@@ -5,26 +5,32 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 17 AUG 2026
 readTime: 7 min read
 ---
 
-Seventeen venues, tens of thousands of spot pairs, an unbounded tail of
-on-chain tokens, and a rolling set of event contracts. Finding the instrument is
-its own problem, and Pairlens solves it locally first.
+Twenty venues, tens of thousands of spot pairs, an unbounded tail of on-chain
+tokens, and a rolling set of event contracts. Finding the instrument is its own
+problem, and Pairlens solves it locally first.
 
 ## Where to search from
 
-| Surface           | Best for                                                   |
-| ----------------- | ---------------------------------------------------------- |
-| **Omni-search**   | <kbd>⌘K</kbd> from anywhere. Pairs, pages, panels, actions |
-| **Markets panel** | Browsing what your connectors reach, by venue and category |
-| **Pair picker**   | Switching the pair a single panel is bound to              |
-| **Watchlist**     | The pairs you already care about                           |
-| **Events panel**  | Prediction-market events, by category and question         |
+| Surface              | Best for                                                      |
+| -------------------- | ------------------------------------------------------------- |
+| **Omni-search**      | <kbd>⌘K</kbd> from anywhere. Pairs, pages, panels, actions    |
+| **Markets panel**    | Browsing what your connectors reach, by venue and category    |
+| **Pair picker**      | Switching the pair a single panel is bound to                 |
+| **Watchlist**        | The pairs you already care about                              |
+| **Events panel**     | Prediction-market events, by category and question            |
+| **Discovery boards** | Ranking a whole asset class by what it is actually shopped on |
 
-They all sit on the same index and the same search, so a token you find in one
-is findable in the others.
+The first five sit on the same index and the same search, so a token you find
+in one is findable in the others. The Discovery boards are the other half of
+the problem: search answers "where is the thing I already named", and a board
+answers "what should I be looking at". Each asset class gets its own, ranked by
+what matters there, funding and basis on perps, turnover on pools, the calendar
+on stocks, the clock and the odds move on event contracts. See
+[workspaces](/docs/workspaces).
 
 The pair picker filters by asset class, and two classes get their own tab.
 **Predictions** rows read as the question rather than the ticker, because a

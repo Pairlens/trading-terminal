@@ -14,6 +14,20 @@ import { useMarketData } from '@/lib/market-data-provider'
 const TIMEFRAME = '1h'
 const LIMIT = 24
 
+/** The window a caller can ask for instead of the default day. */
+export type SparklineWindow = { timeframe: string; limit: number }
+
+/**
+ * A month of daily closes, for a row whose subject moves over weeks rather
+ * than hours. A prediction outcome is the case: its 24h change is already a
+ * column of its own, so the line beside it earns its space by showing the arc
+ * the day cannot.
+ */
+export const MONTH_WINDOW: SparklineWindow = { timeframe: '1d', limit: 30 }
+
+/** The default: a day of hourly closes. Hoisted so its identity is stable. */
+const DAY_WINDOW: SparklineWindow = { timeframe: TIMEFRAME, limit: LIMIT }
+
 /**
  * Discovery lists hold hundreds of instruments, and not all of them are
  * virtualized — the markets card grid mounts every loaded page at once. Three
@@ -79,6 +93,7 @@ export function useSparkline(
   market: string | undefined,
   pair: string | undefined,
   enabled = true,
+  historyWindow: SparklineWindow = DAY_WINDOW,
 ): SparklineResult {
   const { probeVenueHistory } = useMarketData()
   const [settled, setSettled] = useState(false)
@@ -98,7 +113,16 @@ export function useSparkline(
   const active = enabled && settled && Boolean(market) && Boolean(pair)
 
   const query = useQuery({
-    queryKey: ['sparkline', market, pair, TIMEFRAME, LIMIT],
+    // The window is part of the key: two panes asking the same pair for
+    // different spans are two answers, and sharing one entry would give
+    // whichever mounted second the other's line.
+    queryKey: [
+      'sparkline',
+      market,
+      pair,
+      historyWindow.timeframe,
+      historyWindow.limit,
+    ],
     queryFn: async ({ signal }) => {
       await acquireSlot()
       try {
@@ -109,7 +133,12 @@ export function useSparkline(
         // would walk the chain to a wildcard provider, which for a pair the
         // venue does not list means a CORS-blocked round trip per row before
         // arriving at the same "no chart".
-        const request = probeVenueHistory(market!, pair!, TIMEFRAME, LIMIT)
+        const request = probeVenueHistory(
+          market!,
+          pair!,
+          historyWindow.timeframe,
+          historyWindow.limit,
+        )
         if (!request) return NO_VALUES
         const candles = await request
         return candles

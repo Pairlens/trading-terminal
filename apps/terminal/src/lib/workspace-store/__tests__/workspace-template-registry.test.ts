@@ -90,27 +90,28 @@ const MINIMAL_LAYOUT: ContributedWorkspaceLayout = {
   ],
 }
 
-describe('presets-only family plugins', () => {
-  const PRESETS_ONLY = ['pairlens-dex', 'pairlens-equities'] as const
+describe('family plugins ship panes and presets, never a runtime', () => {
   const FAMILY_OF: Record<string, string> = {
+    'pairlens-cex-futures': 'cex-futures',
+    'pairlens-predictions': 'predictions',
     'pairlens-dex': 'dex',
     'pairlens-equities': 'equities',
   }
 
-  for (const id of PRESETS_ONLY) {
+  for (const id of FAMILY_PLUGIN_IDS) {
     it(`${id} ships in the bootstrap bundle, stamped with its family`, () => {
       const { manifest } = pluginFor(id)
       expect(manifest.metadata?.['family']).toBe(FAMILY_OF[id])
       expect(manifest.capabilities).toEqual([])
     })
 
-    it(`${id} contributes workspaces and nothing else`, () => {
+    it(`${id} contributes panels and workspaces, and nothing else`, () => {
       const contributes = pluginFor(id).manifest.contributes ?? {}
       expect(contributes.workspaces?.length).toBeGreaterThan(0)
-      // No panels, so it must stay out of the bare-pane-key allowlist: a
-      // saved layout never names a pane it owns.
-      expect(contributes.panels ?? []).toEqual([])
-      expect(FIRST_PARTY_PLUGIN_IDS.has(id)).toBe(false)
+      expect(contributes.panels?.length).toBeGreaterThan(0)
+      // Its panes are named bare by its own layouts, exactly as a saved
+      // layout names them, so it has to be in the allowlist.
+      expect(FIRST_PARTY_PLUGIN_IDS.has(id)).toBe(true)
     })
   }
 })
@@ -206,9 +207,9 @@ describe('bundled family workspaces', () => {
     expect(board).toBeDefined()
     expect(board!.context).toBe('discovery')
     expect(board!.routeMenu).toBe(true)
-    // The event browser is the point of the board, and it must dominate it.
+    // The event board is the point of this board, and it must dominate it.
     const events = board!.layout.columns.find((c) =>
-      c.cells.some((cell) => cell.panes.some((p) => p.type === 'events')),
+      c.cells.some((cell) => cell.panes.some((p) => p.type === 'event-board')),
     )
     expect(events).toBeDefined()
     expect(events!.widthPercent).toBeGreaterThanOrEqual(50)
@@ -229,6 +230,7 @@ describe('WorkspaceTemplateRegistry', () => {
     expect(registry.getTemplates().map((t) => t.id)).toEqual([
       'template:prediction-terminal',
       'template:prediction-discovery',
+      'template:prediction-race',
     ])
 
     registry.unregister('pairlens-predictions')
@@ -254,6 +256,7 @@ describe('WorkspaceTemplateRegistry', () => {
       Object.keys(mergeRoutePresets({}, registry.getTemplates(), 'discovery'))
 
     expect(pairMenu()).toContain('template:prediction-terminal')
+    expect(pairMenu()).toContain('template:prediction-race')
     expect(discoveryMenu()).toContain('template:prediction-discovery')
 
     registry.unregister('pairlens-predictions')
@@ -283,11 +286,16 @@ describe('WorkspaceTemplateRegistry', () => {
       'template:perps-discovery',
       'template:prediction-discovery',
     ])
-    // Standalone store templates are never quick-apply presets.
+    // Standalone store templates are never quick-apply presets, and the perp
+    // menu leads with the Default the route boots on.
     const perpMenu = Object.keys(
       mergeRoutePresets({}, registry.getTemplates(), 'pair', 'perp'),
     )
-    expect(perpMenu).toEqual(['template:perps-terminal'])
+    expect(perpMenu).toEqual([
+      'template:perps-terminal',
+      'template:perps-carry',
+      'template:perps-risk',
+    ])
   })
 })
 

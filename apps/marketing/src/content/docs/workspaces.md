@@ -4,8 +4,8 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: AUG 2026
-readTime: 8 min read
+updated: 17 AUG 2026
+readTime: 10 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -32,18 +32,39 @@ Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
 workspace of its own. Rearrange the futures board and the spot board has not
 moved, and each one remembers its own arrangement between sessions.
 
-Every tab opens on a board built for what it trades. Spot keeps the scanner
-over the sentiment rail and the news column. Futures puts your open contracts
-and a multi-price rail beside the scanner. DEX runs recent tickers over the
-social feed, because on-chain discovery is a flow problem. Equities is the
-scanner, your watchlist, and a full-height news column, with no crypto
-sentiment gauge on it. Predictions swaps the pair scanner for the event
-browser, since outcomes are listed and resolved daily and never sit in a
-catalog of pairs.
+Every tab opens on a board built for what that class is actually shopped on,
+and only one of the five is a list of pairs.
 
-The markets scanner opens on the tab's asset class and remembers its own filter
-per tab, so widening the futures board to every market is a decision about that
-board alone.
+**CEX Spot** opens on what moved and why: a market pulse strip over the movers
+table and the sector tape, the full markets scanner beside them, and news over
+your watchlist in the right rail. Clicking a sector chip filters the scanner
+next to it rather than navigating away. Every pane on this board works with no
+account connected.
+
+**CEX Futures** scans by cost of carry instead of by price. The funding matrix
+takes the wide column with the basis monitor under it, and open interest sits
+beside them over the funding extremes. A price scanner already exists on the
+spot board, and repeating it here would have made the section the same page a
+fifth time.
+
+**DEX** is chain first, then pool: a chain rail on the left, pools ranked by
+volume against the liquidity backing them in the middle over the flow chart,
+and the selected pool's detail on the right.
+
+**Equities** is built around the calendar rather than the tape. The session
+state leads, the earnings calendar sits under it and macro releases under
+those, with the movers and the news wire beside them. No sentiment gauge and no
+heatmap here: both read a crypto index and would be quietly wrong above a list
+of tickers.
+
+**Predictions** swaps the pair scanner for the event board, since outcomes are
+listed and resolved daily and never sit in a catalog of pairs. A category rail
+narrows the board, and a right rail carries the biggest odds moves over what
+settles soonest.
+
+The markets scanner is on the spot board and on any board you add it to. It
+opens on that tab's asset class and remembers its own filter per tab, so
+widening one board to every market is a decision about that board alone.
 
 Drag a tab to reorder it, or right-click one and move it left or right. If you
 trade event contracts and nothing else, put Predictions first. The
@@ -59,17 +80,45 @@ perpetuals, DEX tokens, stocks, and prediction markets each keep their own
 arrangement: rearrange the panels while charting a perp and your spot layout
 has not moved.
 
-Each class ships a default built for what it trades. Perps swap the spot
-positions panel for **Futures Positions** with mark and liquidation. Prediction
-markets get the **Events** browser and **Prediction Positions** beside the
-book. DEX pairs drop the order book entirely, because pool-quoted depth is
-synthetic, and pair the swap ticket with recent tickers. Stocks put the ticket
-over the symbol news wire.
+Each class ships a default built for what it trades.
 
-The **Workspaces** menu follows the same rule: on a prediction market it
-suggests layouts built for prediction markets, not a spot execution desk, and
-**Browse Workspace Store** opens the store already filtered to that asset
-class.
+**Spot Execution** is the chart with the tape, positions and market data tabbed
+below it, and a rail that leads with the cross-venue ladder above the order
+book and the ticket. The ladder goes first because the question right before
+clicking is which venue fills this cheapest.
+
+**Perps Terminal** keeps that skeleton and swaps the spot positions pane for
+**Futures Positions** with entry, mark and liquidation, beside a leverage-aware
+ticket.
+
+**DEX Terminal** drops the order book entirely, because pool-quoted depth is
+synthetic. In its place: the chart over **Pool Stats**, the on-chain tape
+beside it, and the swap ticket above the aggregator **Route**, so the slippage
+on the ticket has a cause you can read.
+
+**Equities Terminal** leads with the session clock, because extended hours
+change what the ticket will accept rather than just a label on it. Level 1
+quotes sit over the ticket and the symbol wire.
+
+**Prediction Terminal** leads with the event header, since a contract is a
+question and the question belongs above the chart. The data strip opens on
+**What Moved It**, and the right column carries the event browser over your
+open contracts.
+
+Beyond the default, each class carries its own named boards in the same menu:
+
+| Class       | Boards beside Default                                                                                                                                                       |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CEX Spot    | **Research** for a position held longer than a session: chart over the pair dossier, the pair's own wire beside it, sector peers under the ticket, and no depth stream open |
+| CEX Futures | **Carry**, with the funding belt above the chart; **Risk**, with the liquidation map, margin health and your guardrails editable in place                                   |
+| DEX         | **Liquidity** for the LP side of the pool; **Cross-Chain** for the same token priced per chain with the bridge beside it                                                    |
+| Equities    | **Company**, the ticker read as a business rather than a price                                                                                                              |
+| Predictions | **Race**, for an event with a field rather than two sides: the outcome ladder under the chart and the basket ticket beside it                                               |
+
+The **Workspaces** menu follows the same rule as the defaults: on a prediction
+market it suggests layouts built for prediction markets, not a spot execution
+desk, and **Browse Workspace Store** opens the store already filtered to that
+asset class.
 
 ## Layouts ship with the plugin that owns them
 
@@ -80,6 +129,10 @@ Predictions, the on-chain boards from Pairlens DEX, the stock boards from
 Pairlens Equities. Disable or uninstall one from the Plugins page and its
 layouts leave the Workspace Store, the Workspaces menu, and Discovery (its
 tab included) immediately. Enable it again and they come back.
+
+Spot is the exception, and deliberately: its boards ship in Pairlens Core,
+which cannot be uninstalled, so the Spot tab is always there and the terminal
+always has a home to open on.
 
 A layout you already saved keeps working either way. Only the ready-made
 entries come and go with the plugin.

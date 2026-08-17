@@ -25,12 +25,18 @@ export type PaneRegistryEntry = {
  * template's panes resolve to no owner. It kept its own copy of both until the
  * set grew a third member and only one copy learned about it — silently, since
  * the mismatch shows up as a missing icon rather than an error.
+ *
+ * `pairlens-dex` and `pairlens-equities` joined the set when they stopped
+ * being presets-only: their layouts name panes like `pool-stats` and `level-1`
+ * bare, exactly as a saved layout does.
  */
 export const FIRST_PARTY_PLUGIN_IDS: ReadonlySet<string> = new Set([
   'pairlens-core',
   'pairlens-intelligence',
   'pairlens-predictions',
   'pairlens-cex-futures',
+  'pairlens-dex',
+  'pairlens-equities',
 ])
 
 /** The one rule that turns (plugin, panel) into a saved-layout pane type. */

@@ -24,6 +24,8 @@ export type EvmChainConfig = {
   iconUrl: string
   /** Default public JSON-RPC endpoint (CORS-friendly). */
   rpcUrl: string
+  /** Block explorer root, for linking a confirmed swap to its transaction. */
+  explorerUrl: string
   nativeSymbol: string
   wrappedNativeAddress: string
   /** Canonical USD-stable quote token for generated pairs. */
@@ -40,6 +42,7 @@ export const EVM_CHAINS: Record<string, EvmChainConfig> = {
     geckoNetwork: 'eth',
     iconUrl: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=040',
     rpcUrl: 'https://ethereum-rpc.publicnode.com',
+    explorerUrl: 'https://etherscan.io',
     nativeSymbol: 'ETH',
     wrappedNativeAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
     quote: {
@@ -58,6 +61,7 @@ export const EVM_CHAINS: Record<string, EvmChainConfig> = {
     iconUrl:
       'https://coin-images.coingecko.com/asset_platforms/images/131/small/base-network.png',
     rpcUrl: 'https://base-rpc.publicnode.com',
+    explorerUrl: 'https://basescan.org',
     nativeSymbol: 'ETH',
     wrappedNativeAddress: '0x4200000000000000000000000000000000000006',
     quote: {
@@ -75,6 +79,7 @@ export const EVM_CHAINS: Record<string, EvmChainConfig> = {
     geckoNetwork: 'arbitrum',
     iconUrl: 'https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=040',
     rpcUrl: 'https://arbitrum-one-rpc.publicnode.com',
+    explorerUrl: 'https://arbiscan.io',
     nativeSymbol: 'ETH',
     wrappedNativeAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
     quote: {
@@ -92,6 +97,7 @@ export const EVM_CHAINS: Record<string, EvmChainConfig> = {
     geckoNetwork: 'bsc',
     iconUrl: 'https://cryptologos.cc/logos/bnb-bnb-logo.png?v=040',
     rpcUrl: 'https://bsc-rpc.publicnode.com',
+    explorerUrl: 'https://bscscan.com',
     nativeSymbol: 'BNB',
     wrappedNativeAddress: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
     // USDT dominates BSC liquidity; USDC pools are comparatively thin.
@@ -110,6 +116,7 @@ export const EVM_CHAINS: Record<string, EvmChainConfig> = {
     geckoNetwork: 'polygon_pos',
     iconUrl: 'https://cryptologos.cc/logos/polygon-matic-logo.png?v=040',
     rpcUrl: 'https://polygon-bor-rpc.publicnode.com',
+    explorerUrl: 'https://polygonscan.com',
     nativeSymbol: 'POL',
     wrappedNativeAddress: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
     quote: {

@@ -73,7 +73,7 @@ const SYNTHETIC_EPSILON = 1e-6
  * is: a width test would also throw away the genuinely illiquid venues, and
  * those are precisely where a cross-venue edge tends to live.
  */
-function hasRealBook(q: VenuePrice): q is VenuePrice & {
+export function hasRealBook(q: VenuePrice): q is VenuePrice & {
   bid: number
   ask: number
 } {

@@ -26,6 +26,8 @@ export const VALID_CAPABILITY_IDS: ReadonlyArray<CapabilityId> = [
   'market-data:trades',
   'market-data:history',
   'market-data:events',
+  'market-data:session',
+  'market-data:funding',
   'market-data:symbol-logo',
   'ai:inference',
   'ai:web-search',

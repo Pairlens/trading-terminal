@@ -214,6 +214,34 @@ export type NormalizedPosition = {
   notionalUsd?: number
   marginMode?: 'cross' | 'isolated'
   timestamp?: number
+  /**
+   * Unrealised PnL accrued SINCE THE PREVIOUS CLOSE, in the quote currency,
+   * with `changeToday` the same move as a fraction of that close (0.0212 =
+   * +2.12%). Brokers report both on a cash equity position and they are the
+   * two numbers a stock holder reads first; a perp venue reports neither,
+   * which is why they are optional rather than derived.
+   */
+  intradayPnl?: number
+  changeToday?: number
+  /**
+   * The margin side of a derivatives position, in the settle currency, as the
+   * venue reports it. Optional because a spot or equity position has no such
+   * thing and because the perp venues disagree about which of them they fill
+   * in: KuCoin reports every one, Binance leaves `maintenanceMargin` out of its
+   * cross-margin rows, and a computed stand-in would be a different number
+   * wearing the venue's authority.
+   *
+   * - `collateral` — margin currently backing the position.
+   * - `initialMargin` / `maintenanceMargin` — what opening it cost, and the
+   *   floor below which it is liquidated.
+   * - `marginRatio` — the venue's own health figure, as a fraction where 1 is
+   *   liquidation. Read in preference to `maintenanceMargin / collateral`,
+   *   because the venue applies its own tier table and we cannot.
+   */
+  collateral?: number
+  initialMargin?: number
+  maintenanceMargin?: number
+  marginRatio?: number
 }
 
 /** Normalized balance record — emitted by all connectors. */
@@ -222,4 +250,61 @@ export type NormalizedBalance = {
   available: string
   frozen: string
   total: string
+}
+
+/**
+ * One leg of an aggregator's split, as the aggregator names it.
+ *
+ * `share` is the fraction of the INPUT the leg takes, 0..1 — not the output.
+ * A router splits the amount it is given; the outputs then differ per venue,
+ * which is the whole reason a split beats a single pool, so sharing by output
+ * would hide the effect it is meant to show.
+ */
+export type SwapRouteLeg = {
+  /** Pool or DEX the leg routes through (`Uniswap V3`, `Orca`, …). */
+  venue: string
+  share: number
+  /** Output of this leg in output-token units, when the aggregator states it. */
+  amountOut: number | null
+}
+
+/**
+ * A read-only swap preview from a DEX aggregator: what the router WOULD do.
+ *
+ * Produced by `trading:orders` with `action: 'quote'` on the DEX connectors.
+ * Nothing on this path signs, approves, or sends anything — it is the same
+ * quote endpoint the order path calls first, stopped one step short, so the
+ * route pane and the price-impact tiers show the split the user is about to
+ * accept rather than a model of it.
+ *
+ * Amounts are human units (already scaled by token decimals) because every
+ * consumer is a display or an arithmetic comparison, never a value echoed
+ * back to a chain.
+ */
+export type SwapRouteQuote = {
+  market: string
+  pair: string
+  side: 'buy' | 'sell'
+  amountIn: number
+  amountOut: number
+  inputSymbol: string
+  outputSymbol: string
+  /** Input/output notionals where the aggregator prices both legs in USD. */
+  amountInUsd: number | null
+  amountOutUsd: number | null
+  /**
+   * Price impact as a fraction (0.0046 = 0.46%), or null when neither the
+   * aggregator states one nor the two USD legs are both priced. Never
+   * synthesized from pool reserves: an aggregator route crosses pools this
+   * process cannot see.
+   */
+  priceImpact: number | null
+  /** Output per unit of input, for comparing a quote against the mid. */
+  executionPrice: number | null
+  /** Estimated network fee in USD, where the aggregator estimates one. */
+  gasUsd: number | null
+  legs: Array<SwapRouteLeg>
+  /** The aggregator that produced it (`kyberswap`, `jupiter`). */
+  source: string
+  ts: number
 }

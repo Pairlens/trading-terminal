@@ -18,6 +18,7 @@
  * (`defaultEventScope`) instead of an error the user cannot act on.
  */
 
+import { marketChange24h, marketRules, outcomeChange24h } from './derived'
 import type {
   Instrument,
   InstrumentPage,
@@ -194,10 +195,15 @@ function toMarketSummary(
 ): PredictionMarketSummary | null {
   const id = str(raw['id']) || str(raw['market'])
   if (!id) return null
+  const info = asRecord(raw['info'])
+  // One reading of the move per MARKET, signed per outcome below. Both venues
+  // state it once, from the Yes side — see `marketChange24h`.
+  const change = marketChange24h(info)
   const outcomes: Array<PredictionOutcomeSummary> = []
   const rawOutcomes = raw['outcomes']
   if (Array.isArray(rawOutcomes)) {
-    for (const entry of rawOutcomes) {
+    const count = rawOutcomes.length
+    for (const [index, entry] of rawOutcomes.entries()) {
       const row = entry as Record<string, unknown>
       const symbol = str(row['outcome'])
       if (!symbol) continue
@@ -205,22 +211,24 @@ function toMarketSummary(
         outcome: symbol,
         outcomeId: str(row['outcomeId']) || null,
       })
+      const label = str(row['label']) || symbol
       outcomes.push({
         pairKey,
-        label: str(row['label']) || symbol,
+        label,
         ...optNum('price', row['price']),
         ...optNum('bid', row['bid']),
         ...optNum('ask', row['ask']),
+        ...optNum('change24h', outcomeChange24h(change, label, index, count)),
       })
     }
   }
   const status = marketStatus(raw)
-  const info = asRecord(raw['info'])
   return {
     id,
     title: marketTitle(raw, info, id),
     ...opt('shortTitle', marketShortTitle(info)),
     ...opt('imageUrl', str(info['icon']) || str(info['image'])),
+    ...opt('rules', marketRules(info)),
     outcomes,
     // Neither venue populates the unified `volume`/`end` on a market row;
     // both keep them on the venue payload, and `expiry` is where ccxt puts

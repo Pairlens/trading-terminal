@@ -201,6 +201,16 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.RecentTickersPane,
       })),
     ),
+    'venue-ladder': lazyChunk(() =>
+      import('@/components/terminal/venue-ladder-pane').then((m) => ({
+        default: m.VenueLadderPane,
+      })),
+    ),
+    'pair-dossier': lazyChunk(() =>
+      import('@/components/terminal/pair-dossier-pane').then((m) => ({
+        default: m.PairDossierPane,
+      })),
+    ),
   },
   'pairlens-predictions': {
     events: lazyChunk(() =>
@@ -215,11 +225,195 @@ const FIRST_PARTY_COMPONENTS: Record<
         }),
       ),
     ),
+    categories: lazyChunk(() =>
+      import('@/components/predictions/categories-pane').then((m) => ({
+        default: m.CategoriesPane,
+      })),
+    ),
+    'event-board': lazyChunk(() =>
+      import('@/components/predictions/event-board-pane').then((m) => ({
+        default: m.EventBoardPane,
+      })),
+    ),
+    'odds-movers': lazyChunk(() =>
+      import('@/components/predictions/odds-movers-pane').then((m) => ({
+        default: m.OddsMoversPane,
+      })),
+    ),
+    'resolving-soon': lazyChunk(() =>
+      import('@/components/predictions/resolving-soon-pane').then((m) => ({
+        default: m.ResolvingSoonPane,
+      })),
+    ),
+    'event-header': lazyChunk(() =>
+      import('@/components/predictions/event-header-pane').then((m) => ({
+        default: m.EventHeaderPane,
+      })),
+    ),
+    'what-moved-it': lazyChunk(() =>
+      import('@/components/predictions/what-moved-it-pane').then((m) => ({
+        default: m.WhatMovedItPane,
+      })),
+    ),
+    'outcome-ladder': lazyChunk(() =>
+      import('@/components/predictions/outcome-ladder-pane').then((m) => ({
+        default: m.OutcomeLadderPane,
+      })),
+    ),
+    'basket-ticket': lazyChunk(() =>
+      import('@/components/predictions/basket-ticket-pane').then((m) => ({
+        default: m.BasketTicketPane,
+      })),
+    ),
   },
   'pairlens-cex-futures': {
     'futures-positions': lazyChunk(() =>
       import('@/components/futures/futures-positions-pane').then((m) => ({
         default: m.FuturesPositionsPane,
+      })),
+    ),
+    'funding-matrix': lazyChunk(() =>
+      import('@/components/futures/funding-matrix-pane').then((m) => ({
+        default: m.FundingMatrixPane,
+      })),
+    ),
+    'basis-monitor': lazyChunk(() =>
+      import('@/components/futures/basis-monitor-pane').then((m) => ({
+        default: m.BasisMonitorPane,
+      })),
+    ),
+    'open-interest': lazyChunk(() =>
+      import('@/components/futures/open-interest-pane').then((m) => ({
+        default: m.OpenInterestPane,
+      })),
+    ),
+    'funding-extremes': lazyChunk(() =>
+      import('@/components/futures/funding-extremes-pane').then((m) => ({
+        default: m.FundingExtremesPane,
+      })),
+    ),
+    'funding-belt': lazyChunk(() =>
+      import('@/components/futures/funding-belt-pane').then((m) => ({
+        default: m.FundingBeltPane,
+      })),
+    ),
+    'liquidation-map': lazyChunk(() =>
+      import('@/components/futures/liquidation-map-pane').then((m) => ({
+        default: m.LiquidationMapPane,
+      })),
+    ),
+    'margin-health': lazyChunk(() =>
+      import('@/components/futures/margin-health-pane').then((m) => ({
+        default: m.MarginHealthPane,
+      })),
+    ),
+    'risk-controls': lazyChunk(() =>
+      import('@/components/futures/risk-controls-pane').then((m) => ({
+        default: m.RiskControlsPane,
+      })),
+    ),
+  },
+  'pairlens-dex': {
+    chains: lazyChunk(() =>
+      import('@/components/dex/chains-pane').then((m) => ({
+        default: m.ChainsPane,
+      })),
+    ),
+    'pool-map': lazyChunk(() =>
+      import('@/components/dex/pool-map-pane').then((m) => ({
+        default: m.PoolMapPane,
+      })),
+    ),
+    'liquidity-flow': lazyChunk(() =>
+      import('@/components/dex/liquidity-flow-pane').then((m) => ({
+        default: m.LiquidityFlowPane,
+      })),
+    ),
+    'pool-detail': lazyChunk(() =>
+      import('@/components/dex/pool-detail-pane').then((m) => ({
+        default: m.PoolDetailPane,
+      })),
+    ),
+    'pool-stats': lazyChunk(() =>
+      import('@/components/dex/pool-stats-pane').then((m) => ({
+        default: m.PoolStatsPane,
+      })),
+    ),
+    'onchain-trades': lazyChunk(() =>
+      import('@/components/dex/onchain-trades-pane').then((m) => ({
+        default: m.OnchainTradesPane,
+      })),
+    ),
+    route: lazyChunk(() =>
+      import('@/components/dex/route-pane').then((m) => ({
+        default: m.RoutePane,
+      })),
+    ),
+    'fee-accrual': lazyChunk(() =>
+      import('@/components/dex/fee-accrual-pane').then((m) => ({
+        default: m.FeeAccrualPane,
+      })),
+    ),
+    'lp-position': lazyChunk(() =>
+      import('@/components/dex/lp-position-pane').then((m) => ({
+        default: m.LpPositionPane,
+      })),
+    ),
+    'manage-liquidity': lazyChunk(() =>
+      import('@/components/dex/manage-liquidity-pane').then((m) => ({
+        default: m.ManageLiquidityPane,
+      })),
+    ),
+    'chain-ladder': lazyChunk(() =>
+      import('@/components/dex/chain-ladder-pane').then((m) => ({
+        default: m.ChainLadderPane,
+      })),
+    ),
+    'route-bridge': lazyChunk(() =>
+      import('@/components/dex/route-bridge-pane').then((m) => ({
+        default: m.RouteBridgePane,
+      })),
+    ),
+    'in-flight': lazyChunk(() =>
+      import('@/components/dex/in-flight-pane').then((m) => ({
+        default: m.InFlightPane,
+      })),
+    ),
+  },
+  'pairlens-equities': {
+    session: lazyChunk(() =>
+      import('@/components/equities/session-pane').then((m) => ({
+        default: m.SessionPane,
+      })),
+    ),
+    'earnings-calendar': lazyChunk(() =>
+      import('@/components/equities/earnings-calendar-pane').then((m) => ({
+        default: m.EarningsCalendarPane,
+      })),
+    ),
+    'economic-calendar': lazyChunk(() =>
+      import('@/components/equities/economic-calendar-pane').then((m) => ({
+        default: m.EconomicCalendarPane,
+      })),
+    ),
+    'session-clock': lazyChunk(() =>
+      import('@/components/equities/session-clock-pane').then((m) => ({
+        default: m.SessionClockPane,
+      })),
+    ),
+    'level-1': lazyChunk(() =>
+      import('@/components/equities/level-1-pane').then((m) => ({
+        default: m.Level1Pane,
+      })),
+    ),
+    company: lazyChunk(() =>
+      import('@/components/equities/company-pane').then((m) => ({
+        default: m.CompanyPane,
+      })),
+    ),
+    'your-position': lazyChunk(() =>
+      import('@/components/equities/your-position-pane').then((m) => ({
+        default: m.YourPositionPane,
       })),
     ),
   },
@@ -252,6 +446,26 @@ const FIRST_PARTY_COMPONENTS: Record<
     'fear-greed': lazyChunk(() =>
       import('@/components/discovery/fear-greed-pane').then((m) => ({
         default: m.FearGreedPane,
+      })),
+    ),
+    'market-pulse': lazyChunk(() =>
+      import('@/components/discovery/market-pulse-pane').then((m) => ({
+        default: m.MarketPulsePane,
+      })),
+    ),
+    movers: lazyChunk(() =>
+      import('@/components/discovery/movers-pane').then((m) => ({
+        default: m.MoversPane,
+      })),
+    ),
+    'sector-tape': lazyChunk(() =>
+      import('@/components/discovery/sector-tape-pane').then((m) => ({
+        default: m.SectorTapePane,
+      })),
+    ),
+    'sector-peers': lazyChunk(() =>
+      import('@/components/discovery/sector-peers-pane').then((m) => ({
+        default: m.SectorPeersPane,
       })),
     ),
   },

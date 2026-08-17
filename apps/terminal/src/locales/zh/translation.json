@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "永续与现货",
+    "subtitle": "同一资产在两个交易台上并排显示",
+    "spot": "现货 {{price}}",
+    "spotMissing": "无指数",
+    "perp": "永续 {{price}}",
+    "bps": "{{value}} 个基点",
+    "rowHint": "{{venue}} 上的 {{pair}}",
+    "emptyTitle": "暂无可比较的数据",
+    "emptyBody": "基差需要标记价格和指数价格。请连接同时公布两者的永续合约交易所。"
+  },
+  "basketTicket": {
+    "noPairTitle": "尚未选择事件",
+    "noPairBody": "打开一场竞逐，即可一次性押注多个结果。",
+    "emptyTitle": "篮子还是空的",
+    "emptyBody": "用阶梯里的加号按钮添加结果，再为每个结果填上金额。",
+    "stakeFor": "投入 {{name}} 的金额",
+    "removeLeg": "把 {{name}} 从篮子里移除",
+    "totalCost": "总成本",
+    "covers": "覆盖",
+    "overroundAsk": "按卖价合计",
+    "overroundLast": "按最新价合计",
+    "maxPayout": "最大收益",
+    "maxLoss": "最大亏损",
+    "unusable_one": "有 1 条腿的金额或价格不可用，不会被发送。",
+    "unusable_other": "有 {{count}} 条腿的金额或价格不可用，不会被发送。",
+    "place_one": "下 1 笔单",
+    "place_other": "下 {{count}} 笔单",
+    "placing": "正在下单…",
+    "placedTitle_one": "已下 1 笔单",
+    "placedTitle_other": "已下 {{count}} 笔单",
+    "placedBody": "每条腿都按显示价格作为限价单发出。",
+    "partialTitle": "篮子提前停止",
+    "partialBody": "{{total}} 笔中已下 {{placed}} 笔。{{outcome}} 被拒绝：{{reason}}",
+    "failedTitle": "篮子下单失败",
+    "hint": "每条腿都是真实的限价单。"
+  },
+  "bridgePanes": {
+    "routeTitle": "跨链桥需要桥接服务商",
+    "routeBody": "目前没有任何服务商接入。链上连接器只在单条链内路由，因此这里无法报出跨链转移的费用或耗时。链阶梯比较的是你已经能交易的范围。",
+    "wouldQuote": "将为从 {{chain}} 转出的 {{asset}} 报价",
+    "inFlightTitle": "转账追踪需要桥接服务商",
+    "inFlightBody": "确认数来自搬运资金的那座桥。没有接入的桥就无处轮询，而背后没有数据的进度条会在卡住的转账上继续前进。"
+  },
+  "chainLadder": {
+    "title": "跨链的 {{asset}}",
+    "subtitle": "按扣掉 gas 后到手的数量排序，而不是按最优报价",
+    "sizedFor": "按 {{value}} 计算",
+    "best": "最优",
+    "versusBest": "{{bps}} 个基点",
+    "notFound": "这里没有 {{asset}} 池子",
+    "footnote": "最深的池子不等于最好的成交。贵链上的便宜报价，会输给 gas 几乎为零的链上稍差的报价。",
+    "columns": {
+      "chain": "链",
+      "price": "价格",
+      "impact": "影响",
+      "gas": "Gas",
+      "youReceive": "你将收到"
+    },
+    "noPairTitle": "未绑定交易对",
+    "noPairBody": "把此面板绑定到一个交易对，每条已连接的链都会按同一规模报价。",
+    "noChainsTitle": "没有链连接器",
+    "noChainsBody": "安装一个链上连接器，它的链就会加入这张阶梯。"
+  },
+  "company": {
+    "unknownName": "暂无公司名称",
+    "needsProviderTitle": "基本面数据需要数据源",
+    "needsProviderBody": "券商负责报价和成交，不发布估值、增长和利润率。安装基本面插件即可填充此面板。"
+  },
+  "dexChains": {
+    "title": "资金流向何处",
+    "subtitleNetwork": "24小时成交额，全链",
+    "subtitleSampled": "各链最活跃池子的24小时成交额",
+    "liquidityValue": "流动性 {{value}}",
+    "poolsValue_one": "{{count}} 个池",
+    "poolsValue_other": "{{count}} 个池",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "优先费",
+    "notInstalled": "未安装连接器",
+    "installConnector": "安装连接器",
+    "emptyTitle": "没有可浏览的链",
+    "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。"
+  },
+  "earningsCalendar": {
+    "title": "财报",
+    "subtitle": "开盘前与收盘后",
+    "emptyTitle": "未安装财报数据源",
+    "emptyBody": "填充这份日历的是基本面数据插件。券商只公布自己的交易时段，不提供本周谁发财报。",
+    "columns": {
+      "symbol": "代码",
+      "when": "时段",
+      "epsEstimate": "预期每股收益",
+      "revenueEstimate": "预期营收",
+      "impliedMove": "隐含波幅"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "未安装宏观数据源",
+    "emptyBody": "宏观数据插件会用发布时间、市场预期和前值填充这份日历。",
+    "columns": {
+      "time": "时间",
+      "event": "事件",
+      "actual": "公布值",
+      "consensus": "预期",
+      "prior": "前值"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "在 1 个在售市场中搜索",
+    "searchPlaceholder_other": "在 {{count}} 个在售市场中搜索",
+    "loadingTitle": "正在加载看板",
+    "loadingBody": "正在向各平台询问当前有哪些市场在交易。",
+    "sort": {
+      "trending": "热门",
+      "endingSoon": "即将结束",
+      "volume": "成交额",
+      "biggestMove": "涨跌最大"
+    },
+    "unchanged": "无变化",
+    "movedPoints": "{{arrow}} 今日 {{points}} 个点",
+    "volumeUnknown": "未公布成交额",
+    "liquidity": "流动性 {{value}}",
+    "outcomeCount_one": "1 位候选",
+    "outcomeCount_other": "{{count}} 位候选",
+    "topShare_one": "领先者占据 {{percent}} % 的概率份额。",
+    "topShare_other": "前 {{count}} 位占据 {{percent}} % 的概率份额。",
+    "openFullField_one": "打开全部候选（还有 1 位）",
+    "openFullField_other": "打开全部候选（还有 {{count}} 位）"
+  },
+  "eventHeader": {
+    "noPairTitle": "尚未选择合约",
+    "noPairBody": "在 Discovery 中打开一个事件，即可看到问题、结算时间以及市场给出的概率。",
+    "resolves": "结算",
+    "venue": "平台",
+    "rules": "结算规则",
+    "rulesTitle": "如何结算",
+    "rulesSource": "由 {{venue}} 公布",
+    "tradeableOutcomes": "个可交易结果",
+    "statusClosed": "已停止交易",
+    "statusResolved": "已结算",
+    "changeToday": "今日 {{value}} 个点",
+    "loadingPrice": "正在读取平台报价…",
+    "noPrice": "该平台当前没有为这一结果报价。",
+    "noOverround": "有报价的候选太少，无法求和。",
+    "sideYes": "Yes {{percent}} %",
+    "sideNo": "No {{percent}} % · {{price}}",
+    "overroundLabel": "全部 Yes 价格之和",
+    "overroundOver": "超额 {{percent}} %。买下所有结果正好亏这么多；如果深度允许，卖出整个盘口才是套利。",
+    "overroundUnder": "比公允盘口低 {{percent}} %。如果深度允许，买下所有结果可以赚到这么多。",
+    "basisAsk_one": "由 1 个卖价求和",
+    "basisAsk_other": "由 {{count}} 个卖价求和",
+    "basisLast_one": "由 1 个最新价求和",
+    "basisLast_other": "由 {{count}} 个最新价求和",
+    "basisMissing_one": "1 位候选无报价",
+    "basisMissing_other": "{{count}} 位候选无报价"
+  },
+  "funding": {
+    "loading": "正在读取资金费率…",
+    "na": "无",
+    "stampUnknown": "未公布",
+    "desktopOnly": "的公开 API 只能从桌面端访问。",
+    "manageConnectors": "管理连接器",
+    "cellHint": "{{pair}} · 每 {{hours}} 小时 {{rate}}",
+    "cellHintAssumed": "{{pair}} · {{rate}}，交易所未公布周期，按每 {{hours}} 小时结算估算"
+  },
+  "fundingBelt": {
+    "now": "当前资金费率 · {{hours}} 小时",
+    "longsPay": "多头支付空头",
+    "shortsPay": "空头支付多头",
+    "nextPayment": "下次结算",
+    "costYou": "将花费 {{amount}}",
+    "costPerReference": "每持有 {{notional}} 为 {{amount}}",
+    "annualised": "年化",
+    "weekAverage": "7 日均值 {{value}}",
+    "noHistory": "尚无已结算记录",
+    "paidLabel": "你的仓位已支付",
+    "paidLabelReference": "每持有 {{notional}} 的成本",
+    "otherVenues": "同一合约，其他交易所",
+    "onlyVenue": "这是你为该合约连接的唯一交易所。",
+    "emptyTitle": "请选择一个永续合约",
+    "emptyBody": "该条只跟踪一个永续合约：费率、结算时钟和持仓成本。打开一个永续交易对即可填充。",
+    "noRateTitle": "未公布资金费率",
+    "noRateBody": "{{venue}} 未返回该合约的资金费率。"
+  },
+  "fundingExtremes": {
+    "subtitle": "已连接交易所中最贵和最便宜的持仓成本，均为年化。",
+    "longsPay": "多头支付最多",
+    "shortsPay": "空头支付最多",
+    "perInterval": "每 {{hours}} 小时 {{rate}}",
+    "emptyTitle": "没有可排序的费率",
+    "emptyBody": "永续合约交易所一旦响应，其最贵和最便宜的合约就会出现在这里。"
+  },
+  "fundingMatrix": {
+    "title": "资金费率（年化）",
+    "subtitle": "正值 = 多头支付空头",
+    "nextPayment": "距下次结算",
+    "colSpread": "价差",
+    "points": "{{value}} 个百分点",
+    "spreadHint": "最贵与最便宜交易所之间的差距，以年化资金费率的百分点计",
+    "sortBy": "按 {{venue}} 排序",
+    "note": "点击单元格即可在该交易所打开该合约。价差列就是现货期货套利：在资金费率最低处做多，在最高处做空。",
+    "noRows": "没有交易所返回资金费率。",
+    "emptyTitle": "没有启用的永续合约交易所",
+    "emptyBody": "资金费率是公开数据，无需 API 密钥。安装一个永续合约连接器，矩阵会自动填充。"
+  },
+  "level1": {
+    "emptyTitle": "暂无报价",
+    "emptyBody": "该标的的买价或卖价尚未推送。",
+    "bid": "买价",
+    "ask": "卖价",
+    "spread": "价差",
+    "bps": "个基点",
+    "dayRange": "当日区间",
+    "feed": "数据源",
+    "depthNote": "券商只提供盘口最优价，这两个价格背后没有深度。"
+  },
+  "liquidationMap": {
+    "subtitle": "你的强平价格，以及在此开仓的杠杆会走到哪里",
+    "estimateBadge": "估算",
+    "sideLong": "多头",
+    "sideShort": "空头",
+    "referenceHint": "按当前价格开仓的 {{leverage}} 倍{{side}}将在 {{price}} 附近被强平",
+    "caption": "柱形是各交易所报告的你自己的强平价格。细线标出按当前价格开仓在 5 倍、10 倍和 25 倍杠杆下的强平位置。没有交易所公布聚合强平簇，因此不作绘制。",
+    "noPositionsCaption": "细线标出按当前价格开仓在 5 倍、10 倍和 25 倍杠杆下的强平位置。你自己的强平价格会在持有仓位后以柱形显示。",
+    "noPriceTitle": "没有可参照的价格",
+    "noPriceBody": "该图需要合约的实时价格。旁边的图表一有价格就会填充。",
+    "emptyTitle": "没有可绘制的内容",
+    "emptyBody": "开一个永续仓位，或选择一个合约，价格轴就会填充。"
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "选择一个池子",
+    "noPoolBody": "在图中选一个池子，穿过它的资金会以五分钟为单位显示在这里。",
+    "loadingTitle": "正在加载兑换",
+    "loadingBody": "正在获取该池子的最近兑换。",
+    "emptyTitle": "暂无兑换",
+    "emptyBody": "这个池子近期没有成交，因此没有可轧差的资金流。",
+    "barsLabel": "吃单方净流量，{{pool}}",
+    "netHour": "最近一小时 {{value}}",
+    "bucketTooltip": "买入 {{buy}}，卖出 {{sell}}",
+    "axisNote": "每 5 分钟买入减卖出。LP 添加或撤出的流动性不在此数据流中。",
+    "biggestLabel": "最大兑换"
+  },
+  "lpPanes": {
+    "positionTitle": "LP 仓位需要仓位数据源",
+    "positionBody": "目前已连接的组件都还读不到流动性仓位。那需要向链上的 position manager 查询这个钱包自己的价格区间，而今天没有连接器这样做。",
+    "feesTitle": "手续费历史需要仓位数据源",
+    "feesBody": "每日赚取的手续费来自索引器，或来自随时间测量的 fee growth。两者都未连接，而估算出的图表看起来会像实测数据。",
+    "manageTitle": "调整区间需要流动性操作",
+    "manageBody": "添加、撤出和重新居中流动性都是需要签名的交易，目前没有连接器能构造。这些控件在真正可用之前不会出现。",
+    "venueFallback": "这条链",
+    "wouldRead": "将读取 {{chain}} 上 {{pool}} 的 {{wallet}}"
+  },
+  "marginHealth": {
+    "title": "保证金状况",
+    "marginRatio": "保证金率",
+    "safe": "安全",
+    "marginCall": "追加保证金 80%",
+    "liquidation": "强平",
+    "equity": "权益",
+    "maintenance": "维持保证金",
+    "liqDistance": "距强平",
+    "adl": "自动减仓队列",
+    "adlHint": "交易所未公布",
+    "stressLabel": "若价格向不利方向变动",
+    "ratioAfter": "保证金率 {{value}}%",
+    "liquidated": "已强平",
+    "flatBody": "该账户没有持仓。开出第一个仓位后即可看到保证金状况。",
+    "noVenueTitle": "没有启用的永续合约交易所",
+    "noVenueBody": "保证金状况读取合约连接器上报的仓位。安装一个连接器即可使用本面板。"
+  },
+  "marketPulse": {
+    "emptyTitle": "暂无市场数据",
+    "emptyBody": "App Server 与公开备用源都没有响应。任一方恢复后，这条概览会立即填充。",
+    "totalCap": "总市值",
+    "window24h": "24 小时",
+    "volume24h": "24 小时成交额",
+    "turnover": "成交额相当于市值的 {{pct}}%",
+    "dominance": "BTC 占比",
+    "breadth": "涨跌家数 · {{total}} 个资产",
+    "up": "上涨",
+    "down": "下跌",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "加密市场恐惧与贪婪指数。0 表示极度恐惧，100 表示极度贪婪。"
+  },
+  "movers": {
+    "emptyTitle": "暂无市场数据",
+    "emptyBody": "App Server 与公开备用源都没有响应，暂时无从排名。",
+    "noBrokerTitle": "未安装股票交易所",
+    "noBrokerBody": "从插件商店安装一个券商连接器，当天的异动就会出现在这里。",
+    "tabs": {
+      "gainers": "涨幅榜",
+      "losers": "跌幅榜",
+      "volume": "成交额",
+      "volatility": "波动",
+      "unusual": "异常"
+    },
+    "window": "排名区间",
+    "columns": {
+      "pair": "交易对",
+      "change": "{{window}}涨跌",
+      "price": "价格",
+      "volume": "成交额",
+      "trend": "走势"
+    },
+    "turnoverTooltip": "24 小时成交额，以及该资产相对同一批快照中位数换手了自身多少倍。这不是与它自己 30 天均值的对比，快照里没有那个数据。",
+    "empty": {
+      "gainers": "该区间内没有上涨的资产。",
+      "losers": "该区间内没有下跌的资产。",
+      "volume": "还没有交易所报出成交额。",
+      "volatility": "没有资产波动到足以进入榜单。",
+      "unusual": "没有资产相对自身体量出现异常成交。"
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "24 小时概率变动最大",
+    "loadingTitle": "正在读取看板",
+    "loadingBody": "各平台响应后即会显示变动。",
+    "emptyTitle": "没有明显变动",
+    "emptyBody": "今天没有合约变动到值得单列一行。",
+    "noChangeFrom": "未参与排名：{{venues}} 不公布 24 小时变动。"
+  },
   "onboarding": {
     "phase": {
       "ready": "已就绪"
@@ -208,6 +529,187 @@
       "sub": "私密、本地,且已按你的交易方式调优。你的终端已就绪。"
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "不是链上交易对",
+    "notOnChainBody": "此逐笔读取穿过 AMM 池子的兑换。绑定的交易对在中心化交易所成交。",
+    "filterAll": "全部",
+    "filterLarge": "超过 {{value}}",
+    "buy": "买入",
+    "sell": "卖出",
+    "openTx": "打开交易",
+    "net1h": "1小时净额",
+    "columns": {
+      "time": "时间",
+      "side": "方向",
+      "value": "USD",
+      "price": "价格",
+      "wallet": "钱包"
+    },
+    "loadingTitle": "正在加载兑换",
+    "loadingBody": "正在获取该池子已确认的兑换。",
+    "emptyTitle": "暂无兑换",
+    "emptyBody": "在数据提供方返回的时间窗口内，该池子没有任何成交。"
+  },
+  "openInterest": {
+    "title": "持仓量排行",
+    "changeLabel": "24 小时变化",
+    "notPublished": "的 API 不公布持仓量。",
+    "emptyTitle": "暂无持仓量",
+    "emptyBody": "持仓量随资金费率一同读取，显示已连接交易所正在报价的合约。"
+  },
+  "outcomeLadder": {
+    "noPairTitle": "尚未选择事件",
+    "noPairBody": "在 Discovery 中打开一场竞逐，即可在一张表里看到每位候选的价格。",
+    "loadingTitle": "正在加载候选",
+    "loadingBody": "平台响应后即会显示全部候选。",
+    "notFoundTitle": "平台看板上没有这个事件",
+    "notFoundBody": "平台没有返回这个事件，因此无法列出它的其他结果。图表和下单票据仍可使用。",
+    "emptyTitle": "没有其他结果",
+    "emptyBody": "这个问题只有一个市场，没有可排名的候选。",
+    "filterPlaceholder_one": "筛选 1 个结果",
+    "filterPlaceholder_other": "筛选 {{count}} 个结果",
+    "sort": {
+      "probability": "排序 · 概率",
+      "change": "排序 · 24 小时变动",
+      "volume": "排序 · 成交额",
+      "name": "排序 · 名称"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "结果",
+      "yes": "Yes",
+      "change": "24 小时",
+      "trend": "30 天",
+      "volume": "成交额",
+      "trade": "交易"
+    },
+    "yesChip": "Yes {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "把 {{name}} 加入篮子",
+    "noMatches": "没有结果符合该筛选条件。",
+    "tailBelow_one": "还有 1 个结果低于 {{price}} · 合计成交额 {{volume}}",
+    "tailBelow_other": "还有 {{count}} 个结果低于 {{price}} · 合计成交额 {{volume}}",
+    "tailMore_one": "还有 1 个结果 · 合计成交额 {{volume}}",
+    "tailMore_other": "还有 {{count}} 个结果 · 合计成交额 {{volume}}",
+    "showMore_one": "再显示 1 个",
+    "showMore_other": "再显示 {{count}} 个"
+  },
+  "pairDossier": {
+    "marketCap": "市值",
+    "rank": "第 {{rank}} 名",
+    "volume24h": "24 小时成交额",
+    "turnover": "相当于市值的 {{pct}}%",
+    "change7d": "7 天涨跌",
+    "change7dSub": "与一周前相比",
+    "sector": "板块",
+    "sectorMove": "板块 24 小时 {{change}}",
+    "quotedOn": "报价交易所",
+    "ofVenues": "共 {{total}} 家",
+    "tightestSpread": "最窄价差",
+    "bps": "{{bps}} 基点",
+    "range24h": "24 小时区间",
+    "rangeLowHigh": "{{low}} 至 {{high}}",
+    "volatility": "波动率",
+    "volatilityWindow": "按 {{span}} 的 {{timeframe}} K 线年化",
+    "spreadByVenue": "各交易所价差 · 盘口顶部",
+    "spreadByVenueTooltip": "各交易所此刻报价有多紧，以中间价为基准的基点。行情不带挂单量，所以这是在盘口顶部吃单的成本，不是后面的深度。",
+    "noBooks": "暂无已连接的交易所为该交易对提供双边盘口。",
+    "sizingNote": "吃单成本在 {{tight}} 为 {{tightBps}} 基点，在 {{wide}} 为 {{wideBps}} 基点。按交易所而不是按交易对来定下单量。",
+    "sizingNoteSingle": "只有 {{venue}} 提供真实盘口，价差 {{bps}} 基点。"
+  },
+  "poolDetail": {
+    "emptyTitle": "未选择池子",
+    "emptyBody": "从图中选一个池子，即可查看流动性、成交额和资金流，离图表只有一次点击。",
+    "change24h": "{{value}} 24小时",
+    "liquidity": "流动性",
+    "volume24h": "24小时成交额",
+    "turnover": "成交额 / 流动性",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "24小时成交笔数",
+    "feeTier": "费率档位",
+    "pressureByValue": "买卖压力，24小时按金额",
+    "pressureByCount": "买卖压力，24小时按成交笔数",
+    "loading": "正在加载池子状态。",
+    "openChart": "打开图表并兑换"
+  },
+  "poolMap": {
+    "title": "{{chain}} 池子",
+    "subtitle": "按每个池子把自身流动性用得多狠来排序",
+    "sortTurnover": "周转率",
+    "sortVolume": "成交额",
+    "sortLiquidity": "流动性",
+    "turnoverValue": "{{value}}x",
+    "openPair": "打开图表",
+    "columns": {
+      "pool": "池子",
+      "price": "价格",
+      "change": "24小时",
+      "volume": "24小时成交额",
+      "liquidity": "流动性",
+      "turnover": "成交额 / 流动性"
+    },
+    "noChainTitle": "选择一条链",
+    "noChainBody": "在左侧选择一条链，它的池子就会按成交额与背后流动性的比值排在这里。",
+    "loadingTitle": "正在加载池子",
+    "loadingBody": "正在获取该链的排序池子。",
+    "emptyTitle": "未返回任何池子",
+    "emptyBody": "数据提供方没有为这条链返回任何内容。下次刷新时会重试。"
+  },
+  "poolStats": {
+    "notOnChainTitle": "不是链上交易对",
+    "notOnChainBody": "此面板读取 AMM 池子状态。绑定的交易对在中心化交易所成交，那里有的是订单簿。",
+    "loadingTitle": "正在加载池子",
+    "loadingBody": "正在为该交易对确定最深的池子。",
+    "emptyTitle": "没有池子状态",
+    "emptyBody": "数据提供方没有为该池子返回任何内容。下次刷新时会重试。",
+    "liquidity": "流动性",
+    "volume24h": "24小时成交额",
+    "turnoverSub": "流动性的 {{value}} 倍",
+    "feeTier": "费率档位",
+    "feeTierUnknown": "该平台未公布",
+    "reserves": "储备",
+    "reservesUnavailable": "两侧仅在桌面端可见",
+    "trades24h": "24小时成交笔数",
+    "tradersSub_one": "{{count}} 名交易者",
+    "tradersSub_other": "{{count}} 名交易者",
+    "poolAge": "池子存续时间",
+    "ageToday": "今天",
+    "ageDays_one": "{{count}} 天",
+    "ageDays_other": "{{count}} 天",
+    "ageMonths_one": "{{count}} 个月",
+    "ageMonths_other": "{{count}} 个月",
+    "impactLabel": "按下单规模的价格影响",
+    "impactNote": "每个规模都是实时询价，不是用储备推算，因此拆分路由可能好过这个池子自身的曲线。"
+  },
+  "predictionCategories": {
+    "all": "全部",
+    "noneBody": "该平台没有为事件划分分类。",
+    "venueHeading": "平台",
+    "desktopOnly": "桌面端",
+    "venueError": "错误"
+  },
+  "resolvingSoon": {
+    "resolves": "{{when}} 结算",
+    "loadingTitle": "正在读取结算时间",
+    "loadingBody": "各平台响应后即会显示结算日期。",
+    "emptyTitle": "近期没有结算",
+    "emptyBody": "这里的未结合约都没有公布即将到来的结算日期。"
+  },
+  "riskControls": {
+    "maxDailyLoss": "每日最大亏损",
+    "maxDailyTrades": "每日最大交易次数",
+    "maxPositionSize": "最大仓位规模",
+    "usedPercent": "已用 {{value}}%",
+    "usedCount": "已下 {{value}} 单",
+    "perOrder": "每笔订单都会检查",
+    "off": "关闭",
+    "resetWindow": "重置周期",
+    "resetIn": "{{time}} 后重置",
+    "killSwitch": "紧急停止",
+    "killSwitchHint": "在你恢复之前阻止所有订单",
+    "haltOrders": "停止下单",
+    "resumeOrders": "恢复"
+  },
   "sectionTours": {
     "back": "返回",
     "next": "下一步",
@@ -397,6 +899,50 @@
     "signInConsent": "继续即表示你同意我们的<terms>服务条款</terms>和<privacy>隐私政策</privacy>。",
     "analyticsNote": "我们收集哪些信息、绝不触碰哪些信息，详见<privacy>隐私政策</privacy>。",
     "checkoutConsent": "订阅即表示你同意我们的<terms>服务条款</terms>。"
+  },
+  "sectorPeers": {
+    "emptyTitle": "该交易对没有板块",
+    "emptyBody": "{{pair}} 不在精选板块目录中，因此没有可比较的同类资产。",
+    "loadingBody": "正在读取板块目录。",
+    "subtitle": "{{sector}} · {{total}} 个资产。按 24 小时排序，{{symbol}} 在最前。"
+  },
+  "sectorTape": {
+    "emptyTitle": "暂无板块数据",
+    "emptyBody": "板块由标的目录与市场快照拼接得出，目前两边都还没有响应。",
+    "subtitle": "按市值加权。下方的条形显示有多少成员跟随了这次移动。",
+    "window": "板块区间",
+    "leads": "{{total}} 个资产 · {{symbol}} 领涨",
+    "drags": "{{total}} 个资产 · {{symbol}} 拖累",
+    "assets": "{{total}} 个资产"
+  },
+  "session": {
+    "noVenueTitle": "未连接券商",
+    "noVenueBody": "交易日来自券商自己的日历。安装股票连接器后即可在此查看各时段。",
+    "noVenueAction": "浏览连接器",
+    "loading": "正在读取交易日历…",
+    "unavailableTitle": "无法获取交易时段",
+    "unavailableBody": "券商既没有返回时钟也没有返回日历，系统会自动重试。",
+    "stateOpen": "市场开盘",
+    "statePre": "盘前",
+    "statePost": "盘后",
+    "stateClosed": "市场休市",
+    "closesIn": "{{time}}后收盘",
+    "opensIn": "{{time}}后开盘",
+    "afterHoursEndsIn": "盘后交易将在{{time}}后结束",
+    "preMarketIn": "{{time}}后进入盘前",
+    "durationDh": "{{days}}天{{hours}}小时",
+    "durationHm": "{{hours}}小时{{minutes}}分",
+    "durationMs": "{{minutes}}分{{seconds}}秒",
+    "barPre": "盘前",
+    "barOpen": "开盘",
+    "barClose": "收盘",
+    "barPost": "盘后",
+    "halfDay": "半日市",
+    "nextSession": "下一交易时段 {{day}}",
+    "noSchedule": "没有安排交易时段",
+    "clockOnly": "只能判断开市或休市：没有公布交易时段区间。",
+    "ticketExtendedNote": "此时段只接受限价单。没有连续竞价可以成交市价单。",
+    "ticketClosedNote": "市场已休市。限价单会挂到下一个时段开盘。"
   },
   "settings": {
     "title": "设置",
@@ -1067,6 +1613,20 @@
       "thanks": "谢谢，这真的很有帮助。"
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "不是链上交易对",
+    "notOnChainBody": "路由是聚合器把一笔兑换拆到多个池子。绑定的交易对在中心化交易所成交。",
+    "probeLabel": "询价规模",
+    "loadingTitle": "询价中",
+    "loadingBody": "正在询问聚合器会如何成交这一规模。",
+    "noRouteTitle": "没有路由",
+    "noRouteBody": "聚合器没有找到为该交易对成交这一规模的办法。",
+    "noQuotePriceBody": "计价代币没有公布美元价格，因此无法确定询价规模。",
+    "emptyTitle": "没有可显示的拆分",
+    "youReceive": "你将收到",
+    "priceImpact": "价格影响",
+    "networkFee": "网络费"
+  },
   "userMenu": {
     "accountMenu": "账户菜单",
     "settings": "设置",
@@ -1105,6 +1665,45 @@
     "newWindow": "新建窗口",
     "back": "后退",
     "forward": "前进"
+  },
+  "venueLadder": {
+    "emptyTitle": "没有可比较的交易所",
+    "emptyBody": "再连接一家上架该资产类别的交易所，阶梯就会按你交易的方向排序。",
+    "columns": {
+      "venue": "交易所",
+      "bid": "买价",
+      "ask": "卖价",
+      "bps": "基点"
+    },
+    "switchSide": "切换方向",
+    "rankedByAsk": "按卖价排序，买入最便宜的在前",
+    "rankedByBid": "按买价排序，卖出最划算的在前",
+    "bpsTooltip": "盘口顶部的价差，以中间价衡量。不提供真实双边盘口的交易所不参与排名。",
+    "best": "最优",
+    "desktopOnlyRow": "{{venue}} 需要桌面应用",
+    "switchTo": "在 {{venue}} 查看该交易对图表",
+    "desktopOnly": "桌面版",
+    "notListed": "未上架该交易对",
+    "noBook": "暂无报价"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "尚未选择合约",
+    "noPairBody": "打开一个事件，看看它的概率是什么时候变的。",
+    "loadingTitle": "正在读取历史",
+    "loadingBody": "概率历史加载完成后即会显示时间线。",
+    "flatTitle": "没有值得单列的变动",
+    "flatBody": "在已加载的历史中，这份合约的重新定价没有超过三美分。",
+    "columns": {
+      "when": "时间",
+      "move": "变动",
+      "what": "发生了什么",
+      "traded": "成交"
+    },
+    "movedFromTo": "概率从 {{from}} 变到 {{to}}",
+    "contracts_one": "1 张合约",
+    "contracts_other": "{{count}} 张合约",
+    "footerMatched": "新闻按时间而非因果与 {{ticker}} 对应：每条都是市场重新定价期间最后发布的一条。",
+    "footerNoTicker": "新闻源按代码索引，而这个问题不含任何代码，因此每行只显示变动本身。"
   },
   "workspace": {
     "rename": "重命名",
@@ -2275,7 +2874,49 @@
     "empty": "空",
     "events": "事件",
     "predictionPositions": "预测持仓",
-    "futuresPositions": "期货持仓"
+    "futuresPositions": "期货持仓",
+    "venueLadder": "交易所阶梯",
+    "pairDossier": "交易对档案",
+    "marketPulse": "市场脉搏",
+    "movers": "涨跌幅榜",
+    "sectorTape": "板块栏",
+    "sectorPeers": "同板块",
+    "fundingMatrix": "资金费率矩阵",
+    "basisMonitor": "基差监控",
+    "openInterest": "持仓量",
+    "fundingExtremes": "资金费极值",
+    "fundingBelt": "资金费倒计时",
+    "liquidationMap": "强平地图",
+    "marginHealth": "保证金状况",
+    "riskControls": "风险管控",
+    "categories": "分类",
+    "eventBoard": "事件看板",
+    "oddsMovers": "概率变动",
+    "resolvingSoon": "即将结算",
+    "eventHeader": "事件信息",
+    "whatMovedIt": "变动原因",
+    "outcomeLadder": "结果阶梯",
+    "basketTicket": "篮子下单面板",
+    "chains": "区块链",
+    "poolMap": "资金池地图",
+    "liquidityFlow": "流动性流向",
+    "poolDetail": "资金池详情",
+    "poolStats": "资金池数据",
+    "onchainTrades": "链上成交记录",
+    "route": "路由",
+    "feeAccrual": "手续费累计",
+    "lpPosition": "LP 仓位",
+    "manageLiquidity": "流动性管理",
+    "chainLadder": "跨链阶梯",
+    "routeBridge": "跨链路由",
+    "inFlight": "转账中",
+    "session": "交易时段",
+    "earningsCalendar": "财报日历",
+    "economicCalendar": "财经日历",
+    "sessionClock": "交易时钟",
+    "level1": "Level 1",
+    "company": "公司信息",
+    "yourPosition": "持仓明细"
   },
   "paneDescriptions": {
     "markets": "浏览各交易所所有可交易的交易对",
@@ -2302,7 +2943,49 @@
     "recentTickers": "最近查看的交易对及其实时价格,便于快速切换",
     "events": "浏览预测市场事件并打开某个结果的图表",
     "predictionPositions": "你持有的合约、成本以及结算时间",
-    "futuresPositions": "未平仓永续合约仓位、标记价格和强平价位"
+    "futuresPositions": "未平仓永续合约仓位、标记价格和强平价位",
+    "venueLadder": "已连接的每个交易所对该交易对的最优买卖价，按最优成交价排序，最上一行即最划算的成交",
+    "pairDossier": "决定仓位大小的关键数据：波动区间、成交量、上下 1% 以内的流动性，以及这个交易对成交最集中的地方",
+    "marketPulse": "用三个数字概括整个市场，再用一行说明发生了什么变化及原因",
+    "movers": "当日涨跌幅最大的品种，连同背后的成交量，让真实行情和影线插针一目了然",
+    "sectorTape": "把每个板块做成标签，配上涨跌幅和涨跌比例条，轮动一眼看清",
+    "sectorPeers": "这个交易对所属板块中其他品种的今日表现，交易对本身固定置顶",
+    "fundingMatrix": "把已连接每个交易所的所有永续合约资金费率汇总成一张表，任意列都能排序",
+    "basisMonitor": "永续合约与现货的价差以基点和年化利率呈现，让持仓成本读起来像收益率而不是价差",
+    "openInterest": "每个合约的持仓量及 24 小时变化，让资金拥挤先于价格显现",
+    "fundingExtremes": "当前资金费率最高和最低的合约，以及各自所在的交易所",
+    "fundingBelt": "距离下次资金费结算的倒计时、当前与预测费率，以及你的仓位规模要支付或赚取的金额",
+    "liquidationMap": "你的仓位在价格轴上被强平的位置，与市场其余部分承受的强平量对照显示",
+    "marginHealth": "保证金率、维持保证金与可用保证金的对比，以及账户距离自动减仓(ADL)还有多近",
+    "riskControls": "每日亏损上限、交易笔数、仓位规模和紧急停止开关，就在交易发生的地方直接编辑",
+    "categories": "所有事件分类均附带实时合约数量，一键即可缩小看板范围",
+    "eventBoard": "以卡片形式展示进行中的事件市场：问题、以美分计价的 Yes 和 No、成交量与结算时间",
+    "oddsMovers": "今天概率变动最大的合约，变动幅度以点数表示",
+    "resolvingSoon": "按结算时间而非成交量排序，展示最接近结算的合约",
+    "eventHeader": "问题内容、结算的时间与方式，以及市场当前定价的概率",
+    "whatMovedIt": "以时间线呈现头条新闻，每条都标注它引发的概率变动",
+    "outcomeLadder": "事件中的每个结果都以美分计价，可排序可搜索，每一行都有下注按钮",
+    "basketTicket": "一次性对多个结果下注，提交前显示总花费、超额概率和最坏情况",
+    "chains": "已配置连接器的每条链，附带 Gas 费、流动性与 24 小时成交量",
+    "poolMap": "按成交量与流动性的比例给资金池排名，真正在交易的池子排在最前",
+    "liquidityFlow": "按时间区间显示流动性的净流入流出，让资金池枯竭先于价格显现",
+    "poolDetail": "一览已选资金池的概况，一键直达图表与兑换",
+    "poolStats": "两侧储备量、锁仓价值(TVL)、24 小时成交量、手续费档位，以及三种规模下的价格影响",
+    "onchainTrades": "资金池中每一笔兑换在确认时即时显示，附带钱包地址与交易链接",
+    "route": "聚合器如何把你的兑换拆分到各个资金池，让滑点有据可查",
+    "feeAccrual": "你的仓位随时间累积的手续费收益、由此推算的 APR，以及现在可领取的金额",
+    "lpPosition": "你的价格区间与实时价格的对比、区间内停留时间，以及相对于单纯持有测算的无常损失",
+    "manageLiquidity": "无需离开图表即可调整区间、增减流动性并领取手续费",
+    "chainLadder": "同一代币在每条链上的报价，已计入 Gas 费，比拼的是总成本而不是表面报价",
+    "routeBridge": "源链、目标链、使用的跨链桥及其手续费与所需时间，一切就绪即可执行",
+    "inFlight": "仍在确认中的转账，附带各自等待的区块确认数",
+    "session": "依据券商自身日历显示当前交易日所处的时段，包含假期与半日市",
+    "earningsCalendar": "谁将在何时发布财报，盘前还是盘后，以及需要超越的市场预期",
+    "economicCalendar": "宏观数据按发布时间排列，附带重要性、前值与市场预期",
+    "sessionClock": "用一行显示交易日状态的时钟，盘后下单不会再让你措手不及",
+    "level1": "来自券商行情的买卖报价及其数量、价差和当日波动区间",
+    "company": "估值、增长率、利润率、下一个催化剂，以及分析师的看法，全部集中在一个面板",
+    "yourPosition": "你在这个标的上的持仓：数量、成本、标记价格，以及当日与持仓浮动盈亏"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens 预测",
-        "description": "预测市场的事件浏览器与未平仓合约持仓"
+        "description": "预测市场功能：事件看板、结果阶梯、篮子下单与持仓合约"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures 市场连接器",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens 期货",
-        "description": "未平仓永续合约仓位，含开仓价、标记价与强平价"
+        "description": "永续合约功能：持仓、资金费率与基差扫描器、强平与保证金面板"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "链上工作区预设：DEX 终端与冲土狗看板"
+        "description": "链上功能：资金池数据、兑换路由、LP 仓位与跨链阶梯"
       },
       "pairlens-equities": {
         "title": "Pairlens 股票",
-        "description": "股票工作区预设：股票终端与扫描器主导的交易台"
+        "description": "股票功能：交易时钟、Level 1 报价、公司基本面与财报日历"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "仅提供行情数据，无法在此交易。"
     },
     "trade": {
+      "allOutcomes": "全部 {{total}} 项",
+      "avgFillPrice": "平均成交价",
+      "contractCount_one": "{{formatted}} 张合约",
+      "contractCount_other": "{{formatted}} 张合约",
+      "fundingAtEntry": "入场资金费率",
+      "fundingLongsPay": "多头支付空头",
+      "fundingShortsPay": "空头支付多头",
+      "ifDoesNotWin": "若 {{outcome}} 不成立",
+      "ifWins": "若 {{outcome}} 成立",
       "limitBuy": "限价买入",
       "limitSell": "限价卖出",
       "bought": "已买入",
+      "maxAmount": "最大",
+      "maxPayout": "最大回报",
+      "profitLine": "盈利 {{amount}} · {{roi}}",
+      "resolvesOn": "{{date}} 结算",
       "sold": "已卖出",
       "limitOrderFailed": "限价单失败",
+      "stakeLine": "投入 {{amount}}",
       "swapFailed": "兑换失败",
+      "switchOutcome": "切换结果",
       "workflowUnsupported": "该市场不支持工作流",
       "orderBlocked": "订单被风险限额拦截",
       "orderRejected": "订单被拒绝",
@@ -3083,8 +3781,6 @@
       "maxLoss": "最大亏损",
       "priceCents": "价格（¢）",
       "thisOutcome": "当前结果",
-      "decreaseContracts": "减少一份合约",
-      "increaseContracts": "增加一份合约",
       "priceCentsRange": "请输入 0¢ 到 100¢ 之间的价格",
       "leverage": "杠杆",
       "reduceOnly": "只减仓",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "预测市场终端",
-        "tagline": "把概率画成图表，整个事件就在旁边。",
-        "description": "预测市场的默认布局：概率图表下方是成交记录和你的持仓合约，中间是订单簿与下单面板，右侧是通高的事件浏览器，因为相邻结果就是分析的一半。",
+        "tagline": "先看问题，赔率随后。",
+        "description": "预测市场默认布局：事件信息，其下方是概率图表，再往下是引发波动的头条新闻，以及在下注前显示最高赔付与最大损失的订单簿与下单面板，右侧是相邻的其他结果。",
         "menuLabel": "默认"
       },
       "prediction-discovery": {
         "name": "预测市场发现",
         "tagline": "浏览正在进行的事件市场，而不是交易对目录。",
-        "description": "为事件合约打造的首页看板：事件浏览器占据宽栏，新闻流在旁边滚动，窄栏把自选列表放在情绪指标之上。安装 Kalshi 或 Polymarket 等预测平台即可填满看板。",
+        "description": "为事件合约打造的首页看板：事件看板旁边是分类栏，最大的概率变动，其下方是即将结算的合约。安装 Kalshi 或 Polymarket 等预测平台即可填满看板。",
         "menuLabel": "默认"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "DEX 终端",
         "tagline": "链上交易，不用假的订单簿。",
-        "description": "链上默认布局：图表下方是流动性池数据与成交记录，兑换面板叠在最近行情之上，方便捕捉新上线代币，右侧是社交动态。没有订单簿栏位：由资金池推算的深度是合成的，因此不予显示。",
+        "description": "链上默认布局：图表，其下方是资金池数据，旁边是链上成交记录，聚合器路由上方是兑换面板，让滑点有据可查。没有订单簿栏位：由资金池推算的深度是合成的，因此不予显示。",
         "menuLabel": "默认"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "股票终端",
-        "tagline": "股票交易，下单面板就在标的资讯之上。",
-        "description": "股票的默认布局：图表下方是成交记录、持仓与基本面数据，下单面板位于标的资讯之上，因为催化剂推动股票，就像资金流推动加密货币。",
+        "tagline": "交易时钟置于图表之上，Level 1 置于下单面板之上。",
+        "description": "股票默认布局：交易时钟领头，其下方是图表，再加上成交记录与仓位，以及把 Level 1 报价放在下单面板和标的资讯之上的边栏。常规交易时间之外，时钟会明确标示，下单面板也只接受限价单。",
         "menuLabel": "默认"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "填满超宽屏或第二块显示器的四栏指挥中心：扫描器、图表、订单簿与深度，以及叠在你持仓之上的下单面板。极繁主义布局。"
       },
       "classic-terminal": {
-        "name": "经典终端",
-        "tagline": "经典 Pairlens 工作台：图表、数据、订单簿、下单面板。",
-        "description": "默认终端布局：左侧是大图表搭配标签式数据条与风险条，右侧是订单簿叠加下单面板。",
+        "name": "现货执行",
+        "tagline": "所有已连接交易所中的最优买一卖一。",
+        "description": "现货默认布局：图表，其下方是成交记录与仓位，以交易所阶梯打头，依次接上订单簿与下单面板的边栏。",
         "menuLabel": "默认"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "为 4K 显示器铺满全部内容：订单簿与交易对信息、带风险条的图表、持仓与社交动态，以及下单面板栏。"
       },
       "home-pulse": {
-        "name": "首页",
-        "tagline": "默认看板：扫描器、情绪、涨跌幅榜与资讯。",
-        "description": "默认首页看板：市场扫描器、带恐慌与贪婪指数和热门币种的市场脉搏栏（与你的自选列表同标签页），以及通栏资讯栏。全部功能无需账户即可使用。",
+        "name": "现货发现",
+        "tagline": "打开就看到谁在动，为什么动。",
+        "description": "现货首页看板：市场脉搏条，其下方是涨跌幅榜和板块栏，旁边是完整扫描器，自选列表之上是新闻。全部功能无需账户即可使用。",
         "menuLabel": "默认"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "永续合约发现",
-        "tagline": "扫描永续合约，持仓就在旁边。",
-        "description": "合约首页看板：按永续合约筛选的市场扫描器，旁边是带标记价和强平价的持仓，下方是多价格栏，情绪指标位于新闻流之上。",
+        "tagline": "按持仓成本扫描，而不是按价格。",
+        "description": "期货首页看板：资金费率矩阵，其下方是基差监控，旁边是持仓量与资金费极值。它按持有成本给永续合约排名，这正是价格扫描器永远回答不了的问题。",
         "menuLabel": "默认"
       },
       "dex-discovery": {
         "name": "DEX 发现",
-        "tagline": "链上新币、社交动态和自选列表。",
-        "description": "链上首页看板：按 DEX 交易对筛选的市场扫描器，社交动态之上是最近查看的代币，方便抓住刚上线的新币，自选列表位于新闻流之上。",
+        "tagline": "先选链，再选池。",
+        "description": "链上首页看板：显示 Gas 费与流动性的链上栏，按成交量对流动性排名的资金池，其下方是流向图表，右侧是已选资金池，一键直达图表与兑换。没有连接器的链不会出现。",
         "menuLabel": "默认"
       },
       "equities-discovery": {
         "name": "股票发现",
-        "tagline": "股票扫描器、自选列表和新闻并排。",
-        "description": "股票首页看板：按股票筛选的市场扫描器，多价格栏之上是自选列表，还有一整列新闻，因为股票靠公告和头条驱动。",
+        "tagline": "交易日，跟着驱动它的日历走。",
+        "description": "股票首页看板：当前交易时段的状态、谁将在何时发布财报、即将公布的宏观数据，旁边是涨跌幅榜和新闻源。时钟数据来自券商日历，因此假期与半日市都准确无误。",
         "menuLabel": "默认"
+      },
+      "spot-research": {
+        "name": "现货研究",
+        "tagline": "下单之前，先要有理由。",
+        "description": "面向持仓超过一个交易时段的仓位：交易对档案上方是图表，旁边是这个交易对专属的新闻源，同板块上方是报价规模的下单面板。没有订单簿，因此不会开启深度数据流。",
+        "menuLabel": "研究"
+      },
+      "perps-carry": {
+        "name": "永续合约资金成本",
+        "tagline": "下一次资金费结算，会花你多少钱。",
+        "description": "面向打算持续持有的永续合约：图表上方是带倒计时的资金费倒计时条，显示当前与预测费率，以及你的仓位规模要支付或赚取的金额，下方是未平仓合约，订单簿下方是支持杠杆的下单面板。",
+        "menuLabel": "资金成本"
+      },
+      "perps-risk": {
+        "name": "永续合约风险",
+        "tagline": "仓位在哪里归零，以及阻止它的限额。",
+        "description": "把同一个交易对当作风险敞口来看：图表下方是强平地图，保证金状况下方是护栏设置，右侧是下单面板。限额可就地编辑，规模上限的调整就在交易发生的地方，而不必去设置页面。",
+        "menuLabel": "风险"
+      },
+      "dex-liquidity": {
+        "name": "DEX 流动性",
+        "tagline": "你的区间，你的手续费，你的无常损失。",
+        "description": "资金池的 LP 视角：图表上叠加你的价格区间，累积的手续费及由此推算的 APR，区间内停留时间，以及相对于单纯持有测算的无常损失。旁边就是区间编辑器，无需离开图表即可调整仓位。",
+        "menuLabel": "流动性"
+      },
+      "dex-cross-chain": {
+        "name": "DEX 跨链",
+        "tagline": "同一枚代币，每条链都有，Gas 费全部算进去。",
+        "description": "用于跨链转移的看板：跨链阶梯以计入 Gas 费的总成本，在每条链上为代币报价，跨链路由注明手续费与所需时间，旁边并列着仍在确认中的转账及其区块确认数。",
+        "menuLabel": "跨链"
+      },
+      "equities-company": {
+        "name": "股票公司",
+        "tagline": "股票代码背后的生意。",
+        "description": "面向持有而非交易股票的画面：图表下方是估值、增长率、利润率、下一个催化剂、分析师预期区间，旁边是标的资讯，下单面板上方是持仓明细。",
+        "menuLabel": "公司"
+      },
+      "prediction-race": {
+        "name": "预测竞猜",
+        "tagline": "每个结果都标价，超额概率也一并列明。",
+        "description": "面向多个候选而非二选一的事件：头部显示结果数量与超额概率，一个堆叠份额图表，以及为每个结果标价、可直接在行内下注的阶梯。篮子的总价等于超额概率部分，所以扫光全部结果显然不是免费的钱。",
+        "menuLabel": "竞猜"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "K 线",
         "description": "为图表和信号提供实时 OHLCV K 线推送"
       },
+      "funding": {
+        "label": "资金费率",
+        "description": "永续合约资金费率、标记价格与指数价格，以及持仓量"
+      },
+      "pool-stats": {
+        "label": "池子统计",
+        "description": "AMM 池子状态、它的兑换，以及某条链的排序池子"
+      },
+      "session": {
+        "label": "交易时段日历",
+        "description": "交易日的时钟与日历，包含假日和半日市"
+      },
       "ticker": {
         "label": "行情",
         "description": "实时最新价格与 24 小时涨跌幅推送"
@@ -5274,5 +6024,23 @@
     "closeBody": "将在 {{venue}} 提交一笔只减仓市价单，数量为 {{pair}} 的 {{contracts}} 张合约。",
     "closeConfirm": "平仓",
     "closeSubmitted": "平仓订单已提交"
+  },
+  "yourPosition": {
+    "noVenueTitle": "未连接券商",
+    "noVenueBody": "连接股票券商后即可查看你在该标的上的持仓。",
+    "noAccountsTitle": "没有证券账户",
+    "noAccountsBody": "添加券商 API 密钥即可查看持仓，模拟账户密钥同样可用。",
+    "connect": "连接账户",
+    "flatTitle": "没有 {{symbol}} 的持仓",
+    "flatBody": "该标的的成交会显示在这里。",
+    "shares_one": "{{shares}} 股",
+    "shares_other": "{{shares}} 股",
+    "sharesShort_one": "融券卖出 {{shares}} 股",
+    "sharesShort_other": "融券卖出 {{shares}} 股",
+    "openPnlPercent": "成本收益率",
+    "avgCost": "平均成本",
+    "mark": "参考价",
+    "marketValue": "市值",
+    "dayChange": "今日"
   }
 }

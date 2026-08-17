@@ -39,6 +39,8 @@
  * its own chunk.
  */
 
+import { PlatformRestrictedError } from '@pairlens/market-engine/errors'
+import { isCorsConstrained } from '@pairlens/market-engine/platform'
 import { createCexConnectorPlugin } from '../cex-connector'
 import {
   CcxtExchangeHost,
@@ -48,6 +50,7 @@ import { createCcxtPrivateStream } from '../ccxt-connector/private-stream'
 import { fetchCcxtHistory } from '../ccxt-connector/rest'
 import { mapTimeframeToCcxt } from '../ccxt-connector/parser'
 import { CcxtStreamHub } from '../ccxt-connector/watch-driver'
+import { CcxtFundingProvider, parseFundingRequest } from './funding'
 import { CcxtFuturesMarketsProvider } from './futures-markets'
 import { CcxtFuturesTradingRuntime } from './futures-orders'
 import { fromFuturesSymbol, toFuturesSymbol } from './futures-symbols'
@@ -106,6 +109,14 @@ export {
   buildCcxtFuturesOrderCall,
   normalizeCcxtPositions,
 } from './futures-orders'
+export {
+  CcxtFundingProvider,
+  changeOverSeries,
+  parseFundingRequest,
+  parseIntervalHours,
+  resolveBaseSymbols,
+} from './funding'
+export type { FundingRequest } from './funding'
 
 export type CreateCcxtFuturesConnectorOptions = {
   /** Injectable markets cache — the CLI and tests run on an in-memory map. */
@@ -136,6 +147,7 @@ class CcxtFuturesVenueRuntime {
   readonly markets: CcxtFuturesMarketsProvider
   readonly hub: CcxtStreamHub
   readonly trading: CcxtFuturesTradingRuntime
+  readonly funding: CcxtFundingProvider
   private client: CexPublicWsClient | null = null
 
   constructor(
@@ -171,6 +183,31 @@ class CcxtFuturesVenueRuntime {
       ensureMarkets: (exchange) => this.ensureMarkets(exchange),
       onError: (scope, error) => warn(venue.marketId, scope, error),
     })
+    this.funding = new CcxtFundingProvider(venue)
+  }
+
+  /**
+   * Funding, open interest and the settled series, off the PUBLIC instance.
+   *
+   * The markets table is loaded first because every read here maps a pair key
+   * through `exchange.market()` or filters on the contract's own flags, and a
+   * cold profile that skipped it would drop Kraken's index series into the
+   * funding matrix as though it were a tradeable perp.
+   */
+  async fetchFunding(
+    params: Record<string, unknown>,
+    country: string,
+  ): Promise<unknown> {
+    const request = parseFundingRequest(params)
+    const exchange = await this.acquireFor(country)
+    try {
+      await this.markets.whenReady(exchange)
+      return await this.funding.handle(exchange, request)
+    } catch (error) {
+      throw this.classify(error, country)
+    } finally {
+      this.hub.touchIdle()
+    }
   }
 
   /**
@@ -338,6 +375,29 @@ export function createCcxtFuturesConnectorPlugin(
   const instance = createCexConnectorPlugin(spec, manifest)
   return {
     ...instance,
+    /**
+     * `market-data:funding` in front of the shell's own dispatch.
+     *
+     * Handled HERE rather than through a spec hook because the shell is shared
+     * with the fourteen spot venues, and funding is not a question a spot
+     * connector can be asked — adding a branch there would put a capability in
+     * every spot manifest's reach that none of them can answer.
+     *
+     * The two refusals the shell runs at the top of its own `execute` are
+     * repeated for the same reason they exist there: a browser build cannot
+     * reach a CORS-closed venue's REST at all, and a region refusal has to be
+     * the typed error the region dialog keys on rather than an empty pane.
+     */
+    execute: async (params) => {
+      if (params.capability !== 'market-data:funding') {
+        return instance.execute(params)
+      }
+      if (venue.requiresDesktop && isCorsConstrained()) {
+        throw new PlatformRestrictedError(manifest.name || venue.marketId)
+      }
+      venue.geoCheck?.(params.context.country, params.capability)
+      return runtime.fetchFunding(params.params, params.context.country)
+    },
     // The shell's `destroy()` reaches the public client and each slot's private
     // client, both of which it created — but the authed REST instances have no
     // hook there, and a plugin that only ever traded never built a public

@@ -358,6 +358,10 @@ export const kucoinFuturesCcxtVenue: CcxtFuturesVenueConfig = {
   // by `withKucoinQuirks` — KuCoin's own request has no `until`.
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
   livenessTimeoutMs: 60_000,
+  // Eight-hour settlement, and ccxt declares `fetchFundingRates: false` here —
+  // the venue answers one contract per call, so the funding matrix asks it only
+  // for the contracts it is already showing rather than sweeping the venue.
+  fundingIntervalHours: 8,
   geoCheck: (country) => {
     // Diverges from the spot connector on purpose: that one throws a plain
     // Error to preserve pre-ccxt UI behavior, and there is no such history

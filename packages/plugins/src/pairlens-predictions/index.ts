@@ -3,12 +3,12 @@
 /**
  * `pairlens-predictions` — the prediction-market surfaces, as a plugin.
  *
- * Panels only: no capabilities, no runtime. The event browser and the
- * positions pane read `market-data:events` and `trading:positions` from
- * whichever prediction connector is active, so this plugin serves nothing
- * itself — it exists so the two panes ship, install, disable and uninstall
- * with the family they belong to rather than riding in `pairlens-core`, which
- * a deployment that drops the predictions family still keeps.
+ * Panels only: no capabilities, no runtime. Every pane here reads
+ * `market-data:events` and `trading:positions` from whichever prediction
+ * connector is active, so this plugin serves nothing itself. It exists so the
+ * event surfaces ship, install, disable and uninstall with the family they
+ * belong to rather than riding in `pairlens-core`, which a deployment that
+ * drops the predictions family still keeps.
  *
  * An empty `capabilities` array is deliberate and legal (`validateManifest`
  * asks only that the field be an array). It also keeps the plugin out of every
@@ -28,7 +28,7 @@ export const pairlensPredictionsManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Prediction-market surfaces — event browser and open contract positions',
+    'Prediction-market surfaces: the event board, the outcome ladder, baskets and open contract positions',
   homepage: 'https://pairlens.finance',
   icon: 'https://pairlens.finance/favicon.svg',
   metadata: { family: 'predictions' },
@@ -58,6 +58,88 @@ export const pairlensPredictionsManifest: PluginManifest = {
         icon: 'Wallet',
         category: 'trading',
         minHeight: 120,
+      },
+      {
+        id: 'categories',
+        label: 'Categories',
+        labelKey: 'panes.categories',
+        descriptionKey: 'paneDescriptions.categories',
+        icon: 'Tags',
+        category: 'discovery',
+        minHeight: 120,
+        singleton: true,
+      },
+      {
+        id: 'event-board',
+        label: 'Event Board',
+        labelKey: 'panes.eventBoard',
+        descriptionKey: 'paneDescriptions.eventBoard',
+        icon: 'Vote',
+        category: 'discovery',
+        minHeight: 200,
+        singleton: true,
+      },
+      {
+        id: 'odds-movers',
+        label: 'Odds Movers',
+        labelKey: 'panes.oddsMovers',
+        descriptionKey: 'paneDescriptions.oddsMovers',
+        icon: 'TrendingUp',
+        category: 'discovery',
+        minHeight: 100,
+      },
+      {
+        id: 'resolving-soon',
+        label: 'Resolving Soon',
+        labelKey: 'panes.resolvingSoon',
+        descriptionKey: 'paneDescriptions.resolvingSoon',
+        icon: 'CalendarClock',
+        category: 'discovery',
+        minHeight: 100,
+      },
+      {
+        id: 'event-header',
+        label: 'Event Header',
+        labelKey: 'panes.eventHeader',
+        descriptionKey: 'paneDescriptions.eventHeader',
+        icon: 'CircleHelp',
+        category: 'charting',
+        minHeight: 80,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'what-moved-it',
+        label: 'What Moved It',
+        labelKey: 'panes.whatMovedIt',
+        descriptionKey: 'paneDescriptions.whatMovedIt',
+        icon: 'History',
+        category: 'ai-research',
+        minHeight: 100,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'outcome-ladder',
+        label: 'Outcome Ladder',
+        labelKey: 'panes.outcomeLadder',
+        descriptionKey: 'paneDescriptions.outcomeLadder',
+        icon: 'ListOrdered',
+        category: 'trading',
+        minHeight: 150,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        // The one pane in the family that does gate on an account: it stakes
+        // several outcomes in one submit, so there is nothing to price until
+        // the workspace knows which account is paying.
+        id: 'basket-ticket',
+        label: 'Basket Ticket',
+        labelKey: 'panes.basketTicket',
+        descriptionKey: 'paneDescriptions.basketTicket',
+        icon: 'ShoppingBasket',
+        category: 'trading',
+        minHeight: 200,
+        singleton: true,
+        requires: ['workspace:active-pair', 'workspace:active-wallet'],
       },
     ],
     // The prediction desk and the event-market home board ship with the family

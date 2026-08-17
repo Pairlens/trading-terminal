@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "Vĩnh cửu và giao ngay",
+    "subtitle": "Cùng một tài sản trên hai bàn, đặt cạnh nhau",
+    "spot": "giao ngay {{price}}",
+    "spotMissing": "không có chỉ số",
+    "perp": "vĩnh cửu {{price}}",
+    "bps": "{{value}} điểm cơ bản",
+    "rowHint": "{{pair}} trên {{venue}}",
+    "emptyTitle": "Chưa có gì để so sánh",
+    "emptyBody": "Basis cần cả giá mark lẫn giá chỉ số. Hãy kết nối một sàn vĩnh cửu công bố cả hai."
+  },
+  "basketTicket": {
+    "noPairTitle": "Chưa chọn sự kiện",
+    "noPairBody": "Mở một cuộc đua để đặt nhiều kết quả cùng lúc.",
+    "emptyTitle": "Giỏ còn trống",
+    "emptyBody": "Thêm kết quả từ bảng xếp hạng bằng nút dấu cộng, rồi đặt số tiền cho từng kết quả.",
+    "stakeFor": "Số tiền cho {{name}}",
+    "removeLeg": "Bỏ {{name}} khỏi giỏ",
+    "totalCost": "Tổng chi phí",
+    "covers": "Bao phủ",
+    "overroundAsk": "Danh sách theo giá bán",
+    "overroundLast": "Danh sách theo giá gần nhất",
+    "maxPayout": "Chi trả tối đa",
+    "maxLoss": "Lỗ tối đa",
+    "unusable_one": "1 chân không có số tiền hoặc giá dùng được nên sẽ không được gửi.",
+    "unusable_other": "{{count}} chân không có số tiền hoặc giá dùng được nên sẽ không được gửi.",
+    "place_one": "Đặt 1 lệnh",
+    "place_other": "Đặt {{count}} lệnh",
+    "placing": "Đang gửi…",
+    "placedTitle_one": "Đã đặt 1 lệnh",
+    "placedTitle_other": "Đã đặt {{count}} lệnh",
+    "placedBody": "Mỗi chân được gửi dưới dạng lệnh giới hạn tại mức giá hiển thị.",
+    "partialTitle": "Giỏ dừng giữa chừng",
+    "partialBody": "Đã đặt {{placed}} trên {{total}} lệnh. {{outcome}} bị từ chối: {{reason}}",
+    "failedTitle": "Không đặt được giỏ lệnh",
+    "hint": "Mỗi chân là một lệnh giới hạn thật."
+  },
+  "bridgePanes": {
+    "routeTitle": "Bắc cầu cần một nhà cung cấp bridge",
+    "routeBody": "Chưa có nhà cung cấp nào kết nối. Các connector on-chain định tuyến trong một chuỗi duy nhất, nên ở đây không thể báo phí hay thời gian chuyển tiền qua chuỗi khác. Bậc thang chuỗi so sánh những gì bạn đã có thể giao dịch.",
+    "wouldQuote": "Sẽ báo giá {{asset}} đi ra từ {{chain}}",
+    "inFlightTitle": "Theo dõi chuyển tiền cần một nhà cung cấp bridge",
+    "inFlightBody": "Số xác nhận đến từ bridge đã chuyển tiền. Không có bridge kết nối thì không có gì để truy vấn, và một thanh không có dữ liệu phía sau vẫn sẽ chạy tiếp dù giao dịch đang kẹt."
+  },
+  "chainLadder": {
+    "title": "{{asset}} trên các chuỗi",
+    "subtitle": "Xếp theo số nhận được sau gas, không theo báo giá tốt nhất",
+    "sizedFor": "Tính cho {{value}}",
+    "best": "Tốt nhất",
+    "versusBest": "{{bps}} bps",
+    "notFound": "Không có pool {{asset}} ở đây",
+    "footnote": "Pool sâu nhất không phải là mức khớp tốt nhất. Báo giá rẻ trên chuỗi đắt sẽ thua báo giá hơi kém hơn ở nơi gas gần như bằng không.",
+    "columns": {
+      "chain": "Chuỗi",
+      "price": "Giá",
+      "impact": "Tác động",
+      "gas": "Gas",
+      "youReceive": "Bạn nhận được"
+    },
+    "noPairTitle": "Chưa gắn cặp",
+    "noPairBody": "Gắn bảng này với một cặp, mọi chuỗi đã kết nối sẽ báo giá cùng một quy mô cho nó.",
+    "noChainsTitle": "Không có connector chuỗi",
+    "noChainsBody": "Cài một connector on-chain và chuỗi của nó sẽ vào bậc thang này."
+  },
+  "company": {
+    "unknownName": "Không có tên công ty",
+    "needsProviderTitle": "Dữ liệu cơ bản cần một nhà cung cấp",
+    "needsProviderBody": "Nhà môi giới báo giá và khớp lệnh; họ không công bố định giá, tăng trưởng hay biên lợi nhuận. Cài plugin dữ liệu cơ bản để lấp đầy khung này."
+  },
+  "dexChains": {
+    "title": "Dòng tiền đang ở đâu",
+    "subtitleNetwork": "Khối lượng 24h, toàn chuỗi",
+    "subtitleSampled": "Khối lượng 24h của các pool sôi động nhất mỗi chuỗi",
+    "liquidityValue": "Thanh khoản {{value}}",
+    "poolsValue_one": "{{count}} pool",
+    "poolsValue_other": "{{count}} pool",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "phí ưu tiên",
+    "notInstalled": "Chưa cài connector",
+    "installConnector": "Cài connector",
+    "emptyTitle": "Không có chuỗi nào để xem",
+    "emptyBody": "Bản dựng này không kèm connector on-chain, nên không có chuỗi nào để xếp hạng pool."
+  },
+  "earningsCalendar": {
+    "title": "Kết quả kinh doanh",
+    "subtitle": "Trước giờ mở cửa và sau giờ đóng cửa",
+    "emptyTitle": "Chưa cài nguồn dữ liệu kết quả kinh doanh",
+    "emptyBody": "Một plugin dữ liệu cơ bản sẽ lấp đầy lịch này. Nhà môi giới công bố giờ phiên của chính họ, không phải danh sách doanh nghiệp báo cáo tuần này.",
+    "columns": {
+      "symbol": "Mã",
+      "when": "Thời điểm",
+      "epsEstimate": "EPS dự báo",
+      "revenueEstimate": "Doanh thu dự báo",
+      "impliedMove": "Biến động hàm ý"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "Chưa cài nguồn dữ liệu vĩ mô",
+    "emptyBody": "Một plugin dữ liệu vĩ mô sẽ lấp đầy lịch này bằng giờ công bố, dự báo và số liệu kỳ trước.",
+    "columns": {
+      "time": "Giờ",
+      "event": "Sự kiện",
+      "actual": "Thực tế",
+      "consensus": "Dự báo",
+      "prior": "Kỳ trước"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "Tìm trong 1 thị trường đang mở",
+    "searchPlaceholder_other": "Tìm trong {{count}} thị trường đang mở",
+    "loadingTitle": "Đang tải bảng",
+    "loadingBody": "Đang hỏi từng sàn xem hiện có gì đang giao dịch.",
+    "sort": {
+      "trending": "Nổi bật",
+      "endingSoon": "Sắp kết thúc",
+      "volume": "Khối lượng",
+      "biggestMove": "Biến động lớn nhất"
+    },
+    "unchanged": "không đổi",
+    "movedPoints": "{{arrow}} {{points}} điểm hôm nay",
+    "volumeUnknown": "Sàn không công bố khối lượng",
+    "liquidity": "Thanh khoản {{value}}",
+    "outcomeCount_one": "1 ứng viên",
+    "outcomeCount_other": "{{count}} ứng viên",
+    "topShare_one": "Người dẫn đầu nắm {{percent}} % tổng xác suất.",
+    "topShare_other": "Top {{count}} nắm {{percent}} % tổng xác suất.",
+    "openFullField_one": "Mở toàn bộ danh sách (thêm 1)",
+    "openFullField_other": "Mở toàn bộ danh sách (thêm {{count}})"
+  },
+  "eventHeader": {
+    "noPairTitle": "Chưa chọn hợp đồng",
+    "noPairBody": "Mở một sự kiện từ Discovery để xem câu hỏi, thời điểm chốt và xác suất thị trường đang trả.",
+    "resolves": "Chốt",
+    "venue": "Sàn",
+    "rules": "Quy tắc chốt",
+    "rulesTitle": "Cách sự kiện này được chốt",
+    "rulesSource": "Theo công bố của {{venue}}",
+    "tradeableOutcomes": "kết quả có thể giao dịch",
+    "statusClosed": "Đã đóng giao dịch",
+    "statusResolved": "Đã chốt",
+    "changeToday": "{{value}} điểm hôm nay",
+    "loadingPrice": "Đang đọc bảng giá của sàn…",
+    "noPrice": "Sàn này hiện không niêm yết giá cho kết quả đó.",
+    "noOverround": "Quá ít ứng viên có giá để cộng tổng danh sách.",
+    "sideYes": "{{percent}} % Có",
+    "sideNo": "{{percent}} % Không · {{price}}",
+    "overroundLabel": "Tổng mọi giá Có",
+    "overroundOver": "Overround {{percent}} %. Mua hết mọi kết quả sẽ lỗ đúng bằng đó; bán cả danh sách mới là cơ hội chênh lệch, nếu độ sâu cho phép.",
+    "overroundUnder": "Thấp hơn mức hợp lý {{percent}} %. Mua hết mọi kết quả sẽ lãi bằng đó, nếu độ sâu cho phép.",
+    "basisAsk_one": "Cộng từ 1 giá bán",
+    "basisAsk_other": "Cộng từ {{count}} giá bán",
+    "basisLast_one": "Cộng từ 1 giá khớp gần nhất",
+    "basisLast_other": "Cộng từ {{count}} giá khớp gần nhất",
+    "basisMissing_one": "1 ứng viên chưa có giá",
+    "basisMissing_other": "{{count}} ứng viên chưa có giá"
+  },
+  "funding": {
+    "loading": "Đang đọc phí funding…",
+    "na": "không có",
+    "stampUnknown": "Không công bố",
+    "desktopOnly": "chỉ cho phép truy cập API công khai từ ứng dụng máy tính.",
+    "manageConnectors": "Quản lý trình kết nối",
+    "cellHint": "{{pair}} · {{rate}} mỗi {{hours}} giờ",
+    "cellHintAssumed": "{{pair}} · {{rate}}, giả định thanh toán mỗi {{hours}} giờ vì sàn không công bố chu kỳ"
+  },
+  "fundingBelt": {
+    "now": "Funding hiện tại · {{hours}} giờ",
+    "longsPay": "long trả cho short",
+    "shortsPay": "short trả cho long",
+    "nextPayment": "Lần trả kế tiếp",
+    "costYou": "tốn của bạn {{amount}}",
+    "costPerReference": "{{amount}} cho mỗi {{notional}} nắm giữ",
+    "annualised": "Quy đổi năm",
+    "weekAverage": "TB 7 ngày {{value}}",
+    "noHistory": "chưa có lịch sử thanh toán",
+    "paidLabel": "Đã trả trên vị thế của bạn",
+    "paidLabelReference": "Chi phí cho mỗi {{notional}} nắm giữ",
+    "otherVenues": "Cùng hợp đồng, sàn khác",
+    "onlyVenue": "Đây là sàn duy nhất bạn kết nối cho hợp đồng này.",
+    "emptyTitle": "Chọn một hợp đồng vĩnh cửu",
+    "emptyBody": "Dải này theo dõi một hợp đồng vĩnh cửu: mức phí, đồng hồ thanh toán và chi phí nắm giữ. Mở một cặp vĩnh cửu để lấp đầy nó.",
+    "noRateTitle": "Không công bố funding",
+    "noRateBody": "{{venue}} không trả về phí funding cho hợp đồng này."
+  },
+  "fundingExtremes": {
+    "subtitle": "Chi phí nắm giữ đắt nhất và rẻ nhất trên các sàn bạn đã kết nối, quy đổi năm.",
+    "longsPay": "Long trả nhiều nhất",
+    "shortsPay": "Short trả nhiều nhất",
+    "perInterval": "{{rate}} mỗi {{hours}} giờ",
+    "emptyTitle": "Không có mức phí nào để xếp hạng",
+    "emptyBody": "Ngay khi một sàn vĩnh cửu phản hồi, các hợp đồng đắt nhất và rẻ nhất của sàn sẽ hiện ở đây."
+  },
+  "fundingMatrix": {
+    "title": "Funding, quy đổi năm",
+    "subtitle": "Dương = long trả cho short",
+    "nextPayment": "Lần trả kế tiếp sau",
+    "colSpread": "Chênh lệch",
+    "points": "{{value}} điểm",
+    "spreadHint": "Khoảng cách giữa sàn đắt nhất và rẻ nhất, tính bằng điểm funding quy đổi năm",
+    "sortBy": "Sắp xếp theo {{venue}}",
+    "note": "Nhấn một ô để mở hợp đồng đó trên sàn đó. Cột Chênh lệch chính là cash-and-carry: long ở nơi funding rẻ nhất, short ở nơi đắt nhất.",
+    "noRows": "Không sàn nào trả về phí funding.",
+    "emptyTitle": "Chưa có sàn hợp đồng vĩnh cửu nào hoạt động",
+    "emptyBody": "Funding là dữ liệu công khai nên không cần khóa API. Cài một trình kết nối futures vĩnh cửu là bảng tự đầy."
+  },
+  "level1": {
+    "emptyTitle": "Chưa có báo giá",
+    "emptyBody": "Sàn chưa gửi giá mua hoặc giá bán cho mã này.",
+    "bid": "Giá mua",
+    "ask": "Giá bán",
+    "spread": "Chênh lệch",
+    "bps": "điểm cơ bản",
+    "dayRange": "biên độ ngày",
+    "feed": "Nguồn",
+    "depthNote": "Nhà môi giới chỉ báo giá tốt nhất mỗi bên, nên không có độ sâu phía sau hai mức giá này."
+  },
+  "liquidationMap": {
+    "subtitle": "Giá thanh lý của bạn, và nơi đòn bẩy mở tại đây kết thúc",
+    "estimateBadge": "ƯỚC TÍNH",
+    "sideLong": "long",
+    "sideShort": "short",
+    "referenceHint": "Vị thế {{side}} đòn bẩy {{leverage}}x mở tại giá hiện tại sẽ bị thanh lý quanh {{price}}",
+    "caption": "Các cột là giá thanh lý của chính bạn, theo báo cáo của từng sàn. Vạch mảnh cho biết vị thế mở tại giá hiện tại sẽ bị thanh lý ở đâu với đòn bẩy 5x, 10x và 25x. Không sàn nào công bố cụm thanh lý tổng hợp nên không vẽ.",
+    "noPositionsCaption": "Vạch mảnh cho biết vị thế mở tại giá hiện tại sẽ bị thanh lý ở đâu với đòn bẩy 5x, 10x và 25x. Giá thanh lý của bạn sẽ hiện thành cột ngay khi có vị thế mở.",
+    "noPriceTitle": "Không có giá để đối chiếu",
+    "noPriceBody": "Bản đồ cần giá trực tiếp của hợp đồng. Nó sẽ hiện ngay khi biểu đồ bên cạnh có giá.",
+    "emptyTitle": "Không có gì để vẽ",
+    "emptyBody": "Mở một vị thế vĩnh cửu, hoặc chọn một hợp đồng, trục giá sẽ được lấp đầy."
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "Chọn một pool",
+    "noPoolBody": "Chọn pool trên bản đồ, dòng tiền đi qua nó sẽ hiện ở đây theo từng năm phút.",
+    "loadingTitle": "Đang tải swap",
+    "loadingBody": "Đang lấy các swap gần đây của pool này.",
+    "emptyTitle": "Chưa có swap",
+    "emptyBody": "Gần đây không có giao dịch nào qua pool này, nên không có dòng tiền để bù trừ.",
+    "barsLabel": "Dòng ròng phía taker, {{pool}}",
+    "netHour": "{{value}} trong một giờ qua",
+    "bucketTooltip": "mua {{buy}}, bán {{sell}}",
+    "axisNote": "Mua trừ bán mỗi 5 phút. Thanh khoản do LP thêm vào hay rút ra không nằm trong luồng này.",
+    "biggestLabel": "Swap lớn nhất"
+  },
+  "lpPanes": {
+    "positionTitle": "Vị thế LP cần một nguồn vị thế",
+    "positionBody": "Chưa có thứ nào đang kết nối đọc được vị thế thanh khoản. Việc đó cần hỏi position manager của chuỗi về các dải giá của ví này, và hiện chưa connector nào làm.",
+    "feesTitle": "Lịch sử phí cần một nguồn vị thế",
+    "feesBody": "Phí kiếm được theo ngày đến từ một indexer, hoặc từ fee growth đo theo thời gian. Cả hai đều chưa kết nối, và một biểu đồ ước lượng sẽ trông như số liệu đo thật.",
+    "manageTitle": "Sửa dải giá cần một thao tác thanh khoản",
+    "manageBody": "Thêm, rút và căn lại thanh khoản đều là giao dịch có chữ ký mà chưa connector nào dựng được. Các điều khiển sẽ chưa xuất hiện cho tới khi chúng thực sự làm được việc.",
+    "venueFallback": "chuỗi này",
+    "wouldRead": "Sẽ đọc {{wallet}} trên {{pool}}, {{chain}}"
+  },
+  "marginHealth": {
+    "title": "Sức khỏe ký quỹ",
+    "marginRatio": "Tỷ lệ ký quỹ",
+    "safe": "an toàn",
+    "marginCall": "gọi ký quỹ 80 %",
+    "liquidation": "thanh lý",
+    "equity": "Vốn chủ",
+    "maintenance": "Ký quỹ duy trì",
+    "liqDistance": "Khoảng cách tới thanh lý",
+    "adl": "Hàng đợi ADL",
+    "adlHint": "Sàn không công bố",
+    "stressLabel": "Nếu giá đi ngược lại bạn",
+    "ratioAfter": "tỷ lệ {{value}} %",
+    "liquidated": "bị thanh lý",
+    "flatBody": "Tài khoản này không có vị thế. Sức khỏe ký quỹ hiện ra cùng vị thế mở đầu tiên.",
+    "noVenueTitle": "Chưa có sàn hợp đồng vĩnh cửu nào hoạt động",
+    "noVenueBody": "Sức khỏe ký quỹ đọc các vị thế mà trình kết nối futures báo về. Hãy cài một trình kết nối để dùng khung này."
+  },
+  "marketPulse": {
+    "emptyTitle": "Không có dữ liệu thị trường",
+    "emptyBody": "Cả App Server lẫn nguồn dự phòng công khai đều chưa phản hồi. Dải này sẽ hiện ngay khi một trong hai trả lời.",
+    "totalCap": "Tổng vốn hóa",
+    "window24h": "24h",
+    "volume24h": "Khối lượng 24h",
+    "turnover": "{{pct}}% vốn hóa đã giao dịch",
+    "dominance": "Thống trị BTC",
+    "breadth": "Độ rộng · {{total}} tài sản",
+    "up": "tăng",
+    "down": "giảm",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "Chỉ số sợ hãi và tham lam của thị trường crypto. 0 là sợ hãi cực độ, 100 là tham lam cực độ."
+  },
+  "movers": {
+    "emptyTitle": "Không có dữ liệu thị trường",
+    "emptyBody": "Cả App Server lẫn nguồn dự phòng công khai đều chưa phản hồi, nên chưa có gì để xếp hạng.",
+    "noBrokerTitle": "Chưa cài sàn cổ phiếu",
+    "noBrokerBody": "Cài một kết nối môi giới từ Plugin Store, biến động trong ngày sẽ hiện ở đây.",
+    "tabs": {
+      "gainers": "Tăng",
+      "losers": "Giảm",
+      "volume": "Khối lượng",
+      "volatility": "Biến động",
+      "unusual": "Bất thường"
+    },
+    "window": "Khung xếp hạng",
+    "columns": {
+      "pair": "Cặp",
+      "change": "Thay đổi {{window}}",
+      "price": "Giá",
+      "volume": "Khối lượng",
+      "trend": "Xu hướng"
+    },
+    "turnoverTooltip": "Khối lượng 24 giờ, và tài sản đã giao dịch bao nhiêu phần chính nó so với mức trung vị trong cùng ảnh chụp dữ liệu. Đây không phải so với trung bình 30 ngày của chính nó, thứ mà ảnh chụp không có.",
+    "empty": {
+      "gainers": "Không có gì tăng trong khung này.",
+      "losers": "Không có gì giảm trong khung này.",
+      "volume": "Chưa sàn nào báo khối lượng.",
+      "volatility": "Chưa có gì biến động đủ để xếp hạng.",
+      "unusual": "Không tài sản nào giao dịch bất thường so với quy mô của nó."
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "Xác suất thay đổi mạnh nhất, 24 giờ",
+    "loadingTitle": "Đang đọc bảng",
+    "loadingBody": "Biến động sẽ hiện khi các sàn trả lời.",
+    "emptyTitle": "Không có gì biến động",
+    "emptyBody": "Hôm nay không hợp đồng nào biến động đủ mạnh để có một dòng riêng.",
+    "noChangeFrom": "Không xếp hạng: {{venues}} không công bố biến động 24 giờ."
+  },
   "onboarding": {
     "phase": {
       "ready": "Sẵn sàng"
@@ -208,6 +529,187 @@
       "sub": "Riêng tư, cục bộ và tinh chỉnh theo cách bạn giao dịch. Terminal của bạn đã sẵn sàng."
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "Không phải cặp on-chain",
+    "notOnChainBody": "Băng này đọc các swap đi qua một pool AMM. Cặp đang gắn với nó giao dịch trên sàn tập trung.",
+    "filterAll": "Tất cả",
+    "filterLarge": "Trên {{value}}",
+    "buy": "Mua",
+    "sell": "Bán",
+    "openTx": "Mở giao dịch",
+    "net1h": "Ròng 1h",
+    "columns": {
+      "time": "Thời gian",
+      "side": "Phía",
+      "value": "USD",
+      "price": "Giá",
+      "wallet": "Ví"
+    },
+    "loadingTitle": "Đang tải swap",
+    "loadingBody": "Đang lấy các swap đã xác nhận qua pool này.",
+    "emptyTitle": "Chưa có swap",
+    "emptyBody": "Trong khoảng thời gian nhà cung cấp trả về, không có giao dịch nào qua pool này."
+  },
+  "openInterest": {
+    "title": "Dẫn đầu khối lượng mở",
+    "changeLabel": "Thay đổi 24 giờ",
+    "notPublished": "không công bố khối lượng mở qua API.",
+    "emptyTitle": "Chưa có khối lượng mở",
+    "emptyBody": "Khối lượng mở đến cùng lượt đọc funding. Nó cho thấy các hợp đồng mà những sàn bạn kết nối đang niêm yết."
+  },
+  "outcomeLadder": {
+    "noPairTitle": "Chưa chọn sự kiện",
+    "noPairBody": "Mở một cuộc đua từ Discovery để xem giá của mọi ứng viên trong một bảng.",
+    "loadingTitle": "Đang tải danh sách",
+    "loadingBody": "Mọi ứng viên sẽ hiện khi sàn trả lời.",
+    "notFoundTitle": "Sự kiện không có trên bảng của sàn",
+    "notFoundBody": "Sàn không trả về sự kiện này nên không thể liệt kê các kết quả khác. Biểu đồ và phiếu lệnh vẫn hoạt động.",
+    "emptyTitle": "Không có kết quả nào khác",
+    "emptyBody": "Câu hỏi này chỉ có một thị trường nên không có danh sách để xếp hạng.",
+    "filterPlaceholder_one": "Lọc 1 kết quả",
+    "filterPlaceholder_other": "Lọc {{count}} kết quả",
+    "sort": {
+      "probability": "Sắp xếp · xác suất",
+      "change": "Sắp xếp · biến động 24 giờ",
+      "volume": "Sắp xếp · khối lượng",
+      "name": "Sắp xếp · tên"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "Kết quả",
+      "yes": "Có",
+      "change": "24 giờ",
+      "trend": "30 ngày",
+      "volume": "Khối lượng",
+      "trade": "Giao dịch"
+    },
+    "yesChip": "Có {{price}}",
+    "noChip": "Không {{price}}",
+    "addToBasket": "Thêm {{name}} vào giỏ",
+    "noMatches": "Không kết quả nào khớp bộ lọc đó.",
+    "tailBelow_one": "Thêm 1 kết quả dưới {{price}} · tổng khối lượng {{volume}}",
+    "tailBelow_other": "Thêm {{count}} kết quả dưới {{price}} · tổng khối lượng {{volume}}",
+    "tailMore_one": "Thêm 1 kết quả · tổng khối lượng {{volume}}",
+    "tailMore_other": "Thêm {{count}} kết quả · tổng khối lượng {{volume}}",
+    "showMore_one": "Hiện thêm 1",
+    "showMore_other": "Hiện thêm {{count}}"
+  },
+  "pairDossier": {
+    "marketCap": "Vốn hóa",
+    "rank": "hạng {{rank}}",
+    "volume24h": "Khối lượng 24h",
+    "turnover": "{{pct}}% vốn hóa",
+    "change7d": "Thay đổi 7n",
+    "change7dSub": "so với một tuần trước",
+    "sector": "Nhóm ngành",
+    "sectorMove": "nhóm ngành {{change}} 24h",
+    "quotedOn": "Có báo giá trên",
+    "ofVenues": "trên {{total}} sàn",
+    "tightestSpread": "Chênh lệch hẹp nhất",
+    "bps": "{{bps}} bps",
+    "range24h": "Biên độ 24h",
+    "rangeLowHigh": "{{low}} đến {{high}}",
+    "volatility": "Biến động",
+    "volatilityWindow": "quy năm từ {{span}} nến {{timeframe}}",
+    "spreadByVenue": "Chênh lệch theo sàn · đỉnh sổ lệnh",
+    "spreadByVenueTooltip": "Mỗi sàn đang báo giá sát đến đâu, tính bằng điểm cơ bản so với giá giữa. Bản tin giá không kèm khối lượng, nên đây là chi phí vượt chênh lệch ở đỉnh sổ, không phải độ sâu phía sau.",
+    "noBooks": "Chưa sàn nào đang kết nối công bố sổ lệnh hai chiều cho cặp này.",
+    "sizingNote": "Vượt chênh lệch tốn {{tightBps}} bps trên {{tight}} và {{wideBps}} bps trên {{wide}}. Hãy chọn khối lượng theo sàn, không theo cặp.",
+    "sizingNoteSingle": "{{venue}} là sàn duy nhất có sổ lệnh thật, ở mức {{bps}} bps."
+  },
+  "poolDetail": {
+    "emptyTitle": "Chưa chọn pool",
+    "emptyBody": "Chọn một pool từ bản đồ để xem thanh khoản, khối lượng và dòng tiền, chỉ cách biểu đồ một cú nhấp.",
+    "change24h": "{{value}} 24h",
+    "liquidity": "Thanh khoản",
+    "volume24h": "Khối lượng 24h",
+    "turnover": "KL / TK",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "Giao dịch 24h",
+    "feeTier": "Bậc phí",
+    "pressureByValue": "Áp lực mua và bán, 24h theo giá trị",
+    "pressureByCount": "Áp lực mua và bán, 24h theo số giao dịch",
+    "loading": "Đang tải trạng thái pool.",
+    "openChart": "Mở biểu đồ và swap"
+  },
+  "poolMap": {
+    "title": "Pool trên {{chain}}",
+    "subtitle": "Xếp theo mức độ mỗi pool khai thác chính thanh khoản của nó",
+    "sortTurnover": "Vòng quay",
+    "sortVolume": "Khối lượng",
+    "sortLiquidity": "Thanh khoản",
+    "turnoverValue": "{{value}}x",
+    "openPair": "Mở biểu đồ",
+    "columns": {
+      "pool": "Pool",
+      "price": "Giá",
+      "change": "24h",
+      "volume": "KL 24h",
+      "liquidity": "Thanh khoản",
+      "turnover": "KL / TK"
+    },
+    "noChainTitle": "Chọn một chuỗi",
+    "noChainBody": "Chọn chuỗi ở cột bên, các pool của nó sẽ xếp hạng tại đây: khối lượng so với thanh khoản đứng sau.",
+    "loadingTitle": "Đang tải pool",
+    "loadingBody": "Đang lấy các pool đã xếp hạng của chuỗi này.",
+    "emptyTitle": "Không có pool trả về",
+    "emptyBody": "Nhà cung cấp dữ liệu không liệt kê gì cho chuỗi này. Sẽ thử lại ở lần làm mới sau."
+  },
+  "poolStats": {
+    "notOnChainTitle": "Không phải cặp on-chain",
+    "notOnChainBody": "Bảng này đọc trạng thái pool AMM. Cặp đang gắn với nó giao dịch trên sàn tập trung, nơi có sổ lệnh thay vì pool.",
+    "loadingTitle": "Đang tải pool",
+    "loadingBody": "Đang xác định pool sâu nhất cho cặp này.",
+    "emptyTitle": "Không có trạng thái pool",
+    "emptyBody": "Nhà cung cấp dữ liệu không trả về gì cho pool này. Sẽ thử lại ở lần làm mới sau.",
+    "liquidity": "Thanh khoản",
+    "volume24h": "Khối lượng 24h",
+    "turnoverSub": "{{value}}x thanh khoản",
+    "feeTier": "Bậc phí",
+    "feeTierUnknown": "Sàn này không công bố",
+    "reserves": "Dự trữ",
+    "reservesUnavailable": "Cả hai phía chỉ có trên máy tính",
+    "trades24h": "Giao dịch 24h",
+    "tradersSub_one": "{{count}} trader",
+    "tradersSub_other": "{{count}} trader",
+    "poolAge": "Tuổi pool",
+    "ageToday": "Hôm nay",
+    "ageDays_one": "{{count}} ngày",
+    "ageDays_other": "{{count}} ngày",
+    "ageMonths_one": "{{count}} tháng",
+    "ageMonths_other": "{{count}} tháng",
+    "impactLabel": "Tác động giá theo quy mô lệnh",
+    "impactNote": "Được báo giá trực tiếp ở từng quy mô, không mô phỏng từ dự trữ, nên một tuyến chia nhỏ có thể tốt hơn đường cong của chính pool này."
+  },
+  "predictionCategories": {
+    "all": "Tất cả",
+    "noneBody": "Sàn này không gắn danh mục cho các sự kiện của mình.",
+    "venueHeading": "Sàn",
+    "desktopOnly": "máy tính",
+    "venueError": "lỗi"
+  },
+  "resolvingSoon": {
+    "resolves": "Chốt {{when}}",
+    "loadingTitle": "Đang đọc lịch",
+    "loadingBody": "Ngày chốt sẽ hiện khi các sàn trả lời.",
+    "emptyTitle": "Chưa có gì sắp chốt",
+    "emptyBody": "Không hợp đồng mở nào ở đây công bố ngày chốt sắp tới."
+  },
+  "riskControls": {
+    "maxDailyLoss": "Lỗ tối đa mỗi ngày",
+    "maxDailyTrades": "Số lệnh tối đa mỗi ngày",
+    "maxPositionSize": "Quy mô vị thế tối đa",
+    "usedPercent": "đã dùng {{value}} %",
+    "usedCount": "đã đặt {{value}}",
+    "perOrder": "Kiểm tra ở mỗi lệnh",
+    "off": "Tắt",
+    "resetWindow": "Chu kỳ đặt lại",
+    "resetIn": "Đặt lại sau {{time}}",
+    "killSwitch": "Công tắc khẩn",
+    "killSwitchHint": "Chặn mọi lệnh cho tới khi bạn tiếp tục",
+    "haltOrders": "Dừng lệnh",
+    "resumeOrders": "Tiếp tục"
+  },
   "sectionTours": {
     "back": "Quay lại",
     "next": "Tiếp",
@@ -397,6 +899,50 @@
     "signInConsent": "Bằng việc tiếp tục, bạn đồng ý với <terms>Điều khoản và Điều kiện</terms> và <privacy>Chính sách bảo mật</privacy> của chúng tôi.",
     "analyticsNote": "Những gì chúng tôi thu thập, và những gì chúng tôi không bao giờ chạm tới, được nêu trong <privacy>Chính sách bảo mật</privacy>.",
     "checkoutConsent": "Khi đăng ký, bạn đồng ý với <terms>Điều khoản và Điều kiện</terms> của chúng tôi."
+  },
+  "sectorPeers": {
+    "emptyTitle": "Cặp này không thuộc nhóm ngành nào",
+    "emptyBody": "{{pair}} không có trong danh mục nhóm ngành đã tuyển chọn, nên không có gì để so sánh.",
+    "loadingBody": "Đang đọc danh mục nhóm ngành.",
+    "subtitle": "{{sector}} · {{total}} tài sản. Xếp theo 24h, {{symbol}} đứng đầu."
+  },
+  "sectorTape": {
+    "emptyTitle": "Không có dữ liệu nhóm ngành",
+    "emptyBody": "Nhóm ngành lấy từ danh mục công cụ ghép với ảnh chụp thị trường. Cả hai đều chưa phản hồi.",
+    "subtitle": "Trọng số theo vốn hóa. Thanh cho biết bao nhiêu thành viên đi cùng chiều.",
+    "window": "Khung nhóm ngành",
+    "leads": "{{total}} tài sản · {{symbol}} dẫn dắt",
+    "drags": "{{total}} tài sản · {{symbol}} kéo lùi",
+    "assets": "{{total}} tài sản"
+  },
+  "session": {
+    "noVenueTitle": "Chưa kết nối nhà môi giới",
+    "noVenueBody": "Ngày giao dịch lấy từ lịch của chính nhà môi giới. Cài trình kết nối cổ phiếu để xem giờ phiên ở đây.",
+    "noVenueAction": "Xem trình kết nối",
+    "loading": "Đang đọc lịch giao dịch…",
+    "unavailableTitle": "Không có thông tin phiên",
+    "unavailableBody": "Nhà môi giới không trả về đồng hồ lẫn lịch. Hệ thống sẽ tự thử lại.",
+    "stateOpen": "Thị trường mở cửa",
+    "statePre": "Trước phiên",
+    "statePost": "Sau phiên",
+    "stateClosed": "Thị trường đóng cửa",
+    "closesIn": "Đóng cửa sau {{time}}",
+    "opensIn": "Mở cửa sau {{time}}",
+    "afterHoursEndsIn": "Phiên sau giờ kết thúc sau {{time}}",
+    "preMarketIn": "Phiên trước giờ bắt đầu sau {{time}}",
+    "durationDh": "{{days}} ngày {{hours}} giờ",
+    "durationHm": "{{hours}} giờ {{minutes}} phút",
+    "durationMs": "{{minutes}} phút {{seconds}} giây",
+    "barPre": "trước phiên",
+    "barOpen": "mở cửa",
+    "barClose": "đóng cửa",
+    "barPost": "sau phiên",
+    "halfDay": "Phiên nửa ngày",
+    "nextSession": "Phiên kế tiếp {{day}}",
+    "noSchedule": "Không có phiên nào được lên lịch",
+    "clockOnly": "Chỉ biết mở hay đóng: không có khung giờ phiên nào được công bố.",
+    "ticketExtendedNote": "Phiên này chỉ nhận lệnh giới hạn. Không có khớp lệnh liên tục để lệnh thị trường khớp vào.",
+    "ticketClosedNote": "Thị trường đang đóng cửa. Lệnh giới hạn sẽ chờ đến khi phiên kế tiếp mở."
   },
   "settings": {
     "title": "Cài đặt",
@@ -1067,6 +1613,20 @@
       "thanks": "Cảm ơn bạn. Điều đó thật sự hữu ích."
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "Không phải cặp on-chain",
+    "notOnChainBody": "Tuyến là cách bộ tổng hợp chia một swap qua nhiều pool. Cặp đang gắn giao dịch trên sàn tập trung.",
+    "probeLabel": "Báo giá cho",
+    "loadingTitle": "Đang báo giá",
+    "loadingBody": "Đang hỏi bộ tổng hợp sẽ khớp quy mô này thế nào.",
+    "noRouteTitle": "Không có tuyến",
+    "noRouteBody": "Bộ tổng hợp không tìm được cách khớp quy mô này cho cặp này.",
+    "noQuotePriceBody": "Token định giá không có giá USD được công bố, nên không có quy mô nào để báo giá.",
+    "emptyTitle": "Không có phân bổ để hiển thị",
+    "youReceive": "Bạn nhận được",
+    "priceImpact": "Tác động giá",
+    "networkFee": "Phí mạng"
+  },
   "userMenu": {
     "accountMenu": "Menu tài khoản",
     "settings": "Cài đặt",
@@ -1105,6 +1665,45 @@
     "newWindow": "Cửa sổ mới",
     "back": "Quay lại",
     "forward": "Tiến tới"
+  },
+  "venueLadder": {
+    "emptyTitle": "Không có sàn nào để so sánh",
+    "emptyBody": "Kết nối thêm một sàn có niêm yết lớp tài sản này, thang sẽ xếp hạng theo chiều bạn đang giao dịch.",
+    "columns": {
+      "venue": "Sàn",
+      "bid": "Giá mua",
+      "ask": "Giá bán",
+      "bps": "bps"
+    },
+    "switchSide": "Đổi chiều",
+    "rankedByAsk": "Xếp theo giá bán, mua rẻ nhất lên đầu",
+    "rankedByBid": "Xếp theo giá mua, bán được nhất lên đầu",
+    "bpsTooltip": "Chênh lệch ở đỉnh sổ lệnh, đo theo giá giữa. Sàn không công bố sổ hai chiều thật thì không bao giờ được xếp hạng.",
+    "best": "Tốt nhất",
+    "desktopOnlyRow": "{{venue}} cần ứng dụng máy tính",
+    "switchTo": "Xem biểu đồ cặp này trên {{venue}}",
+    "desktopOnly": "Máy tính",
+    "notListed": "cặp chưa niêm yết",
+    "noBook": "chưa có báo giá"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "Chưa chọn hợp đồng",
+    "noPairBody": "Mở một sự kiện để xem xác suất của nó biến động khi nào.",
+    "loadingTitle": "Đang đọc lịch sử",
+    "loadingBody": "Dòng thời gian sẽ hiện khi lịch sử xác suất tải xong.",
+    "flatTitle": "Không có biến động đáng kể",
+    "flatBody": "Hợp đồng này chưa định giá lại quá ba xu trong phần lịch sử đã tải.",
+    "columns": {
+      "when": "Khi nào",
+      "move": "Biến động",
+      "what": "Chuyện gì xảy ra",
+      "traded": "Đã khớp"
+    },
+    "movedFromTo": "Xác suất đi từ {{from}} lên {{to}}",
+    "contracts_one": "1 hợp đồng",
+    "contracts_other": "{{count}} hợp đồng",
+    "footerMatched": "Tin tức được ghép với {{ticker}} theo thời gian chứ không theo nguyên nhân: mỗi tin là tin cuối đăng trong lúc thị trường định giá lại.",
+    "footerNoTicker": "Nguồn tin được lập chỉ mục theo mã và câu hỏi này không nhắc mã nào, nên mỗi dòng chỉ hiện biến động."
   },
   "workspace": {
     "rename": "Đổi tên",
@@ -2275,7 +2874,49 @@
     "empty": "Trống",
     "events": "Sự kiện",
     "predictionPositions": "Vị thế dự đoán",
-    "futuresPositions": "Vị thế futures"
+    "futuresPositions": "Vị thế futures",
+    "venueLadder": "Bảng xếp hạng sàn",
+    "pairDossier": "Hồ sơ cặp",
+    "marketPulse": "Nhịp đập thị trường",
+    "movers": "Biến động mạnh",
+    "sectorTape": "Dải lĩnh vực",
+    "sectorPeers": "Cùng lĩnh vực",
+    "fundingMatrix": "Ma trận funding",
+    "basisMonitor": "Theo dõi basis",
+    "openInterest": "Open Interest",
+    "fundingExtremes": "Funding cực trị",
+    "fundingBelt": "Dải funding",
+    "liquidationMap": "Bản đồ thanh lý",
+    "marginHealth": "Sức khỏe ký quỹ",
+    "riskControls": "Kiểm soát rủi ro",
+    "categories": "Thể loại",
+    "eventBoard": "Bảng sự kiện",
+    "oddsMovers": "Biến động tỷ lệ",
+    "resolvingSoon": "Sắp tất toán",
+    "eventHeader": "Tiêu đề sự kiện",
+    "whatMovedIt": "Điều gì đã tác động",
+    "outcomeLadder": "Bảng xếp hạng kết quả",
+    "basketTicket": "Phiếu giỏ lệnh",
+    "chains": "Chuỗi",
+    "poolMap": "Bản đồ pool",
+    "liquidityFlow": "Dòng thanh khoản",
+    "poolDetail": "Chi tiết pool",
+    "poolStats": "Thống kê pool",
+    "onchainTrades": "Giao dịch on-chain",
+    "route": "Định tuyến",
+    "feeAccrual": "Phí tích lũy",
+    "lpPosition": "Vị thế LP",
+    "manageLiquidity": "Quản lý thanh khoản",
+    "chainLadder": "Bảng xếp hạng chuỗi",
+    "routeBridge": "Tuyến cầu nối",
+    "inFlight": "Đang chuyển",
+    "session": "Phiên",
+    "earningsCalendar": "Lịch báo cáo lợi nhuận",
+    "economicCalendar": "Lịch kinh tế",
+    "sessionClock": "Đồng hồ phiên",
+    "level1": "Level 1",
+    "company": "Công ty",
+    "yourPosition": "Vị thế của bạn"
   },
   "paneDescriptions": {
     "markets": "Duyệt tất cả các cặp giao dịch khả dụng trên các sàn",
@@ -2302,7 +2943,49 @@
     "recentTickers": "Các cặp xem gần đây với giá trực tiếp để chuyển đổi nhanh",
     "events": "Duyệt sự kiện thị trường dự đoán và mở biểu đồ của một kết quả",
     "predictionPositions": "Hợp đồng bạn nắm giữ, chi phí và thời điểm tất toán",
-    "futuresPositions": "Vị thế vĩnh cửu đang mở, giá đánh dấu và mức thanh lý"
+    "futuresPositions": "Vị thế vĩnh cửu đang mở, giá đánh dấu và mức thanh lý",
+    "venueLadder": "Giá mua và bán tốt nhất của mọi sàn đã kết nối cho cặp này, xếp hạng để mức khớp rẻ nhất nằm ở hàng đầu",
+    "pairDossier": "Các số liệu quyết định khối lượng lệnh: biên độ, khối lượng, thanh khoản trong phạm vi một phần trăm, và nơi cặp này giao dịch tốt nhất",
+    "marketPulse": "Ba con số cho toàn thị trường, cùng một dòng giải thích điều gì đã biến động và vì sao",
+    "movers": "Những mã tăng và giảm mạnh nhất trong ngày cùng khối lượng phía sau, để một biến động thật nổi bật hơn một bóng nến",
+    "sectorTape": "Mỗi lĩnh vực hiện thành một thẻ với mức biến động và một thanh độ rộng, để sự xoay vòng dễ đọc trong nháy mắt",
+    "sectorPeers": "Phần còn lại của lĩnh vực này giao dịch ra sao hôm nay, với chính cặp này được ghim lên trên cùng",
+    "fundingMatrix": "Funding cho mọi perp trên mọi sàn bạn đã kết nối, trong một lưới bạn có thể sắp xếp theo bất kỳ cột nào",
+    "basisMonitor": "Perp so với spot tính theo điểm cơ bản và quy đổi theo năm, để chi phí carry đọc như một khoản lợi suất thay vì một khoảng cách",
+    "openInterest": "Open Interest theo từng hợp đồng cùng mức thay đổi 24 giờ, để sự chen chúc lộ ra trước khi giá phản ứng",
+    "fundingExtremes": "Tỷ lệ funding dương cao nhất và âm sâu nhất ngay lúc này, cùng sàn đang trả mỗi mức đó",
+    "fundingBelt": "Đếm ngược đến lần thu funding tiếp theo, tỷ lệ hiện tại và dự đoán, và khối lượng của bạn phải trả hay được nhận bao nhiêu",
+    "liquidationMap": "Nơi vị thế của bạn kết thúc trên trục giá, đối chiếu với mức thanh lý mà phần còn lại của thị trường đang gánh",
+    "marginHealth": "Tỷ lệ ký quỹ, mức duy trì so với số dư khả dụng, và tài khoản đang gần mức tự động giảm đòn bẩy đến đâu",
+    "riskControls": "Hạn mức lỗ hằng ngày, số lệnh, quy mô vị thế và công tắc ngắt khẩn cấp của bạn, chỉnh sửa được ngay tại nơi giao dịch diễn ra",
+    "categories": "Mọi danh mục sự kiện cùng số hợp đồng đang hoạt động, để bảng thu hẹp chỉ trong một cú nhấp",
+    "eventBoard": "Các thị trường sự kiện đang mở dưới dạng thẻ: câu hỏi, Có và Không tính theo cent, khối lượng, và thời điểm tất toán",
+    "oddsMovers": "Các hợp đồng có xác suất biến động mạnh nhất hôm nay, mức thay đổi tính theo điểm",
+    "resolvingSoon": "Các hợp đồng gần tất toán nhất, sắp xếp theo thời gian còn lại thay vì khối lượng",
+    "eventHeader": "Câu hỏi, thời điểm và cách nó tất toán, và xác suất mà thị trường đang định giá ngay lúc này",
+    "whatMovedIt": "Các tiêu đề tin tức trên một dòng thời gian, mỗi tin gắn kèm mức biến động xác suất mà nó gây ra",
+    "outcomeLadder": "Mọi kết quả trong sự kiện được định giá theo cent, có thể sắp xếp và tìm kiếm, với một nút đặt cược trên mỗi hàng",
+    "basketTicket": "Đặt cược nhiều kết quả cùng lúc, với tổng chi phí, mức overround đã nêu và trường hợp xấu nhất trước khi bạn gửi lệnh",
+    "chains": "Mọi chuỗi bạn có bộ kết nối, cùng phí gas, thanh khoản và khối lượng 24 giờ bên cạnh",
+    "poolMap": "Các pool xếp hạng theo khối lượng so với thanh khoản, để những pool thực sự đang giao dịch đứng lên trước",
+    "liquidityFlow": "Thanh khoản ròng vào và ra theo từng khoảng thời gian, để một pool đang cạn kiệt lộ ra trước khi giá phản ứng",
+    "poolDetail": "Pool đang chọn ở một cái nhìn, cách biểu đồ và một lệnh swap chỉ một cú nhấp",
+    "poolStats": "Dự trữ ở cả hai phía, giá trị khóa, khối lượng 24 giờ, mức phí, và tác động giá ở ba quy mô",
+    "onchainTrades": "Mọi lệnh swap qua pool ngay khi được xác nhận, cùng ví thực hiện và liên kết đến giao dịch",
+    "route": "Cách bộ tổng hợp chia lệnh swap của bạn qua các pool, để mức trượt giá có một nguyên nhân được nêu rõ",
+    "feeAccrual": "Phí mà vị thế của bạn đã kiếm được theo thời gian, mức APR mà nó ngụ ý, và những gì có thể nhận ngay bây giờ",
+    "lpPosition": "Khoảng giá của bạn so với giá hiện tại, thời gian nằm trong khoảng, và tổn thất tạm thời đo so với việc chỉ nắm giữ đơn thuần",
+    "manageLiquidity": "Di chuyển khoảng giá, thêm hoặc rút thanh khoản, và nhận phí mà không cần rời khỏi biểu đồ",
+    "chainLadder": "Cùng một token được định giá trên mọi chuỗi, đã gồm cả phí gas, để tổng chi phí tốt nhất thắng thay vì báo giá tốt nhất",
+    "routeBridge": "Chuỗi nguồn, chuỗi đích, cầu nối, phí của nó và mất bao lâu, sẵn sàng để thực hiện",
+    "inFlight": "Các giao dịch chuyển tiền vẫn đang được xác nhận, mỗi giao dịch kèm bộ đếm khối mà nó đang chờ",
+    "session": "Phiên giao dịch hiện đang ở đâu, theo đúng lịch riêng của sàn môi giới, đã tính cả ngày lễ và ngày làm nửa buổi",
+    "earningsCalendar": "Ai báo cáo và khi nào, trước hay sau giờ đóng cửa, cùng mức ước tính họ phải vượt qua",
+    "economicCalendar": "Các số liệu vĩ mô theo giờ công bố, kèm mức độ quan trọng, số liệu kỳ trước và mức đồng thuận",
+    "sessionClock": "Một chiếc đồng hồ một dòng cho phiên giao dịch, để một lệnh ngoài giờ không bao giờ là một bất ngờ",
+    "level1": "Giá mua và bán cùng khối lượng, mức chênh lệch giá, và biên độ trong ngày từ nguồn dữ liệu của nhà môi giới",
+    "company": "Định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo, và quan điểm của các nhà phân tích, trong một panel",
+    "yourPosition": "Những gì bạn đang nắm giữ ở mã này: số lượng, giá vốn, giá đánh dấu, và cả lợi nhuận trong ngày lẫn lợi nhuận chưa thực hiện"
   },
   "multiPrice": {
     "venue": "Sàn",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens Dự đoán",
-        "description": "Trình duyệt sự kiện và vị thế hợp đồng đang mở cho thị trường dự đoán"
+        "description": "Bề mặt thị trường dự đoán: bảng sự kiện, bảng xếp hạng kết quả, giỏ cược và vị thế hợp đồng đang mở"
       },
       "binance-futures-market-connector": {
         "title": "Bộ kết nối Thị trường Binance Futures",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
-        "description": "Vị thế vĩnh cửu đang mở kèm giá vào, giá mark và mức thanh lý"
+        "description": "Bề mặt hợp đồng tương lai vĩnh cửu: vị thế đang mở, bộ quét funding và basis, các panel thanh lý và ký quỹ"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "Bố cục không gian làm việc on-chain: terminal DEX và bảng săn degen"
+        "description": "Bề mặt on-chain: thống kê pool, tuyến swap, vị thế LP và bảng xếp hạng đa chuỗi"
       },
       "pairlens-equities": {
         "title": "Pairlens Cổ phiếu",
-        "description": "Bố cục không gian làm việc cổ phiếu: terminal cổ phiếu và bàn dẫn bởi bộ quét"
+        "description": "Bề mặt cổ phiếu: đồng hồ phiên, báo giá Level 1, dữ liệu cơ bản công ty và lịch báo cáo lợi nhuận"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "Chỉ có dữ liệu thị trường. Không thể giao dịch ở đây."
     },
     "trade": {
+      "allOutcomes": "Tất cả {{total}}",
+      "avgFillPrice": "Giá khớp trung bình",
+      "contractCount_one": "{{formatted}} hợp đồng",
+      "contractCount_other": "{{formatted}} hợp đồng",
+      "fundingAtEntry": "Funding khi vào lệnh",
+      "fundingLongsPay": "Long trả cho short",
+      "fundingShortsPay": "Short trả cho long",
+      "ifDoesNotWin": "Nếu {{outcome}} không thắng",
+      "ifWins": "Nếu {{outcome}} thắng",
       "limitBuy": "Mua giới hạn",
       "limitSell": "Bán giới hạn",
       "bought": "Đã mua",
+      "maxAmount": "Tối đa",
+      "maxPayout": "Nhận tối đa",
+      "profitLine": "Lợi nhuận {{amount}} · {{roi}}",
+      "resolvesOn": "Chốt {{date}}",
       "sold": "Đã bán",
       "limitOrderFailed": "Lệnh giới hạn thất bại",
+      "stakeLine": "Vốn {{amount}}",
       "swapFailed": "Swap thất bại",
+      "switchOutcome": "Đổi kết quả",
       "workflowUnsupported": "Sàn này không hỗ trợ workflow",
       "orderBlocked": "Lệnh bị chặn bởi giới hạn rủi ro",
       "orderRejected": "Lệnh bị từ chối",
@@ -3083,8 +3781,6 @@
       "maxLoss": "Lỗ tối đa",
       "priceCents": "Giá (¢)",
       "thisOutcome": "Kết quả này",
-      "decreaseContracts": "Giảm một hợp đồng",
-      "increaseContracts": "Tăng một hợp đồng",
       "priceCentsRange": "Nhập giá từ 0¢ đến 100¢",
       "leverage": "Đòn bẩy",
       "reduceOnly": "Chỉ giảm vị thế",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "Terminal Dự Đoán",
-        "tagline": "Vẽ biểu đồ xác suất với toàn bộ sự kiện ngay bên cạnh.",
-        "description": "Bố cục mặc định cho thị trường dự đoán: một biểu đồ xác suất với giao dịch và các hợp đồng đang mở của bạn bên dưới, sổ lệnh và phiếu đặt lệnh ở giữa, và một trình duyệt sự kiện cao hết khung bên phải, vì các kết quả lân cận chiếm một nửa phần phân tích.",
+        "tagline": "Câu hỏi trước, tỷ lệ cược sau.",
+        "description": "Bố cục thị trường dự đoán mặc định: phần đầu trang sự kiện phía trên một biểu đồ xác suất, với các tiêu đề tin tức đã tác động đến nó bên dưới, sổ lệnh và một phiếu đặt lệnh nêu rõ mức thắng tối đa và mức lỗ tối đa trước khi bạn đặt cược, và các kết quả lân cận bên phải.",
         "menuLabel": "Mặc định"
       },
       "prediction-discovery": {
         "name": "Khám phá thị trường dự đoán",
         "tagline": "Duyệt các thị trường sự kiện đang mở, không phải danh mục cặp giao dịch.",
-        "description": "Bảng chính dành cho hợp đồng sự kiện: trình duyệt sự kiện chiếm cột rộng, dòng tin tức chạy bên cạnh, và một dải hẹp đặt danh sách theo dõi phía trên chỉ báo tâm lý. Cài một sàn dự đoán như Kalshi hoặc Polymarket để lấp đầy bảng này.",
+        "description": "Một bảng trang chủ được xây dựng cho hợp đồng sự kiện: một dải danh mục bên cạnh bảng sự kiện, với những biến động tỷ lệ lớn nhất phía trên các hợp đồng gần tất toán nhất. Cài một sàn dự đoán như Kalshi hoặc Polymarket để lấp đầy nó.",
         "menuLabel": "Mặc định"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Giao dịch on-chain mà không cần sổ lệnh giả.",
-        "description": "Bố cục on-chain mặc định: một biểu đồ với thống kê pool và giao dịch bên dưới, phiếu swap nằm trên các mã gần đây để bắt kịp niêm yết mới, và luồng mạng xã hội bên phải. Không có cột sổ lệnh: độ sâu suy ra từ pool chỉ là con số tổng hợp nhân tạo nên không được hiển thị.",
+        "description": "Bố cục on-chain mặc định: biểu đồ nằm trên thống kê pool, dải giao dịch on-chain bên cạnh, và một phiếu swap nằm trên tuyến định tuyến của bộ tổng hợp để mức trượt giá có nguyên nhân được nêu rõ. Không có cột sổ lệnh: độ sâu suy ra từ pool mang tính tổng hợp nhân tạo, nên không được hiển thị.",
         "menuLabel": "Mặc định"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "Terminal Cổ Phiếu",
-        "tagline": "Cổ phiếu với phiếu đặt lệnh nằm trên bảng tin tức mã.",
-        "description": "Bố cục mặc định cho cổ phiếu: một biểu đồ với giao dịch, vị thế và dữ liệu cơ bản bên dưới, và phiếu đặt lệnh nằm trên tin tức mã, vì chất xúc tác làm cổ phiếu chạy giống như dòng tiền làm crypto chạy.",
+        "tagline": "Đồng hồ phiên phía trên biểu đồ, Level 1 phía trên phiếu đặt lệnh.",
+        "description": "Bố cục cổ phiếu mặc định: đồng hồ phiên dẫn đầu, sau đó là biểu đồ với giao dịch và vị thế bên dưới, và một dải mang báo giá Level 1 phía trên phiếu đặt lệnh và luồng tin theo mã. Ngoài giờ giao dịch chính thức, đồng hồ sẽ báo rõ điều đó, và phiếu đặt lệnh chuyển sang chỉ nhận lệnh giới hạn.",
         "menuLabel": "Mặc định"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "Một trung tâm chỉ huy bốn cột lấp đầy màn hình ultrawide hoặc màn hình phụ: bộ quét, biểu đồ, sổ lệnh và độ sâu, và một phiếu đặt lệnh nằm trên các vị thế đang mở của bạn. Bố cục tối đa nhất."
       },
       "classic-terminal": {
-        "name": "Terminal Cổ Điển",
-        "tagline": "Bàn làm việc Pairlens cổ điển: biểu đồ, dữ liệu, sổ lệnh, phiếu đặt lệnh.",
-        "description": "Bố cục terminal mặc định: một biểu đồ lớn với dải dữ liệu dạng tab và thanh rủi ro bên trái, và sổ lệnh nằm trên một phiếu đặt lệnh bên phải.",
+        "name": "Thực Thi Spot",
+        "tagline": "Giá mua và bán tốt nhất trên mọi sàn bạn đã kết nối.",
+        "description": "Bố cục spot mặc định: biểu đồ với dòng giao dịch và vị thế bên dưới, và một dải dẫn đầu bằng bảng xếp hạng đa sàn phía trên sổ lệnh và phiếu đặt lệnh.",
         "menuLabel": "Mặc định"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "Mọi thứ trên màn hình cho một màn hình 4K: sổ lệnh và thông tin cặp, biểu đồ với thanh rủi ro, vị thế và mạng xã hội, và một cột phiếu đặt lệnh."
       },
       "home-pulse": {
-        "name": "Trang chủ",
-        "tagline": "Bảng mặc định: bộ quét, tâm lý, mã biến động và tin tức.",
-        "description": "Bảng trang chủ mặc định: bộ quét thị trường, một dải nhịp đập thị trường với đồng hồ đo Sợ hãi & Tham lam và coin hàng đầu xếp tab cùng danh sách theo dõi của bạn, và một cột tin tức cao suốt trang. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
+        "name": "Khám Phá Spot",
+        "tagline": "Mở ra với những gì đã biến động, và vì sao.",
+        "description": "Bảng trang chủ spot: một dải nhịp đập thị trường phía trên bảng các mã biến động mạnh và dải lĩnh vực, với bộ quét đầy đủ bên cạnh và tin tức phía trên danh sách theo dõi của bạn. Mọi thứ trên đó hoạt động mà không cần tài khoản.",
         "menuLabel": "Mặc định"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "Khám phá Perps",
-        "tagline": "Quét perps với hợp đồng đang mở ngay bên cạnh.",
-        "description": "Bảng chính cho phái sinh: bộ quét thị trường lọc theo hợp đồng vĩnh cửu, vị thế đang mở kèm giá mark và giá thanh lý ngay bên cạnh, phía dưới là dải nhiều giá, và tâm lý thị trường trên bảng tin.",
+        "tagline": "Quét theo chi phí carry, không phải theo giá.",
+        "description": "Bảng trang chủ futures: ma trận funding phía trên khu vực theo dõi basis, với open interest và funding cực trị bên cạnh. Nó xếp hạng các perp theo chi phí nắm giữ chúng, câu hỏi mà một bộ quét theo giá không bao giờ trả lời được.",
         "menuLabel": "Mặc định"
       },
       "dex-discovery": {
         "name": "Khám phá DEX",
-        "tagline": "Token mới on-chain, dòng mạng xã hội và danh mục.",
-        "description": "Bảng chính on-chain: bộ quét thị trường lọc theo cặp DEX, các mã vừa xem phía trên dòng mạng xã hội để bắt token vừa niêm yết, và danh mục theo dõi phía trên bảng tin.",
+        "tagline": "Chọn chuỗi trước, rồi đến pool.",
+        "description": "Bảng trang chủ on-chain: một dải chuỗi kèm gas và thanh khoản, các pool xếp hạng theo khối lượng so với thanh khoản phía trên biểu đồ dòng chảy, và pool đang chọn ở bên phải, cách biểu đồ của nó và một lệnh swap chỉ một cú nhấp. Các chuỗi bạn không có bộ kết nối sẽ không bao giờ xuất hiện.",
         "menuLabel": "Mặc định"
       },
       "equities-discovery": {
         "name": "Khám phá Cổ phiếu",
-        "tagline": "Bộ quét cổ phiếu cạnh danh mục và bảng tin.",
-        "description": "Bảng chính cổ phiếu: bộ quét thị trường lọc theo cổ phiếu, danh mục theo dõi phía trên dải nhiều giá, và một cột tin tức cao hết bảng, vì cổ phiếu chạy theo tin.",
+        "tagline": "Ngày giao dịch, theo đúng lịch vận hành nó.",
+        "description": "Bảng trang chủ cổ phiếu: phiên giao dịch hiện đang ở đâu, ai báo cáo và khi nào, và các số liệu vĩ mô sắp công bố, với các mã biến động mạnh và luồng tin bên cạnh. Đồng hồ lấy theo lịch của sàn môi giới, nên ngày lễ và ngày làm nửa buổi đều chính xác.",
         "menuLabel": "Mặc định"
+      },
+      "spot-research": {
+        "name": "Nghiên Cứu Spot",
+        "tagline": "Một lý do trước một phiếu lệnh.",
+        "description": "Dành cho vị thế giữ lâu hơn một phiên: biểu đồ nằm trên hồ sơ cặp, luồng tin tức riêng của cặp bên cạnh, và một phiếu đặt lệnh cỡ báo giá nằm trên các mã cùng lĩnh vực. Không có sổ lệnh, nên không luồng độ sâu nào được mở.",
+        "menuLabel": "Nghiên cứu"
+      },
+      "perps-carry": {
+        "name": "Carry Perps",
+        "tagline": "Lần thu funding tiếp theo tốn của bạn bao nhiêu.",
+        "description": "Dành cho một perp bạn định giữ: dải funding phía trên biểu đồ với bộ đếm ngược, tỷ lệ hiện tại và dự đoán cùng những gì khối lượng của bạn phải trả hay được nhận, hợp đồng đang mở bên dưới, và sổ lệnh nằm trên một phiếu đặt lệnh có tính đến đòn bẩy.",
+        "menuLabel": "Carry"
+      },
+      "perps-risk": {
+        "name": "Rủi Ro Perps",
+        "tagline": "Nơi vị thế kết thúc, và các giới hạn ngăn nó lại.",
+        "description": "Cùng một cặp được đọc như mức độ phơi nhiễm: biểu đồ nằm trên bản đồ thanh lý, sức khỏe ký quỹ phía trên các giới hạn bảo vệ của bạn, và phiếu đặt lệnh bên phải. Các giới hạn có thể chỉnh sửa ngay tại chỗ, nên một mức trần khối lượng được điều chỉnh ngay nơi giao dịch diễn ra thay vì trong Cài đặt.",
+        "menuLabel": "Rủi ro"
+      },
+      "dex-liquidity": {
+        "name": "Thanh Khoản DEX",
+        "tagline": "Khoảng giá của bạn, phí của bạn, tổn thất tạm thời của bạn.",
+        "description": "Phía LP của một pool: biểu đồ có khoảng giá của bạn trên đó, phí đã tích lũy và mức APR mà chúng ngụ ý, thời gian nằm trong khoảng, và tổn thất tạm thời đo so với việc chỉ nắm giữ đơn thuần. Trình chỉnh khoảng giá nằm ngay bên cạnh, nên một vị thế được cân bằng lại mà không cần rời khỏi biểu đồ.",
+        "menuLabel": "Thanh khoản"
+      },
+      "dex-cross-chain": {
+        "name": "DEX Đa Chuỗi",
+        "tagline": "Cùng một token, mọi chuỗi, đã gồm cả gas.",
+        "description": "Một bảng để di chuyển giữa các chuỗi: bảng xếp hạng chuỗi định giá token ở mọi nơi với phí gas đã gộp vào tổng, tuyến cầu nối nêu rõ phí và mất bao lâu, và các giao dịch chuyển tiền vẫn đang xác nhận nằm bên cạnh cùng bộ đếm khối của chúng.",
+        "menuLabel": "Đa chuỗi"
+      },
+      "equities-company": {
+        "name": "Cổ Phiếu Công Ty",
+        "tagline": "Doanh nghiệp đằng sau mã cổ phiếu.",
+        "description": "Dành cho việc nắm giữ một cổ phiếu thay vì giao dịch nó: biểu đồ nằm trên định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo và biên độ dự báo của nhà phân tích, với luồng tin theo mã bên cạnh và vị thế của bạn nằm trên phiếu đặt lệnh.",
+        "menuLabel": "Công ty"
+      },
+      "prediction-race": {
+        "name": "Đua Dự Đoán",
+        "tagline": "Mọi kết quả được định giá, và overround được nêu rõ.",
+        "description": "Dành cho một sự kiện có nhiều lựa chọn thay vì chỉ hai phía: phần đầu trang với số lượng kết quả và overround, một biểu đồ cổ phần xếp chồng, và một bảng xếp hạng định giá mọi kết quả và cho đặt cược ngay từ hàng. Giỏ cược cộng lại đúng bằng overround, nên việc gom hết các lựa chọn rõ ràng không phải tiền miễn phí.",
+        "menuLabel": "Đua"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "Nến",
         "description": "Luồng nến OHLCV trực tiếp cho biểu đồ và tín hiệu"
       },
+      "funding": {
+        "label": "Funding",
+        "description": "Phí funding hợp đồng vĩnh cửu, giá mark và giá chỉ số, cùng khối lượng mở"
+      },
+      "pool-stats": {
+        "label": "Thống kê pool",
+        "description": "Trạng thái pool AMM, các swap của nó, và pool xếp hạng của một chuỗi"
+      },
+      "session": {
+        "label": "Lịch phiên giao dịch",
+        "description": "Đồng hồ và lịch của ngày giao dịch, gồm cả ngày nghỉ và phiên nửa ngày"
+      },
       "ticker": {
         "label": "Ticker",
         "description": "Luồng giá cuối và biến động 24 giờ theo thời gian thực"
@@ -5274,5 +6024,23 @@
     "closeBody": "Đặt lệnh thị trường chỉ giảm vị thế cho {{contracts}} hợp đồng {{pair}} trên {{venue}}.",
     "closeConfirm": "Đóng vị thế",
     "closeSubmitted": "Đã gửi lệnh đóng vị thế"
+  },
+  "yourPosition": {
+    "noVenueTitle": "Chưa kết nối nhà môi giới",
+    "noVenueBody": "Kết nối nhà môi giới cổ phiếu để xem bạn đang nắm giữ gì ở mã này.",
+    "noAccountsTitle": "Chưa có tài khoản chứng khoán",
+    "noAccountsBody": "Thêm khóa API của nhà môi giới để xem danh mục. Khóa tài khoản thử nghiệm cũng dùng được.",
+    "connect": "Kết nối tài khoản",
+    "flatTitle": "Không có vị thế ở {{symbol}}",
+    "flatBody": "Các lệnh khớp ở mã này sẽ hiện tại đây.",
+    "shares_one": "{{shares}} cổ phiếu",
+    "shares_other": "{{shares}} cổ phiếu",
+    "sharesShort_one": "bán khống {{shares}} cổ phiếu",
+    "sharesShort_other": "bán khống {{shares}} cổ phiếu",
+    "openPnlPercent": "Lợi nhuận trên giá vốn",
+    "avgCost": "Giá vốn bình quân",
+    "mark": "Giá tham chiếu",
+    "marketValue": "Giá trị thị trường",
+    "dayChange": "Hôm nay"
   }
 }

@@ -1,12 +1,12 @@
 ---
 title: Perpetual futures
-description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with a leverage selector, reduce-only orders, contract sizing and a positions panel.
+description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, a liquidation map and margin health.
 group: traders
 parent: trading
 order: 8
 eyebrow: For traders
-updated: AUG 2026
-readTime: 6 min read
+updated: 17 AUG 2026
+readTime: 10 min read
 ---
 
 A perpetual future is a contract that tracks a spot price without ever
@@ -49,8 +49,11 @@ runs against Kraken's demo futures environment.
 | Paper mode    | Yes, futures testnet | No, live only   | Yes, demo futures |
 | Margin mode   | Cross                | Cross           | Cross             |
 
-All three stream candles, tickers, order books and trades, and all three report
-your open positions back to the terminal.
+All three stream candles, tickers, order books and trades, all three report
+your open positions back to the terminal, and all three serve funding rates and
+open interest, which is what fills the scanners below. A venue you have not
+connected contributes no rows: there is no third-party funding aggregator
+behind any of this, so the board shows the venues you actually reach.
 
 ## Connecting
 
@@ -83,6 +86,54 @@ lists come from each venue's own market table rather than from a catalog, so a
 venue you have not connected yet contributes nothing and the tab says so. On a
 phone the venue filter row gains the same Futures chip.
 
+## The funding layer
+
+A perp desk does not shop by price. The same contract exists on three venues at
+the same price and costs three different amounts to hold, and that difference
+is the trade. So the **CEX Futures** tab on Discovery opens on carry rather
+than on a scanner, built from four panels that share one snapshot.
+
+**Funding Matrix.** Every base asset against every connected perp venue, one
+cell per contract. Rates are annualised before they are shown, because the
+venues settle on different clocks (Kraken hourly, the other two every eight
+hours) and their printed per-interval numbers are not comparable. Rows are one
+base asset rather than one contract, so Binance's USDT-settled BTC and Kraken's
+USD-settled BTC sit side by side with something to compare. Each cell carries
+the venue's own pair key, so clicking it opens exactly the contract that quoted
+the number. Sorting is by asset ranking until you click a venue column, because
+sorting on rate puts whichever illiquid contract printed an outlier at the top
+of the board on every refresh.
+
+**Basis Monitor.** The perp against the spot it tracks, in basis points and
+annualised, so carry reads as a yield instead of a gap. Both legs come out of
+the same funding payload the matrix uses: the mark is the price the venue funds
+against and the index is its reference spot. One row per asset quoted by one
+venue, because a basis is a property of a contract against its own index and
+averaging across venues would produce a number no venue publishes.
+
+**Open Interest.** How much money is in each contract and which way it moved
+today. Deliberately not a cross-venue sum: Pairlens sees the venues you
+connected, so a total would mean one exchange's worth on a fresh install and
+three on a full one under the same label. Every row names the venue that
+measured it. The list is short because the data is expensive, Binance answers
+one symbol per request and the 24h change is a second request on top, and where
+a venue publishes no history the change column is blank rather than zero.
+
+**Funding Extremes.** The dearest and cheapest rates right now, annualised, one
+entry per contract per venue. TAO on Binance and TAO on KuCoin are two
+different trades and the gap between them is the trade, so they are never
+collapsed into one row.
+
+On the pair page, the **Carry** board puts a **Funding Belt** above the chart:
+the countdown to the next stamp, the current and predicted rate, what the last
+8h, 24h and 7d paid or earned, and what holding costs. With a position open it
+prices that position. With none it prices a stated 1,000 of the settle
+currency, labelled as such, because a cost figure with no size behind it reads
+as a real charge against an account holding nothing.
+
+None of these panes open a stream. Funding moves once per settlement, so they
+read a shared cached snapshot and only the countdown ticks.
+
 ## The ticket
 
 Select a perpetual and the Trade Entry panel switches modes on its own, on the
@@ -107,6 +158,14 @@ spending a line to prevent.
 **A reduce-only toggle.** With it on, the venue shrinks an open position and
 refuses to open the opposite side. It is what makes closing safe: a size larger
 than what is actually open cannot flip you short by accident.
+
+**Funding at entry.** One row under the size field: the current rate, which
+side pays it, and the countdown to the next stamp. Entering a long into a
++0.09% stamp that settles in four minutes is a different trade from entering
+the same long an hour after it settled, and nothing on a chart shows that. It
+is public data on the same cached snapshot the scanners read, so it costs
+nothing, and it renders nothing at all when the venue publishes no rate for the
+contract, because an empty row where a cost should be reads as free.
 
 **Notional and an estimated liquidation price.** Notional is contracts times
 contract size times price, which is the number your risk guardrails measure.
@@ -142,6 +201,41 @@ Futures positions are their own panel rather than a tab in
 [Positions](/docs/positions-and-portfolio), because a leveraged contract with a
 liquidation price has different columns than a spot balance.
 
+## Reading the risk
+
+The **Risk** board pairs the chart with three panels that answer "how much room
+is left", and each of them is careful about what it does not know.
+
+**Liquidation Map.** Where your own position stops being yours, plotted on the
+price axis straight from each venue's position payload and sized by the
+notional at risk, with reference marks for where a position opened at the
+current price would liquidate at 5x, 10x and 25x. What it deliberately does not
+draw is a market-wide liquidation heatmap. No exchange in the fleet publishes
+aggregate liquidation clusters, and the vendors that sell one are modelling it
+from open interest and leverage assumptions rather than observing it. Bars that
+looked like measured depth would be the most confident kind of wrong, so the
+caption says which marks are yours and which are reference.
+
+**Margin Health.** One section per connected futures account, because a margin
+ratio is an account fact: cross margin pools every position against one balance
+and a merged gauge across two exchanges would be a number neither of them would
+liquidate on. The ratio is computed from maintenance over equity rather than
+read off the venue's own field, which two of the three venues scale differently
+with nothing in the payload to say which; where the venue's figure is the only
+one available it is normalised and the header names the source. Auto
+deleveraging is shown as unpublished rather than approximated. No unified call
+returns an ADL rank, and a five-bar indicator inferred from margin health would
+look exactly like the venue's own and mean nothing.
+
+**Risk Controls.** Your daily loss cap, daily trade count, maximum position
+size and the kill switch, editable beside the chart instead of behind Settings.
+It is not a second risk system: every control writes the same store the risk
+strip summarises and the guarded order path reads before every placement, so a
+limit set here is live on the next order with no save button. What is not there
+is an auto-deleverage guard, a funding stop or a flatten-all button. The first
+two would be standing automation that has to keep running with the app closed,
+and the third is an order path rather than a setting.
+
 ## Guardrails still apply
 
 Every futures order goes down the same guarded path as a spot order or a swap,
@@ -156,11 +250,13 @@ exactly as they do on a spot venue.
 
 ## What is not here yet
 
-Funding-rate and mark-price overlays on the chart, isolated margin, a per
-position margin adjustment, inverse (coin-margined) contracts, dated futures,
-and deploying a bot onto a perpetual market. Bots still refuse leverage by
-construction, so a strategy cannot be pointed at a futures venue in this
-release.
+Funding and mark price are panels rather than chart overlays, so neither is
+plotted on the candles yet. Also missing: a market-wide liquidation heatmap
+(nobody publishes the data), an ADL indicator (same reason), funding history as
+a series rather than a snapshot, isolated margin, a per position margin
+adjustment, inverse (coin-margined) contracts, dated futures, and deploying a
+bot onto a perpetual market. Bots still refuse leverage by construction, so a
+strategy cannot be pointed at a futures venue in this release.
 
 ## Next
 

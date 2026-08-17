@@ -179,6 +179,18 @@ export type PredictionOutcomeSummary = {
   price?: number
   bid?: number
   ask?: number
+  /**
+   * Probability moved over the last 24h, signed FOR THIS OUTCOME, in
+   * collateral units (0.07 is "up seven points"). Absent when the venue does
+   * not publish it or the payload cannot attribute it to one side.
+   *
+   * Both venues state the move on the market rather than the outcome
+   * (Polymarket's `oneDayPriceChange`, Kalshi's `previous_price_dollars`), and
+   * both state it from the YES side, so a complement outcome carries the
+   * negation. A market with more than two outcomes gets nothing rather than a
+   * guess.
+   */
+  change24h?: number
 }
 
 export type PredictionMarketSummary = {
@@ -196,6 +208,13 @@ export type PredictionMarketSummary = {
   shortTitle?: string
   /** Per-market artwork, when the venue publishes one (Polymarket icons). */
   imageUrl?: string
+  /**
+   * The venue's own resolution criteria, verbatim (Kalshi `rules_primary` plus
+   * `rules_secondary`, Polymarket the market `description`). Prose, not a URL:
+   * neither venue publishes one, and a header that had to choose between
+   * linking nowhere and stating the rules states them.
+   */
+  rules?: string
   outcomes: Array<PredictionOutcomeSummary>
   volume?: number
   liquidity?: number
@@ -492,4 +511,272 @@ export type FearGreedResponse = {
   latest: FearGreedDataPoint
   historical: Array<FearGreedDataPoint>
   fetchedAt: string
+}
+
+// ── Trading-day clock and calendar (`market-data:session`) ────────────
+//
+// What a broker connector answers when a surface asks where the trading day
+// is. Every instant is epoch milliseconds: venues publish a local wall clock
+// ('09:30') against their own timezone, and a wire format that passed that
+// through would make every consumer redo the conversion — badly, on the days
+// that matter. `timeZone` rides along anyway, because a pane still has to
+// LABEL those instants in exchange time.
+//
+// The rule that makes this worth a capability: a half day is a shorter
+// `closeMs` and a holiday is an ABSENT date, never a flag either way. Nothing
+// downstream is allowed to assume 09:30 to 16:00.
+
+export type MarketSessionClock = {
+  /** The venue's own clock at the moment of the read. */
+  nowMs: number
+  /** Regular trading hours only — pre-market and after-hours are not "open". */
+  isOpen: boolean
+  nextOpenMs: number | null
+  nextCloseMs: number | null
+  /** IANA zone the venue schedules its sessions in, e.g. 'America/New_York'. */
+  timeZone: string
+}
+
+export type MarketSessionDay = {
+  /** Session date in the venue's own timezone, ISO 'YYYY-MM-DD'. */
+  date: string
+  /** Regular trading hours. */
+  openMs: number
+  closeMs: number
+  /** Extended-hours bounds, where the venue publishes them. */
+  preOpenMs?: number
+  postCloseMs?: number
+}
+
+export type MarketSessionCalendar = {
+  timeZone: string
+  /** Trading days only, ascending. A holiday is a missing entry. */
+  days: Array<MarketSessionDay>
+}
+
+// ── Perpetual futures: funding and open interest ────────────────────────
+// Wire shapes for `market-data:funding`, served by the ccxt futures bridge and
+// read by the funding matrix, basis monitor, OI leaders, extremes rail and the
+// funding belt. Public data: no credential ever travels with these calls.
+
+/** Params accepted by `market-data:funding` execute calls. */
+export type FundingQuery =
+  /** Every contract the venue publishes a rate for, or just the named pairs. */
+  | { action: 'funding-rates'; pairs?: Array<string>; limit?: number }
+  /**
+   * Open interest for the named pairs. Bounded on purpose: two of the three
+   * venues answer one symbol per REST call, so an unbounded sweep is hundreds
+   * of requests. `history` additionally asks for the trailing 24h change,
+   * which costs a second call per symbol and is skipped where the venue
+   * publishes no OI series.
+   */
+  | { action: 'open-interest'; pairs: Array<string>; history?: boolean }
+  /** Settled rates for one contract, newest last. */
+  | { action: 'funding-history'; pair: string; limit?: number }
+
+/**
+ * One contract's current funding, as the venue publishes it right now.
+ *
+ * `fundingRate` is the rate for ONE interval, as a fraction (0.0001 = 0.01%),
+ * signed the way every perp venue signs it: positive means longs pay shorts.
+ * Annualising it needs the interval, which is why `intervalHours` is not
+ * optional — a rate without its period is a number nobody can compare across
+ * venues (Kraken settles hourly, Binance and KuCoin every eight hours, and a
+ * handful of Binance contracts every four). `intervalKnown` says whether the
+ * venue stated it or the connector fell back to the venue's ordinary period,
+ * so a surface that cares can mark the estimate.
+ */
+export type FundingRateEntry = {
+  /** Three-segment perp pair key, e.g. 'BTC-USDT-USDT'. */
+  pair: string
+  base: string
+  quote: string
+  fundingRate: number
+  intervalHours: number
+  intervalKnown: boolean
+  /** Epoch ms of the next settlement, where the venue publishes one. */
+  nextFundingMs?: number
+  markPrice?: number
+  indexPrice?: number
+  /** The venue's own forecast for the next stamp, where it publishes one. */
+  predictedRate?: number
+  /** Epoch ms the venue stamped the row. */
+  ts?: number
+}
+
+export type FundingSnapshotResponse = {
+  /** The connector's marketId ('binance-futures', 'kraken-futures'). */
+  market: string
+  entries: Array<FundingRateEntry>
+  ts: number
+}
+
+export type OpenInterestEntry = {
+  pair: string
+  base: string
+  /** Open contracts, in the venue's own contract units. */
+  amount?: number
+  /**
+   * Base-asset size of one contract, so a contract count can be priced. Not 1
+   * everywhere: KuCoin's XBTUSDTM is 0.001 BTC, and ignoring that overstates
+   * open interest a thousandfold.
+   */
+  contractSize?: number
+  /** Open interest in the settle currency, where the venue prices it. */
+  value?: number
+  /** Trailing 24h change as a fraction; absent when no series was served. */
+  change24h?: number
+  ts?: number
+}
+
+export type OpenInterestResponse = {
+  market: string
+  entries: Array<OpenInterestEntry>
+  /**
+   * False when the venue publishes no open interest at all (Kraken Futures
+   * through ccxt), so a pane can say that rather than render an empty list
+   * that reads as "no positions anywhere".
+   */
+  supported: boolean
+  ts: number
+}
+
+/** One settled funding stamp. */
+export type FundingHistoryPoint = { ts: number; rate: number }
+
+export type FundingHistoryResponse = {
+  market: string
+  pair: string
+  /** Ascending by time, oldest first. */
+  points: Array<FundingHistoryPoint>
+  intervalHours: number
+  ts: number
+}
+
+// ── DEX pool reads (`market-data:pool-stats`) ───────────────────────────────
+// What an AMM pool actually publishes, as the DEX data providers report it.
+// One capability with an `action` param serves four reads (stats, trades,
+// pools, networks) because they come from one provider and one budget; the
+// terminal hooks in `hooks/use-pool-*.ts` are the only consumers.
+//
+// EVERY figure a provider does not publish is `null` rather than zero or a
+// guess. Pool depth is the reason: GeckoTerminal reports value locked in USD
+// and nothing per side, DexPaprika reports both sides, and a pane that filled
+// the gap by halving the USD figure would be inventing a constant-product
+// pool that a concentrated-liquidity venue is not.
+
+/** Which pool read an execute call is asking for. */
+export type PoolStatsAction = 'stats' | 'trades' | 'pools' | 'networks'
+
+/** Buy/sell counts over a window, as the provider reports them. */
+export type PoolTradeCounts = {
+  buys: number
+  sells: number
+  buyers: number | null
+  sellers: number | null
+}
+
+/** One AMM pool, resolved for a pair. Nulls are "not published", never zero. */
+export type PoolStats = {
+  /** Provider network slug (`solana`, `eth`, `base`, …). */
+  network: string
+  /** Pool address / id on that network. */
+  address: string
+  /** The pool's own label, e.g. `SOL / USDC 0.04%`. */
+  name: string
+  dexName: string
+  baseSymbol: string | null
+  quoteSymbol: string | null
+  /** Base token price in USD. */
+  priceUsd: number | null
+  /** Quote token price in USD — what converts a USD size into quote units. */
+  quotePriceUsd: number | null
+  /** Base price denominated in the quote token. */
+  priceInQuote: number | null
+  change1hPct: number | null
+  change24hPct: number | null
+  volume1hUsd: number | null
+  volume24hUsd: number | null
+  /** Value locked, both sides, in USD. */
+  reserveUsd: number | null
+  /** Base-side reserve in token units. Only where the provider publishes it. */
+  baseReserve: number | null
+  quoteReserve: number | null
+  /** Fee tier as a fraction (0.0004 = 4 bps), from the venue or the pool name. */
+  feeTier: number | null
+  trades24h: PoolTradeCounts | null
+  /** 24h buy/sell notionals — DexPaprika publishes these, GeckoTerminal does not. */
+  buyVolume24hUsd: number | null
+  sellVolume24hUsd: number | null
+  /** ISO timestamp the pool was created. */
+  createdAt: string | null
+  fdvUsd: number | null
+  source: 'geckoterminal' | 'dexpaprika'
+}
+
+/** One confirmed swap through a pool. `side` is the aggressor on the base leg. */
+export type PoolTrade = {
+  id: string
+  ts: number
+  side: 'buy' | 'sell'
+  amountUsd: number
+  /** Base token price in USD at the swap. */
+  priceUsd: number | null
+  baseAmount: number | null
+  quoteAmount: number | null
+  /** Signer of the transaction, unlabelled — a raw address, never a name. */
+  wallet: string | null
+  txHash: string | null
+  blockNumber: number | null
+}
+
+/** A pool row in a network's ranked listing. */
+export type PoolListingEntry = {
+  network: string
+  address: string
+  name: string
+  dexName: string
+  priceUsd: number | null
+  change24hPct: number | null
+  volume24hUsd: number | null
+  reserveUsd: number | null
+  baseSymbol: string | null
+  quoteSymbol: string | null
+  /** Base token address, so a row can open the pair by identity, not by symbol. */
+  baseAddress: string | null
+}
+
+export type PoolListingResponse = {
+  network: string
+  pools: Array<PoolListingEntry>
+  source: 'geckoterminal' | 'dexpaprika'
+}
+
+/**
+ * A network's activity, and HOW MUCH of the network it covers.
+ *
+ * `coverage` is not decoration. DexPaprika publishes chain-wide totals;
+ * GeckoTerminal publishes no network endpoint at all, so the same numbers can
+ * only be summed over the pools that were sampled. Labelling a top-20 sum as
+ * "Ethereum's 24h volume" would be off by an order of magnitude, so the pane
+ * says which one it is showing.
+ */
+export type ChainPoolStats = {
+  /** The provider's own network slug (`eth`, `polygon_pos`, `solana`). */
+  network: string
+  /**
+   * The Pairlens market id this row answers for, echoed back. Providers use
+   * different slugs for the same chain (`eth` here, `ethereum` there), so a
+   * batched request correlates on what the CALLER asked, not on the slug.
+   */
+  market: string
+  displayName: string
+  volume24hUsd: number | null
+  reserveUsd: number | null
+  txns24h: number | null
+  poolsCount: number | null
+  coverage: 'network' | 'top-pools'
+  /** Pools behind the figures when `coverage` is `top-pools`. */
+  sampledPools: number | null
+  source: 'geckoterminal' | 'dexpaprika'
 }

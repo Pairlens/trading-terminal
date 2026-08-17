@@ -4,7 +4,7 @@ description: Every exchange connector in the Pairlens crypto trading terminal, 1
 group: builders
 order: 4
 eyebrow: For builders
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 4 min read
 ---
 
@@ -21,7 +21,8 @@ Gate, Bitget, Coinbase, Kraken, HTX, Crypto.com, Bitfinex, Upbit. Spot only.
 **Perpetual futures (3).** Binance Futures, KuCoin Futures, Kraken Futures, for
 linear perpetual swaps. See [perpetual futures](/docs/cex-futures).
 
-**Brokers.** Alpaca, for US equities and ETFs.
+**Brokers.** Alpaca, for US equities and ETFs. See
+[US equities](/docs/equities).
 
 **Prediction markets.** Kalshi and Polymarket, for event contracts. See
 [prediction markets](/docs/prediction-markets).

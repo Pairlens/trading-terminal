@@ -98,6 +98,19 @@ for (const { label, manifest, venue, info } of VENUES) {
       )
     })
 
+    it('declares funding, market-scoped, with a settlement period behind it', () => {
+      // Market-scoped rather than wildcard: the funding panes address venues by
+      // name, and a wildcard declaration would make this venue a fallback
+      // answer for a question about a different one. The period is what an
+      // annualised rate divides by — Kraken settles hourly, and inheriting the
+      // eight-hour default there would understate its carry eightfold.
+      expect(capability(manifest, 'market-data:funding')).toMatchObject({
+        markets: [venue.marketId],
+        streaming: false,
+      })
+      expect(venue.fundingIntervalHours).toBeGreaterThan(0)
+    })
+
     it('declares positions and a side-effecting order capability', () => {
       expect(capability(manifest, 'trading:positions')).toMatchObject({
         markets: [venue.marketId],

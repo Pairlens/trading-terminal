@@ -27,6 +27,7 @@ import {
   PRESET_QUAD_CHARTS,
   PRESET_TRADING,
   PRESET_TRIPLE_CHARTS,
+  SPOT_RESEARCH_LAYOUT,
   ULTRAWIDE_FULL_DASHBOARD,
   ULTRAWIDE_WIDE_TRADING,
 } from '@/lib/layout/presets'
@@ -130,11 +131,12 @@ export const SCREEN_SIZE_META: Record<
 
 // These two sets restate what each panel declares in its manifest
 // (`requires: ['workspace:active-pair' | 'workspace:active-wallet']`, see
-// pairlens-core and pairlens-intelligence). They exist as a copy because the
-// catalog builds its layouts at module scope, long before a pane registry
-// exists to ask — `createPaneInstance` in lib/layout/reducer.ts is the runtime
-// half of the same rule. A copy can drift, so dependency-analysis.test.ts
-// asserts these match the real manifests.
+// pairlens-core, pairlens-intelligence and the four family plugins). They
+// exist as a copy because the catalog builds its layouts at module scope, long
+// before a pane registry exists to ask — `createPaneInstance` in
+// lib/layout/reducer.ts is the runtime half of the same rule. A copy can
+// drift, so dependency-analysis.test.ts asserts these match the real
+// manifests.
 const PANES_NEEDING_PAIR = new Set([
   'chart',
   'data-log',
@@ -146,9 +148,41 @@ const PANES_NEEDING_PAIR = new Set([
   'liquidity-heatmap',
   'trade-entry',
   'symbol-news',
+  'venue-ladder',
+  'pair-dossier',
+  'sector-peers',
+  'funding-belt',
+  'liquidation-map',
+  'event-header',
+  'what-moved-it',
+  'outcome-ladder',
+  'basket-ticket',
+  'pool-stats',
+  'onchain-trades',
+  'route',
+  'fee-accrual',
+  'lp-position',
+  'manage-liquidity',
+  'chain-ladder',
+  'route-bridge',
+  'level-1',
+  'company',
+  'your-position',
 ])
 
-const PANES_NEEDING_WALLET = new Set(['trade-entry', 'positions', 'portfolio'])
+const PANES_NEEDING_WALLET = new Set([
+  'trade-entry',
+  'positions',
+  'portfolio',
+  'margin-health',
+  'basket-ticket',
+  'fee-accrual',
+  'lp-position',
+  'manage-liquidity',
+  'route-bridge',
+  'in-flight',
+  'your-position',
+])
 
 type CellSpec = { h: number; panes: Array<string> }
 type ColSpec = { w: number; cells: Array<CellSpec> }
@@ -711,14 +745,14 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
   // ── Pair-route layouts (quick-apply in the pair layout menu) ──
   presetTemplate({
     id: 'template:classic-terminal',
-    name: 'Classic Terminal',
+    name: 'Spot Execution',
     menuLabel: 'Default',
     context: 'pair',
     routeMenu: true,
     icon: 'CandlestickChart',
-    tagline: 'The classic Pairlens desk: chart, data, book, ticket.',
+    tagline: 'Best bid and ask across every venue you connected.',
     description:
-      'The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and the order book over a trade ticket on the right.',
+      'The default spot layout: chart with the tape and positions below it, and a rail that leads with the cross-venue ladder above the book and ticket.',
     facets: {
       traderTypes: ['day-trader'],
       assetClasses: ['crypto-spot'],
@@ -780,6 +814,24 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
     },
     tags: ['analysis', 'research'],
     layout: PRESET_ANALYSIS,
+  }),
+  presetTemplate({
+    id: 'template:spot-research',
+    name: 'Spot Research',
+    menuLabel: 'Research',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Brain',
+    tagline: 'A reason before a ticket.',
+    description:
+      "For positions held longer than a session: chart over the pair dossier, the pair's own news wire beside it, and a quote-sized ticket over its sector peers. No order book, so no depth stream opens.",
+    facets: {
+      traderTypes: ['swing-trader', 'position-investor'],
+      assetClasses: ['crypto-spot'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['spot', 'research'],
+    layout: SPOT_RESEARCH_LAYOUT,
   }),
   // ── Per-asset-class pair defaults live in their family plugins ──
   //
@@ -944,14 +996,14 @@ const PRESET_TEMPLATES: Array<WorkspaceTemplate> = [
   // ── Discovery-route layouts (quick-apply in the home layout menu) ──
   presetTemplate({
     id: 'template:home-pulse',
-    name: 'Home',
+    name: 'Spot Discovery',
     menuLabel: 'Default',
     context: 'discovery',
     routeMenu: true,
     icon: 'Home',
-    tagline: 'The default board: scanner, sentiment, movers, and news.',
+    tagline: 'Open on what moved, and why.',
     description:
-      'The default home board — markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.',
+      'The spot home board: a market pulse strip over the movers table and the sector tape, with the full scanner beside it and news over your watchlist. Everything on it works without an account.',
     facets: {
       traderTypes: ['day-trader', 'swing-trader', 'news-trader'],
       assetClasses: ['crypto-spot'],

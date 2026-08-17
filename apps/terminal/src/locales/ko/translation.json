@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "무기한 대 현물",
+    "subtitle": "같은 자산을 두 데스크에서 나란히",
+    "spot": "현물 {{price}}",
+    "spotMissing": "인덱스 없음",
+    "perp": "무기한 {{price}}",
+    "bps": "{{value}} bp",
+    "rowHint": "{{venue}}의 {{pair}}",
+    "emptyTitle": "아직 비교할 것이 없습니다",
+    "emptyBody": "베이시스에는 마크 가격과 인덱스 가격이 모두 필요합니다. 둘 다 공개하는 무기한 거래소를 연결하세요."
+  },
+  "basketTicket": {
+    "noPairTitle": "선택된 이벤트가 없습니다",
+    "noPairBody": "레이스를 열면 여러 결과에 한 번에 베팅할 수 있습니다.",
+    "emptyTitle": "아직 담긴 항목이 없습니다",
+    "emptyBody": "래더의 더하기 버튼으로 결과를 담고, 각각에 얼마를 넣을지 정하세요.",
+    "stakeFor": "{{name}} 투입액",
+    "removeLeg": "{{name}}을(를) 바스켓에서 제거",
+    "totalCost": "총 비용",
+    "covers": "커버 범위",
+    "overroundAsk": "매도 호가 기준 합계",
+    "overroundLast": "최종가 기준 합계",
+    "maxPayout": "최대 수령액",
+    "maxLoss": "최대 손실",
+    "unusable_one": "1개 항목은 쓸 수 있는 금액이나 가격이 없어 전송되지 않습니다.",
+    "unusable_other": "{{count}}개 항목은 쓸 수 있는 금액이나 가격이 없어 전송되지 않습니다.",
+    "place_one": "주문 1건 넣기",
+    "place_other": "주문 {{count}}건 넣기",
+    "placing": "전송 중…",
+    "placedTitle_one": "주문 1건 접수",
+    "placedTitle_other": "주문 {{count}}건 접수",
+    "placedBody": "각 항목은 표시된 가격의 지정가 주문으로 나갔습니다.",
+    "partialTitle": "바스켓이 도중에 멈췄습니다",
+    "partialBody": "{{total}}건 중 {{placed}}건 접수. {{outcome}}이(가) 거부되었습니다: {{reason}}",
+    "failedTitle": "바스켓을 넣지 못했습니다",
+    "hint": "각 항목은 실제 지정가 주문입니다."
+  },
+  "bridgePanes": {
+    "routeTitle": "브리지에는 브리지 제공자가 필요합니다",
+    "routeBody": "연결된 제공자가 없습니다. 온체인 커넥터는 단일 체인 안에서만 라우팅하므로, 체인 간 이동의 수수료나 소요 시간을 견적할 수 없습니다. 체인 사다리는 이미 거래 가능한 범위를 비교합니다.",
+    "wouldQuote": "{{chain}}에서 나가는 {{asset}}을 견적합니다",
+    "inFlightTitle": "전송 추적에는 브리지 제공자가 필요합니다",
+    "inFlightBody": "확인 수는 자금을 옮긴 브리지가 알려줍니다. 연결이 없으면 조회할 대상이 없고, 근거 없는 막대는 멈춘 전송에서도 계속 진행되는 것처럼 보입니다."
+  },
+  "chainLadder": {
+    "title": "체인별 {{asset}}",
+    "subtitle": "최고 호가가 아니라 가스를 빼고 실제로 남는 금액 기준 정렬",
+    "sizedFor": "{{value}} 기준",
+    "best": "최선",
+    "versusBest": "{{bps}} bps",
+    "notFound": "여기에 {{asset}} 풀 없음",
+    "footnote": "가장 깊은 풀이 가장 좋은 체결은 아닙니다. 비싼 체인의 싼 호가는 가스가 거의 없는 체인의 약간 나쁜 호가에 집니다.",
+    "columns": {
+      "chain": "체인",
+      "price": "가격",
+      "impact": "영향",
+      "gas": "가스",
+      "youReceive": "수령액"
+    },
+    "noPairTitle": "연결된 페어 없음",
+    "noPairBody": "이 패널을 페어에 연결하면 연결된 모든 체인이 같은 규모로 견적합니다.",
+    "noChainsTitle": "체인 커넥터 없음",
+    "noChainsBody": "온체인 커넥터를 설치하면 해당 체인이 이 사다리에 합류합니다."
+  },
+  "company": {
+    "unknownName": "회사명을 가져올 수 없음",
+    "needsProviderTitle": "재무 지표에는 제공자가 필요합니다",
+    "needsProviderBody": "브로커는 호가와 체결을 다룰 뿐 밸류에이션, 성장률, 마진을 제공하지 않습니다. 재무 데이터 플러그인을 설치하면 이 창이 채워집니다."
+  },
+  "dexChains": {
+    "title": "자금이 흐르는 곳",
+    "subtitleNetwork": "24시간 거래대금, 체인 전체",
+    "subtitleSampled": "체인별 상위 풀의 24시간 거래대금",
+    "liquidityValue": "유동성 {{value}}",
+    "poolsValue_one": "풀 {{count}}개",
+    "poolsValue_other": "풀 {{count}}개",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "우선 수수료",
+    "notInstalled": "커넥터 미설치",
+    "installConnector": "커넥터 설치",
+    "emptyTitle": "탐색할 체인 없음",
+    "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다."
+  },
+  "earningsCalendar": {
+    "title": "실적",
+    "subtitle": "개장 전과 마감 후",
+    "emptyTitle": "실적 피드가 설치되지 않음",
+    "emptyBody": "이 캘린더는 재무 데이터 제공 플러그인이 채웁니다. 브로커는 자기 세션 시간을 공개할 뿐, 이번 주 실적 발표 일정은 제공하지 않습니다.",
+    "columns": {
+      "symbol": "종목",
+      "when": "시점",
+      "epsEstimate": "EPS 예상",
+      "revenueEstimate": "매출 예상",
+      "impliedMove": "내재 변동폭"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "매크로 피드가 설치되지 않음",
+    "emptyBody": "매크로 데이터 플러그인이 발표 시각, 시장 예상, 직전 수치로 이 캘린더를 채웁니다.",
+    "columns": {
+      "time": "시각",
+      "event": "지표",
+      "actual": "실제",
+      "consensus": "예상",
+      "prior": "직전"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "실시간 마켓 1개에서 검색",
+    "searchPlaceholder_other": "실시간 마켓 {{count}}개에서 검색",
+    "loadingTitle": "보드 불러오는 중",
+    "loadingBody": "각 거래소에 지금 무엇이 거래되는지 묻고 있습니다.",
+    "sort": {
+      "trending": "인기",
+      "endingSoon": "곧 종료",
+      "volume": "거래량",
+      "biggestMove": "변동 폭"
+    },
+    "unchanged": "변동 없음",
+    "movedPoints": "{{arrow}} 오늘 {{points}}포인트",
+    "volumeUnknown": "거래량 미공개",
+    "liquidity": "유동성 {{value}}",
+    "outcomeCount_one": "후보 1개",
+    "outcomeCount_other": "후보 {{count}}개",
+    "topShare_one": "선두가 전체 확률의 {{percent}} %를 차지합니다.",
+    "topShare_other": "상위 {{count}}개가 전체 확률의 {{percent}} %를 차지합니다.",
+    "openFullField_one": "전체 후보 열기(1개 더)",
+    "openFullField_other": "전체 후보 열기({{count}}개 더)"
+  },
+  "eventHeader": {
+    "noPairTitle": "선택된 계약이 없습니다",
+    "noPairBody": "Discovery에서 이벤트를 열면 질문과 정산 시점, 시장이 매기는 확률을 볼 수 있습니다.",
+    "resolves": "정산",
+    "venue": "거래소",
+    "rules": "정산 규칙",
+    "rulesTitle": "정산 방식",
+    "rulesSource": "{{venue}}가 공개한 내용",
+    "tradeableOutcomes": "개의 거래 가능한 결과",
+    "statusClosed": "거래 종료",
+    "statusResolved": "정산 완료",
+    "changeToday": "오늘 {{value}}포인트",
+    "loadingPrice": "거래소 보드를 읽는 중…",
+    "noPrice": "이 거래소는 지금 해당 결과에 호가를 내지 않습니다.",
+    "noOverround": "호가가 있는 후보가 너무 적어 합계를 낼 수 없습니다.",
+    "sideYes": "Yes {{percent}} %",
+    "sideNo": "No {{percent}} % · {{price}}",
+    "overroundLabel": "모든 Yes 가격의 합",
+    "overroundOver": "오버라운드 {{percent}} %. 모든 결과를 사면 딱 그만큼 잃습니다. 호가 깊이가 받쳐 준다면 전체를 파는 쪽이 차익입니다.",
+    "overroundUnder": "공정 수준보다 {{percent}} % 낮습니다. 호가 깊이가 받쳐 준다면 모든 결과를 사서 그만큼 얻습니다.",
+    "basisAsk_one": "매도 호가 1개를 합산",
+    "basisAsk_other": "매도 호가 {{count}}개를 합산",
+    "basisLast_one": "최종가 1개를 합산",
+    "basisLast_other": "최종가 {{count}}개를 합산",
+    "basisMissing_one": "호가 없는 후보 1개",
+    "basisMissing_other": "호가 없는 후보 {{count}}개"
+  },
+  "funding": {
+    "loading": "펀딩 비율을 읽는 중…",
+    "na": "해당 없음",
+    "stampUnknown": "미공개",
+    "desktopOnly": "의 공개 API는 데스크톱 앱에서만 접근할 수 있습니다.",
+    "manageConnectors": "커넥터 관리",
+    "cellHint": "{{pair}} · {{hours}}시간마다 {{rate}}",
+    "cellHintAssumed": "{{pair}} · {{rate}}. 거래소가 공개하지 않아 {{hours}}시간 정산으로 가정"
+  },
+  "fundingBelt": {
+    "now": "현재 펀딩 · {{hours}}시간",
+    "longsPay": "롱이 숏에게 지급",
+    "shortsPay": "숏이 롱에게 지급",
+    "nextPayment": "다음 지급",
+    "costYou": "비용 {{amount}}",
+    "costPerReference": "보유 {{notional}}당 {{amount}}",
+    "annualised": "연율 환산",
+    "weekAverage": "7일 평균 {{value}}",
+    "noHistory": "아직 정산 이력 없음",
+    "paidLabel": "보유 포지션에 지급",
+    "paidLabelReference": "보유 {{notional}}당 비용",
+    "otherVenues": "같은 계약, 다른 거래소",
+    "onlyVenue": "이 계약으로 연결된 거래소는 여기뿐입니다.",
+    "emptyTitle": "무기한 계약을 선택하세요",
+    "emptyBody": "이 벨트는 무기한 하나를 추적합니다. 비율, 정산 시각, 보유 비용. 무기한 페어를 열면 채워집니다.",
+    "noRateTitle": "펀딩 미공개",
+    "noRateBody": "{{venue}}가 이 계약의 펀딩 비율을 반환하지 않았습니다."
+  },
+  "fundingExtremes": {
+    "subtitle": "연결된 거래소 중 가장 비싼 캐리와 가장 싼 캐리, 연율 기준.",
+    "longsPay": "롱 부담이 가장 큼",
+    "shortsPay": "숏 부담이 가장 큼",
+    "perInterval": "{{hours}}시간마다 {{rate}}",
+    "emptyTitle": "정렬할 비율이 없습니다",
+    "emptyBody": "무기한 거래소가 응답하면 가장 비싼 계약과 가장 싼 계약이 여기 표시됩니다."
+  },
+  "fundingMatrix": {
+    "title": "펀딩, 연율 환산",
+    "subtitle": "양수 = 롱이 숏에게 지급",
+    "nextPayment": "다음 지급까지",
+    "colSpread": "격차",
+    "points": "{{value}}pp",
+    "spreadHint": "가장 비싼 거래소와 가장 싼 거래소의 격차, 연율 펀딩 포인트 기준",
+    "sortBy": "{{venue}} 기준 정렬",
+    "note": "셀을 누르면 해당 거래소의 그 계약이 열립니다. 격차 열은 캐시앤캐리입니다. 펀딩이 가장 싼 쪽을 롱, 가장 비싼 쪽을 숏.",
+    "noRows": "펀딩 비율을 응답한 거래소가 없습니다.",
+    "emptyTitle": "활성화된 무기한 거래소 없음",
+    "emptyBody": "펀딩은 공개 데이터라 API 키가 필요 없습니다. 무기한 선물 커넥터를 설치하면 표가 저절로 채워집니다."
+  },
+  "level1": {
+    "emptyTitle": "아직 호가 없음",
+    "emptyBody": "이 종목의 매수·매도 호가가 아직 수신되지 않았습니다.",
+    "bid": "매수호가",
+    "ask": "매도호가",
+    "spread": "스프레드",
+    "bps": "bp",
+    "dayRange": "당일 범위",
+    "feed": "피드",
+    "depthNote": "브로커는 최우선 호가만 제공하므로 이 두 가격 뒤에 호가 잔량 깊이는 없습니다."
+  },
+  "liquidationMap": {
+    "subtitle": "내 청산 가격과, 여기서 연 레버리지가 끝나는 지점",
+    "estimateBadge": "추정",
+    "sideLong": "롱",
+    "sideShort": "숏",
+    "referenceHint": "현재 가격에서 연 {{leverage}}배 {{side}}는 {{price}} 부근에서 청산됩니다",
+    "caption": "막대는 각 거래소가 보고한 내 청산 가격입니다. 가는 표시는 현재 가격에서 연 포지션이 5배, 10배, 25배에서 청산되는 지점입니다. 집계된 청산 클러스터를 공개하는 거래소는 없어 그리지 않습니다.",
+    "noPositionsCaption": "가는 표시는 현재 가격에서 연 포지션이 5배, 10배, 25배에서 청산되는 지점입니다. 내 청산 가격은 포지션이 열리면 막대로 표시됩니다.",
+    "noPriceTitle": "기준이 될 가격이 없습니다",
+    "noPriceBody": "이 지도에는 계약의 실시간 가격이 필요합니다. 옆 차트에 가격이 들어오면 채워집니다.",
+    "emptyTitle": "그릴 것이 없습니다",
+    "emptyBody": "무기한 포지션을 열거나 계약을 고르면 가격 축이 채워집니다."
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "풀 선택",
+    "noPoolBody": "맵에서 풀을 고르면 그 풀을 통과한 자금이 5분 단위로 여기에 표시됩니다.",
+    "loadingTitle": "스왑 불러오는 중",
+    "loadingBody": "이 풀의 최근 스왑을 가져오고 있습니다.",
+    "emptyTitle": "아직 스왑 없음",
+    "emptyBody": "최근 이 풀에서 체결된 거래가 없어 상계할 흐름이 없습니다.",
+    "barsLabel": "테이커 순흐름, {{pool}}",
+    "netHour": "최근 1시간 {{value}}",
+    "bucketTooltip": "매수 {{buy}}, 매도 {{sell}}",
+    "axisNote": "5분당 매수에서 매도를 뺀 값입니다. LP가 넣거나 뺀 유동성은 이 피드에 포함되지 않습니다.",
+    "biggestLabel": "최대 스왑"
+  },
+  "lpPanes": {
+    "positionTitle": "LP 포지션에는 포지션 소스가 필요합니다",
+    "positionBody": "연결된 어떤 것도 아직 유동성 포지션을 읽지 못합니다. 체인의 포지션 매니저에 이 지갑의 범위를 물어야 하는데, 현재 그렇게 하는 커넥터가 없습니다.",
+    "feesTitle": "수수료 내역에는 포지션 소스가 필요합니다",
+    "feesBody": "일별 수수료는 인덱서에서 오거나, 시간에 걸쳐 측정한 fee growth에서 나옵니다. 둘 다 연결되어 있지 않고, 추정 차트는 실측처럼 보이게 됩니다.",
+    "manageTitle": "범위 수정에는 유동성 액션이 필요합니다",
+    "manageBody": "유동성 추가, 회수, 재조정은 모두 서명 트랜잭션이며 아직 어떤 커넥터도 만들지 못합니다. 실제로 동작하기 전까지 컨트롤은 표시하지 않습니다.",
+    "venueFallback": "이 체인",
+    "wouldRead": "{{chain}}의 {{pool}}에서 {{wallet}}을 읽습니다"
+  },
+  "marginHealth": {
+    "title": "증거금 상태",
+    "marginRatio": "증거금 비율",
+    "safe": "안전",
+    "marginCall": "마진콜 80%",
+    "liquidation": "청산",
+    "equity": "순자산",
+    "maintenance": "유지 증거금",
+    "liqDistance": "청산까지 거리",
+    "adl": "ADL 대기열",
+    "adlHint": "거래소가 공개하지 않음",
+    "stressLabel": "가격이 불리하게 움직이면",
+    "ratioAfter": "비율 {{value}}%",
+    "liquidated": "청산됨",
+    "flatBody": "이 계정은 포지션이 없습니다. 첫 포지션이 열리면 증거금 상태가 표시됩니다.",
+    "noVenueTitle": "활성화된 무기한 거래소 없음",
+    "noVenueBody": "증거금 상태는 선물 커넥터가 보고하는 포지션을 읽습니다. 이 패널을 쓰려면 커넥터를 설치하세요."
+  },
+  "marketPulse": {
+    "emptyTitle": "시장 데이터 없음",
+    "emptyBody": "App Server도 공개 대체 소스도 응답하지 않았습니다. 둘 중 하나가 응답하는 즉시 채워집니다.",
+    "totalCap": "총 시가총액",
+    "window24h": "24시간",
+    "volume24h": "24시간 거래대금",
+    "turnover": "시총의 {{pct}}%가 거래됨",
+    "dominance": "BTC 도미넌스",
+    "breadth": "등락 · {{total}}개 자산",
+    "up": "상승",
+    "down": "하락",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "크립토 공포·탐욕 지수. 0은 극단적 공포, 100은 극단적 탐욕입니다."
+  },
+  "movers": {
+    "emptyTitle": "시장 데이터 없음",
+    "emptyBody": "App Server도 공개 대체 소스도 응답하지 않아 아직 순위를 매길 것이 없습니다.",
+    "noBrokerTitle": "주식 거래소가 설치되지 않음",
+    "noBrokerBody": "플러그인 스토어에서 브로커 커넥터를 설치하면 오늘의 등락이 여기에 표시됩니다.",
+    "tabs": {
+      "gainers": "상승",
+      "losers": "하락",
+      "volume": "거래대금",
+      "volatility": "변동성",
+      "unusual": "이상 거래"
+    },
+    "window": "집계 구간",
+    "columns": {
+      "pair": "페어",
+      "change": "{{window}} 변동",
+      "price": "가격",
+      "volume": "거래대금",
+      "trend": "추세"
+    },
+    "turnoverTooltip": "24시간 거래대금과, 같은 스냅숏의 중앙값 대비 이 자산이 자기 몸집의 얼마를 거래했는지입니다. 자기 자신의 30일 평균과의 비교가 아닙니다. 스냅숏에는 그 값이 없습니다.",
+    "empty": {
+      "gainers": "이 구간에서 오른 자산이 없습니다.",
+      "losers": "이 구간에서 내린 자산이 없습니다.",
+      "volume": "아직 거래대금을 보고한 거래소가 없습니다.",
+      "volatility": "순위를 매길 만큼 움직인 자산이 없습니다.",
+      "unusual": "몸집 대비 이상하게 거래되는 자산이 없습니다."
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "24시간 확률 변동이 큰 순서",
+    "loadingTitle": "보드 읽는 중",
+    "loadingBody": "거래소가 응답하면 변동이 표시됩니다.",
+    "emptyTitle": "움직인 계약이 없습니다",
+    "emptyBody": "오늘 한 줄을 차지할 만큼 움직인 계약이 없습니다.",
+    "noChangeFrom": "순위 제외: {{venues}}는 24시간 변동을 공개하지 않습니다."
+  },
   "onboarding": {
     "phase": {
       "ready": "준비 완료"
@@ -208,6 +529,187 @@
       "sub": "비공개, 로컬, 당신의 거래 방식에 맞춰 조정되었습니다. 터미널이 준비되었습니다."
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "온체인 페어가 아님",
+    "notOnChainBody": "이 테이프는 AMM 풀을 통과하는 스왑을 읽습니다. 연결된 페어는 중앙화 거래소에서 거래됩니다.",
+    "filterAll": "전체",
+    "filterLarge": "{{value}} 초과",
+    "buy": "매수",
+    "sell": "매도",
+    "openTx": "트랜잭션 열기",
+    "net1h": "1시간 순액",
+    "columns": {
+      "time": "시각",
+      "side": "방향",
+      "value": "USD",
+      "price": "가격",
+      "wallet": "지갑"
+    },
+    "loadingTitle": "스왑 불러오는 중",
+    "loadingBody": "이 풀에서 확정된 스왑을 가져오고 있습니다.",
+    "emptyTitle": "아직 스왑 없음",
+    "emptyBody": "제공자가 반환하는 기간 동안 이 풀에서 체결된 거래가 없습니다."
+  },
+  "openInterest": {
+    "title": "미결제약정 상위",
+    "changeLabel": "24시간 변동",
+    "notPublished": "는 API로 미결제약정을 공개하지 않습니다.",
+    "emptyTitle": "아직 미결제약정 없음",
+    "emptyBody": "미결제약정은 펀딩 조회와 함께 들어옵니다. 연결된 거래소가 호가를 내는 계약이 표시됩니다."
+  },
+  "outcomeLadder": {
+    "noPairTitle": "선택된 이벤트가 없습니다",
+    "noPairBody": "Discovery에서 레이스를 열면 모든 후보의 가격을 한 표에서 볼 수 있습니다.",
+    "loadingTitle": "후보 불러오는 중",
+    "loadingBody": "거래소가 응답하면 모든 후보가 표시됩니다.",
+    "notFoundTitle": "거래소 보드에 없는 이벤트",
+    "notFoundBody": "거래소가 이 이벤트를 반환하지 않아 다른 결과를 나열할 수 없습니다. 차트와 주문 티켓은 계속 작동합니다.",
+    "emptyTitle": "다른 결과가 없습니다",
+    "emptyBody": "이 질문은 마켓이 하나뿐이라 순위를 매길 후보군이 없습니다.",
+    "filterPlaceholder_one": "결과 1개 필터",
+    "filterPlaceholder_other": "결과 {{count}}개 필터",
+    "sort": {
+      "probability": "정렬 · 확률",
+      "change": "정렬 · 24시간 변동",
+      "volume": "정렬 · 거래량",
+      "name": "정렬 · 이름"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "결과",
+      "yes": "Yes",
+      "change": "24시간",
+      "trend": "30일",
+      "volume": "거래량",
+      "trade": "거래"
+    },
+    "yesChip": "Yes {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "{{name}}을(를) 바스켓에 추가",
+    "noMatches": "그 필터에 맞는 결과가 없습니다.",
+    "tailBelow_one": "{{price}} 미만 1개 더 · 합산 거래량 {{volume}}",
+    "tailBelow_other": "{{price}} 미만 {{count}}개 더 · 합산 거래량 {{volume}}",
+    "tailMore_one": "1개 더 · 합산 거래량 {{volume}}",
+    "tailMore_other": "{{count}}개 더 · 합산 거래량 {{volume}}",
+    "showMore_one": "1개 더 보기",
+    "showMore_other": "{{count}}개 더 보기"
+  },
+  "pairDossier": {
+    "marketCap": "시가총액",
+    "rank": "{{rank}}위",
+    "volume24h": "24시간 거래대금",
+    "turnover": "시총의 {{pct}}%",
+    "change7d": "7일 변동",
+    "change7dSub": "일주일 전 대비",
+    "sector": "섹터",
+    "sectorMove": "섹터 24시간 {{change}}",
+    "quotedOn": "호가 제공",
+    "ofVenues": "{{total}}개 거래소 중",
+    "tightestSpread": "최저 스프레드",
+    "bps": "{{bps}} bps",
+    "range24h": "24시간 범위",
+    "rangeLowHigh": "{{low}} ~ {{high}}",
+    "volatility": "변동성",
+    "volatilityWindow": "{{timeframe}} 캔들 {{span}}치를 연율화",
+    "spreadByVenue": "거래소별 스프레드 · 최우선 호가",
+    "spreadByVenueTooltip": "지금 각 거래소가 얼마나 촘촘하게 호가를 내는지를 중간가 기준 베이시스포인트로 보여줍니다. 티커에는 수량이 없으므로 이것은 최우선 호가를 넘는 비용이지 그 뒤의 잔량이 아닙니다.",
+    "noBooks": "이 페어의 양방향 호가를 내는 연결 거래소가 아직 없습니다.",
+    "sizingNote": "호가를 넘는 비용은 {{tight}} {{tightBps}} bps, {{wide}} {{wideBps}} bps입니다. 주문 크기는 페어가 아니라 거래소에 맞추세요.",
+    "sizingNoteSingle": "실제 호가를 내는 곳은 {{venue}}뿐이며 {{bps}} bps입니다."
+  },
+  "poolDetail": {
+    "emptyTitle": "선택된 풀 없음",
+    "emptyBody": "맵에서 풀을 고르면 유동성, 거래대금, 흐름이 보이고 차트까지 한 번의 클릭입니다.",
+    "change24h": "{{value}} 24시간",
+    "liquidity": "유동성",
+    "volume24h": "24시간 거래대금",
+    "turnover": "거래대금 / 유동성",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "24시간 체결 수",
+    "feeTier": "수수료 구간",
+    "pressureByValue": "매수 매도 압력, 24시간 금액 기준",
+    "pressureByCount": "매수 매도 압력, 24시간 체결 수 기준",
+    "loading": "풀 상태를 불러오는 중입니다.",
+    "openChart": "차트 열고 스왑"
+  },
+  "poolMap": {
+    "title": "{{chain}} 풀",
+    "subtitle": "각 풀이 자기 유동성을 얼마나 굴리는지 기준으로 정렬",
+    "sortTurnover": "회전율",
+    "sortVolume": "거래대금",
+    "sortLiquidity": "유동성",
+    "turnoverValue": "{{value}}x",
+    "openPair": "차트 열기",
+    "columns": {
+      "pool": "풀",
+      "price": "가격",
+      "change": "24시간",
+      "volume": "24시간 거래대금",
+      "liquidity": "유동성",
+      "turnover": "거래대금 / 유동성"
+    },
+    "noChainTitle": "체인 선택",
+    "noChainBody": "왼쪽에서 체인을 고르면 해당 풀이 거래대금 대비 유동성 기준으로 여기에 정렬됩니다.",
+    "loadingTitle": "풀 불러오는 중",
+    "loadingBody": "이 체인의 상위 풀을 가져오고 있습니다.",
+    "emptyTitle": "반환된 풀 없음",
+    "emptyBody": "데이터 제공자가 이 체인에 대해 아무것도 반환하지 않았습니다. 다음 갱신에서 다시 시도합니다."
+  },
+  "poolStats": {
+    "notOnChainTitle": "온체인 페어가 아님",
+    "notOnChainBody": "이 패널은 AMM 풀 상태를 읽습니다. 연결된 페어는 중앙화 거래소에서 거래되며, 대신 호가창이 있습니다.",
+    "loadingTitle": "풀 불러오는 중",
+    "loadingBody": "이 페어에서 가장 깊은 풀을 찾고 있습니다.",
+    "emptyTitle": "풀 상태 없음",
+    "emptyBody": "데이터 제공자가 이 풀에 대해 아무것도 반환하지 않았습니다. 다음 갱신에서 다시 시도합니다.",
+    "liquidity": "유동성",
+    "volume24h": "24시간 거래대금",
+    "turnoverSub": "유동성의 {{value}}배",
+    "feeTier": "수수료 구간",
+    "feeTierUnknown": "이 venue는 공개하지 않음",
+    "reserves": "예치량",
+    "reservesUnavailable": "양쪽 모두는 데스크톱에서만",
+    "trades24h": "24시간 체결 수",
+    "tradersSub_one": "트레이더 {{count}}명",
+    "tradersSub_other": "트레이더 {{count}}명",
+    "poolAge": "풀 개설 경과",
+    "ageToday": "오늘",
+    "ageDays_one": "{{count}}일",
+    "ageDays_other": "{{count}}일",
+    "ageMonths_one": "{{count}}개월",
+    "ageMonths_other": "{{count}}개월",
+    "impactLabel": "주문 규모별 가격 영향",
+    "impactNote": "각 규모마다 실시간으로 견적한 값이며 예치량으로 추정한 값이 아닙니다. 그래서 분할 경로가 이 풀 자체의 곡선을 이길 수 있습니다."
+  },
+  "predictionCategories": {
+    "all": "전체",
+    "noneBody": "이 거래소는 이벤트에 카테고리를 붙이지 않습니다.",
+    "venueHeading": "거래소",
+    "desktopOnly": "데스크톱",
+    "venueError": "오류"
+  },
+  "resolvingSoon": {
+    "resolves": "{{when}} 정산",
+    "loadingTitle": "일정 읽는 중",
+    "loadingBody": "거래소가 응답하면 정산일이 표시됩니다.",
+    "emptyTitle": "곧 정산될 계약이 없습니다",
+    "emptyBody": "여기 열려 있는 계약 중 다가오는 정산일을 공개한 것이 없습니다."
+  },
+  "riskControls": {
+    "maxDailyLoss": "일일 최대 손실",
+    "maxDailyTrades": "일일 최대 거래 수",
+    "maxPositionSize": "최대 포지션 크기",
+    "usedPercent": "{{value}}% 사용",
+    "usedCount": "{{value}}건 주문",
+    "perOrder": "모든 주문에서 확인",
+    "off": "끔",
+    "resetWindow": "초기화 주기",
+    "resetIn": "{{time}} 후 초기화",
+    "killSwitch": "긴급 정지",
+    "killSwitchHint": "재개할 때까지 모든 주문을 차단",
+    "haltOrders": "주문 정지",
+    "resumeOrders": "재개"
+  },
   "sectionTours": {
     "back": "뒤로",
     "next": "다음",
@@ -397,6 +899,50 @@
     "signInConsent": "계속 진행하면 <terms>이용약관</terms> 및 <privacy>개인정보 처리방침</privacy>에 동의하는 것입니다.",
     "analyticsNote": "수집하는 항목과 절대 다루지 않는 항목은 <privacy>개인정보 처리방침</privacy>에 안내되어 있습니다.",
     "checkoutConsent": "구독하면 <terms>이용약관</terms>에 동의하는 것입니다."
+  },
+  "sectorPeers": {
+    "emptyTitle": "이 페어의 섹터가 없습니다",
+    "emptyBody": "{{pair}}은(는) 선별된 섹터 카탈로그에 없어 비교할 동종 자산이 없습니다.",
+    "loadingBody": "섹터 카탈로그를 읽는 중입니다.",
+    "subtitle": "{{sector}} · {{total}}개 종목. 24시간 기준 정렬, {{symbol}}이(가) 먼저입니다."
+  },
+  "sectorTape": {
+    "emptyTitle": "섹터 데이터 없음",
+    "emptyBody": "섹터는 종목 카탈로그와 시장 스냅숏을 결합해 만듭니다. 아직 둘 다 응답하지 않았습니다.",
+    "subtitle": "시가총액 가중. 막대는 몇 개 종목이 같은 방향으로 움직였는지 보여줍니다.",
+    "window": "섹터 구간",
+    "leads": "{{total}}개 종목 · {{symbol}} 주도",
+    "drags": "{{total}}개 종목 · {{symbol}} 부진",
+    "assets": "{{total}}개 종목"
+  },
+  "session": {
+    "noVenueTitle": "연결된 브로커 없음",
+    "noVenueBody": "거래일 정보는 브로커의 자체 캘린더에서 가져옵니다. 주식 커넥터를 설치하면 여기에 세션 시간이 표시됩니다.",
+    "noVenueAction": "커넥터 둘러보기",
+    "loading": "거래 캘린더를 읽는 중…",
+    "unavailableTitle": "세션 정보를 가져올 수 없음",
+    "unavailableBody": "브로커가 시계도 캘린더도 반환하지 않았습니다. 자동으로 다시 시도합니다.",
+    "stateOpen": "장중",
+    "statePre": "장전 시간외",
+    "statePost": "장후 시간외",
+    "stateClosed": "장 마감",
+    "closesIn": "{{time}} 후 마감",
+    "opensIn": "{{time}} 후 개장",
+    "afterHoursEndsIn": "장후 시간외가 {{time}} 후 종료",
+    "preMarketIn": "{{time}} 후 장전 시간외",
+    "durationDh": "{{days}}일 {{hours}}시간",
+    "durationHm": "{{hours}}시간 {{minutes}}분",
+    "durationMs": "{{minutes}}분 {{seconds}}초",
+    "barPre": "장전",
+    "barOpen": "개장",
+    "barClose": "마감",
+    "barPost": "장후",
+    "halfDay": "반일 거래",
+    "nextSession": "다음 세션 {{day}}",
+    "noSchedule": "예정된 세션 없음",
+    "clockOnly": "개장 여부만 확인됩니다. 세션 구간은 공개되지 않았습니다.",
+    "ticketExtendedNote": "이 세션에서는 지정가 주문만 가능합니다. 시장가를 체결할 연속 호가가 없습니다.",
+    "ticketClosedNote": "장이 마감되었습니다. 지정가 주문은 다음 세션이 열릴 때까지 대기합니다."
   },
   "settings": {
     "title": "설정",
@@ -1067,6 +1613,20 @@
       "thanks": "감사합니다. 정말 큰 힘이 됩니다."
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "온체인 페어가 아님",
+    "notOnChainBody": "경로란 애그리게이터가 스왑을 여러 풀에 나누는 방식입니다. 연결된 페어는 중앙화 거래소에서 거래됩니다.",
+    "probeLabel": "견적 기준",
+    "loadingTitle": "견적 중",
+    "loadingBody": "이 규모를 어떻게 체결할지 애그리게이터에 묻고 있습니다.",
+    "noRouteTitle": "경로 없음",
+    "noRouteBody": "애그리게이터가 이 페어에서 이 규모를 체결할 방법을 찾지 못했습니다.",
+    "noQuotePriceBody": "견적 토큰의 USD 가격이 공개되지 않아 견적할 규모를 정할 수 없습니다.",
+    "emptyTitle": "표시할 분할 없음",
+    "youReceive": "수령액",
+    "priceImpact": "가격 영향",
+    "networkFee": "네트워크 수수료"
+  },
   "userMenu": {
     "accountMenu": "계정 메뉴",
     "settings": "설정",
@@ -1105,6 +1665,45 @@
     "newWindow": "새 창",
     "back": "뒤로",
     "forward": "앞으로"
+  },
+  "venueLadder": {
+    "emptyTitle": "비교할 거래소가 없습니다",
+    "emptyBody": "이 자산군을 취급하는 거래소를 하나 더 연결하면, 거래하는 방향에 맞춰 순위를 매깁니다.",
+    "columns": {
+      "venue": "거래소",
+      "bid": "매수호가",
+      "ask": "매도호가",
+      "bps": "bps"
+    },
+    "switchSide": "방향 전환",
+    "rankedByAsk": "매도호가 기준. 사기 가장 싼 곳이 위",
+    "rankedByBid": "매수호가 기준. 팔기 가장 좋은 곳이 위",
+    "bpsTooltip": "호가 최상단 스프레드를 중간가 기준으로 측정합니다. 양방향 실호가를 내지 않는 거래소는 순위에서 제외됩니다.",
+    "best": "최적",
+    "desktopOnlyRow": "{{venue}}은(는) 데스크톱 앱이 필요합니다",
+    "switchTo": "{{venue}}에서 이 페어 차트 보기",
+    "desktopOnly": "데스크톱",
+    "notListed": "미상장 페어",
+    "noBook": "호가 없음"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "선택된 계약이 없습니다",
+    "noPairBody": "이벤트를 열면 확률이 언제 움직였는지 볼 수 있습니다.",
+    "loadingTitle": "이력 읽는 중",
+    "loadingBody": "확률 이력이 로드되면 타임라인이 표시됩니다.",
+    "flatTitle": "표시할 만한 변동이 없습니다",
+    "flatBody": "불러온 이력 구간에서 이 계약은 3센트를 넘게 움직이지 않았습니다.",
+    "columns": {
+      "when": "시점",
+      "move": "변동",
+      "what": "무슨 일이",
+      "traded": "체결"
+    },
+    "movedFromTo": "확률이 {{from}}에서 {{to}}로 이동했습니다",
+    "contracts_one": "계약 1개",
+    "contracts_other": "계약 {{count}}개",
+    "footerMatched": "헤드라인은 원인이 아니라 시각 기준으로 {{ticker}}에 연결됩니다. 각 항목은 시장이 재평가되는 동안 마지막으로 게시된 기사입니다.",
+    "footerNoTicker": "뉴스는 티커 단위로 색인되며 이 질문에는 티커가 없어 각 행은 변동만 보여 줍니다."
   },
   "workspace": {
     "rename": "이름 변경",
@@ -2275,7 +2874,49 @@
     "empty": "비어 있음",
     "events": "이벤트",
     "predictionPositions": "예측 포지션",
-    "futuresPositions": "선물 포지션"
+    "futuresPositions": "선물 포지션",
+    "venueLadder": "거래소 래더",
+    "pairDossier": "페어 프로필",
+    "marketPulse": "마켓 펄스",
+    "movers": "무버스",
+    "sectorTape": "섹터 레일",
+    "sectorPeers": "섹터 종목",
+    "fundingMatrix": "펀딩 매트릭스",
+    "basisMonitor": "베이시스 모니터",
+    "openInterest": "미결제약정",
+    "fundingExtremes": "펀딩비 극값",
+    "fundingBelt": "펀딩 벨트",
+    "liquidationMap": "청산 맵",
+    "marginHealth": "마진 상태",
+    "riskControls": "리스크 관리",
+    "categories": "카테고리",
+    "eventBoard": "이벤트 보드",
+    "oddsMovers": "확률 변동",
+    "resolvingSoon": "정산 임박",
+    "eventHeader": "이벤트 헤더",
+    "whatMovedIt": "변동 요인",
+    "outcomeLadder": "결과 래더",
+    "basketTicket": "바스켓 티켓",
+    "chains": "체인",
+    "poolMap": "풀 맵",
+    "liquidityFlow": "유동성 흐름",
+    "poolDetail": "풀 상세",
+    "poolStats": "풀 통계",
+    "onchainTrades": "온체인 체결 내역",
+    "route": "경로",
+    "feeAccrual": "수수료 누적",
+    "lpPosition": "LP 포지션",
+    "manageLiquidity": "유동성 관리",
+    "chainLadder": "체인 래더",
+    "routeBridge": "브리지 경로",
+    "inFlight": "전송 중",
+    "session": "세션",
+    "earningsCalendar": "실적 캘린더",
+    "economicCalendar": "경제 지표 캘린더",
+    "sessionClock": "세션 시계",
+    "level1": "Level 1",
+    "company": "기업 정보",
+    "yourPosition": "보유 포지션"
   },
   "paneDescriptions": {
     "markets": "거래소 전반의 모든 거래 페어를 탐색하세요",
@@ -2302,7 +2943,49 @@
     "recentTickers": "빠른 전환을 위한 최근 조회 페어와 실시간 가격",
     "events": "예측 시장 이벤트를 둘러보고 결과의 차트를 엽니다",
     "predictionPositions": "보유 계약과 비용, 그리고 정산 시점",
-    "futuresPositions": "미결제 무기한 포지션, 마크 가격과 청산 가격"
+    "futuresPositions": "미결제 무기한 포지션, 마크 가격과 청산 가격",
+    "venueLadder": "이 페어에 대한 연결된 모든 거래소의 최우선 호가, 가장 싸게 체결되는 순서로 정렬",
+    "pairDossier": "포지션 크기를 결정하는 통계: 가격 범위, 거래량, 상하 1% 이내 유동성, 그리고 이 페어가 가장 활발히 거래되는 곳",
+    "marketPulse": "시장 전체를 요약하는 세 가지 숫자와, 무엇이 왜 움직였는지 한 줄로",
+    "movers": "당일 상승률・하락률 상위 종목과 그 뒤의 거래량, 진짜 움직임과 꼬리를 구분할 수 있게",
+    "sectorTape": "모든 섹터를 칩 형태로, 등락률과 등락 바를 함께 표시해 순환매를 한눈에",
+    "sectorPeers": "이 페어가 속한 섹터의 나머지 종목이 오늘 어떻게 움직였는지, 페어 자신은 맨 위에 고정",
+    "fundingMatrix": "연결한 모든 거래소의 모든 무기한 계약 펀딩비를 하나의 표로, 어떤 열로도 정렬 가능",
+    "basisMonitor": "무기한 계약과 현물의 가격 차이를 베이시스 포인트와 연율로 표시, 캐리를 격차가 아니라 수익률로 읽을 수 있게",
+    "openInterest": "계약별 미결제약정과 24시간 변화, 가격이 움직이기 전에 쏠림을 먼저 포착",
+    "fundingExtremes": "지금 가장 높은 펀딩비와 가장 낮은 펀딩비, 각각 어느 거래소인지와 함께",
+    "fundingBelt": "다음 펀딩 정산까지 남은 시간, 현재 요율과 예측 요율, 그리고 내 포지션 크기가 지불하거나 받는 금액",
+    "liquidationMap": "내 포지션이 청산되는 가격을, 나머지 시장이 짊어진 청산 물량과 겹쳐서 표시",
+    "marginHealth": "마진 비율, 유지 증거금과 가용 증거금의 비교, 그리고 계정이 자동 디레버리징(ADL)에 얼마나 가까운지",
+    "riskControls": "일일 손실 한도, 거래 횟수, 포지션 사이즈, 킬 스위치를 거래가 일어나는 바로 그 자리에서 편집",
+    "categories": "실시간 계약 수와 함께 보여주는 모든 이벤트 카테고리, 클릭 한 번으로 보드를 좁힐 수 있게",
+    "eventBoard": "진행 중인 이벤트 시장을 카드로: 질문, 센트 단위의 Yes와 No, 거래량, 정산 시점",
+    "oddsMovers": "오늘 확률이 가장 크게 움직인 계약, 변동폭을 포인트 단위로 표시",
+    "resolvingSoon": "정산이 가장 임박한 계약을 거래량이 아니라 시간 순으로 정렬",
+    "eventHeader": "질문, 언제 어떻게 정산되는지, 그리고 지금 시장이 반영하는 확률",
+    "whatMovedIt": "헤드라인을 타임라인으로, 각각이 일으킨 확률 변동을 함께 표시",
+    "outcomeLadder": "이벤트 내 모든 결과를 센트 단위로, 정렬과 검색이 가능하며 각 행에 베팅 버튼",
+    "basketTicket": "여러 결과에 한 번에 베팅, 총 비용과 오버라운드, 제출 전 최악의 손실까지 표시",
+    "chains": "커넥터가 있는 모든 체인을 가스비, 유동성, 24시간 거래량과 함께 표시",
+    "poolMap": "거래량 대비 유동성으로 풀 순위를 매겨, 실제로 거래되는 풀이 먼저 보이게",
+    "liquidityFlow": "일정 간격마다 유동성의 순유출입을 표시, 가격이 움직이기 전에 풀 고갈을 먼저 포착",
+    "poolDetail": "선택한 풀을 한눈에, 클릭 한 번으로 차트와 스왑까지",
+    "poolStats": "양쪽 준비금, 예치 자산 총액(TVL), 24시간 거래량, 수수료 등급, 세 가지 규모에서의 가격 영향",
+    "onchainTrades": "풀을 거치는 모든 스왑을 확정되는 대로 표시, 지갑 주소와 트랜잭션 링크와 함께",
+    "route": "애그리게이터가 스왑을 여러 풀에 어떻게 나누는지, 슬리피지의 원인을 명시",
+    "feeAccrual": "내 포지션이 시간에 걸쳐 벌어들인 수수료, 그것이 의미하는 APR, 그리고 지금 청구 가능한 금액",
+    "lpPosition": "설정한 가격 범위와 실시간 가격의 관계, 범위 내 체류 시간, 그리고 단순 보유 대비 비영구적 손실",
+    "manageLiquidity": "차트를 벗어나지 않고 가격 범위 이동, 유동성 추가 또는 회수, 수수료 청구까지",
+    "chainLadder": "같은 토큰을 모든 체인에서 가격 비교, 가스비까지 포함해 표면 시세가 아니라 총액 기준으로 최적을 선택",
+    "routeBridge": "출발 체인, 목적지 체인, 사용할 브리지, 수수료와 소요 시간까지 표시, 바로 실행 가능",
+    "inFlight": "아직 확정되지 않은 전송을, 대기 중인 블록 확인 수와 함께 표시",
+    "session": "브로커 자체 캘린더를 기준으로 지금 거래일이 어느 시점에 있는지, 휴장일과 조기 마감일까지 반영",
+    "earningsCalendar": "누가 언제 실적을 발표하는지, 장 시작 전인지 마감 후인지, 넘어야 할 시장 예상치와 함께",
+    "economicCalendar": "매크로 지표를 발표 시각 순으로, 중요도와 이전치, 시장 예상치와 함께",
+    "sessionClock": "거래일 상태를 한 줄로 보여주는 시계, 시간외 주문에 놀랄 일이 없도록",
+    "level1": "브로커 피드에서 받아온 매수/매도 호가와 수량, 스프레드, 당일 가격 범위",
+    "company": "밸류에이션, 성장률, 이익률, 다음 촉매, 그리고 애널리스트들의 시각을 하나의 패널에",
+    "yourPosition": "이 종목에서 내가 보유한 것: 수량, 원가, 마크 가격, 그리고 당일 손익과 보유 손익"
   },
   "multiPrice": {
     "venue": "거래소",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens 예측",
-        "description": "예측 시장의 이벤트 브라우저와 미결제 계약 포지션"
+        "description": "예측 시장 기능: 이벤트 보드, 결과 래더, 바스켓, 보유 계약 포지션"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures 마켓 커넥터",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens 선물",
-        "description": "진입가, 마크 가격, 청산가와 함께 보는 미결제 무기한 포지션"
+        "description": "무기한 선물 기능: 보유 포지션, 펀딩・베이시스 스캐너, 청산・마진 패널"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "온체인 워크스페이스 프리셋: DEX 터미널과 디젠 탐색 보드"
+        "description": "온체인 기능: 풀 통계, 스왑 경로, LP 포지션, 크로스체인 래더"
       },
       "pairlens-equities": {
         "title": "Pairlens 주식",
-        "description": "주식 워크스페이스 프리셋: 주식 터미널과 스캐너 중심 데스크"
+        "description": "주식 기능: 세션 시계, Level 1 호가, 기업 펀더멘털, 실적 캘린더"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "시세 데이터 전용입니다. 여기서는 거래할 수 없습니다."
     },
     "trade": {
+      "allOutcomes": "전체 {{total}}개",
+      "avgFillPrice": "평균 체결가",
+      "contractCount_one": "{{formatted}}계약",
+      "contractCount_other": "{{formatted}}계약",
+      "fundingAtEntry": "진입 시 펀딩",
+      "fundingLongsPay": "롱이 숏에게 지급",
+      "fundingShortsPay": "숏이 롱에게 지급",
+      "ifDoesNotWin": "{{outcome}} 미적중 시",
+      "ifWins": "{{outcome}} 적중 시",
       "limitBuy": "지정가 매수",
       "limitSell": "지정가 매도",
       "bought": "매수 체결",
+      "maxAmount": "최대",
+      "maxPayout": "최대 수령액",
+      "profitLine": "수익 {{amount}} · {{roi}}",
+      "resolvesOn": "{{date}} 정산",
       "sold": "매도 체결",
       "limitOrderFailed": "지정가 주문 실패",
+      "stakeLine": "투입 {{amount}}",
       "swapFailed": "스왑 실패",
+      "switchOutcome": "결과 전환",
       "workflowUnsupported": "이 마켓에서는 워크플로를 지원하지 않습니다",
       "orderBlocked": "리스크 한도로 주문이 차단되었습니다",
       "orderRejected": "주문이 거부되었습니다",
@@ -3083,8 +3781,6 @@
       "maxLoss": "최대 손실",
       "priceCents": "가격(¢)",
       "thisOutcome": "이 결과",
-      "decreaseContracts": "계약 1개 줄이기",
-      "increaseContracts": "계약 1개 늘리기",
       "priceCentsRange": "0¢에서 100¢ 사이의 가격을 입력하세요",
       "leverage": "레버리지",
       "reduceOnly": "리듀스온리",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "예측 시장 터미널",
-        "tagline": "확률을 차트로, 이벤트 전체를 그 옆에.",
-        "description": "예측 시장 기본 레이아웃: 확률 차트 아래에 체결 내역과 보유 계약, 가운데에 호가창과 거래 티켓, 오른쪽에 전체 높이 이벤트 브라우저. 옆에 놓인 결과들이 분석의 절반이기 때문입니다.",
+        "tagline": "질문이 먼저, 확률은 그다음.",
+        "description": "예측 시장 기본 레이아웃: 이벤트 헤더, 그 아래 확률 차트, 그것을 움직인 헤드라인, 그리고 베팅 전 최대 지급액과 최대 손실을 보여주는 호가창과 티켓, 오른쪽에는 인접한 결과들.",
         "menuLabel": "기본"
       },
       "prediction-discovery": {
         "name": "예측 마켓 탐색",
         "tagline": "페어 목록이 아니라, 진행 중인 이벤트 시장을 살펴보세요.",
-        "description": "이벤트 계약을 위한 홈 보드입니다. 이벤트 브라우저가 넓은 칸을 차지하고 그 옆으로 뉴스 피드가 흐르며, 좁은 레일에 관심목록과 심리 지표가 세로로 놓입니다. Kalshi나 Polymarket 같은 예측 거래소를 설치하면 보드가 채워집니다.",
+        "description": "이벤트 계약을 위해 만든 홈 보드: 이벤트 보드 옆에 카테고리 레일, 그리고 가장 큰 확률 변동, 그 아래 정산이 임박한 계약. Kalshi나 Polymarket 같은 예측 거래소를 설치하면 보드가 채워집니다.",
         "menuLabel": "기본"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "DEX 터미널",
         "tagline": "가짜 호가창 없는 온체인 트레이딩.",
-        "description": "온체인 기본 레이아웃: 차트 아래에 풀 통계와 체결 내역, 신규 상장을 포착하도록 최근 티커 위에 스왑 티켓, 오른쪽에 소셜 피드. 호가창 열은 없습니다. 풀에서 산출한 호가 깊이는 합성된 값이라 표시하지 않습니다.",
+        "description": "온체인 기본 레이아웃: 차트, 그 아래 풀 통계, 옆에는 온체인 체결 내역, 그리고 애그리게이터 경로 위에 스왑 티켓을 두어 슬리피지의 원인을 명시합니다. 호가창 열은 없습니다. 풀에서 산출한 호가 깊이는 합성된 값이라 표시하지 않습니다.",
         "menuLabel": "기본"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "주식 터미널",
-        "tagline": "심볼 뉴스 위에 거래 티켓을 올린 주식 화면.",
-        "description": "주식 기본 레이아웃: 차트 아래에 체결 내역, 포지션, 펀더멘털, 심볼 뉴스 위에 거래 티켓. 암호화폐를 수급이 움직이듯 주식은 촉매가 움직이기 때문입니다.",
+        "tagline": "세션 시계를 차트 위에, Level 1을 거래 티켓 위에.",
+        "description": "주식 기본 레이아웃: 세션 시계가 맨 앞, 그 아래 차트와 체결 내역, 포지션, 그리고 Level 1 호가를 거래 티켓과 심볼 뉴스 위에 얹은 레일. 정규 거래 시간이 아니면 시계가 이를 알리고, 티켓은 지정가 전용으로 전환됩니다.",
         "menuLabel": "기본"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "울트라와이드나 듀얼 모니터를 가득 채우는 4단 커맨드 센터: 스캐너, 차트, 호가창과 심도, 그리고 보유 포지션 위에 놓인 거래 티켓. 극대화된 레이아웃입니다."
       },
       "classic-terminal": {
-        "name": "클래식 터미널",
-        "tagline": "클래식한 Pairlens 데스크: 차트, 데이터, 호가창, 티켓.",
-        "description": "기본 터미널 레이아웃: 왼쪽에 큰 차트와 탭으로 전환되는 데이터 스트립, 리스크 바, 오른쪽에 호가창과 그 아래 거래 티켓.",
+        "name": "현물 체결",
+        "tagline": "연결한 모든 거래소의 최우선 호가.",
+        "description": "현물 기본 레이아웃: 차트, 그 아래 체결 내역과 포지션, 거래소 래더를 맨 앞에 두고 호가창과 거래 티켓으로 이어지는 레일.",
         "menuLabel": "기본"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "4K 모니터 화면을 가득 채우는 모든 것: 호가창과 페어 정보, 리스크 바를 곁들인 차트, 포지션과 소셜, 그리고 거래 티켓 컬럼."
       },
       "home-pulse": {
-        "name": "홈",
-        "tagline": "기본 보드: 스캐너, 심리, 무버스, 뉴스.",
-        "description": "기본 홈 보드: 마켓 스캐너, 공포 & 탐욕 게이지와 상위 코인을 관심 목록과 탭으로 전환하는 마켓 펄스 레일, 그리고 전체 높이 뉴스 컬럼. 계정 없이도 모두 작동합니다.",
+        "name": "현물 탐색",
+        "tagline": "무엇이 움직였는지, 그리고 왜.",
+        "description": "현물 홈 보드: 마켓 펄스 스트립, 그 아래 무버스 테이블과 섹터 레일, 옆에는 전체 스캐너, 관심 목록 위에 뉴스. 모두 계정 없이 작동합니다.",
         "menuLabel": "기본"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "무기한 선물 탐색",
-        "tagline": "미결제 계약을 옆에 두고 무기한 선물을 스캔하세요.",
-        "description": "선물 홈 보드: 무기한 계약으로 필터링한 마켓 스캐너 옆에 마크 가격과 청산 가격이 있는 미결제 포지션, 그 아래 멀티 가격 레일, 그리고 심리 지표 아래 뉴스 피드를 둡니다.",
+        "tagline": "가격이 아니라 보유 비용으로 스캔.",
+        "description": "선물 홈 보드: 펀딩 매트릭스, 그 아래 베이시스 모니터, 옆에는 미결제약정과 펀딩비 극값. 무기한 계약을 보유 비용 기준으로 순위 매기는데, 이는 가격 스캐너가 결코 답하지 못하는 질문입니다.",
         "menuLabel": "기본"
       },
       "dex-discovery": {
         "name": "DEX 탐색",
-        "tagline": "온체인 신규 상장, 소셜 피드, 관심 목록.",
-        "description": "온체인 홈 보드: DEX 페어로 필터링한 마켓 스캐너, 신규 상장을 잡아내는 최근 티커와 소셜 피드, 그리고 관심 목록 아래 뉴스 피드를 둡니다.",
+        "tagline": "먼저 체인을 고르고, 그다음 풀을.",
+        "description": "온체인 홈 보드: 가스비와 유동성을 보여주는 체인 레일, 거래량 대비 유동성으로 순위를 매긴 풀, 그 아래 흐름 차트, 오른쪽에는 선택한 풀을 두어 클릭 한 번으로 차트와 스왑까지. 커넥터가 없는 체인은 표시되지 않습니다.",
         "menuLabel": "기본"
       },
       "equities-discovery": {
         "name": "주식 탐색",
-        "tagline": "종목 스캐너 옆에 관심 목록과 뉴스.",
-        "description": "주식 홈 보드: 주식으로 필터링한 마켓 스캐너, 멀티 가격 레일 위의 관심 목록, 그리고 전체 높이 뉴스 열. 주식은 공시와 헤드라인에 움직이니까요.",
+        "tagline": "거래일을, 그것을 움직이는 캘린더로.",
+        "description": "주식 홈 보드: 지금 세션이 어디에 있는지, 누가 언제 실적을 발표하는지, 예정된 매크로 지표, 그 옆에 무버스와 뉴스 와이어. 시계는 브로커 캘린더를 따르므로 휴장일과 조기 마감일도 정확합니다.",
         "menuLabel": "기본"
+      },
+      "spot-research": {
+        "name": "현물 리서치",
+        "tagline": "티켓을 누르기 전에, 이유부터.",
+        "description": "세션을 넘어 보유하는 포지션을 위한 화면: 페어 프로필 위에 차트, 그 옆에 페어 전용 뉴스 와이어, 섹터 종목 위에 견적 규모의 거래 티켓. 호가창이 없어 뎁스 스트림도 열리지 않습니다.",
+        "menuLabel": "리서치"
+      },
+      "perps-carry": {
+        "name": "무기한 선물 캐리",
+        "tagline": "다음 펀딩 정산이 나에게 얼마를 청구하는지.",
+        "description": "계속 보유할 무기한 계약을 위한 화면: 차트 위에 카운트다운이 있는 펀딩 벨트, 현재와 예측 요율, 내 포지션 크기가 지불하거나 받는 금액을 표시하고, 그 아래 미결제 계약, 호가창 아래에는 레버리지를 반영한 거래 티켓.",
+        "menuLabel": "캐리"
+      },
+      "perps-risk": {
+        "name": "무기한 선물 리스크",
+        "tagline": "포지션이 사라지는 지점과, 그것을 막는 한도.",
+        "description": "같은 페어를 익스포저로 읽는 화면: 차트, 그 아래 청산 맵, 마진 상태 아래에 가드레일, 오른쪽에 티켓. 한도는 그 자리에서 편집할 수 있어, 사이즈 상한은 설정 화면이 아니라 거래가 일어나는 바로 그곳에서 조정합니다.",
+        "menuLabel": "리스크"
+      },
+      "dex-liquidity": {
+        "name": "DEX 유동성",
+        "tagline": "나의 가격 범위, 나의 수수료, 나의 비영구적 손실.",
+        "description": "풀의 LP 쪽을 보는 화면: 가격 범위를 겹친 차트, 쌓인 수수료와 그것이 의미하는 APR, 범위 내 체류 시간, 그리고 단순 보유 대비 비영구적 손실. 옆에 범위 편집기가 있어 차트를 벗어나지 않고 포지션을 재조정할 수 있습니다.",
+        "menuLabel": "유동성"
+      },
+      "dex-cross-chain": {
+        "name": "DEX 크로스체인",
+        "tagline": "같은 토큰을, 모든 체인에서, 가스비까지 포함해서.",
+        "description": "체인 간 이동을 위한 보드: 체인 래더가 가스비를 포함한 총액으로 모든 체인에서 토큰 가격을 보여주고, 브리지 경로가 수수료와 소요 시간을 명시하며, 그 옆에는 아직 확정되지 않은 전송이 블록 확인 수와 함께 놓입니다.",
+        "menuLabel": "크로스체인"
+      },
+      "equities-company": {
+        "name": "주식 컴퍼니",
+        "tagline": "티커 너머에 있는 사업.",
+        "description": "매매보다는 보유를 위한 주식 화면: 차트, 그 아래 밸류에이션, 성장률, 이익률, 다음 촉매, 애널리스트 예상 범위, 옆에는 심볼 뉴스, 거래 티켓 위에는 보유 포지션.",
+        "menuLabel": "기업"
+      },
+      "prediction-race": {
+        "name": "예측 레이스",
+        "tagline": "모든 결과에 값이 매겨지고, 오버라운드도 명시.",
+        "description": "양자택일이 아니라 여러 후보가 있는 이벤트를 위한 화면: 결과 수와 오버라운드를 보여주는 헤더, 누적 지분 차트, 그리고 모든 결과에 값을 매기고 행에서 바로 베팅할 수 있는 래더. 바스켓의 합계는 오버라운드만큼이 되므로, 전체를 쓸어 담아도 공짜 돈이 아니라는 게 눈에 보입니다.",
+        "menuLabel": "레이스"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "캔들",
         "description": "차트와 시그널을 위한 실시간 OHLCV 캔들 스트림"
       },
+      "funding": {
+        "label": "펀딩",
+        "description": "무기한 선물 펀딩 비율, 마크 및 인덱스 가격, 미결제약정"
+      },
+      "pool-stats": {
+        "label": "풀 통계",
+        "description": "AMM 풀 상태, 해당 스왑, 체인의 상위 풀"
+      },
+      "session": {
+        "label": "세션 캘린더",
+        "description": "휴장일과 반일 거래를 포함한 거래일 시계와 캘린더"
+      },
       "ticker": {
         "label": "티커",
         "description": "실시간 최종가와 24시간 변동 스트림"
@@ -5274,5 +6024,23 @@
     "closeBody": "{{venue}}에서 {{pair}} {{contracts}}계약에 대해 리듀스온리 시장가 주문을 냅니다.",
     "closeConfirm": "포지션 청산",
     "closeSubmitted": "청산 주문을 보냈습니다"
+  },
+  "yourPosition": {
+    "noVenueTitle": "연결된 브로커 없음",
+    "noVenueBody": "주식 브로커를 연결하면 이 종목의 보유 내역이 표시됩니다.",
+    "noAccountsTitle": "증권 계좌 없음",
+    "noAccountsBody": "브로커 API 키를 추가하면 보유 내역이 보입니다. 모의투자 키도 사용할 수 있습니다.",
+    "connect": "계좌 연결",
+    "flatTitle": "{{symbol}} 보유 없음",
+    "flatBody": "이 종목의 체결 내역이 여기에 표시됩니다.",
+    "shares_one": "{{shares}}주",
+    "shares_other": "{{shares}}주",
+    "sharesShort_one": "{{shares}}주 공매도",
+    "sharesShort_other": "{{shares}}주 공매도",
+    "openPnlPercent": "매입원가 대비 수익률",
+    "avgCost": "평균 매입가",
+    "mark": "평가 가격",
+    "marketValue": "평가 금액",
+    "dayChange": "오늘"
   }
 }

@@ -56,8 +56,13 @@ export function priceToCents(price: number): number {
  */
 export function normalizeContracts(raw: string | number): string {
   const n = typeof raw === 'number' ? raw : Number(raw)
-  if (!Number.isFinite(n) || n <= 0) return ''
-  return String(Math.floor(n))
+  if (!Number.isFinite(n)) return ''
+  // Floored FIRST, then checked: a fraction under one contract is not "0
+  // contracts", it is no order at all. Dollar-denominated sizing reaches this
+  // on every keystroke below one contract's cost, and a literal '0' in the
+  // size field renders as a size the venue would refuse.
+  const whole = Math.floor(n)
+  return whole > 0 ? String(whole) : ''
 }
 
 export type MaxLossInput = {
@@ -85,6 +90,127 @@ export function predictionMaxLoss({
   if (price === null || !Number.isFinite(price)) return null
   const per = side === 'buy' ? price : 1 - price
   return contracts * Math.max(0, per)
+}
+
+export type FillPriceInput = {
+  /** The typed limit price, already converted to dollars, or null. */
+  limitPrice: number | null
+  bid: number | null
+  ask: number | null
+  last: number | null
+  side: 'buy' | 'sell'
+}
+
+/**
+ * The price this ticket is sizing against — what "avg fill price" states.
+ *
+ * A limit order fills at the price the user typed, so it wins outright. A
+ * market order crosses the spread, and on a probability book the spread is the
+ * whole trade: an outcome quoted 61 bid / 68 ask is a 10% difference in how
+ * many contracts a hundred dollars buys, so sizing a buy off the LAST price
+ * quietly overstates the position by that much. The far touch is the honest
+ * estimate, and the last trade is only the fallback for a venue that is not
+ * publishing a book right now.
+ *
+ * Null rather than a bound when nothing usable exists: the payout card, the
+ * contract count and the max-loss row all refuse together, which is what keeps
+ * a stale figure from sitting next to a live confirm button.
+ */
+export function predictionFillPrice({
+  limitPrice,
+  bid,
+  ask,
+  last,
+  side,
+}: FillPriceInput): number | null {
+  if (limitPrice !== null && isProbability(limitPrice)) return limitPrice
+  const touch = side === 'buy' ? ask : bid
+  if (touch !== null && isProbability(touch)) return touch
+  return last !== null && isProbability(last) ? last : null
+}
+
+export type AmountSizingInput = {
+  /** What the user typed into the amount field, in collateral units. */
+  amountUsd: number
+  /** Dollar probability price (0..1) the order would fill at. */
+  price: number | null
+  side: 'buy' | 'sell'
+}
+
+/**
+ * Dollars in the field → contracts on the wire.
+ *
+ * Traders think in money and both venues settle in contracts, so the ticket
+ * takes one and sends the other. The divisor is what the contract COSTS on
+ * this side, not its price: a buy pays the premium, a sell posts the rest of
+ * the dollar it may owe, and dividing a sell's stake by the price would size
+ * a 95¢ outcome at twenty times the intended risk.
+ *
+ * Floors, via `normalizeContracts`, so the committed stake is always at or
+ * under what the user typed. Rounding up would spend money they did not offer.
+ */
+export function contractsForAmount({
+  amountUsd,
+  price,
+  side,
+}: AmountSizingInput): string {
+  if (!Number.isFinite(amountUsd) || amountUsd <= 0) return ''
+  if (price === null || !isProbability(price)) return ''
+  const perContract = side === 'buy' ? price : 1 - price
+  if (perContract <= 0) return ''
+  return normalizeContracts(snapWhole(amountUsd / perContract))
+}
+
+/**
+ * Binary floating point, undone.
+ *
+ * `1 - 0.95` is 0.05000000000000004, so $100 on a 95¢ sell divides to
+ * 1999.9999… and a bare floor sizes it at 1999 — one contract missing from an
+ * order the user will check against their own arithmetic. The snap is a
+ * millionth of a contract wide, which no real fraction ever lands inside.
+ */
+function snapWhole(value: number): number {
+  const nearest = Math.round(value)
+  return Math.abs(value - nearest) < 1e-6 ? nearest : value
+}
+
+export type PredictionPayout = {
+  /** Collateral committed: the most this order can lose. */
+  stake: number
+  /** Collateral returned if the order is right — one unit per contract. */
+  payout: number
+  profit: number
+  /** Profit as a fraction of the stake. */
+  roi: number
+}
+
+/**
+ * What the order returns when it is right.
+ *
+ * One contract settles at exactly one unit of collateral, so the payout is the
+ * contract count on BOTH sides — which is the reading that makes a sell
+ * legible. Selling a Yes at 68¢ posts 32¢ and returns the whole dollar if the
+ * outcome does not happen; quoting the 68¢ premium as the payout would state a
+ * 212% return as 68%.
+ *
+ * The stake is `predictionMaxLoss`, deliberately: the card above the confirm
+ * button and the risk row under it must never disagree about what is at risk.
+ */
+export function predictionPayout(input: MaxLossInput): PredictionPayout | null {
+  const stake = predictionMaxLoss(input)
+  if (stake === null || stake <= 0) return null
+  const payout = input.contracts
+  return {
+    stake,
+    payout,
+    profit: payout - stake,
+    roi: (payout - stake) / stake,
+  }
+}
+
+/** A probability is strictly inside (0, 1); the bounds are not prices. */
+function isProbability(value: number): boolean {
+  return Number.isFinite(value) && value > 0 && value < 1
 }
 
 /** Kalshi's NO leg is the YES ticker with this suffix. */

@@ -110,6 +110,14 @@ export function normalizeCcxtPositions(
       ...optionalNumber('leverage', raw['leverage']),
       ...optionalNumber('unrealizedPnl', raw['unrealizedPnl']),
       ...optionalNumber('notionalUsd', raw['notional']),
+      // The margin side, straight from the venue. Each is spread only when the
+      // venue filled it in: a missing maintenance margin has to stay missing so
+      // the margin pane says "not published" instead of drawing a gauge from a
+      // zero it invented.
+      ...optionalNumber('collateral', raw['collateral']),
+      ...optionalNumber('initialMargin', raw['initialMargin']),
+      ...optionalNumber('maintenanceMargin', raw['maintenanceMargin']),
+      ...optionalNumber('marginRatio', raw['marginRatio']),
       ...(marginMode === 'cross' || marginMode === 'isolated'
         ? { marginMode }
         : {}),

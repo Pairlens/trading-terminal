@@ -63,6 +63,7 @@ const SEPOLIA_CHAIN: EvmChainConfig = {
   geckoNetwork: '', // no DEX data on testnets
   iconUrl: '',
   rpcUrl: SEPOLIA_RPC,
+  explorerUrl: 'https://sepolia.etherscan.io',
   nativeSymbol: 'ETH',
   // Canonical Sepolia WETH (Uniswap deployment)
   wrappedNativeAddress: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',

@@ -4,7 +4,7 @@ description: Connect a venue, place an order that goes straight to the exchange,
 group: traders
 order: 3
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 17 AUG 2026
 readTime: 3 min read
 ---
 
@@ -31,6 +31,8 @@ anything.
   fills, balances, allocation, and the guardrail readout.
 - **[Perpetual futures](/docs/cex-futures).** Leverage, reduce-only orders and
   contract sizing on three futures venues.
+- **[US equities](/docs/equities).** Stocks and ETFs through Alpaca, on a
+  session clock the broker publishes.
 
 ## The golden rule
 

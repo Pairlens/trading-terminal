@@ -13,8 +13,15 @@ import {
   fetchAlpacaBalances,
   fetchAlpacaOpenOrders,
   fetchAlpacaOrderHistory,
+  fetchAlpacaPositions,
   placeAlpacaOrder,
 } from './order-executor'
+import {
+  ALPACA_SESSION_TZ,
+  fetchAlpacaCalendar,
+  fetchAlpacaClock,
+  shiftExchangeDate,
+} from './session-client'
 import { toPairKey } from './parser'
 import type { AlpacaCredentials } from './rest-client'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
@@ -117,6 +124,23 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
       markets: ['alpaca'],
       priority: 1,
       streaming: true,
+    },
+    {
+      id: 'trading:positions',
+      singleton: false,
+      markets: ['alpaca'],
+      priority: 1,
+      streaming: false,
+    },
+    {
+      // The trading day itself: a clock and a calendar, so the session panes
+      // and the ticket read holidays and half days off the broker instead of
+      // assuming 09:30 to 16:00.
+      id: 'market-data:session',
+      singleton: false,
+      markets: ['alpaca'],
+      priority: 1,
+      streaming: false,
     },
   ],
   metadata: {
@@ -270,6 +294,38 @@ export function createAlpacaMarketConnectorPlugin(
       const slot = getSlot(params)
       if (!slot) return []
       return fetchAlpacaBalances(slot.credentials, slot.mode)
+    }
+
+    if (capability === 'trading:positions') {
+      const slot = getSlot(params)
+      // Throws rather than returning []: an empty array is what "you hold
+      // nothing" looks like, and a position pane must not report a flat book
+      // when the truth is that it could not ask.
+      if (!slot) throw missingCredentialsError()
+      return fetchAlpacaPositions(slot.credentials, slot.mode)
+    }
+
+    if (capability === 'market-data:session') {
+      // The clock and the calendar live on the TRADING host, so they need a
+      // credential like everything else Alpaca serves.
+      const slot = getSlot(params)
+      if (!slot) throw missingCredentialsError()
+
+      if (String(p['action'] ?? 'clock') === 'calendar') {
+        const now = Date.now()
+        // A default window rather than a required one: yesterday through next
+        // week covers "what are today's hours" and "when does it open again
+        // after Friday", which is every question the panes ask.
+        const start = p['start']
+          ? String(p['start'])
+          : shiftExchangeDate(now, -1, ALPACA_SESSION_TZ)
+        const end = p['end']
+          ? String(p['end'])
+          : shiftExchangeDate(now, 8, ALPACA_SESSION_TZ)
+        return fetchAlpacaCalendar(slot.credentials, slot.mode, start, end)
+      }
+
+      return fetchAlpacaClock(slot.credentials, slot.mode)
     }
 
     throw new Error(

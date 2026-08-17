@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "Perpetuo contro spot",
+    "subtitle": "Lo stesso asset sui due desk, affiancati",
+    "spot": "spot {{price}}",
+    "spotMissing": "nessun indice",
+    "perp": "perp {{price}}",
+    "bps": "{{value}} pb",
+    "rowHint": "{{pair}} su {{venue}}",
+    "emptyTitle": "Ancora nulla da confrontare",
+    "emptyBody": "La base richiede un prezzo mark e uno index. Collega un exchange di perpetui che pubblichi entrambi."
+  },
+  "basketTicket": {
+    "noPairTitle": "Nessun evento selezionato",
+    "noPairBody": "Apri una corsa per puntare su più esiti insieme.",
+    "emptyTitle": "Ancora niente in paniere",
+    "emptyBody": "Aggiungi esiti dalla scala con il pulsante più, poi indica quanto vale ciascuno.",
+    "stakeFor": "Puntata su {{name}}",
+    "removeLeg": "Rimuovi {{name}} dal paniere",
+    "totalCost": "Costo totale",
+    "covers": "Copre",
+    "overroundAsk": "Campo in lettera",
+    "overroundLast": "Campo all'ultimo prezzo",
+    "maxPayout": "Payout massimo",
+    "maxLoss": "Perdita massima",
+    "unusable_one": "1 gamba non ha puntata o prezzo utilizzabile e non verrà inviata.",
+    "unusable_other": "{{count}} gambe non hanno puntata o prezzo utilizzabile e non verranno inviate.",
+    "place_one": "Invia 1 ordine",
+    "place_other": "Invia {{count}} ordini",
+    "placing": "Invio…",
+    "placedTitle_one": "1 ordine inviato",
+    "placedTitle_other": "{{count}} ordini inviati",
+    "placedBody": "Ogni gamba è partita come ordine limite al prezzo mostrato.",
+    "partialTitle": "Paniere interrotto",
+    "partialBody": "{{placed}} ordini su {{total}} inviati. {{outcome}} è stato rifiutato: {{reason}}",
+    "failedTitle": "Impossibile inviare il paniere",
+    "hint": "Ogni gamba è un ordine limite reale."
+  },
+  "bridgePanes": {
+    "routeTitle": "Il bridging richiede un provider di bridge",
+    "routeBody": "Nessuno è connesso. I connettori on-chain instradano dentro una sola chain, quindi qui nulla può quotare commissione o tempo di un trasferimento tra chain. La scala delle chain confronta ciò che puoi già scambiare.",
+    "wouldQuote": "Quoterebbe {{asset}} in uscita da {{chain}}",
+    "inFlightTitle": "Il tracciamento dei trasferimenti richiede un provider di bridge",
+    "inFlightBody": "Il conteggio delle conferme arriva dal bridge che ha spostato i fondi. Senza bridge connesso non c'è nulla da interrogare, e una barra senza nulla dietro continuerebbe ad avanzare su un trasferimento bloccato."
+  },
+  "chainLadder": {
+    "title": "{{asset}} su tutte le chain",
+    "subtitle": "Ordinato per quanto arriva dopo il gas, non per la quotazione migliore",
+    "sizedFor": "Calcolato per {{value}}",
+    "best": "Migliore",
+    "versusBest": "{{bps}} pb",
+    "notFound": "Nessun pool {{asset}} qui",
+    "footnote": "Il pool più profondo non è l'esecuzione migliore. Una quotazione conveniente su una chain costosa perde contro una leggermente peggiore dove il gas non costa nulla.",
+    "columns": {
+      "chain": "Chain",
+      "price": "Prezzo",
+      "impact": "Impatto",
+      "gas": "Gas",
+      "youReceive": "Ricevi"
+    },
+    "noPairTitle": "Nessuna coppia associata",
+    "noPairBody": "Associa questo pannello a una coppia e ogni chain connessa quoterà la stessa dimensione.",
+    "noChainsTitle": "Nessun connettore di chain",
+    "noChainsBody": "Installa un connettore on-chain e la sua chain entra nella scala."
+  },
+  "company": {
+    "unknownName": "Nome della società non disponibile",
+    "needsProviderTitle": "I fondamentali richiedono un provider",
+    "needsProviderBody": "Un broker quota ed esegue; non pubblica valutazione, crescita o margini. Installa un plugin di fondamentali per riempire questo pannello."
+  },
+  "dexChains": {
+    "title": "Dove va il flusso",
+    "subtitleNetwork": "Volume 24h, su tutta la chain",
+    "subtitleSampled": "Volume 24h dei pool più attivi di ogni chain",
+    "liquidityValue": "{{value}} di liquidità",
+    "poolsValue_one": "{{count}} pool",
+    "poolsValue_other": "{{count}} pool",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "priority fee",
+    "notInstalled": "Nessun connettore installato",
+    "installConnector": "Installa connettore",
+    "emptyTitle": "Nessuna chain disponibile",
+    "emptyBody": "Questa build non include connettori on-chain, quindi non c'è alcuna chain di cui classificare i pool."
+  },
+  "earningsCalendar": {
+    "title": "Trimestrali",
+    "subtitle": "Prima dell'apertura e dopo la chiusura",
+    "emptyTitle": "Nessun feed sulle trimestrali",
+    "emptyBody": "A riempire questo calendario è un plugin di dati fondamentali. Un broker pubblica i propri orari, non chi presenta i conti questa settimana.",
+    "columns": {
+      "symbol": "Simbolo",
+      "when": "Quando",
+      "epsEstimate": "EPS stimato",
+      "revenueEstimate": "Ricavi stimati",
+      "impliedMove": "Movimento implicito"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "Nessun feed macro installato",
+    "emptyBody": "Un plugin di dati macro riempie questo calendario con orari di pubblicazione, consenso e dato precedente.",
+    "columns": {
+      "time": "Ora",
+      "event": "Evento",
+      "actual": "Effettivo",
+      "consensus": "Consenso",
+      "prior": "Precedente"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "Cerca in 1 mercato attivo",
+    "searchPlaceholder_other": "Cerca in {{count}} mercati attivi",
+    "loadingTitle": "Caricamento della board",
+    "loadingBody": "Stiamo chiedendo a ogni piattaforma cosa si tratta adesso.",
+    "sort": {
+      "trending": "Di tendenza",
+      "endingSoon": "In scadenza",
+      "volume": "Volume",
+      "biggestMove": "Movimento maggiore"
+    },
+    "unchanged": "invariato",
+    "movedPoints": "{{arrow}} {{points}} pt oggi",
+    "volumeUnknown": "Volume non pubblicato",
+    "liquidity": "Liq. {{value}}",
+    "outcomeCount_one": "1 candidato",
+    "outcomeCount_other": "{{count}} candidati",
+    "topShare_one": "Il favorito concentra il {{percent}} % della probabilità.",
+    "topShare_other": "I primi {{count}} concentrano il {{percent}} % della probabilità.",
+    "openFullField_one": "Apri tutto il campo (1 in più)",
+    "openFullField_other": "Apri tutto il campo ({{count}} in più)"
+  },
+  "eventHeader": {
+    "noPairTitle": "Nessun contratto selezionato",
+    "noPairBody": "Apri un evento da Discovery per vedere la domanda, quando si risolve e la probabilità che il mercato paga.",
+    "resolves": "Si risolve",
+    "venue": "Piattaforma",
+    "rules": "Regole di risoluzione",
+    "rulesTitle": "Come si risolve",
+    "rulesSource": "Come pubblicato da {{venue}}",
+    "tradeableOutcomes": "esiti negoziabili",
+    "statusClosed": "Contrattazioni chiuse",
+    "statusResolved": "Risolto",
+    "changeToday": "{{value}} pt oggi",
+    "loadingPrice": "Lettura della board della piattaforma…",
+    "noPrice": "Questa piattaforma al momento non quota questo esito.",
+    "noOverround": "Troppo pochi concorrenti quotati per sommare il campo.",
+    "sideYes": "{{percent}} % Sì",
+    "sideNo": "{{percent}} % No · {{price}}",
+    "overroundLabel": "Somma di tutti i prezzi Sì",
+    "overroundOver": "{{percent}} % di overround. Comprare ogni esito perde esattamente questo; vendere l'intero campo è l'arbitraggio, se la profondità lo consente.",
+    "overroundUnder": "{{percent}} % sotto un campo equo. Comprare ogni esito rende questo, se la profondità lo consente.",
+    "basisAsk_one": "Sommato su 1 prezzo lettera",
+    "basisAsk_other": "Sommato su {{count}} prezzi lettera",
+    "basisLast_one": "Sommato su 1 ultimo prezzo",
+    "basisLast_other": "Sommato su {{count}} ultimi prezzi",
+    "basisMissing_one": "1 concorrente non quotato",
+    "basisMissing_other": "{{count}} concorrenti non quotati"
+  },
+  "funding": {
+    "loading": "Lettura dei tassi di finanziamento…",
+    "na": "n/d",
+    "stampUnknown": "Non pubblicato",
+    "desktopOnly": "raggiunge la sua API pubblica solo dall'app desktop.",
+    "manageConnectors": "Gestisci i connettori",
+    "cellHint": "{{pair}} · {{rate}} ogni {{hours}} h",
+    "cellHintAssumed": "{{pair}} · {{rate}}, ipotizzando un regolamento ogni {{hours}} h che l'exchange non pubblica"
+  },
+  "fundingBelt": {
+    "now": "Finanziamento ora · {{hours}} h",
+    "longsPay": "i long pagano gli short",
+    "shortsPay": "gli short pagano i long",
+    "nextPayment": "Prossimo pagamento",
+    "costYou": "ti costa {{amount}}",
+    "costPerReference": "{{amount}} ogni {{notional}} detenuti",
+    "annualised": "Annualizzato",
+    "weekAverage": "media 7 g {{value}}",
+    "noHistory": "ancora nessuno storico regolato",
+    "paidLabel": "Pagato sulla tua posizione",
+    "paidLabelReference": "Costo ogni {{notional}} detenuti",
+    "otherVenues": "Stesso contratto, altri exchange",
+    "onlyVenue": "L'unico exchange che hai collegato per questo contratto.",
+    "emptyTitle": "Scegli un contratto perpetuo",
+    "emptyBody": "La fascia segue un perpetuo: il tasso, l'orologio e quanto costa tenerlo. Apri una coppia perpetua per riempirla.",
+    "noRateTitle": "Nessun finanziamento pubblicato",
+    "noRateBody": "{{venue}} non ha restituito un tasso di finanziamento per questo contratto."
+  },
+  "fundingExtremes": {
+    "subtitle": "Il carry più caro e il più economico tra gli exchange collegati, annualizzato.",
+    "longsPay": "I long pagano di più",
+    "shortsPay": "Gli short pagano di più",
+    "perInterval": "{{rate}} ogni {{hours}} h",
+    "emptyTitle": "Nessun tasso da ordinare",
+    "emptyBody": "Appena un exchange di perpetui risponde, i suoi contratti più cari e più economici finiscono qui."
+  },
+  "fundingMatrix": {
+    "title": "Finanziamento, annualizzato",
+    "subtitle": "Positivo = i long pagano gli short",
+    "nextPayment": "Prossimo pagamento tra",
+    "colSpread": "Spread",
+    "points": "{{value}} pp",
+    "spreadHint": "Distanza tra l'exchange più caro e il più economico, in punti di finanziamento annualizzato",
+    "sortBy": "Ordina per {{venue}}",
+    "note": "Una cella apre quel contratto su quell'exchange. La colonna Spread è il cash-and-carry: long sul finanziamento più economico, short sul più caro.",
+    "noRows": "Nessun exchange ha risposto con un tasso di finanziamento.",
+    "emptyTitle": "Nessun exchange di perpetui attivo",
+    "emptyBody": "Il finanziamento è un dato pubblico, quindi non serve una chiave API. Installa un connettore di futures perpetui e la matrice si riempie da sola."
+  },
+  "level1": {
+    "emptyTitle": "Nessuna quotazione",
+    "emptyBody": "La sede non ha ancora inviato denaro o lettera per questo simbolo.",
+    "bid": "Denaro",
+    "ask": "Lettera",
+    "spread": "Spread",
+    "bps": "pb",
+    "dayRange": "range del giorno",
+    "feed": "Feed",
+    "depthNote": "Il broker quota solo la cima del book, quindi dietro questi due prezzi non c'è profondità."
+  },
+  "liquidationMap": {
+    "subtitle": "I tuoi prezzi di liquidazione, e dove finisce una leva aperta qui",
+    "estimateBadge": "STIMA",
+    "sideLong": "long",
+    "sideShort": "short",
+    "referenceHint": "Uno {{side}} a {{leverage}}x aperto al prezzo attuale liquida intorno a {{price}}",
+    "caption": "Le barre sono i tuoi prezzi di liquidazione, come li riporta ogni exchange. I segni sottili indicano dove una posizione aperta al prezzo attuale verrebbe liquidata a 5x, 10x e 25x. Nessun exchange pubblica cluster aggregati di liquidazioni, quindi non ne viene disegnato nessuno.",
+    "noPositionsCaption": "I segni sottili indicano dove una posizione aperta al prezzo attuale verrebbe liquidata a 5x, 10x e 25x. I tuoi prezzi di liquidazione compaiono come barre non appena una posizione è aperta.",
+    "noPriceTitle": "Nessun prezzo di riferimento",
+    "noPriceBody": "La mappa ha bisogno di un prezzo in tempo reale per il contratto. Si riempie appena il grafico accanto ne ha uno.",
+    "emptyTitle": "Niente da tracciare",
+    "emptyBody": "Apri una posizione perpetua, o scegli un contratto, e l'asse dei prezzi si riempie."
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "Scegli un pool",
+    "noPoolBody": "Seleziona un pool nella mappa e qui compare il denaro che lo attraversa, in blocchi da cinque minuti.",
+    "loadingTitle": "Caricamento swap",
+    "loadingBody": "Recupero degli swap recenti di questo pool.",
+    "emptyTitle": "Ancora nessuno swap",
+    "emptyBody": "Su questo pool non è passato nulla di recente, quindi non c'è flusso da compensare.",
+    "barsLabel": "Flusso netto dei taker, {{pool}}",
+    "netHour": "{{value}} nell'ultima ora",
+    "bucketTooltip": "{{buy}} comprati, {{sell}} venduti",
+    "axisNote": "Acquisti meno vendite ogni 5 minuti. La liquidità aggiunta o ritirata dagli LP non è in questo feed.",
+    "biggestLabel": "Swap più grandi"
+  },
+  "lpPanes": {
+    "positionTitle": "Le posizioni LP richiedono una fonte di posizioni",
+    "positionBody": "Niente di connesso sa ancora leggere una posizione di liquidità. Servirebbe interrogare il position manager della chain sui range di questo wallet, cosa che oggi nessun connettore fa.",
+    "feesTitle": "Lo storico commissioni richiede una fonte di posizioni",
+    "feesBody": "Le commissioni giornaliere vengono da un indexer, o dal fee growth misurato nel tempo. Nessuno dei due è connesso, e un grafico stimato sembrerebbe misurato.",
+    "manageTitle": "Modificare il range richiede un'azione di liquidità",
+    "manageBody": "Aggiungere, ritirare e ricentrare liquidità sono transazioni firmate che nessun connettore costruisce ancora. I controlli restano fuori finché non fanno qualcosa.",
+    "venueFallback": "questa chain",
+    "wouldRead": "Leggerebbe {{wallet}} su {{pool}}, {{chain}}"
+  },
+  "marginHealth": {
+    "title": "Salute del margine",
+    "marginRatio": "Rapporto di margine",
+    "safe": "sicuro",
+    "marginCall": "margin call 80 %",
+    "liquidation": "liquidazione",
+    "equity": "Patrimonio",
+    "maintenance": "Mantenimento",
+    "liqDistance": "Distanza dalla liquidazione",
+    "adl": "Coda ADL",
+    "adlHint": "Non pubblicato dall'exchange",
+    "stressLabel": "Se il prezzo va contro di te",
+    "ratioAfter": "rapporto {{value}} %",
+    "liquidated": "liquidato",
+    "flatBody": "Questo conto è flat. La salute del margine compare con la prima posizione aperta.",
+    "noVenueTitle": "Nessun exchange di perpetui attivo",
+    "noVenueBody": "La salute del margine legge le posizioni riportate da un connettore futures. Installane uno per usare questo pannello."
+  },
+  "marketPulse": {
+    "emptyTitle": "Nessun dato di mercato",
+    "emptyBody": "Né l'App Server né la fonte pubblica di riserva hanno risposto. La striscia si riempie appena una delle due risponde.",
+    "totalCap": "Capitalizzazione totale",
+    "window24h": "24h",
+    "volume24h": "Volume 24h",
+    "turnover": "{{pct}}% della capitalizzazione scambiata",
+    "dominance": "Dominanza BTC",
+    "breadth": "Ampiezza · {{total}} asset",
+    "up": "in rialzo",
+    "down": "in ribasso",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "L'indice cripto di paura e avidità. 0 è paura estrema, 100 è avidità estrema."
+  },
+  "movers": {
+    "emptyTitle": "Nessun dato di mercato",
+    "emptyBody": "Né l'App Server né la fonte pubblica di riserva hanno risposto, quindi non c'è ancora nulla da ordinare.",
+    "noBrokerTitle": "Nessuna borsa azionaria installata",
+    "noBrokerBody": "Installa un connettore broker dal Plugin Store e i movimenti del giorno arrivano qui.",
+    "tabs": {
+      "gainers": "In rialzo",
+      "losers": "In ribasso",
+      "volume": "Volume",
+      "volatility": "Volatilità",
+      "unusual": "Insolito"
+    },
+    "window": "Finestra di classifica",
+    "columns": {
+      "pair": "Coppia",
+      "change": "Variazione {{window}}",
+      "price": "Prezzo",
+      "volume": "Volume",
+      "trend": "Trend"
+    },
+    "turnoverTooltip": "Volume 24h, e quanto di sé stesso l'asset ha scambiato rispetto alla mediana di questa istantanea. Non è un confronto con la sua media a 30 giorni, che nessuna istantanea porta con sé.",
+    "empty": {
+      "gainers": "Niente è in rialzo su questa finestra.",
+      "losers": "Niente è in ribasso su questa finestra.",
+      "volume": "Nessun exchange ha ancora riportato volumi.",
+      "volatility": "Niente si è mosso abbastanza.",
+      "unusual": "Nessun asset scambia in modo insolito per la sua dimensione."
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "Maggiori spostamenti di probabilità, 24 h",
+    "loadingTitle": "Lettura della board",
+    "loadingBody": "I movimenti compaiono appena rispondono le piattaforme.",
+    "emptyTitle": "Nulla si è mosso",
+    "emptyBody": "Oggi nessun contratto si è mosso abbastanza da meritare una riga.",
+    "noChangeFrom": "Non in classifica: {{venues}} non pubblica la variazione a 24 h."
+  },
   "onboarding": {
     "phase": {
       "ready": "Pronto"
@@ -208,6 +529,187 @@
       "sub": "Privato, locale e personalizzato in base a come fai trading. Il tuo terminale è pronto."
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "Non è una coppia on-chain",
+    "notOnChainBody": "Questo tape legge gli swap attraverso un pool AMM. La coppia a cui è associato si scambia su un exchange centralizzato.",
+    "filterAll": "Tutti",
+    "filterLarge": "Oltre {{value}}",
+    "buy": "Acquisto",
+    "sell": "Vendita",
+    "openTx": "Apri transazione",
+    "net1h": "Netto 1h",
+    "columns": {
+      "time": "Ora",
+      "side": "Lato",
+      "value": "USD",
+      "price": "Prezzo",
+      "wallet": "Wallet"
+    },
+    "loadingTitle": "Caricamento swap",
+    "loadingBody": "Recupero degli swap confermati su questo pool.",
+    "emptyTitle": "Ancora nessuno swap",
+    "emptyBody": "Su questo pool non è passato nulla nella finestra restituita dal provider."
+  },
+  "openInterest": {
+    "title": "Leader per open interest",
+    "changeLabel": "Variazione 24 h",
+    "notPublished": "non pubblica l'open interest tramite la sua API.",
+    "emptyTitle": "Ancora nessun open interest",
+    "emptyBody": "L'open interest arriva con la lettura del finanziamento. Mostra i contratti quotati dagli exchange che hai collegato."
+  },
+  "outcomeLadder": {
+    "noPairTitle": "Nessun evento selezionato",
+    "noPairBody": "Apri una corsa da Discovery per quotare ogni concorrente in un'unica tabella.",
+    "loadingTitle": "Caricamento del campo",
+    "loadingBody": "Tutti i concorrenti compaiono appena la piattaforma risponde.",
+    "notFoundTitle": "Evento assente dalla board della piattaforma",
+    "notFoundBody": "La piattaforma non ha restituito questo evento, quindi gli altri esiti non possono essere elencati. Grafico e ticket continuano a funzionare.",
+    "emptyTitle": "Nessun altro esito",
+    "emptyBody": "Questa domanda ha un solo mercato, quindi non c'è un campo da ordinare.",
+    "filterPlaceholder_one": "Filtra 1 esito",
+    "filterPlaceholder_other": "Filtra {{count}} esiti",
+    "sort": {
+      "probability": "Ordina · probabilità",
+      "change": "Ordina · movimento 24 h",
+      "volume": "Ordina · volume",
+      "name": "Ordina · nome"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "Esito",
+      "yes": "Sì",
+      "change": "24 h",
+      "trend": "30 giorni",
+      "volume": "Volume",
+      "trade": "Opera"
+    },
+    "yesChip": "Sì {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "Aggiungi {{name}} al paniere",
+    "noMatches": "Nessun esito corrisponde a questo filtro.",
+    "tailBelow_one": "1 altro esito sotto {{price}} · {{volume}} di volume complessivo",
+    "tailBelow_other": "Altri {{count}} esiti sotto {{price}} · {{volume}} di volume complessivo",
+    "tailMore_one": "1 altro esito · {{volume}} di volume complessivo",
+    "tailMore_other": "Altri {{count}} esiti · {{volume}} di volume complessivo",
+    "showMore_one": "Mostra 1 in più",
+    "showMore_other": "Mostra altri {{count}}"
+  },
+  "pairDossier": {
+    "marketCap": "Capitalizzazione",
+    "rank": "posizione {{rank}}",
+    "volume24h": "Volume 24h",
+    "turnover": "{{pct}}% della capitalizzazione",
+    "change7d": "Variazione 7g",
+    "change7dSub": "rispetto a una settimana fa",
+    "sector": "Settore",
+    "sectorMove": "settore {{change}} 24h",
+    "quotedOn": "Quotato su",
+    "ofVenues": "di {{total}} exchange",
+    "tightestSpread": "Spread più stretto",
+    "bps": "{{bps}} pb",
+    "range24h": "Range 24h",
+    "rangeLowHigh": "da {{low}} a {{high}}",
+    "volatility": "Volatilità",
+    "volatilityWindow": "annualizzata su {{span}} di candele {{timeframe}}",
+    "spreadByVenue": "Spread per exchange · cima del book",
+    "spreadByVenueTooltip": "Quanto stretto quota ogni exchange in questo momento, in punti base sul mid. Un ticker non porta con sé la size, quindi questo è il costo di attraversare in cima al book, non la profondità dietro.",
+    "noBooks": "Nessun exchange collegato pubblica ancora un book a due lati per questa coppia.",
+    "sizingNote": "Attraversare costa {{tightBps}} pb su {{tight}} e {{wideBps}} pb su {{wide}}. Dimensiona l'ordine sull'exchange, non sulla coppia.",
+    "sizingNoteSingle": "{{venue}} è l'unico exchange con un book reale, a {{bps}} pb."
+  },
+  "poolDetail": {
+    "emptyTitle": "Nessun pool selezionato",
+    "emptyBody": "Scegli un pool dalla mappa per vederne liquidità, volume e flusso, a un clic dal grafico.",
+    "change24h": "{{value}} 24h",
+    "liquidity": "Liquidità",
+    "volume24h": "Volume 24h",
+    "turnover": "Vol / liq",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "Operazioni 24h",
+    "feeTier": "Fascia commissioni",
+    "pressureByValue": "Pressione in acquisto e vendita, 24h per valore",
+    "pressureByCount": "Pressione in acquisto e vendita, 24h per numero di operazioni",
+    "loading": "Caricamento dello stato del pool.",
+    "openChart": "Apri grafico e fai swap"
+  },
+  "poolMap": {
+    "title": "Pool su {{chain}}",
+    "subtitle": "Ordinati per quanto ogni pool fa lavorare la propria liquidità",
+    "sortTurnover": "Rotazione",
+    "sortVolume": "Volume",
+    "sortLiquidity": "Liquidità",
+    "turnoverValue": "{{value}}x",
+    "openPair": "Apri grafico",
+    "columns": {
+      "pool": "Pool",
+      "price": "Prezzo",
+      "change": "24h",
+      "volume": "Vol 24h",
+      "liquidity": "Liquidità",
+      "turnover": "Vol / liq"
+    },
+    "noChainTitle": "Scegli una chain",
+    "noChainBody": "Scegli una chain nella colonna e i suoi pool si ordinano qui, volume contro la liquidità che lo sostiene.",
+    "loadingTitle": "Caricamento pool",
+    "loadingBody": "Recupero dei pool ordinati di questa chain.",
+    "emptyTitle": "Nessun pool restituito",
+    "emptyBody": "Il provider di dati non ha elencato nulla per questa chain. Riprova al prossimo aggiornamento."
+  },
+  "poolStats": {
+    "notOnChainTitle": "Non è una coppia on-chain",
+    "notOnChainBody": "Questo pannello legge lo stato di un pool AMM. La coppia a cui è associato si scambia su un exchange centralizzato, che ha invece un book.",
+    "loadingTitle": "Caricamento pool",
+    "loadingBody": "Individuazione del pool più profondo per questa coppia.",
+    "emptyTitle": "Nessuno stato del pool",
+    "emptyBody": "Il provider di dati non ha restituito nulla per questo pool. Riprova al prossimo aggiornamento.",
+    "liquidity": "Liquidità",
+    "volume24h": "Volume 24h",
+    "turnoverSub": "{{value}}x la liquidità",
+    "feeTier": "Fascia commissioni",
+    "feeTierUnknown": "Non pubblicata da questa venue",
+    "reserves": "Riserve",
+    "reservesUnavailable": "Entrambi i lati solo su desktop",
+    "trades24h": "Operazioni 24h",
+    "tradersSub_one": "{{count}} trader",
+    "tradersSub_other": "{{count}} trader",
+    "poolAge": "Età del pool",
+    "ageToday": "Oggi",
+    "ageDays_one": "{{count}} giorno",
+    "ageDays_other": "{{count}} giorni",
+    "ageMonths_one": "{{count}} mese",
+    "ageMonths_other": "{{count}} mesi",
+    "impactLabel": "Impatto sul prezzo per dimensione dell'ordine",
+    "impactNote": "Quotato dal vivo per ogni dimensione, non modellato dalle riserve: una rotta divisa può quindi battere la curva di questo pool."
+  },
+  "predictionCategories": {
+    "all": "Tutte",
+    "noneBody": "Questa piattaforma non assegna categorie ai suoi eventi.",
+    "venueHeading": "Piattaforma",
+    "desktopOnly": "desktop",
+    "venueError": "errore"
+  },
+  "resolvingSoon": {
+    "resolves": "Si risolve {{when}}",
+    "loadingTitle": "Lettura dell'orologio",
+    "loadingBody": "Le date di risoluzione compaiono appena rispondono le piattaforme.",
+    "emptyTitle": "Nulla in scadenza",
+    "emptyBody": "Nessun contratto aperto qui pubblica una data di risoluzione futura."
+  },
+  "riskControls": {
+    "maxDailyLoss": "Perdita giornaliera max",
+    "maxDailyTrades": "Operazioni giornaliere max",
+    "maxPositionSize": "Dimensione max posizione",
+    "usedPercent": "{{value}} % usato",
+    "usedCount": "{{value}} inviati",
+    "perOrder": "Verificato a ogni ordine",
+    "off": "Spento",
+    "resetWindow": "Finestra di reset",
+    "resetIn": "Reset tra {{time}}",
+    "killSwitch": "Interruttore di emergenza",
+    "killSwitchHint": "Blocca ogni ordine finché non riprendi",
+    "haltOrders": "Blocca gli ordini",
+    "resumeOrders": "Riprendi"
+  },
   "sectionTours": {
     "back": "Indietro",
     "next": "Avanti",
@@ -397,6 +899,50 @@
     "signInConsent": "Continuando, accetti i nostri <terms>Termini e Condizioni</terms> e la nostra <privacy>Informativa sulla privacy</privacy>.",
     "analyticsNote": "Cosa raccogliamo, e cosa non tocchiamo mai, è spiegato nella nostra <privacy>Informativa sulla privacy</privacy>.",
     "checkoutConsent": "Abbonandoti, accetti i nostri <terms>Termini e Condizioni</terms>."
+  },
+  "sectorPeers": {
+    "emptyTitle": "Nessun settore per questa coppia",
+    "emptyBody": "{{pair}} non è nel catalogo settori curato, quindi non ci sono termini di paragone.",
+    "loadingBody": "Lettura del catalogo settori.",
+    "subtitle": "{{sector}} · {{total}} asset. Ordinati per 24h, {{symbol}} per primo."
+  },
+  "sectorTape": {
+    "emptyTitle": "Nessun dato di settore",
+    "emptyBody": "I settori nascono dal catalogo strumenti incrociato con l'istantanea di mercato. Nessuno dei due ha ancora risposto.",
+    "subtitle": "Pesato per capitalizzazione. La barra dice quanti membri hanno accompagnato il movimento.",
+    "window": "Finestra del settore",
+    "leads": "{{total}} asset · {{symbol}} guida",
+    "drags": "{{total}} asset · {{symbol}} frena",
+    "assets": "{{total}} asset"
+  },
+  "session": {
+    "noVenueTitle": "Nessun broker collegato",
+    "noVenueBody": "La giornata di borsa arriva dal calendario del broker. Installa un connettore azionario per vedere qui gli orari.",
+    "noVenueAction": "Sfoglia i connettori",
+    "loading": "Lettura del calendario di borsa…",
+    "unavailableTitle": "Sessione non disponibile",
+    "unavailableBody": "Il broker non ha restituito né orologio né calendario. Riproverà da solo.",
+    "stateOpen": "Mercato aperto",
+    "statePre": "Pre-apertura",
+    "statePost": "Dopo la chiusura",
+    "stateClosed": "Mercato chiuso",
+    "closesIn": "Chiude tra {{time}}",
+    "opensIn": "Apre tra {{time}}",
+    "afterHoursEndsIn": "L'after hours finisce tra {{time}}",
+    "preMarketIn": "Pre-apertura tra {{time}}",
+    "durationDh": "{{days}} g {{hours}} h",
+    "durationHm": "{{hours}} h {{minutes}} min",
+    "durationMs": "{{minutes}} min {{seconds}} s",
+    "barPre": "pre",
+    "barOpen": "apertura",
+    "barClose": "chiusura",
+    "barPost": "dopo",
+    "halfDay": "Mezza giornata",
+    "nextSession": "Prossima seduta {{day}}",
+    "noSchedule": "Nessuna seduta in programma",
+    "clockOnly": "Solo aperto o chiuso: non è stata pubblicata alcuna finestra di seduta.",
+    "ticketExtendedNote": "Questa seduta accetta solo ordini limite. Non c'è un'asta continua su cui eseguire un ordine a mercato.",
+    "ticketClosedNote": "Il mercato è chiuso. Un ordine limite resta in attesa fino all'apertura della prossima seduta."
   },
   "settings": {
     "title": "Impostazioni",
@@ -1067,6 +1613,20 @@
       "thanks": "Grazie. Aiuta davvero."
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "Non è una coppia on-chain",
+    "notOnChainBody": "Una rotta è un aggregatore che divide uno swap tra più pool. La coppia associata si scambia su un exchange centralizzato.",
+    "probeLabel": "Quotato per",
+    "loadingTitle": "Quotazione",
+    "loadingBody": "Si chiede all'aggregatore come eseguirebbe questa dimensione.",
+    "noRouteTitle": "Nessuna rotta",
+    "noRouteBody": "L'aggregatore non ha trovato modo di eseguire questa dimensione per questa coppia.",
+    "noQuotePriceBody": "Il token di quotazione non ha un prezzo in USD pubblicato, quindi non c'è alcuna dimensione da quotare.",
+    "emptyTitle": "Nessuna divisione da mostrare",
+    "youReceive": "Ricevi",
+    "priceImpact": "Impatto sul prezzo",
+    "networkFee": "Commissione di rete"
+  },
   "userMenu": {
     "accountMenu": "Menu account",
     "settings": "Impostazioni",
@@ -1105,6 +1665,45 @@
     "newWindow": "Nuova finestra",
     "back": "Indietro",
     "forward": "Avanti"
+  },
+  "venueLadder": {
+    "emptyTitle": "Nessun exchange da confrontare",
+    "emptyBody": "Collega un secondo exchange che quota questa classe di attivi e la scala li ordina in base al lato che stai operando.",
+    "columns": {
+      "venue": "Exchange",
+      "bid": "Denaro",
+      "ask": "Lettera",
+      "bps": "pb"
+    },
+    "switchSide": "Cambia lato",
+    "rankedByAsk": "Ordinato per lettera, il più conveniente da comprare prima",
+    "rankedByBid": "Ordinato per denaro, il migliore da vendere prima",
+    "bpsTooltip": "Spread in cima al book, misurato sul mid. Un exchange senza un vero book a due lati non entra mai in classifica.",
+    "best": "Migliore",
+    "desktopOnlyRow": "{{venue}} richiede l'app desktop",
+    "switchTo": "Apri il grafico di questa coppia su {{venue}}",
+    "desktopOnly": "Desktop",
+    "notListed": "coppia non quotata",
+    "noBook": "ancora nessuna quotazione"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "Nessun contratto selezionato",
+    "noPairBody": "Apri un evento per vedere quando la sua probabilità si è mossa.",
+    "loadingTitle": "Lettura dello storico",
+    "loadingBody": "La cronologia compare appena si carica lo storico di probabilità.",
+    "flatTitle": "Nessun movimento da segnalare",
+    "flatBody": "Questo contratto non si è riprezzato di più di tre centesimi nello storico caricato.",
+    "columns": {
+      "when": "Quando",
+      "move": "Movimento",
+      "what": "Cosa è successo",
+      "traded": "Scambiati"
+    },
+    "movedFromTo": "La probabilità è passata da {{from}} a {{to}}",
+    "contracts_one": "1 contratto",
+    "contracts_other": "{{count}} contratti",
+    "footerMatched": "I titoli sono abbinati a {{ticker}} per orario, non per causa: ognuno è l'ultimo pubblicato mentre il mercato si riprezzava.",
+    "footerNoTicker": "Il feed di notizie è indicizzato per ticker e questa domanda non ne nomina nessuno, quindi le righe mostrano solo il movimento."
   },
   "workspace": {
     "rename": "Rinomina",
@@ -2275,7 +2874,49 @@
     "empty": "Vuoto",
     "events": "Eventi",
     "predictionPositions": "Posizioni previsionali",
-    "futuresPositions": "Posizioni futures"
+    "futuresPositions": "Posizioni futures",
+    "venueLadder": "Scala degli exchange",
+    "pairDossier": "Dossier della coppia",
+    "marketPulse": "Battito del mercato",
+    "movers": "Mover",
+    "sectorTape": "Barra dei settori",
+    "sectorPeers": "Confronto di settore",
+    "fundingMatrix": "Matrice di funding",
+    "basisMonitor": "Monitor della base",
+    "openInterest": "Open Interest",
+    "fundingExtremes": "Estremi di funding",
+    "fundingBelt": "Barra del funding",
+    "liquidationMap": "Mappa delle liquidazioni",
+    "marginHealth": "Salute del margine",
+    "riskControls": "Controlli di rischio",
+    "categories": "Categorie",
+    "eventBoard": "Dashboard degli eventi",
+    "oddsMovers": "Mover delle quote",
+    "resolvingSoon": "Risoluzione imminente",
+    "eventHeader": "Intestazione dell'evento",
+    "whatMovedIt": "Cosa l'ha mosso",
+    "outcomeLadder": "Scala degli esiti",
+    "basketTicket": "Ticket paniere",
+    "chains": "Blockchain",
+    "poolMap": "Mappa delle pool",
+    "liquidityFlow": "Flusso di liquidità",
+    "poolDetail": "Dettaglio pool",
+    "poolStats": "Statistiche della pool",
+    "onchainTrades": "Operazioni on-chain",
+    "route": "Percorso",
+    "feeAccrual": "Commissioni accumulate",
+    "lpPosition": "Posizione LP",
+    "manageLiquidity": "Gestisci liquidità",
+    "chainLadder": "Scala blockchain",
+    "routeBridge": "Percorso del bridge",
+    "inFlight": "In transito",
+    "session": "Sessione",
+    "earningsCalendar": "Calendario degli utili",
+    "economicCalendar": "Calendario economico",
+    "sessionClock": "Orologio di sessione",
+    "level1": "Level 1",
+    "company": "Azienda",
+    "yourPosition": "La tua posizione"
   },
   "paneDescriptions": {
     "markets": "Sfoglia tutte le coppie di trading disponibili sugli exchange",
@@ -2302,7 +2943,49 @@
     "recentTickers": "Coppie visualizzate di recente con prezzi in tempo reale per un cambio rapido",
     "events": "Sfoglia gli eventi dei mercati previsionali e apri il grafico di un esito",
     "predictionPositions": "I contratti che detieni, il loro costo e quando si risolvono",
-    "futuresPositions": "Posizioni perpetue aperte, il prezzo mark e il livello di liquidazione"
+    "futuresPositions": "Posizioni perpetue aperte, il prezzo mark e il livello di liquidazione",
+    "venueLadder": "Il miglior bid e ask di ogni exchange collegato per questa coppia, classificati così che l'esecuzione più economica sia in cima",
+    "pairDossier": "I numeri che determinano una size: range, volume, liquidità entro l'uno per cento, e dove la coppia si scambia meglio",
+    "marketPulse": "Tre numeri per l'intero mercato, con una riga su cosa si è mosso e perché",
+    "movers": "I maggiori rialzisti e ribassisti della giornata con il volume dietro, così un movimento vero si distingue da uno stoppino",
+    "sectorTape": "Ogni settore come chip con il suo movimento e una barra di ampiezza, così la rotazione si legge a colpo d'occhio",
+    "sectorPeers": "Come ha scambiato oggi il resto del settore di questa coppia, con la coppia stessa fissata in cima",
+    "fundingMatrix": "Il funding di ogni perpetuo su ogni exchange che hai collegato, in una griglia ordinabile per qualsiasi colonna",
+    "basisMonitor": "Perpetuo contro spot in basis point e annualizzato, così il carry si legge come un rendimento e non come un divario",
+    "openInterest": "Open Interest per contratto con la sua variazione a 24h, così il crowding emerge prima del prezzo",
+    "fundingExtremes": "Il tasso di funding più positivo e quello più negativo in questo momento, con l'exchange che paga ciascuno",
+    "fundingBelt": "Il conto alla rovescia fino al prossimo pagamento del funding, il tasso attuale e quello previsto, e quanto paga o incassa la tua posizione",
+    "liquidationMap": "Dove muore la tua posizione sull'asse dei prezzi, contro la liquidazione che il resto del mercato porta",
+    "marginHealth": "Rapporto di margine, mantenimento contro disponibile, e quanto è vicino il conto al deleveraging automatico",
+    "riskControls": "Il tuo limite di perdita giornaliero, il conteggio delle operazioni, la size della posizione e il kill switch, modificabili dove avviene l'operazione",
+    "categories": "Ogni categoria di evento con un conteggio dei contratti in tempo reale, così la dashboard si restringe con un clic",
+    "eventBoard": "Mercati di eventi live come card: la domanda, Sì e No in centesimi, il volume, e quando si risolve",
+    "oddsMovers": "I contratti la cui probabilità si è mossa di più oggi, con il movimento espresso in punti",
+    "resolvingSoon": "Contratti più vicini alla risoluzione, ordinati per orologio e non per volume",
+    "eventHeader": "La domanda, quando e come si risolve, e la probabilità che il mercato sta quotando in questo momento",
+    "whatMovedIt": "Titoli su una timeline, ognuno marcato con il movimento di probabilità che ha causato",
+    "outcomeLadder": "Ogni concorrente dell'evento quotato in centesimi, ordinabile e cercabile, con un pulsante di puntata su ogni riga",
+    "basketTicket": "Punta su più esiti insieme, con il costo totale, l'overround dichiarato e il tuo scenario peggiore prima di confermare",
+    "chains": "Ogni blockchain per cui hai un connettore, con gas, liquidità e volume a 24h accanto",
+    "poolMap": "Pool classificate per volume contro liquidità, così quelle che scambiano davvero vengono prima",
+    "liquidityFlow": "Liquidità netta in entrata e in uscita per intervallo, così una pool che si svuota emerge prima del prezzo",
+    "poolDetail": "La pool selezionata a colpo d'occhio, a un clic dal suo grafico e da uno swap",
+    "poolStats": "Riserve su entrambi i lati, valore bloccato, volume a 24h, il livello di commissione, e l'impatto sul prezzo su tre size",
+    "onchainTrades": "Ogni swap attraverso la pool man mano che si conferma, con il wallet e un link alla transazione",
+    "route": "Come l'aggregatore divide il tuo swap tra le pool, così lo slippage ha una causa dichiarata",
+    "feeAccrual": "Le commissioni che la tua posizione ha guadagnato nel tempo, l'APR che implicano, e cosa è riscuotibile ora",
+    "lpPosition": "Il tuo range contro il prezzo live, il tempo nel range, e l'impermanent loss misurato contro il semplice possesso",
+    "manageLiquidity": "Sposta il range, aggiungi o ritira liquidità, e riscuoti le commissioni senza lasciare il grafico",
+    "chainLadder": "Lo stesso token quotato su ogni blockchain, con il gas incluso, così vince il totale migliore e non la quotazione migliore",
+    "routeBridge": "Blockchain di origine, blockchain di destinazione, il bridge, la sua commissione e quanto ci vuole, pronto per l'esecuzione",
+    "inFlight": "Trasferimenti ancora in conferma, ognuno con il contatore di blocchi che sta aspettando",
+    "session": "A che punto è la giornata di trading in questo momento, secondo il calendario del broker, festività e mezze giornate incluse",
+    "earningsCalendar": "Chi comunica gli utili e quando, prima dell'apertura o dopo la chiusura, con la stima da battere",
+    "economicCalendar": "Pubblicazioni macro all'orario preciso, con importanza, il dato precedente e il consenso",
+    "sessionClock": "Un orologio su una riga per la giornata di trading, così un ticket fuori orario non è mai una sorpresa",
+    "level1": "Bid e ask con le loro size, lo spread e il range del giorno dal feed del broker",
+    "company": "Valutazione, crescita, margini, il prossimo catalizzatore e dove si posizionano gli analisti, in un unico pannello",
+    "yourPosition": "Cosa detieni in questo simbolo: quantità, costo, mark, e sia il P&L del giorno che quello aperto"
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens Previsioni",
-        "description": "Esploratore di eventi e posizioni aperte sui mercati previsionali"
+        "description": "Superfici per i mercati previsionali: la dashboard degli eventi, la scala degli esiti, i panieri e le posizioni sui contratti aperti"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures Connettore di Mercato",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
-        "description": "Posizioni perpetue aperte con ingresso, prezzo mark e livello di liquidazione"
+        "description": "Superfici per i futures perpetui: posizioni aperte, scanner di funding e base, pannelli di liquidazione e margine"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "Preset di workspace on-chain: il terminale DEX e la bacheca degen"
+        "description": "Superfici on-chain: statistiche della pool, il percorso di swap, le posizioni LP e la scala blockchain"
       },
       "pairlens-equities": {
         "title": "Pairlens Azioni",
-        "description": "Preset di workspace azionari: il terminale equity e il desk con scanner"
+        "description": "Superfici azionarie: l'orologio di sessione, le quotazioni Level 1, i fondamentali aziendali e il calendario degli utili"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "Solo dati di mercato. Qui non si può operare."
     },
     "trade": {
+      "allOutcomes": "Tutti i {{total}}",
+      "avgFillPrice": "Prezzo medio di esecuzione",
+      "contractCount_one": "{{formatted}} contratto",
+      "contractCount_other": "{{formatted}} contratti",
+      "fundingAtEntry": "Funding all'ingresso",
+      "fundingLongsPay": "I long pagano gli short",
+      "fundingShortsPay": "Gli short pagano i long",
+      "ifDoesNotWin": "Se {{outcome}} non vince",
+      "ifWins": "Se {{outcome}} vince",
       "limitBuy": "Acquisto limite",
       "limitSell": "Vendita limite",
       "bought": "Acquistato",
+      "maxAmount": "Max",
+      "maxPayout": "Payout max.",
+      "profitLine": "Profitto {{amount}} · {{roi}}",
+      "resolvesOn": "Si risolve il {{date}}",
       "sold": "Venduto",
       "limitOrderFailed": "Ordine limite fallito",
+      "stakeLine": "Capitale {{amount}}",
       "swapFailed": "Swap fallito",
+      "switchOutcome": "Cambia esito",
       "workflowUnsupported": "Workflow non supportato su questo mercato",
       "orderBlocked": "Ordine bloccato dal limite di rischio",
       "orderRejected": "Ordine rifiutato",
@@ -3083,8 +3781,6 @@
       "maxLoss": "Perdita max.",
       "priceCents": "Prezzo (¢)",
       "thisOutcome": "Questo esito",
-      "decreaseContracts": "Un contratto in meno",
-      "increaseContracts": "Un contratto in più",
       "priceCentsRange": "Inserisci un prezzo tra 0¢ e 100¢",
       "leverage": "Leva",
       "reduceOnly": "Solo riduzione",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "Terminal Previsioni",
-        "tagline": "Il grafico delle probabilità con l'intero evento accanto.",
-        "description": "Il layout predefinito per i mercati previsionali: un grafico di probabilità con le operazioni e i tuoi contratti aperti sotto, l'order book e il pannello di trading al centro, e a destra un browser degli eventi a tutta altezza, perché gli esiti vicini sono metà dell'analisi.",
+        "tagline": "Prima la domanda, poi le quote.",
+        "description": "Il layout predefinito per i mercati previsionali: l'intestazione dell'evento sopra un grafico di probabilità, con i titoli che l'hanno mosso sotto, l'order book e un ticket che indica la vincita massima e la perdita massima prima di puntare, e gli esiti vicini a destra.",
         "menuLabel": "Predefinito"
       },
       "prediction-discovery": {
         "name": "Scoperta previsioni",
         "tagline": "Sfoglia i mercati di eventi dal vivo, non un catalogo di coppie.",
-        "description": "Una bacheca iniziale pensata per i contratti su eventi: l'esploratore di eventi occupa la colonna larga, il flusso di notizie scorre accanto e una barra leggera porta la tua watchlist sopra l'indicatore di sentiment. Installa una piattaforma di previsioni come Kalshi o Polymarket per riempire la bacheca.",
+        "description": "Una board iniziale costruita per i contratti su eventi: una colonna di categorie accanto alla dashboard degli eventi, con i maggiori movimenti di quote sopra i contratti più vicini alla risoluzione. Installa una piattaforma di previsioni come Kalshi o Polymarket per riempirla.",
         "menuLabel": "Predefinito"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "Terminal DEX",
         "tagline": "Trading on-chain senza il finto order book.",
-        "description": "Il layout on-chain predefinito: un grafico con le statistiche della pool e le operazioni sotto, un ticket di swap sopra i tuoi ticker recenti per cogliere nuove quotazioni, e il feed social a destra. Non c'è la colonna dell'order book: la profondità quotata da una pool è sintetica, quindi non viene mostrata.",
+        "description": "Il layout on-chain predefinito: un grafico sopra le statistiche della pool, il flusso delle operazioni on-chain accanto, e un ticket di swap sopra il percorso dell'aggregatore così lo slippage ha una causa dichiarata. Non c'è la colonna dell'order book: la profondità quotata dalla pool è sintetica, quindi non viene mostrata.",
         "menuLabel": "Predefinito"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "Terminal Azioni",
-        "tagline": "Azioni con il pannello di trading sopra le notizie sul simbolo.",
-        "description": "Il layout predefinito per le azioni: un grafico con operazioni, posizioni e dati fondamentali sotto di esso, e il pannello di trading sopra le notizie sul simbolo, perché i catalizzatori muovono le azioni come i flussi muovono le crypto.",
+        "tagline": "L'orologio di sessione sopra il grafico, Level 1 sopra il ticket.",
+        "description": "Il layout azionario predefinito: l'orologio di sessione guida, poi il grafico con time and sales e posizioni sotto, e una colonna con le quotazioni Level 1 sopra il ticket e le notizie sul simbolo. Fuori dall'orario regolare l'orologio lo indica, e il ticket passa a solo limite.",
         "menuLabel": "Predefinito"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "Un centro di comando a quattro colonne che riempie un monitor ultrawide o secondario: scanner, grafico, order book e profondità, e un pannello di trading sopra le tue posizioni aperte. Il layout massimalista."
       },
       "classic-terminal": {
-        "name": "Terminal Classico",
-        "tagline": "Il desk classico di Pairlens: grafico, dati, order book, pannello.",
-        "description": "Il layout predefinito del terminale: un grande grafico con una striscia dati a schede e una barra del rischio a sinistra, e l'order book sopra un pannello di trading a destra.",
+        "name": "Esecuzione Spot",
+        "tagline": "Il miglior bid e ask su ogni exchange che hai collegato.",
+        "description": "Il layout spot predefinito: grafico con il flusso delle operazioni e le posizioni sotto, e una colonna guidata dalla scala multi-exchange sopra l'order book e il ticket.",
         "menuLabel": "Predefinito"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "Tutto sullo schermo per un monitor 4K: order book e info coppia, grafico con la barra del rischio, posizioni e social, e una colonna con il pannello di trading."
       },
       "home-pulse": {
-        "name": "Home",
-        "tagline": "La dashboard predefinita: scanner, sentiment, mover e notizie.",
-        "description": "La dashboard di partenza: scanner dei mercati, una barra del battito del mercato con l'indicatore Paura e Avidità e le top coin in scheda con la tua watchlist, e una colonna notizie a tutta altezza. Tutto funziona anche senza account.",
+        "name": "Scoperta Spot",
+        "tagline": "Si apre su cosa si è mosso, e perché.",
+        "description": "La dashboard di partenza per lo spot: una barra del battito del mercato sopra la tabella dei mover e la barra dei settori, con lo scanner completo accanto e le notizie sopra la tua watchlist. Tutto funziona senza account.",
         "menuLabel": "Predefinito"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "Scoperta perpetui",
-        "tagline": "Scansiona i perp con i contratti aperti accanto.",
-        "description": "La board iniziale dei futures: lo scanner di mercato filtrato sui contratti perpetui, le tue posizioni aperte con prezzo mark e liquidazione accanto, sopra una barra multi-prezzo, e il sentiment sopra il feed di notizie.",
+        "tagline": "Scansiona per costo del carry, non per prezzo.",
+        "description": "La board iniziale dei futures: la matrice di funding sopra il monitor della base, con l'open interest e gli estremi di funding accanto. Classifica i perpetui in base a quanto costa mantenerli, la domanda a cui uno scanner di prezzo non risponde mai.",
         "menuLabel": "Predefinito"
       },
       "dex-discovery": {
         "name": "Scoperta DEX",
-        "tagline": "Nuovi listing on-chain, feed social e watchlist.",
-        "description": "La board iniziale on-chain: lo scanner di mercato filtrato sulle coppie DEX, i ticker recenti sopra il feed social per intercettare i nuovi listing, e la tua watchlist sopra il feed di notizie.",
+        "tagline": "Scegli la blockchain, poi la pool.",
+        "description": "La board iniziale on-chain: una colonna di blockchain con gas e liquidità, pool classificate per volume contro liquidità sopra il grafico dei flussi, e la pool selezionata a destra, a un clic dal suo grafico e da uno swap. Le blockchain per cui non hai un connettore non compaiono mai.",
         "menuLabel": "Predefinito"
       },
       "equities-discovery": {
         "name": "Scoperta azioni",
-        "tagline": "Lo scanner azionario accanto al paniere e alle notizie.",
-        "description": "La board iniziale azionaria: lo scanner di mercato filtrato sulle azioni, la tua watchlist sopra una barra multi-prezzo e una colonna di notizie a tutta altezza, perché le azioni si muovono sulle notizie.",
+        "tagline": "La giornata di trading, secondo il calendario che la governa.",
+        "description": "La board iniziale azionaria: a che punto è la sessione in questo momento, chi comunica gli utili e quando, e le pubblicazioni macro in arrivo, con i mover e il feed di notizie accanto. L'orologio arriva dal calendario del broker, così festività e mezze giornate sono corrette.",
         "menuLabel": "Predefinito"
+      },
+      "spot-research": {
+        "name": "Spot Research",
+        "tagline": "Un motivo prima di un ticket.",
+        "description": "Per posizioni mantenute più a lungo di una sessione: grafico sopra il dossier della coppia, il feed di notizie della coppia accanto, e un ticket dimensionato nella valuta di quotazione sopra il suo confronto di settore. Nessun order book, quindi nessun flusso di profondità si apre.",
+        "menuLabel": "Research"
+      },
+      "perps-carry": {
+        "name": "Carry Perpetui",
+        "tagline": "Quanto ti costa il prossimo pagamento del funding.",
+        "description": "Per un perpetuo che intendi mantenere: la barra del funding sopra il grafico con il conto alla rovescia, il tasso attuale e quello previsto e quanto paga o incassa la tua posizione, i contratti aperti sotto, e l'order book sopra un ticket che tiene conto della leva.",
+        "menuLabel": "Carry"
+      },
+      "perps-risk": {
+        "name": "Rischio Perpetui",
+        "tagline": "Dove muore la posizione, e i limiti che la fermano.",
+        "description": "La stessa coppia letta come esposizione: il grafico sopra una mappa delle liquidazioni, la salute del margine sopra i tuoi limiti di sicurezza, e il ticket a destra. I limiti sono modificabili sul posto, così un tetto di size si regola dove avviene l'operazione, non nelle Impostazioni.",
+        "menuLabel": "Rischio"
+      },
+      "dex-liquidity": {
+        "name": "Liquidità DEX",
+        "tagline": "Il tuo range, le tue commissioni, il tuo impermanent loss.",
+        "description": "Il lato LP di una pool: il grafico con il tuo range su di esso, le commissioni accumulate e l'APR che implicano, il tempo nel range, e l'impermanent loss misurato contro il semplice possesso. L'editor del range sta accanto, così una posizione si ribilancia senza lasciare il grafico.",
+        "menuLabel": "Liquidità"
+      },
+      "dex-cross-chain": {
+        "name": "DEX Cross-Chain",
+        "tagline": "Lo stesso token, ogni blockchain, gas incluso.",
+        "description": "Una dashboard per muoversi tra blockchain: la scala blockchain quota il token ovunque con il gas incluso nel totale, il percorso del bridge indica la sua commissione e quanto ci vuole, e i trasferimenti ancora in conferma stanno accanto con i loro contatori di blocchi.",
+        "menuLabel": "Cross-Chain"
+      },
+      "equities-company": {
+        "name": "Azienda azioni",
+        "tagline": "Il business dietro al ticker.",
+        "description": "Per detenere un'azione invece di scambiarla: il grafico sopra valutazione, crescita, margini, il prossimo catalizzatore e il range degli analisti, con le notizie sul simbolo accanto e la tua posizione sopra il ticket.",
+        "menuLabel": "Azienda"
+      },
+      "prediction-race": {
+        "name": "Corsa previsionale",
+        "tagline": "Ogni concorrente quotato, l'overround dichiarato.",
+        "description": "Per un evento con un campo di concorrenti invece di due lati: l'intestazione con il conteggio dei concorrenti e l'overround, un grafico a quote impilate, e una scala che quota ogni concorrente e permette di puntare dalla riga. Il paniere somma all'overround, così coprire l'intero campo visibilmente non è denaro gratis.",
+        "menuLabel": "Corsa"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "Candele",
         "description": "Flussi di candele OHLCV in tempo reale per grafici e segnali"
       },
+      "funding": {
+        "label": "Finanziamento",
+        "description": "Tassi di finanziamento dei perpetui, prezzi mark e index, e open interest"
+      },
+      "pool-stats": {
+        "label": "Statistiche pool",
+        "description": "Stato di un pool AMM, i suoi swap e i pool ordinati di una chain"
+      },
+      "session": {
+        "label": "Calendario di seduta",
+        "description": "Orologio e calendario della giornata di borsa, festivi e mezze sedute inclusi"
+      },
       "ticker": {
         "label": "Ticker",
         "description": "Flussi in tempo reale dell'ultimo prezzo e della variazione 24h"
@@ -5274,5 +6024,23 @@
     "closeBody": "Invia un ordine a mercato solo-riduzione per {{contracts}} contratti di {{pair}} su {{venue}}.",
     "closeConfirm": "Chiudi posizione",
     "closeSubmitted": "Ordine di chiusura inviato"
+  },
+  "yourPosition": {
+    "noVenueTitle": "Nessun broker collegato",
+    "noVenueBody": "Collega un broker azionario per vedere quanto detieni su questo simbolo.",
+    "noAccountsTitle": "Nessun conto titoli",
+    "noAccountsBody": "Aggiungi le chiavi API del broker per vedere le tue posizioni. Vanno bene anche le chiavi paper.",
+    "connect": "Collega un conto",
+    "flatTitle": "Nessuna posizione su {{symbol}}",
+    "flatBody": "Le esecuzioni su questo simbolo compaiono qui.",
+    "shares_one": "{{shares}} azione",
+    "shares_other": "{{shares}} azioni",
+    "sharesShort_one": "{{shares}} azione allo scoperto",
+    "sharesShort_other": "{{shares}} azioni allo scoperto",
+    "openPnlPercent": "Rendimento sul costo",
+    "avgCost": "Costo medio",
+    "mark": "Prezzo di riferimento",
+    "marketValue": "Valore di mercato",
+    "dayChange": "Oggi"
   }
 }
