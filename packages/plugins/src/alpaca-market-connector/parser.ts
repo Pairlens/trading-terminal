@@ -4,6 +4,7 @@ import type { Candle } from '@pairlens/shared/types'
 import type {
   OrderbookLevel,
   TickerSnapshot,
+  TradingStatus,
 } from '@pairlens/market-engine/types'
 
 // ── Pair normalization ──
@@ -191,6 +192,70 @@ export function parseAlpacaSnapshot(raw: unknown): TickerSnapshot | null {
     change24h,
     ts,
   }
+}
+
+// ── Trading status ──
+//
+// The `statuses` channel carries the tape's own halt/resume administrative
+// messages: `sc` a status code, `sm` its text, `rc`/`rm` a reason. Two tape
+// conventions share the channel (UTP publishes letters, CTA digits), which is
+// why the mapping is a table of the codes that mean something unambiguous
+// rather than a rule about what a letter means.
+//
+// The bias is deliberate: a code we do not recognise must NEVER read as
+// 'active'. Telling someone a halted stock is trading normally is the one
+// failure that costs money here, so anything unmapped is 'paused' and carries
+// the venue's own words for the user to read.
+
+/** Codes whose meaning is unambiguous across both tapes. */
+const STATUS_CODES: Record<string, TradingStatus['state']> = {
+  // Trading is stopped.
+  H: 'halted', // UTP: trading halt
+  E: 'halted', // UTP: trading suspended (unlisted issue)
+  '2': 'halted', // CTA: trading halt
+  // Stopped, but by a volatility mechanism rather than an administrative halt.
+  P: 'paused', // UTP: volatility trading pause (LULD)
+  M: 'paused', // UTP: volatility pause, straddle condition
+  // Quotes are back but trading has not been declared open again, which is a
+  // different fact and must not read as 'active'.
+  Q: 'paused', // UTP: quotation resumption
+  // Trading again.
+  T: 'active', // UTP: trading resumption
+  '3': 'active', // CTA: resume
+}
+
+/**
+ * One `statuses` frame as a normalized trading status, or null when the frame
+ * carries no status code at all.
+ *
+ * `reason` prefers the reason text over the status text: 'News Pending' tells a
+ * trader why the tape stopped, while 'Trading Halt' only repeats the state the
+ * badge already shows.
+ */
+export function parseAlpacaTradingStatus(raw: unknown): TradingStatus | null {
+  if (!raw || typeof raw !== 'object') return null
+  const msg = raw as Record<string, unknown>
+
+  const code = typeof msg['sc'] === 'string' ? msg['sc'].trim() : ''
+  if (!code) return null
+
+  const reasonText = firstText(msg['rm'], msg['sm'])
+
+  return {
+    state: STATUS_CODES[code.toUpperCase()] ?? 'paused',
+    reason: reasonText,
+    sinceMs: parseTs(msg['t']),
+  }
+}
+
+/** The first of these that is a non-empty string, else null. */
+function firstText(...values: Array<unknown>): string | null {
+  for (const value of values) {
+    if (typeof value !== 'string') continue
+    const trimmed = value.trim()
+    if (trimmed.length > 0) return trimmed
+  }
+  return null
 }
 
 // ── Quote → top-of-book ──

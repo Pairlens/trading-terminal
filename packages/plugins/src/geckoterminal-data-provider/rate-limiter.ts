@@ -4,10 +4,12 @@
  * One paced door for every GeckoTerminal request this process makes.
  *
  * GeckoTerminal's free tier allows roughly 30 requests a minute per IP, and the
- * DEX surfaces spend that budget from five independent places: the candle
- * poller, the ticker poller, pool state, the swap tape, and the chain rail's
- * per-chain listings. None of them can see the others, so each one is inside
- * its own cadence while the sum is not, and the sum is what the provider meters.
+ * DEX surfaces spend that budget from six independent places: the candle
+ * poller, the ticker poller, pool state, the swap tape, the chain rail's
+ * per-chain listings, and the movers pane's new-pools feed (one request per
+ * major chain, on a slow cadence). None of them can see the others, so each one
+ * is inside its own cadence while the sum is not, and the sum is what the
+ * provider meters.
  * Opening a DEX board on five chains and then navigating pairs used to burst
  * straight through the limit; the whole provider then answered 429 for the next
  * minute, and a 429 on the candle path reads downstream as "this venue does not

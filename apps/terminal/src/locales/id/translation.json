@@ -36,13 +36,6 @@
     "failedTitle": "Keranjang gagal dikirim",
     "hint": "Tiap kaki adalah order limit sungguhan."
   },
-  "bridgePanes": {
-    "routeTitle": "Bridging butuh penyedia bridge",
-    "routeBody": "Belum ada yang terhubung. Konektor on-chain merutekan di dalam satu chain, jadi tidak ada yang bisa mengutip biaya atau waktu untuk memindahkan dana lintas chain. Tangga chain membandingkan apa yang sudah bisa Anda perdagangkan.",
-    "wouldQuote": "Akan mengutip {{asset}} keluar dari {{chain}}",
-    "inFlightTitle": "Pelacakan transfer butuh penyedia bridge",
-    "inFlightBody": "Hitungan konfirmasi datang dari bridge yang memindahkan dana. Tanpa bridge terhubung tidak ada yang bisa ditanya, dan bilah tanpa data di belakangnya akan terus maju pada transfer yang macet."
-  },
   "chainLadder": {
     "title": "{{asset}} di seluruh chain",
     "subtitle": "Diurutkan dari yang benar-benar sampai setelah gas, bukan dari kutipan terbaik",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "Menampilkan {{shown}} dari {{total}} laporan pertama.",
+    "ipo": {
+      "title": "IPO",
+      "columns": {
+        "exchange": "Bursa",
+        "priceRange": "Rentang harga"
+      },
+      "range": "{{low}} sampai {{high}}",
+      "priceTbd": "belum ada harga",
+      "capped": "Menampilkan {{shown}} dari {{total}} pencatatan pertama.",
+      "noneTitle": "Belum ada yang melantai",
+      "noneBody": "Saat ini tidak ada perusahaan dengan tanggal pencatatan di kalender penyedia data.",
+      "emptyTitle": "Tidak ada feed IPO",
+      "emptyBody": "Build ini tidak punya penyedia data fundamental. Kalender IPO berasal dari App Server; broker menerbitkan saham yang ia perdagangkan, bukan yang akan melantai.",
+      "providerBusyTitle": "Feed IPO kena batas laju",
+      "providerErrorTitle": "Feed IPO gagal dimuat"
+    },
     "noEstimate": "tanpa estimasi",
     "noneInWindowBody": {
       "today": "Tidak ada perusahaan di kalender yang melapor hari ini.",
@@ -161,22 +170,52 @@
     "tomorrow": "Besok"
   },
   "economicCalendar": {
-    "emptyTitle": "Belum ada feed makro",
-    "emptyBody": "Plugin data makro mengisi kalender ini dengan waktu rilis, konsensus, dan angka sebelumnya.",
+    "allDay": "Sepanjang hari",
+    "emptyTitle": "Tidak ada kalender makro",
+    "emptyBody": "Jadwal rilis berasal dari App Server. Build ini berjalan mandiri, jadi tidak ada sumber untuk menyusunnya.",
     "columns": {
-      "time": "Waktu",
-      "event": "Peristiwa",
-      "actual": "Aktual",
-      "consensus": "Konsensus",
-      "prior": "Sebelumnya"
-    }
+      "source": "Lembaga",
+      "time": "Waktu ({{zone}})",
+      "event": "Rilis"
+    },
+    "impact": {
+      "high": "Dampak tinggi",
+      "medium": "Dampak sedang",
+      "low": "Dampak rendah"
+    },
+    "impactAll": "Semua",
+    "impactHigh": "Dampak tinggi",
+    "impactLabel": "Filter dampak",
+    "noneHighBody": "Tidak ada rilis berdampak tinggi di rentang ini. Ganti ke Semua untuk melihat sisa kalendernya.",
+    "noneInWindowBody": {
+      "week": "Tidak ada rilis AS dalam tujuh hari ke depan.",
+      "fortnight": "Tidak ada rilis AS dalam dua pekan ke depan.",
+      "month": "Tidak ada rilis AS dalam sebulan ke depan."
+    },
+    "noneInWindowTitle": "Tidak ada jadwal",
+    "providerBusyBody": "Layanan jadwal sedang membatasi kami. Kalender akan kembali sendiri begitu jendelanya disetel ulang.",
+    "providerBusyTitle": "Kalender makro sedang dibatasi",
+    "providerErrorBody": "Jadwal rilis resmi tidak dapat dijangkau. Tidak ada masalah dengan akun atau konektor Anda.",
+    "providerErrorTitle": "Kalender makro gagal dimuat",
+    "scopeLabel": "Rentang rilis",
+    "scopes": {
+      "week": "Sepekan",
+      "fortnight": "2 pekan",
+      "month": "Sebulan"
+    },
+    "sourceNote": "Disusun dari jadwal rilis BLS, BEA, Federal Reserve, dan Census. Waktu dalam zona Timur AS, sesuai yang diumumkan lembaganya.",
+    "title": "Makro",
+    "today": "Hari ini",
+    "tomorrow": "Besok"
   },
   "eventBoard": {
+    "listed": "Terdaftar {{when}}",
     "searchPlaceholder_one": "Cari di 1 pasar aktif",
     "searchPlaceholder_other": "Cari di {{count}} pasar aktif",
     "loadingTitle": "Memuat papan",
     "loadingBody": "Menanyakan ke tiap bursa apa yang sedang diperdagangkan.",
     "sort": {
+      "new": "Terbaru",
       "trending": "Sedang ramai",
       "endingSoon": "Segera berakhir",
       "volume": "Volume",
@@ -221,6 +260,7 @@
     "basisMissing_other": "{{count}} peserta tanpa kutipan"
   },
   "feeAccrual": {
+    "lastTouch": "saat terakhir disentuh",
     "title": "Akumulasi fee",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
@@ -233,12 +273,12 @@
       "claimable": "Bisa diklaim"
     },
     "loadingTitle": "Membaca fee",
-    "loadingBody": "Mensimulasikan collect pada setiap posisi untuk melihat berapa yang akan dibayar sekarang.",
+    "loadingBody": "Membaca hak setiap posisi, dan mensimulasikan collect di chain yang mendukungnya.",
     "emptyTitle": "Tidak ada posisi likuiditas",
     "emptyBody": "{{wallet}} tidak memegang posisi yang bisa mengumpulkan fee. Sediakan likuiditas di chain yang terhubung dan jumlahnya akan muncul di sini.",
     "noChainsTitle": "Tidak ada konektor chain",
     "noChainsBody": "Pasang konektor on-chain dan panel ini akan membaca berapa yang pool-nya utang ke wallet Anda.",
-    "footnote": "Jumlah yang akan dibayar collect pada blok ini, kedua sisi, per posisi. Fee yang sudah diambil tidak meninggalkan jejak di chain, jadi APR fee, waktu dalam rentang, dan kerugian dibanding menahan aset butuh indexer dan tidak ditampilkan."
+    "footnote": "Kedua sisi, per posisi: di chain EVM, jumlah yang akan dibayar collect pada blok ini; di Solana, jumlah yang sudah dikreditkan pool. Biaya yang sudah ditarik tidak meninggalkan jejak on-chain, sehingga APR biaya, waktu dalam rentang, dan kerugian dibanding menahan membutuhkan indexer dan tidak ditampilkan."
   },
   "funding": {
     "loading": "Membaca tingkat pendanaan…",
@@ -289,6 +329,57 @@
     "emptyTitle": "Tidak ada bursa perpetual aktif",
     "emptyBody": "Pendanaan adalah data publik, jadi kunci API tidak diperlukan. Pasang konektor futures perpetual dan matriks terisi sendiri."
   },
+  "inFlight": {
+    "title": "Dalam perjalanan",
+    "pendingCount_one": "{{count}} tertunda",
+    "pendingCount_other": "{{count}} tertunda",
+    "emptyTitle": "Tidak ada transfer berjalan",
+    "emptyBody": "Transfer bridge yang dikirim dari terminal ini muncul di sini beserta kedua transaksinya, dan bertahan sampai dana tiba.",
+    "route": "{{from}} ke {{to}}",
+    "sourceTx": "Tx asal",
+    "destinationTx": "Tx tujuan",
+    "landed": "Tiba",
+    "landedAmount": "Tiba {{amount}}",
+    "failed": "Gagal",
+    "confirming": "Mengonfirmasi",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "Menunggu konfirmasi di chain asal",
+      "WAIT_DESTINATION_TRANSACTION": "Menunggu chain tujuan",
+      "BRIDGE_NOT_AVAILABLE": "Bridge tidak tersedia",
+      "CHAIN_NOT_AVAILABLE": "Chain tidak tersedia",
+      "REFUND_IN_PROGRESS": "Pengembalian dana berjalan",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "Perlu pengembalian dana",
+      "UNKNOWN_ERROR": "Status tidak diketahui",
+      "COMPLETED": "Selesai",
+      "PENDING": "Mengonfirmasi"
+    }
+  },
+  "insiderActivity": {
+    "title": "Aktivitas orang dalam",
+    "summary": "{{buys}} beli · {{sells}} jual",
+    "span_one": "{{count}} hari",
+    "span_other": "{{count}} hari",
+    "buy": "Beli",
+    "sell": "Jual",
+    "noValue": "tanpa nilai",
+    "columns": {
+      "date": "Tanggal",
+      "insider": "Orang dalam",
+      "shares": "Lembar",
+      "price": "Harga",
+      "value": "Nilai"
+    },
+    "noFilingsTitle": "Tidak ada laporan terbaru untuk {{symbol}}",
+    "noFilingsBody": "Belum ada orang dalam perusahaan ini yang melaporkan transaksi. Periode sepi itu wajar, dan Form 4 masuk dalam dua hari kerja setelah transaksi.",
+    "needsProviderTitle": "Laporan orang dalam butuh penyedia data",
+    "needsProviderBody": "Build ini tidak punya feed fundamental. Laporan Form 4 berasal dari App Server, dan konektor broker hanya memberi kuotasi dan mengeksekusi.",
+    "providerBusyTitle": "Laporan orang dalam kena batas laju",
+    "providerBusyBody": "Penyedia data sedang membatasi kami. Laporan kembali sendiri begitu jendelanya disetel ulang.",
+    "providerErrorTitle": "Laporan orang dalam gagal dimuat",
+    "providerErrorBody": "Penyedia menjawab dengan sesuatu yang tidak terpakai. Tidak ada masalah pada akun atau konektor Anda.",
+    "notEquityTitle": "Laporan orang dalam butuh saham",
+    "notEquityBody": "Hanya perusahaan tercatat yang mengajukan ini. {{venue}} bukan bursa saham, dan ticker yang sama di sana adalah aset lain."
+  },
   "level1": {
     "emptyTitle": "Belum ada kuotasi",
     "emptyBody": "Bursa belum mengirim bid atau ask untuk simbol ini.",
@@ -298,20 +389,44 @@
     "bps": "bps",
     "dayRange": "rentang hari ini",
     "feed": "Feed",
-    "depthNote": "Broker hanya mengutip puncak order book, jadi tidak ada kedalaman di balik kedua harga ini."
+    "depthNote": "Broker hanya mengutip puncak order book, jadi tidak ada kedalaman di balik kedua harga ini.",
+    "status": "Status",
+    "statusHalted": "Dihentikan",
+    "statusPaused": "Dijeda",
+    "statusSince": "sejak {{time}}",
+    "statusTrading": "Diperdagangkan"
   },
   "liquidationMap": {
-    "subtitle": "Harga likuidasimu, dan di mana leverage yang dibuka di sini berakhir",
+    "clusterHint": "{{price}}: {{notional}} posisi {{side}} dilikuidasi dalam {{count}} eksekusi",
+    "clustersCaption": "Kolom berbayang adalah yang benar-benar dilikuidasi bursa selama {{window}} jam terakhir, merah untuk long dan hijau untuk short.",
+    "clustersErrorCaption": "Riwayat likuidasi bursa tidak dapat dimuat. Bagian lain pada sumbu tidak terpengaruh.",
+    "clustersLoadingCaption": "Memuat riwayat likuidasi bursa.",
+    "collectingCaption": "Klaster pasar masih terisi. Mengumpulkan sejak {{since}}.",
+    "collectingJustStarted": "baru saja",
+    "legendLong": "{{value}} long",
+    "legendPrints": "{{count}} eksekusi",
+    "legendShort": "{{value}} short",
+    "noClustersCaption": "Tidak ada yang dilikuidasi pada kontrak ini dalam {{window}} jam terakhir.",
+    "notTrackedCaption": "Bursa ini tidak menerbitkan feed likuidasi agregat, jadi tidak ada klaster pasar yang digambar.",
+    "standaloneCaption": "Klaster pasar berasal dari cloud Pairlens, yang tidak dipakai build ini.",
+    "subtitle": "Di mana pasar dilikuidasi, dan di mana posisi Anda sendiri akan berada",
     "estimateBadge": "PERKIRAAN",
     "sideLong": "long",
     "sideShort": "short",
     "referenceHint": "{{side}} {{leverage}}x yang dibuka di harga sekarang terlikuidasi dekat {{price}}",
-    "caption": "Batang adalah harga likuidasimu sendiri, seperti dilaporkan tiap bursa. Garis tipis menandai di mana posisi yang dibuka pada harga sekarang akan terlikuidasi pada 5x, 10x, dan 25x. Tidak ada bursa yang mempublikasikan klaster likuidasi agregat, jadi tidak ada yang digambar.",
+    "caption": "Batang adalah harga likuidasi Anda sendiri, sesuai laporan tiap bursa. Tanda tipis menunjukkan di mana posisi yang dibuka pada harga sekarang akan dilikuidasi pada 5x, 10x, dan 25x.",
     "noPositionsCaption": "Garis tipis menandai di mana posisi yang dibuka pada harga sekarang akan terlikuidasi pada 5x, 10x, dan 25x. Harga likuidasimu sendiri muncul sebagai batang begitu ada posisi terbuka.",
     "noPriceTitle": "Tidak ada harga acuan",
     "noPriceBody": "Peta butuh harga langsung untuk kontrak ini. Ia terisi begitu grafik di sebelahnya punya satu.",
     "emptyTitle": "Tidak ada yang digambar",
-    "emptyBody": "Buka posisi perpetual, atau pilih kontrak, dan sumbu harga akan terisi."
+    "emptyBody": "Buka posisi perpetual, atau pilih kontrak, dan sumbu harga akan terisi.",
+    "windowLabel": "Rentang",
+    "windows": {
+      "h1": "1 j",
+      "h6": "6 j",
+      "h24": "24 j",
+      "h72": "72 j"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "Pilih pool",
@@ -327,12 +442,11 @@
     "biggestLabel": "Swap terbesar"
   },
   "lpPanes": {
-    "manageTitle": "Mengubah range butuh aksi likuiditas",
-    "manageBody": "Menambah, menarik dan memusatkan ulang likuiditas adalah transaksi bertanda tangan yang belum dibangun konektor mana pun. Kontrolnya tidak ditampilkan sampai benar-benar berfungsi.",
     "venueFallback": "chain ini",
     "wouldRead": "Akan membaca {{wallet}} pada {{pool}}, {{chain}}"
   },
   "lpPosition": {
+    "feesLastTouch": "Diselesaikan saat posisi ini terakhir disentuh. Orca dan Raydium baru mengkredit biaya ketika posisi disentuh berikutnya, jadi klaim sebenarnya bisa lebih besar.",
     "title": "Posisi LP",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
@@ -353,12 +467,81 @@
     "rangeUnknown": "Pool belum terbaca",
     "otherPositions": "Posisi Anda yang lain",
     "loadingTitle": "Membaca posisi",
-    "loadingBody": "Menanyakan position manager di setiap chain yang terhubung tentang isi wallet ini.",
+    "loadingBody": "Menanyakan ke setiap chain yang terhubung apa yang dipegang dompet ini.",
     "emptyTitle": "Tidak ada posisi likuiditas",
-    "emptyBody": "{{wallet}} tidak memegang posisi Uniswap v3 atau PancakeSwap v3 di chain yang terhubung. Sediakan likuiditas di salah satunya dan posisinya akan muncul di sini.",
+    "emptyBody": "{{wallet}} tidak memiliki posisi likuiditas terkonsentrasi di chain yang terhubung. Sediakan likuiditas di salah satunya dan posisi itu akan muncul di sini.",
     "noChainsTitle": "Tidak ada konektor chain",
-    "noChainsBody": "Pasang konektor on-chain dan panel ini akan membaca position manager chain tersebut untuk wallet Anda.",
+    "noChainsBody": "Pasang konektor on-chain dan panel ini akan membaca posisi likuiditas chain tersebut untuk dompet Anda.",
     "footnote": "Dibaca dari chain: pita harga, nilai likuiditas saat ini, dan fee yang belum diambil. Posisi tidak menyimpan biaya awalnya, jadi tidak ada angka pembanding terhadap sekadar menahan aset."
+  },
+  "manageLiquidity": {
+    "title": "Kelola likuiditas",
+    "subtitle_one": "{{wallet}} · {{count}} posisi",
+    "subtitle_other": "{{wallet}} · {{count}} posisi",
+    "position": "Posisi",
+    "tabCollect": "Klaim",
+    "tabRemove": "Tarik",
+    "tabAdd": "Tambah",
+    "unread": "Pool belum terbaca",
+    "claimable": "Bisa diklaim sekarang",
+    "collectNote": "Satu transaksi. Kedua sisi dibayarkan ke dompet ini.",
+    "collectNothing": "Belum ada yang bisa diklaim pada posisi ini.",
+    "collectUnread": "Biaya posisi ini tidak terbaca, jadi tidak ada yang perlu dikonfirmasi.",
+    "removeAmount": "Tarik",
+    "youReceive": "Kamu menerima",
+    "removeFeesNote": "Biaya disapu penuh dalam transaksi yang sama, berapa pun persentase yang kamu tarik.",
+    "removeUnread": "Pool tidak menjawab, jadi hasilnya tidak bisa dipratinjau. Minimum tetap ditetapkan dari kondisi live saat kamu menandatangani.",
+    "addRatioNote": "Rentang menentukan rasionya: mengisi satu jumlah menentukan yang lain.",
+    "addBelowBand": "Harga di bawah rentang, jadi posisi ini hanya menerima {{symbol}}.",
+    "addAboveBand": "Harga di atas rentang, jadi posisi ini hanya menerima {{symbol}}.",
+    "addUnread": "Pool tidak menjawab, jumlah kedua tidak bisa diturunkan. Isi keduanya.",
+    "addWrappedNote": "Yang disetor adalah token milik pool. Posisi yang memegang native terbungkus butuh saldo terbungkus, bukan yang native.",
+    "balance": "Saldo {{amount}}",
+    "slippage": "Slippage",
+    "reviewCollect": "Tinjau klaim",
+    "reviewRemove": "Tinjau penarikan",
+    "reviewAdd": "Tinjau setoran",
+    "confirmTitle": "Konfirmasi yang akan ditandatangani",
+    "rowAction": "Aksi",
+    "rowPosition": "Posisi",
+    "rowChain": "Chain",
+    "rowManager": "Manager",
+    "rowCollecting": "Diklaim",
+    "rowRemoving": "Ditarik",
+    "rowReceive": "Kamu menerima",
+    "rowFeesSwept": "Biaya yang ikut disapu",
+    "rowDepositing": "Disetor",
+    "rowMinimum": "Minimum",
+    "confirmCollectNote": "Dikirim ke position manager di atas. Biaya masuk ke dompet ini dan tidak ke mana-mana lagi.",
+    "confirmRemoveNote": "Burn dan klaim dalam satu transaksi. Minimum dihitung ulang dari harga pool saat tanda tangan, {{slippage}} di bawahnya.",
+    "confirmAddNote": "Tiap token perlu approval ke manager dulu, jadi ini bisa jadi dua atau tiga transaksi.",
+    "back": "Kembali",
+    "sign": "Tanda tangani dan kirim",
+    "pendingTitle": "Menunggu tanda terima",
+    "pendingBody": "Sudah ditandatangani dan dikirim. Layar ini bertahan sampai chain mengonfirmasi.",
+    "collectedTitle": "Biaya diklaim",
+    "removedTitle": "Likuiditas ditarik",
+    "addedTitle": "Likuiditas ditambahkan",
+    "successBody": "Posisimu diperbarui pada pembacaan berikutnya.",
+    "failedTitle": "Transaksi gagal",
+    "viewTransaction": "Lihat transaksi",
+    "done": "Selesai",
+    "lockedTitle": "Buka kunci untuk menandatangani",
+    "lockedBody": "Transaksi ini butuh kunci dompetmu. Buka kunci Pairlens lalu coba lagi.",
+    "noConnectorTitle": "Konektor belum dipasang",
+    "noConnectorBody": "Chain posisi ini tidak punya konektor terpasang, jadi tidak ada yang bisa menandatanganinya.",
+    "evmOnlyTitle": "Hanya posisi EVM",
+    "evmOnlyBody": "Aksi-aksi ini memanggil position manager Uniswap v3, yaitu kontrak EVM. Posisi Solana bisa dibaca di panel LP lain tapi tidak bisa ditandatangani di sini. Sediakan likuiditas di chain EVM dan kamu bisa mengelolanya dari panel ini.",
+    "readOnlyElsewhere_one": "{{count}} posisi dari keluarga tanda tangan lain hanya bisa dibaca di sini.",
+    "readOnlyElsewhere_other": "{{count}} posisi dari keluarga tanda tangan lain hanya bisa dibaca di sini.",
+    "noSigner": "Tidak ada dompet terhubung yang menandatangani di chain posisi ini.",
+    "noChainsTitle": "Tidak ada konektor chain",
+    "noChainsBody": "Pasang konektor on-chain dan panel ini bisa mengklaim biaya serta mengubah ukuran rentang yang ditemukan.",
+    "loadingTitle": "Membaca posisi",
+    "loadingBody": "Menanyakan ke position manager tiap chain terhubung apa yang dipegang dompet ini.",
+    "emptyTitle": "Tidak ada posisi likuiditas",
+    "emptyBody": "{{wallet}} tidak memegang posisi Uniswap v3 atau PancakeSwap v3 di chain yang terhubung. Sediakan likuiditas di salah satunya dan kamu bisa mengelolanya di sini.",
+    "footnote": "Klaim dan penarikan masing-masing satu transaksi, dan penarikan membawa serta biayanya. Menggeser rentang bukan pengeditan: itu membakar posisi dan mencetak yang baru, jadi tidak ditawarkan di sini."
   },
   "marginHealth": {
     "title": "Kesehatan margin",
@@ -369,8 +552,6 @@
     "equity": "Ekuitas",
     "maintenance": "Pemeliharaan",
     "liqDistance": "Jarak likuidasi",
-    "adl": "Antrean ADL",
-    "adlHint": "Tidak dipublikasikan bursa",
     "stressLabel": "Jika harga bergerak melawanmu",
     "ratioAfter": "rasio {{value}} %",
     "liquidated": "terlikuidasi",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "Tidak ada data pasar",
     "emptyBody": "App Server maupun sumber publik cadangan belum menjawab, jadi belum ada yang bisa diperingkat.",
+    "newListings": {
+      "emptyTitle": "Belum ada yang baru",
+      "emptyBodyBothOff": "Baik penyapuan listing bursa maupun penyedia on-chain tidak menjawab.",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "Listing bursa dilacak sejak {{date}}. Pool membawa waktu pembuatannya sendiri.",
+      "cexOff": "Hanya pool on-chain. Listing bursa berasal dari App Server, yang tidak dipakai build ini."
+    },
     "noBrokerTitle": "Belum ada bursa saham terpasang",
     "noBrokerBody": "Pasang konektor broker dari Plugin Store, lalu pergerakan hari ini muncul di sini.",
     "tabs": {
       "gainers": "Naik",
       "losers": "Turun",
+      "newListings": "Listing baru",
       "volume": "Volume",
       "volatility": "Volatilitas",
       "unusual": "Tidak biasa"
     },
     "window": "Rentang peringkat",
     "columns": {
+      "asset": "Aset",
+      "liquidity": "Likuiditas",
+      "listed": "Terdaftar",
       "pair": "Pasangan",
       "change": "Perubahan {{window}}",
       "price": "Harga",
+      "venue": "Bursa",
       "volume": "Volume",
       "trend": "Tren"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "Tidak ada yang naik pada rentang ini.",
       "losers": "Tidak ada yang turun pada rentang ini.",
+      "newListings": "Tidak ada yang terdaftar dalam dua minggu terakhir.",
       "volume": "Belum ada bursa yang melaporkan volume.",
       "volatility": "Belum ada yang bergerak cukup jauh.",
       "unusual": "Tidak ada aset yang diperdagangkan tidak biasa untuk ukurannya."
@@ -819,6 +1014,44 @@
     "killSwitchHint": "Memblokir semua order sampai kamu melanjutkan",
     "haltOrders": "Hentikan order",
     "resumeOrders": "Lanjutkan"
+  },
+  "routeBridge": {
+    "title": "Bridge",
+    "subtitle": "Pindahkan satu aset dari {{chain}}",
+    "provider": "LI.FI",
+    "notEvmTitle": "Chain ini belum bisa di-bridge",
+    "notEvmBody": "Transfer berjalan antara Ethereum, Base, Arbitrum, BNB Chain, dan Polygon. {{chain}} menandatangani jenis transaksi yang berbeda, dan konektor bridge belum membawa penanda tangan itu.",
+    "noConnectorTitle": "Belum ada konektor bridge",
+    "noConnectorBody": "Pasang plugin LI.FI Bridge dari Plugin Store untuk menghitung dan mengirim transfer lintas chain.",
+    "amountLabel": "Jumlah yang di-bridge",
+    "amountPlaceholder": "Jumlah dalam {{asset}}",
+    "destination": "Chain tujuan",
+    "quoting": "Menghitung rute",
+    "youReceive": "Kamu terima di",
+    "minReceived": "Dijamin",
+    "bridgeFee": "Biaya bridge",
+    "networkGas": "Gas jaringan",
+    "eta": "Perkiraan tiba",
+    "etaSeconds": "~{{seconds}} dtk",
+    "etaMinutes": "~{{minutes}} mnt",
+    "feeIncluded": "{{tool}} memotong biayanya dari jumlah, jadi angka di atas adalah yang benar-benar sampai.",
+    "feeExtra": "{{tool}} menagih biayanya di luar jumlah tersebut.",
+    "review": "Tinjau transfer",
+    "requote": "Perbarui kuotasi",
+    "expired": "Kedaluwarsa",
+    "confirmBody": "Kirim {{amount}} {{asset}} dari {{from}} ke {{to}} lewat {{tool}}. Kamu menerima minimal {{min}}.",
+    "confirmCost": "Biaya bridge {{fee}}, gas jaringan {{gas}}, ditandatangani oleh {{wallet}}.",
+    "confirmAction": "Konfirmasi dan tanda tangani",
+    "cancel": "Batal",
+    "sentBody": "Transfer terkirim. Sedang dilacak:",
+    "sendFailed": "Transfer tidak bisa dikirim.",
+    "refusal": {
+      "non-evm-chain": "Bridge ke dan dari {{chain}} belum didukung. Transfer hanya berjalan antar chain EVM.",
+      "same-chain": "Itu chain yang sedang kamu pakai. Untuk menukar, gunakan panel di sebelah.",
+      "unknown-market": "{{chain}} bukan chain yang dicakup bridge ini.",
+      "unknown-token": "{{asset}} tidak menemukan kontrak di {{chain}}, jadi tidak ada yang bisa di-bridge.",
+      "no-route": "Tidak ada bridge yang punya rute untuk ukuran ini sekarang. Coba jumlah atau chain lain."
+    }
   },
   "sectionTours": {
     "back": "Kembali",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "Aktivitas Orang Dalam",
     "markets": "Market",
     "watchlist": "Daftar Pantauan",
     "topCoins": "Koin Teratas",
@@ -3029,6 +3263,7 @@
     "yourPosition": "Posisi Anda"
   },
   "paneDescriptions": {
+    "insiderActivity": "Laporan Form 4 terbaru: siapa di dalam perusahaan yang membeli atau menjual, berapa banyak, dan di harga berapa",
     "markets": "Jelajahi semua pair trading yang tersedia di berbagai exchange",
     "watchlist": "Lacak pair favorit Anda dalam daftar yang dapat disesuaikan",
     "topCoins": "Urutkan koin berdasarkan volume, kapitalisasi pasar, dan perubahan harga",
@@ -3065,8 +3300,8 @@
     "openInterest": "Open interest per kontrak beserta perubahan 24 jamnya, sehingga penumpukan posisi terlihat sebelum harga bereaksi",
     "fundingExtremes": "Funding rate paling positif dan paling negatif saat ini, beserta bursa yang membayar masing-masing",
     "fundingBelt": "Hitung mundur ke funding berikutnya, rate saat ini dan yang diprediksi, serta berapa yang dibayar atau didapat posisi Anda",
-    "liquidationMap": "Di mana posisi Anda berakhir pada sumbu harga, dibandingkan dengan likuidasi yang ditanggung sisa market",
-    "marginHealth": "Rasio margin, maintenance dibanding yang tersedia, dan seberapa dekat akun dengan auto-deleveraging",
+    "liquidationMap": "Apa yang benar-benar dilikuidasi bursa pada sumbu harga, dengan harga likuidasi Anda sendiri dan tanda leverage di atasnya",
+    "marginHealth": "Rasio margin, maintenance terhadap ekuitas, jarak ke likuidasi, dan dampak pergerakan yang berlawanan pada ketiganya",
     "riskControls": "Batas kerugian harian, jumlah trade, ukuran posisi, dan kill switch Anda, dapat diedit langsung di tempat trade terjadi",
     "categories": "Setiap kategori acara dengan jumlah kontrak aktif secara live, sehingga papan menyempit hanya dengan satu klik",
     "eventBoard": "Market acara langsung dalam bentuk kartu: pertanyaannya, Yes dan No dalam sen, volume, dan kapan diselesaikan",
@@ -3090,10 +3325,10 @@
     "routeBridge": "Chain asal, chain tujuan, bridge-nya, fee-nya, dan berapa lama waktunya, siap dieksekusi",
     "inFlight": "Transfer yang masih dikonfirmasi, masing-masing dengan penghitung blok yang sedang ditunggunya",
     "session": "Di titik mana hari trading berada sekarang, dari kalender broker itu sendiri, termasuk hari libur dan setengah hari",
-    "earningsCalendar": "Siapa melapor dan kapan, dikelompokkan per hari, dengan estimasi konsensus yang harus dilewati",
+    "earningsCalendar": "Siapa merilis laporan dan kapan, dengan estimasi yang harus dilewati, plus apa yang segera melantai",
     "economicCalendar": "Rilis data makro berdasarkan waktunya, dengan tingkat kepentingan, angka periode sebelumnya, dan konsensus",
     "sessionClock": "Jam satu baris untuk hari trading, sehingga order di luar jam trading tidak pernah jadi kejutan",
-    "level1": "Bid dan ask beserta ukurannya, spread, dan rentang harga hari ini dari feed broker",
+    "level1": "Bid dan ask beserta ukurannya, spread, rentang hari ini, dan baris status saat bursa menghentikan perdagangan",
     "company": "Valuasi, pertumbuhan, margin, katalis berikutnya, dan posisi para analis, dalam satu panel",
     "yourPosition": "Yang Anda pegang pada simbol ini: kuantitas, cost, mark, serta profit harian maupun profit yang belum direalisasi"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "Saldo, posisi, dan order dibaca lewat kunci API {{venue}} Anda, dan kunci itu sedang terkunci.",
       "accountMissingTitle": "Hubungkan {{venue}} untuk melihat akun Anda",
       "accountMissingDescription": "Hanya kunci API {{venue}} Anda yang bisa membaca saldo, posisi, dan order. Kunci itu tetap di perangkat ini.",
+      "walletMissingTitle": "Hubungkan dompet",
+      "walletMissingDescription": "Panel ini bekerja dengan dompet yang terhubung. Tautkan satu dan posisi, biaya, serta transfernya muncul di sini.",
+      "walletSealedDescription": "Kunci dompet Anda berada di brankas yang terkunci. Buka kuncinya dan panel ini dapat membaca serta menandatangani untuk dompet itu.",
       "connectAction": "Hubungkan {{venue}}"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "Perlu API key",
     "setupRequiredHint": "Perlu penyiapan",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "Node Solana yang dilalui setiap pembacaan dan pengiriman di Solana: saldo, posisi likuiditas, pengiriman swap. Tambahkan kunci Helius Anda sendiri untuk endpoint yang andal; tanpa kunci, aplikasi memakai RPC publik yang menolak beban tanpa peringatan."
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Pindahkan satu aset antara Ethereum, Base, Arbitrum, BNB Chain, dan Polygon: bridge terbaik untuk ukurannya, lengkap dengan biaya, perkiraan waktu tiba, dan pelacakan sampai dana masuk"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "Terminal trading inti: chart, order book, entry trade, penemuan market, dan watchlist"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "Kuotasi bridge",
+        "description": "Kuotasi rute lintas chain dan pelacakan status transfer"
+      },
       "candles": {
         "label": "Candle",
         "description": "Streaming candle OHLCV langsung untuk chart dan sinyal"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "Pendanaan",
         "description": "Tingkat pendanaan perpetual, harga mark dan indeks, serta open interest"
+      },
+      "liquidations": {
+        "label": "Likuidasi",
+        "description": "Riwayat likuidasi teragregasi untuk pasangan futures perpetual"
       },
       "pool-stats": {
         "label": "Statistik Pool",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "Data Market",
       "ai": "AI",
+      "rpc": "RPC",
       "trading": "Trading",
       "automation": "Otomasi",
       "theme": "Tema",
@@ -5762,7 +6017,17 @@
         "description": "Landasan pencarian web untuk laporan riset AI"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "RPC Solana",
+        "description": "Akses JSON-RPC ke jaringan Solana untuk baca dan kirim"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "Eksekusi bridge",
+        "description": "Menjalankan transfer lintas chain dengan dompet yang terhubung"
+      },
       "orders": {
         "label": "Order",
         "description": "Pasang dan kelola order di venue yang terhubung"
@@ -6084,6 +6349,12 @@
     "allCategories": "Semua",
     "loading": "Memuat acara…",
     "failed": "Tidak dapat memuat acara",
+    "sort": {
+      "venueOrder": "Urut · urutan bursa",
+      "new": "Urut · terbaru",
+      "endingSoon": "Urut · segera berakhir",
+      "volume": "Urut · volume"
+    },
     "tryLater": "Bursa tidak merespons. Coba lagi sebentar.",
     "emptyTitle": "Tidak ada acara terbuka",
     "emptyBody": "Bursa ini sedang tidak mencantumkan apa pun.",

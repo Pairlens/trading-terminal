@@ -1,18 +1,21 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The two derived event fields, pinned.
+ * The derived event fields, pinned.
  *
- * Both exist because ccxt drops them: `parsePredictionTicker` sets `change` to
- * undefined on either venue even where the raw payload carries the previous
- * price. The failure a user notices is a movers board that ranks by nonsense —
- * a cold market whose previous price is zero-filled reporting a 43-point
- * overnight move, or a No leg painted green while its Yes leg fell.
+ * All of them exist because ccxt drops them: `parsePredictionTicker` sets
+ * `change` to undefined on either venue even where the raw payload carries the
+ * previous price, and `parseMarket` hardcodes `created: undefined` on both. The
+ * failure a user notices is a board that ranks by nonsense — a cold market
+ * whose previous price is zero-filled reporting a 43-point overnight move, a No
+ * leg painted green while its Yes leg fell, or a zero-filled timestamp dating a
+ * market to 1970 at the bottom of a "New" sort.
  */
 import { describe, expect, it } from 'bun:test'
 
 import {
   marketChange24h,
+  marketCreatedMs,
   marketRules,
   outcomeChange24h,
   outcomeChangeSign,
@@ -58,6 +61,70 @@ describe('marketChange24h', () => {
         previous_price_dollars: '0.1',
       }),
     ).toBe(0.01)
+  })
+})
+
+describe('marketCreatedMs', () => {
+  it('reads the Polymarket creation instant', () => {
+    // Field names measured against gamma /events on 2026-08-17.
+    expect(marketCreatedMs({ createdAt: '2026-08-13T12:30:06.012391Z' })).toBe(
+      Date.parse('2026-08-13T12:30:06.012Z'),
+    )
+  })
+
+  it('falls back to the Polymarket trading window', () => {
+    expect(marketCreatedMs({ startDate: '2026-08-13T12:30:27Z' })).toBe(
+      Date.parse('2026-08-13T12:30:27Z'),
+    )
+  })
+
+  it('prefers the creation instant over the window', () => {
+    expect(
+      marketCreatedMs({
+        createdAt: '2026-08-13T12:30:06Z',
+        startDate: '2026-08-14T00:00:00Z',
+      }),
+    ).toBe(Date.parse('2026-08-13T12:30:06Z'))
+  })
+
+  it('reads the Kalshi open time', () => {
+    expect(marketCreatedMs({ open_time: '2026-08-17T17:34:53Z' })).toBe(
+      Date.parse('2026-08-17T17:34:53Z'),
+    )
+  })
+
+  it('ignores the Kalshi record birthday, zero-filled or not', () => {
+    // Kalshi publishes `created_time: "0001-01-01T00:00:00Z"` on markets it has
+    // not opened, and it can precede the listing by days when it is real. The
+    // listing instant is the one a "New" sort means.
+    expect(
+      marketCreatedMs({ created_time: '0001-01-01T00:00:00Z' }),
+    ).toBeUndefined()
+    expect(
+      marketCreatedMs({ created_time: '2026-06-05T17:55:43.779104Z' }),
+    ).toBeUndefined()
+  })
+
+  it('refuses a timestamp at or before the epoch rather than dating it to 1970', () => {
+    expect(
+      marketCreatedMs({ open_time: '1970-01-01T00:00:00Z' }),
+    ).toBeUndefined()
+    expect(
+      marketCreatedMs({ createdAt: '0001-01-01T00:00:00Z' }),
+    ).toBeUndefined()
+  })
+
+  it('refuses a bare epoch, because seconds and milliseconds look alike', () => {
+    expect(marketCreatedMs({ createdAt: 1_755_449_693_000 })).toBeUndefined()
+    expect(marketCreatedMs({ open_time: 1_755_449_693 })).toBeUndefined()
+  })
+
+  it('has nothing to say about garbage or absence', () => {
+    expect(marketCreatedMs({})).toBeUndefined()
+    expect(marketCreatedMs({ createdAt: 'soon' })).toBeUndefined()
+    expect(marketCreatedMs({ createdAt: '' })).toBeUndefined()
+    expect(marketCreatedMs({ open_time: '   ' })).toBeUndefined()
+    expect(marketCreatedMs({ createdAt: null })).toBeUndefined()
   })
 })
 

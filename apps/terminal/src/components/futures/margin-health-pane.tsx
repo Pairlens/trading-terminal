@@ -13,10 +13,6 @@
  * differently (a fraction on one, percent on another) with nothing in the
  * payload to say which. Where the venue's figure is the only one available it
  * is normalised and used, and the header says the source.
- *
- * ADL is shown as unpublished rather than approximated. No unified ccxt call
- * returns an auto-deleveraging rank, and a five-bar indicator inferred from
- * margin health would look exactly like the venue's own and mean nothing.
  */
 import { useMemo, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -191,7 +187,9 @@ function AccountSection({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      {/* Three across since ADL left: a 2-column grid would strand the last
+          cell half-width and read as a missing fourth stat. */}
+      <div className="grid grid-cols-3 gap-2">
         <Stat
           label={t('marginHealth.equity')}
           value={
@@ -214,11 +212,6 @@ function AccountSection({
               ? null
               : `${(health.liqDistance * 100).toFixed(1)}%`
           }
-        />
-        <Stat
-          hint={t('marginHealth.adlHint')}
-          label={t('marginHealth.adl')}
-          value={null}
         />
       </div>
 
@@ -289,12 +282,10 @@ function Stat({
   label,
   value,
   tone,
-  hint,
 }: {
   label: string
   value: string | null
   tone?: 'caution'
-  hint?: string
 }) {
   const { t } = useTranslation()
   return (
@@ -309,11 +300,6 @@ function Stat({
       >
         {value ?? t('funding.na')}
       </p>
-      {hint && (
-        <p className="mt-0.5 text-[9.5px] leading-tight text-muted-foreground">
-          {hint}
-        </p>
-      )}
     </div>
   )
 }

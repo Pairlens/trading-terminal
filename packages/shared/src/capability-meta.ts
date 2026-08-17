@@ -97,6 +97,22 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
       'Perpetual funding rates, mark and index prices, and open interest',
   },
   {
+    id: 'market-data:liquidations',
+    label: 'Liquidations',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description: 'Aggregated liquidation history for perpetual futures pairs',
+  },
+  {
+    id: 'market-data:bridge',
+    label: 'Bridge Quotes',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description: 'Cross-chain route quotes and transfer status tracking',
+  },
+  {
     id: 'market-data:discovery',
     label: 'Discovery',
     domain: 'market-data',
@@ -161,6 +177,23 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     domainLabel: 'Trading',
     singleton: false,
     description: 'Read open positions and settlements from the connected venue',
+  },
+  {
+    id: 'trading:bridge',
+    label: 'Bridge Execution',
+    domain: 'trading',
+    domainLabel: 'Trading',
+    singleton: false,
+    description: 'Executes cross-chain transfers with the connected wallet',
+  },
+  // RPC
+  {
+    id: 'rpc:solana',
+    label: 'Solana RPC',
+    domain: 'rpc',
+    domainLabel: 'RPC',
+    singleton: false,
+    description: 'JSON-RPC access to the Solana network for reads and sends',
   },
   // Automation
   {

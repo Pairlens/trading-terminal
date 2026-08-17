@@ -1,6 +1,6 @@
 ---
 title: Connectors
-description: Every exchange connector in the Pairlens crypto trading terminal, 14 spot CEXs, three perpetual futures venues, Alpaca for US equities, Kalshi and Polymarket for event contracts, and DEX aggregators.
+description: Every exchange connector in the Pairlens crypto trading terminal, 14 spot CEXs, three perpetual futures venues, Alpaca for US equities, Kalshi and Polymarket for event contracts, DEX aggregators, and a cross-chain bridge.
 group: builders
 order: 4
 eyebrow: For builders
@@ -11,7 +11,8 @@ readTime: 4 min read
 Market connectors are plugins that stream data and route orders directly
 between your machine and the venue. Pairlens ships with connectors for major
 centralized exchanges, three perpetual futures venues, a US equities broker,
-two prediction markets, and DEX aggregators on Solana and EVM chains.
+two prediction markets, DEX aggregators on Solana and EVM chains, and a
+cross-chain bridge.
 
 ## Bundled connectors
 
@@ -29,6 +30,14 @@ linear perpetual swaps. See [perpetual futures](/docs/cex-futures).
 
 **DEX.** Jupiter on Solana, plus an EVM DEX connector spanning Ethereum, Base,
 Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
+
+**Bridge.** LI.FI, for moving one asset between the five EVM chains. It quotes
+routes and tracks transfers as public reads, and signs with the EVM wallet the
+DEX connectors already use. See [DEX and wallets](/docs/dex-trading#bridging).
+
+**Solana RPC.** Helius, answering the `rpc:solana` capability that every Solana
+read and send in the terminal goes through. Bring your own key, or run keyless
+against the public node.
 
 **DEX data.** GeckoTerminal as primary and DexPaprika as fallback, both
 read-only.

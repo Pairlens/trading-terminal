@@ -3,11 +3,13 @@
 /**
  * A wallet's concentrated-liquidity positions, one query per chain.
  *
- * "Accounts" here are CHAINS, not credentials: the DEX family signs with a
- * single EVM key that is valid on all five chains, so what varies per query is
- * the connector being asked, and the address is the same everywhere. That is
- * also why only the address travels — a position read is public chain state and
- * must work with the vault sealed, so nothing on this path can ask for a key.
+ * "Accounts" here are CHAINS, not credentials: one EVM key is valid on all five
+ * EVM chains, so what varies per query is the connector being asked. The
+ * ADDRESS varies too, and only by signing family — a Solana base58 key is not
+ * an EVM address, so each chain row carries the address it will actually be
+ * read with rather than inheriting one from the caller. Only the address
+ * travels either way: a position read is public chain state and must work with
+ * the vault sealed, so nothing on this path can ask for a key.
  *
  * Per chain rather than one fan-out, for the reason the futures pane learned:
  * a single query is only as fast as its slowest RPC, and its cache key is the
@@ -28,7 +30,9 @@ import type { LpPositionsResponse } from '@pairlens/shared/instrument-types'
 
 import { useDexChains } from '@/hooks/use-dex-chains'
 import { useDexConnectors } from '@/hooks/use-swap-route'
+import { useActiveWallet } from '@/lib/active-wallet-context'
 import { getCountrySetting } from '@/lib/region-settings'
+import { useWalletsStore } from '@/stores/wallets-store'
 
 /** Pool price moves; positions do not move fast enough to poll harder. */
 const LP_STALE_MS = 45_000
@@ -39,6 +43,14 @@ export type LpChain = {
   displayName: string
   iconUrl: string
   plugin: PluginInstance
+  /** Signing family. One EVM key covers every EVM chain; Solana has its own. */
+  walletChain: 'solana' | 'ethereum'
+  /**
+   * The address read on THIS chain. Present whenever the row came from
+   * `useLpChains`; a caller building rows by hand may omit it and the query
+   * falls back to the owner it was given.
+   */
+  owner?: string
 }
 
 export type LpChainResult = {
@@ -49,33 +61,50 @@ export type LpChainResult = {
 }
 
 /**
- * Chains that can answer a position read: an installed connector, and an EVM
- * signing family.
+ * Chains that can answer a position read: an installed connector, and a wallet
+ * of that chain's signing family.
  *
- * Solana is excluded here rather than in the connector because Jupiter is an
- * aggregator with no position manager behind it at all: Orca and Raydium keep
- * liquidity in program accounts, which needs its own client. A chain whose
- * connector IS installed but which has no v3-family deployment answers with an
- * empty response, so the list is allowed to be optimistic.
+ * Solana used to be excluded here, because Jupiter is an aggregator with no
+ * position manager behind it. It now has one: Orca and Raydium keep liquidity
+ * in program accounts and the connector reads them (`lp-client.ts`), so the
+ * only filter left is whether the user has a key that can be read on the chain.
+ * A chain whose connector IS installed but which has no deployment answers with
+ * an empty response, so the list stays optimistic about everything else.
+ *
+ * The wallet is resolved per row rather than passed in: the bound wallet wins
+ * for its own family, and any wallet of the family answers otherwise. That
+ * matches the gate in `use-lp-source-state`, so the address a pane names in its
+ * header is the one the query actually read.
  */
 export function useLpChains(): Array<LpChain> {
   const chains = useDexChains()
   const connectors = useDexConnectors()
+  const wallets = useWalletsStore((s) => s.wallets)
+  const { activeWallet } = useActiveWallet()
+  const boundId = activeWallet?.walletId
   return useMemo(() => {
+    const bound = wallets.find((w) => w.id === boundId) ?? null
     const rows: Array<LpChain> = []
     for (const chain of chains) {
-      if (!chain.connected || chain.walletChain !== 'ethereum') continue
+      if (!chain.connected) continue
       const plugin = connectors.get(chain.market)
       if (!plugin) continue
+      const wallet =
+        bound?.chain === chain.walletChain
+          ? bound
+          : wallets.find((w) => w.chain === chain.walletChain)
+      if (!wallet) continue
       rows.push({
         market: chain.market,
         displayName: chain.displayName,
         iconUrl: chain.iconUrl,
         plugin,
+        walletChain: chain.walletChain,
+        owner: wallet.address,
       })
     }
     return rows
-  }, [chains, connectors])
+  }, [chains, connectors, wallets, boundId])
 }
 
 export type LpPositionsQuery = {
@@ -90,9 +119,14 @@ export type LpPositionsQuery = {
 }
 
 /**
- * `owner` gates everything. With no wallet connected the panes render their
+ * An address gates everything. With no wallet connected the panes render their
  * connect state and no query runs, so a parked LP workspace with no account
  * costs nothing.
+ *
+ * `owner` is the caller's address and now a FALLBACK: a row from `useLpChains`
+ * already carries the address of its own signing family, and handing an EVM
+ * address to Orca would ask a Solana program about an `0x…` string. The
+ * fallback keeps a hand-built row working.
  *
  * `activePair` is passed only to the chain the pair is on. The connector uses it
  * to mark which positions belong to the pool on screen, and asking Base to
@@ -110,13 +144,14 @@ export function useLpPositions(
         activePair && activePair.market === chain.market
           ? activePair.pairKey
           : null
+      const target = chain.owner ?? owner
       return {
-        queryKey: ['lp-positions', chain.market, owner, pair],
+        queryKey: ['lp-positions', chain.market, target, pair],
         queryFn: async (): Promise<LpChainResult> => {
           try {
             const response = (await chain.plugin.execute({
               capability: 'trading:orders',
-              params: { action: 'lp-positions', owner, pair },
+              params: { action: 'lp-positions', owner: target, pair },
               context: {
                 pair: pair ?? '',
                 market: chain.market,
@@ -137,7 +172,7 @@ export function useLpPositions(
             }
           }
         },
-        enabled: Boolean(enabled && owner),
+        enabled: Boolean(enabled && target),
         staleTime: LP_STALE_MS,
         refetchInterval: LP_REFRESH_MS,
         gcTime: 5 * 60_000,

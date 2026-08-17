@@ -34,6 +34,8 @@ export type RawGeckoPoolRow = {
     price_change_percentage?: Record<string, string | null>
     volume_usd?: Record<string, string | null>
     reserve_in_usd?: string | null
+    /** ISO 8601. Published by `/new_pools`; absent from the ranked listing. */
+    pool_created_at?: string | null
   }
   relationships?: {
     dex?: { data?: { id?: string } }
@@ -56,6 +58,21 @@ export function stripNetworkPrefix(
   return id.startsWith(prefix) ? id.slice(prefix.length) : id
 }
 
+/**
+ * `2026-08-14T09:12:03Z` → epoch ms, or undefined.
+ *
+ * Undefined rather than null, and rather than a fallback to "now": a "new
+ * pools" row whose age is unknown must not be drawn as freshly minted, and the
+ * optional field is what lets a consumer drop it instead.
+ */
+export function parsePoolCreatedAt(
+  raw: string | null | undefined,
+): number | undefined {
+  if (!raw) return undefined
+  const ms = Date.parse(raw)
+  return Number.isFinite(ms) ? ms : undefined
+}
+
 export function parsePoolListingEntry(
   raw: RawGeckoPoolRow,
   network: string,
@@ -66,6 +83,7 @@ export function parsePoolListingEntry(
 
   const name = attrs.name ?? ''
   const legs = splitPoolName(name)
+  const createdAtMs = parsePoolCreatedAt(attrs.pool_created_at)
 
   return {
     network,
@@ -82,6 +100,9 @@ export function parsePoolListingEntry(
       raw.relationships?.base_token?.data?.id,
       network,
     ),
+    // Only `/new_pools` publishes it. Spread so a ranked-pool row keeps the
+    // key absent rather than carrying an explicit undefined into a store.
+    ...(createdAtMs === undefined ? {} : { createdAtMs }),
   }
 }
 
@@ -158,7 +179,41 @@ export function fetchTopPools(
   network: string,
   page = 1,
 ): Promise<Array<PoolListingEntry>> {
-  const key = `${network}:${page}`
+  return cachedListing(`${network}:${page}`, () =>
+    requestPoolPage(`${API_BASE}/networks/${network}/pools?page=${page}`, {
+      network,
+      label: 'pools',
+    }),
+  )
+}
+
+/**
+ * The chain's most recently created pools, newest first as the provider orders
+ * them, each row carrying `createdAtMs`.
+ *
+ * Same rows as `fetchTopPools` plus the creation time, and a DISTINCT cache key
+ * prefix: the two endpoints answer different questions about the same chain and
+ * collapsing them would serve a ranked page as a listing feed. The shared cache
+ * still does its job — two panes asking the same chain for new pools spend one
+ * request.
+ */
+export function fetchNewPools(
+  network: string,
+  page = 1,
+): Promise<Array<PoolListingEntry>> {
+  return cachedListing(`new:${network}:${page}`, () =>
+    requestPoolPage(`${API_BASE}/networks/${network}/new_pools?page=${page}`, {
+      network,
+      label: 'new_pools',
+    }),
+  )
+}
+
+/** Cache + in-flight collapse, shared by both listing endpoints. */
+function cachedListing(
+  key: string,
+  request: () => Promise<Array<PoolListingEntry>>,
+): Promise<Array<PoolListingEntry>> {
   const cached = listingCache.get(key)
   if (cached && Date.now() - cached.ts < LISTING_TTL_MS) {
     return Promise.resolve(cached.pools)
@@ -166,7 +221,7 @@ export function fetchTopPools(
   const existing = listingInFlight.get(key)
   if (existing) return existing
 
-  const request = requestTopPools(network, page)
+  const pending = request()
     .then((pools) => {
       listingCache.set(key, { pools, ts: Date.now() })
       return pools
@@ -176,20 +231,22 @@ export function fetchTopPools(
       // on success, and the slot is freed either way so the next caller retries.
       listingInFlight.delete(key)
     })
-  listingInFlight.set(key, request)
-  return request
+  listingInFlight.set(key, pending)
+  return pending
 }
 
-async function requestTopPools(
-  network: string,
-  page: number,
+async function requestPoolPage(
+  url: string,
+  meta: { network: string; label: string },
 ): Promise<Array<PoolListingEntry>> {
-  const res = await fetch(`${API_BASE}/networks/${network}/pools?page=${page}`)
+  const res = await fetch(url)
   if (!res.ok) {
-    throw new Error(`GeckoTerminal pools ${network}: HTTP ${res.status}`)
+    throw new Error(
+      `GeckoTerminal ${meta.label} ${meta.network}: HTTP ${res.status}`,
+    )
   }
   const json = (await res.json()) as { data?: Array<RawGeckoPoolRow> }
-  return parsePoolListing(json.data, network)
+  return parsePoolListing(json.data, meta.network)
 }
 
 /** Drop every cached page. Called when the plugin is torn down. */

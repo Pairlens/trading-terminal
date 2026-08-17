@@ -59,6 +59,16 @@ const COPY = {
       body: 'layout.paneCredentials.accountMissingDescription',
     },
   },
+  wallet: {
+    sealed: {
+      title: 'layout.paneCredentials.sealedTitle',
+      body: 'layout.paneCredentials.walletSealedDescription',
+    },
+    missing: {
+      title: 'layout.paneCredentials.walletMissingTitle',
+      body: 'layout.paneCredentials.walletMissingDescription',
+    },
+  },
 } as const
 
 export function PaneCredentialsRequired({
@@ -77,9 +87,11 @@ export function PaneCredentialsRequired({
   /**
    * `market` (default): the key is what streams prices. `account`: the key is
    * what reads balances, positions and orders, on a venue whose prices are
-   * public — margin health, your position.
+   * public — margin health, your position. `wallet`: the pane works with a
+   * connected on-chain wallet — LP positions, fees, bridging — where the
+   * price-feed sentence would promise a chart the pane never draws.
    */
-  kind?: 'market' | 'account'
+  kind?: 'market' | 'account' | 'wallet'
 }) {
   const { t } = useTranslation()
   const [unlockOpen, setUnlockOpen] = useState(false)

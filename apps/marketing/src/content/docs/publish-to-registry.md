@@ -5,7 +5,7 @@ group: builders
 parent: plugin-sdk
 order: 3
 eyebrow: For builders
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 3 min read
 ---
 
@@ -44,7 +44,8 @@ pull request adding your source under
 [`apps/registry/community/`](https://github.com/Pairlens/trading-terminal/tree/main/apps/registry/community).
 CI validates the submission and the registry builds and signs it itself, so
 there is no key for you to manage. Community plugins cannot declare `trading:*`
-capabilities and always run sandboxed.
+capabilities (`trading:bridge` included) or `rpc:solana`, which would hand them
+a node URL carrying the user's API key, and they always run sandboxed.
 
 This is the right path for indicators, panels, themes, and read-only data
 sources.

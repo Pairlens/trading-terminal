@@ -12,16 +12,19 @@ import { describe, expect, test } from 'bun:test'
 
 import {
   collectResolvingSoon,
+  createdOf,
   endOf,
   eventVolume,
   flattenBoardEvents,
   sortBoardEvents,
+  sortEventSummaries,
 } from '../board'
 import type { PredictionEventSummary } from '@pairlens/shared/instrument-types'
 import type { PredictionVenueResult } from '@/hooks/use-prediction-events'
 
 const NOW = 1_700_000_000_000
 const HOUR = 3_600_000
+const DAY = 24 * HOUR
 
 function evt(
   id: string,
@@ -43,6 +46,21 @@ function evt(
       },
     ],
     ...extra,
+  }
+}
+
+/** One market per listing timestamp, so an event can be a ladder that grew. */
+function withCreated(
+  event: PredictionEventSummary,
+  created: Array<number>,
+): PredictionEventSummary {
+  return {
+    ...event,
+    markets: created.map((createdMs, index) => ({
+      ...event.markets[0],
+      id: `${event.id}-m${index}`,
+      createdMs,
+    })),
   }
 }
 
@@ -150,6 +168,62 @@ describe('sortBoardEvents', () => {
     ])
   })
 
+  test('new ranks by the most recently listed market', () => {
+    const rows = flattenBoardEvents(
+      [
+        venue([
+          withCreated(evt('older'), [NOW - 30 * DAY]),
+          withCreated(evt('fresh'), [NOW - HOUR]),
+          withCreated(evt('midweek'), [NOW - 3 * DAY]),
+        ]),
+      ],
+      { category: null, query: '' },
+    )
+    expect(sortBoardEvents(rows, 'new').map((r) => r.event.id)).toEqual([
+      'fresh',
+      'midweek',
+      'older',
+    ])
+  })
+
+  test('new sinks events whose venue published no listing time', () => {
+    // The bug this prevents: a missing timestamp read as 0 would date the event
+    // to 1970 and pin it under every real row, which looks like a sort that
+    // ranked it last rather than a venue that said nothing.
+    const rows = flattenBoardEvents(
+      [
+        venue([
+          evt('silent'),
+          withCreated(evt('listed'), [NOW - 5 * DAY]),
+          withCreated(evt('newest'), [NOW - HOUR]),
+        ]),
+      ],
+      { category: null, query: '' },
+    )
+    expect(sortBoardEvents(rows, 'new').map((r) => r.event.id)).toEqual([
+      'newest',
+      'listed',
+      'silent',
+    ])
+  })
+
+  test('new reads a ladder by its newest strike, not its first', () => {
+    const rows = flattenBoardEvents(
+      [
+        venue([
+          withCreated(evt('single'), [NOW - 2 * DAY]),
+          // Opened a month ago, gained a strike an hour ago: new to trade.
+          withCreated(evt('ladder'), [NOW - 30 * DAY, NOW - HOUR]),
+        ]),
+      ],
+      { category: null, query: '' },
+    )
+    expect(sortBoardEvents(rows, 'new').map((r) => r.event.id)).toEqual([
+      'ladder',
+      'single',
+    ])
+  })
+
   test('biggest move ranks by the largest move in the event', () => {
     const moved = evt('moved')
     moved.markets[0].outcomes[0].change24h = 0.14
@@ -162,6 +236,43 @@ describe('sortBoardEvents', () => {
     expect(sortBoardEvents(rows, 'biggestMove').map((r) => r.event.id)).toEqual(
       ['moved', 'nudged', 'still'],
     )
+  })
+})
+
+describe('sortEventSummaries', () => {
+  test('orders a bare event list the way the board orders its rows', () => {
+    const events = [
+      withCreated(evt('older'), [NOW - 30 * DAY]),
+      evt('silent'),
+      withCreated(evt('fresh'), [NOW - HOUR]),
+    ]
+    expect(sortEventSummaries(events, 'new').map((e) => e.id)).toEqual([
+      'fresh',
+      'older',
+      'silent',
+    ])
+  })
+
+  test('leaves the venue order alone, same as the board', () => {
+    const events = [evt('a'), evt('b')]
+    expect(sortEventSummaries(events, 'trending')).toBe(events)
+  })
+})
+
+describe('createdOf', () => {
+  test('reads the newest market in the event', () => {
+    expect(createdOf(withCreated(evt('x'), [NOW - 9 * DAY, NOW - DAY]))).toBe(
+      NOW - DAY,
+    )
+  })
+
+  test('says nothing when no market carries a listing time', () => {
+    expect(createdOf(evt('x'))).toBeNull()
+  })
+
+  test('refuses an epoch-zero timestamp rather than dating the event to 1970', () => {
+    expect(createdOf(withCreated(evt('x'), [0]))).toBeNull()
+    expect(createdOf(withCreated(evt('x'), [0, NOW - DAY]))).toBe(NOW - DAY)
   })
 })
 

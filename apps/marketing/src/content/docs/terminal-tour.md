@@ -31,7 +31,7 @@ Below those sit your workspaces, your recent pairs, and the Workspace Store.
 ## The workspace grid
 
 A workspace is a saved arrangement of panels. Every panel is contributed by a
-plugin, which is why the catalogue grows when you install one. Sixty-seven ship
+plugin, which is why the catalogue grows when you install one. Sixty-eight ship
 in the box, in four categories:
 
 **Discovery.** The scanner and the watchlist, the crypto context panes (Market
@@ -44,8 +44,8 @@ Categories, Event Board, Odds Movers, Resolving Soon), and Web.
 **Charting and data.** Chart, Order Book, Market Depth, Liquidity Heatmap,
 Multi-Price, Venue Ladder, Pair Info, Pair Dossier, Data Log, plus the
 class-specific ones: Funding Belt and Liquidation Map on a perp, Pool Stats,
-On-chain Trades and Chain Ladder on a pool, Session Clock, Level 1 and Company
-on a stock, Event Header on a contract.
+On-chain Trades and Chain Ladder on a pool, Session Clock, Level 1, Company and
+Insider Activity on a stock, Event Header on a contract.
 
 **Trading.** Trade Entry, Positions, Portfolio, Risk, Futures Positions, Margin
 Health, Risk Controls, Prediction Positions, Outcome Ladder, Basket Ticket,

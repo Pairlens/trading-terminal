@@ -54,6 +54,7 @@ import {
   priceUsdFor,
 } from '@/lib/risk/position-size'
 import { normalizePairKey } from '@/lib/pairs'
+import { resolveSolanaRpcEndpoint } from '@/lib/dex/solana-rpc'
 import { contractSizeFor } from '@/lib/futures/contract-size'
 import {
   balanceScopeFor,
@@ -961,6 +962,45 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
   useEffect(() => {
     loadWallets()
   }, [loadWallets])
+
+  // ── Solana RPC endpoint (DEX) ───────────────────────────────────────
+  // Solana connectors take an `rpcUrl` and default to the public node, which
+  // sheds load with a bare 403 and reads downstream as an empty wallet. The
+  // endpoint comes from the `rpc:solana` capability instead, so a user's own
+  // key reaches balances, LP reads AND swap submission through one setting.
+  //
+  // Deliberately not folded into the wallet loop below: the connector has to
+  // know its endpoint whether or not a wallet is connected, and re-resolving on
+  // `pluginStateVersion` is what applies a key the user just enrolled without
+  // a reload. The ref makes it idempotent — an unchanged URL re-initializes
+  // nothing.
+  const solanaRpcRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (!pluginsReady) return
+    let cancelled = false
+    void resolveSolanaRpcEndpoint(pluginManager).then((endpoint) => {
+      if (cancelled || !endpoint) return
+      if (endpoint.url === solanaRpcRef.current) return
+      solanaRpcRef.current = endpoint.url
+      for (const plugin of pluginManager.getActivePlugins()) {
+        const meta = plugin.manifest.metadata as
+          | Record<string, string>
+          | undefined
+        if (meta?.walletChain !== 'solana' || !plugin.initialize) continue
+        // Endpoint only. No wallet id, no key accessor — a connector's existing
+        // slots keep the accessor they were provisioned with.
+        plugin.initialize({ rpcUrl: endpoint.url }).catch((err) => {
+          console.warn(
+            `[market-data] Solana RPC wiring failed for ${plugin.manifest.id}:`,
+            err,
+          )
+        })
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [pluginsReady, pluginManager, pluginStateVersion])
 
   useEffect(() => {
     if (!walletsLoaded || !pluginsReady) return

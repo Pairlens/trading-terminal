@@ -36,13 +36,6 @@
     "failedTitle": "籃子下單失敗",
     "hint": "每條腿都是真實的限價單。"
   },
-  "bridgePanes": {
-    "routeTitle": "跨鏈橋需要橋接服務商",
-    "routeBody": "目前沒有任何服務商接入。鏈上連接器只在單一鏈內路由，因此這裡無法報出跨鏈轉移的費用或耗時。鏈階梯比較的是你已經能交易的範圍。",
-    "wouldQuote": "將為從 {{chain}} 轉出的 {{asset}} 報價",
-    "inFlightTitle": "轉帳追蹤需要橋接服務商",
-    "inFlightBody": "確認數來自搬運資金的那座橋。沒有接入的橋就無處輪詢，而背後沒有資料的進度條會在卡住的轉帳上繼續前進。"
-  },
   "chainLadder": {
     "title": "跨鏈的 {{asset}}",
     "subtitle": "依扣掉 gas 後實際到手的數量排序，而非依最佳報價",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "共 {{total}} 份財報，顯示前 {{shown}} 份。",
+    "ipo": {
+      "title": "新股掛牌",
+      "columns": {
+        "exchange": "交易所",
+        "priceRange": "價格區間"
+      },
+      "range": "{{low}} 至 {{high}}",
+      "priceTbd": "尚未定價",
+      "capped": "共 {{total}} 檔，顯示前 {{shown}} 檔。",
+      "noneTitle": "目前沒有新股掛牌",
+      "noneBody": "資料提供方的行事曆中，目前沒有任何公司排定掛牌日期。",
+      "emptyTitle": "沒有新股資料來源",
+      "emptyBody": "此版本沒有基本面資料提供方。新股行事曆來自 App Server；券商公布的是自己承作的股票，而不是即將掛牌的股票。",
+      "providerBusyTitle": "新股資料來源已限流",
+      "providerErrorTitle": "新股資料來源載入失敗"
+    },
     "noEstimate": "無預估",
     "noneInWindowBody": {
       "today": "今天日曆上沒有公司發財報。",
@@ -161,22 +170,52 @@
     "tomorrow": "明天"
   },
   "economicCalendar": {
-    "emptyTitle": "未安裝總體經濟資料來源",
-    "emptyBody": "總體經濟資料外掛會以發布時間、市場預期與前值填入這份日曆。",
+    "allDay": "全天",
+    "emptyTitle": "沒有總經行事曆",
+    "emptyBody": "發布時程來自 App Server。此版本以獨立模式執行，沒有可彙整的來源。",
     "columns": {
-      "time": "時間",
-      "event": "事件",
-      "actual": "公布值",
-      "consensus": "預期",
-      "prior": "前值"
-    }
+      "source": "機構",
+      "time": "時間（{{zone}}）",
+      "event": "發布"
+    },
+    "impact": {
+      "high": "高影響",
+      "medium": "中等影響",
+      "low": "低影響"
+    },
+    "impactAll": "全部",
+    "impactHigh": "高影響",
+    "impactLabel": "影響篩選",
+    "noneHighBody": "此時間範圍內沒有高影響發布。切換到「全部」可查看其餘時程。",
+    "noneInWindowBody": {
+      "week": "未來七天沒有美國數據發布。",
+      "fortnight": "未來兩週沒有美國數據發布。",
+      "month": "未來一個月沒有美國數據發布。"
+    },
+    "noneInWindowTitle": "暫無安排",
+    "providerBusyBody": "時程服務正在限流。限流視窗重置後行事曆會自動恢復。",
+    "providerBusyTitle": "總經行事曆遭到限流",
+    "providerErrorBody": "無法連上官方發布時程。你的帳號與連接器都沒有問題。",
+    "providerErrorTitle": "總經行事曆未載入",
+    "scopeLabel": "發布時間範圍",
+    "scopes": {
+      "week": "一週",
+      "fortnight": "兩週",
+      "month": "一個月"
+    },
+    "sourceNote": "彙整自 BLS、BEA、聯準會與 Census 的發布時程。時間為美國東部時間，與各機構公布的一致。",
+    "title": "總經",
+    "today": "今天",
+    "tomorrow": "明天"
   },
   "eventBoard": {
+    "listed": "上架 {{when}}",
     "searchPlaceholder_one": "在 1 個在售市場中搜尋",
     "searchPlaceholder_other": "在 {{count}} 個在售市場中搜尋",
     "loadingTitle": "正在載入看板",
     "loadingBody": "正在向各平台詢問目前有哪些市場在交易。",
     "sort": {
+      "new": "最新",
       "trending": "熱門",
       "endingSoon": "即將結束",
       "volume": "成交額",
@@ -221,6 +260,7 @@
     "basisMissing_other": "{{count}} 位候選無報價"
   },
   "feeAccrual": {
+    "lastTouch": "上次觸碰時",
     "title": "手續費累積",
     "subtitle_one": "{{wallet}} · {{count}} 個區間",
     "subtitle_other": "{{wallet}} · {{count}} 個區間",
@@ -233,12 +273,12 @@
       "claimable": "可領取"
     },
     "loadingTitle": "正在讀取手續費",
-    "loadingBody": "正在對每個部位模擬 collect，看現在會付出多少。",
+    "loadingBody": "正在讀取每個部位的應得金額，並在支援的鏈上模擬一次 collect。",
     "emptyTitle": "沒有流動性部位",
     "emptyBody": "{{wallet}} 沒有可累積手續費的部位。在一條已連接的鏈上提供流動性後，金額就會顯示在這裡。",
     "noChainsTitle": "沒有鏈連接器",
     "noChainsBody": "安裝一個鏈上連接器，這個面板就會讀取它的池欠你錢包多少。",
-    "footnote": "這一區塊內 collect 會支付的金額，兩側代幣、按部位列出。已領取的手續費不會在鏈上留下痕跡，所以手續費 APR、區間內時長和相對持有的損失都需要索引器，這裡不展示。"
+    "footnote": "依部位列出兩條腿：在 EVM 鏈上是本區塊執行 collect 會支付的金額，在 Solana 上是資金池已經計入的金額。已領取的手續費在鏈上不留痕跡，所以手續費 APR、區間內時長以及相對持有的損益都需要索引器，暫不顯示。"
   },
   "funding": {
     "loading": "正在讀取資金費率…",
@@ -289,6 +329,57 @@
     "emptyTitle": "沒有啟用的永續合約交易所",
     "emptyBody": "資金費率是公開資料，不需要 API 金鑰。安裝一個永續合約連接器，表格會自動填滿。"
   },
+  "inFlight": {
+    "title": "轉帳中",
+    "pendingCount_one": "{{count}} 筆處理中",
+    "pendingCount_other": "{{count}} 筆處理中",
+    "emptyTitle": "沒有進行中的轉帳",
+    "emptyBody": "從這個終端送出的跨鏈轉帳會連同兩條鏈的交易一起顯示在這裡，直到資金入帳。",
+    "route": "{{from}} 到 {{to}}",
+    "sourceTx": "來源鏈交易",
+    "destinationTx": "目標鏈交易",
+    "landed": "已入帳",
+    "landedAmount": "已入帳 {{amount}}",
+    "failed": "失敗",
+    "confirming": "確認中",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "等待來源鏈確認",
+      "WAIT_DESTINATION_TRANSACTION": "等待目標鏈交易",
+      "BRIDGE_NOT_AVAILABLE": "跨鏈橋無法使用",
+      "CHAIN_NOT_AVAILABLE": "鏈無法使用",
+      "REFUND_IN_PROGRESS": "退款處理中",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "需要退款",
+      "UNKNOWN_ERROR": "狀態不明",
+      "COMPLETED": "已完成",
+      "PENDING": "確認中"
+    }
+  },
+  "insiderActivity": {
+    "title": "內部人交易",
+    "summary": "買進 {{buys}} 筆 · 賣出 {{sells}} 筆",
+    "span_one": "{{count}} 天",
+    "span_other": "{{count}} 天",
+    "buy": "買進",
+    "sell": "賣出",
+    "noValue": "無金額",
+    "columns": {
+      "date": "日期",
+      "insider": "申報人",
+      "shares": "股數",
+      "price": "價格",
+      "value": "金額"
+    },
+    "noFilingsTitle": "{{symbol}} 近期沒有申報",
+    "noFilingsBody": "這家公司近期沒有內部人申報交易。安靜期很常見，Form 4 會在交易後兩個營業日內提交。",
+    "needsProviderTitle": "內部人申報需要資料提供方",
+    "needsProviderBody": "此版本沒有基本面資料來源。Form 4 申報來自 App Server，而券商連接器只負責報價與成交。",
+    "providerBusyTitle": "內部人申報已限流",
+    "providerBusyBody": "資料提供方正在限制我們。限流視窗重置後，申報會自動恢復。",
+    "providerErrorTitle": "內部人申報載入失敗",
+    "providerErrorBody": "提供方回傳了無法使用的內容。你的帳戶與連接器都沒有問題。",
+    "notEquityTitle": "內部人申報需要股票",
+    "notEquityBody": "只有上市公司才會提交這類申報。{{venue}} 不是股票市場，同名代號在那裡是另一種資產。"
+  },
   "level1": {
     "emptyTitle": "尚無報價",
     "emptyBody": "此標的的買價或賣價尚未推送。",
@@ -298,20 +389,44 @@
     "bps": "個基點",
     "dayRange": "當日區間",
     "feed": "資料來源",
-    "depthNote": "券商只提供盤口最佳價，這兩個價格背後沒有深度。"
+    "depthNote": "券商只提供盤口最佳價，這兩個價格背後沒有深度。",
+    "status": "狀態",
+    "statusHalted": "已停牌",
+    "statusPaused": "暫停",
+    "statusSince": "自 {{time}} 起",
+    "statusTrading": "交易中"
   },
   "liquidationMap": {
-    "subtitle": "你的強制平倉價格，以及在此開倉的槓桿會走到哪裡",
+    "clusterHint": "{{price}}：{{notional}} 的{{side}}部位在 {{count}} 筆成交中被強平",
+    "clustersCaption": "陰影色帶是交易所在過去 {{window}} 小時內實際強平的量，紅色為多方，綠色為空方。",
+    "clustersErrorCaption": "無法載入交易所的強平歷史。價格軸上的其他內容不受影響。",
+    "clustersLoadingCaption": "正在載入交易所的強平歷史。",
+    "collectingCaption": "市場聚集區仍在累積。自 {{since}} 起開始收集。",
+    "collectingJustStarted": "剛剛",
+    "legendLong": "多方 {{value}}",
+    "legendPrints": "{{count}} 筆",
+    "legendShort": "空方 {{value}}",
+    "noClustersCaption": "過去 {{window}} 小時內此合約沒有發生強平。",
+    "notTrackedCaption": "此交易所不發布彙總強平資料，因此不繪製市場聚集區。",
+    "standaloneCaption": "市場聚集區來自 Pairlens 雲端，而此版本未啟用雲端。",
+    "subtitle": "市場在哪些價位被強平，以及你自己的部位會落在哪裡",
     "estimateBadge": "估算",
     "sideLong": "多頭",
     "sideShort": "空頭",
     "referenceHint": "以目前價格開倉的 {{leverage}} 倍{{side}}將在 {{price}} 附近被強制平倉",
-    "caption": "長條是各交易所回報的你自己的強制平倉價格。細線標出以目前價格開倉在 5 倍、10 倍與 25 倍槓桿下的強制平倉位置。沒有交易所公布彙總的清算叢集，因此不繪製。",
+    "caption": "柱形是各交易所回報的你自己的強平價格。細刻度表示以目前價格開倉在 5x、10x、25x 下的強平位置。",
     "noPositionsCaption": "細線標出以目前價格開倉在 5 倍、10 倍與 25 倍槓桿下的強制平倉位置。你自己的強制平倉價格會在持有部位後以長條顯示。",
     "noPriceTitle": "沒有可對照的價格",
     "noPriceBody": "這張圖需要合約的即時價格。旁邊的圖表一有價格就會填入。",
     "emptyTitle": "沒有可繪製的內容",
-    "emptyBody": "開一個永續部位，或選擇一個合約，價格軸就會填入。"
+    "emptyBody": "開一個永續部位，或選擇一個合約，價格軸就會填入。",
+    "windowLabel": "時間範圍",
+    "windows": {
+      "h1": "1小時",
+      "h6": "6小時",
+      "h24": "24小時",
+      "h72": "72小時"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "選擇一個池子",
@@ -327,12 +442,11 @@
     "biggestLabel": "最大兌換"
   },
   "lpPanes": {
-    "manageTitle": "調整區間需要流動性操作",
-    "manageBody": "加入、撤出與重新置中流動性都是需要簽章的交易，目前沒有連接器能建構。這些控制項在真正可用之前不會出現。",
     "venueFallback": "這條鏈",
     "wouldRead": "將讀取 {{chain}} 上 {{pool}} 的 {{wallet}}"
   },
   "lpPosition": {
+    "feesLastTouch": "以該部位上一次被觸碰時結算。Orca 與 Raydium 只在部位下一次被觸碰時才計入手續費，因此實際可領取的金額可能更高。",
     "title": "LP 部位",
     "subtitle_one": "{{wallet}} · {{count}} 個區間",
     "subtitle_other": "{{wallet}} · {{count}} 個區間",
@@ -353,12 +467,81 @@
     "rangeUnknown": "未讀取到池",
     "otherPositions": "你的其他部位",
     "loadingTitle": "正在讀取部位",
-    "loadingBody": "正在向每條已連接鏈的 position manager 查詢這個錢包持有什麼。",
+    "loadingBody": "正在向每條已連接的鏈詢問這個錢包持有什麼。",
     "emptyTitle": "沒有流動性部位",
-    "emptyBody": "{{wallet}} 在已連接的鏈上沒有 Uniswap v3 或 PancakeSwap v3 部位。在其中一條鏈上提供流動性後就會顯示在這裡。",
+    "emptyBody": "{{wallet}} 在已連接的鏈上沒有集中流動性部位。在其中一條鏈上提供流動性，部位就會出現在這裡。",
     "noChainsTitle": "沒有鏈連接器",
-    "noChainsBody": "安裝一個鏈上連接器，這個面板就會為你的錢包讀取該鏈的 position manager。",
+    "noChainsBody": "安裝一個鏈上連接器，本面板就會為你的錢包讀取那條鏈的流動性部位。",
     "footnote": "從鏈上讀取：價格區間、流動性目前的價值，以及尚未領取的手續費。部位不記錄成本，所以沒有與單純持有的對比數值。"
+  },
+  "manageLiquidity": {
+    "title": "管理流動性",
+    "subtitle_one": "{{wallet}} · {{count}} 個倉位",
+    "subtitle_other": "{{wallet}} · {{count}} 個倉位",
+    "position": "倉位",
+    "tabCollect": "領取",
+    "tabRemove": "移除",
+    "tabAdd": "追加",
+    "unread": "未讀取到池",
+    "claimable": "目前可領取",
+    "collectNote": "一筆交易。兩邊都會匯到這個錢包。",
+    "collectNothing": "這個倉位暫時沒有可領取的手續費。",
+    "collectUnread": "讀不到這個倉位的手續費，因此沒有可確認的內容。",
+    "removeAmount": "移除",
+    "youReceive": "你將收到",
+    "removeFeesNote": "手續費會在同一筆交易中全額掃走，與移除比例無關。",
+    "removeUnread": "池沒有回應，無法預覽入帳金額。簽名時最小值仍會依即時狀態計算。",
+    "addRatioNote": "區間決定比例：輸入一邊的數量即可確定另一邊。",
+    "addBelowBand": "價格低於區間，這個倉位只接受 {{symbol}}。",
+    "addAboveBand": "價格高於區間，這個倉位只接受 {{symbol}}。",
+    "addUnread": "池沒有回應，第二個數量無法推導。請兩個都填。",
+    "addWrappedNote": "存入的是池本身的代幣。持有包裝原生代幣的倉位需要包裝餘額，而不是原生餘額。",
+    "balance": "餘額 {{amount}}",
+    "slippage": "滑價",
+    "reviewCollect": "確認領取",
+    "reviewRemove": "確認移除",
+    "reviewAdd": "確認存入",
+    "confirmTitle": "確認將要簽名的內容",
+    "rowAction": "操作",
+    "rowPosition": "倉位",
+    "rowChain": "鏈",
+    "rowManager": "管理合約",
+    "rowCollecting": "領取",
+    "rowRemoving": "移除",
+    "rowReceive": "你將收到",
+    "rowFeesSwept": "一併掃走的手續費",
+    "rowDepositing": "存入",
+    "rowMinimum": "最低",
+    "confirmCollectNote": "送往上方的倉位管理合約。手續費只會匯到這個錢包。",
+    "confirmRemoveNote": "銷毀與領取在一筆交易內完成。最小值於簽名時依池價重新計算，比池價低 {{slippage}}。",
+    "confirmAddNote": "每個代幣都要先對管理合約授權，因此可能是兩到三筆交易。",
+    "back": "返回",
+    "sign": "簽名並送出",
+    "pendingTitle": "等待收據",
+    "pendingBody": "已簽名並送出。在鏈上確認之前會一直停在這裡。",
+    "collectedTitle": "手續費已領取",
+    "removedTitle": "流動性已移除",
+    "addedTitle": "流動性已追加",
+    "successBody": "下一次讀取時倉位會更新。",
+    "failedTitle": "交易失敗",
+    "viewTransaction": "查看交易",
+    "done": "完成",
+    "lockedTitle": "解鎖後才能簽名",
+    "lockedBody": "這筆交易需要你的錢包私鑰。請解鎖 Pairlens 後再試一次。",
+    "noConnectorTitle": "未安裝連接器",
+    "noConnectorBody": "這個倉位所在的鏈沒有安裝連接器，無法為它簽名。",
+    "evmOnlyTitle": "僅限 EVM 倉位",
+    "evmOnlyBody": "這些操作呼叫的是 Uniswap v3 倉位管理合約，屬於 EVM 合約。Solana 倉位可以在其他 LP 面板檢視，但在這裡無法簽名。在 EVM 鏈上提供流動性後即可在本面板管理。",
+    "readOnlyElsewhere_one": "另一簽名體系的 {{count}} 個倉位在這裡唯讀。",
+    "readOnlyElsewhere_other": "另一簽名體系的 {{count}} 個倉位在這裡唯讀。",
+    "noSigner": "已連接的錢包中沒有能在該倉位所在鏈上簽名的。",
+    "noChainsTitle": "沒有鏈連接器",
+    "noChainsBody": "安裝鏈上連接器後，本面板即可領取手續費並調整找到的區間。",
+    "loadingTitle": "正在讀取倉位",
+    "loadingBody": "正在向每條已連接鏈的倉位管理合約詢問這個錢包持有什麼。",
+    "emptyTitle": "沒有流動性倉位",
+    "emptyBody": "{{wallet}} 在已連接的鏈上沒有 Uniswap v3 或 PancakeSwap v3 倉位。在其中一條鏈上提供流動性後即可在這裡管理。",
+    "footnote": "領取與移除各是一筆交易，移除會把手續費一起帶走。移動區間不是編輯：它會銷毀原倉位並鑄造新的，因此這裡不提供。"
   },
   "marginHealth": {
     "title": "保證金狀況",
@@ -369,8 +552,6 @@
     "equity": "權益",
     "maintenance": "維持保證金",
     "liqDistance": "距強制平倉",
-    "adl": "自動減倉佇列",
-    "adlHint": "交易所未公布",
     "stressLabel": "若價格朝不利方向變動",
     "ratioAfter": "保證金率 {{value}}%",
     "liquidated": "已強制平倉",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "暫無市場數據",
     "emptyBody": "App Server 與公開備援來源都沒有回應，暫時無從排名。",
+    "newListings": {
+      "emptyTitle": "暫時沒有新東西",
+      "emptyBodyBothOff": "交易所上架掃描與鏈上資料來源都沒有回應。",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "交易所上架自 {{date}} 起開始記錄。資金池自帶建立時間。",
+      "cexOff": "僅顯示鏈上資金池。交易所上架來自 App Server，而目前版本沒有啟用它。"
+    },
     "noBrokerTitle": "未安裝股票交易所",
     "noBrokerBody": "從外掛商店安裝一個券商連接器，當天的異動就會出現在這裡。",
     "tabs": {
       "gainers": "漲幅榜",
       "losers": "跌幅榜",
+      "newListings": "新上架",
       "volume": "成交額",
       "volatility": "波動",
       "unusual": "異常"
     },
     "window": "排名區間",
     "columns": {
+      "asset": "資產",
+      "liquidity": "流動性",
+      "listed": "上架時間",
       "pair": "交易對",
       "change": "{{window}}漲跌",
       "price": "價格",
+      "venue": "交易所",
       "volume": "成交額",
       "trend": "走勢"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "該區間內沒有上漲的資產。",
       "losers": "該區間內沒有下跌的資產。",
+      "newListings": "過去兩週沒有任何新上架。",
       "volume": "還沒有交易所報出成交額。",
       "volatility": "沒有資產波動到足以進入榜單。",
       "unusual": "沒有資產相對自身體量出現異常成交。"
@@ -819,6 +1014,44 @@
     "killSwitchHint": "在你恢復之前阻擋所有委託",
     "haltOrders": "停止委託",
     "resumeOrders": "恢復"
+  },
+  "routeBridge": {
+    "title": "跨鏈",
+    "subtitle": "把一種資產從 {{chain}} 轉出",
+    "provider": "LI.FI",
+    "notEvmTitle": "此鏈尚未支援跨鏈",
+    "notEvmBody": "轉帳在 Ethereum、Base、Arbitrum、BNB Chain 與 Polygon 之間進行。{{chain}} 的交易簽章方式不同，跨鏈連接器還沒有對應的簽章器。",
+    "noConnectorTitle": "未安裝跨鏈連接器",
+    "noConnectorBody": "在外掛商店安裝 LI.FI Bridge 外掛，即可報價並送出跨鏈轉帳。",
+    "amountLabel": "跨鏈數量",
+    "amountPlaceholder": "{{asset}} 數量",
+    "destination": "目標鏈",
+    "quoting": "正在為路線報價",
+    "youReceive": "入帳鏈",
+    "minReceived": "保底入帳",
+    "bridgeFee": "跨鏈費",
+    "networkGas": "網路 Gas",
+    "eta": "入帳時間",
+    "etaSeconds": "約 {{seconds}} 秒",
+    "etaMinutes": "約 {{minutes}} 分鐘",
+    "feeIncluded": "{{tool}} 會從轉帳數量中扣除手續費，因此上面的數字就是實際入帳金額。",
+    "feeExtra": "{{tool}} 的手續費在轉帳數量之外另計。",
+    "review": "確認轉帳內容",
+    "requote": "重新報價",
+    "expired": "已過期",
+    "confirmBody": "透過 {{tool}} 將 {{amount}} {{asset}} 從 {{from}} 轉到 {{to}}，至少入帳 {{min}}。",
+    "confirmCost": "跨鏈費 {{fee}}、網路 Gas {{gas}}，由 {{wallet}} 簽章。",
+    "confirmAction": "確認並簽章",
+    "cancel": "取消",
+    "sentBody": "已送出轉帳，追蹤中：",
+    "sendFailed": "轉帳未能送出。",
+    "refusal": {
+      "non-evm-chain": "尚未支援與 {{chain}} 之間的跨鏈。轉帳僅在 EVM 鏈之間進行。",
+      "same-chain": "這就是你目前所在的鏈。要兌換請用旁邊的面板。",
+      "unknown-market": "{{chain}} 不在此跨鏈橋涵蓋的鏈之內。",
+      "unknown-token": "{{asset}} 在 {{chain}} 上找不到對應合約，沒有可跨鏈的資產。",
+      "no-route": "目前沒有跨鏈橋能處理這個規模。換個數量或換一條鏈試試。"
+    }
   },
   "sectionTours": {
     "back": "上一步",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "內部人交易",
     "markets": "市場",
     "watchlist": "自選清單",
     "topCoins": "熱門幣種",
@@ -3029,6 +3263,7 @@
     "yourPosition": "持倉明細"
   },
   "paneDescriptions": {
+    "insiderActivity": "最近的 Form 4 申報：公司內部人買了還是賣了、買賣多少、成交價多少",
     "markets": "瀏覽各交易所所有可用的交易對",
     "watchlist": "在可自訂的清單中追蹤你關注的交易對",
     "topCoins": "依成交量、市值與漲跌幅排列幣種",
@@ -3065,8 +3300,8 @@
     "openInterest": "每個合約的未平倉量及 24 小時變化，讓資金擁擠先於價格顯現",
     "fundingExtremes": "目前資金費率最高和最低的合約，以及各自所在的交易所",
     "fundingBelt": "距離下次資金費結算的倒數、目前與預測費率，以及你的部位規模要支付或賺取的金額",
-    "liquidationMap": "你的部位在價格軸上被強平的位置，與市場其餘部分承受的強平量對照顯示",
-    "marginHealth": "保證金率、維持保證金與可用保證金的對比，以及帳戶距離自動減倉(ADL)還有多近",
+    "liquidationMap": "在價格軸上呈現交易所實際強平的量，並疊加你自己的強平價格與槓桿刻度",
+    "marginHealth": "保證金率、維持保證金對權益、距離強制平倉的空間，以及一次逆向波動會對這三者造成什麼",
     "riskControls": "每日虧損上限、交易筆數、部位規模和緊急停止開關，就在交易發生的地方直接編輯",
     "categories": "所有事件分類均附帶即時合約數量，一鍵即可縮小看板範圍",
     "eventBoard": "以卡片形式展示進行中的事件市場：問題、以美分計價的 Yes 和 No、成交量與結算時間",
@@ -3090,10 +3325,10 @@
     "routeBridge": "來源鏈、目標鏈、使用的跨鏈橋及其手續費與所需時間，一切就緒即可執行",
     "inFlight": "仍在確認中的轉帳，附帶各自等待的區塊確認數",
     "session": "依據券商自身日曆顯示目前交易日所處的時段，包含假期與半日市",
-    "earningsCalendar": "誰在什麼時候發財報，按日期分組，並附上要超越的市場預期",
+    "earningsCalendar": "誰在什麼時候公布財報、要超越的預期是多少，再加上即將掛牌的公司",
     "economicCalendar": "總體經濟數據按發布時間排列，附帶重要性、前值與市場預期",
     "sessionClock": "用一行顯示交易日狀態的時鐘，盤後下單不會再讓你措手不及",
-    "level1": "來自券商行情的買賣報價及其數量、價差和當日波動區間",
+    "level1": "買賣報價及其掛單量、價差、當日區間，以及交易所宣布停牌時的狀態列",
     "company": "估值、成長率、利潤率、下一個催化劑，以及分析師的看法，全部集中在一個面板",
     "yourPosition": "你在這個標的上的持倉：數量、成本、標記價格，以及當日與持倉浮動損益"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "餘額、持倉與委託都透過你的 {{venue}} API 金鑰讀取，而金鑰目前處於鎖定狀態。",
       "accountMissingTitle": "連接 {{venue}} 以查看你的帳戶",
       "accountMissingDescription": "只有你的 {{venue}} API 金鑰才能讀取餘額、持倉與委託。金鑰只留在這台裝置。",
+      "walletMissingTitle": "連接錢包",
+      "walletMissingDescription": "此面板與已連接的錢包搭配使用。連接一個錢包後，其持倉、手續費和轉帳會顯示在這裡。",
+      "walletSealedDescription": "你的錢包金鑰在已鎖定的保險庫中。解鎖後，此面板即可為該錢包讀取和簽名。",
       "connectAction": "連接 {{venue}}"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "需要 API 金鑰",
     "setupRequiredHint": "需要設定",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "Solana 上每一次讀取與每一次發送都會經過的節點：餘額、流動性部位、兌換提交。填入你自己的 Helius 金鑰可取得穩定的連線端點；沒有金鑰時會退回公用 RPC，而它會在毫無預警的情況下丟棄請求。"
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "在 Ethereum、Base、Arbitrum、BNB Chain 與 Polygon 之間移動資產：依金額挑選最合適的跨鏈橋，列出手續費與入帳時間，並一路追蹤到款項入帳"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "核心交易終端機：圖表、委託簿、進場、市場探索和自選清單"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "跨鏈橋報價",
+        "description": "跨鏈路由報價與轉帳狀態追蹤"
+      },
       "candles": {
         "label": "K 線",
         "description": "為圖表與訊號提供即時 OHLCV K 線串流"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "資金費率",
         "description": "永續合約資金費率、標記價格與指數價格，以及未平倉量"
+      },
+      "liquidations": {
+        "label": "清算",
+        "description": "永續合約交易對的聚合清算歷史"
       },
       "pool-stats": {
         "label": "池子統計",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "市場數據",
       "ai": "AI",
+      "rpc": "RPC",
       "trading": "交易",
       "automation": "自動化",
       "theme": "主題",
@@ -5762,7 +6017,17 @@
         "description": "為 AI 研究報告提供網頁搜尋依據"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "Solana RPC",
+        "description": "以 JSON-RPC 存取 Solana 網路進行讀取與傳送"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "跨鏈橋執行",
+        "description": "使用已連接的錢包執行跨鏈轉帳"
+      },
       "orders": {
         "label": "訂單",
         "description": "在已連接的交易所下單與管理訂單"
@@ -6084,6 +6349,12 @@
     "allCategories": "全部",
     "loading": "正在載入事件…",
     "failed": "無法載入事件",
+    "sort": {
+      "venueOrder": "排序 · 平台順序",
+      "new": "排序 · 最新",
+      "endingSoon": "排序 · 即將結束",
+      "volume": "排序 · 成交額"
+    },
     "tryLater": "該平台沒有回應，請稍後重試。",
     "emptyTitle": "沒有進行中的事件",
     "emptyBody": "該平台目前沒有任何上架的事件。",

@@ -1,12 +1,12 @@
 ---
 title: Perpetual futures
-description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, a liquidation map and margin health.
+description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, measured liquidation clusters and margin health.
 group: traders
 parent: trading
 order: 8
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 10 min read
+readTime: 11 min read
 ---
 
 A perpetual future is a contract that tracks a spot price without ever
@@ -206,15 +206,33 @@ liquidation price has different columns than a spot balance.
 The **Risk** board pairs the chart with three panels that answer "how much room
 is left", and each of them is careful about what it does not know.
 
-**Liquidation Map.** Where your own position stops being yours, plotted on the
-price axis straight from each venue's position payload and sized by the
-notional at risk, with reference marks for where a position opened at the
-current price would liquidate at 5x, 10x and 25x. What it deliberately does not
-draw is a market-wide liquidation heatmap. No exchange in the fleet publishes
-aggregate liquidation clusters, and the vendors that sell one are modelling it
-from open interest and leverage assumptions rather than observing it. Bars that
-looked like measured depth would be the most confident kind of wrong, so the
-caption says which marks are yours and which are reference.
+**Liquidation Map.** Three layers over one price axis, each with a different
+claim behind it, and the caption says which is which in the pane rather than in
+a tooltip.
+
+**Measured clusters** are what the venue actually liquidated. Binance Futures
+publishes a force-order stream, the App Server holds it open and buckets the
+prints by minute and by price, and the pane draws the result. These are prints,
+not a model. That distinction is the whole point: the vendors who sell a
+liquidation heatmap are inferring one from open interest and assumed leverage,
+and bars that look like measured depth but are not are the most confident kind of
+wrong.
+
+Retention is 72 hours, and the window is a selector rather than a second axis:
+chips pick 1h, 6h, 24h or 72h, and the minutes inside the window are summed per
+price bucket. A two-dimensional time-by-price heatmap belongs over the chart,
+where there is already a time axis to hang it on.
+
+**KuCoin Futures and Kraken Futures stay estimate-only.** Neither publishes a
+public liquidation print stream, so there is nothing to collect and the pane says
+the venue is uncovered rather than filling the strip from a model. A terminal
+running [standalone](/docs/self-hosting#standalone-mode) has no collector at all
+and says that instead.
+
+Over the clusters sit **your own liquidation prices**, straight from each venue's
+position payload and sized by the notional at risk, and **leverage reference
+marks** for where a position opened at the current price would liquidate at 5x,
+10x and 25x, from the same estimator the ticket uses and labelled as an estimate.
 
 **Margin Health.** One section per connected futures account, because a margin
 ratio is an account fact: cross margin pools every position against one balance
@@ -222,10 +240,7 @@ and a merged gauge across two exchanges would be a number neither of them would
 liquidate on. The ratio is computed from maintenance over equity rather than
 read off the venue's own field, which two of the three venues scale differently
 with nothing in the payload to say which; where the venue's figure is the only
-one available it is normalised and the header names the source. Auto
-deleveraging is shown as unpublished rather than approximated. No unified call
-returns an ADL rank, and a five-bar indicator inferred from margin health would
-look exactly like the venue's own and mean nothing.
+one available it is normalised and the header names the source.
 
 **Risk Controls.** Your daily loss cap, daily trade count, maximum position
 size and the kill switch, editable beside the chart instead of behind Settings.
@@ -251,12 +266,16 @@ exactly as they do on a spot venue.
 ## What is not here yet
 
 Funding and mark price are panels rather than chart overlays, so neither is
-plotted on the candles yet. Also missing: a market-wide liquidation heatmap
-(nobody publishes the data), an ADL indicator (same reason), funding history as
-a series rather than a snapshot, isolated margin, a per position margin
-adjustment, inverse (coin-margined) contracts, dated futures, and deploying a
-bot onto a perpetual market. Bots still refuse leverage by construction, so a
-strategy cannot be pointed at a futures venue in this release.
+plotted on the candles yet, and the measured liquidation clusters are a strip
+over price rather than a heatmap over the candles. Also missing: liquidation
+clusters on KuCoin and Kraken (neither publishes a print stream), an ADL
+indicator (no venue returns an ADL rank, and a five-bar gauge inferred from
+margin health would look exactly like the venue's own and mean nothing), funding
+history as a series rather than a snapshot, isolated margin, a per position
+margin adjustment, inverse (coin-margined) contracts, dated futures, and
+deploying a bot onto a perpetual market. Bots still refuse leverage by
+construction, so a strategy cannot be pointed at a futures venue in this
+release.
 
 ## Next
 

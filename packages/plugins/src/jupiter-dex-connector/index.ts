@@ -8,6 +8,7 @@ import {
   searchTokens,
 } from './token-registry'
 import { executeSwap, getQuote } from './swap-executor'
+import { fetchSolanaLpPositions, isSolanaLpAddress } from './lp-client'
 import { quoteSwapRoute } from './route-preview'
 import {
   cancelTriggerOrder,
@@ -47,13 +48,28 @@ function toInstrument(t: JupiterToken): Instrument {
   }
 }
 
+/**
+ * Actions `trading:orders` answers on this connector.
+ *
+ * `place` is the default and the only one that spends anything, which is
+ * exactly why the set is closed: an action string this connector does not know
+ * is a caller bug, and the honest answer to a caller bug is a refusal.
+ */
+export const JUPITER_ORDER_ACTIONS: ReadonlySet<string> = new Set([
+  'place',
+  'quote',
+  'list',
+  'cancel',
+  'lp-positions',
+])
+
 export const jupiterDexConnectorManifest: PluginManifest = {
   id: 'jupiter-dex-connector',
   name: 'Jupiter DEX Connector',
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Solana DEX aggregator — best price routing across all Solana DEXs',
+    'Solana DEX aggregator: best price routing across all Solana DEXs',
   homepage: 'https://jup.ag',
   icon: 'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
   metadata: {
@@ -164,6 +180,17 @@ export function createJupiterDexConnectorPlugin(
     if (capability === 'trading:orders') {
       const action = String(p['action'] ?? 'place')
 
+      // Every action this connector serves, listed so that an unrecognised one
+      // can be REFUSED. It used to fall through to order placement: a typo, a
+      // renamed action, or a read a future pane invents (`gas`, `lp-positions`
+      // — both real cases) arrived at the swap path with `pair`, `side` and
+      // `size` defaulted, and the only thing standing between that and a market
+      // buy was whether a wallet happened to be provisioned. A read must never
+      // be one string away from spending money.
+      if (!JUPITER_ORDER_ACTIONS.has(action)) {
+        throw new Error(`jupiter-dex-connector: unknown action '${action}'`)
+      }
+
       // Read-only, and deliberately ahead of the wallet lookup: the route pane
       // and the price-impact tiers quote sizes nobody has agreed to trade, so
       // requiring an account would gate a preview behind a key. Ends at data —
@@ -174,6 +201,29 @@ export function createJupiterDexConnectorPlugin(
           pair: String(p['pair'] ?? ''),
           side: String(p['side'] ?? 'buy') === 'sell' ? 'sell' : 'buy',
           size: String(p['size'] ?? '0'),
+        })
+      }
+
+      // Concentrated-liquidity positions for an address, from Orca and
+      // Raydium. An action rather than the `trading:positions` capability for
+      // the reason the EVM connectors state: every consumer of that id reads a
+      // `NormalizedPosition` (entry price, leverage, liquidation), and an LP
+      // position has none of those.
+      //
+      // The owner is a parameter and falls back to the wallet slot. Only the
+      // ADDRESS is involved either way: public chain state, no key, and the
+      // panes have to work while the vault is still sealed.
+      if (action === 'lp-positions') {
+        const requested = p['owner']
+        const slot = getSlot(params)
+        const owner = isSolanaLpAddress(requested)
+          ? requested
+          : (slot?.address ?? '')
+        return fetchSolanaLpPositions({
+          owner,
+          rpcUrl: slot?.rpcUrl ?? rpcUrl,
+          pair: typeof p['pair'] === 'string' ? p['pair'] : null,
+          cap: typeof p['cap'] === 'number' ? p['cap'] : undefined,
         })
       }
 
@@ -300,7 +350,15 @@ export function createJupiterDexConnectorPlugin(
 
     async initialize(config: Record<string, unknown>) {
       // Update config
-      if (typeof config['rpcUrl'] === 'string') rpcUrl = config['rpcUrl']
+      if (typeof config['rpcUrl'] === 'string' && config['rpcUrl'] !== rpcUrl) {
+        rpcUrl = config['rpcUrl']
+        // Slots carry the endpoint they were provisioned with, and re-pointing
+        // them here is the whole reason the RPC can be swapped at runtime: a
+        // user who enrols a Helius key mid-session must not keep sending swaps
+        // through the public node until the next reload. Only the ENDPOINT is
+        // re-pointed; the key accessor bound at provisioning is untouched.
+        for (const slot of walletSlots.values()) slot.rpcUrl = rpcUrl
+      }
       if (typeof config['slippageBps'] === 'number')
         defaultSlippageBps = config['slippageBps']
       const getKey =

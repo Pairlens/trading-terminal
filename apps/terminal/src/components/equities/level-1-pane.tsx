@@ -13,17 +13,19 @@
  * a second subscription would double the socket traffic to show the same two
  * prices.
  *
- * No halt row. Alpaca publishes trading status on a separate `statuses`
- * channel that the connector does not subscribe to, and neither the quote
- * frames nor the normalized book carry a halt flag — so the pane omits the
- * row instead of implying "not halted" from an absence of evidence.
+ * The halt row appears ONLY when the venue has actually said something. The
+ * connector subscribes Alpaca's `statuses` channel and puts what it hears on
+ * the ticker payload, and a ticker that carries no status means the venue has
+ * not spoken, which is not the same as "trading normally". So an absent status
+ * renders no row at all rather than a reassuring green one.
  */
-import { BookOpen } from 'lucide-react'
+import { BookOpen, OctagonAlert } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { usePanePair } from '@pairlens/plugin-sdk'
 import { cn } from '@pairlens/ui'
 import { TIMEFRAME_TO_MS, isTimeframe } from '@pairlens/shared/timeframe'
+import type { TradingStatus } from '@pairlens/market-engine/types'
 
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
@@ -125,6 +127,11 @@ function Level1PaneInner({ pairKey }: { pairKey: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto p-3">
+      {/* Only when the venue has spoken; see the module note. */}
+      {tickerData?.tradingStatus && (
+        <TradingStatusRow status={tickerData.tradingStatus} />
+      )}
+
       <div className="flex gap-1.5">
         <QuoteCard
           label={t('level1.bid')}
@@ -190,6 +197,62 @@ function Level1PaneInner({ pairKey }: { pairKey: string }) {
 }
 
 // ── Pieces ────────────────────────────────────────────────────────────
+
+/**
+ * What the tape says about whether this stock is trading.
+ *
+ * 'active' is stated quietly: it only ever appears right after a resumption
+ * message, and a loud green badge sitting there all day would train people to
+ * stop reading the row that matters. A halt takes the destructive tone, a
+ * volatility pause the caution one, and the venue's own reason text rides
+ * underneath verbatim because 'News Pending' is the useful part.
+ */
+function TradingStatusRow({ status }: { status: TradingStatus }) {
+  const { t } = useTranslation()
+  const since =
+    status.sinceMs === null
+      ? null
+      : new Date(status.sinceMs).toLocaleTimeString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+
+  return (
+    <div className="flex flex-col gap-1 rounded-lg bg-muted/40 px-2.5 py-2">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[11px] text-muted-foreground">
+          {t('level1.status')}
+        </span>
+        {status.state === 'active' ? (
+          <span className="text-[11px] text-muted-foreground">
+            {t('level1.statusTrading')}
+          </span>
+        ) : (
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide',
+              status.state === 'halted'
+                ? 'bg-destructive/15 text-destructive'
+                : 'bg-[color-mix(in_oklch,var(--chart-4)_20%,transparent)] text-[var(--chart-4)]',
+            )}
+          >
+            <OctagonAlert aria-hidden className="size-3" />
+            {status.state === 'halted'
+              ? t('level1.statusHalted')
+              : t('level1.statusPaused')}
+          </span>
+        )}
+      </div>
+      {(status.reason || since) && (
+        <p className="text-[10px] leading-snug text-muted-foreground">
+          {status.reason}
+          {status.reason && since ? ' · ' : ''}
+          {since && t('level1.statusSince', { time: since })}
+        </p>
+      )}
+    </div>
+  )
+}
 
 function QuoteCard({
   label,

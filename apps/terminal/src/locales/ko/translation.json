@@ -36,13 +36,6 @@
     "failedTitle": "바스켓을 넣지 못했습니다",
     "hint": "각 항목은 실제 지정가 주문입니다."
   },
-  "bridgePanes": {
-    "routeTitle": "브리지에는 브리지 제공자가 필요합니다",
-    "routeBody": "연결된 제공자가 없습니다. 온체인 커넥터는 단일 체인 안에서만 라우팅하므로, 체인 간 이동의 수수료나 소요 시간을 견적할 수 없습니다. 체인 사다리는 이미 거래 가능한 범위를 비교합니다.",
-    "wouldQuote": "{{chain}}에서 나가는 {{asset}}을 견적합니다",
-    "inFlightTitle": "전송 추적에는 브리지 제공자가 필요합니다",
-    "inFlightBody": "확인 수는 자금을 옮긴 브리지가 알려줍니다. 연결이 없으면 조회할 대상이 없고, 근거 없는 막대는 멈춘 전송에서도 계속 진행되는 것처럼 보입니다."
-  },
   "chainLadder": {
     "title": "체인별 {{asset}}",
     "subtitle": "최고 호가가 아니라 가스를 빼고 실제로 남는 금액 기준 정렬",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "{{total}}건 중 처음 {{shown}}건을 보여 줍니다.",
+    "ipo": {
+      "title": "IPO",
+      "columns": {
+        "exchange": "거래소",
+        "priceRange": "공모가 범위"
+      },
+      "range": "{{low}} ~ {{high}}",
+      "priceTbd": "미확정",
+      "capped": "총 {{total}}건 중 처음 {{shown}}건을 표시합니다.",
+      "noneTitle": "예정된 상장 없음",
+      "noneBody": "지금은 데이터 제공사 캘린더에 상장일이 잡힌 회사가 없습니다.",
+      "emptyTitle": "상장 피드 없음",
+      "emptyBody": "이 빌드에는 펀더멘털 제공사가 없습니다. IPO 캘린더는 App Server에서 옵니다. 브로커가 알려주는 것은 자신이 거래하는 종목이지, 앞으로 상장할 종목이 아닙니다.",
+      "providerBusyTitle": "상장 피드가 속도 제한 중",
+      "providerErrorTitle": "상장 피드를 불러오지 못했습니다"
+    },
     "noEstimate": "추정치 없음",
     "noneInWindowBody": {
       "today": "오늘 실적을 발표하는 기업이 캘린더에 없습니다.",
@@ -161,22 +170,52 @@
     "tomorrow": "내일"
   },
   "economicCalendar": {
-    "emptyTitle": "매크로 피드가 설치되지 않음",
-    "emptyBody": "매크로 데이터 플러그인이 발표 시각, 시장 예상, 직전 수치로 이 캘린더를 채웁니다.",
+    "allDay": "종일",
+    "emptyTitle": "매크로 캘린더 없음",
+    "emptyBody": "발표 일정은 App Server에서 옵니다. 이 빌드는 독립 실행 모드라 일정을 모을 곳이 없습니다.",
     "columns": {
-      "time": "시각",
-      "event": "지표",
-      "actual": "실제",
-      "consensus": "예상",
-      "prior": "직전"
-    }
+      "source": "기관",
+      "time": "시각 ({{zone}})",
+      "event": "발표"
+    },
+    "impact": {
+      "high": "영향 큼",
+      "medium": "영향 보통",
+      "low": "영향 작음"
+    },
+    "impactAll": "전체",
+    "impactHigh": "영향 큼",
+    "impactLabel": "영향도 필터",
+    "noneHighBody": "이 기간에는 영향이 큰 발표가 없습니다. 전체로 바꾸면 나머지 일정을 볼 수 있습니다.",
+    "noneInWindowBody": {
+      "week": "앞으로 7일간 미국 발표 일정이 없습니다.",
+      "fortnight": "앞으로 2주간 미국 발표 일정이 없습니다.",
+      "month": "앞으로 한 달간 미국 발표 일정이 없습니다."
+    },
+    "noneInWindowTitle": "예정된 발표 없음",
+    "providerBusyBody": "일정 서비스가 요청을 제한하고 있습니다. 제한 구간이 초기화되면 저절로 돌아옵니다.",
+    "providerBusyTitle": "매크로 캘린더가 제한되었습니다",
+    "providerErrorBody": "기관 발표 일정에 접속하지 못했습니다. 계정이나 커넥터 문제는 아닙니다.",
+    "providerErrorTitle": "매크로 캘린더를 불러오지 못했습니다",
+    "scopeLabel": "발표 기간",
+    "scopes": {
+      "week": "1주",
+      "fortnight": "2주",
+      "month": "1개월"
+    },
+    "sourceNote": "BLS, BEA, 연방준비제도, Census의 발표 일정을 모아 구성합니다. 시각은 각 기관이 공표한 대로 미국 동부 시간입니다.",
+    "title": "매크로",
+    "today": "오늘",
+    "tomorrow": "내일"
   },
   "eventBoard": {
+    "listed": "등록 {{when}}",
     "searchPlaceholder_one": "실시간 마켓 1개에서 검색",
     "searchPlaceholder_other": "실시간 마켓 {{count}}개에서 검색",
     "loadingTitle": "보드 불러오는 중",
     "loadingBody": "각 거래소에 지금 무엇이 거래되는지 묻고 있습니다.",
     "sort": {
+      "new": "신규",
       "trending": "인기",
       "endingSoon": "곧 종료",
       "volume": "거래량",
@@ -221,6 +260,7 @@
     "basisMissing_other": "호가 없는 후보 {{count}}개"
   },
   "feeAccrual": {
+    "lastTouch": "마지막 갱신 시점",
     "title": "수수료 적립",
     "subtitle_one": "{{wallet}} · 구간 {{count}}개",
     "subtitle_other": "{{wallet}} · 구간 {{count}}개",
@@ -233,12 +273,12 @@
       "claimable": "수취 가능"
     },
     "loadingTitle": "수수료 조회 중",
-    "loadingBody": "각 포지션에 collect를 시뮬레이션해 지금 얼마가 지급되는지 확인하고 있습니다.",
+    "loadingBody": "각 포지션에 쌓인 금액을 읽고, 지원하는 체인에서는 collect를 시뮬레이션합니다.",
     "emptyTitle": "유동성 포지션 없음",
     "emptyBody": "{{wallet}}에는 수수료가 쌓일 포지션이 없습니다. 연결된 체인에 유동성을 공급하면 금액이 여기에 표시됩니다.",
     "noChainsTitle": "체인 커넥터 없음",
     "noChainsBody": "온체인 커넥터를 설치하면 이 패널이 해당 풀이 지갑에 지급할 금액을 조회합니다.",
-    "footnote": "이 블록에서 collect가 지급할 금액을 양쪽 자산, 포지션별로 보여줍니다. 이미 받은 수수료는 체인에 흔적이 남지 않으므로 수수료 APR, 구간 내 시간, 단순 보유 대비 손실은 인덱서가 필요하며 표시하지 않습니다."
+    "footnote": "포지션마다 양쪽 자산을 보여줍니다. EVM 체인에서는 이 블록에서 collect가 지급할 금액이고, 솔라나에서는 풀이 이미 적립한 금액입니다. 이미 수령한 수수료는 온체인에 흔적이 남지 않으므로 수수료 APR, 레인지 체류 시간, 보유 대비 손실은 인덱서가 필요해 표시하지 않습니다."
   },
   "funding": {
     "loading": "펀딩 비율을 읽는 중…",
@@ -289,6 +329,57 @@
     "emptyTitle": "활성화된 무기한 거래소 없음",
     "emptyBody": "펀딩은 공개 데이터라 API 키가 필요 없습니다. 무기한 선물 커넥터를 설치하면 표가 저절로 채워집니다."
   },
+  "inFlight": {
+    "title": "전송 중",
+    "pendingCount_one": "{{count}}건 대기",
+    "pendingCount_other": "{{count}}건 대기",
+    "emptyTitle": "전송 중인 자금 없음",
+    "emptyBody": "이 터미널에서 보낸 브리지 전송이 양쪽 트랜잭션과 함께 여기에 표시되고, 도착할 때까지 남아 있습니다.",
+    "route": "{{from}} → {{to}}",
+    "sourceTx": "출발 Tx",
+    "destinationTx": "도착 Tx",
+    "landed": "도착",
+    "landedAmount": "{{amount}} 도착",
+    "failed": "실패",
+    "confirming": "확인 중",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "출발 체인 승인 대기",
+      "WAIT_DESTINATION_TRANSACTION": "도착 체인 대기",
+      "BRIDGE_NOT_AVAILABLE": "브리지 사용 불가",
+      "CHAIN_NOT_AVAILABLE": "체인 사용 불가",
+      "REFUND_IN_PROGRESS": "환불 진행 중",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "환불 필요",
+      "UNKNOWN_ERROR": "상태 알 수 없음",
+      "COMPLETED": "완료",
+      "PENDING": "확인 중"
+    }
+  },
+  "insiderActivity": {
+    "title": "내부자 거래",
+    "summary": "매수 {{buys}}건 · 매도 {{sells}}건",
+    "span_one": "{{count}}일",
+    "span_other": "{{count}}일",
+    "buy": "매수",
+    "sell": "매도",
+    "noValue": "금액 없음",
+    "columns": {
+      "date": "날짜",
+      "insider": "내부자",
+      "shares": "수량",
+      "price": "가격",
+      "value": "금액"
+    },
+    "noFilingsTitle": "{{symbol}}의 최근 신고 없음",
+    "noFilingsBody": "최근 이 회사 내부자가 신고한 거래가 없습니다. 조용한 구간은 흔하며, Form 4는 거래 후 영업일 2일 안에 제출됩니다.",
+    "needsProviderTitle": "내부자 신고에는 제공사가 필요합니다",
+    "needsProviderBody": "이 빌드에는 펀더멘털 피드가 없습니다. Form 4는 App Server에서 오고, 브로커 커넥터는 호가와 체결만 담당합니다.",
+    "providerBusyTitle": "내부자 신고가 속도 제한 중",
+    "providerBusyBody": "데이터 제공사가 요청을 제한하고 있습니다. 제한 창이 초기화되면 알아서 돌아옵니다.",
+    "providerErrorTitle": "내부자 신고를 불러오지 못했습니다",
+    "providerErrorBody": "제공사가 쓸 수 없는 응답을 보냈습니다. 계정이나 커넥터에는 문제가 없습니다.",
+    "notEquityTitle": "내부자 신고에는 주식이 필요합니다",
+    "notEquityBody": "이런 신고는 상장기업만 합니다. {{venue}}는 주식 거래소가 아니며, 같은 티커라도 그곳에서는 다른 자산입니다."
+  },
   "level1": {
     "emptyTitle": "아직 호가 없음",
     "emptyBody": "이 종목의 매수·매도 호가가 아직 수신되지 않았습니다.",
@@ -298,20 +389,44 @@
     "bps": "bp",
     "dayRange": "당일 범위",
     "feed": "피드",
-    "depthNote": "브로커는 최우선 호가만 제공하므로 이 두 가격 뒤에 호가 잔량 깊이는 없습니다."
+    "depthNote": "브로커는 최우선 호가만 제공하므로 이 두 가격 뒤에 호가 잔량 깊이는 없습니다.",
+    "status": "상태",
+    "statusHalted": "거래정지",
+    "statusPaused": "일시중단",
+    "statusSince": "{{time}}부터",
+    "statusTrading": "거래 중"
   },
   "liquidationMap": {
-    "subtitle": "내 청산 가격과, 여기서 연 레버리지가 끝나는 지점",
+    "clusterHint": "{{price}}: {{side}} 포지션 {{notional}}이(가) {{count}}건의 체결로 청산되었습니다",
+    "clustersCaption": "음영 기둥은 최근 {{window}}시간 동안 거래소가 실제로 청산한 규모입니다. 빨강은 롱, 초록은 숏입니다.",
+    "clustersErrorCaption": "거래소의 청산 기록을 불러오지 못했습니다. 축의 나머지 표시에는 영향이 없습니다.",
+    "clustersLoadingCaption": "거래소의 청산 기록을 불러오는 중입니다.",
+    "collectingCaption": "시장 클러스터를 아직 모으는 중입니다. {{since}}부터 수집하고 있습니다.",
+    "collectingJustStarted": "방금",
+    "legendLong": "롱 {{value}}",
+    "legendPrints": "{{count}}건",
+    "legendShort": "숏 {{value}}",
+    "noClustersCaption": "최근 {{window}}시간 동안 이 계약에서 청산이 없었습니다.",
+    "notTrackedCaption": "이 거래소는 집계 청산 피드를 공개하지 않아 시장 클러스터가 그려지지 않습니다.",
+    "standaloneCaption": "시장 클러스터는 Pairlens 클라우드에서 오지만 이 빌드는 클라우드를 사용하지 않습니다.",
+    "subtitle": "시장이 청산된 가격대와 내 포지션이 놓일 자리",
     "estimateBadge": "추정",
     "sideLong": "롱",
     "sideShort": "숏",
     "referenceHint": "현재 가격에서 연 {{leverage}}배 {{side}}는 {{price}} 부근에서 청산됩니다",
-    "caption": "막대는 각 거래소가 보고한 내 청산 가격입니다. 가는 표시는 현재 가격에서 연 포지션이 5배, 10배, 25배에서 청산되는 지점입니다. 집계된 청산 클러스터를 공개하는 거래소는 없어 그리지 않습니다.",
+    "caption": "막대는 각 거래소가 보고한 내 청산 가격입니다. 가는 눈금은 현재 가격에 진입한 포지션이 5x, 10x, 25x에서 청산되는 지점입니다.",
     "noPositionsCaption": "가는 표시는 현재 가격에서 연 포지션이 5배, 10배, 25배에서 청산되는 지점입니다. 내 청산 가격은 포지션이 열리면 막대로 표시됩니다.",
     "noPriceTitle": "기준이 될 가격이 없습니다",
     "noPriceBody": "이 지도에는 계약의 실시간 가격이 필요합니다. 옆 차트에 가격이 들어오면 채워집니다.",
     "emptyTitle": "그릴 것이 없습니다",
-    "emptyBody": "무기한 포지션을 열거나 계약을 고르면 가격 축이 채워집니다."
+    "emptyBody": "무기한 포지션을 열거나 계약을 고르면 가격 축이 채워집니다.",
+    "windowLabel": "기간",
+    "windows": {
+      "h1": "1시간",
+      "h6": "6시간",
+      "h24": "24시간",
+      "h72": "72시간"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "풀 선택",
@@ -327,12 +442,11 @@
     "biggestLabel": "최대 스왑"
   },
   "lpPanes": {
-    "manageTitle": "범위 수정에는 유동성 액션이 필요합니다",
-    "manageBody": "유동성 추가, 회수, 재조정은 모두 서명 트랜잭션이며 아직 어떤 커넥터도 만들지 못합니다. 실제로 동작하기 전까지 컨트롤은 표시하지 않습니다.",
     "venueFallback": "이 체인",
     "wouldRead": "{{chain}}의 {{pool}}에서 {{wallet}}을 읽습니다"
   },
   "lpPosition": {
+    "feesLastTouch": "이 포지션을 마지막으로 건드렸을 때 정산된 금액입니다. Orca와 Raydium은 포지션을 다시 건드릴 때 수수료를 반영하므로 실제 청구액은 더 클 수 있습니다.",
     "title": "LP 포지션",
     "subtitle_one": "{{wallet}} · 구간 {{count}}개",
     "subtitle_other": "{{wallet}} · 구간 {{count}}개",
@@ -353,12 +467,81 @@
     "rangeUnknown": "풀 조회 실패",
     "otherPositions": "내 다른 포지션",
     "loadingTitle": "포지션 조회 중",
-    "loadingBody": "연결된 각 체인의 position manager에 이 지갑의 보유 내역을 조회하고 있습니다.",
+    "loadingBody": "연결된 각 체인에 이 지갑이 무엇을 보유하고 있는지 묻고 있습니다.",
     "emptyTitle": "유동성 포지션 없음",
-    "emptyBody": "{{wallet}}에는 연결된 체인의 Uniswap v3 또는 PancakeSwap v3 포지션이 없습니다. 한 곳에 유동성을 공급하면 여기에 표시됩니다.",
+    "emptyBody": "{{wallet}}에는 연결된 체인에 집중 유동성 포지션이 없습니다. 한 체인에 유동성을 공급하면 여기에 표시됩니다.",
     "noChainsTitle": "체인 커넥터 없음",
-    "noChainsBody": "온체인 커넥터를 설치하면 이 패널이 해당 체인의 position manager를 지갑 기준으로 조회합니다.",
+    "noChainsBody": "온체인 커넥터를 설치하면 이 패널이 해당 체인의 유동성 포지션을 지갑 기준으로 읽어옵니다.",
     "footnote": "체인에서 읽은 값: 밴드, 지금 유동성의 가치, 아직 받지 않은 수수료. 포지션은 진입 원가를 저장하지 않으므로 단순 보유 대비 수치는 없습니다."
+  },
+  "manageLiquidity": {
+    "title": "유동성 관리",
+    "subtitle_one": "{{wallet}} · 포지션 {{count}}개",
+    "subtitle_other": "{{wallet}} · 포지션 {{count}}개",
+    "position": "포지션",
+    "tabCollect": "수령",
+    "tabRemove": "회수",
+    "tabAdd": "추가",
+    "unread": "풀 미조회",
+    "claimable": "지금 받을 수 있는 금액",
+    "collectNote": "트랜잭션 한 건. 양쪽 모두 이 지갑으로 지급됩니다.",
+    "collectNothing": "이 포지션에서 아직 받을 것이 없습니다.",
+    "collectUnread": "이 포지션의 수수료를 읽지 못해 확인할 내용이 없습니다.",
+    "removeAmount": "회수",
+    "youReceive": "받는 금액",
+    "removeFeesNote": "수수료는 회수 비율과 관계없이 같은 트랜잭션에서 전액 함께 정산됩니다.",
+    "removeUnread": "풀이 응답하지 않아 지급액을 미리 볼 수 없습니다. 최소 수량은 서명 시점의 실시간 상태로 정해집니다.",
+    "addRatioNote": "구간이 비율을 정합니다. 한쪽 수량을 입력하면 나머지가 정해집니다.",
+    "addBelowBand": "가격이 구간 아래에 있어 이 포지션은 {{symbol}}만 받습니다.",
+    "addAboveBand": "가격이 구간 위에 있어 이 포지션은 {{symbol}}만 받습니다.",
+    "addUnread": "풀이 응답하지 않아 두 번째 수량을 계산할 수 없습니다. 둘 다 입력하세요.",
+    "addWrappedNote": "입금은 풀의 토큰으로 이뤄집니다. 래핑된 네이티브를 담은 포지션에는 네이티브가 아니라 래핑된 잔액이 필요합니다.",
+    "balance": "잔액 {{amount}}",
+    "slippage": "슬리피지",
+    "reviewCollect": "수령 검토",
+    "reviewRemove": "회수 검토",
+    "reviewAdd": "입금 검토",
+    "confirmTitle": "서명할 내용 확인",
+    "rowAction": "작업",
+    "rowPosition": "포지션",
+    "rowChain": "체인",
+    "rowManager": "매니저",
+    "rowCollecting": "수령액",
+    "rowRemoving": "회수 비율",
+    "rowReceive": "받는 금액",
+    "rowFeesSwept": "함께 정산되는 수수료",
+    "rowDepositing": "입금액",
+    "rowMinimum": "최소",
+    "confirmCollectNote": "위의 포지션 매니저로 전송됩니다. 수수료는 이 지갑으로만 지급됩니다.",
+    "confirmRemoveNote": "소각과 수령을 트랜잭션 한 건으로 처리합니다. 최소 수량은 서명 시점 풀 가격에서 {{slippage}} 아래로 다시 계산됩니다.",
+    "confirmAddNote": "토큰마다 매니저에 대한 승인이 먼저 필요하므로 트랜잭션이 두세 건이 될 수 있습니다.",
+    "back": "뒤로",
+    "sign": "서명 후 전송",
+    "pendingTitle": "영수증 대기 중",
+    "pendingBody": "서명해서 보냈습니다. 체인이 확정할 때까지 이 화면이 유지됩니다.",
+    "collectedTitle": "수수료를 수령했습니다",
+    "removedTitle": "유동성을 회수했습니다",
+    "addedTitle": "유동성을 추가했습니다",
+    "successBody": "포지션은 다음 조회 때 갱신됩니다.",
+    "failedTitle": "트랜잭션 실패",
+    "viewTransaction": "트랜잭션 보기",
+    "done": "완료",
+    "lockedTitle": "서명하려면 잠금 해제",
+    "lockedBody": "이 트랜잭션에는 지갑 키가 필요합니다. Pairlens 잠금을 해제하고 다시 시도하세요.",
+    "noConnectorTitle": "커넥터 미설치",
+    "noConnectorBody": "이 포지션의 체인에 설치된 커넥터가 없어 서명할 수단이 없습니다.",
+    "evmOnlyTitle": "EVM 포지션만 가능",
+    "evmOnlyBody": "이 작업들은 EVM 컨트랙트인 Uniswap v3 포지션 매니저를 호출합니다. 솔라나 포지션은 다른 LP 패널에서 볼 수 있지만 여기서는 서명할 수 없습니다. EVM 체인에 유동성을 공급하면 이 패널에서 관리할 수 있습니다.",
+    "readOnlyElsewhere_one": "다른 서명 계열의 포지션 {{count}}개는 여기서 읽기 전용입니다.",
+    "readOnlyElsewhere_other": "다른 서명 계열의 포지션 {{count}}개는 여기서 읽기 전용입니다.",
+    "noSigner": "연결된 지갑 중 이 포지션의 체인에서 서명할 수 있는 것이 없습니다.",
+    "noChainsTitle": "체인 커넥터 없음",
+    "noChainsBody": "온체인 커넥터를 설치하면 이 패널에서 수수료를 수령하고 찾은 구간의 크기를 조정할 수 있습니다.",
+    "loadingTitle": "포지션 조회 중",
+    "loadingBody": "연결된 각 체인의 포지션 매니저에 이 지갑의 보유 내역을 묻고 있습니다.",
+    "emptyTitle": "유동성 포지션 없음",
+    "emptyBody": "{{wallet}}은 연결된 체인에서 Uniswap v3 또는 PancakeSwap v3 포지션을 보유하고 있지 않습니다. 한 곳에 유동성을 공급하면 여기서 관리할 수 있습니다.",
+    "footnote": "수령과 회수는 각각 트랜잭션 한 건이며, 회수는 수수료도 함께 가져옵니다. 구간 이동은 수정이 아닙니다. 포지션을 소각하고 새로 발행하므로 여기서는 제공하지 않습니다."
   },
   "marginHealth": {
     "title": "증거금 상태",
@@ -369,8 +552,6 @@
     "equity": "순자산",
     "maintenance": "유지 증거금",
     "liqDistance": "청산까지 거리",
-    "adl": "ADL 대기열",
-    "adlHint": "거래소가 공개하지 않음",
     "stressLabel": "가격이 불리하게 움직이면",
     "ratioAfter": "비율 {{value}}%",
     "liquidated": "청산됨",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "시장 데이터 없음",
     "emptyBody": "App Server도 공개 대체 소스도 응답하지 않아 아직 순위를 매길 것이 없습니다.",
+    "newListings": {
+      "emptyTitle": "아직 새로운 것이 없습니다",
+      "emptyBodyBothOff": "거래소 상장 스윕도 온체인 제공자도 응답하지 않았습니다.",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "거래소 상장은 {{date}}부터 기록하고 있습니다. 풀은 자체 생성 시각을 가지고 있습니다.",
+      "cexOff": "온체인 풀만 표시합니다. 거래소 상장은 App Server에서 오는데 이 빌드는 사용하지 않습니다."
+    },
     "noBrokerTitle": "주식 거래소가 설치되지 않음",
     "noBrokerBody": "플러그인 스토어에서 브로커 커넥터를 설치하면 오늘의 등락이 여기에 표시됩니다.",
     "tabs": {
       "gainers": "상승",
       "losers": "하락",
+      "newListings": "신규 상장",
       "volume": "거래대금",
       "volatility": "변동성",
       "unusual": "이상 거래"
     },
     "window": "집계 구간",
     "columns": {
+      "asset": "자산",
+      "liquidity": "유동성",
+      "listed": "등재",
       "pair": "페어",
       "change": "{{window}} 변동",
       "price": "가격",
+      "venue": "거래소",
       "volume": "거래대금",
       "trend": "추세"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "이 구간에서 오른 자산이 없습니다.",
       "losers": "이 구간에서 내린 자산이 없습니다.",
+      "newListings": "최근 2주 동안 새로 상장된 자산이 없습니다.",
       "volume": "아직 거래대금을 보고한 거래소가 없습니다.",
       "volatility": "순위를 매길 만큼 움직인 자산이 없습니다.",
       "unusual": "몸집 대비 이상하게 거래되는 자산이 없습니다."
@@ -819,6 +1014,44 @@
     "killSwitchHint": "재개할 때까지 모든 주문을 차단",
     "haltOrders": "주문 정지",
     "resumeOrders": "재개"
+  },
+  "routeBridge": {
+    "title": "브리지",
+    "subtitle": "{{chain}}에서 자산 옮기기",
+    "provider": "LI.FI",
+    "notEvmTitle": "브리지할 수 없는 체인",
+    "notEvmBody": "전송은 Ethereum, Base, Arbitrum, BNB Chain, Polygon 사이에서 이뤄집니다. {{chain}}은 서명 방식이 달라 브리지 커넥터가 아직 해당 서명자를 갖고 있지 않습니다.",
+    "noConnectorTitle": "브리지 커넥터가 없습니다",
+    "noConnectorBody": "크로스체인 전송을 견적하고 보내려면 플러그인 스토어에서 LI.FI Bridge 플러그인을 설치하세요.",
+    "amountLabel": "브리지할 수량",
+    "amountPlaceholder": "{{asset}} 수량",
+    "destination": "받을 체인",
+    "quoting": "경로 견적 중",
+    "youReceive": "받는 체인",
+    "minReceived": "최소 보장",
+    "bridgeFee": "브리지 수수료",
+    "networkGas": "네트워크 가스",
+    "eta": "도착 예상",
+    "etaSeconds": "약 {{seconds}}초",
+    "etaMinutes": "약 {{minutes}}분",
+    "feeIncluded": "{{tool}}이 수수료를 수량에서 차감하므로 위 숫자가 실제 도착 금액입니다.",
+    "feeExtra": "{{tool}}은 수수료를 수량과 별도로 청구합니다.",
+    "review": "전송 검토",
+    "requote": "견적 새로고침",
+    "expired": "만료됨",
+    "confirmBody": "{{amount}} {{asset}}을 {{from}}에서 {{to}}로 {{tool}}을 통해 보냅니다. 최소 {{min}}을 받습니다.",
+    "confirmCost": "브리지 수수료 {{fee}}, 네트워크 가스 {{gas}}, 서명 지갑 {{wallet}}.",
+    "confirmAction": "확인하고 서명",
+    "cancel": "취소",
+    "sentBody": "전송을 보냈습니다. 추적 중입니다:",
+    "sendFailed": "전송을 보내지 못했습니다.",
+    "refusal": {
+      "non-evm-chain": "{{chain}}과의 브리지는 아직 지원하지 않습니다. 전송은 EVM 체인 사이에서만 가능합니다.",
+      "same-chain": "이미 사용 중인 체인입니다. 교환은 옆 패널에서 하세요.",
+      "unknown-market": "{{chain}}은 이 브리지가 다루는 체인이 아닙니다.",
+      "unknown-token": "{{asset}}은 {{chain}}에서 컨트랙트로 확인되지 않아 보낼 대상이 없습니다.",
+      "no-route": "지금 이 규모를 처리할 경로가 없습니다. 수량이나 체인을 바꿔 보세요."
+    }
   },
   "sectionTours": {
     "back": "뒤로",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "내부자 거래",
     "markets": "마켓",
     "watchlist": "관심 목록",
     "topCoins": "상위 코인",
@@ -3029,6 +3263,7 @@
     "yourPosition": "보유 포지션"
   },
   "paneDescriptions": {
+    "insiderActivity": "최근 Form 4 신고: 회사 내부자가 무엇을 얼마나 어떤 가격에 사고팔았는지",
     "markets": "거래소 전반의 모든 거래 페어를 탐색하세요",
     "watchlist": "커스터마이징 가능한 목록으로 즐겨찾는 페어를 추적하세요",
     "topCoins": "거래량, 시가총액, 가격 변동으로 코인 순위를 매기세요",
@@ -3065,8 +3300,8 @@
     "openInterest": "계약별 미결제약정과 24시간 변화, 가격이 움직이기 전에 쏠림을 먼저 포착",
     "fundingExtremes": "지금 가장 높은 펀딩비와 가장 낮은 펀딩비, 각각 어느 거래소인지와 함께",
     "fundingBelt": "다음 펀딩 정산까지 남은 시간, 현재 요율과 예측 요율, 그리고 내 포지션 크기가 지불하거나 받는 금액",
-    "liquidationMap": "내 포지션이 청산되는 가격을, 나머지 시장이 짊어진 청산 물량과 겹쳐서 표시",
-    "marginHealth": "마진 비율, 유지 증거금과 가용 증거금의 비교, 그리고 계정이 자동 디레버리징(ADL)에 얼마나 가까운지",
+    "liquidationMap": "가격 축 위에 거래소가 실제로 청산한 규모를 그리고, 그 위에 내 청산 가격과 레버리지 눈금을 표시",
+    "marginHealth": "증거금 비율, 자기자본 대비 유지증거금, 청산까지의 거리, 그리고 역방향 움직임이 이 셋에 미치는 영향",
     "riskControls": "일일 손실 한도, 거래 횟수, 포지션 사이즈, 킬 스위치를 거래가 일어나는 바로 그 자리에서 편집",
     "categories": "실시간 계약 수와 함께 보여주는 모든 이벤트 카테고리, 클릭 한 번으로 보드를 좁힐 수 있게",
     "eventBoard": "진행 중인 이벤트 시장을 카드로: 질문, 센트 단위의 Yes와 No, 거래량, 정산 시점",
@@ -3090,10 +3325,10 @@
     "routeBridge": "출발 체인, 목적지 체인, 사용할 브리지, 수수료와 소요 시간까지 표시, 바로 실행 가능",
     "inFlight": "아직 확정되지 않은 전송을, 대기 중인 블록 확인 수와 함께 표시",
     "session": "브로커 자체 캘린더를 기준으로 지금 거래일이 어느 시점에 있는지, 휴장일과 조기 마감일까지 반영",
-    "earningsCalendar": "누가 언제 발표하는지 날짜별로 묶어, 넘어야 할 컨센서스까지 함께",
+    "earningsCalendar": "누가 언제 실적을 내놓는지와 넘어야 할 컨센서스, 여기에 곧 상장할 종목까지",
     "economicCalendar": "매크로 지표를 발표 시각 순으로, 중요도와 이전치, 시장 예상치와 함께",
     "sessionClock": "거래일 상태를 한 줄로 보여주는 시계, 시간외 주문에 놀랄 일이 없도록",
-    "level1": "브로커 피드에서 받아온 매수/매도 호가와 수량, 스프레드, 당일 가격 범위",
+    "level1": "매수·매도 호가와 잔량, 스프레드, 당일 범위, 그리고 거래소가 거래를 정지했을 때의 상태 행",
     "company": "밸류에이션, 성장률, 이익률, 다음 촉매, 그리고 애널리스트들의 시각을 하나의 패널에",
     "yourPosition": "이 종목에서 내가 보유한 것: 수량, 원가, 마크 가격, 그리고 당일 손익과 보유 손익"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "잔고와 포지션, 주문은 {{venue}} API 키로 읽는데 지금은 그 키가 잠겨 있습니다.",
       "accountMissingTitle": "계정을 보려면 {{venue}}를 연결하세요",
       "accountMissingDescription": "잔고와 포지션, 주문은 {{venue}} API 키로만 읽습니다. 키는 이 기기에 남아 있습니다.",
+      "walletMissingTitle": "지갑 연결",
+      "walletMissingDescription": "이 패널은 연결된 지갑과 함께 작동합니다. 지갑을 연결하면 포지션, 수수료, 전송 내역이 여기에 표시됩니다.",
+      "walletSealedDescription": "지갑 키가 잠긴 금고에 있습니다. 잠금을 해제하면 이 패널이 해당 지갑을 읽고 서명할 수 있습니다.",
       "connectAction": "{{venue}} 연결"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "API 키 필요",
     "setupRequiredHint": "설정 필요",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "솔라나의 모든 조회와 전송이 거치는 노드입니다. 잔고, 유동성 포지션, 스왑 전송에 쓰입니다. 자신의 Helius 키를 등록하면 안정적인 엔드포인트를 사용할 수 있고, 키가 없으면 공개 RPC로 대체되는데 이쪽은 예고 없이 요청을 거절합니다."
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Ethereum, Base, Arbitrum, BNB Chain, Polygon 사이에서 자산을 옮깁니다. 규모에 맞는 최적의 브리지, 수수료와 도착 시간, 그리고 도착까지의 추적을 제공합니다"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "핵심 트레이딩 터미널: 차트, 호가창, 진입, 마켓 탐색, 관심 목록"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "브리지 견적",
+        "description": "크로스체인 경로 견적 및 전송 상태 추적"
+      },
       "candles": {
         "label": "캔들",
         "description": "차트와 시그널을 위한 실시간 OHLCV 캔들 스트림"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "펀딩",
         "description": "무기한 선물 펀딩 비율, 마크 및 인덱스 가격, 미결제약정"
+      },
+      "liquidations": {
+        "label": "청산",
+        "description": "무기한 선물 페어의 집계 청산 기록"
       },
       "pool-stats": {
         "label": "풀 통계",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "마켓 데이터",
       "ai": "AI",
+      "rpc": "RPC",
       "trading": "트레이딩",
       "automation": "자동화",
       "theme": "테마",
@@ -5762,7 +6017,17 @@
         "description": "AI 리서치 리포트를 위한 웹 검색 그라운딩"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "Solana RPC",
+        "description": "읽기와 전송을 위한 Solana 네트워크 JSON-RPC 접근"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "브리지 실행",
+        "description": "연결된 지갑으로 크로스체인 전송을 실행합니다"
+      },
       "orders": {
         "label": "주문",
         "description": "연결된 거래소에서 주문을 실행하고 관리합니다"
@@ -6084,6 +6349,12 @@
     "allCategories": "전체",
     "loading": "이벤트 불러오는 중…",
     "failed": "이벤트를 불러오지 못했습니다",
+    "sort": {
+      "venueOrder": "정렬 · 거래소 순서",
+      "new": "정렬 · 신규",
+      "endingSoon": "정렬 · 곧 종료",
+      "volume": "정렬 · 거래량"
+    },
     "tryLater": "거래소가 응답하지 않았습니다. 잠시 후 다시 시도하세요.",
     "emptyTitle": "진행 중인 이벤트가 없습니다",
     "emptyBody": "이 거래소에는 지금 상장된 항목이 없습니다.",

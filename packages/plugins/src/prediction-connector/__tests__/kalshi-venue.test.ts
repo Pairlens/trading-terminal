@@ -273,6 +273,47 @@ describe('kalshi market titles', () => {
     ])
     expect(titles[0]).not.toContain('·')
   })
+
+  it('carries the open time onto the market summary as the listing instant', async () => {
+    // The wiring test for `marketCreatedMs` on this venue: ccxt sets
+    // `created: undefined` on every prediction market, so a New sort has
+    // nothing to rank unless the projection reads `open_time` off the payload.
+    const exchange = fakeExchange({
+      fetchEvents: async () => [
+        {
+          id: 'e1',
+          title: 'An event',
+          markets: [
+            {
+              id: 'KXNHSALES-26AUG25-T560000',
+              market: 'x',
+              outcomes: [],
+              info: {
+                title: 'Will US new home sales be above 560,000?',
+                open_time: '2026-08-17T17:34:53Z',
+                // Kalshi zero-fills this one on a market it has not opened.
+                created_time: '0001-01-01T00:00:00Z',
+              },
+            },
+          ],
+        },
+      ],
+    })
+    const response = await fetchPredictionEvents(
+      exchange,
+      {
+        venue: kalshiPredictionVenue,
+        resolver: new OutcomeResolver(
+          kalshiPredictionVenue,
+          new OutcomeKeyMap('kalshi', memoryStorage()),
+        ),
+      },
+      { query: 'anything' },
+    )
+    expect(response.events[0]?.markets[0]?.createdMs).toBe(
+      Date.parse('2026-08-17T17:34:53Z'),
+    )
+  })
 })
 
 describe('kalshi order mapping', () => {

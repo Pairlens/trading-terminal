@@ -29,11 +29,14 @@
  * PRECISION. Tick square roots are computed in double precision rather than
  * with the protocol's Q64.96 fixed-point `TickMath`, which costs about 1e-12
  * relative accuracy on an amount and buys a module with no transcribed magic
- * constants in it. That trade is only sound because nothing here signs a
- * transaction: these numbers are displayed, never used to size a mint or a
- * burn. If a liquidity WRITE path is ever added it needs exact integer math,
- * not this. The one place rounding could actually be seen — whether a position
- * counts as in range — is decided on integer ticks, so it cannot drift.
+ * constants in it. That trade is sound because nothing sized from these numbers
+ * is exact: they are displayed, and in `lp-writer` they set the LOWER BOUND on
+ * a removal, floored and then cut by a tolerance eight orders of magnitude
+ * larger than the float error. What a write does need exactly it computes in
+ * integers there (the liquidity being burnt, the amounts being deposited), and
+ * a future MINT path would need the same. The one place rounding could actually
+ * be seen — whether a position counts as in range — is decided on integer
+ * ticks, so it cannot drift.
  */
 
 /** Ratio between two adjacent ticks. The whole tick space is a power of this. */

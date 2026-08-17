@@ -62,6 +62,7 @@ export function useLpSourceState(
       gate: (
         <PaneCredentialsRequired
           compact
+          kind="wallet"
           state="missing"
           market={activePair?.market ?? ''}
           venueLabel={chain?.displayName ?? t('lpPanes.venueFallback')}

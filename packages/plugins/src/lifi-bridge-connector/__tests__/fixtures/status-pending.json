@@ -1,0 +1,38 @@
+{
+  "transactionId": "0x102e7d7092144ccf7b7d26d507826e21a8cad5381c9b2017b26be7a6052d5a79",
+  "sending": {
+    "txHash": "0x5a0a454070f0159c26423f500bd8af74931ff805838a77946dcfd5ac26619352",
+    "txLink": "https://basescan.org/tx/0x5a0a454070f0159c26423f500bd8af74931ff805838a77946dcfd5ac26619352",
+    "token": {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "chainId": 8453,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin"
+    },
+    "chainId": 8453,
+    "amount": "17000000000",
+    "amountUSD": "16980.6653",
+    "timestamp": 1786988313
+  },
+  "receiving": {
+    "txLink": "https://optimistic.etherscan.io/tx/0xb6bdcdb6fef2c8cfe637d28122e983734ee275b83efa65a88bfceadc6963a5b6",
+    "token": {
+      "address": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+      "chainId": 10,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin"
+    },
+    "chainId": 10,
+    "amountUSD": "16985.3483",
+    "timestamp": 1786988315
+  },
+  "lifiExplorerLink": "https://scan.li.fi/tx/0x5a0a454070f0159c26423f500bd8af74931ff805838a77946dcfd5ac26619352",
+  "fromAddress": "0x1728603ec857977265c701200a095ca3defae6e2",
+  "toAddress": "0x1728603ec857977265c701200a095ca3defae6e2",
+  "tool": "eco",
+  "status": "PENDING",
+  "substatus": "WAIT_DESTINATION_TRANSACTION",
+  "substatusMessage": "The transfer is waiting for the destination transaction."
+}

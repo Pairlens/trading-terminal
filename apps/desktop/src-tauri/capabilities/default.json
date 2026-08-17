@@ -50,13 +50,15 @@
         { "url": "https://*.kalshi.co/*" },
         { "url": "https://*.polymarket.com/*" },
         { "url": "https://*.kyberswap.com/*" },
+        { "url": "https://li.quest/*" },
         { "url": "https://jup.ag/*" },
         { "url": "https://*.jup.ag/*" },
         { "url": "https://*.dexpaprika.com/*" },
         { "url": "https://*.dexscreener.com/*" },
         { "url": "https://*.geckoterminal.com/*" },
         { "url": "https://*.publicnode.com/*" },
-        { "url": "https://*.solana.com/*" }
+        { "url": "https://*.solana.com/*" },
+        { "url": "https://mainnet.helius-rpc.com/*" }
       ]
     }
   ]

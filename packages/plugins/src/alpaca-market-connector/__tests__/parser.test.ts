@@ -13,6 +13,7 @@ import {
   parseAlpacaBar,
   parseAlpacaQuoteBook,
   parseAlpacaSnapshot,
+  parseAlpacaTradingStatus,
   parseTs,
   servesAlpacaPair,
   timeframeToMs,
@@ -284,5 +285,79 @@ describe('alpaca parser — what the venue will serve', () => {
     expect(servesAlpacaPair('  ')).toBe(false)
     expect(servesAlpacaPair('-USD')).toBe(false)
     expect(servesAlpacaPair('A-B-C')).toBe(false)
+  })
+})
+
+/**
+ * The halt mapping, spelled out as a table.
+ *
+ * The failure that matters is one-directional: a code read as 'active' during
+ * a halt tells a trader the tape is open when it is not. Everything unmapped
+ * therefore lands on 'paused', and only the codes both tapes agree about mean
+ * 'halted' or 'active'.
+ */
+describe('alpaca parser — trading status', () => {
+  const statusOf = (sc: string) =>
+    parseAlpacaTradingStatus({ T: 's', S: 'AAPL', sc })?.state
+
+  it('maps the codes that unambiguously mean stopped', () => {
+    expect(statusOf('H')).toBe('halted') // UTP trading halt
+    expect(statusOf('E')).toBe('halted') // UTP trading suspended
+    expect(statusOf('2')).toBe('halted') // CTA trading halt
+  })
+
+  it('maps the codes that unambiguously mean trading again', () => {
+    expect(statusOf('T')).toBe('active') // UTP trading resumption
+    expect(statusOf('3')).toBe('active') // CTA resume
+  })
+
+  it('keeps a volatility pause and a quote-only resumption off "active"', () => {
+    // Quotes coming back is not trading coming back.
+    expect(statusOf('P')).toBe('paused')
+    expect(statusOf('M')).toBe('paused')
+    expect(statusOf('Q')).toBe('paused')
+  })
+
+  it('reads an unknown code as paused, never as trading', () => {
+    for (const code of ['5', '6', 'X', 'ZZ', '?']) {
+      expect(statusOf(code)).toBe('paused')
+    }
+  })
+
+  it('is case-insensitive about the code', () => {
+    expect(statusOf('h')).toBe('halted')
+    expect(statusOf('t')).toBe('active')
+  })
+
+  it('prefers the reason text over the status text', () => {
+    // 'News Pending' is why the tape stopped; 'Trading Halt' only repeats the
+    // badge next to it.
+    expect(
+      parseAlpacaTradingStatus({
+        sc: 'H',
+        sm: 'Trading Halt',
+        rm: 'News Pending',
+      })?.reason,
+    ).toBe('News Pending')
+    expect(
+      parseAlpacaTradingStatus({ sc: 'H', sm: 'Trading Halt' })?.reason,
+    ).toBe('Trading Halt')
+    expect(parseAlpacaTradingStatus({ sc: 'H', sm: '   ' })?.reason).toBeNull()
+  })
+
+  it('carries the venue timestamp, or null when it published none', () => {
+    expect(
+      parseAlpacaTradingStatus({ sc: 'H', t: '2026-08-17T14:32:00Z' })?.sinceMs,
+    ).toBe(Date.parse('2026-08-17T14:32:00Z'))
+    expect(parseAlpacaTradingStatus({ sc: 'H' })?.sinceMs).toBeNull()
+  })
+
+  it('is null when the frame carries no status code at all', () => {
+    // Absence must stay absence: the pane draws no row rather than a
+    // reassuring one.
+    expect(parseAlpacaTradingStatus({ T: 's', S: 'AAPL' })).toBeNull()
+    expect(parseAlpacaTradingStatus({ sc: '  ' })).toBeNull()
+    expect(parseAlpacaTradingStatus(null)).toBeNull()
+    expect(parseAlpacaTradingStatus('nope')).toBeNull()
   })
 })

@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
  * The pool reads behind every on-chain pane: state, swaps, a chain's ranked
- * pools, and chain-level activity.
+ * pools, its newly created ones, and chain-level activity.
  *
- * All four go through `pluginManager.execute('market-data:pool-stats', …)`
+ * All five go through `pluginManager.execute('market-data:pool-stats', …)`
  * rather than a fan-out, because unlike a venue ladder there is exactly one
  * answer here: GeckoTerminal serves it, DexPaprika is the priority-6 fallback
  * the manager walks to when the first one throws, and that IS the behaviour we
@@ -24,9 +24,13 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
+import { ProviderThrottledError } from '@pairlens/market-engine/errors'
+import { providerThrottledUntil } from '@pairlens/market-engine/provider-throttle'
+
 import type { PluginInstance } from '@pairlens/plugin-system/types'
 import type {
   ChainPoolStats,
+  PoolListingEntry,
   PoolListingResponse,
   PoolStats,
   PoolStatsSource,
@@ -44,6 +48,8 @@ const STATS_REFRESH_MS = 60_000
 const TRADES_REFRESH_MS = 15_000
 /** A chain's top pools reorder on the scale of hours, not seconds. */
 const LISTING_REFRESH_MS = 5 * 60_000
+/** New pools: fresh enough for a discovery tab, cheap on a shared budget. */
+const NEW_POOLS_REFRESH_MS = 2 * 60_000
 
 export type PoolStatsResult = {
   stats: PoolStats | null
@@ -237,6 +243,121 @@ export function usePoolListing(
 
   return {
     pools: query.data?.pools ?? [],
+    isLoading: active && query.isPending,
+    error: query.error ? errorText(query.error) : null,
+  }
+}
+
+/**
+ * The chains the new-pools feed sweeps.
+ *
+ * Fixed and short on purpose: every chain here is one request per refresh out
+ * of a ~25/minute provider budget the candle poller, the tape and the chain
+ * rail are already spending. These four carry the overwhelming majority of new
+ * pool creation; adding the long tail would cost the pair chart its headroom to
+ * show a handful more rows nobody scrolls to.
+ *
+ * Pairlens market ids, not provider slugs — Solana's market is `jupiter`, after
+ * the connector that trades it, and the provider mapping happens inside the
+ * plugin.
+ */
+export const NEW_POOL_MARKETS: ReadonlyArray<string> = [
+  'jupiter',
+  'ethereum',
+  'base',
+  'bsc',
+]
+
+/** A newly created pool, tagged with the Pairlens market it can be opened on. */
+export type NewPoolRow = {
+  market: string
+  pool: PoolListingEntry
+}
+
+export type NewPoolsResult = {
+  pools: Array<NewPoolRow>
+  isLoading: boolean
+  /** Set only when EVERY chain refused; one chain failing just drops its rows. */
+  error: string | null
+}
+
+const EMPTY_NEW_POOLS: Array<NewPoolRow> = []
+
+/**
+ * Recently created pools across the major chains, newest first.
+ *
+ * One query, `Promise.allSettled` across the chains inside it: a throttled or
+ * empty chain drops its own rows rather than blanking the tab, and the caller
+ * gets one loading state instead of four.
+ *
+ * Refetch discipline. `staleTime` is two minutes and there is NO
+ * `refetchInterval`, which is the difference between this tab and the pool
+ * rail. A pool is created and then it exists; nothing about the row changes in
+ * the next thirty seconds, so a poll would spend four requests a minute out of
+ * the shared GeckoTerminal budget to redraw the same list. The tab refreshes
+ * when it is mounted or refocused past the stale window, and that is all.
+ */
+export function useNewPools(
+  markets: ReadonlyArray<string> = NEW_POOL_MARKETS,
+  enabled = true,
+): NewPoolsResult {
+  const { pluginManager, pluginsReady } = usePairlens()
+  const key = markets.slice().sort().join(',')
+  const active = Boolean(enabled && pluginsReady && markets.length > 0)
+
+  const query = useQuery({
+    queryKey: ['new-pools', key],
+    queryFn: async () => {
+      const settled = await Promise.allSettled(
+        markets.map(async (market) => {
+          const response = (await pluginManager.execute(
+            'market-data:pool-stats',
+            // `market` explicitly, as everywhere in this file: the manager's
+            // own context carries the terminal's current venue, which for a
+            // discovery tab is whatever pair happens to be charted.
+            { action: 'new-pools', market },
+          )) as PoolListingResponse | null
+          return (response?.pools ?? []).map(
+            (pool): NewPoolRow => ({ market, pool }),
+          )
+        }),
+      )
+      const rows: Array<NewPoolRow> = []
+      for (const result of settled) {
+        if (result.status === 'fulfilled') rows.push(...result.value)
+      }
+      if (rows.length === 0) {
+        // Every chain refused: rethrow one of them so the pane can say the
+        // provider is the reason rather than "no pools were created today".
+        const rejected = settled.find((r) => r.status === 'rejected')
+        if (rejected?.status === 'rejected') throw rejected.reason
+        // Nothing rejected and nothing came back. On desktop that is the
+        // fallback chain answering: DexPaprika returns null for this action
+        // rather than throwing, so a throttled primary reads here as an empty
+        // answer. The shared throttle registry is the only place that still
+        // knows, and "the provider is rate limiting us" is a different
+        // sentence from "no pools were created today". Asked without a
+        // provider id, like the candle stream does, because the caller cannot
+        // know which one the resolver ended up using.
+        const until = providerThrottledUntil()
+        if (until > 0) {
+          throw new ProviderThrottledError(
+            'The pool data provider',
+            429,
+            until - Date.now(),
+          )
+        }
+      }
+      return rows
+    },
+    enabled: active,
+    staleTime: NEW_POOLS_REFRESH_MS,
+    gcTime: 30 * 60_000,
+    retry: false,
+  })
+
+  return {
+    pools: query.data ?? EMPTY_NEW_POOLS,
     isLoading: active && query.isPending,
     error: query.error ? errorText(query.error) : null,
   }

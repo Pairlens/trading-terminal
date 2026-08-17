@@ -8,6 +8,7 @@ import {
   mergeBarIntoBucket,
   parseAlpacaBar,
   parseAlpacaQuoteBook,
+  parseAlpacaTradingStatus,
   parseTs,
   servesAlpacaPair,
   timeframeToMs,
@@ -28,6 +29,7 @@ import type {
   OrderbookCallback,
   TickerCallback,
   TickerSnapshot,
+  TradingStatus,
 } from '@pairlens/market-engine/types'
 
 const GRACE_PERIOD = 5_000
@@ -56,6 +58,14 @@ type TickerSub = {
   callback: TickerCallback
   /** Last REST snapshot, patched live by WS trades/quotes. */
   snapshot: TickerSnapshot | null
+  /**
+   * Last halt/resume message off the `statuses` channel.
+   *
+   * Held beside the snapshot rather than inside it because the 30-second REST
+   * refresh replaces the snapshot wholesale, and a halt that vanished every
+   * refresh would flicker "halted" off a pane for the rest of the halt.
+   */
+  status: TradingStatus | null
   refreshTimer: ReturnType<typeof setInterval> | null
 }
 
@@ -114,6 +124,7 @@ export class AlpacaWsClient {
   private subscribedBars = new Set<string>()
   private subscribedQuotes = new Set<string>()
   private subscribedTrades = new Set<string>()
+  private subscribedStatuses = new Set<string>()
 
   constructor(
     private getCredentials: () => AlpacaCredentials | null,
@@ -229,6 +240,7 @@ export class AlpacaWsClient {
       pair: symbol,
       callback: cb,
       snapshot: null,
+      status: null,
       refreshTimer: null,
     }
     this.tickerSubs.set(pair, sub)
@@ -239,8 +251,7 @@ export class AlpacaWsClient {
       fetchAlpacaSnapshot(symbol, creds)
         .then((snapshot) => {
           if (this.tickerSubs.get(pair) !== sub) return
-          sub.snapshot = snapshot
-          sub.callback({ type: 'ticker', ticker: snapshot })
+          this.emitTicker(sub, snapshot)
         })
         .catch(() => {
           // Keep the previous snapshot; WS quotes/trades still patch it.
@@ -335,6 +346,21 @@ export class AlpacaWsClient {
     return set
   }
 
+  /**
+   * Halt/resume messages, for ticker subscribers only.
+   *
+   * Tied to the ticker set rather than to bars or books because the status
+   * rides on the ticker payload: a candle stream has nowhere to put it, and a
+   * book subscriber that is not also a ticker subscriber would pay for frames
+   * nothing reads. The channel is cheap (a handful of messages a day per
+   * symbol) but it is not free.
+   */
+  private desiredStatuses(): Set<string> {
+    const set = new Set<string>()
+    for (const sub of this.tickerSubs.values()) set.add(sub.pair)
+    return set
+  }
+
   private hasDesired(): boolean {
     return (
       this.candleSubs.size > 0 ||
@@ -347,6 +373,7 @@ export class AlpacaWsClient {
     this.subscribedBars.clear()
     this.subscribedQuotes.clear()
     this.subscribedTrades.clear()
+    this.subscribedStatuses.clear()
   }
 
   // ── Reconcile ──
@@ -383,28 +410,43 @@ export class AlpacaWsClient {
     const bars = diff(this.desiredBars(), this.subscribedBars)
     const quotes = diff(this.desiredQuotes(), this.subscribedQuotes)
     const trades = diff(this.desiredTrades(), this.subscribedTrades)
+    const statuses = diff(this.desiredStatuses(), this.subscribedStatuses)
 
-    if (bars.add.length || quotes.add.length || trades.add.length) {
+    if (
+      bars.add.length ||
+      quotes.add.length ||
+      trades.add.length ||
+      statuses.add.length
+    ) {
       this.send({
         action: 'subscribe',
         ...(bars.add.length ? { bars: bars.add } : {}),
         ...(quotes.add.length ? { quotes: quotes.add } : {}),
         ...(trades.add.length ? { trades: trades.add } : {}),
+        ...(statuses.add.length ? { statuses: statuses.add } : {}),
       })
       for (const s of bars.add) this.subscribedBars.add(s)
       for (const s of quotes.add) this.subscribedQuotes.add(s)
       for (const s of trades.add) this.subscribedTrades.add(s)
+      for (const s of statuses.add) this.subscribedStatuses.add(s)
     }
-    if (bars.remove.length || quotes.remove.length || trades.remove.length) {
+    if (
+      bars.remove.length ||
+      quotes.remove.length ||
+      trades.remove.length ||
+      statuses.remove.length
+    ) {
       this.send({
         action: 'unsubscribe',
         ...(bars.remove.length ? { bars: bars.remove } : {}),
         ...(quotes.remove.length ? { quotes: quotes.remove } : {}),
         ...(trades.remove.length ? { trades: trades.remove } : {}),
+        ...(statuses.remove.length ? { statuses: statuses.remove } : {}),
       })
       for (const s of bars.remove) this.subscribedBars.delete(s)
       for (const s of quotes.remove) this.subscribedQuotes.delete(s)
       for (const s of trades.remove) this.subscribedTrades.delete(s)
+      for (const s of statuses.remove) this.subscribedStatuses.delete(s)
     }
   }
 
@@ -502,6 +544,11 @@ export class AlpacaWsClient {
         this.handleTrade(msg)
         continue
       }
+
+      if (type === 's') {
+        this.handleStatus(msg)
+        continue
+      }
     }
   }
 
@@ -548,14 +595,12 @@ export class AlpacaWsClient {
 
     for (const tickerSub of this.tickerSubs.values()) {
       if (tickerSub.pair !== symbol || !tickerSub.snapshot) continue
-      const next = {
+      this.emitTicker(tickerSub, {
         ...tickerSub.snapshot,
         bid: book.bids[0]?.[0] ?? tickerSub.snapshot.bid,
         ask: book.asks[0]?.[0] ?? tickerSub.snapshot.ask,
         ts: book.ts,
-      }
-      tickerSub.snapshot = next
-      tickerSub.callback({ type: 'ticker', ticker: next })
+      })
     }
   }
 
@@ -567,16 +612,51 @@ export class AlpacaWsClient {
 
     for (const sub of this.tickerSubs.values()) {
       if (sub.pair !== symbol || !sub.snapshot) continue
-      const next = {
+      this.emitTicker(sub, {
         ...sub.snapshot,
         last: price,
         high24h: Math.max(sub.snapshot.high24h, price),
         low24h: Math.min(sub.snapshot.low24h, price),
         ts,
-      }
-      sub.snapshot = next
-      sub.callback({ type: 'ticker', ticker: next })
+      })
     }
+  }
+
+  /**
+   * A halt, a volatility pause or a resumption off the `statuses` channel.
+   *
+   * The status is remembered on the subscription even when no snapshot has
+   * landed yet: a halt carries no price, so it commonly arrives before the
+   * first REST snapshot for a symbol opened during one, and it then rides out
+   * attached to that snapshot instead of being dropped.
+   */
+  private handleStatus(msg: Record<string, unknown>): void {
+    const symbol = String(msg['S'] ?? '').toUpperCase()
+    const status = parseAlpacaTradingStatus(msg)
+    if (!status) return
+
+    for (const sub of this.tickerSubs.values()) {
+      if (sub.pair !== symbol) continue
+      sub.status = status
+      if (sub.snapshot) this.emitTicker(sub, sub.snapshot)
+    }
+  }
+
+  /**
+   * Publish a ticker with the subscription's current trading status attached.
+   *
+   * The status is attached at emit time rather than stored on the snapshot, so
+   * every path that rebuilds a snapshot (REST refresh, quote patch, trade
+   * patch) carries it without having to remember to.
+   */
+  private emitTicker(sub: TickerSub, snapshot: TickerSnapshot): void {
+    sub.snapshot = snapshot
+    sub.callback({
+      type: 'ticker',
+      ticker: sub.status
+        ? { ...snapshot, tradingStatus: sub.status }
+        : snapshot,
+    })
   }
 
   /** Close only after a grace period with no subscriptions. */

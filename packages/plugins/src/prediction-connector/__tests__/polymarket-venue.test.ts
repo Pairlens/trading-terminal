@@ -312,6 +312,42 @@ describe('polymarket events projection', () => {
     expect(r.peek('FED-CUT-25BPS-NO')).toBe('222')
   })
 
+  it('carries the gamma listing instant onto the market summary', async () => {
+    // The wiring test for `marketCreatedMs`: ccxt sets `created: undefined` on
+    // every prediction market, so the projection has to read the venue payload.
+    // Without this the board's New sort silently ranks nothing.
+    const exchange = fakeExchange({
+      fetchEvents: async () => [
+        {
+          id: 'e1',
+          event: 'e1',
+          title: 'An event',
+          markets: [
+            {
+              id: '0xcond',
+              market: 'x',
+              outcomes: [],
+              info: {
+                createdAt: '2026-08-13T12:30:06Z',
+                startDate: '2026-08-14T00:00:00Z',
+              },
+            },
+          ],
+        },
+      ],
+    })
+
+    const response = await fetchPredictionEvents(
+      exchange,
+      { venue: polymarketPredictionVenue, resolver: resolver() },
+      { query: 'anything' },
+    )
+
+    expect(response.events[0]?.markets[0]?.createdMs).toBe(
+      Date.parse('2026-08-13T12:30:06Z'),
+    )
+  })
+
   it('browses the venue listing, NOT fetchEvents, when the query is empty', async () => {
     // Regression: `fetchEvents({status, sort, limit})` throws
     // ArgumentsRequired, because polymarket declares no `eventScopeParams` and

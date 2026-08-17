@@ -138,9 +138,17 @@ import {
   geckoterminalDataProviderManifest,
 } from '@pairlens/plugins/geckoterminal-data-provider'
 import {
+  createHeliusRpcProviderPlugin,
+  heliusRpcProviderManifest,
+} from '@pairlens/plugins/helius-rpc-provider'
+import {
   createJupiterDexConnectorPlugin,
   jupiterDexConnectorManifest,
 } from '@pairlens/plugins/jupiter-dex-connector'
+import {
+  createLifiBridgeConnectorPlugin,
+  lifiBridgeConnectorManifest,
+} from '@pairlens/plugins/lifi-bridge-connector'
 import {
   arbitrumDexConnectorManifest,
   baseDexConnectorManifest,
@@ -301,6 +309,13 @@ export const BOOTSTRAP_DEX_PLUGINS: Array<BootstrapPlugin> = [
     manifest: dexscreenerDataProviderManifest,
     factory: createDexscreenerDataProviderPlugin,
   },
+  // Solana's node, as a capability. Ordered ahead of the Jupiter connector on
+  // purpose: the connector is provisioned with whatever `rpc:solana` resolves
+  // to, so the provider has to be installable before it.
+  {
+    manifest: heliusRpcProviderManifest,
+    factory: createHeliusRpcProviderPlugin,
+  },
   {
     manifest: jupiterDexConnectorManifest,
     factory: createJupiterDexConnectorPlugin,
@@ -324,6 +339,13 @@ export const BOOTSTRAP_DEX_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: polygonDexConnectorManifest,
     factory: createEvmDexConnectorPlugin,
+  },
+  // Cross-chain transfers over the same EVM wallet the connectors above sign
+  // with. Last in the DEX group because it depends on none of them at runtime:
+  // it reads their chain table, not their plugins.
+  {
+    manifest: lifiBridgeConnectorManifest,
+    factory: createLifiBridgeConnectorPlugin,
   },
 ]
 

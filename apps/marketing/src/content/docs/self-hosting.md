@@ -4,7 +4,7 @@ description: Run Pairlens entirely on infrastructure you control, standalone wit
 group: institutions
 order: 1
 eyebrow: For institutions
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 7 min read
 ---
 
@@ -33,11 +33,14 @@ machine that runs it.
 
 ## Standalone mode
 
-The optional App Server (Pairlens Cloud) provides sign-in, cross-device sync,
-and a hosted AI proxy. None of it is required. Build with
-`VITE_APP_SERVER_URL` explicitly empty, or set `PAIRLENS_STANDALONE=1` in dev,
-and the terminal runs with auth off, cloud panels hidden, and all persistence
-local to the machine.
+The optional App Server (Pairlens Cloud) provides sign-in, cross-device sync, a
+hosted AI proxy, and the reference feeds no venue publishes about itself: news,
+the economic and IPO calendars, insider filings, new listings, and the
+aggregated liquidation clusters the futures risk board draws. None of it is
+required. Build with `VITE_APP_SERVER_URL` explicitly empty, or set
+`PAIRLENS_STANDALONE=1` in dev, and the terminal runs with auth off, cloud
+panels hidden, and all persistence local to the machine. The panes that read
+those feeds say the build has no server rather than reading as an empty week.
 
 AI features still work in standalone mode: bring your own provider key (Groq,
 OpenAI, Anthropic, OpenRouter for inference; Tavily or Exa for search) through

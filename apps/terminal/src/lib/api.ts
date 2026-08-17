@@ -14,8 +14,12 @@ import type { AccountDeletionSummary } from '@pairlens/shared/account-types'
 import type {
   CompanyOverviewResponse,
   EarningsCalendarResponse,
+  EconomicCalendarResponse,
   EquityFundamentalsUnavailableReason,
   EquityFundamentalsUnavailableResponse,
+  InsiderTransactionsResponse,
+  IpoCalendarResponse,
+  NewListingsResponse,
 } from '@pairlens/shared/instrument-types'
 import {
   APP_SERVER_CREDENTIALS,
@@ -679,6 +683,51 @@ export const api = {
       `/api/earnings-calendar${suffix}`,
     )
   },
+
+  /**
+   * What the United States publishes next: the forward macro release calendar,
+   * compiled server-side from the BLS, BEA, Fed and Census schedules. No
+   * provider key behind it, so the only refusal is the App Server being absent
+   * (standalone build) or the agencies being unreachable, and both arrive as
+   * `EquityFundamentalsUnavailableError`. Defaults to a fortnight, capped at 92
+   * days server-side.
+   */
+  getEconomicCalendar: (days?: number) =>
+    fetchFundamentals<EconomicCalendarResponse>(
+      `/api/economic-calendar${days ? `?days=${days}` : ''}`,
+    ),
+
+  /**
+   * What is about to list. No symbols filter and no start date: a ticker that
+   * has not listed yet is on nobody's watchlist, and the window always starts
+   * today. Defaults to the provider's whole forward pipeline (~3 months).
+   */
+  getIpoCalendar: (params?: { days?: number }) =>
+    fetchFundamentals<IpoCalendarResponse>(
+      `/api/ipo-calendar${params?.days ? `?days=${params.days}` : ''}`,
+    ),
+
+  /**
+   * One company's recent insider filings, newest first (200 max). An empty
+   * list is a real answer here, not a seam: a company can have had no Form 4
+   * activity, and only a provider failure throws.
+   */
+  getInsiderTransactions: (symbol: string) =>
+    fetchFundamentals<InsiderTransactionsResponse>(
+      `/api/insider-transactions?symbol=${encodeURIComponent(symbol)}`,
+    ),
+
+  /**
+   * CEX pairs our own listings sweeper first saw inside the window (default a
+   * fortnight, clamped to 30 days server-side). Plain `fetchApi`, not the
+   * fundamentals transport: there is no external provider behind this one, so
+   * the only failure is the App Server being absent or down, and the caller
+   * renders the DEX half either way.
+   */
+  getNewListings: (days?: number) =>
+    fetchApi<NewListingsResponse>(
+      `/api/new-listings${days ? `?days=${days}` : ''}`,
+    ),
 
   getTradeJournal: (params?: {
     market?: string

@@ -10,6 +10,7 @@ import {
 import { executeSwap, getRoute, scaleAmount } from './swap-executor'
 import { fetchGasPriceWei, quoteSwapRoute } from './route-preview'
 import { fetchLpPositions, isEvmAddress } from './lp-client'
+import { executeLpWrite, isLpWriteAction, lpWriteFailure } from './lp-writer'
 import {
   cancelLimitOrder,
   createLimitOrder,
@@ -272,6 +273,64 @@ export function createEvmDexConnectorPlugin(
           walletAddress: slot.address,
           getPrivateKey: cancelKey,
         })
+      }
+
+      // ── Liquidity writes ──
+      // Collecting fees, burning part of a range and topping one up are signed
+      // transactions against a position manager, not orders: there is no side,
+      // no pair and no price on any of them, so each is its own action rather
+      // than a shape `OrderParams` would have to grow a branch for.
+      //
+      // Placed before the order fall-through and self-contained, like `cancel`
+      // above: the position is named by (manager, tokenId), and the manager is
+      // validated against the pinned deployment table inside the writer before
+      // anything reaches a key. See `lp-writer.ts` for the full refusal order.
+      if (isLpWriteAction(action)) {
+        const lpSlot = getSlot(params)
+        if (!lpSlot) {
+          return lpWriteFailure(
+            action,
+            chain.market,
+            String(p['tokenId'] ?? ''),
+            p['walletId']
+              ? `Unknown wallet '${String(p['walletId'])}'`
+              : 'No wallet configured',
+          )
+        }
+        const lpKey = lpSlot.getPrivateKey
+        if (!lpKey) {
+          return lpWriteFailure(
+            action,
+            chain.market,
+            String(p['tokenId'] ?? ''),
+            'Wallet key retriever not configured',
+          )
+        }
+        return executeLpWrite({
+          chain,
+          action,
+          manager: p['manager'],
+          tokenId: p['tokenId'],
+          walletAddress: lpSlot.address,
+          getPrivateKey: lpKey,
+          rpcUrl: lpSlot.rpcUrl,
+          slippageBps: p['slippageBps'],
+          liquidityPct: p['liquidityPct'],
+          amount0Desired: p['amount0Desired'],
+          amount1Desired: p['amount1Desired'],
+        })
+      }
+
+      // The actions above are the whole set. An unrecognised action must
+      // refuse here, not fall through: the code below signs a swap, so a
+      // typo'd or future action string reaching it would place an order the
+      // caller never asked for. The Jupiter connector enforces the same rule
+      // with its closed JUPITER_ORDER_ACTIONS set.
+      if (action !== 'place') {
+        return {
+          success: false,
+          error: `Unknown trading action '${action}'`,
+        }
       }
 
       const slot = getSlot(params)

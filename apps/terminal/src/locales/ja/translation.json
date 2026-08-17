@@ -36,13 +36,6 @@
     "failedTitle": "バスケットを発注できませんでした",
     "hint": "各明細は実際の指値注文です。"
   },
-  "bridgePanes": {
-    "routeTitle": "ブリッジにはブリッジプロバイダが必要です",
-    "routeBody": "接続されていません。オンチェーンコネクタは単一チェーン内のルーティングのみで、チェーンをまたぐ送金の手数料や所要時間は見積もれません。チェーンラダーは、すでに取引できる範囲を比較します。",
-    "wouldQuote": "{{chain}} から出る {{asset}} を見積もります",
-    "inFlightTitle": "送金追跡にはブリッジプロバイダが必要です",
-    "inFlightBody": "確認数は資金を動かしたブリッジから得ます。接続がなければ問い合わせ先がなく、裏付けのないバーは滞留中の送金でも進み続けてしまいます。"
-  },
   "chainLadder": {
     "title": "チェーン横断の {{asset}}",
     "subtitle": "最良気配ではなく、ガス控除後に手元に残る額で並べ替え",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "{{total}} 件のうち最初の {{shown}} 件を表示しています。",
+    "ipo": {
+      "title": "IPO",
+      "columns": {
+        "exchange": "取引所",
+        "priceRange": "価格レンジ"
+      },
+      "range": "{{low}} 〜 {{high}}",
+      "priceTbd": "価格未定",
+      "capped": "{{total}} 件中、最初の {{shown}} 件を表示しています。",
+      "noneTitle": "予定されている上場はありません",
+      "noneBody": "現在、データ提供元のカレンダーに上場日が入っている企業はありません。",
+      "emptyTitle": "IPOフィードがありません",
+      "emptyBody": "このビルドにはファンダメンタルズの提供元がありません。IPOカレンダーはApp Serverから届きます。ブローカーが公開するのは取り扱い銘柄であって、これから上場する銘柄ではありません。",
+      "providerBusyTitle": "IPOフィードがレート制限中です",
+      "providerErrorTitle": "IPOフィードを読み込めませんでした"
+    },
     "noEstimate": "予想なし",
     "noneInWindowBody": {
       "today": "本日決算を発表する企業はカレンダーにありません。",
@@ -161,22 +170,52 @@
     "tomorrow": "明日"
   },
   "economicCalendar": {
-    "emptyTitle": "マクロフィードが未導入です",
-    "emptyBody": "マクロデータ提供プラグインが、発表時刻・市場予想・前回値でこのカレンダーを埋めます。",
+    "allDay": "終日",
+    "emptyTitle": "マクロカレンダーがありません",
+    "emptyBody": "発表予定は App Server から取得します。このビルドはスタンドアロンで動作しているため、集計する元がありません。",
     "columns": {
-      "time": "時刻",
-      "event": "イベント",
-      "actual": "結果",
-      "consensus": "予想",
-      "prior": "前回"
-    }
+      "source": "機関",
+      "time": "時刻 ({{zone}})",
+      "event": "発表"
+    },
+    "impact": {
+      "high": "影響大",
+      "medium": "影響中",
+      "low": "影響小"
+    },
+    "impactAll": "すべて",
+    "impactHigh": "影響大",
+    "impactLabel": "影響度フィルター",
+    "noneHighBody": "この期間に影響大の発表はありません。「すべて」に切り替えると残りの予定を表示します。",
+    "noneInWindowBody": {
+      "week": "今後7日間に米国の発表予定はありません。",
+      "fortnight": "今後2週間に米国の発表予定はありません。",
+      "month": "今後1か月に米国の発表予定はありません。"
+    },
+    "noneInWindowTitle": "予定はありません",
+    "providerBusyBody": "カレンダーの提供元が制限をかけています。制限枠がリセットされれば自動的に復帰します。",
+    "providerBusyTitle": "マクロカレンダーがレート制限中です",
+    "providerErrorBody": "各機関の発表予定に接続できませんでした。アカウントやコネクタには問題ありません。",
+    "providerErrorTitle": "マクロカレンダーを読み込めませんでした",
+    "scopeLabel": "発表期間",
+    "scopes": {
+      "week": "1週間",
+      "fortnight": "2週間",
+      "month": "1か月"
+    },
+    "sourceNote": "BLS、BEA、連邦準備制度、Census の発表予定から作成しています。時刻は各機関の公表どおり米国東部時間です。",
+    "title": "マクロ",
+    "today": "今日",
+    "tomorrow": "明日"
   },
   "eventBoard": {
+    "listed": "掲載 {{when}}",
     "searchPlaceholder_one": "1 件のライブマーケットを検索",
     "searchPlaceholder_other": "{{count}} 件のライブマーケットを検索",
     "loadingTitle": "ボードを読み込み中",
     "loadingBody": "各取引所に、いま何が取引されているかを問い合わせています。",
     "sort": {
+      "new": "新着",
       "trending": "話題",
       "endingSoon": "まもなく終了",
       "volume": "出来高",
@@ -221,6 +260,7 @@
     "basisMissing_other": "値付けなしの候補 {{count}} 件"
   },
   "feeAccrual": {
+    "lastTouch": "最終操作時点",
     "title": "手数料の蓄積",
     "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
     "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
@@ -233,12 +273,12 @@
       "claimable": "受取可能"
     },
     "loadingTitle": "手数料を読み取り中",
-    "loadingBody": "各ポジションに対して collect をシミュレートし、いま支払われる額を確認しています。",
+    "loadingBody": "各ポジションの未収額を読み取り、対応しているチェーンでは collect をシミュレートしています。",
     "emptyTitle": "流動性ポジションなし",
     "emptyBody": "{{wallet}} には手数料が積み上がるポジションがありません。接続済みチェーンで流動性を提供するとここに表示されます。",
     "noChainsTitle": "チェーンコネクタなし",
     "noChainsBody": "オンチェーンコネクタを入れると、このパネルがそのプールからウォレットへの未払い額を読み取ります。",
-    "footnote": "このブロックで collect が支払う額を、両サイド・ポジションごとに表示します。すでに回収した手数料はチェーン上に痕跡が残らないため、手数料APR、レンジ内滞在時間、単純保有との損益にはインデクサが必要で、表示しません。"
+    "footnote": "ポジションごとに両サイドを表示します。EVM チェーンではこのブロックで collect した場合の受取額、Solana ではプールがすでに計上した額です。回収済みの手数料はオンチェーンに痕跡が残らないため、手数料 APR、レンジ内滞在時間、保有との比較損益はインデクサが必要で、ここには表示しません。"
   },
   "funding": {
     "loading": "ファンディングレートを読み込み中…",
@@ -289,6 +329,57 @@
     "emptyTitle": "無期限先物の取引所が有効ではありません",
     "emptyBody": "ファンディングは公開データなのでAPIキーは不要です。無期限先物コネクタを入れれば表は自動で埋まります。"
   },
+  "inFlight": {
+    "title": "送金中",
+    "pendingCount_one": "{{count}} 件処理中",
+    "pendingCount_other": "{{count}} 件処理中",
+    "emptyTitle": "送金中の資金はありません",
+    "emptyBody": "このターミナルから送ったブリッジ送金は、両方のトランザクションとともにここに表示され、着金するまで残ります。",
+    "route": "{{from}} から {{to}}",
+    "sourceTx": "送信 Tx",
+    "destinationTx": "着金 Tx",
+    "landed": "着金済み",
+    "landedAmount": "{{amount}} 着金",
+    "failed": "失敗",
+    "confirming": "確認中",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "送信元チェーンの確認待ち",
+      "WAIT_DESTINATION_TRANSACTION": "送金先チェーンの処理待ち",
+      "BRIDGE_NOT_AVAILABLE": "ブリッジが利用できません",
+      "CHAIN_NOT_AVAILABLE": "チェーンが利用できません",
+      "REFUND_IN_PROGRESS": "返金処理中",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "返金が必要です",
+      "UNKNOWN_ERROR": "ステータス不明",
+      "COMPLETED": "完了",
+      "PENDING": "確認中"
+    }
+  },
+  "insiderActivity": {
+    "title": "インサイダー取引",
+    "summary": "買い {{buys}} 件 · 売り {{sells}} 件",
+    "span_one": "{{count}} 日間",
+    "span_other": "{{count}} 日間",
+    "buy": "買い",
+    "sell": "売り",
+    "noValue": "金額なし",
+    "columns": {
+      "date": "日付",
+      "insider": "届出者",
+      "shares": "株数",
+      "price": "価格",
+      "value": "金額"
+    },
+    "noFilingsTitle": "{{symbol}} の直近の届出はありません",
+    "noFilingsBody": "この会社の関係者による直近の取引届出はありません。静かな期間は珍しくなく、Form 4は取引の2営業日以内に提出されます。",
+    "needsProviderTitle": "インサイダー届出には提供元が必要です",
+    "needsProviderBody": "このビルドにはファンダメンタルズのフィードがありません。Form 4はApp Serverから届き、ブローカーのコネクタは気配と執行しか担いません。",
+    "providerBusyTitle": "インサイダー届出がレート制限中です",
+    "providerBusyBody": "データ提供元が接続を絞っています。制限枠がリセットされれば自動的に戻ります。",
+    "providerErrorTitle": "インサイダー届出を読み込めませんでした",
+    "providerErrorBody": "提供元が利用できない応答を返しました。アカウントやコネクタに問題はありません。",
+    "notEquityTitle": "インサイダー届出には株式が必要です",
+    "notEquityBody": "届出を行うのは上場企業だけです。{{venue}} は株式市場ではなく、同じティッカーでも別の資産を指します。"
+  },
   "level1": {
     "emptyTitle": "気配値がまだありません",
     "emptyBody": "この銘柄の買い気配・売り気配はまだ配信されていません。",
@@ -298,20 +389,44 @@
     "bps": "bp",
     "dayRange": "当日レンジ",
     "feed": "フィード",
-    "depthNote": "ブローカーは板の最良気配のみを配信するため、この2つの価格の背後に板の厚みはありません。"
+    "depthNote": "ブローカーは板の最良気配のみを配信するため、この2つの価格の背後に板の厚みはありません。",
+    "status": "状態",
+    "statusHalted": "売買停止",
+    "statusPaused": "一時中断",
+    "statusSince": "{{time}} から",
+    "statusTrading": "取引中"
   },
   "liquidationMap": {
-    "subtitle": "自分の強制決済価格と、ここで建てたレバレッジの行き先",
+    "clusterHint": "{{price}}：{{side}}ポジション {{notional}} 分が {{count}} 件の約定で清算されました",
+    "clustersCaption": "網掛けの縦帯は、直近 {{window}} 時間に取引所が実際に清算した量です。赤がロング、緑がショートです。",
+    "clustersErrorCaption": "取引所の清算履歴を読み込めませんでした。軸上のそれ以外の表示に影響はありません。",
+    "clustersLoadingCaption": "取引所の清算履歴を読み込んでいます。",
+    "collectingCaption": "市場クラスターはまだ蓄積中です。{{since}} から収集しています。",
+    "collectingJustStarted": "たった今",
+    "legendLong": "ロング {{value}}",
+    "legendPrints": "{{count}} 件",
+    "legendShort": "ショート {{value}}",
+    "noClustersCaption": "直近 {{window}} 時間、この銘柄では清算が発生していません。",
+    "notTrackedCaption": "この取引所は集計清算フィードを公開していないため、市場クラスターは描画されません。",
+    "standaloneCaption": "市場クラスターは Pairlens クラウドから取得しますが、このビルドはクラウドを使用しません。",
+    "subtitle": "市場が清算された価格帯と、自分のポジションが置かれる位置",
     "estimateBadge": "推定",
     "sideLong": "ロング",
     "sideShort": "ショート",
     "referenceHint": "現在価格で建てた{{leverage}}倍の{{side}}は {{price}} 付近で強制決済",
-    "caption": "バーは各取引所が報告した自分自身の強制決済価格です。細い線は、現在価格で建てたポジションが5倍・10倍・25倍で強制決済される水準を示します。集計された清算クラスターを公開している取引所はないため、描画していません。",
+    "caption": "バーは各取引所が報告したあなた自身の清算価格です。細い目盛りは、現在価格で建てたポジションが 5x、10x、25x で清算される位置を示します。",
     "noPositionsCaption": "細い線は、現在価格で建てたポジションが5倍・10倍・25倍で強制決済される水準を示します。自分の強制決済価格はポジションを持つとバーで表示されます。",
     "noPriceTitle": "基準となる価格がありません",
     "noPriceBody": "このマップには契約のライブ価格が必要です。隣のチャートに価格が入ると同時に表示されます。",
     "emptyTitle": "描画するものがありません",
-    "emptyBody": "無期限先物のポジションを建てるか契約を選ぶと、価格軸が埋まります。"
+    "emptyBody": "無期限先物のポジションを建てるか契約を選ぶと、価格軸が埋まります。",
+    "windowLabel": "期間",
+    "windows": {
+      "h1": "1時間",
+      "h6": "6時間",
+      "h24": "24時間",
+      "h72": "72時間"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "プールを選択",
@@ -327,12 +442,11 @@
     "biggestLabel": "最大のスワップ"
   },
   "lpPanes": {
-    "manageTitle": "レンジ変更には流動性アクションが必要です",
-    "manageBody": "流動性の追加・引き出し・レンジ再設定はいずれも署名付きトランザクションで、まだどのコネクタも組み立てられません。実際に機能するまで操作要素は出しません。",
     "venueFallback": "このチェーン",
     "wouldRead": "{{chain}} の {{pool}} で {{wallet}} を読み取ります"
   },
   "lpPosition": {
+    "feesLastTouch": "このポジションに最後に触れた時点で確定した額です。Orca と Raydium は次にポジションが操作されたときに手数料を計上するため、実際の請求額はこれより大きくなることがあります。",
     "title": "LPポジション",
     "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
     "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
@@ -353,12 +467,81 @@
     "rangeUnknown": "プール未取得",
     "otherPositions": "その他のポジション",
     "loadingTitle": "ポジションを読み取り中",
-    "loadingBody": "接続済みの各チェーンの position manager に、このウォレットの保有内容を問い合わせています。",
+    "loadingBody": "接続中の各チェーンに、このウォレットの保有内容を問い合わせています。",
     "emptyTitle": "流動性ポジションなし",
-    "emptyBody": "{{wallet}} は接続済みチェーンに Uniswap v3 と PancakeSwap v3 のポジションを保有していません。いずれかで流動性を提供するとここに表示されます。",
+    "emptyBody": "{{wallet}} は接続中のチェーンに集中流動性ポジションを持っていません。いずれかのチェーンで流動性を提供すると、ここに表示されます。",
     "noChainsTitle": "チェーンコネクタなし",
-    "noChainsBody": "オンチェーンコネクタを入れると、このパネルがそのチェーンの position manager をウォレット向けに読み取ります。",
+    "noChainsBody": "オンチェーンコネクタをインストールすると、このパネルがそのチェーンの流動性ポジションをウォレット向けに読み取ります。",
     "footnote": "チェーンから取得: バンド、現在の流動性の価値、未回収の手数料。ポジションは取得コストを保存しないため、単純保有との比較値はありません。"
+  },
+  "manageLiquidity": {
+    "title": "流動性の管理",
+    "subtitle_one": "{{wallet}} · ポジション {{count}} 件",
+    "subtitle_other": "{{wallet}} · ポジション {{count}} 件",
+    "position": "ポジション",
+    "tabCollect": "回収",
+    "tabRemove": "引き出し",
+    "tabAdd": "追加",
+    "unread": "プール未取得",
+    "claimable": "現在の請求可能額",
+    "collectNote": "取引は 1 件。両サイドともこのウォレットに支払われます。",
+    "collectNothing": "このポジションにはまだ回収できるものがありません。",
+    "collectUnread": "このポジションの手数料を取得できなかったため、確認する内容がありません。",
+    "removeAmount": "引き出し",
+    "youReceive": "受け取り",
+    "removeFeesNote": "手数料は同じ取引で全額まとめて回収されます。引き出す割合には左右されません。",
+    "removeUnread": "プールが応答しなかったため受取額をプレビューできません。最小額は署名時のライブ状態から設定されます。",
+    "addRatioNote": "レンジが比率を決めます。片方の数量を入力するともう一方が決まります。",
+    "addBelowBand": "価格がレンジ下限を下回っているため、このポジションは {{symbol}} のみ受け付けます。",
+    "addAboveBand": "価格がレンジ上限を上回っているため、このポジションは {{symbol}} のみ受け付けます。",
+    "addUnread": "プールが応答しなかったため 2 つ目の数量を導けません。両方入力してください。",
+    "addWrappedNote": "預け入れるのはプール自身のトークンです。ラップ済みネイティブを保有するポジションにはネイティブではなくラップ済み残高が必要です。",
+    "balance": "残高 {{amount}}",
+    "slippage": "スリッページ",
+    "reviewCollect": "回収を確認",
+    "reviewRemove": "引き出しを確認",
+    "reviewAdd": "預け入れを確認",
+    "confirmTitle": "署名内容を確認",
+    "rowAction": "アクション",
+    "rowPosition": "ポジション",
+    "rowChain": "チェーン",
+    "rowManager": "マネージャー",
+    "rowCollecting": "回収額",
+    "rowRemoving": "引き出し割合",
+    "rowReceive": "受け取り",
+    "rowFeesSwept": "同時回収の手数料",
+    "rowDepositing": "預け入れ額",
+    "rowMinimum": "最小額",
+    "confirmCollectNote": "上記のポジションマネージャーに送信されます。手数料はこのウォレットにのみ支払われます。",
+    "confirmRemoveNote": "バーンと回収を 1 件の取引で実行します。最小額は署名時のプール価格から再計算され、そこから {{slippage}} 下になります。",
+    "confirmAddNote": "各トークンには先にマネージャーへの承認が必要なので、取引は 2 件か 3 件になることがあります。",
+    "back": "戻る",
+    "sign": "署名して送信",
+    "pendingTitle": "レシート待ち",
+    "pendingBody": "署名して送信しました。チェーンが確定するまでこのまま表示します。",
+    "collectedTitle": "手数料を回収しました",
+    "removedTitle": "流動性を引き出しました",
+    "addedTitle": "流動性を追加しました",
+    "successBody": "ポジションは次回の読み取りで更新されます。",
+    "failedTitle": "取引に失敗しました",
+    "viewTransaction": "取引を表示",
+    "done": "完了",
+    "lockedTitle": "署名するにはロック解除",
+    "lockedBody": "この取引にはウォレットの鍵が必要です。Pairlens のロックを解除して再試行してください。",
+    "noConnectorTitle": "コネクタ未インストール",
+    "noConnectorBody": "このポジションのチェーンにコネクタが入っていないため、署名できるものがありません。",
+    "evmOnlyTitle": "EVM ポジションのみ",
+    "evmOnlyBody": "これらの操作は EVM コントラクトである Uniswap v3 のポジションマネージャーを呼び出します。Solana のポジションは他の LP パネルで閲覧できますが、ここでは署名できません。EVM チェーンで流動性を提供すればこのパネルから管理できます。",
+    "readOnlyElsewhere_one": "別の署名系のポジション {{count}} 件はここでは閲覧のみです。",
+    "readOnlyElsewhere_other": "別の署名系のポジション {{count}} 件はここでは閲覧のみです。",
+    "noSigner": "接続中のウォレットにこのポジションのチェーンで署名できるものがありません。",
+    "noChainsTitle": "チェーンコネクタなし",
+    "noChainsBody": "オンチェーンコネクタを入れると、このパネルで手数料の回収とレンジの増減ができます。",
+    "loadingTitle": "ポジションを読み取り中",
+    "loadingBody": "接続中の各チェーンのポジションマネージャーに、このウォレットの保有内容を問い合わせています。",
+    "emptyTitle": "流動性ポジションなし",
+    "emptyBody": "{{wallet}} は接続中のチェーンで Uniswap v3 / PancakeSwap v3 のポジションを保有していません。どれかで流動性を提供するとここで管理できます。",
+    "footnote": "回収と引き出しはそれぞれ 1 件の取引で、引き出しは手数料も一緒に回収します。レンジの移動は編集ではありません。ポジションをバーンして新しく発行するため、ここでは提供していません。"
   },
   "marginHealth": {
     "title": "証拠金の健全性",
@@ -369,8 +552,6 @@
     "equity": "有効証拠金",
     "maintenance": "維持証拠金",
     "liqDistance": "強制決済までの距離",
-    "adl": "ADLキュー",
-    "adlHint": "取引所は公開していません",
     "stressLabel": "価格が不利に動いた場合",
     "ratioAfter": "維持率 {{value}}%",
     "liquidated": "強制決済",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "市場データがありません",
     "emptyBody": "App Server も公開フォールバックも応答していないため、まだ並べ替えるものがありません。",
+    "newListings": {
+      "emptyTitle": "まだ新しいものはありません",
+      "emptyBodyBothOff": "取引所の上場スイープもオンチェーンの提供元も応答していません。",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "取引所の上場は {{date}} から記録しています。プールは自身の作成時刻を持っています。",
+      "cexOff": "オンチェーンのプールのみです。取引所の上場は App Server から取得しますが、このビルドは使っていません。"
+    },
     "noBrokerTitle": "株式の接続先がありません",
     "noBrokerBody": "Plugin Store からブローカーのコネクタを入れると、その日の値動きがここに並びます。",
     "tabs": {
       "gainers": "上昇",
       "losers": "下落",
+      "newListings": "新規上場",
       "volume": "出来高",
       "volatility": "ボラティリティ",
       "unusual": "異常値"
     },
     "window": "集計期間",
     "columns": {
+      "asset": "銘柄",
+      "liquidity": "流動性",
+      "listed": "掲載",
       "pair": "ペア",
       "change": "{{window}}変化",
       "price": "価格",
+      "venue": "取引所",
       "volume": "出来高",
       "trend": "トレンド"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "この期間で上昇した銘柄はありません。",
       "losers": "この期間で下落した銘柄はありません。",
+      "newListings": "この2週間で新しく上場した銘柄はありません。",
       "volume": "まだ出来高を報告した取引所がありません。",
       "volatility": "順位が付くほど動いた銘柄がありません。",
       "unusual": "規模に対して異常な売買をしている銘柄はありません。"
@@ -819,6 +1014,44 @@
     "killSwitchHint": "再開するまですべての注文をブロック",
     "haltOrders": "注文を停止",
     "resumeOrders": "再開"
+  },
+  "routeBridge": {
+    "title": "ブリッジ",
+    "subtitle": "{{chain}} から資産を移動",
+    "provider": "LI.FI",
+    "notEvmTitle": "ブリッジ対象外のチェーン",
+    "notEvmBody": "送金は Ethereum、Base、Arbitrum、BNB Chain、Polygon の間で行えます。{{chain}} は署名するトランザクションの形式が異なり、ブリッジコネクタはまだその署名手段を持っていません。",
+    "noConnectorTitle": "ブリッジコネクタが未インストール",
+    "noConnectorBody": "クロスチェーン送金の見積もりと実行には、プラグインストアから LI.FI Bridge を追加してください。",
+    "amountLabel": "ブリッジする数量",
+    "amountPlaceholder": "{{asset}} の数量",
+    "destination": "送金先チェーン",
+    "quoting": "ルートを見積もり中",
+    "youReceive": "受け取り先",
+    "minReceived": "最低保証",
+    "bridgeFee": "ブリッジ手数料",
+    "networkGas": "ネットワークガス",
+    "eta": "到着まで",
+    "etaSeconds": "約 {{seconds}} 秒",
+    "etaMinutes": "約 {{minutes}} 分",
+    "feeIncluded": "{{tool}} は手数料を数量から差し引くため、上の数字がそのまま着金額です。",
+    "feeExtra": "{{tool}} は手数料を数量とは別に請求します。",
+    "review": "送金内容を確認",
+    "requote": "見積もりを更新",
+    "expired": "期限切れ",
+    "confirmBody": "{{amount}} {{asset}} を {{from}} から {{to}} へ {{tool}} 経由で送ります。最低 {{min}} を受け取ります。",
+    "confirmCost": "ブリッジ手数料 {{fee}}、ネットワークガス {{gas}}、署名は {{wallet}}。",
+    "confirmAction": "確認して署名",
+    "cancel": "キャンセル",
+    "sentBody": "送金しました。追跡中です:",
+    "sendFailed": "送金できませんでした。",
+    "refusal": {
+      "non-evm-chain": "{{chain}} との間のブリッジはまだ対応していません。送金は EVM チェーン間のみです。",
+      "same-chain": "いま使っているチェーンです。交換は隣のペインで行えます。",
+      "unknown-market": "{{chain}} はこのブリッジの対象チェーンではありません。",
+      "unknown-token": "{{asset}} は {{chain}} 上のコントラクトに解決できないため、送るものがありません。",
+      "no-route": "現在この数量に対応するルートがありません。数量かチェーンを変えてみてください。"
+    }
   },
   "sectionTours": {
     "back": "戻る",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "インサイダー取引",
     "markets": "マーケット",
     "watchlist": "ウォッチリスト",
     "topCoins": "トップコイン",
@@ -3029,6 +3263,7 @@
     "yourPosition": "保有ポジション"
   },
   "paneDescriptions": {
+    "insiderActivity": "直近のForm 4届出。社内の誰が、どれだけ、いくらで買ったか売ったか",
     "markets": "全取引所の全取引ペアを閲覧",
     "watchlist": "お気に入りのペアをカスタマイズ可能なリストで追跡",
     "topCoins": "出来高、時価総額、価格変動でコインをランク付け",
@@ -3065,8 +3300,8 @@
     "openInterest": "各契約の建玉と24時間変化を表示し、価格が動く前にポジションの集中を捉えます",
     "fundingExtremes": "現在最も高いファンディングレートと最も低いファンディングレート、それぞれの取引所とともに表示",
     "fundingBelt": "次回のファンディング精算までのカウントダウン、現在と予測のレート、そしてあなたのサイズが支払う額または受け取る額",
-    "liquidationMap": "あなたのポジションが強制決済される価格を、市場全体が抱える清算ポジションと重ねて表示",
-    "marginHealth": "証拠金維持率、維持証拠金と利用可能証拠金の比較、そして口座が自動デレバレッジ(ADL)にどれだけ近いか",
+    "liquidationMap": "価格軸上で取引所が実際に清算した量に、自分の清算価格とレバレッジ目盛りを重ねて表示",
+    "marginHealth": "証拠金比率、維持証拠金と有効証拠金、清算までの距離、そして逆行時にその3つがどう動くか",
     "riskControls": "日次損失の上限、取引回数、ポジションサイズ、緊急停止スイッチを、取引が行われるその場で編集可能",
     "categories": "全イベントカテゴリーをリアルタイムの契約数とともに表示し、ワンクリックでボードを絞り込めます",
     "eventBoard": "進行中のイベント市場をカードで表示：質問文、YesとNoのセント建て価格、出来高、決済時期",
@@ -3090,10 +3325,10 @@
     "routeBridge": "移動元チェーン、移動先チェーン、使用するブリッジ、その手数料と所要時間を表示、そのまま実行可能",
     "inFlight": "まだ確定していない送金を、待機中のブロック確認数とともに表示",
     "session": "ブローカー自身のカレンダーに基づく、今まさにどの取引セッションにあるか。祝日や短縮取引日も反映",
-    "earningsCalendar": "どこがいつ決算を出すかを日付ごとにまとめ、超えるべき市場予想も添えて表示",
+    "earningsCalendar": "誰がいつ決算を出すか、超えるべき予想付き。加えて上場を控えている銘柄",
     "economicCalendar": "経済指標を発表時刻順に、重要度・前回値・市場予想とともに表示",
     "sessionClock": "取引日の状態を1行で示すクロックで、時間外の注文で驚くことがなくなります",
-    "level1": "気配値とそのサイズ、スプレッド、当日のレンジをブローカーのフィードから表示",
+    "level1": "気配値と数量、スプレッド、当日レンジ、そして取引所が売買を停止したときの状態行",
     "company": "バリュエーション、成長率、利益率、次のカタリスト、そしてアナリストの見立てを1つのペインに集約",
     "yourPosition": "この銘柄であなたが保有するもの：数量、コスト、マーク価格、そして当日と保有全体の損益"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "残高、ポジション、注文は {{venue}} の API キーで読み取りますが、そのキーが今ロックされています。",
       "accountMissingTitle": "口座を表示するには {{venue}} を接続してください",
       "accountMissingDescription": "残高、ポジション、注文を読み取れるのは {{venue}} の API キーだけです。キーはこの端末に保存されます。",
+      "walletMissingTitle": "ウォレットを接続",
+      "walletMissingDescription": "このパネルは接続済みウォレットと連動します。接続すると、ポジション、手数料、送金がここに表示されます。",
+      "walletSealedDescription": "ウォレットの鍵はロックされた保管庫にあります。解除すると、このパネルがそのウォレットの読み取りと署名を行えます。",
       "connectAction": "{{venue}} を接続"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "APIキーが必要",
     "setupRequiredHint": "セットアップが必要",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "Solana の読み取りと送信がすべて経由するノードです。残高、流動性ポジション、スワップの送信に使われます。自分の Helius キーを登録すると安定したエンドポイントになります。キーがない場合は公開 RPC を使いますが、こちらは予告なく負荷を切り捨てます。"
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Ethereum、Base、Arbitrum、BNB Chain、Polygon の間で資産を移動。数量に最適なブリッジを選び、手数料と到着時間を示し、着金まで追跡します"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "コアトレーディングターミナル：チャート、オーダーブック、エントリー、マーケットディスカバリー、ウォッチリスト"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "ブリッジ見積もり",
+        "description": "クロスチェーンルートの見積もりと送金ステータスの追跡"
+      },
       "candles": {
         "label": "ローソク足",
         "description": "チャートとシグナルのためのライブOHLCVローソク足ストリーム"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "ファンディング",
         "description": "無期限先物のファンディングレート、マーク価格とインデックス価格、建玉"
+      },
+      "liquidations": {
+        "label": "清算",
+        "description": "無期限先物ペアの集計清算履歴"
       },
       "pool-stats": {
         "label": "プール統計",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "マーケットデータ",
       "ai": "AI",
+      "rpc": "RPC",
       "trading": "トレーディング",
       "automation": "オートメーション",
       "theme": "テーマ",
@@ -5762,7 +6017,17 @@
         "description": "AIリサーチレポートのためのウェブ検索グラウンディング"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "Solana RPC",
+        "description": "読み取りと送信のためのSolanaネットワークへのJSON-RPCアクセス"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "ブリッジ実行",
+        "description": "接続済みウォレットでクロスチェーン送金を実行します"
+      },
       "orders": {
         "label": "注文",
         "description": "接続した取引所で注文を発注・管理"
@@ -6084,6 +6349,12 @@
     "allCategories": "すべて",
     "loading": "イベントを読み込み中…",
     "failed": "イベントを読み込めませんでした",
+    "sort": {
+      "venueOrder": "並び順 · 取引所の順",
+      "new": "並び順 · 新着",
+      "endingSoon": "並び順 · まもなく終了",
+      "volume": "並び順 · 出来高"
+    },
     "tryLater": "取引所から応答がありませんでした。少し待って再試行してください。",
     "emptyTitle": "進行中のイベントはありません",
     "emptyBody": "この取引所には現在、掲載中のイベントがありません。",

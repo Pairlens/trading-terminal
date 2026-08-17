@@ -1,12 +1,12 @@
 ---
 title: US equities
-description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes, an out-of-hours ticket that goes limit-only, and a per-symbol position card.
+description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes with a halt row, an out-of-hours ticket that goes limit-only, insider filings, and the earnings, IPO and macro calendars.
 group: traders
 parent: trading
 order: 9
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 10 min read
+readTime: 13 min read
 ---
 
 A stock is the one instrument in Pairlens that keeps office hours. Everything
@@ -80,12 +80,11 @@ tabs that would always be empty.
 
 **News** runs down the right.
 
-The **Earnings Calendar** and the **Economic Calendar** are on the board as
-frames with an honest body. No bundled connector serves either feed: a broker
-publishes the schedule of its own venue, which is what Session reads, and knows
-nothing about who reports on Thursday or when CPI prints. Both panes draw the
-columns a provider must produce and name the kind of plugin that would fill
-them, rather than presenting an empty table as a slow one.
+The **Earnings Calendar** and the **Economic Calendar** finish the board. Both
+read from the App Server rather than from the broker, because a broker publishes
+the schedule of its own venue, which is what Session reads, and knows nothing
+about who reports on Thursday or when CPI prints. Each gets its own section
+below.
 
 ## The trading day
 
@@ -122,11 +121,14 @@ quietly becoming a 24-hour range.
 
 Under it, one line stating that there is no depth behind the quote. The
 broker's free feed carries top of book only, and a one-row ladder dressed up as
-a book would look broken rather than honest. There is no halt row either.
-Alpaca publishes trading status on a separate channel the connector does not
-subscribe to, and neither the quote frames nor the normalized book carry a halt
-flag, so the pane omits the row rather than implying "not halted" from an
-absence of evidence.
+a book would look broken rather than honest.
+
+**The halt row appears only when the venue has said something.** The connector
+subscribes Alpaca's `statuses` channel and puts what it hears on the ticker, so a
+halt shows as a halt and a resumption shows as one. A ticker carrying no status
+means the venue has not spoken, which is not the same as trading normally, so an
+absent status draws no row at all. The absence of evidence is never rendered as a
+reassuring green line.
 
 The pane opens no stream of its own. The pair route already streams this
 venue's quotes for the chart, and a second subscription would double the socket
@@ -216,6 +218,27 @@ ask keeps the old honest seam: a standalone terminal, a self-hosted App Server
 with no provider key, or one older than the route all say that fundamentals need
 a provider instead of drawing an empty grid.
 
+## Who is buying it from the inside
+
+**Insider Activity** sits on the Company board beside the panel above, and lists
+the company's own Form 4 filings: the date, the insider, their role, whether it
+was a buy, a sell or a grant, the share count, the price and the value, with a
+buys-versus-sells line on top.
+
+The direction is stated in trader language, Buy and Sell, rather than in the
+filing's own acquisition and disposal. That is not simplification: the reason to
+open this pane is to compare it against your own position, and nobody puts
+"disposal" next to a short.
+
+**The summary leads with the span the counts cover**, because counts alone lie.
+A company files nothing for two years and then eleven sales in a week, and "2
+buys, 40 sells" with no span reads like this month either way. The span quoted is
+the range actually loaded, never a window we claim to have asked for.
+
+Value is shares times price, and it is blank on a grant. A grant has no price,
+and a $0 in a column of dollars reads as a worthless trade rather than as one
+that was never a purchase.
+
 ## The earnings calendar
 
 **Earnings** answers who reports and when, grouped by day, with today's group
@@ -232,16 +255,46 @@ There is no before-the-bell or after-the-close column. The provider publishes a
 report date and no time, and that badge would be a guess about the one detail
 you would position on.
 
+**A source toggle switches the pane to IPOs**: the forward pipeline, with the
+symbol, the company, the exchange it will list on, the expected date and the
+price range where one has been filed. The IPO view carries no scopes, because
+the whole pipeline is a few dozen rows and a Today filter over it would usually
+be empty. Rows do not link to a chart either: there is no tape to link to until
+the thing trades.
+
+## The economic calendar
+
+**Economic** is the forward US macro calendar, and it comes from the agencies
+themselves rather than from a vendor's copy of them. The App Server compiles it
+from the BLS and BEA published iCalendar feeds, the Fed's FOMC calendar, and the
+Census indicator schedule.
+
+Each row is a day, a clock, who publishes it, and how hard it usually hits.
+Importance is high, medium or low, and a **High impact** filter cuts to the rows
+worth repositioning on: two thirds of a federal calendar is county employment
+tables. Three windows: the week, two weeks, or the month.
+
+**Times are Eastern and are labelled Eastern**, because 08:30 ET is how every
+headline quotes CPI. Your own clock rides in the row's tooltip rather than
+replacing it. Some rows carry no clock at all, which is the feed rather than a
+gap: FOMC minutes and the Census indicators are published as a date, and those
+rows say so instead of inheriting a plausible time nobody can check.
+
+**There is no consensus, actual or prior column, and there will not be one from
+this source.** No agency forecasts itself and none of them publish the street's
+number. Three columns of dashes would be the pane pretending to a feed it does
+not have. What it does have is what a trader actually plans around: the day, the
+clock, the publisher, and the weight.
+
 ## What is not here yet
 
-Halt status, a macro feed with consensus (the fundamentals provider covers
-company filings and earnings dates, not forward macro releases, so the
-**Economic Calendar** panel still shows its seam), market breadth on the session
-strip, options, free float and short interest, and market orders in extended
-hours (the venue does not accept them). Depth beyond the touch is a data
-question rather than a UI one: the entitlement behind the connector quotes top
-of book, so there is no ladder to draw until a feed that carries one is
-connected.
+Market breadth on the session strip, options, free float and short interest, and
+market orders in extended hours (the venue does not accept them). Depth beyond
+the touch is a data question rather than a UI one: the entitlement behind the
+connector quotes top of book, so there is no ladder to draw until a feed that
+carries one is connected. The macro calendar covers US federal releases; other
+jurisdictions and the street's consensus both need a provider nobody here
+subscribes to.
 
 ## Next
 

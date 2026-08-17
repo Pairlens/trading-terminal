@@ -36,13 +36,6 @@
     "failedTitle": "Não foi possível enviar a cesta",
     "hint": "Cada perna é uma ordem limitada real."
   },
-  "bridgePanes": {
-    "routeTitle": "A ponte precisa de um provedor de bridge",
-    "routeBody": "Nenhum está conectado. Os conectores on-chain roteiam dentro de uma única rede, então nada aqui cota a taxa nem o tempo de mover fundos entre redes. A escada de redes compara o que você já pode negociar.",
-    "wouldQuote": "Cotaria {{asset}} saindo de {{chain}}",
-    "inFlightTitle": "O acompanhamento de transferências precisa de um provedor de bridge",
-    "inFlightBody": "A contagem de confirmações vem da bridge que moveu os fundos. Sem nenhuma conectada não há o que consultar, e uma barra sem lastro continuaria avançando numa transferência travada."
-  },
   "chainLadder": {
     "title": "{{asset}} entre redes",
     "subtitle": "Ordenado pelo que sobra depois do gas, não pela melhor cotação",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "Mostrando os primeiros {{shown}} de {{total}} balanços.",
+    "ipo": {
+      "title": "IPOs",
+      "columns": {
+        "exchange": "Bolsa",
+        "priceRange": "Faixa de preço"
+      },
+      "range": "{{low}} a {{high}}",
+      "priceTbd": "sem preço",
+      "capped": "Exibindo as primeiras {{shown}} de {{total}} listagens.",
+      "noneTitle": "Nada listando por enquanto",
+      "noneBody": "Nenhuma empresa tem data de listagem no calendário do provedor no momento.",
+      "emptyTitle": "Sem feed de listagens",
+      "emptyBody": "Esta build não tem provedor de fundamentos. O calendário de IPOs vem do App Server; uma corretora publica as ações que negocia, não as que estão prestes a listar.",
+      "providerBusyTitle": "Feed de listagens com limite de taxa",
+      "providerErrorTitle": "O feed de listagens não carregou"
+    },
     "noEstimate": "sem estimativa",
     "noneInWindowBody": {
       "today": "Nenhuma empresa do calendário divulga hoje.",
@@ -161,22 +170,52 @@
     "tomorrow": "Amanhã"
   },
   "economicCalendar": {
-    "emptyTitle": "Nenhuma fonte macro instalada",
-    "emptyBody": "Um plugin de dados macro preenche este calendário com horários de divulgação, consenso e o dado anterior.",
+    "allDay": "O dia todo",
+    "emptyTitle": "Sem calendário macro",
+    "emptyBody": "O calendário de divulgações vem do App Server. Esta build roda de forma autônoma, então não há de onde compilá-lo.",
     "columns": {
-      "time": "Hora",
-      "event": "Evento",
-      "actual": "Efetivo",
-      "consensus": "Consenso",
-      "prior": "Anterior"
-    }
+      "source": "Órgão",
+      "time": "Hora ({{zone}})",
+      "event": "Divulgação"
+    },
+    "impact": {
+      "high": "Alto impacto",
+      "medium": "Impacto médio",
+      "low": "Baixo impacto"
+    },
+    "impactAll": "Tudo",
+    "impactHigh": "Alto impacto",
+    "impactLabel": "Filtro de impacto",
+    "noneHighBody": "Nenhuma divulgação de alto impacto nesta janela. Mude para Tudo para ver o resto do calendário.",
+    "noneInWindowBody": {
+      "week": "Nenhuma divulgação dos EUA nos próximos sete dias.",
+      "fortnight": "Nenhuma divulgação dos EUA nas próximas duas semanas.",
+      "month": "Nenhuma divulgação dos EUA no próximo mês."
+    },
+    "noneInWindowTitle": "Nada agendado",
+    "providerBusyBody": "O serviço de calendário está nos limitando. O calendário volta sozinho assim que a janela reiniciar.",
+    "providerBusyTitle": "Calendário macro limitado",
+    "providerErrorBody": "Não foi possível acessar os calendários oficiais de divulgação. Suas contas e seus conectores estão bem.",
+    "providerErrorTitle": "O calendário macro não carregou",
+    "scopeLabel": "Janela de divulgações",
+    "scopes": {
+      "week": "Semana",
+      "fortnight": "2 semanas",
+      "month": "Mês"
+    },
+    "sourceNote": "Compilado dos calendários de divulgação do BLS, do BEA, do Federal Reserve e do Census. Horários no fuso leste dos EUA, como os órgãos publicam.",
+    "title": "Macro",
+    "today": "Hoje",
+    "tomorrow": "Amanhã"
   },
   "eventBoard": {
+    "listed": "Publicado {{when}}",
     "searchPlaceholder_one": "Pesquisar em 1 mercado ativo",
     "searchPlaceholder_other": "Pesquisar em {{count}} mercados ativos",
     "loadingTitle": "Carregando o painel",
     "loadingBody": "Perguntando a cada plataforma o que está sendo negociado agora.",
     "sort": {
+      "new": "Novos",
       "trending": "Em alta",
       "endingSoon": "Encerra em breve",
       "volume": "Volume",
@@ -221,6 +260,7 @@
     "basisMissing_other": "{{count}} concorrentes sem cotação"
   },
   "feeAccrual": {
+    "lastTouch": "no último toque",
     "title": "Taxas acumuladas",
     "subtitle_one": "{{wallet}} · {{count}} faixa",
     "subtitle_other": "{{wallet}} · {{count}} faixas",
@@ -233,12 +273,12 @@
       "claimable": "A sacar"
     },
     "loadingTitle": "Lendo taxas",
-    "loadingBody": "Simulando um collect em cada posição para ver quanto ele pagaria agora.",
+    "loadingBody": "Lendo o que cada posição tem a receber e simulando um collect onde a cadeia permite.",
     "emptyTitle": "Nenhuma posição de liquidez",
     "emptyBody": "{{wallet}} não tem posições para acumular taxas. Forneça liquidez em uma rede conectada e o valor aparece aqui.",
     "noChainsTitle": "Nenhum conector de rede",
     "noChainsBody": "Instale um conector on-chain e este painel lê o que as pools dele devem à sua carteira.",
-    "footnote": "O que um collect pagaria neste bloco, nas duas pernas, por posição. Taxas já coletadas não deixam rastro on-chain, então APR de taxas, tempo na faixa e perda em relação a manter precisam de um indexador e não são exibidos."
+    "footnote": "As duas pernas, por posição: nas cadeias EVM, o que um collect pagaria neste bloco; na Solana, o que o pool já creditou. Taxas já recolhidas não deixam rastro on-chain, então APR de taxas, tempo em faixa e perda frente a segurar exigem um indexador e não são mostrados."
   },
   "funding": {
     "loading": "A ler taxas de financiamento…",
@@ -289,6 +329,57 @@
     "emptyTitle": "Nenhuma corretora de perpétuos ativa",
     "emptyBody": "O financiamento é dado público, por isso não é preciso chave de API. Instale um conector de futuros perpétuos e a matriz preenche-se sozinha."
   },
+  "inFlight": {
+    "title": "Em trânsito",
+    "pendingCount_one": "{{count}} pendente",
+    "pendingCount_other": "{{count}} pendentes",
+    "emptyTitle": "Nenhuma transferência em trânsito",
+    "emptyBody": "As transferências enviadas deste terminal aparecem aqui com as duas transações e ficam até chegarem.",
+    "route": "{{from}} para {{to}}",
+    "sourceTx": "Tx de origem",
+    "destinationTx": "Tx de destino",
+    "landed": "Chegou",
+    "landedAmount": "Chegaram {{amount}}",
+    "failed": "Falhou",
+    "confirming": "Confirmando",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "Aguardando confirmações na origem",
+      "WAIT_DESTINATION_TRANSACTION": "Aguardando a cadeia de destino",
+      "BRIDGE_NOT_AVAILABLE": "Ponte indisponível",
+      "CHAIN_NOT_AVAILABLE": "Cadeia indisponível",
+      "REFUND_IN_PROGRESS": "Reembolso em andamento",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "Precisa de reembolso",
+      "UNKNOWN_ERROR": "Status desconhecido",
+      "COMPLETED": "Concluída",
+      "PENDING": "Confirmando"
+    }
+  },
+  "insiderActivity": {
+    "title": "Atividade de insiders",
+    "summary": "{{buys}} compras · {{sells}} vendas",
+    "span_one": "{{count}} dia",
+    "span_other": "{{count}} dias",
+    "buy": "Compra",
+    "sell": "Venda",
+    "noValue": "sem valor",
+    "columns": {
+      "date": "Data",
+      "insider": "Insider",
+      "shares": "Ações",
+      "price": "Preço",
+      "value": "Valor"
+    },
+    "noFilingsTitle": "Sem registros recentes de {{symbol}}",
+    "noFilingsBody": "Ninguém dentro desta empresa registrou negócios recentemente. Períodos calmos são normais, e o Form 4 chega em até dois dias úteis após a operação.",
+    "needsProviderTitle": "Registros de insiders precisam de um provedor",
+    "needsProviderBody": "Esta build não tem feed de fundamentos. Os Form 4 vêm do App Server, e um conector de corretora apenas cota e executa.",
+    "providerBusyTitle": "Registros de insiders com limite de taxa",
+    "providerBusyBody": "O provedor de dados está nos limitando. Os registros voltam sozinhos quando a janela reinicia.",
+    "providerErrorTitle": "Os registros de insiders não carregaram",
+    "providerErrorBody": "O provedor respondeu com algo inutilizável. Não há nada errado com suas contas nem com seus conectores.",
+    "notEquityTitle": "Registros de insiders precisam de uma ação",
+    "notEquityBody": "Só uma empresa listada arquiva isso. {{venue}} não é uma bolsa de ações, e o mesmo ticker lá é outro ativo."
+  },
   "level1": {
     "emptyTitle": "Ainda sem cotação",
     "emptyBody": "O mercado ainda não enviou compra nem venda para este símbolo.",
@@ -298,20 +389,44 @@
     "bps": "pb",
     "dayRange": "faixa do dia",
     "feed": "Fonte",
-    "depthNote": "A corretora cota apenas o topo do book, então não há profundidade atrás destes dois preços."
+    "depthNote": "A corretora cota apenas o topo do book, então não há profundidade atrás destes dois preços.",
+    "status": "Status",
+    "statusHalted": "Interrompido",
+    "statusPaused": "Pausado",
+    "statusSince": "desde {{time}}",
+    "statusTrading": "Negociando"
   },
   "liquidationMap": {
-    "subtitle": "Os seus preços de liquidação, e onde acaba a alavancagem aberta aqui",
+    "clusterHint": "{{price}}: {{notional}} em posições {{side}} liquidadas em {{count}} execuções",
+    "clustersCaption": "As colunas sombreadas são o que a exchange realmente liquidou nas últimas {{window}} horas, vermelho para longs e verde para shorts.",
+    "clustersErrorCaption": "Não foi possível carregar o histórico de liquidações da exchange. O resto do eixo não é afetado.",
+    "clustersLoadingCaption": "Carregando o histórico de liquidações da exchange.",
+    "collectingCaption": "Os clusters de mercado ainda estão sendo preenchidos. Coletando desde {{since}}.",
+    "collectingJustStarted": "agora mesmo",
+    "legendLong": "{{value}} em longs",
+    "legendPrints": "{{count}} execuções",
+    "legendShort": "{{value}} em shorts",
+    "noClustersCaption": "Nada foi liquidado neste contrato nas últimas {{window}} horas.",
+    "notTrackedCaption": "Esta exchange não publica um feed agregado de liquidações, então nenhum cluster de mercado é desenhado.",
+    "standaloneCaption": "Os clusters de mercado vêm da nuvem Pairlens, que esta build não usa.",
+    "subtitle": "Onde o mercado foi liquidado e onde a sua própria posição ficaria",
     "estimateBadge": "ESTIMATIVA",
     "sideLong": "longo",
     "sideShort": "curto",
     "referenceHint": "Um {{side}} de {{leverage}}x aberto ao preço atual liquida perto de {{price}}",
-    "caption": "As barras são os seus próprios preços de liquidação, tal como cada corretora os reporta. As marcas finas indicam onde uma posição aberta ao preço atual seria liquidada a 5x, 10x e 25x. Nenhuma corretora publica clusters agregados de liquidações, por isso nenhum é desenhado.",
+    "caption": "As barras são os seus próprios preços de liquidação, conforme cada exchange informa. As marcas finas mostram onde uma posição aberta ao preço atual seria liquidada a 5x, 10x e 25x.",
     "noPositionsCaption": "As marcas finas indicam onde uma posição aberta ao preço atual seria liquidada a 5x, 10x e 25x. Os seus preços de liquidação aparecem como barras assim que houver uma posição aberta.",
     "noPriceTitle": "Sem preço de referência",
     "noPriceBody": "O mapa precisa de um preço em direto do contrato. Preenche-se assim que o gráfico ao lado tiver um.",
     "emptyTitle": "Nada para desenhar",
-    "emptyBody": "Abra uma posição perpétua, ou escolha um contrato, e o eixo de preços preenche-se."
+    "emptyBody": "Abra uma posição perpétua, ou escolha um contrato, e o eixo de preços preenche-se.",
+    "windowLabel": "Janela",
+    "windows": {
+      "h1": "1 h",
+      "h6": "6 h",
+      "h24": "24 h",
+      "h72": "72 h"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "Escolha uma pool",
@@ -327,12 +442,11 @@
     "biggestLabel": "Maiores swaps"
   },
   "lpPanes": {
-    "manageTitle": "Editar a faixa precisa de uma ação de liquidez",
-    "manageBody": "Adicionar, retirar e recentralizar liquidez são transações assinadas que nenhum conector constrói ainda. Os controles ficam de fora até que façam alguma coisa.",
     "venueFallback": "esta rede",
     "wouldRead": "Leria {{wallet}} em {{pool}}, {{chain}}"
   },
   "lpPosition": {
+    "feesLastTouch": "Liquidadas no último toque desta posição. Orca e Raydium só creditam taxas quando a posição é tocada de novo, então o valor real a receber pode ser maior.",
     "title": "Posição de liquidez",
     "subtitle_one": "{{wallet}} · {{count}} faixa",
     "subtitle_other": "{{wallet}} · {{count}} faixas",
@@ -353,12 +467,81 @@
     "rangeUnknown": "Pool não lida",
     "otherPositions": "Suas outras posições",
     "loadingTitle": "Lendo posições",
-    "loadingBody": "Perguntando ao position manager de cada rede conectada o que esta carteira tem.",
+    "loadingBody": "Perguntando a cada cadeia conectada o que esta carteira tem.",
     "emptyTitle": "Nenhuma posição de liquidez",
-    "emptyBody": "{{wallet}} não tem posições da Uniswap v3 nem da PancakeSwap v3 nas redes conectadas. Forneça liquidez em uma delas e ela aparece aqui.",
+    "emptyBody": "{{wallet}} não tem posições de liquidez concentrada nas cadeias conectadas. Forneça liquidez em uma delas e ela aparece aqui.",
     "noChainsTitle": "Nenhum conector de rede",
-    "noChainsBody": "Instale um conector on-chain e este painel lê o position manager dessa rede para a sua carteira.",
+    "noChainsBody": "Instale um conector on-chain e este painel lê as posições de liquidez daquela cadeia para a sua carteira.",
     "footnote": "Lido da rede: a faixa, quanto a liquidez vale agora e as taxas ainda não coletadas. Uma posição não guarda quanto custou, então não há um número em relação a simplesmente manter."
+  },
+  "manageLiquidity": {
+    "title": "Gerir liquidez",
+    "subtitle_one": "{{wallet}} · {{count}} posição",
+    "subtitle_other": "{{wallet}} · {{count}} posições",
+    "position": "Posição",
+    "tabCollect": "Coletar",
+    "tabRemove": "Remover",
+    "tabAdd": "Adicionar",
+    "unread": "Pool não lida",
+    "claimable": "Disponível agora",
+    "collectNote": "Uma transação. As duas pernas são pagas a esta wallet.",
+    "collectNothing": "Ainda não há nada a coletar nesta posição.",
+    "collectUnread": "As taxas desta posição não puderam ser lidas, portanto não há nada a confirmar.",
+    "removeAmount": "Remover",
+    "youReceive": "Você recebe",
+    "removeFeesNote": "As taxas são varridas por completo na mesma transação, qualquer que seja a percentagem removida.",
+    "removeUnread": "A pool não respondeu, por isso não dá para prever o pagamento. Os mínimos continuam a ser definidos pelo estado ao vivo na altura da assinatura.",
+    "addRatioNote": "A banda fixa a proporção: escrever um valor define o outro.",
+    "addBelowBand": "O preço está abaixo da banda, por isso esta posição só aceita {{symbol}}.",
+    "addAboveBand": "O preço está acima da banda, por isso esta posição só aceita {{symbol}}.",
+    "addUnread": "A pool não respondeu, o segundo valor não pode ser derivado. Introduza os dois.",
+    "addWrappedNote": "Deposita-se os tokens da própria pool. Uma posição com native embrulhado precisa do saldo embrulhado, não do nativo.",
+    "balance": "Saldo {{amount}}",
+    "slippage": "Slippage",
+    "reviewCollect": "Rever coleta",
+    "reviewRemove": "Rever remoção",
+    "reviewAdd": "Rever depósito",
+    "confirmTitle": "Confirme o que vai ser assinado",
+    "rowAction": "Ação",
+    "rowPosition": "Posição",
+    "rowChain": "Chain",
+    "rowManager": "Manager",
+    "rowCollecting": "A coletar",
+    "rowRemoving": "A remover",
+    "rowReceive": "Você recebe",
+    "rowFeesSwept": "Taxas varridas",
+    "rowDepositing": "A depositar",
+    "rowMinimum": "Mínimo",
+    "confirmCollectNote": "Enviada ao position manager acima. As taxas vão para esta wallet e para mais lado nenhum.",
+    "confirmRemoveNote": "Burn e coleta numa só transação. Os mínimos são recalculados a partir do preço da pool na assinatura, {{slippage}} abaixo dele.",
+    "confirmAddNote": "Cada token precisa primeiro de uma aprovação ao manager, portanto isto pode ser duas ou três transações.",
+    "back": "Voltar",
+    "sign": "Assinar e enviar",
+    "pendingTitle": "À espera do recibo",
+    "pendingBody": "Assinada e enviada. Isto fica aqui até a chain confirmar.",
+    "collectedTitle": "Taxas coletadas",
+    "removedTitle": "Liquidez removida",
+    "addedTitle": "Liquidez adicionada",
+    "successBody": "As suas posições atualizam na próxima leitura.",
+    "failedTitle": "Transação falhou",
+    "viewTransaction": "Ver transação",
+    "done": "Concluído",
+    "lockedTitle": "Desbloqueie para assinar",
+    "lockedBody": "Esta transação precisa da chave da sua wallet. Desbloqueie o Pairlens e tente de novo.",
+    "noConnectorTitle": "Conector não instalado",
+    "noConnectorBody": "A chain desta posição não tem conector instalado, portanto nada pode assinar por ela.",
+    "evmOnlyTitle": "Apenas posições EVM",
+    "evmOnlyBody": "Estas ações chamam um position manager da Uniswap v3, que é um contrato EVM. As posições de Solana leem-se nos outros painéis LP mas aqui não podem ser assinadas. Forneça liquidez numa chain EVM e poderá geri-la a partir deste painel.",
+    "readOnlyElsewhere_one": "{{count}} posição de outra família de assinatura é só de leitura aqui.",
+    "readOnlyElsewhere_other": "{{count}} posições de outra família de assinatura são só de leitura aqui.",
+    "noSigner": "Nenhuma wallet ligada assina na chain desta posição.",
+    "noChainsTitle": "Sem conectores de chain",
+    "noChainsBody": "Instale um conector on-chain e este painel poderá coletar taxas e redimensionar as bandas que encontrar.",
+    "loadingTitle": "A ler posições",
+    "loadingBody": "A perguntar ao position manager de cada chain ligada o que esta wallet detém.",
+    "emptyTitle": "Sem posições de liquidez",
+    "emptyBody": "{{wallet}} não detém posições Uniswap v3 nem PancakeSwap v3 nas chains ligadas. Forneça liquidez numa delas e poderá geri-la aqui.",
+    "footnote": "Coletar e remover são uma transação cada, e uma remoção leva as taxas com ela. Mover uma banda não é uma edição: queima a posição e cunha outra nova, por isso não é oferecido aqui."
   },
   "marginHealth": {
     "title": "Saúde da margem",
@@ -369,8 +552,6 @@
     "equity": "Capital",
     "maintenance": "Manutenção",
     "liqDistance": "Distância à liquidação",
-    "adl": "Fila ADL",
-    "adlHint": "Não publicado pela corretora",
     "stressLabel": "Se o preço andar contra si",
     "ratioAfter": "índice {{value}} %",
     "liquidated": "liquidado",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "Sem dados de mercado",
     "emptyBody": "Nem o App Server nem a fonte pública de reserva responderam, então ainda não há o que ordenar.",
+    "newListings": {
+      "emptyTitle": "Ainda não há nada novo",
+      "emptyBodyBothOff": "Nem a varredura de listagens das corretoras nem o provedor on-chain responderam.",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "Listagens de corretora acompanhadas desde {{date}}. As pools trazem a própria data de criação.",
+      "cexOff": "Apenas pools on-chain. As listagens de corretora vêm do App Server, que esta build não está usando."
+    },
     "noBrokerTitle": "Nenhuma corretora de ações instalada",
     "noBrokerBody": "Instale um conector de corretora na Loja de Plugins e os movimentos do dia aparecem aqui.",
     "tabs": {
       "gainers": "Altas",
       "losers": "Baixas",
+      "newListings": "Novas listagens",
       "volume": "Volume",
       "volatility": "Volatilidade",
       "unusual": "Atípico"
     },
     "window": "Janela do ranking",
     "columns": {
+      "asset": "Ativo",
+      "liquidity": "Liquidez",
+      "listed": "Listado",
       "pair": "Par",
       "change": "Variação {{window}}",
       "price": "Preço",
+      "venue": "Corretora",
       "volume": "Volume",
       "trend": "Tendência"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "Nada está em alta nesta janela.",
       "losers": "Nada está em baixa nesta janela.",
+      "newListings": "Nada foi listado nas últimas duas semanas.",
       "volume": "Nenhuma corretora reportou volume ainda.",
       "volatility": "Nada se moveu o bastante para entrar no ranking.",
       "unusual": "Nenhum ativo negocia de forma atípica para o seu tamanho."
@@ -819,6 +1014,44 @@
     "killSwitchHint": "Bloqueia todas as ordens até retomar",
     "haltOrders": "Parar ordens",
     "resumeOrders": "Retomar"
+  },
+  "routeBridge": {
+    "title": "Ponte",
+    "subtitle": "Mova um ativo para fora de {{chain}}",
+    "provider": "LI.FI",
+    "notEvmTitle": "Cadeia sem ponte",
+    "notEvmBody": "As transferências acontecem entre Ethereum, Base, Arbitrum, BNB Chain e Polygon. {{chain}} assina outro tipo de transação, e o conector de ponte ainda não traz esse assinante.",
+    "noConnectorTitle": "Nenhum conector de ponte instalado",
+    "noConnectorBody": "Instale o plugin LI.FI Bridge na loja de plugins para cotar e enviar transferências entre cadeias.",
+    "amountLabel": "Valor a transferir",
+    "amountPlaceholder": "Valor em {{asset}}",
+    "destination": "Cadeia de destino",
+    "quoting": "Cotando a rota",
+    "youReceive": "Você recebe em",
+    "minReceived": "Garantido",
+    "bridgeFee": "Taxa da ponte",
+    "networkGas": "Gás da rede",
+    "eta": "Tempo até chegar",
+    "etaSeconds": "~{{seconds}} s",
+    "etaMinutes": "~{{minutes}} min",
+    "feeIncluded": "{{tool}} desconta a taxa do valor, então o número acima é o que chega.",
+    "feeExtra": "{{tool}} cobra a taxa além do valor.",
+    "review": "Revisar transferência",
+    "requote": "Atualizar cotação",
+    "expired": "Expirada",
+    "confirmBody": "Enviar {{amount}} {{asset}} de {{from}} para {{to}} via {{tool}}. Você recebe pelo menos {{min}}.",
+    "confirmCost": "Taxa da ponte {{fee}}, gás da rede {{gas}}, assinado por {{wallet}}.",
+    "confirmAction": "Confirmar e assinar",
+    "cancel": "Cancelar",
+    "sentBody": "Transferência enviada. Acompanhando:",
+    "sendFailed": "Não foi possível enviar a transferência.",
+    "refusal": {
+      "non-evm-chain": "Ainda não há ponte de ou para {{chain}}. As transferências só acontecem entre cadeias EVM.",
+      "same-chain": "É a cadeia em que você já está. Para trocar, use o painel ao lado.",
+      "unknown-market": "{{chain}} não é uma cadeia coberta por esta ponte.",
+      "unknown-token": "{{asset}} não corresponde a nenhum contrato em {{chain}}, então não há o que transferir.",
+      "no-route": "Nenhuma ponte tem rota para este tamanho agora. Tente outro valor ou outra cadeia."
+    }
   },
   "sectionTours": {
     "back": "Voltar",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "Atividade de insiders",
     "markets": "Mercados",
     "watchlist": "Watchlist",
     "topCoins": "Top Moedas",
@@ -3029,6 +3263,7 @@
     "yourPosition": "Sua Posição"
   },
   "paneDescriptions": {
+    "insiderActivity": "Registros Form 4 recentes: quem dentro da empresa comprou ou vendeu, quanto e a que preço",
     "markets": "Explore todos os pares de negociação disponíveis nas exchanges",
     "watchlist": "Acompanhe seus pares favoritos em uma lista personalizável",
     "topCoins": "Classifique moedas por volume, capitalização de mercado e variação de preço",
@@ -3065,8 +3300,8 @@
     "openInterest": "Interesse em aberto por contrato, com sua variação em 24h, para que a aglomeração apareça antes do preço",
     "fundingExtremes": "As taxas de financiamento mais positivas e mais negativas agora, com a exchange que paga cada uma",
     "fundingBelt": "A contagem regressiva para o próximo pagamento de financiamento, a taxa atual e prevista, e o que o seu tamanho paga ou ganha",
-    "liquidationMap": "Onde sua posição morre no eixo de preço, contra a liquidação que o resto do mercado está carregando",
-    "marginHealth": "Índice de margem, manutenção contra disponível, e quão perto a conta está do auto-deleveraging",
+    "liquidationMap": "O que a exchange realmente liquidou no eixo de preços, com o seu próprio preço de liquidação e as marcas de alavancagem por cima",
+    "marginHealth": "Índice de margem, manutenção contra o patrimônio, distância da liquidação e o que um movimento contrário faria com os três",
     "riskControls": "Seu limite diário de perda, contagem de negociações, tamanho de posição e kill switch, editáveis onde a negociação acontece",
     "categories": "Cada categoria de evento com uma contagem de contratos ao vivo, para que o painel se estreite em um clique",
     "eventBoard": "Mercados de eventos ao vivo como cartões: a pergunta, Sim e Não em centavos, volume, e quando resolve",
@@ -3090,10 +3325,10 @@
     "routeBridge": "Blockchain de origem, blockchain de destino, a ponte, sua taxa e quanto tempo leva, pronto para executar",
     "inFlight": "Transferências ainda confirmando, cada uma com o contador de blocos que está aguardando",
     "session": "Onde o dia de negociação está agora, pelo próprio calendário da corretora, com feriados e meios expedientes incluídos",
-    "earningsCalendar": "Quem divulga e quando, agrupado por dia, com a estimativa de consenso a ser batida",
+    "earningsCalendar": "Quem divulga resultados e quando, com a estimativa a superar, além do que está prestes a listar",
     "economicCalendar": "Divulgações macroeconômicas no horário certo, com a importância, a leitura anterior e o consenso",
     "sessionClock": "Um relógio de uma linha para o dia de negociação, para que um ticket fora do horário nunca seja surpresa",
-    "level1": "Bid e ask com seus tamanhos, o spread e a variação do dia a partir do feed da corretora",
+    "level1": "Compra e venda com seus tamanhos, o spread, a faixa do dia e uma linha de status quando a bolsa interrompe a negociação",
     "company": "Valuation, crescimento, margens, o próximo catalisador e onde os analistas estão, em um só painel",
     "yourPosition": "O que você tem neste símbolo: quantidade, custo, marcação, e o lucro tanto do dia quanto o aberto"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "Saldos, posições e ordens vêm das suas chaves de API da {{venue}}, e elas estão bloqueadas agora.",
       "accountMissingTitle": "Conecte a {{venue}} para ver sua conta",
       "accountMissingDescription": "Só as suas chaves de API da {{venue}} leem saldos, posições e ordens. Elas ficam neste dispositivo.",
+      "walletMissingTitle": "Conecte uma carteira",
+      "walletMissingDescription": "Este painel funciona com a sua carteira conectada. Vincule uma e as posições, taxas e transferências dela aparecem aqui.",
+      "walletSealedDescription": "A chave da sua carteira está no cofre bloqueado. Desbloqueie-o e este painel poderá ler e assinar por essa carteira.",
       "connectAction": "Conectar {{venue}}"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "Chave de API necessária",
     "setupRequiredHint": "Configuração necessária",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "O nó da Solana por onde passa toda leitura e todo envio na rede: saldos, posições de liquidez, envio de swaps. Adicione sua própria chave Helius para ter um endpoint confiável; sem chave o app usa o RPC público, que descarta carga sem aviso."
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Mova um ativo entre Ethereum, Base, Arbitrum, BNB Chain e Polygon: a melhor ponte para o tamanho, com taxa, tempo de chegada e acompanhamento até o fim"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "Terminal de negociação principal: gráficos, livros de ofertas, envio de ordens, descoberta de mercados e watchlists"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "Cotações de bridge",
+        "description": "Cotações de rotas cross-chain e acompanhamento do estado das transferências"
+      },
       "candles": {
         "label": "Candles",
         "description": "Streams de candles OHLCV ao vivo para gráficos e sinais"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "Financiamento",
         "description": "Taxas de financiamento de perpétuos, preços mark e index, e contratos em aberto"
+      },
+      "liquidations": {
+        "label": "Liquidações",
+        "description": "Histórico agregado de liquidações para pares de futuros perpétuos"
       },
       "pool-stats": {
         "label": "Estatísticas de pool",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "Dados de Mercado",
       "ai": "IA",
+      "rpc": "RPC",
       "trading": "Negociação",
       "automation": "Automação",
       "theme": "Tema",
@@ -5762,7 +6017,17 @@
         "description": "Pesquisa na web como base para os relatórios de pesquisa de IA"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "RPC da Solana",
+        "description": "Acesso JSON-RPC à rede Solana para leituras e envios"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "Execução de bridge",
+        "description": "Executa transferências cross-chain com a carteira conectada"
+      },
       "orders": {
         "label": "Ordens",
         "description": "Envie e gerencie ordens na corretora conectada"
@@ -6084,6 +6349,12 @@
     "allCategories": "Todas",
     "loading": "Carregando eventos…",
     "failed": "Não foi possível carregar os eventos",
+    "sort": {
+      "venueOrder": "Ordem · da plataforma",
+      "new": "Ordem · novos",
+      "endingSoon": "Ordem · encerra em breve",
+      "volume": "Ordem · volume"
+    },
     "tryLater": "A plataforma não respondeu. Tente novamente em instantes.",
     "emptyTitle": "Nenhum evento aberto",
     "emptyBody": "Esta plataforma não está listando nada no momento.",

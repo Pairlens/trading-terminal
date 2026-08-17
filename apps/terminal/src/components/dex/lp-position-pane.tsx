@@ -5,9 +5,9 @@
  * made of right now, and what it has not collected yet.
  *
  * All of it is read off the chain for the connected wallet — the position
- * manager for the token ids, the pool's own `slot0` for the current tick — so
- * the composition on screen is what a burn would return this block. Nothing is
- * modelled. What the chain does not carry is not shown at all rather than
+ * manager (EVM) or the position PDA behind each NFT (Solana) for the ranges,
+ * and the pool's own state for the current tick — so the composition on screen
+ * is what a burn would return this block. Nothing is modelled. What the chain does not carry is not shown at all rather than
  * estimated: there is no cost basis in a v3 position, so no "up 7.8% since
  * deposit", and no history, so no loss-versus-holding. Those are numbers people
  * close real positions on.
@@ -338,6 +338,15 @@ function PositionDetail({
           value={view.quoteFees === null ? '' : formatAmount(view.quoteFees)}
           tone={view.quoteFees !== null && view.quoteFees > 0 ? 'up' : 'muted'}
         />
+        {/* Solana's CLMMs settle fees into the position when it is next
+            touched, so the figure is a floor rather than what a claim would
+            pay now. Labelled, because an unlabelled floor reads as the whole
+            claim. */}
+        {entry.feesAsOf === 'last-touch' ? (
+          <p className="text-[10px] leading-relaxed text-muted-foreground">
+            {t('lpPosition.feesLastTouch')}
+          </p>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-1.5 border-b border-border px-3 py-2.5">

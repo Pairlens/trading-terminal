@@ -4,7 +4,7 @@ description: Extend Pairlens with capability-based plugins for connectors, AI pr
 group: builders
 order: 1
 eyebrow: For builders
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 4 min read
 ---
 
@@ -14,28 +14,35 @@ the best plugin for each requested capability at runtime.
 
 ## Capabilities
 
-| Capability                     | What it provides                 |
-| ------------------------------ | -------------------------------- |
-| `market-data:candles`          | Streaming candles                |
-| `market-data:ticker`           | Streaming tickers                |
-| `market-data:ticker-snapshot`  | Point-in-time ticker reads       |
-| `market-data:orderbook`        | Streaming order books            |
-| `market-data:trades`           | Streaming public trades          |
-| `market-data:history`          | Historical candle backfill       |
-| `market-data:discovery`        | Instrument listing               |
-| `market-data:discovery:search` | Instrument search                |
-| `market-data:symbol-logo`      | Asset logos                      |
-| `market-data:events`           | Prediction-market event browsing |
-| `trading:orders`               | Order placement and cancellation |
-| `trading:balances`             | Account balances                 |
-| `trading:positions`            | Open positions and contracts     |
-| `ai:inference`                 | A language model                 |
-| `ai:web-search`                | Web search for research          |
-| `workflow:step-types`          | New workflow canvas steps        |
-| `notification:channel`         | New alert delivery channels      |
-| `chart:indicator`              | Custom chart indicators          |
-| `theme:override`               | A terminal theme                 |
-| `workspace-store:catalog`      | A source of workspace templates  |
+| Capability                     | What it provides                                                  |
+| ------------------------------ | ----------------------------------------------------------------- |
+| `market-data:candles`          | Streaming candles                                                 |
+| `market-data:ticker`           | Streaming tickers                                                 |
+| `market-data:ticker-snapshot`  | Point-in-time ticker reads                                        |
+| `market-data:orderbook`        | Streaming order books                                             |
+| `market-data:trades`           | Streaming public trades                                           |
+| `market-data:history`          | Historical candle backfill                                        |
+| `market-data:discovery`        | Instrument listing                                                |
+| `market-data:discovery:search` | Instrument search                                                 |
+| `market-data:symbol-logo`      | Asset logos                                                       |
+| `market-data:events`           | Prediction-market event browsing                                  |
+| `market-data:pool-stats`       | AMM pool state, its swaps, and a chain's ranked pools             |
+| `market-data:session`          | Trading-day clock and calendar, holidays and half days included   |
+| `market-data:funding`          | Perpetual funding rates, mark and index prices, and open interest |
+| `market-data:liquidations`     | Aggregated liquidation history for perpetual futures pairs        |
+| `market-data:bridge`           | Cross-chain route quotes and transfer status tracking             |
+| `trading:orders`               | Order placement and cancellation                                  |
+| `trading:balances`             | Account balances                                                  |
+| `trading:positions`            | Open positions and contracts                                      |
+| `trading:bridge`               | Executes cross-chain transfers with the connected wallet          |
+| `rpc:solana`                   | JSON-RPC access to the Solana network for reads and sends         |
+| `ai:inference`                 | A language model                                                  |
+| `ai:web-search`                | Web search for research                                           |
+| `workflow:step-types`          | New workflow canvas steps                                         |
+| `notification:channel`         | New alert delivery channels                                       |
+| `chart:indicator`              | Custom chart indicators                                           |
+| `theme:override`               | A terminal theme                                                  |
+| `workspace-store:catalog`      | A source of workspace templates                                   |
 
 Plugins also contribute **panels** through the manifest's `contributes` block,
 which is how a plugin adds a tile to the workspace grid, and **workspaces**,

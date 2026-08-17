@@ -52,6 +52,7 @@ const PANEL_IDS = [
   'session-clock',
   'level-1',
   'company',
+  'insider-activity',
   'your-position',
 ]
 
@@ -125,6 +126,7 @@ describe('pairlens-equities', () => {
     const REQUIRES: Record<string, Array<string>> = {
       'level-1': [PAIR],
       company: [PAIR],
+      'insider-activity': [PAIR],
       'your-position': [PAIR, WALLET],
     }
     for (const panel of EQUITIES!.manifest.contributes?.panels ?? []) {

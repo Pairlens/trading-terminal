@@ -28,7 +28,7 @@ export const pairlensEquitiesManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Stock surfaces: the session clock, Level 1 quotes, company fundamentals and the earnings calendar',
+    'Stock surfaces: the session clock, Level 1 quotes, company fundamentals, insider filings and the earnings calendar',
   homepage: 'https://pairlens.finance',
   icon: 'https://pairlens.finance/favicon.svg',
   metadata: { family: 'equities' },
@@ -92,6 +92,16 @@ export const pairlensEquitiesManifest: PluginManifest = {
         icon: 'Building2',
         category: 'charting',
         minHeight: 140,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'insider-activity',
+        label: 'Insider Activity',
+        labelKey: 'panes.insiderActivity',
+        descriptionKey: 'paneDescriptions.insiderActivity',
+        icon: 'UserRound',
+        category: 'charting',
+        minHeight: 120,
         requires: ['workspace:active-pair'],
       },
       {

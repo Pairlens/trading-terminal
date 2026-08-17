@@ -14,7 +14,12 @@ export type ChartTerminalStateValue = ReturnType<typeof useChartTerminalState>
 
 export type TickerStreamValue = Pick<
   ChartTerminalStateValue,
-  'lastTradePrice' | 'bestBid' | 'bestAsk' | 'midPrice' | 'spread'
+  | 'lastTradePrice'
+  | 'bestBid'
+  | 'bestAsk'
+  | 'midPrice'
+  | 'spread'
+  | 'tradingStatus'
 >
 
 // ── Orderbook Stream (updates on every orderbook WS message ~1-5/sec)
@@ -159,6 +164,7 @@ export function ChartTerminalProvider({
       bestAsk: state.bestAsk,
       midPrice: state.midPrice,
       spread: state.spread,
+      tradingStatus: state.tradingStatus,
     }),
     [
       state.lastTradePrice,
@@ -166,6 +172,7 @@ export function ChartTerminalProvider({
       state.bestAsk,
       state.midPrice,
       state.spread,
+      state.tradingStatus,
     ],
   )
 
