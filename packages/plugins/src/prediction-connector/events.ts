@@ -18,7 +18,12 @@
  * (`defaultEventScope`) instead of an error the user cannot act on.
  */
 
-import { marketChange24h, marketRules, outcomeChange24h } from './derived'
+import {
+  marketChange24h,
+  marketCreatedMs,
+  marketRules,
+  outcomeChange24h,
+} from './derived'
 import type {
   Instrument,
   InstrumentPage,
@@ -237,6 +242,9 @@ function toMarketSummary(
     ...optNum('liquidity', raw['liquidity'] ?? info['liquidity']),
     ...optNum('openInterest', raw['openInterest']),
     ...optNum('endMs', raw['end'] ?? raw['expiry']),
+    // ccxt sets `created: undefined` on a prediction market on both venues, so
+    // this reads the venue payload — see `marketCreatedMs`.
+    ...optNum('createdMs', marketCreatedMs(info)),
     ...(status !== undefined ? { status } : {}),
   }
 }

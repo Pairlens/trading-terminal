@@ -1,12 +1,12 @@
 ---
 title: Market discovery
-description: 'How Pairlens finds instruments: the local index, the three search waves, the cloud snapshot, watchlists, and the consent gate on server-side deep search.'
+description: 'How Pairlens finds instruments: the local index, the three search waves, the cloud snapshot, new listings, watchlists, and the consent gate on server-side deep search.'
 group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 7 min read
+readTime: 8 min read
 ---
 
 Twenty venues, tens of thousands of spot pairs, an unbounded tail of on-chain
@@ -113,6 +113,26 @@ queries would be a false promise, so there is only the one.
 
 Turn it off and search stays on this device. You lose long-tail server results
 and nothing else.
+
+## What just started trading
+
+The **Movers** panel carries a **New listings** tab beside the gainers and
+losers, merging two sources that agree on nothing except a timestamp.
+
+**CEX listings come from our own sweeper.** The App Server stamps the first time
+it saw a venue list a pair, and the row says exactly that: first seen by the
+Pairlens index, with the date tracking began beside it. It is not the venue's
+announcement date and never claims to be, so a pair listed before we started
+watching never reads as brand new.
+
+**DEX listings are newly created pools** from GeckoTerminal, which publish their
+own creation block, so that half is exact. A pool has to hold more than $1,000
+of measurable liquidity to appear at all. Without that floor the tab is dozens
+of minutes-old deployments per chain per hour, and the two or three rows you
+opened it for are buried under dust nobody can trade.
+
+The two row shapes share one field, when, which is what the list is ordered by.
+The tab fetches only while it is the tab on screen.
 
 ## The Markets panel
 

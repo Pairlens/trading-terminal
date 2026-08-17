@@ -8,6 +8,7 @@ import { fetchPoolTrades } from './pool-trades-client'
 import {
   aggregateChainStats,
   clearListingCache,
+  fetchNewPools,
   fetchTopPools,
 } from './pool-listing-client'
 import { geckoFetch as fetch } from './rate-limiter'
@@ -53,9 +54,9 @@ export const geckoterminalDataProviderManifest: PluginManifest = {
       priority: 5,
       streaming: false,
     },
-    // Pool state, the pool's swaps, ranked pools and chain aggregates — one
-    // capability with an `action` param, because they share a provider, a
-    // pool cache and one free-tier request budget.
+    // Pool state, the pool's swaps, ranked pools, newly created pools and
+    // chain aggregates — one capability with an `action` param, because they
+    // share a provider, a pool cache and one free-tier request budget.
     {
       id: 'market-data:pool-stats',
       singleton: false,
@@ -114,6 +115,14 @@ export function createGeckoterminalDataProviderPlugin(
 
       if (action === 'pools') {
         const pools = await fetchTopPools(network)
+        return { network, pools, source: 'geckoterminal' as const }
+      }
+
+      if (action === 'new-pools') {
+        // The only endpoint on this provider that publishes a creation time,
+        // which is what makes a "new listings" feed answerable on-chain at
+        // all. Same response shape as `pools` so callers stay uniform.
+        const pools = await fetchNewPools(network)
         return { network, pools, source: 'geckoterminal' as const }
       }
 

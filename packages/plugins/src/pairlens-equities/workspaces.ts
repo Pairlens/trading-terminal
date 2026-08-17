@@ -86,13 +86,18 @@ export const EQUITIES_TERMINAL_LAYOUT = {
 
 /**
  * Equities Company — the pair as a business rather than a price. Chart over
- * the company pane, the symbol wire beside it, and your position above the
- * ticket.
+ * the company pane and the insider tape, the symbol wire beside it, and your
+ * position above the ticket.
  *
  * One pane replaces what used to be a five-tab strip: valuation, growth,
  * margins, the next catalyst and the analyst range. When the connector cannot
  * supply fundamentals the pane says so, rather than drawing a grid of dashes
  * that reads as real data with every number missing.
+ *
+ * Insider filings sit directly under the fundamentals because they answer the
+ * question the valuation raises: the people who know the business are either
+ * buying it at this multiple or selling into it. Stacked rather than tabbed,
+ * so nobody has to remember to look.
  */
 export const EQUITIES_COMPANY_LAYOUT = {
   version: 1,
@@ -103,15 +108,21 @@ export const EQUITIES_COMPANY_LAYOUT = {
       cells: [
         {
           id: 'cell-chart',
-          heightPercent: 65,
+          heightPercent: 60,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
           id: 'cell-company',
-          heightPercent: 35,
+          heightPercent: 20,
           activeTabIndex: 0,
           panes: [{ id: 'pane-company', type: 'company' }],
+        },
+        {
+          id: 'cell-insider',
+          heightPercent: 20,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-insider-activity', type: 'insider-activity' }],
         },
       ],
     },

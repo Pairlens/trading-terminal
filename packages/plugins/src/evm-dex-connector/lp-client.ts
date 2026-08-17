@@ -150,7 +150,12 @@ const NFPM_ABI = [
   },
 ] as const
 
-const FACTORY_ABI = [
+/**
+ * `getPool` on the v3 factory. Exported because the write path resolves the
+ * same pool from the same pinned factory: two copies of this could drift into
+ * reading one pool and signing against another.
+ */
+export const FACTORY_ABI = [
   {
     type: 'function',
     name: 'getPool',
@@ -182,7 +187,7 @@ const ERC20_METADATA_ABI = [
 ] as const
 
 /** Uniswap v3's `slot0`. Only the first two fields are read. */
-const UNISWAP_SLOT0_ABI = [
+export const UNISWAP_SLOT0_ABI = [
   {
     type: 'function',
     name: 'slot0',
@@ -201,7 +206,7 @@ const UNISWAP_SLOT0_ABI = [
 ] as const
 
 /** PancakeSwap v3 widened `feeProtocol` to `uint32`; same first two fields. */
-const PANCAKE_SLOT0_ABI = [
+export const PANCAKE_SLOT0_ABI = [
   {
     type: 'function',
     name: 'slot0',
@@ -324,6 +329,10 @@ export function buildPositionEntry(opts: {
     amount1: amounts?.amount1 ?? null,
     fees0: fees?.amount0 ?? null,
     fees1: fees?.amount1 ?? null,
+    // Stated rather than left to the default: the simulation returns what a
+    // collect would pay THIS block, and the Solana client next door reports a
+    // last-touch figure into the same two fields.
+    feesAsOf: 'live',
     priceLower: tickToPrice(raw.tickLower, token0.decimals, token1.decimals),
     priceUpper: tickToPrice(raw.tickUpper, token0.decimals, token1.decimals),
     priceCurrent: poolState

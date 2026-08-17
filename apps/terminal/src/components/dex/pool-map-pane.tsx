@@ -20,7 +20,6 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowUpRight, Droplets } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
-import { normalizeInstrumentId } from '@pairlens/shared/market-ref'
 import type { PoolListingEntry } from '@pairlens/shared/instrument-types'
 
 import {
@@ -37,7 +36,7 @@ import {
   measurableReserveUsd,
   volumeToTvl,
 } from '@/lib/dex/pool-math'
-import { chartLinkProps } from '@/lib/market-ref/link'
+import { poolChartTarget } from '@/lib/dex/pool-link'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 
 /** Rows drawn at once. Deeper than the pane shows without a scroll. */
@@ -274,24 +273,6 @@ function PoolRow({
       </td>
     </tr>
   )
-}
-
-/**
- * The pair route for a pool row, or null when the listing named neither an
- * address nor a ticker for the base leg.
- *
- * The id is `address-QUOTE` whenever the listing carried a base address, which
- * is the see-what-you-trade rule: a symbol-keyed link on a discovery board is
- * how somebody ends up charting a different token with the same ticker.
- */
-function poolChartTarget(pool: PoolListingEntry, market: string) {
-  const base = pool.baseAddress ?? pool.baseSymbol
-  if (!base) return null
-  return chartLinkProps({
-    cls: 'dex',
-    market,
-    id: normalizeInstrumentId('dex', `${base}-${pool.quoteSymbol ?? 'USDC'}`),
-  })
 }
 
 /** The row's explicit way out to the pair, for anyone not double-clicking. */

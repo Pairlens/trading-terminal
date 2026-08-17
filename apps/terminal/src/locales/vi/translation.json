@@ -36,13 +36,6 @@
     "failedTitle": "Không đặt được giỏ lệnh",
     "hint": "Mỗi chân là một lệnh giới hạn thật."
   },
-  "bridgePanes": {
-    "routeTitle": "Bắc cầu cần một nhà cung cấp bridge",
-    "routeBody": "Chưa có nhà cung cấp nào kết nối. Các connector on-chain định tuyến trong một chuỗi duy nhất, nên ở đây không thể báo phí hay thời gian chuyển tiền qua chuỗi khác. Bậc thang chuỗi so sánh những gì bạn đã có thể giao dịch.",
-    "wouldQuote": "Sẽ báo giá {{asset}} đi ra từ {{chain}}",
-    "inFlightTitle": "Theo dõi chuyển tiền cần một nhà cung cấp bridge",
-    "inFlightBody": "Số xác nhận đến từ bridge đã chuyển tiền. Không có bridge kết nối thì không có gì để truy vấn, và một thanh không có dữ liệu phía sau vẫn sẽ chạy tiếp dù giao dịch đang kẹt."
-  },
   "chainLadder": {
     "title": "{{asset}} trên các chuỗi",
     "subtitle": "Xếp theo số nhận được sau gas, không theo báo giá tốt nhất",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "Đang hiển thị {{shown}} trong {{total}} báo cáo đầu tiên.",
+    "ipo": {
+      "title": "IPO",
+      "columns": {
+        "exchange": "Sàn",
+        "priceRange": "Khoảng giá"
+      },
+      "range": "{{low}} đến {{high}}",
+      "priceTbd": "chưa có giá",
+      "capped": "Hiển thị {{shown}} trong tổng số {{total}} thương vụ niêm yết.",
+      "noneTitle": "Chưa có thương vụ niêm yết",
+      "noneBody": "Hiện chưa công ty nào có ngày niêm yết trong lịch của nhà cung cấp dữ liệu.",
+      "emptyTitle": "Không có nguồn dữ liệu niêm yết",
+      "emptyBody": "Bản dựng này không có nhà cung cấp dữ liệu cơ bản. Lịch IPO đến từ App Server; một nhà môi giới công bố những cổ phiếu họ giao dịch, không phải những mã sắp niêm yết.",
+      "providerBusyTitle": "Nguồn dữ liệu niêm yết đang bị giới hạn",
+      "providerErrorTitle": "Không tải được nguồn dữ liệu niêm yết"
+    },
     "noEstimate": "không có dự phóng",
     "noneInWindowBody": {
       "today": "Hôm nay không doanh nghiệp nào trong lịch công bố báo cáo.",
@@ -161,22 +170,52 @@
     "tomorrow": "Ngày mai"
   },
   "economicCalendar": {
-    "emptyTitle": "Chưa cài nguồn dữ liệu vĩ mô",
-    "emptyBody": "Một plugin dữ liệu vĩ mô sẽ lấp đầy lịch này bằng giờ công bố, dự báo và số liệu kỳ trước.",
+    "allDay": "Cả ngày",
+    "emptyTitle": "Không có lịch vĩ mô",
+    "emptyBody": "Lịch công bố đến từ App Server. Bản dựng này chạy độc lập nên không có nguồn để tổng hợp.",
     "columns": {
-      "time": "Giờ",
-      "event": "Sự kiện",
-      "actual": "Thực tế",
-      "consensus": "Dự báo",
-      "prior": "Kỳ trước"
-    }
+      "source": "Cơ quan",
+      "time": "Giờ ({{zone}})",
+      "event": "Công bố"
+    },
+    "impact": {
+      "high": "Tác động lớn",
+      "medium": "Tác động vừa",
+      "low": "Tác động thấp"
+    },
+    "impactAll": "Tất cả",
+    "impactHigh": "Tác động lớn",
+    "impactLabel": "Bộ lọc tác động",
+    "noneHighBody": "Không có công bố tác động lớn trong khoảng này. Chuyển sang Tất cả để xem phần còn lại của lịch.",
+    "noneInWindowBody": {
+      "week": "Không có công bố nào của Hoa Kỳ trong bảy ngày tới.",
+      "fortnight": "Không có công bố nào của Hoa Kỳ trong hai tuần tới.",
+      "month": "Không có công bố nào của Hoa Kỳ trong một tháng tới."
+    },
+    "noneInWindowTitle": "Không có lịch nào",
+    "providerBusyBody": "Dịch vụ lịch đang giới hạn chúng tôi. Lịch sẽ tự trở lại khi cửa sổ giới hạn được đặt lại.",
+    "providerBusyTitle": "Lịch vĩ mô đang bị giới hạn",
+    "providerErrorBody": "Không truy cập được lịch công bố chính thức. Tài khoản và trình kết nối của bạn vẫn bình thường.",
+    "providerErrorTitle": "Không tải được lịch vĩ mô",
+    "scopeLabel": "Khoảng công bố",
+    "scopes": {
+      "week": "1 tuần",
+      "fortnight": "2 tuần",
+      "month": "1 tháng"
+    },
+    "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
+    "title": "Vĩ mô",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai"
   },
   "eventBoard": {
+    "listed": "Niêm yết {{when}}",
     "searchPlaceholder_one": "Tìm trong 1 thị trường đang mở",
     "searchPlaceholder_other": "Tìm trong {{count}} thị trường đang mở",
     "loadingTitle": "Đang tải bảng",
     "loadingBody": "Đang hỏi từng sàn xem hiện có gì đang giao dịch.",
     "sort": {
+      "new": "Mới",
       "trending": "Nổi bật",
       "endingSoon": "Sắp kết thúc",
       "volume": "Khối lượng",
@@ -221,6 +260,7 @@
     "basisMissing_other": "{{count}} ứng viên chưa có giá"
   },
   "feeAccrual": {
+    "lastTouch": "tại lần chạm gần nhất",
     "title": "Phí tích lũy",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
@@ -233,12 +273,12 @@
       "claimable": "Có thể thu"
     },
     "loadingTitle": "Đang đọc phí",
-    "loadingBody": "Đang mô phỏng lệnh collect trên từng vị thế để xem hiện tại sẽ trả bao nhiêu.",
+    "loadingBody": "Đang đọc khoản mỗi vị thế được nhận, và mô phỏng collect ở những chain hỗ trợ.",
     "emptyTitle": "Không có vị thế thanh khoản",
     "emptyBody": "{{wallet}} không giữ vị thế nào để tích lũy phí. Cung cấp thanh khoản trên một chain đã kết nối và số tiền sẽ xuất hiện ở đây.",
     "noChainsTitle": "Chưa có connector chain",
     "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc số phí mà các pool của nó đang nợ ví của bạn.",
-    "footnote": "Số tiền một lệnh collect sẽ trả ở block này, cả hai chân, theo từng vị thế. Phí đã thu không để lại dấu vết trên chain, nên APR phí, thời gian trong khoảng và mức lỗ so với nắm giữ cần một indexer và không được hiển thị."
+    "footnote": "Cả hai chân, theo từng vị thế: trên chain EVM là số tiền một lệnh collect sẽ trả ở block này, trên Solana là số tiền pool đã ghi nhận. Phí đã thu không để lại dấu vết on-chain, nên APR phí, thời gian trong biên và mức lỗ so với nắm giữ đều cần indexer và không được hiển thị."
   },
   "funding": {
     "loading": "Đang đọc phí funding…",
@@ -289,6 +329,57 @@
     "emptyTitle": "Chưa có sàn hợp đồng vĩnh cửu nào hoạt động",
     "emptyBody": "Funding là dữ liệu công khai nên không cần khóa API. Cài một trình kết nối futures vĩnh cửu là bảng tự đầy."
   },
+  "inFlight": {
+    "title": "Đang chuyển",
+    "pendingCount_one": "{{count}} đang chờ",
+    "pendingCount_other": "{{count}} đang chờ",
+    "emptyTitle": "Không có giao dịch nào đang chuyển",
+    "emptyBody": "Các giao dịch bắc cầu gửi từ terminal này hiện ở đây kèm cả hai giao dịch, và ở lại cho tới khi tiền tới nơi.",
+    "route": "{{from}} sang {{to}}",
+    "sourceTx": "Tx nguồn",
+    "destinationTx": "Tx đích",
+    "landed": "Đã tới",
+    "landedAmount": "Đã tới {{amount}}",
+    "failed": "Thất bại",
+    "confirming": "Đang xác nhận",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "Chờ xác nhận trên chuỗi nguồn",
+      "WAIT_DESTINATION_TRANSACTION": "Chờ chuỗi đích",
+      "BRIDGE_NOT_AVAILABLE": "Cầu nối không khả dụng",
+      "CHAIN_NOT_AVAILABLE": "Chuỗi không khả dụng",
+      "REFUND_IN_PROGRESS": "Đang hoàn tiền",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "Cần hoàn tiền",
+      "UNKNOWN_ERROR": "Không rõ trạng thái",
+      "COMPLETED": "Hoàn tất",
+      "PENDING": "Đang xác nhận"
+    }
+  },
+  "insiderActivity": {
+    "title": "Giao dịch nội bộ",
+    "summary": "{{buys}} lệnh mua · {{sells}} lệnh bán",
+    "span_one": "{{count}} ngày",
+    "span_other": "{{count}} ngày",
+    "buy": "Mua",
+    "sell": "Bán",
+    "noValue": "không có giá trị",
+    "columns": {
+      "date": "Ngày",
+      "insider": "Người báo cáo",
+      "shares": "Số cổ phiếu",
+      "price": "Giá",
+      "value": "Giá trị"
+    },
+    "noFilingsTitle": "Không có báo cáo gần đây cho {{symbol}}",
+    "noFilingsBody": "Chưa có ai trong công ty này báo cáo giao dịch gần đây. Những giai đoạn im ắng là bình thường, và Form 4 được nộp trong vòng hai ngày làm việc sau giao dịch.",
+    "needsProviderTitle": "Báo cáo nội bộ cần một nhà cung cấp",
+    "needsProviderBody": "Bản dựng này không có nguồn dữ liệu cơ bản. Form 4 đến từ App Server, còn trình kết nối của nhà môi giới chỉ báo giá và khớp lệnh.",
+    "providerBusyTitle": "Báo cáo nội bộ đang bị giới hạn",
+    "providerBusyBody": "Nhà cung cấp dữ liệu đang hạn chế chúng tôi. Báo cáo sẽ tự trở lại khi cửa sổ giới hạn đặt lại.",
+    "providerErrorTitle": "Không tải được báo cáo nội bộ",
+    "providerErrorBody": "Nhà cung cấp trả về dữ liệu không dùng được. Tài khoản và trình kết nối của bạn không có vấn đề gì.",
+    "notEquityTitle": "Báo cáo nội bộ cần một cổ phiếu",
+    "notEquityBody": "Chỉ công ty niêm yết mới nộp loại báo cáo này. {{venue}} không phải sàn cổ phiếu, và cùng mã đó ở đây là một tài sản khác."
+  },
   "level1": {
     "emptyTitle": "Chưa có báo giá",
     "emptyBody": "Sàn chưa gửi giá mua hoặc giá bán cho mã này.",
@@ -298,20 +389,44 @@
     "bps": "điểm cơ bản",
     "dayRange": "biên độ ngày",
     "feed": "Nguồn",
-    "depthNote": "Nhà môi giới chỉ báo giá tốt nhất mỗi bên, nên không có độ sâu phía sau hai mức giá này."
+    "depthNote": "Nhà môi giới chỉ báo giá tốt nhất mỗi bên, nên không có độ sâu phía sau hai mức giá này.",
+    "status": "Trạng thái",
+    "statusHalted": "Tạm ngừng",
+    "statusPaused": "Tạm nghỉ",
+    "statusSince": "từ {{time}}",
+    "statusTrading": "Đang giao dịch"
   },
   "liquidationMap": {
-    "subtitle": "Giá thanh lý của bạn, và nơi đòn bẩy mở tại đây kết thúc",
+    "clusterHint": "{{price}}: {{notional}} vị thế {{side}} bị thanh lý qua {{count}} lệnh khớp",
+    "clustersCaption": "Các cột đổ bóng là những gì sàn thực sự đã thanh lý trong {{window}} giờ qua, đỏ cho long và xanh cho short.",
+    "clustersErrorCaption": "Không tải được lịch sử thanh lý của sàn. Mọi thứ còn lại trên trục giá không bị ảnh hưởng.",
+    "clustersLoadingCaption": "Đang tải lịch sử thanh lý của sàn.",
+    "collectingCaption": "Cụm thị trường vẫn đang được tích lũy. Thu thập từ {{since}}.",
+    "collectingJustStarted": "vừa xong",
+    "legendLong": "{{value}} long",
+    "legendPrints": "{{count}} lệnh khớp",
+    "legendShort": "{{value}} short",
+    "noClustersCaption": "Không có gì bị thanh lý trên hợp đồng này trong {{window}} giờ qua.",
+    "notTrackedCaption": "Sàn này không công bố nguồn dữ liệu thanh lý tổng hợp, nên không vẽ cụm thị trường.",
+    "standaloneCaption": "Cụm thị trường đến từ đám mây Pairlens, mà bản dựng này không sử dụng.",
+    "subtitle": "Nơi thị trường bị thanh lý và nơi vị thế của bạn sẽ nằm",
     "estimateBadge": "ƯỚC TÍNH",
     "sideLong": "long",
     "sideShort": "short",
     "referenceHint": "Vị thế {{side}} đòn bẩy {{leverage}}x mở tại giá hiện tại sẽ bị thanh lý quanh {{price}}",
-    "caption": "Các cột là giá thanh lý của chính bạn, theo báo cáo của từng sàn. Vạch mảnh cho biết vị thế mở tại giá hiện tại sẽ bị thanh lý ở đâu với đòn bẩy 5x, 10x và 25x. Không sàn nào công bố cụm thanh lý tổng hợp nên không vẽ.",
+    "caption": "Các thanh là giá thanh lý của chính bạn, theo báo cáo của từng sàn. Vạch mảnh cho biết vị thế mở ở giá hiện tại sẽ bị thanh lý ở đâu với 5x, 10x và 25x.",
     "noPositionsCaption": "Vạch mảnh cho biết vị thế mở tại giá hiện tại sẽ bị thanh lý ở đâu với đòn bẩy 5x, 10x và 25x. Giá thanh lý của bạn sẽ hiện thành cột ngay khi có vị thế mở.",
     "noPriceTitle": "Không có giá để đối chiếu",
     "noPriceBody": "Bản đồ cần giá trực tiếp của hợp đồng. Nó sẽ hiện ngay khi biểu đồ bên cạnh có giá.",
     "emptyTitle": "Không có gì để vẽ",
-    "emptyBody": "Mở một vị thế vĩnh cửu, hoặc chọn một hợp đồng, trục giá sẽ được lấp đầy."
+    "emptyBody": "Mở một vị thế vĩnh cửu, hoặc chọn một hợp đồng, trục giá sẽ được lấp đầy.",
+    "windowLabel": "Khoảng thời gian",
+    "windows": {
+      "h1": "1 giờ",
+      "h6": "6 giờ",
+      "h24": "24 giờ",
+      "h72": "72 giờ"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "Chọn một pool",
@@ -327,12 +442,11 @@
     "biggestLabel": "Swap lớn nhất"
   },
   "lpPanes": {
-    "manageTitle": "Sửa dải giá cần một thao tác thanh khoản",
-    "manageBody": "Thêm, rút và căn lại thanh khoản đều là giao dịch có chữ ký mà chưa connector nào dựng được. Các điều khiển sẽ chưa xuất hiện cho tới khi chúng thực sự làm được việc.",
     "venueFallback": "chuỗi này",
     "wouldRead": "Sẽ đọc {{wallet}} trên {{pool}}, {{chain}}"
   },
   "lpPosition": {
+    "feesLastTouch": "Được chốt vào lần chạm gần nhất của vị thế này. Orca và Raydium chỉ ghi nhận phí khi vị thế được chạm lần kế tiếp, nên khoản thực nhận có thể cao hơn.",
     "title": "Vị thế LP",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
@@ -353,12 +467,81 @@
     "rangeUnknown": "Chưa đọc được pool",
     "otherPositions": "Các vị thế khác của bạn",
     "loadingTitle": "Đang đọc vị thế",
-    "loadingBody": "Đang hỏi position manager của từng chain đã kết nối xem ví này đang giữ gì.",
+    "loadingBody": "Đang hỏi từng chain đã kết nối xem ví này đang nắm giữ gì.",
     "emptyTitle": "Không có vị thế thanh khoản",
-    "emptyBody": "{{wallet}} không giữ vị thế Uniswap v3 hay PancakeSwap v3 nào trên các chain đã kết nối. Cung cấp thanh khoản trên một chain và vị thế sẽ xuất hiện ở đây.",
+    "emptyBody": "{{wallet}} không có vị thế thanh khoản tập trung nào trên các chain đã kết nối. Hãy cung cấp thanh khoản trên một chain và vị thế sẽ hiện ở đây.",
     "noChainsTitle": "Chưa có connector chain",
-    "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc position manager của chain đó cho ví của bạn.",
+    "noChainsBody": "Cài một connector on-chain và bảng này sẽ đọc các vị thế thanh khoản của chain đó cho ví của bạn.",
     "footnote": "Đọc từ chain: dải giá, giá trị thanh khoản hiện tại và phí chưa thu. Vị thế không lưu giá vốn, nên không có con số so với việc chỉ nắm giữ."
+  },
+  "manageLiquidity": {
+    "title": "Quản lý thanh khoản",
+    "subtitle_one": "{{wallet}} · {{count}} vị thế",
+    "subtitle_other": "{{wallet}} · {{count}} vị thế",
+    "position": "Vị thế",
+    "tabCollect": "Thu phí",
+    "tabRemove": "Rút",
+    "tabAdd": "Thêm",
+    "unread": "Chưa đọc được pool",
+    "claimable": "Có thể nhận ngay",
+    "collectNote": "Một giao dịch. Cả hai chân đều trả về ví này.",
+    "collectNothing": "Vị thế này chưa có gì để thu.",
+    "collectUnread": "Không đọc được phí của vị thế này nên không có gì để xác nhận.",
+    "removeAmount": "Rút",
+    "youReceive": "Bạn nhận",
+    "removeFeesNote": "Phí được quét toàn bộ trong cùng giao dịch, dù bạn rút bao nhiêu phần trăm.",
+    "removeUnread": "Pool không phản hồi nên không xem trước được khoản nhận. Mức tối thiểu vẫn được đặt theo trạng thái tại thời điểm ký.",
+    "addRatioNote": "Dải giá quyết định tỷ lệ: nhập một số lượng là số còn lại được xác định.",
+    "addBelowBand": "Giá đang dưới dải, nên vị thế này chỉ nhận {{symbol}}.",
+    "addAboveBand": "Giá đang trên dải, nên vị thế này chỉ nhận {{symbol}}.",
+    "addUnread": "Pool không phản hồi nên không suy ra được số lượng thứ hai. Hãy nhập cả hai.",
+    "addWrappedNote": "Bạn nạp chính token của pool. Vị thế giữ native đã bọc cần số dư bọc, không phải native.",
+    "balance": "Số dư {{amount}}",
+    "slippage": "Trượt giá",
+    "reviewCollect": "Xem lại khoản thu",
+    "reviewRemove": "Xem lại khoản rút",
+    "reviewAdd": "Xem lại khoản nạp",
+    "confirmTitle": "Xác nhận nội dung sẽ ký",
+    "rowAction": "Hành động",
+    "rowPosition": "Vị thế",
+    "rowChain": "Chuỗi",
+    "rowManager": "Manager",
+    "rowCollecting": "Thu về",
+    "rowRemoving": "Rút",
+    "rowReceive": "Bạn nhận",
+    "rowFeesSwept": "Phí được quét kèm",
+    "rowDepositing": "Nạp vào",
+    "rowMinimum": "Tối thiểu",
+    "confirmCollectNote": "Gửi tới position manager ở trên. Phí về ví này và không đi đâu khác.",
+    "confirmRemoveNote": "Đốt và thu trong một giao dịch. Mức tối thiểu được tính lại theo giá pool lúc ký, thấp hơn {{slippage}}.",
+    "confirmAddNote": "Mỗi token cần được approve cho manager trước, nên có thể là hai hoặc ba giao dịch.",
+    "back": "Quay lại",
+    "sign": "Ký và gửi",
+    "pendingTitle": "Đang chờ biên nhận",
+    "pendingBody": "Đã ký và gửi. Màn hình này giữ nguyên cho tới khi chuỗi xác nhận.",
+    "collectedTitle": "Đã thu phí",
+    "removedTitle": "Đã rút thanh khoản",
+    "addedTitle": "Đã thêm thanh khoản",
+    "successBody": "Vị thế của bạn sẽ làm mới ở lần đọc tiếp theo.",
+    "failedTitle": "Giao dịch thất bại",
+    "viewTransaction": "Xem giao dịch",
+    "done": "Xong",
+    "lockedTitle": "Mở khóa để ký",
+    "lockedBody": "Giao dịch này cần khóa ví của bạn. Hãy mở khóa Pairlens rồi thử lại.",
+    "noConnectorTitle": "Chưa cài connector",
+    "noConnectorBody": "Chuỗi của vị thế này chưa có connector nào được cài nên không có gì ký thay nó.",
+    "evmOnlyTitle": "Chỉ vị thế EVM",
+    "evmOnlyBody": "Các hành động này gọi position manager của Uniswap v3, tức một hợp đồng EVM. Vị thế Solana đọc được ở các panel LP khác nhưng không ký được ở đây. Hãy cung cấp thanh khoản trên chuỗi EVM để quản lý từ panel này.",
+    "readOnlyElsewhere_one": "{{count}} vị thế thuộc họ chữ ký khác chỉ đọc được ở đây.",
+    "readOnlyElsewhere_other": "{{count}} vị thế thuộc họ chữ ký khác chỉ đọc được ở đây.",
+    "noSigner": "Không có ví nào đang kết nối ký được trên chuỗi của vị thế này.",
+    "noChainsTitle": "Không có connector chuỗi",
+    "noChainsBody": "Cài một connector on-chain để panel này thu phí và thay đổi kích thước các dải nó tìm thấy.",
+    "loadingTitle": "Đang đọc vị thế",
+    "loadingBody": "Đang hỏi position manager của từng chuỗi đã kết nối xem ví này đang giữ gì.",
+    "emptyTitle": "Không có vị thế thanh khoản",
+    "emptyBody": "{{wallet}} không giữ vị thế Uniswap v3 hay PancakeSwap v3 nào trên các chuỗi đã kết nối. Cung cấp thanh khoản trên một chuỗi và bạn có thể quản lý ở đây.",
+    "footnote": "Thu phí và rút mỗi thứ một giao dịch, và khoản rút mang phí đi theo. Dời dải giá không phải là chỉnh sửa: nó đốt vị thế và đúc một vị thế mới, nên ở đây không có."
   },
   "marginHealth": {
     "title": "Sức khỏe ký quỹ",
@@ -369,8 +552,6 @@
     "equity": "Vốn chủ",
     "maintenance": "Ký quỹ duy trì",
     "liqDistance": "Khoảng cách tới thanh lý",
-    "adl": "Hàng đợi ADL",
-    "adlHint": "Sàn không công bố",
     "stressLabel": "Nếu giá đi ngược lại bạn",
     "ratioAfter": "tỷ lệ {{value}} %",
     "liquidated": "bị thanh lý",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "Không có dữ liệu thị trường",
     "emptyBody": "Cả App Server lẫn nguồn dự phòng công khai đều chưa phản hồi, nên chưa có gì để xếp hạng.",
+    "newListings": {
+      "emptyTitle": "Chưa có gì mới",
+      "emptyBodyBothOff": "Cả lượt quét niêm yết của sàn lẫn nhà cung cấp on-chain đều không trả lời.",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "Niêm yết trên sàn được theo dõi từ {{date}}. Các pool mang theo thời điểm tạo của chính chúng.",
+      "cexOff": "Chỉ có pool on-chain. Niêm yết trên sàn đến từ App Server, bản dựng này không dùng nó."
+    },
     "noBrokerTitle": "Chưa cài sàn cổ phiếu",
     "noBrokerBody": "Cài một kết nối môi giới từ Plugin Store, biến động trong ngày sẽ hiện ở đây.",
     "tabs": {
       "gainers": "Tăng",
       "losers": "Giảm",
+      "newListings": "Niêm yết mới",
       "volume": "Khối lượng",
       "volatility": "Biến động",
       "unusual": "Bất thường"
     },
     "window": "Khung xếp hạng",
     "columns": {
+      "asset": "Tài sản",
+      "liquidity": "Thanh khoản",
+      "listed": "Niêm yết",
       "pair": "Cặp",
       "change": "Thay đổi {{window}}",
       "price": "Giá",
+      "venue": "Sàn",
       "volume": "Khối lượng",
       "trend": "Xu hướng"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "Không có gì tăng trong khung này.",
       "losers": "Không có gì giảm trong khung này.",
+      "newListings": "Hai tuần qua không có gì được niêm yết.",
       "volume": "Chưa sàn nào báo khối lượng.",
       "volatility": "Chưa có gì biến động đủ để xếp hạng.",
       "unusual": "Không tài sản nào giao dịch bất thường so với quy mô của nó."
@@ -819,6 +1014,44 @@
     "killSwitchHint": "Chặn mọi lệnh cho tới khi bạn tiếp tục",
     "haltOrders": "Dừng lệnh",
     "resumeOrders": "Tiếp tục"
+  },
+  "routeBridge": {
+    "title": "Cầu nối",
+    "subtitle": "Chuyển một tài sản ra khỏi {{chain}}",
+    "provider": "LI.FI",
+    "notEvmTitle": "Chuỗi chưa bắc cầu được",
+    "notEvmBody": "Giao dịch chuyển chạy giữa Ethereum, Base, Arbitrum, BNB Chain và Polygon. {{chain}} ký một loại giao dịch khác, và connector cầu nối chưa có bộ ký đó.",
+    "noConnectorTitle": "Chưa cài connector cầu nối",
+    "noConnectorBody": "Cài plugin LI.FI Bridge trong Plugin Store để báo giá và gửi giao dịch chuyển giữa các chuỗi.",
+    "amountLabel": "Số lượng cần chuyển",
+    "amountPlaceholder": "Số lượng tính bằng {{asset}}",
+    "destination": "Chuỗi đích",
+    "quoting": "Đang báo giá tuyến",
+    "youReceive": "Bạn nhận trên",
+    "minReceived": "Bảo đảm tối thiểu",
+    "bridgeFee": "Phí cầu nối",
+    "networkGas": "Gas mạng",
+    "eta": "Thời gian tới nơi",
+    "etaSeconds": "~{{seconds}} giây",
+    "etaMinutes": "~{{minutes}} phút",
+    "feeIncluded": "{{tool}} trừ phí ngay trong số lượng gửi, nên con số phía trên chính là phần tới nơi.",
+    "feeExtra": "{{tool}} thu phí ngoài số lượng gửi.",
+    "review": "Xem lại giao dịch",
+    "requote": "Làm mới báo giá",
+    "expired": "Hết hạn",
+    "confirmBody": "Gửi {{amount}} {{asset}} từ {{from}} sang {{to}} qua {{tool}}. Bạn nhận ít nhất {{min}}.",
+    "confirmCost": "Phí cầu nối {{fee}}, gas mạng {{gas}}, ký bởi {{wallet}}.",
+    "confirmAction": "Xác nhận và ký",
+    "cancel": "Huỷ",
+    "sentBody": "Đã gửi. Đang theo dõi:",
+    "sendFailed": "Không gửi được giao dịch chuyển.",
+    "refusal": {
+      "non-evm-chain": "Chưa hỗ trợ bắc cầu tới và từ {{chain}}. Giao dịch chuyển chỉ chạy giữa các chuỗi EVM.",
+      "same-chain": "Đó là chuỗi bạn đang đứng. Muốn hoán đổi thì dùng khung bên cạnh.",
+      "unknown-market": "{{chain}} không nằm trong các chuỗi mà cầu nối này phục vụ.",
+      "unknown-token": "{{asset}} không khớp hợp đồng nào trên {{chain}}, nên không có gì để chuyển.",
+      "no-route": "Hiện chưa cầu nối nào có tuyến cho quy mô này. Thử số lượng hoặc chuỗi khác."
+    }
   },
   "sectionTours": {
     "back": "Quay lại",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "Giao dịch nội bộ",
     "markets": "Thị trường",
     "watchlist": "Danh sách theo dõi",
     "topCoins": "Coin hàng đầu",
@@ -3029,6 +3263,7 @@
     "yourPosition": "Vị thế của bạn"
   },
   "paneDescriptions": {
+    "insiderActivity": "Các báo cáo Form 4 gần đây: ai trong công ty đã mua hay bán, bao nhiêu và ở giá nào",
     "markets": "Duyệt tất cả các cặp giao dịch khả dụng trên các sàn",
     "watchlist": "Theo dõi các cặp yêu thích của bạn trong danh sách tùy chỉnh",
     "topCoins": "Xếp hạng coin theo khối lượng, vốn hóa thị trường và biến động giá",
@@ -3065,8 +3300,8 @@
     "openInterest": "Open Interest theo từng hợp đồng cùng mức thay đổi 24 giờ, để sự chen chúc lộ ra trước khi giá phản ứng",
     "fundingExtremes": "Tỷ lệ funding dương cao nhất và âm sâu nhất ngay lúc này, cùng sàn đang trả mỗi mức đó",
     "fundingBelt": "Đếm ngược đến lần thu funding tiếp theo, tỷ lệ hiện tại và dự đoán, và khối lượng của bạn phải trả hay được nhận bao nhiêu",
-    "liquidationMap": "Nơi vị thế của bạn kết thúc trên trục giá, đối chiếu với mức thanh lý mà phần còn lại của thị trường đang gánh",
-    "marginHealth": "Tỷ lệ ký quỹ, mức duy trì so với số dư khả dụng, và tài khoản đang gần mức tự động giảm đòn bẩy đến đâu",
+    "liquidationMap": "Những gì sàn thực sự đã thanh lý trên trục giá, cùng giá thanh lý của bạn và các vạch đòn bẩy ở trên",
+    "marginHealth": "Tỷ lệ ký quỹ, ký quỹ duy trì so với vốn, khoảng cách tới thanh lý, và một cú đi ngược sẽ tác động thế nào tới cả ba",
     "riskControls": "Hạn mức lỗ hằng ngày, số lệnh, quy mô vị thế và công tắc ngắt khẩn cấp của bạn, chỉnh sửa được ngay tại nơi giao dịch diễn ra",
     "categories": "Mọi danh mục sự kiện cùng số hợp đồng đang hoạt động, để bảng thu hẹp chỉ trong một cú nhấp",
     "eventBoard": "Các thị trường sự kiện đang mở dưới dạng thẻ: câu hỏi, Có và Không tính theo cent, khối lượng, và thời điểm tất toán",
@@ -3090,10 +3325,10 @@
     "routeBridge": "Chuỗi nguồn, chuỗi đích, cầu nối, phí của nó và mất bao lâu, sẵn sàng để thực hiện",
     "inFlight": "Các giao dịch chuyển tiền vẫn đang được xác nhận, mỗi giao dịch kèm bộ đếm khối mà nó đang chờ",
     "session": "Phiên giao dịch hiện đang ở đâu, theo đúng lịch riêng của sàn môi giới, đã tính cả ngày lễ và ngày làm nửa buổi",
-    "earningsCalendar": "Ai công bố và khi nào, nhóm theo ngày, kèm mức đồng thuận phải vượt qua",
+    "earningsCalendar": "Ai công bố kết quả và khi nào, kèm mức dự báo phải vượt qua, cùng những mã sắp niêm yết",
     "economicCalendar": "Các số liệu vĩ mô theo giờ công bố, kèm mức độ quan trọng, số liệu kỳ trước và mức đồng thuận",
     "sessionClock": "Một chiếc đồng hồ một dòng cho phiên giao dịch, để một lệnh ngoài giờ không bao giờ là một bất ngờ",
-    "level1": "Giá mua và bán cùng khối lượng, mức chênh lệch giá, và biên độ trong ngày từ nguồn dữ liệu của nhà môi giới",
+    "level1": "Giá mua và giá bán kèm khối lượng, chênh lệch, biên độ trong ngày, và một dòng trạng thái khi sàn tạm dừng giao dịch",
     "company": "Định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo, và quan điểm của các nhà phân tích, trong một panel",
     "yourPosition": "Những gì bạn đang nắm giữ ở mã này: số lượng, giá vốn, giá đánh dấu, và cả lợi nhuận trong ngày lẫn lợi nhuận chưa thực hiện"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "Số dư, vị thế và lệnh đều đọc qua khóa API {{venue}} của bạn, và khóa đang bị khóa lúc này.",
       "accountMissingTitle": "Kết nối {{venue}} để xem tài khoản của bạn",
       "accountMissingDescription": "Chỉ khóa API {{venue}} của bạn đọc được số dư, vị thế và lệnh. Khóa vẫn nằm trên thiết bị này.",
+      "walletMissingTitle": "Kết nối ví",
+      "walletMissingDescription": "Bảng này hoạt động với ví đã kết nối. Liên kết một ví và các vị thế, phí và giao dịch chuyển sẽ hiển thị ở đây.",
+      "walletSealedDescription": "Khóa ví của bạn nằm trong kho đã khóa. Mở khóa và bảng này có thể đọc và ký cho ví đó.",
       "connectAction": "Kết nối {{venue}}"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "Cần khóa API",
     "setupRequiredHint": "Cần thiết lập",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "Node Solana mà mọi lượt đọc và mọi lượt gửi trên Solana đều đi qua: số dư, vị thế thanh khoản, gửi lệnh swap. Thêm khóa Helius của bạn để có điểm truy cập ổn định; nếu không có khóa, ứng dụng dùng RPC công cộng, vốn từ chối tải mà không báo trước."
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Chuyển một tài sản giữa Ethereum, Base, Arbitrum, BNB Chain và Polygon: chọn cầu nối tốt nhất cho quy mô đó, kèm phí, thời gian tới nơi và theo dõi cho tới khi tiền vào"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "Terminal giao dịch cốt lõi: biểu đồ, sổ lệnh, vào lệnh, khám phá thị trường và danh sách theo dõi"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "Báo giá bridge",
+        "description": "Báo giá tuyến cross-chain và theo dõi trạng thái chuyển khoản"
+      },
       "candles": {
         "label": "Nến",
         "description": "Luồng nến OHLCV trực tiếp cho biểu đồ và tín hiệu"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "Funding",
         "description": "Phí funding hợp đồng vĩnh cửu, giá mark và giá chỉ số, cùng khối lượng mở"
+      },
+      "liquidations": {
+        "label": "Thanh lý",
+        "description": "Lịch sử thanh lý tổng hợp cho các cặp hợp đồng tương lai vĩnh viễn"
       },
       "pool-stats": {
         "label": "Thống kê pool",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "Dữ liệu thị trường",
       "ai": "AI",
+      "rpc": "RPC",
       "trading": "Giao dịch",
       "automation": "Tự động hóa",
       "theme": "Giao diện",
@@ -5762,7 +6017,17 @@
         "description": "Căn cứ tìm kiếm web cho báo cáo nghiên cứu AI"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "RPC Solana",
+        "description": "Truy cập JSON-RPC vào mạng Solana để đọc và gửi"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "Thực thi bridge",
+        "description": "Thực hiện chuyển khoản cross-chain bằng ví đã kết nối"
+      },
       "orders": {
         "label": "Lệnh",
         "description": "Đặt và quản lý lệnh trên venue đã kết nối"
@@ -6084,6 +6349,12 @@
     "allCategories": "Tất cả",
     "loading": "Đang tải sự kiện…",
     "failed": "Không thể tải sự kiện",
+    "sort": {
+      "venueOrder": "Sắp xếp · thứ tự của sàn",
+      "new": "Sắp xếp · mới",
+      "endingSoon": "Sắp xếp · sắp kết thúc",
+      "volume": "Sắp xếp · khối lượng"
+    },
     "tryLater": "Sàn không phản hồi. Hãy thử lại sau giây lát.",
     "emptyTitle": "Không có sự kiện nào đang mở",
     "emptyBody": "Sàn này hiện chưa niêm yết gì.",

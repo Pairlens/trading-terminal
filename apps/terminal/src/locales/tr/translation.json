@@ -36,13 +36,6 @@
     "failedTitle": "Sepet gönderilemedi",
     "hint": "Her bacak gerçek bir limit emridir."
   },
-  "bridgePanes": {
-    "routeTitle": "Köprüleme bir köprü sağlayıcısı gerektirir",
-    "routeBody": "Bağlı sağlayıcı yok. Zincir üstü konektörler tek bir zincir içinde yönlendirir, dolayısıyla burada zincirler arası bir transferin ücretini veya süresini kote edecek bir şey yok. Zincir merdiveni, zaten işlem yapabildiklerinizi karşılaştırır.",
-    "wouldQuote": "{{chain}} çıkışlı {{asset}} kote edilecekti",
-    "inFlightTitle": "Transfer takibi bir köprü sağlayıcısı gerektirir",
-    "inFlightBody": "Onay sayısı, parayı taşıyan köprüden gelir. Bağlı köprü yokken sorgulanacak bir şey de yoktur ve arkasında veri olmayan bir çubuk, tıkanmış bir transferde bile ilerlemeye devam eder."
-  },
   "chainLadder": {
     "title": "Zincirler arası {{asset}}",
     "subtitle": "En iyi koteye göre değil, gazdan sonra elinize geçene göre sıralanır",
@@ -129,6 +122,22 @@
   },
   "earningsCalendar": {
     "capped": "{{total}} bilançonun ilk {{shown}} tanesi gösteriliyor.",
+    "ipo": {
+      "title": "Halka arzlar",
+      "columns": {
+        "exchange": "Borsa",
+        "priceRange": "Fiyat aralığı"
+      },
+      "range": "{{low}} ile {{high}} arası",
+      "priceTbd": "fiyat belirsiz",
+      "capped": "{{total}} halka arzın ilk {{shown}} tanesi gösteriliyor.",
+      "noneTitle": "Yaklaşan halka arz yok",
+      "noneBody": "Şu anda sağlayıcının takviminde işlem görmeye başlayacak tarihi olan bir şirket yok.",
+      "emptyTitle": "Halka arz akışı yok",
+      "emptyBody": "Bu derlemede temel veri sağlayıcısı yok. Halka arz takvimi App Server'dan gelir; bir aracı kurum işlem gördüğü hisseleri yayımlar, henüz halka açılmamış olanları değil.",
+      "providerBusyTitle": "Halka arz akışı hız sınırında",
+      "providerErrorTitle": "Halka arz akışı yüklenemedi"
+    },
     "noEstimate": "beklenti yok",
     "noneInWindowBody": {
       "today": "Takvimdeki hiçbir şirket bugün bilanço açıklamıyor.",
@@ -161,22 +170,52 @@
     "tomorrow": "Yarın"
   },
   "economicCalendar": {
-    "emptyTitle": "Makro akış kurulu değil",
-    "emptyBody": "Bir makro veri eklentisi bu takvimi açıklama saatleri, beklenti ve önceki veriyle doldurur.",
+    "allDay": "Tüm gün",
+    "emptyTitle": "Makro takvim yok",
+    "emptyBody": "Yayın takvimi App Server'dan gelir. Bu yapı bağımsız çalışıyor, dolayısıyla derlenecek bir kaynak yok.",
     "columns": {
-      "time": "Saat",
-      "event": "Veri",
-      "actual": "Gerçekleşen",
-      "consensus": "Beklenti",
-      "prior": "Önceki"
-    }
+      "source": "Kurum",
+      "time": "Saat ({{zone}})",
+      "event": "Yayın"
+    },
+    "impact": {
+      "high": "Yüksek etki",
+      "medium": "Orta etki",
+      "low": "Düşük etki"
+    },
+    "impactAll": "Tümü",
+    "impactHigh": "Yüksek etki",
+    "impactLabel": "Etki filtresi",
+    "noneHighBody": "Bu pencerede yüksek etkili bir yayın yok. Takvimin geri kalanını görmek için Tümü'ne geçin.",
+    "noneInWindowBody": {
+      "week": "Önümüzdeki yedi gün içinde ABD yayını planlanmadı.",
+      "fortnight": "Önümüzdeki iki hafta içinde ABD yayını planlanmadı.",
+      "month": "Önümüzdeki ay içinde ABD yayını planlanmadı."
+    },
+    "noneInWindowTitle": "Planlanan bir şey yok",
+    "providerBusyBody": "Takvim servisi bizi kısıtlıyor. Pencere sıfırlandığında takvim kendiliğinden geri gelir.",
+    "providerBusyTitle": "Makro takvim hız sınırında",
+    "providerErrorBody": "Resmi yayın takvimlerine ulaşılamadı. Hesaplarınızda veya bağlayıcılarınızda bir sorun yok.",
+    "providerErrorTitle": "Makro takvim yüklenmedi",
+    "scopeLabel": "Yayın penceresi",
+    "scopes": {
+      "week": "Hafta",
+      "fortnight": "2 hafta",
+      "month": "Ay"
+    },
+    "sourceNote": "BLS, BEA, Federal Reserve ve Census yayın takvimlerinden derlenmiştir. Saatler, kurumların yayımladığı gibi ABD Doğu saatidir.",
+    "title": "Makro",
+    "today": "Bugün",
+    "tomorrow": "Yarın"
   },
   "eventBoard": {
+    "listed": "Listelendi {{when}}",
     "searchPlaceholder_one": "1 aktif piyasada ara",
     "searchPlaceholder_other": "{{count}} aktif piyasada ara",
     "loadingTitle": "Pano yükleniyor",
     "loadingBody": "Her borsaya şu anda ne işlem gördüğü soruluyor.",
     "sort": {
+      "new": "Yeni",
       "trending": "Öne çıkanlar",
       "endingSoon": "Yakında bitiyor",
       "volume": "Hacim",
@@ -221,6 +260,7 @@
     "basisMissing_other": "{{count}} aday fiyatsız"
   },
   "feeAccrual": {
+    "lastTouch": "son dokunuşta",
     "title": "Biriken ücretler",
     "subtitle_one": "{{wallet}} · {{count}} aralık",
     "subtitle_other": "{{wallet}} · {{count}} aralık",
@@ -233,12 +273,12 @@
       "claimable": "Alınabilir"
     },
     "loadingTitle": "Ücretler okunuyor",
-    "loadingBody": "Her pozisyon için collect simüle ediliyor; şu anda ne ödeyeceği görülüyor.",
+    "loadingBody": "Her pozisyonun alacağı okunuyor ve zincirin desteklediği yerlerde bir collect simüle ediliyor.",
     "emptyTitle": "Likidite pozisyonu yok",
     "emptyBody": "{{wallet}} ücret biriktirecek bir pozisyon tutmuyor. Bağlı bir zincirde likidite sağlayın, tutar burada görünür.",
     "noChainsTitle": "Zincir konektörü yok",
     "noChainsBody": "Bir on-chain konektör kurun; bu panel havuzlarının cüzdanınıza ne borçlu olduğunu okur.",
-    "footnote": "Bir collect bu blokta ne öderdi, iki bacak, pozisyon başına. Tahsil edilmiş ücretler zincirde iz bırakmaz; bu yüzden ücret APR'ı, aralıkta geçen süre ve elde tutmaya karşı kayıp bir indeksleyici gerektirir ve gösterilmez."
+    "footnote": "Pozisyon başına iki bacak: EVM zincirlerinde bu blokta bir collect'in ödeyeceği tutar, Solana'da havuzun hâlihazırda yazdığı tutar. Daha önce toplanan ücretler zincirde iz bırakmaz; bu yüzden ücret APR'si, aralıkta geçen süre ve tutmaya kıyasla kayıp bir indeksleyici gerektirir ve gösterilmez."
   },
   "funding": {
     "loading": "Fonlama oranları okunuyor…",
@@ -289,6 +329,57 @@
     "emptyTitle": "Etkin vadesiz borsa yok",
     "emptyBody": "Fonlama herkese açık veridir, API anahtarı gerekmez. Bir vadesiz vadeli işlem bağlayıcısı kurun, matris kendiliğinden dolar."
   },
+  "inFlight": {
+    "title": "Yolda",
+    "pendingCount_one": "{{count}} beklemede",
+    "pendingCount_other": "{{count}} beklemede",
+    "emptyTitle": "Yolda transfer yok",
+    "emptyBody": "Bu terminalden gönderilen köprü transferleri her iki işlemiyle birlikte burada görünür ve varana kadar kalır.",
+    "route": "{{from}} → {{to}}",
+    "sourceTx": "Kaynak Tx",
+    "destinationTx": "Hedef Tx",
+    "landed": "Ulaştı",
+    "landedAmount": "{{amount}} ulaştı",
+    "failed": "Başarısız",
+    "confirming": "Onaylanıyor",
+    "substatus": {
+      "WAIT_SOURCE_CONFIRMATIONS": "Kaynak zincirdeki onaylar bekleniyor",
+      "WAIT_DESTINATION_TRANSACTION": "Hedef zincir bekleniyor",
+      "BRIDGE_NOT_AVAILABLE": "Köprü kullanılamıyor",
+      "CHAIN_NOT_AVAILABLE": "Zincir kullanılamıyor",
+      "REFUND_IN_PROGRESS": "İade sürüyor",
+      "NOT_PROCESSABLE_REFUND_NEEDED": "İade gerekiyor",
+      "UNKNOWN_ERROR": "Durum bilinmiyor",
+      "COMPLETED": "Tamamlandı",
+      "PENDING": "Onaylanıyor"
+    }
+  },
+  "insiderActivity": {
+    "title": "İçeriden işlemler",
+    "summary": "{{buys}} alış · {{sells}} satış",
+    "span_one": "{{count}} gün",
+    "span_other": "{{count}} gün",
+    "buy": "Alış",
+    "sell": "Satış",
+    "noValue": "tutar yok",
+    "columns": {
+      "date": "Tarih",
+      "insider": "Bildiren",
+      "shares": "Adet",
+      "price": "Fiyat",
+      "value": "Tutar"
+    },
+    "noFilingsTitle": "{{symbol}} için yakın tarihli bildirim yok",
+    "noFilingsBody": "Bu şirkette son dönemde kimse bir işlem bildirmemiş. Sessiz dönemler normaldir ve Form 4, işlemden sonraki iki iş günü içinde verilir.",
+    "needsProviderTitle": "İçeriden işlem bildirimleri bir sağlayıcı ister",
+    "needsProviderBody": "Bu derlemede temel veri akışı yok. Form 4 bildirimleri App Server'dan gelir, aracı kurum bağlayıcısı yalnızca kotasyon verir ve emir iletir.",
+    "providerBusyTitle": "İçeriden işlem bildirimleri hız sınırında",
+    "providerBusyBody": "Veri sağlayıcı bizi kısıtlıyor. Pencere sıfırlandığında bildirimler kendiliğinden döner.",
+    "providerErrorTitle": "İçeriden işlem bildirimleri yüklenemedi",
+    "providerErrorBody": "Sağlayıcı kullanılamayacak bir yanıt verdi. Hesaplarınızda veya bağlayıcılarınızda bir sorun yok.",
+    "notEquityTitle": "İçeriden işlem bildirimleri hisse ister",
+    "notEquityBody": "Bunu yalnızca halka açık bir şirket sunar. {{venue}} bir hisse borsası değil ve oradaki aynı sembol başka bir varlık."
+  },
   "level1": {
     "emptyTitle": "Henüz kotasyon yok",
     "emptyBody": "Bu sembol için alış ya da satış kotasyonu henüz gelmedi.",
@@ -298,20 +389,44 @@
     "bps": "bp",
     "dayRange": "gün aralığı",
     "feed": "Kaynak",
-    "depthNote": "Aracı kurum yalnızca defterin tepesini kote eder, bu iki fiyatın arkasında derinlik yoktur."
+    "depthNote": "Aracı kurum yalnızca defterin tepesini kote eder, bu iki fiyatın arkasında derinlik yoktur.",
+    "status": "Durum",
+    "statusHalted": "Durduruldu",
+    "statusPaused": "Duraklatıldı",
+    "statusSince": "{{time}} itibarıyla",
+    "statusTrading": "İşlem görüyor"
   },
   "liquidationMap": {
-    "subtitle": "Tasfiye fiyatlarınız ve burada açılan kaldıracın bittiği yer",
+    "clusterHint": "{{price}}: {{count}} işlemde {{notional}} tutarında {{side}} pozisyon tasfiye edildi",
+    "clustersCaption": "Gölgeli sütunlar borsanın son {{window}} saatte gerçekten tasfiye ettiğidir; kırmızı long, yeşil short.",
+    "clustersErrorCaption": "Borsanın tasfiye geçmişi yüklenemedi. Eksendeki diğer her şey etkilenmedi.",
+    "clustersLoadingCaption": "Borsanın tasfiye geçmişi yükleniyor.",
+    "collectingCaption": "Piyasa kümeleri hâlâ doluyor. {{since}} tarihinden beri toplanıyor.",
+    "collectingJustStarted": "az önce",
+    "legendLong": "{{value}} long",
+    "legendPrints": "{{count}} işlem",
+    "legendShort": "{{value}} short",
+    "noClustersCaption": "Son {{window}} saatte bu kontratta hiçbir tasfiye olmadı.",
+    "notTrackedCaption": "Bu borsa toplu tasfiye akışı yayınlamıyor, bu yüzden piyasa kümeleri çizilmiyor.",
+    "standaloneCaption": "Piyasa kümeleri Pairlens bulutundan gelir; bu sürüm bulutu kullanmıyor.",
+    "subtitle": "Piyasanın nerede tasfiye edildiği ve kendi pozisyonunun nerede duracağı",
     "estimateBadge": "TAHMİN",
     "sideLong": "long",
     "sideShort": "short",
     "referenceHint": "Güncel fiyattan açılan {{leverage}}x {{side}} yaklaşık {{price}} seviyesinde tasfiye olur",
-    "caption": "Çubuklar, her borsanın bildirdiği kendi tasfiye fiyatlarınızdır. İnce işaretler, güncel fiyattan açılan bir pozisyonun 5x, 10x ve 25x'te nerede tasfiye olacağını gösterir. Hiçbir borsa toplu tasfiye kümeleri yayınlamadığı için hiçbiri çizilmiyor.",
+    "caption": "Çubuklar, her borsanın bildirdiği kendi tasfiye fiyatlarındır. İnce işaretler, mevcut fiyattan açılan bir pozisyonun 5x, 10x ve 25x'te nerede tasfiye olacağını gösterir.",
     "noPositionsCaption": "İnce işaretler, güncel fiyattan açılan bir pozisyonun 5x, 10x ve 25x'te nerede tasfiye olacağını gösterir. Kendi tasfiye fiyatlarınız bir pozisyon açıldığında çubuk olarak görünür.",
     "noPriceTitle": "Referans alınacak fiyat yok",
     "noPriceBody": "Haritanın sözleşme için canlı bir fiyata ihtiyacı var. Yanındaki grafik fiyat aldığı anda dolar.",
     "emptyTitle": "Çizilecek bir şey yok",
-    "emptyBody": "Bir vadesiz pozisyon açın ya da bir sözleşme seçin, fiyat ekseni dolsun."
+    "emptyBody": "Bir vadesiz pozisyon açın ya da bir sözleşme seçin, fiyat ekseni dolsun.",
+    "windowLabel": "Aralık",
+    "windows": {
+      "h1": "1 sa",
+      "h6": "6 sa",
+      "h24": "24 sa",
+      "h72": "72 sa"
+    }
   },
   "liquidityFlow": {
     "noPoolTitle": "Bir havuz seçin",
@@ -327,12 +442,11 @@
     "biggestLabel": "En büyük takaslar"
   },
   "lpPanes": {
-    "manageTitle": "Aralık düzenleme bir likidite işlemi gerektirir",
-    "manageBody": "Likidite ekleme, çekme ve yeniden ortalama, hiçbir konektörün henüz oluşturmadığı imzalı işlemlerdir. Kontroller bir işe yarayana kadar gösterilmez.",
     "venueFallback": "bu zincir",
     "wouldRead": "{{chain}} üzerindeki {{pool}} için {{wallet}} okunacaktı"
   },
   "lpPosition": {
+    "feesLastTouch": "Bu pozisyona en son dokunulduğunda hesaplandı. Orca ve Raydium ücretleri ancak pozisyona bir daha dokunulduğunda yazar, dolayısıyla gerçek alacak daha yüksek olabilir.",
     "title": "LP pozisyonu",
     "subtitle_one": "{{wallet}} · {{count}} aralık",
     "subtitle_other": "{{wallet}} · {{count}} aralık",
@@ -353,12 +467,81 @@
     "rangeUnknown": "Havuz okunamadı",
     "otherPositions": "Diğer pozisyonlarınız",
     "loadingTitle": "Pozisyonlar okunuyor",
-    "loadingBody": "Bağlı her zincirin position manager sözleşmesine bu cüzdanda ne olduğu soruluyor.",
+    "loadingBody": "Bağlı her zincire bu cüzdanın neler tuttuğu soruluyor.",
     "emptyTitle": "Likidite pozisyonu yok",
-    "emptyBody": "{{wallet}} bağlı zincirlerde Uniswap v3 veya PancakeSwap v3 pozisyonu tutmuyor. Birinde likidite sağlayın, burada görünür.",
+    "emptyBody": "{{wallet}} bağlı zincirlerde yoğunlaştırılmış likidite pozisyonu tutmuyor. Birinde likidite sağlayın, pozisyon burada görünsün.",
     "noChainsTitle": "Zincir konektörü yok",
-    "noChainsBody": "Bir on-chain konektör kurun; bu panel o zincirin position manager sözleşmesini cüzdanınız için okur.",
+    "noChainsBody": "Bir zincir üstü bağlayıcı kurun, bu panel o zincirin likidite pozisyonlarını cüzdanınız için okusun.",
     "footnote": "Zincirden okunur: bant, likiditenin şu andaki değeri ve tahsil edilmemiş ücretler. Bir pozisyon maliyetini saklamadığı için elde tutmaya karşı bir rakam yok."
+  },
+  "manageLiquidity": {
+    "title": "Likiditeyi yönet",
+    "subtitle_one": "{{wallet}} · {{count}} pozisyon",
+    "subtitle_other": "{{wallet}} · {{count}} pozisyon",
+    "position": "Pozisyon",
+    "tabCollect": "Tahsil et",
+    "tabRemove": "Çıkar",
+    "tabAdd": "Ekle",
+    "unread": "Havuz okunamadı",
+    "claimable": "Şu an alınabilir",
+    "collectNote": "Tek işlem. İki bacak da bu cüzdana ödenir.",
+    "collectNothing": "Bu pozisyonda henüz tahsil edilecek bir şey yok.",
+    "collectUnread": "Bu pozisyonun ücretleri okunamadı, dolayısıyla onaylanacak bir şey yok.",
+    "removeAmount": "Çıkar",
+    "youReceive": "Alacağın",
+    "removeFeesNote": "Ücretler aynı işlemde tamamen süpürülür, hangi oranı çıkardığın fark etmez.",
+    "removeUnread": "Havuz yanıt vermedi, bu yüzden ödeme önizlenemiyor. Minimumlar yine de imza anındaki canlı duruma göre belirlenir.",
+    "addRatioNote": "Bant oranı belirler: bir tutarı yazmak diğerini tayin eder.",
+    "addBelowBand": "Fiyat bandın altında, bu yüzden bu pozisyon yalnızca {{symbol}} kabul eder.",
+    "addAboveBand": "Fiyat bandın üstünde, bu yüzden bu pozisyon yalnızca {{symbol}} kabul eder.",
+    "addUnread": "Havuz yanıt vermedi, ikinci tutar türetilemiyor. İkisini de gir.",
+    "addWrappedNote": "Yatırılan, havuzun kendi tokenlarıdır. Sarmalanmış yerel token tutan bir pozisyon yerel bakiyeyi değil sarmalanmış bakiyeyi ister.",
+    "balance": "Bakiye {{amount}}",
+    "slippage": "Kayma",
+    "reviewCollect": "Tahsilatı gözden geçir",
+    "reviewRemove": "Çıkarmayı gözden geçir",
+    "reviewAdd": "Yatırmayı gözden geçir",
+    "confirmTitle": "İmzalanacak olanı onayla",
+    "rowAction": "İşlem",
+    "rowPosition": "Pozisyon",
+    "rowChain": "Zincir",
+    "rowManager": "Yönetici",
+    "rowCollecting": "Tahsil edilen",
+    "rowRemoving": "Çıkarılan",
+    "rowReceive": "Alacağın",
+    "rowFeesSwept": "Süpürülen ücretler",
+    "rowDepositing": "Yatırılan",
+    "rowMinimum": "Minimum",
+    "confirmCollectNote": "Yukarıdaki pozisyon yöneticisine gönderilir. Ücretler yalnızca bu cüzdana gider.",
+    "confirmRemoveNote": "Yakma ve tahsilat tek işlemde. Minimumlar imza anındaki havuz fiyatından yeniden hesaplanır, ondan {{slippage}} aşağıda.",
+    "confirmAddNote": "Her token önce yöneticiye onay ister, dolayısıyla bu iki ya da üç işlem olabilir.",
+    "back": "Geri",
+    "sign": "İmzala ve gönder",
+    "pendingTitle": "Makbuz bekleniyor",
+    "pendingBody": "İmzalandı ve gönderildi. Zincir onaylayana kadar burada kalır.",
+    "collectedTitle": "Ücretler tahsil edildi",
+    "removedTitle": "Likidite çıkarıldı",
+    "addedTitle": "Likidite eklendi",
+    "successBody": "Pozisyonların bir sonraki okumada yenilenir.",
+    "failedTitle": "İşlem başarısız",
+    "viewTransaction": "İşlemi görüntüle",
+    "done": "Bitti",
+    "lockedTitle": "İmzalamak için kilidi aç",
+    "lockedBody": "Bu işlem cüzdan anahtarını gerektiriyor. Pairlens kilidini açıp tekrar dene.",
+    "noConnectorTitle": "Konnektör kurulu değil",
+    "noConnectorBody": "Bu pozisyonun zincirinde kurulu konnektör yok, bu yüzden onun adına imza atacak bir şey de yok.",
+    "evmOnlyTitle": "Yalnızca EVM pozisyonları",
+    "evmOnlyBody": "Bu işlemler bir EVM sözleşmesi olan Uniswap v3 pozisyon yöneticisini çağırır. Solana pozisyonları diğer LP panellerinde okunabilir ama burada imzalanamaz. Bir EVM zincirinde likidite sağla, bu panelden yönetebilirsin.",
+    "readOnlyElsewhere_one": "Başka bir imza ailesindeki {{count}} pozisyon burada salt okunur.",
+    "readOnlyElsewhere_other": "Başka bir imza ailesindeki {{count}} pozisyon burada salt okunur.",
+    "noSigner": "Bağlı cüzdanların hiçbiri bu pozisyonun zincirinde imza atmıyor.",
+    "noChainsTitle": "Zincir konnektörü yok",
+    "noChainsBody": "Bir on-chain konnektör kur, bu panel ücretleri tahsil edip bulduğu bantları yeniden boyutlandırabilsin.",
+    "loadingTitle": "Pozisyonlar okunuyor",
+    "loadingBody": "Bağlı her zincirin pozisyon yöneticisine bu cüzdanın neler tuttuğu soruluyor.",
+    "emptyTitle": "Likidite pozisyonu yok",
+    "emptyBody": "{{wallet}} bağlı zincirlerde Uniswap v3 ya da PancakeSwap v3 pozisyonu tutmuyor. Birinde likidite sağla, buradan yönetebilirsin.",
+    "footnote": "Tahsilat ve çıkarma birer işlemdir, çıkarma ücretleri de beraberinde alır. Bandı taşımak bir düzenleme değildir: pozisyonu yakıp yenisini basar, bu yüzden burada sunulmaz."
   },
   "marginHealth": {
     "title": "Marj sağlığı",
@@ -369,8 +552,6 @@
     "equity": "Özkaynak",
     "maintenance": "Sürdürme marjı",
     "liqDistance": "Tasfiyeye uzaklık",
-    "adl": "ADL sırası",
-    "adlHint": "Borsa yayınlamıyor",
     "stressLabel": "Fiyat aleyhinize hareket ederse",
     "ratioAfter": "oran %{{value}}",
     "liquidated": "tasfiye",
@@ -395,20 +576,33 @@
   "movers": {
     "emptyTitle": "Piyasa verisi yok",
     "emptyBody": "Ne App Server ne de genel yedek kaynak yanıt verdi, dolayısıyla sıralanacak bir şey yok.",
+    "newListings": {
+      "emptyTitle": "Henüz yeni bir şey yok",
+      "emptyBodyBothOff": "Ne borsa listeleme taraması ne de zincir üstü sağlayıcı yanıt verdi.",
+      "venue": "CEX",
+      "onChain": "DEX",
+      "trackingSince": "Borsa listelemeleri {{date}} tarihinden beri izleniyor. Havuzlar kendi oluşturulma zamanını taşır.",
+      "cexOff": "Yalnızca zincir üstü havuzlar. Borsa listelemeleri App Server'dan gelir, bu derleme onu kullanmıyor."
+    },
     "noBrokerTitle": "Kurulu hisse borsası yok",
     "noBrokerBody": "Eklenti Mağazası'ndan bir aracı kurum bağlayıcısı kurun, günün hareketleri buraya gelsin.",
     "tabs": {
       "gainers": "Yükselenler",
       "losers": "Düşenler",
+      "newListings": "Yeni listelenenler",
       "volume": "Hacim",
       "volatility": "Volatilite",
       "unusual": "Sıra dışı"
     },
     "window": "Sıralama aralığı",
     "columns": {
+      "asset": "Varlık",
+      "liquidity": "Likidite",
+      "listed": "Listelendi",
       "pair": "Parite",
       "change": "{{window}} değişim",
       "price": "Fiyat",
+      "venue": "Borsa",
       "volume": "Hacim",
       "trend": "Trend"
     },
@@ -416,6 +610,7 @@
     "empty": {
       "gainers": "Bu aralıkta yükselen yok.",
       "losers": "Bu aralıkta düşen yok.",
+      "newListings": "Son iki haftada listelenen bir şey yok.",
       "volume": "Henüz hacim bildiren borsa yok.",
       "volatility": "Sıralanacak kadar hareket eden olmadı.",
       "unusual": "Büyüklüğüne göre sıra dışı işlem gören varlık yok."
@@ -819,6 +1014,44 @@
     "killSwitchHint": "Siz devam ettirene kadar tüm emirleri engeller",
     "haltOrders": "Emirleri durdur",
     "resumeOrders": "Devam et"
+  },
+  "routeBridge": {
+    "title": "Köprü",
+    "subtitle": "{{chain}} üzerinden bir varlık taşı",
+    "provider": "LI.FI",
+    "notEvmTitle": "Köprülenemeyen zincir",
+    "notEvmBody": "Transferler Ethereum, Base, Arbitrum, BNB Chain ve Polygon arasında yapılır. {{chain}} farklı türde bir işlem imzalar ve köprü konnektöründe henüz o imzalayıcı yok.",
+    "noConnectorTitle": "Kurulu köprü konnektörü yok",
+    "noConnectorBody": "Zincirler arası transferleri fiyatlamak ve göndermek için Eklenti Mağazası'ndan LI.FI Bridge eklentisini kurun.",
+    "amountLabel": "Köprülenecek tutar",
+    "amountPlaceholder": "{{asset}} cinsinden tutar",
+    "destination": "Hedef zincir",
+    "quoting": "Rota fiyatlanıyor",
+    "youReceive": "Şurada alırsın",
+    "minReceived": "Garanti",
+    "bridgeFee": "Köprü ücreti",
+    "networkGas": "Ağ gazı",
+    "eta": "Varış süresi",
+    "etaSeconds": "~{{seconds}} sn",
+    "etaMinutes": "~{{minutes}} dk",
+    "feeIncluded": "{{tool}} ücretini tutardan düşer, yani yukarıdaki rakam karşıya geçen tutardır.",
+    "feeExtra": "{{tool}} ücretini tutarın üstüne ekler.",
+    "review": "Transferi incele",
+    "requote": "Fiyatı yenile",
+    "expired": "Süresi doldu",
+    "confirmBody": "{{amount}} {{asset}} tutarını {{from}} zincirinden {{to}} zincirine {{tool}} ile gönder. En az {{min}} alırsın.",
+    "confirmCost": "Köprü ücreti {{fee}}, ağ gazı {{gas}}, imzalayan {{wallet}}.",
+    "confirmAction": "Onayla ve imzala",
+    "cancel": "Vazgeç",
+    "sentBody": "Transfer gönderildi. Takip ediliyor:",
+    "sendFailed": "Transfer gönderilemedi.",
+    "refusal": {
+      "non-evm-chain": "{{chain}} ile köprü henüz desteklenmiyor. Transferler yalnızca EVM zincirleri arasında yapılır.",
+      "same-chain": "Zaten bu zincirdesin. Takas için yandaki panele bak.",
+      "unknown-market": "{{chain}} bu köprünün kapsadığı bir zincir değil.",
+      "unknown-token": "{{asset}} {{chain}} üzerinde bir sözleşmeye karşılık gelmiyor, dolayısıyla taşınacak bir şey yok.",
+      "no-route": "Şu anda bu büyüklük için rota veren bir köprü yok. Farklı bir tutar ya da zincir dene."
+    }
   },
   "sectionTours": {
     "back": "Geri",
@@ -2959,6 +3192,7 @@
     }
   },
   "panes": {
+    "insiderActivity": "İçeriden İşlemler",
     "markets": "Piyasalar",
     "watchlist": "İzleme Listesi",
     "topCoins": "En İyi Coinler",
@@ -3029,6 +3263,7 @@
     "yourPosition": "Pozisyonunuz"
   },
   "paneDescriptions": {
+    "insiderActivity": "Son Form 4 bildirimleri: şirket içinden kim aldı ya da sattı, ne kadar ve hangi fiyattan",
     "markets": "Borsalar genelindeki tüm mevcut işlem paritelerine göz at",
     "watchlist": "Favori paritelerini özelleştirilebilir bir listede takip et",
     "topCoins": "Coinleri hacim, piyasa değeri ve fiyat değişimine göre sırala",
@@ -3065,8 +3300,8 @@
     "openInterest": "Kontrat başına açık pozisyon ve 24 saatlik değişimi, böylece kalabalıklaşma fiyattan önce görünür",
     "fundingExtremes": "Şu anki en pozitif ve en negatif fonlama oranları, her birini ödeyen borsayla birlikte",
     "fundingBelt": "Bir sonraki fonlama anına geri sayım, güncel ve tahmini oran, ve boyutunun ne ödediği ya da kazandığı",
-    "liquidationMap": "Pozisyonunun fiyat ekseninde nerede biteceği, piyasanın geri kalanının taşıdığı likidasyona karşı",
-    "marginHealth": "Marjin oranı, bakım marjini karşısında kullanılabilir bakiye, ve hesabın otomatik kaldıraç azaltmaya ne kadar yakın olduğu",
+    "liquidationMap": "Borsanın fiyat ekseninde gerçekten tasfiye ettikleri, üzerinde kendi tasfiye fiyatın ve kaldıraç işaretleri",
+    "marginHealth": "Teminat oranı, öz sermayeye karşı sürdürme teminatı, likidasyona uzaklık ve aleyhe bir hareketin üçüne de yapacağı",
     "riskControls": "Günlük zarar sınırın, işlem sayın, pozisyon büyüklüğün ve acil durdurman, işlemin yapıldığı yerde düzenlenebilir",
     "categories": "Canlı kontrat sayısıyla her olay kategorisi, böylece pano tek tıkla daralır",
     "eventBoard": "Kart halinde canlı olay piyasaları: soru, sent cinsinden Evet ve Hayır, hacim ve ne zaman sonuçlanacağı",
@@ -3090,10 +3325,10 @@
     "routeBridge": "Kaynak zincir, hedef zincir, köprü, ücreti ve ne kadar sürdüğü, yürütmeye hazır halde",
     "inFlight": "Hâlâ onaylanmakta olan transferler, her biri beklediği blok sayacıyla birlikte",
     "session": "İşlem gününün şu an nerede olduğu, aracı kurumun kendi takviminden; tatiller ve yarım günler dahil",
-    "earningsCalendar": "Kim ne zaman bilanço açıklıyor, güne göre gruplanmış, aşılması gereken beklentiyle birlikte",
+    "earningsCalendar": "Kim ne zaman bilanço açıklıyor ve aşılması gereken tahmin, ayrıca yakında halka açılacaklar",
     "economicCalendar": "Saatine göre makro veriler, önemiyle, önceki rakamla ve piyasa beklentisiyle birlikte",
     "sessionClock": "İşlem günü için tek satırlık bir saat, böylece mesai dışı bir emir asla sürpriz olmaz",
-    "level1": "Boyutlarıyla birlikte alış ve satış, spread ve aracı kurum akışından günün aralığı",
+    "level1": "Alış ve satış kotasyonları ile miktarları, makas, günün aralığı ve borsa işlemi durdurduğunda bir durum satırı",
     "company": "Değerleme, büyüme, marjlar, bir sonraki katalizör, ve analistlerin nerede durduğu, tek bir panoda",
     "yourPosition": "Bu sembolde elinde tuttuğun: miktar, maliyet, işaret fiyatı, ve hem günlük hem açık kâr"
   },
@@ -3181,6 +3416,9 @@
       "accountSealedDescription": "Bakiyeler, pozisyonlar ve emirler {{venue}} API anahtarlarınızla okunuyor ve anahtarlar şu anda kilitli.",
       "accountMissingTitle": "Hesabınızı görmek için {{venue}} bağlayın",
       "accountMissingDescription": "Bakiyeleri, pozisyonları ve emirleri yalnızca {{venue}} API anahtarlarınız okuyabilir. Anahtarlar bu cihazda kalır.",
+      "walletMissingTitle": "Cüzdan bağlayın",
+      "walletMissingDescription": "Bu panel bağlı cüzdanınızla çalışır. Bir tane bağlayın; pozisyonları, ücretleri ve transferleri burada görünür.",
+      "walletSealedDescription": "Cüzdan anahtarınız kilitli kasada. Kilidini açın, bu panel o cüzdan için okuyup imzalayabilsin.",
       "connectAction": "{{venue}} bağla"
     },
     "paneTransition": {
@@ -3484,6 +3722,14 @@
     "apiKeyRequiredHint": "API anahtarı gerekli",
     "setupRequiredHint": "Kurulum gerekli",
     "manifests": {
+      "helius-rpc-provider": {
+        "title": "Helius Solana RPC",
+        "description": "Solana üzerindeki her okumanın ve her gönderimin geçtiği düğüm: bakiyeler, likidite pozisyonları, takas gönderimi. Güvenilir bir uç nokta için kendi Helius anahtarınızı ekleyin; anahtar yoksa uyarmadan yük atan genel RPC devreye girer."
+      },
+      "lifi-bridge-connector": {
+        "title": "LI.FI Bridge",
+        "description": "Bir varlığı Ethereum, Base, Arbitrum, BNB Chain ve Polygon arasında taşı: büyüklüğe en uygun köprü, ücreti, varış süresi ve varana kadar takip"
+      },
       "pairlens-core": {
         "title": "Pairlens Core",
         "description": "Ana işlem terminali: grafikler, emir defterleri, işlem girişi, piyasa keşfi ve izleme listeleri"
@@ -5690,6 +5936,10 @@
   },
   "capabilities": {
     "market-data": {
+      "bridge": {
+        "label": "Köprü kotasyonları",
+        "description": "Zincirler arası rota kotasyonları ve transfer durumu takibi"
+      },
       "candles": {
         "label": "Mumlar",
         "description": "Grafikler ve sinyaller için canlı OHLCV mum akışları"
@@ -5697,6 +5947,10 @@
       "funding": {
         "label": "Fonlama",
         "description": "Vadesiz sözleşme fonlama oranları, mark ve endeks fiyatları ve açık pozisyon"
+      },
+      "liquidations": {
+        "label": "Likidasyonlar",
+        "description": "Süresiz vadeli işlem pariteleri için toplu likidasyon geçmişi"
       },
       "pool-stats": {
         "label": "Havuz İstatistikleri",
@@ -5746,6 +6000,7 @@
     "domains": {
       "market-data": "Piyasa Verisi",
       "ai": "Yapay Zeka",
+      "rpc": "RPC",
       "trading": "İşlem",
       "automation": "Otomasyon",
       "theme": "Tema",
@@ -5762,7 +6017,17 @@
         "description": "Yapay zeka araştırma raporları için web arama temellendirmesi"
       }
     },
+    "rpc": {
+      "solana": {
+        "label": "Solana RPC",
+        "description": "Okuma ve gönderim için Solana ağına JSON-RPC erişimi"
+      }
+    },
     "trading": {
+      "bridge": {
+        "label": "Köprü yürütme",
+        "description": "Bağlı cüzdanla zincirler arası transferleri yürütür"
+      },
       "orders": {
         "label": "Emirler",
         "description": "Bağlı venue üzerinde emir ver ve yönet"
@@ -6084,6 +6349,12 @@
     "allCategories": "Tümü",
     "loading": "Olaylar yükleniyor…",
     "failed": "Olaylar yüklenemedi",
+    "sort": {
+      "venueOrder": "Sırala · platform sırası",
+      "new": "Sırala · yeni",
+      "endingSoon": "Sırala · yakında bitiyor",
+      "volume": "Sırala · hacim"
+    },
     "tryLater": "Platform yanıt vermedi. Birazdan tekrar deneyin.",
     "emptyTitle": "Açık olay yok",
     "emptyBody": "Bu platformda şu anda listelenen bir şey yok.",

@@ -4,7 +4,7 @@ description: What Pairlens is, a source-available, local-first, AI-native crypto
 group: get-started
 order: 1
 eyebrow: Get started
-updated: 16 AUG 2026
+updated: 17 AUG 2026
 readTime: 3 min read
 ---
 
@@ -81,7 +81,7 @@ connector plugins. There is no intermediate data server.
 
 **Connector plugins.** The only code that talks to exchange WebSockets and REST
 APIs. 14 spot CEXs, three perpetual futures venues, a US equities broker, two
-prediction markets, and DEX connectors ship in the box.
+prediction markets, DEX connectors and a cross-chain bridge ship in the box.
 
 **Strategy engine.** Pure TypeScript math: EMA, ATR, breakout, pullback,
 mean-reversion, regime detection. No I/O, no network.
@@ -95,7 +95,9 @@ fallback.
 
 This repository is everything you need to run Pairlens. The one component whose
 source is not published yet is the App Server, a small optional backend for
-sign-in, cross-device sync, and a hosted AI proxy. The terminal works fully
+sign-in, cross-device sync, a hosted AI proxy, and the reference feeds no venue
+publishes about itself: news, the macro and IPO calendars, insider filings, new
+listings, and aggregated liquidation clusters. The terminal works fully
 standalone without it.
 
 ## Find your path

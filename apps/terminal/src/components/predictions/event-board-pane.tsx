@@ -37,6 +37,7 @@ import {
 } from '@/hooks/use-prediction-events'
 import {
   BOARD_SORTS,
+  createdOf,
   endOf,
   eventVolume,
   flattenBoardEvents,
@@ -52,7 +53,10 @@ import {
   topRunnerShare,
 } from '@/lib/predictions/race'
 import { formatCompactUsd, formatPredictionPrice } from '@/lib/format-price'
-import { formatTimeUntil } from '@/lib/format-time'
+import { formatRelativeTime, formatTimeUntil } from '@/lib/format-time'
+
+/** The pane's own `t`, so a helper below can take it as an argument. */
+type Translate = ReturnType<typeof useTranslation>['t']
 
 /** Runners a race card ranks before it defers to the ladder. */
 const RACE_PREVIEW = 4
@@ -72,6 +76,7 @@ const SHARE_TOKENS = [
  */
 const SORT_LABEL_KEYS: Record<BoardSort, string> = {
   trending: 'eventBoard.sort.trending',
+  new: 'eventBoard.sort.new',
   endingSoon: 'eventBoard.sort.endingSoon',
   volume: 'eventBoard.sort.volume',
   biggestMove: 'eventBoard.sort.biggestMove',
@@ -197,7 +202,7 @@ export function EventBoardPane() {
           // width would go two-column inside a 280px cell.
           <div className="@container grid grid-cols-[repeat(auto-fill,minmax(272px,1fr))] content-start gap-2.5">
             {rows.map((row) => (
-              <EventCard key={row.key} row={row} />
+              <EventCard key={row.key} row={row} sort={sort} />
             ))}
           </div>
         )}
@@ -208,12 +213,18 @@ export function EventBoardPane() {
 
 // ── Cards ─────────────────────────────────────────────────────────────
 
-const EventCard = memo(function EventCard({ row }: { row: BoardEvent }) {
+const EventCard = memo(function EventCard({
+  row,
+  sort,
+}: {
+  row: BoardEvent
+  sort: BoardSort
+}) {
   const runners = useMemo(() => runnersOf(row.event), [row.event])
   return isRaceEvent(row.event) ? (
-    <RaceCard row={row} runners={runners} />
+    <RaceCard row={row} runners={runners} sort={sort} />
   ) : (
-    <BinaryCard row={row} runners={runners} />
+    <BinaryCard row={row} runners={runners} sort={sort} />
   )
 })
 
@@ -233,12 +244,27 @@ function CardHeader({ row, meta }: { row: BoardEvent; meta: string }) {
   )
 }
 
-function metaLine(row: BoardEvent, extra?: string): string {
+/**
+ * The card's second line.
+ *
+ * The listing time appears only under the New sort, and that is deliberate: it
+ * is the fact the ordering is built on, so without it the board looks shuffled,
+ * and on any other sort it would be a fourth clause competing with the close
+ * for a line that truncates.
+ */
+function metaLine(
+  row: BoardEvent,
+  { extra, sort, t }: { extra?: string; sort: BoardSort; t: Translate },
+): string {
   const end = endOf(row.event)
+  const created = sort === 'new' ? createdOf(row.event) : null
   return [
     row.event.category,
     extra,
     row.venueLabel,
+    created === null
+      ? null
+      : t('eventBoard.listed', { when: formatRelativeTime(created) }),
     end === null ? null : formatTimeUntil(end),
   ]
     .filter(Boolean)
@@ -248,9 +274,11 @@ function metaLine(row: BoardEvent, extra?: string): string {
 function BinaryCard({
   row,
   runners,
+  sort,
 }: {
   row: BoardEvent
   runners: Array<PredictionRunner>
+  sort: BoardSort
 }) {
   const { t } = useTranslation()
   const select = usePredictionSelect()
@@ -276,7 +304,7 @@ function BinaryCard({
         onClick={() => lead && open(lead)}
         type="button"
       >
-        <CardHeader meta={metaLine(row)} row={row} />
+        <CardHeader meta={metaLine(row, { sort, t })} row={row} />
       </button>
 
       <div className="flex items-end gap-3">
@@ -348,9 +376,11 @@ function BinaryCard({
 function RaceCard({
   row,
   runners,
+  sort,
 }: {
   row: BoardEvent
   runners: Array<PredictionRunner>
+  sort: BoardSort
 }) {
   const { t } = useTranslation()
   const select = usePredictionSelect()
@@ -378,10 +408,11 @@ function RaceCard({
           type="button"
         >
           <CardHeader
-            meta={metaLine(
-              row,
-              t('eventBoard.outcomeCount', { count: runners.length }),
-            )}
+            meta={metaLine(row, {
+              extra: t('eventBoard.outcomeCount', { count: runners.length }),
+              sort,
+              t,
+            })}
             row={row}
           />
         </button>

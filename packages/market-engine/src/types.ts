@@ -9,6 +9,28 @@ export type CandleUpdate = {
   candles: Array<Candle>
 }
 
+/**
+ * Whether the venue is currently letting an instrument trade.
+ *
+ * ABSENCE MEANS UNKNOWN, never "not halted". Only a connector subscribed to a
+ * real venue status feed sets this (today that is Alpaca's `statuses` channel);
+ * every other connector leaves it undefined. A surface must therefore show
+ * nothing rather than infer that a stock is trading normally because no halt
+ * message arrived, which would be the one wrong thing to say during a halt.
+ *
+ * `state` is deliberately coarse and conservative. Venues publish dozens of
+ * status codes across two tape conventions, so only the codes that
+ * unambiguously mean "stopped" or "trading again" map to 'halted' and 'active';
+ * everything else is 'paused' with the venue's own words in `reason`.
+ */
+export type TradingStatus = {
+  state: 'halted' | 'paused' | 'active'
+  /** The venue's own reason text ('News Pending'), when it published one. */
+  reason: string | null
+  /** When the status began, epoch ms; null when the venue published no time. */
+  sinceMs: number | null
+}
+
 export type TickerSnapshot = {
   last: number
   bid: number
@@ -18,6 +40,8 @@ export type TickerSnapshot = {
   volume24h: number
   change24h: number
   ts: number
+  /** Venue trading status, when the connector subscribes one. See above. */
+  tradingStatus?: TradingStatus
 }
 
 export type TickerUpdate = {

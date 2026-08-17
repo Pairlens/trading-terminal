@@ -13,27 +13,52 @@
  * design choice: the provider publishes a date and no time, so a BMO/AMC
  * column could only be a guess about the one detail a trader would act on.
  */
-import type { EarningsCalendarEntry } from '@pairlens/shared/instrument-types'
+import type {
+  EarningsCalendarEntry,
+  IpoCalendarEntry,
+} from '@pairlens/shared/instrument-types'
 
-export type EarningsDayGroup = {
+export type DayGroup<T> = {
   /** ISO 'YYYY-MM-DD' in the exchange's own calendar. */
   date: string
-  entries: Array<EarningsCalendarEntry>
+  entries: Array<T>
+}
+
+export type EarningsDayGroup = DayGroup<EarningsCalendarEntry>
+
+/** Group by a date field, days ascending, entry order preserved inside a day. */
+function groupByDate<T>(
+  entries: Array<T>,
+  dateOf: (entry: T) => string,
+): Array<DayGroup<T>> {
+  const groups = new Map<string, Array<T>>()
+  for (const entry of entries) {
+    const date = dateOf(entry)
+    const bucket = groups.get(date)
+    if (bucket) bucket.push(entry)
+    else groups.set(date, [entry])
+  }
+  return [...groups.entries()]
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([date, group]) => ({ date, entries: group }))
 }
 
 /** Group by report date, days ascending, entry order preserved inside a day. */
 export function groupEarningsByDate(
   entries: Array<EarningsCalendarEntry>,
 ): Array<EarningsDayGroup> {
-  const groups = new Map<string, Array<EarningsCalendarEntry>>()
-  for (const entry of entries) {
-    const bucket = groups.get(entry.reportDate)
-    if (bucket) bucket.push(entry)
-    else groups.set(entry.reportDate, [entry])
-  }
-  return [...groups.entries()]
-    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-    .map(([date, group]) => ({ date, entries: group }))
+  return groupByDate(entries, (entry) => entry.reportDate)
+}
+
+/**
+ * The same grouping for the listings pipeline. A listing date reads exactly
+ * like a report date to a trader ("which day"), so the two views share a shape
+ * rather than inventing a second one.
+ */
+export function groupIposByDate(
+  entries: Array<IpoCalendarEntry>,
+): Array<DayGroup<IpoCalendarEntry>> {
+  return groupByDate(entries, (entry) => entry.date)
 }
 
 /**

@@ -4,7 +4,7 @@ description: How the plugin registry distributes third-party connectors, AI prov
 group: builders
 order: 6
 eyebrow: For builders
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 2 min read
 ---
 
@@ -32,9 +32,11 @@ namespace ownership, build, size cap), and the registry builds and signs it
 itself with a separate community key. Community plugins are badged as such and
 run permanently sandboxed, which is what lets them be installed with one click.
 
-Community submissions cannot declare `trading:*` capabilities. A plugin that
-needs to place orders takes the self-published path and an explicit trust grant
-from each user.
+Community submissions cannot declare `trading:*` capabilities, `trading:bridge`
+included. A plugin that needs to place orders or move funds across chains takes
+the self-published path and an explicit trust grant from each user. `rpc:solana`
+is denied too, for a different reason: it hands its consumer a node URL with the
+user's own API key embedded in it.
 
 ## Installing from the store
 

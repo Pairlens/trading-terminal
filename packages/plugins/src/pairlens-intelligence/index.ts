@@ -15,6 +15,8 @@ import type {
   DeepSearchResponse,
   Instrument,
   InstrumentCategory,
+  LiquidationClustersResponse,
+  LiquidationsUnavailableResponse,
 } from '@pairlens/shared/instrument-types'
 import type { WebSearchResponse } from '@pairlens/shared/plugin-types'
 
@@ -72,6 +74,18 @@ export const pairlensIntelligenceManifest: PluginManifest = {
       id: 'market-data:symbol-logo',
       singleton: false,
       markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
+    {
+      // Named venues rather than '*': the App Server only holds a collector for
+      // the venues listed here, and a wildcard would let the resolver answer for
+      // KuCoin or Kraken Futures with a refusal the pane cannot tell apart from
+      // an outage. The pane reads this list to know a venue is not tracked
+      // without spending a request to find out.
+      id: 'market-data:liquidations',
+      singleton: false,
+      markets: ['binance-futures'],
       priority: 5,
       streaming: false,
     },
@@ -461,6 +475,44 @@ export function createPairlensIntelligencePlugin(
         if (!query) return { items: [], total: 0, hasMore: false }
         return queryInstruments('', { ...p, q: query })
       }
+    }
+
+    if (capability === 'market-data:liquidations') {
+      if (!appUrl) {
+        throw new Error(
+          'pairlens-intelligence: liquidation clusters require an App Server (standalone mode)',
+        )
+      }
+      const venue = String(p['venue'] ?? p['market'] ?? '')
+      const pair = String(p['pair'] ?? '')
+      if (!venue || !pair) {
+        throw new Error(
+          'pairlens-intelligence: liquidations requires venue and pair params',
+        )
+      }
+      const qs = new URLSearchParams({ venue, pair })
+      if (typeof p['hours'] === 'number') qs.set('hours', String(p['hours']))
+      // No auth headers: the endpoint is public and reads none. Sending a
+      // bearer token to a route that ignores it is how a "public" endpoint
+      // quietly becomes one that cannot be called signed out.
+      const response = await fetch(`${appUrl}/api/liquidations?${qs}`)
+      if (response.ok) {
+        return (await response.json()) as LiquidationClustersResponse
+      }
+      // The typed refusals are the answer, not a failure: 404 means the
+      // collector will never watch this venue, 503 that it has not watched it
+      // long enough. Both are states the pane renders in place of the strip,
+      // so they are RETURNED — a thrown custom error would not survive the
+      // sandbox boundary a third-party plugin serving this capability crosses.
+      if (response.status === 404 || response.status === 503) {
+        const body = (await response
+          .json()
+          .catch(() => null)) as LiquidationsUnavailableResponse | null
+        if (body?.error === 'liquidations_unavailable') return body
+      }
+      throw new Error(
+        `pairlens-intelligence: liquidations failed (${response.status})`,
+      )
     }
 
     if (capability === 'market-data:symbol-logo') {

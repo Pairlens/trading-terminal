@@ -221,6 +221,14 @@ export type PredictionMarketSummary = {
   openInterest?: number
   /** Expected resolution/close timestamp in ms. */
   endMs?: number
+  /**
+   * When the venue listed the market, in ms (Polymarket `createdAt`, Kalshi
+   * `open_time`). Absent when the venue publishes no usable instant, which is
+   * why a "New" ordering has to sink these rows rather than date them to the
+   * epoch. There is no event-level twin: an event's age is derived from its
+   * markets, because a ladder gains strikes long after the question opened.
+   */
+  createdMs?: number
   status?: 'open' | 'closed' | 'resolved'
 }
 
@@ -645,7 +653,11 @@ export type EquityFundamentalsUnavailableReason =
 
 /** Error body served with a 5xx when the fundamentals provider fails us. */
 export type EquityFundamentalsUnavailableResponse = {
-  error: 'company_overview_unavailable' | 'earnings_calendar_unavailable'
+  error:
+    | 'company_overview_unavailable'
+    | 'earnings_calendar_unavailable'
+    | 'ipo_calendar_unavailable'
+    | 'insider_transactions_unavailable'
   reason: EquityFundamentalsUnavailableReason
   fetchedAt: string
 }
@@ -803,7 +815,12 @@ export type FundingHistoryResponse = {
 // pool that a concentrated-liquidity venue is not.
 
 /** Which pool read an execute call is asking for. */
-export type PoolStatsAction = 'stats' | 'trades' | 'pools' | 'networks'
+export type PoolStatsAction =
+  | 'stats'
+  | 'trades'
+  | 'pools'
+  | 'new-pools'
+  | 'networks'
 
 /** Buy/sell counts over a window, as the provider reports them. */
 export type PoolTradeCounts = {
@@ -892,6 +909,12 @@ export type PoolListingEntry = {
   quoteSymbol: string | null
   /** Base token address, so a row can open the pair by identity, not by symbol. */
   baseAddress: string | null
+  /**
+   * When the pool was created, epoch ms. Only the `new-pools` listing carries
+   * it — the ranked-pools endpoint publishes no creation time, so a row from
+   * `pools` leaves it undefined rather than guessing.
+   */
+  createdAtMs?: number
 }
 
 export type PoolListingResponse = {
@@ -993,6 +1016,19 @@ export type LpPositionEntry = {
    */
   fees0: number | null
   fees1: number | null
+  /**
+   * How fresh the fee figures are, when the connector can say.
+   *
+   * `'live'` is a simulated collect: what a claim would pay this block, which
+   * is what the EVM connectors report. `'last-touch'` is the amount the pool
+   * settled into the position the last time anything touched it, which is what
+   * the Solana CLMMs store and the only figure obtainable without replaying
+   * their fee growth. The two are not interchangeable — a busy position can
+   * have earned a lot since its last touch — so a pane that prints
+   * `'last-touch'` says so. Absent means the connector did not state it, which
+   * reads as `'live'`.
+   */
+  feesAsOf?: 'live' | 'last-touch'
   /** Band and current price, token1 per token0, decimal-corrected. */
   priceLower: number | null
   priceUpper: number | null
@@ -1026,4 +1062,374 @@ export type LpPositionsResponse = {
   /** Managers that could not be read at all, and why. Data, not a throw. */
   errors: Array<{ manager: string; message: string }>
   ts: number
+}
+
+// ── DEX liquidity writes (`trading:orders`, actions `lp-*`) ──────────────────
+// The three signed transactions a v3-family position accepts, each its own
+// action for the same reason `lp-positions` is one: none of them is an order,
+// and `OrderParams` has no field that means "burn 25% of position #918273".
+//
+// Every action names the position by (manager, tokenId) and nothing else. The
+// manager the caller sends is UNTRUSTED and is checked against the connector's
+// pinned deployment table before anything is signed, because that address is
+// also the only spender an approval is ever granted to.
+
+export type LpWriteAction = 'lp-collect' | 'lp-decrease' | 'lp-increase'
+
+/**
+ * What a liquidity write did, or refused to do.
+ *
+ * `txHash` is present whenever a transaction reached the chain, INCLUDING a
+ * revert: a pane has to be able to link the failure to its receipt. So success
+ * is read from `success`, never from the presence of a hash.
+ */
+export type LpWriteResult = {
+  success: boolean
+  action: LpWriteAction
+  /** Pairlens market id of the chain the transaction was sent to. */
+  market: string
+  /** Position the action targeted, echoed so a stale card cannot mislabel it. */
+  tokenId: string
+  /** Position-manager transaction hash, or null when nothing was sent. */
+  txHash: string | null
+  /**
+   * ERC-20 approvals sent ahead of an increase, in order. Empty when the
+   * allowances were already sufficient; a pane shows them as prior steps.
+   */
+  approvals?: Array<string>
+  /** Verbatim refusal or revert reason. Present exactly when `success` is false. */
+  error?: string
+}
+
+// ── Economic calendar (`/api/economic-calendar`) ──────────────────────
+//
+// A forward US macro release schedule compiled on the App Server from the
+// agencies' own published calendars (BLS, BEA, the Fed, Census), not bought
+// from a data vendor. That origin sets what the shape can honestly carry:
+// titles, times and importance exist; consensus and actual prints do not,
+// because the agencies do not publish forecasts of themselves. The fields stay
+// optional rather than absent so a future paid provider can fill them without
+// a new shape.
+
+export type EconomicEventImportance = 'high' | 'medium' | 'low'
+
+export type EconomicCalendarEntry = {
+  /** Stable across sweeps: source + series + date, so a row updates in place. */
+  id: string
+  title: string
+  /** Publishing agency as commonly cited: 'BLS', 'BEA', 'Fed', 'Census'. */
+  source: string
+  /** Release date in US Eastern, ISO 'YYYY-MM-DD'. */
+  date: string
+  /**
+   * Exact release instant, epoch ms, when the agency states a clock time
+   * (BLS releases at 08:30 ET); null for day-level entries (FOMC minutes
+   * timing drifts). A pane groups by `date` and shows the clock only when
+   * this is present.
+   */
+  releaseMs: number | null
+  importance: EconomicEventImportance
+  /** ISO 3166-1 alpha-2. The compiler is US-only today. */
+  country: string
+  /** Values as the provider states them, units included ('0.2%', '228k'). */
+  actual?: string
+  consensus?: string
+  prior?: string
+}
+
+/** `/api/economic-calendar?days=14` */
+export type EconomicCalendarResponse = {
+  /** Ascending by date, then release time, then title. */
+  entries: Array<EconomicCalendarEntry>
+  /** Window covered, inclusive, ISO 'YYYY-MM-DD'. */
+  start: string
+  end: string
+  fetchedAt: string
+}
+
+/** Error body served with a 5xx when the calendar compiler has nothing. */
+export type EconomicCalendarUnavailableResponse = {
+  error: 'economic_calendar_unavailable'
+  /** 'upstream_error': every source failed AND no cached compile survives. */
+  reason: 'upstream_error'
+  fetchedAt: string
+}
+
+// ── Liquidation clusters (`market-data:liquidations`) ─────────────────
+//
+// Aggregated liquidation prints for one venue and pair, bucketed on both axes
+// so the wire carries a heatmap and not a tape: minute buckets in time, uniform
+// price buckets in price. The App Server's collector holds the venue's public
+// force-order stream and aggregates server-side; a terminal asking twice gets
+// identical history, which a client-side forward-only accumulation never gave.
+// Retention is deliberately bounded and stated in the response — the pane must
+// label the window it shows rather than imply an unlimited archive.
+
+export type LiquidationSide = 'long' | 'short'
+
+export type LiquidationBucket = {
+  /** Bucket start, epoch ms, aligned to `resolutionMs`. */
+  ts: number
+  /** Price bucket lower bound, in the pair's quote currency. */
+  price: number
+  /** Side that was liquidated: 'long' means forced selling. */
+  side: LiquidationSide
+  /** Liquidated notional summed over the bucket, in quote units. */
+  notionalUsd: number
+  count: number
+}
+
+export type LiquidationClustersResponse = {
+  venue: string
+  /** Futures pair key, 'BASE-QUOTE-SETTLE'. */
+  pairKey: string
+  /** Uniform width of every price bucket in this response. */
+  bucketWidth: number
+  /** Time resolution buckets are stored at, ms. */
+  resolutionMs: number
+  /** How far back the collector keeps history, ms. */
+  retentionMs: number
+  /** When the collector began tracking this pair — history before this cannot exist. */
+  trackedSince: number
+  buckets: Array<LiquidationBucket>
+  fetchedAt: string
+}
+
+export type LiquidationsUnavailableReason =
+  | 'not_tracked' // the collector does not watch this venue or pair
+  | 'collecting' // watched, but too young to draw
+
+export type LiquidationsUnavailableResponse = {
+  error: 'liquidations_unavailable'
+  reason: LiquidationsUnavailableReason
+  /** For 'collecting': when tracking began. */
+  trackedSince?: number
+  fetchedAt: string
+}
+
+// ── IPO calendar (`/api/ipo-calendar`) ────────────────────────────────
+
+export type IpoCalendarEntry = {
+  symbol: string
+  name: string
+  /** Expected listing date, ISO 'YYYY-MM-DD'; ranges are day-level only. */
+  date: string
+  exchange: string | null
+  priceRangeLow: number | null
+  priceRangeHigh: number | null
+  currency: string | null
+}
+
+/** `/api/ipo-calendar` — upcoming window as the provider publishes it. */
+export type IpoCalendarResponse = {
+  /** Ascending by date, then symbol. */
+  entries: Array<IpoCalendarEntry>
+  fetchedAt: string
+}
+
+// ── Insider transactions (`/api/insider-transactions?symbol=`) ────────
+
+export type InsiderTransactionType = 'acquisition' | 'disposal'
+
+export type InsiderTransaction = {
+  /** Insider's name as filed. */
+  name: string
+  /** Reported role ('Chief Executive Officer', 'Director'); null when unfiled. */
+  title: string | null
+  type: InsiderTransactionType
+  /** Transaction date, ISO 'YYYY-MM-DD'. */
+  date: string
+  shares: number | null
+  /** Per-share price as filed; null on grants and other zero-price filings. */
+  sharePrice: number | null
+  /** Security type as filed ('Common Stock', 'Stock Option'). */
+  security: string | null
+}
+
+/** Both IPO and insider endpoints fail with the fundamentals taxonomy. */
+export type InsiderTransactionsResponse = {
+  symbol: string
+  /** Newest first, as filed. */
+  transactions: Array<InsiderTransaction>
+  fetchedAt: string
+}
+
+// ── New listings (`/api/new-listings`) ────────────────────────────────
+//
+// CEX listings the instruments-index sweeper saw appear AFTER its baseline
+// snapshot. First-seen is a fact about our sweeper, not the venue's listing
+// announcement — which is why entries carry `firstSeenAt` and the response
+// carries `trackingSince`: on day one everything is technically "first seen",
+// and the baseline exclusion plus that timestamp is what keeps the terminal
+// from presenting the whole market as newly listed.
+
+export type NewListingEntry = {
+  venue: string
+  pairKey: string
+  base: string
+  quote: string
+  /** When the sweeper first saw the venue list this pair, epoch ms. */
+  firstSeenAt: number
+}
+
+export type NewListingsResponse = {
+  /** Newest first. */
+  entries: Array<NewListingEntry>
+  /** When baseline stamping began — nothing older can appear here. */
+  trackingSince: number
+  fetchedAt: string
+}
+
+// ── Cross-chain bridge (`market-data:bridge`, `trading:bridge`) ─────────
+//
+// What a bridge aggregator answers, and what a send looks like while it is
+// still in the air. Served by the LI.FI connector, read by the route-bridge and
+// in-flight panes. Public data on the read side: a quote needs an address to
+// build calldata for, and an address is not a credential.
+//
+// Three rules the shapes encode.
+//
+// Fees are split. `feeUsd` is what the bridge takes out of the amount and
+// `gasUsd` is what the source chain charges to send it: different money pays
+// them, and summing them into one figure hides which half a user can do
+// anything about.
+//
+// `amountOutMin` travels with `amountOut`. The estimate is what usually lands,
+// the floor is what the route guarantees, and execution is checked against the
+// floor — so a surface showing only the estimate would be quoting a number
+// nobody promised.
+//
+// A route the aggregator cannot serve comes back as a refusal, not as an empty
+// quote. "No route" and "this chain is not bridgeable from here" are different
+// sentences, and a null quote is neither of them.
+
+/** Params accepted by `market-data:bridge` and `trading:bridge` calls. */
+export type BridgeQuery =
+  | {
+      action: 'quote'
+      /** Source market id — a Pairlens DEX chain ('base', 'arbitrum', …). */
+      fromMarket: string
+      toMarket: string
+      /** Asset to move. A bridge moves one asset, not a pair. */
+      symbol: string
+      /**
+       * Amount in `symbol` units, as a decimal string: the connector scales to
+       * raw token units with integer math, and a float would lose the tail of
+       * an 18-decimal size.
+       */
+      amount: string
+      /** Sender and recipient. One EVM key holds the same address on every chain. */
+      address?: string
+    }
+  | { action: 'status'; txHash: string }
+  | {
+      action: 'execute'
+      fromMarket: string
+      toMarket: string
+      symbol: string
+      amount: string
+      /** Wallet slot to sign with. Unknown ids fail closed, never fall back. */
+      walletId?: string
+      /**
+       * The floor the user accepted, in destination-token units. Execution
+       * re-quotes (calldata is never carried through the UI) and refuses when
+       * the fresh route's own floor has fallen below this by more than
+       * `maxSlippageBps` — otherwise "confirm" would authorise a worse transfer
+       * than the one on screen.
+       */
+      acceptedAmountOutMin: number
+      /** Tolerance for the re-quote check. Defaults to 50 bps. */
+      maxSlippageBps?: number
+    }
+
+/** One bridge route, priced. Nulls are "not published", never zero. */
+export type BridgeQuote = {
+  fromMarket: string
+  toMarket: string
+  /** Asset symbol being moved, as the source chain names it. */
+  symbol: string
+  /** Ticker that lands. Same ticker, different contract, on the far side. */
+  toSymbol: string
+  amount: number
+  /** What the route expects to deliver, destination-token units. */
+  amountOut: number | null
+  /** The floor the route guarantees. */
+  amountOutMin: number | null
+  /** Bridge fees in USD. Excludes source gas. */
+  feeUsd: number | null
+  /**
+   * True when those fees are already deducted from `amountOut` — LI.FI's own
+   * fixed fee is. A pane that added them again would double-count.
+   */
+  feeIncluded: boolean
+  /** Source-chain gas for the send, in USD. */
+  gasUsd: number | null
+  /** The provider's own estimate of time to land, in seconds. */
+  etaSeconds: number | null
+  /** The bridge that would carry it: 'across', 'eco', 'layerswap'. */
+  tool: string
+  /** The aggregator that produced the quote. */
+  provider: string
+  /** When the aggregator answered, epoch ms. Staleness is the caller's call. */
+  quotedAt: number
+}
+
+/** Why a route cannot be quoted. Each one is a different sentence to a user. */
+export type BridgeRefusalReason =
+  /** One side is not an EVM chain (Solana today). */
+  | 'non-evm-chain'
+  /** Source and destination are the same chain — that is a swap, not a bridge. */
+  | 'same-chain'
+  /** The market id is not a chain this connector knows. */
+  | 'unknown-market'
+  /** The asset does not resolve to a contract on one of the two chains. */
+  | 'unknown-token'
+  /** Both sides resolve, and the aggregator still has no route for the size. */
+  | 'no-route'
+
+export type BridgeRouteRefused = {
+  refused: true
+  reason: BridgeRefusalReason
+  /** The market at fault, when one of the two is. */
+  market: string | null
+  /** The asset at fault, when it is the asset. */
+  symbol: string | null
+}
+
+export type BridgeQuoteResponse = BridgeQuote | BridgeRouteRefused
+
+/**
+ * Where a transfer is. Three states, because that is what a bridge publishes:
+ * block counts are not part of a bridge's status response, so a surface that
+ * wants a progress bar does not get one from here.
+ */
+export type BridgeTransferStatus = 'pending' | 'confirmed' | 'failed'
+
+export type BridgeStatusUpdate = {
+  status: BridgeTransferStatus
+  /** Provider substatus verbatim ('WAIT_DESTINATION_TRANSACTION'), or null. */
+  substatus: string | null
+  /** The provider's own sentence for that substatus. */
+  substatusMessage: string | null
+  sourceTxHash: string | null
+  destinationTxHash: string | null
+  /** What landed, destination-token units, once the provider reports it. */
+  amountOut: number | null
+  /** The provider's page for the transfer, for a "track it" link. */
+  explorerUrl: string | null
+  /**
+   * False when the aggregator has not indexed the send yet. Still PENDING, not
+   * lost: a fresh send is routinely unknown to the status endpoint for a block
+   * or two, and reading that as failure would report a live transfer as dead.
+   */
+  found: boolean
+}
+
+export type BridgeExecutionResult = {
+  success: boolean
+  /** Source-chain transaction hash. Present exactly when `success`. */
+  sourceTxHash?: string
+  /** The route the send actually took, re-quoted at signing time. */
+  quote?: BridgeQuote
+  error?: string
 }

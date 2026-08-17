@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 12 min read
+readTime: 13 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -106,6 +106,33 @@ is dropped rather than shown as closed.
 
 The category rail narrows all three at once, and it counts from the unfiltered
 result, so picking a category never shrinks the rail that did the narrowing.
+
+## Sorting the board
+
+The Event Board offers five orderings, and every one of them is derivable from
+what the venues actually publish: **Trending**, which is the venue's own ranking
+untouched, **New**, **Ending soon**, **Volume**, and **Biggest move**.
+
+**New** deserves its own note, because a prediction event is not born once.
+"Fed decision in December" opens with three strikes and grows to a dozen as the
+range moves, and a nomination race gains a runner whenever someone declares. So
+New ranks on the newest market in the event rather than the event's own birthday,
+which is the difference between surfacing a race that gained four runners this
+morning and burying it under a binary that opened yesterday and never changed
+again. Under that sort each card carries a **Listed 4h ago** line, so the reading
+that produced the ordering is on the card.
+
+The **Events** browser gets the same orderings one short: **Venue order**,
+**New**, **Ending soon** and **Volume**. Biggest move is missing there on
+purpose, because the browser's cards show no move anywhere, and a sort whose
+result the surface cannot explain reads as a shuffle. Venue order and Trending
+are the same behaviour under two names: the board calls it trending because that
+is what the venues rank by, the browser calls it the venue's order because it
+lists per venue.
+
+Rows a sort cannot rank go to the end rather than to the top, always. An event
+with no volume figure is not the quietest event on the board, it is an event
+nobody measured.
 
 The **Events** panel also sits on the default prediction layout, beside the
 chart; on a custom workspace, add it from the Add Pane dialog, under Discovery. It

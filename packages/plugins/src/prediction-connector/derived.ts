@@ -1,15 +1,17 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The two facts the events projection has to DERIVE rather than copy: how far
- * a probability moved in a day, and what the venue says decides the question.
+ * The three facts the events projection has to DERIVE rather than copy: how far
+ * a probability moved in a day, when the venue listed the market, and what the
+ * venue says decides the question.
  *
- * Neither is a unified ccxt field. `parsePredictionTicker` explicitly sets
+ * None is a unified ccxt field. `parsePredictionTicker` explicitly sets
  * `change` and `percentage` to undefined on both venues even where the raw
- * payload carries the previous price, so the only place the move exists is the
+ * payload carries the previous price, and `parseMarket` hardcodes
+ * `created: undefined` on both, so the only place either fact exists is the
  * market's `info` blob — which is exactly what `toMarketSummary` already has
  * in hand. Deriving it there, once, is what lets a discovery pane rank by "who
- * moved" without a second request per row.
+ * moved" or "what just listed" without a second request per row.
  *
  * Kept pure and venue-agnostic on purpose: the branch is on which FIELD is
  * present, not on which venue is calling, so a third prediction connector that
@@ -84,6 +86,39 @@ export function outcomeChange24h(
   return signed === 0 ? 0 : signed
 }
 
+/**
+ * When the venue listed the market, in ms, or undefined when it says nothing.
+ *
+ * Three shapes, checked in order:
+ *
+ *  - `createdAt` — Polymarket's gamma market states its own creation instant.
+ *  - `open_time` — Kalshi states when the market opened for trading, which is
+ *    the moment it became something a user could find. Deliberately NOT
+ *    `created_time`: that is the row's internal birthday, it can precede the
+ *    listing by days on a provisional market, and Kalshi zero-fills it to
+ *    `0001-01-01T00:00:00Z` on markets it has not opened.
+ *  - `startDate` — Polymarket's fallback, for a gamma payload that carries the
+ *    trading window but no creation instant.
+ *
+ * Refuses anything at or before the epoch rather than passing it on. A
+ * zero-filled timestamp is a venue saying nothing, and a market carrying one
+ * would render as listed in 1970 and rank as the oldest thing on the board —
+ * the same defect as the zero-filled previous price above, one field over.
+ *
+ * A bare number is refused too: both venues publish ISO-8601, and a naked
+ * epoch is ambiguous between seconds and milliseconds. Guessing wrong there
+ * dates a market to 1970 as confidently as the zero-fill does.
+ */
+export function marketCreatedMs(
+  info: Record<string, unknown>,
+): number | undefined {
+  return (
+    isoMs(info['createdAt']) ??
+    isoMs(info['open_time']) ??
+    isoMs(info['startDate'])
+  )
+}
+
 /** Longest secondary clause worth appending; beyond it the header truncates. */
 const MAX_RULES_CHARS = 4000
 
@@ -121,4 +156,11 @@ function num(value: unknown): number | undefined {
 
 function str(value: unknown): string {
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function isoMs(value: unknown): number | undefined {
+  const text = str(value)
+  if (text === '') return undefined
+  const parsed = Date.parse(text)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined
 }

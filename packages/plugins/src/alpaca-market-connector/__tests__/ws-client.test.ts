@@ -6,7 +6,7 @@ import type {
   WsAdapterEvents,
   WsConnection,
 } from '@pairlens/market-engine/ws-adapter'
-import type { CandleUpdate } from '@pairlens/market-engine/types'
+import type { CandleUpdate, TickerUpdate } from '@pairlens/market-engine/types'
 
 // Alpaca's stream rejects any subscribe sent before the auth handshake
 // completes (error 401/404), so the client must queue channel changes until
@@ -478,6 +478,138 @@ describe('AlpacaWsClient — pairs the venue cannot serve', () => {
     unsubTicker()
     unsubBook()
     unsubCandles()
+    client.destroy()
+  })
+})
+
+/**
+ * Halts ride the `statuses` channel, which is the only place the venue says a
+ * stock has stopped trading. Two things must hold: the channel is subscribed
+ * for ticker subscribers (a Level 1 pane cannot draw a halt row off a quote),
+ * and the status survives the 30-second REST snapshot refresh that replaces
+ * the ticker payload wholesale.
+ */
+describe('AlpacaWsClient — trading statuses', () => {
+  const stubSnapshot = () => {
+    globalThis.fetch = mock(
+      async () =>
+        new Response(
+          JSON.stringify({
+            AAPL: {
+              latestTrade: { p: 190, t: '2026-06-30T14:00:00Z' },
+              latestQuote: { bp: 189, bs: 1, ap: 191, as: 1 },
+              dailyBar: { h: 195, l: 185, v: 1000, c: 190 },
+              prevDailyBar: { c: 188 },
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch
+  }
+
+  it('subscribes statuses alongside the ticker channels', async () => {
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    stubSnapshot()
+
+    const unsub = client.subscribeTicker('AAPL-USD', () => {})
+    await tick(5)
+    authenticate(state)
+    await tick(5)
+
+    const subscribe = state.sent.find((m) => m['action'] === 'subscribe')!
+    expect(subscribe['statuses']).toEqual(['AAPL'])
+
+    unsub()
+    await tick(5)
+    const unsubscribe = state.sent.find((m) => m['action'] === 'unsubscribe')!
+    expect(unsubscribe['statuses']).toEqual(['AAPL'])
+
+    client.destroy()
+  })
+
+  it('never opens the channel for candles or books alone', async () => {
+    // Nothing downstream of a candle or book stream can carry a status, so
+    // paying for the frames there would buy nothing.
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    stubBarsFetch([])
+
+    const unsubCandles = client.subscribeCandles('AAPL-USD', '15m', () => {})
+    const unsubBook = client.subscribeOrderbook('AAPL-USD', () => {})
+    await tick(5)
+    authenticate(state)
+    await tick(5)
+
+    for (const frame of state.sent.filter((m) => m['action'] === 'subscribe')) {
+      expect(frame['statuses']).toBeUndefined()
+    }
+
+    unsubCandles()
+    unsubBook()
+    client.destroy()
+  })
+
+  it('attaches the halt to the ticker and keeps it across a refresh', async () => {
+    const { state, connectFn } = fakeTransport()
+    const client = new AlpacaWsClient(getCreds, connectFn)
+    stubSnapshot()
+
+    const updates: Array<TickerUpdate> = []
+    const unsub = client.subscribeTicker('AAPL-USD', (u) => {
+      if (u.type === 'ticker') updates.push(u)
+    })
+    await tick(5)
+    authenticate(state)
+    await tick(5)
+
+    // Before the venue says anything, the payload carries no status: absence
+    // is unknown, and must never read as "not halted".
+    expect(updates.at(-1)!.ticker.tradingStatus).toBeUndefined()
+
+    state.events!.onMessage(
+      JSON.stringify([
+        {
+          T: 's',
+          S: 'AAPL',
+          sc: 'H',
+          sm: 'Trading Halt',
+          rm: 'News Pending',
+          t: '2026-08-17T14:32:00Z',
+        },
+      ]),
+    )
+    await tick(5)
+
+    expect(updates.at(-1)!.ticker.tradingStatus).toEqual({
+      state: 'halted',
+      reason: 'News Pending',
+      sinceMs: Date.parse('2026-08-17T14:32:00Z'),
+    })
+
+    // A later trade rebuilds the snapshot; the halt must ride along rather
+    // than blinking off until the next status message (which may be hours).
+    state.events!.onMessage(
+      JSON.stringify([{ T: 't', S: 'AAPL', p: 200, t: 2 }]),
+    )
+    await tick(5)
+    expect(updates.at(-1)!.ticker.last).toBe(200)
+    expect(updates.at(-1)!.ticker.tradingStatus?.state).toBe('halted')
+
+    // And a resumption replaces it rather than accumulating.
+    state.events!.onMessage(
+      JSON.stringify([
+        { T: 's', S: 'AAPL', sc: 'T', sm: 'Trading Resumption' },
+      ]),
+    )
+    await tick(5)
+    expect(updates.at(-1)!.ticker.tradingStatus).toEqual({
+      state: 'active',
+      reason: 'Trading Resumption',
+      sinceMs: null,
+    })
+
+    unsub()
     client.destroy()
   })
 })

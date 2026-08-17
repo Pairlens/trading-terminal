@@ -32,12 +32,19 @@ import type {
 /** Ranking windows the snapshot can serve. */
 export type MoverWindow = '1h' | '24h' | '7d'
 
+/**
+ * `newListings` is in this union but not in `rankMovers`, and deliberately so:
+ * a top-coins snapshot carries no listing date, so there is nothing here to
+ * rank by. That tab renders its own merged feed (`lib/new-listings.ts`) from
+ * the App Server's first-seen stamps and the on-chain new-pools listing.
+ */
 export type MoverTab =
   | 'gainers'
   | 'losers'
   | 'volume'
   | 'volatility'
   | 'unusual'
+  | 'newListings'
 
 export type MoverRow = {
   /** Base symbol for a crypto row ('TAO'), bare ticker for a stock ('AAPL'). */
@@ -181,6 +188,12 @@ export function rankMovers(
                 return { coin, score: t === null ? 0 : t / median }
               })
               .filter((e) => e.score > 0)
+      break
+    case 'newListings':
+      // Not rankable from this snapshot: see the note on MoverTab. Answering
+      // with the top gainers would be a plausible-looking wrong table, which
+      // is the one thing this module refuses to do.
+      scored = []
       break
   }
 

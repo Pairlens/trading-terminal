@@ -15,13 +15,15 @@
  * serve rather than showing tabs that would always be empty. Everywhere else —
  * the spot board, a custom workspace, a pair route — it ranks crypto.
  *
- * It opens nothing. Rows come from snapshots other panes already fetch, and
- * the trend lines are viewport-gated, so scrolling the table is the only thing
- * that ever costs a request.
+ * It opens nothing for the ranked tabs: rows come from snapshots other panes
+ * already fetch, and the trend lines are viewport-gated, so scrolling the table
+ * is the only thing that ever costs a request. The one exception is the
+ * listings tab, which has no snapshot to read and fetches its own two sources
+ * — and only while it is the tab on screen.
  */
 import { memo, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
-import { TrendingUp } from 'lucide-react'
+import { Sparkles, TrendingUp } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -43,6 +45,8 @@ import {
 
 import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
 import type { MoverRow, MoverTab, MoverWindow } from '@/lib/spot-movers'
+import type { NewListingsFeed } from '@/hooks/use-new-listings'
+import type { NewListingRow } from '@/lib/new-listings'
 import {
   EQUITY_MOVER_TABS,
   UNUSUAL_TURNOVER,
@@ -70,6 +74,11 @@ import { TickArrow } from '@/components/tick-arrow'
 import { entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
+import { formatRelativeTime } from '@/lib/format-time'
+import { dexChain } from '@/lib/dex/chain-catalog'
+import { poolChartTarget } from '@/lib/dex/pool-link'
+import { useNewListings } from '@/hooks/use-new-listings'
+import { track } from '@/lib/analytics-events'
 
 const CRYPTO_TABS: ReadonlyArray<MoverTab> = [
   'gainers',
@@ -77,6 +86,7 @@ const CRYPTO_TABS: ReadonlyArray<MoverTab> = [
   'volume',
   'volatility',
   'unusual',
+  'newListings',
 ]
 
 const WINDOWS: ReadonlyArray<MoverWindow> = ['1h', '24h', '7d']
@@ -84,12 +94,21 @@ const WINDOWS: ReadonlyArray<MoverWindow> = ['1h', '24h', '7d']
 /** Rows to rank. Past this the tab is a screener, and the scanner is one pane over. */
 const ROW_LIMIT = 50
 
+/** What an unpublished figure renders as, matching the other panes. */
+const DASH = '—'
+
 // Rank, pair, change, price, volume, trend. Columns join as the pane widens:
 // the change percentage is the point, price is the next thing anyone checks,
 // and volume and the trend line are the two that need real width to say
 // anything.
 const MOVERS_GRID =
   'grid grid-cols-[1.25rem_minmax(0,1fr)_4.75rem] items-center gap-x-2.5 @min-[24rem]/pane:grid-cols-[1.25rem_minmax(0,1fr)_7rem_5rem] @min-[33rem]/pane:grid-cols-[1.25rem_minmax(0,1fr)_7.5rem_5.25rem_6.5rem] @min-[41rem]/pane:grid-cols-[1.25rem_minmax(0,1fr)_7.5rem_5.25rem_6.5rem_4.5rem]'
+
+// Listed-ago first: on this tab the age IS the ranking, so it reads before the
+// name rather than trailing it. Venue, price and liquidity join as the pane
+// widens, in the order somebody vetting a fresh listing asks for them.
+const LISTINGS_GRID =
+  'grid grid-cols-[3.25rem_minmax(0,1fr)] items-center gap-x-2.5 @min-[24rem]/pane:grid-cols-[3.25rem_minmax(0,1fr)_5.5rem] @min-[33rem]/pane:grid-cols-[3.25rem_minmax(0,1fr)_5.5rem_5.25rem] @min-[41rem]/pane:grid-cols-[3.25rem_minmax(0,1fr)_5.5rem_5.25rem_5.5rem]'
 
 export function MoversPane() {
   const section = useDiscoverySection()
@@ -99,7 +118,6 @@ export function MoversPane() {
 // ── Crypto ──────────────────────────────────────────────────────────
 
 function CryptoMovers() {
-  const { t } = useTranslation()
   const coins = useTopCoinsSnapshot()
   const state = useTopCoinsSnapshotState()
   const membership = useSectorMembership()
@@ -116,16 +134,6 @@ function CryptoMovers() {
     [coins, tab, window],
   )
 
-  if (state === 'unavailable') {
-    return (
-      <PaneEmpty
-        icon={TrendingUp}
-        title={t('movers.emptyTitle')}
-        body={t('movers.emptyBody')}
-      />
-    )
-  }
-
   return (
     <MoversTable
       tabs={CRYPTO_TABS}
@@ -135,6 +143,10 @@ function CryptoMovers() {
       onWindowChange={setWindow}
       rows={rows}
       loading={state === 'loading'}
+      // Reported rather than returned early: the listings tab has its own two
+      // sources, so a refused top-coins snapshot must not take the tab strip
+      // down with it.
+      snapshotUnavailable={state === 'unavailable'}
       market={market}
       assetClass="crypto"
       quote="USDT"
@@ -224,6 +236,7 @@ function MoversTable({
   onWindowChange,
   rows,
   loading,
+  snapshotUnavailable = false,
   market,
   assetClass,
   quote,
@@ -237,6 +250,8 @@ function MoversTable({
   onWindowChange?: (window: MoverWindow) => void
   rows: Array<MoverRow>
   loading: boolean
+  /** The ranking source refused. Only the ranked tabs are affected. */
+  snapshotUnavailable?: boolean
   market: string
   assetClass: string
   /** Quote leg for crypto rows; equities are bare tickers. */
@@ -244,6 +259,9 @@ function MoversTable({
   categoryOf: (symbol: string) => string | null
 }) {
   const { t } = useTranslation()
+  // Its own sources, its own columns, its own empty state. Everything below
+  // that reads a MoverRow is skipped for it.
+  const listings = tab === 'newListings'
 
   return (
     // One panel, always the active tab: the table below is what every tab
@@ -252,7 +270,10 @@ function MoversTable({
     // table to the tab strip for a screen reader.
     <Tabs
       value={tab}
-      onValueChange={(value) => onTabChange(value as MoverTab)}
+      onValueChange={(value) => {
+        track('movers_tab_selected', { tab: value })
+        onTabChange(value as MoverTab)
+      }}
       className="flex h-full flex-col gap-0 overflow-hidden"
     >
       <div className="flex items-center gap-2 border-b px-3">
@@ -264,7 +285,7 @@ function MoversTable({
           ))}
         </TabsList>
         <div className="flex-1" />
-        {onWindowChange && (
+        {onWindowChange && !listings && (
           <ToggleGroup
             aria-label={t('movers.window')}
             multiple={false}
@@ -293,39 +314,68 @@ function MoversTable({
       </div>
 
       {/* Column header */}
-      <div
-        className={cn(
-          'border-b border-border/50 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-          MOVERS_GRID,
-        )}
-      >
-        <span>#</span>
-        <span className="truncate">{t('movers.columns.pair')}</span>
-        <span className="truncate">
-          {t('movers.columns.change', { window })}
-        </span>
-        <span className="hidden text-right @min-[24rem]/pane:inline">
-          {t('movers.columns.price')}
-        </span>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <span className="hidden truncate text-right @min-[33rem]/pane:inline" />
-            }
-          >
-            {t('movers.columns.volume')}
-          </TooltipTrigger>
-          <TooltipContent className="max-w-64">
-            {t('movers.turnoverTooltip')}
-          </TooltipContent>
-        </Tooltip>
-        <span className="hidden text-right @min-[41rem]/pane:inline">
-          {t('movers.columns.trend')}
-        </span>
-      </div>
+      {listings ? (
+        <div
+          className={cn(
+            'border-b border-border/50 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
+            LISTINGS_GRID,
+          )}
+        >
+          <span className="truncate">{t('movers.columns.listed')}</span>
+          <span className="truncate">{t('movers.columns.asset')}</span>
+          <span className="hidden truncate @min-[24rem]/pane:inline">
+            {t('movers.columns.venue')}
+          </span>
+          <span className="hidden text-right @min-[33rem]/pane:inline">
+            {t('movers.columns.price')}
+          </span>
+          <span className="hidden text-right @min-[41rem]/pane:inline">
+            {t('movers.columns.liquidity')}
+          </span>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            'border-b border-border/50 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
+            MOVERS_GRID,
+          )}
+        >
+          <span>#</span>
+          <span className="truncate">{t('movers.columns.pair')}</span>
+          <span className="truncate">
+            {t('movers.columns.change', { window })}
+          </span>
+          <span className="hidden text-right @min-[24rem]/pane:inline">
+            {t('movers.columns.price')}
+          </span>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <span className="hidden truncate text-right @min-[33rem]/pane:inline" />
+              }
+            >
+              {t('movers.columns.volume')}
+            </TooltipTrigger>
+            <TooltipContent className="max-w-64">
+              {t('movers.turnoverTooltip')}
+            </TooltipContent>
+          </Tooltip>
+          <span className="hidden text-right @min-[41rem]/pane:inline">
+            {t('movers.columns.trend')}
+          </span>
+        </div>
+      )}
 
       <TabsContent value={tab} className="min-h-0 flex-1 overflow-y-auto">
-        {loading ? (
+        {listings ? (
+          <NewListingsTab />
+        ) : snapshotUnavailable ? (
+          <PaneEmpty
+            icon={TrendingUp}
+            title={t('movers.emptyTitle')}
+            body={t('movers.emptyBody')}
+          />
+        ) : loading ? (
           <MoversSkeleton />
         ) : rows.length === 0 ? (
           <p className="px-3 py-8 text-center text-xs text-muted-foreground">
@@ -480,5 +530,209 @@ const MoverTableRow = memo(function MoverTableRow({
         <MiniPriceChart market={market} pair={symbol} className="h-5 w-full" />
       </span>
     </Link>
+  )
+})
+
+// ── New listings ────────────────────────────────────────────────────
+
+/**
+ * What started trading recently, from two sources with different guarantees.
+ *
+ * A venue row is our own sweeper's first sighting, so it is accurate to the
+ * hourly sweep and never predates the day tracking began — which is what the
+ * footer states rather than leaving the reader to assume we have watched
+ * forever. A pool row is the chain's own creation time, exact, and filtered by
+ * a liquidity floor because a new-pools feed is mostly deployments.
+ *
+ * Either half can be missing. A build with no App Server has no venue rows and
+ * says so in one line; a throttled provider drops the pools. Only both refusing
+ * is empty.
+ */
+function NewListingsTab() {
+  const { t } = useTranslation()
+  const feed = useNewListings()
+  const coins = useTopCoinsSnapshot()
+  const { markets } = useAvailableMarkets()
+
+  // Venue id → label, for the venue column, and the set that can be opened:
+  // a listing on a connector nobody installed is still worth reading and is
+  // not worth a click that lands on a dead chart.
+  const venues = useMemo(
+    () => new Map(markets.map((m) => [m.value, m.label])),
+    [markets],
+  )
+
+  if (feed.isLoading) return <MoversSkeleton />
+
+  if (feed.rows.length === 0) {
+    return (
+      <PaneEmpty
+        icon={Sparkles}
+        title={t('movers.newListings.emptyTitle')}
+        body={
+          feed.cexUnavailable && feed.dexError
+            ? t('movers.newListings.emptyBodyBothOff')
+            : t('movers.empty.newListings')
+        }
+      />
+    )
+  }
+
+  return (
+    <>
+      {feed.rows.map((row) => (
+        <NewListingTableRow
+          key={row.key}
+          row={row}
+          venueLabel={venues.get(row.market) ?? null}
+          logoUrl={
+            row.base
+              ? (coins.get(row.base.toUpperCase())?.logoUrl ?? null)
+              : null
+          }
+          priceUsd={
+            row.priceUsd ??
+            (row.base
+              ? (coins.get(row.base.toUpperCase())?.price ?? null)
+              : null)
+          }
+        />
+      ))}
+      <NewListingsFooter feed={feed} />
+    </>
+  )
+}
+
+/**
+ * What this list is and is not.
+ *
+ * Two claims, both stated only when true: how far back our own venue tracking
+ * goes, and that the venue half is missing entirely. Without the first, a short
+ * list reads as "nothing was listed"; without the second, a standalone build
+ * silently shows half a feed.
+ */
+function NewListingsFooter({ feed }: { feed: NewListingsFeed }) {
+  const { t } = useTranslation()
+  if (!feed.cexUnavailable && feed.trackingSince === null) return null
+
+  return (
+    <p className="px-3 py-2.5 text-[10px] leading-relaxed text-muted-foreground">
+      {feed.cexUnavailable
+        ? t('movers.newListings.cexOff')
+        : t('movers.newListings.trackingSince', {
+            date: formatTrackingSince(feed.trackingSince),
+          })}
+    </p>
+  )
+}
+
+function formatTrackingSince(when: number | null): string {
+  if (when === null) return ''
+  return new Date(when).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: undefined,
+  })
+}
+
+const NewListingTableRow = memo(function NewListingTableRow({
+  row,
+  venueLabel,
+  logoUrl,
+  priceUsd,
+}: {
+  row: NewListingRow
+  /** Null when no installed connector serves this venue — the row stays flat. */
+  venueLabel: string | null
+  logoUrl: string | null
+  priceUsd: number | null
+}) {
+  const { t } = useTranslation()
+
+  // A pool opens by ADDRESS (see pool-link.ts); a venue pair opens by symbol
+  // on the venue that listed it. A venue with no installed connector has no
+  // target at all, and the row renders without a link rather than pointing at
+  // a chart that cannot load.
+  const target =
+    row.kind === 'dex'
+      ? row.pool
+        ? poolChartTarget(row.pool, row.market)
+        : null
+      : venueLabel
+        ? chartLinkProps(
+            entryToMarketRef(
+              {
+                symbol: row.label,
+                assetClass: 'crypto',
+                quote: row.quote ?? undefined,
+              },
+              row.market,
+            ),
+          )
+        : null
+
+  const cells = (
+    <>
+      <span className="whitespace-nowrap font-mono text-[10.5px] tabular-nums text-muted-foreground">
+        {formatRelativeTime(row.listedAt)}
+      </span>
+
+      <span className="flex min-w-0 items-center gap-2">
+        <PairAvatar
+          base={row.base ?? row.label}
+          logoUrl={logoUrl}
+          assetClass={row.kind === 'dex' ? 'dex' : 'crypto'}
+          size="sm"
+          className="size-5 text-[9px]"
+        />
+        <span className="truncate whitespace-nowrap font-mono text-[12px] font-semibold">
+          {row.label}
+        </span>
+        <span
+          className={cn(
+            'shrink-0 rounded-sm px-1.5 py-px text-[10px] font-normal',
+            row.kind === 'dex'
+              ? 'bg-secondary text-muted-foreground'
+              : 'bg-primary/10 text-primary',
+          )}
+        >
+          {row.kind === 'dex'
+            ? t('movers.newListings.onChain')
+            : t('movers.newListings.venue')}
+        </span>
+      </span>
+
+      <span className="hidden truncate text-[11px] text-muted-foreground @min-[24rem]/pane:inline">
+        {row.kind === 'dex'
+          ? (dexChain(row.market)?.displayName ?? row.market)
+          : (venueLabel ?? row.market)}
+      </span>
+
+      <span className="hidden justify-end font-mono text-[11.5px] tabular-nums @min-[33rem]/pane:flex">
+        {priceUsd === null ? (
+          <span className="text-muted-foreground">{DASH}</span>
+        ) : (
+          formatPrice(priceUsd)
+        )}
+      </span>
+
+      <span className="hidden justify-end whitespace-nowrap font-mono text-[11px] tabular-nums text-muted-foreground @min-[41rem]/pane:flex">
+        {row.liquidityUsd === null ? DASH : formatCompactUsd(row.liquidityUsd)}
+      </span>
+    </>
+  )
+
+  const className = cn(
+    'px-3 py-1.5 text-xs transition-colors',
+    LISTINGS_GRID,
+    target && 'hover:bg-accent/40',
+  )
+
+  return target ? (
+    <Link {...target} className={className}>
+      {cells}
+    </Link>
+  ) : (
+    <div className={className}>{cells}</div>
   )
 })

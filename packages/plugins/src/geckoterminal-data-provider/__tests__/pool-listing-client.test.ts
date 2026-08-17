@@ -8,7 +8,9 @@ import { resetProviderThrottles } from '@pairlens/market-engine/provider-throttl
 import {
   aggregateChainStats,
   clearListingCache,
+  fetchNewPools,
   fetchTopPools,
+  parsePoolCreatedAt,
   parsePoolListing,
   stripNetworkPrefix,
 } from '../pool-listing-client'
@@ -66,6 +68,42 @@ describe('parsePoolListing', () => {
 
   it('skips a row with no address', () => {
     expect(parsePoolListing([{ attributes: { name: 'x' } }], 'eth')).toEqual([])
+  })
+
+  it('leaves createdAtMs absent on the ranked listing', () => {
+    // `/pools` publishes no creation time. An age column reading "now" for
+    // every row would be a fabricated one.
+    expect('createdAtMs' in parsePoolListing(ROWS, 'solana')[0]).toBe(false)
+  })
+
+  it('carries pool_created_at through as epoch ms', () => {
+    const pools = parsePoolListing(
+      [
+        {
+          id: 'solana_N',
+          attributes: {
+            address: 'N',
+            name: 'NEW / SOL',
+            pool_created_at: '2026-08-14T09:12:03Z',
+          },
+          relationships: { dex: { data: { id: 'raydium' } } },
+        },
+      ],
+      'solana',
+    )
+    expect(pools[0].createdAtMs).toBe(Date.parse('2026-08-14T09:12:03Z'))
+  })
+})
+
+describe('parsePoolCreatedAt', () => {
+  it('drops what it cannot read rather than guessing an age', () => {
+    expect(parsePoolCreatedAt('2026-08-14T09:12:03Z')).toBe(
+      Date.parse('2026-08-14T09:12:03Z'),
+    )
+    expect(parsePoolCreatedAt(null)).toBeUndefined()
+    expect(parsePoolCreatedAt(undefined)).toBeUndefined()
+    expect(parsePoolCreatedAt('')).toBeUndefined()
+    expect(parsePoolCreatedAt('yesterday')).toBeUndefined()
   })
 })
 
@@ -169,6 +207,31 @@ describe('fetchTopPools — one request per chain per minute', () => {
     await fetchTopPools('base')
     await fetchTopPools('solana', 2)
     expect(calls.length).toBe(3)
+  })
+
+  it('keeps the new-pools feed on its own cache key', async () => {
+    // Same chain, two different questions. A shared key would serve a ranked
+    // page as a listing feed, which is a silently wrong answer rather than a
+    // missing one.
+    const calls = stub(async (url) =>
+      page(url.includes('new_pools') ? 'fresh' : 'ranked'),
+    )
+    const ranked = await fetchTopPools('solana')
+    const fresh = await fetchNewPools('solana')
+    expect(calls.length).toBe(2)
+    expect(calls[1]).toContain('/networks/solana/new_pools')
+    expect(ranked[0].address).toBe('ranked')
+    expect(fresh[0].address).toBe('fresh')
+  })
+
+  it('collapses concurrent new-pools asks for the same chain', async () => {
+    const calls = stub(async () => page('fresh'))
+    const [a, b] = await Promise.all([
+      fetchNewPools('solana'),
+      fetchNewPools('solana'),
+    ])
+    expect(calls.length).toBe(1)
+    expect(b).toEqual(a)
   })
 
   it('never caches a throttle as an answer', async () => {

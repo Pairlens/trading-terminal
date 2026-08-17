@@ -411,6 +411,11 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.CompanyPane,
       })),
     ),
+    'insider-activity': lazyChunk(() =>
+      import('@/components/equities/insider-activity-pane').then((m) => ({
+        default: m.InsiderActivityPane,
+      })),
+    ),
     'your-position': lazyChunk(() =>
       import('@/components/equities/your-position-pane').then((m) => ({
         default: m.YourPositionPane,

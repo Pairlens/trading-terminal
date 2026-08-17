@@ -300,6 +300,24 @@ export interface AnalyticsEvents {
   panel_added: { pane_type: string }
   panel_removed: Record<string, never>
 
+  // ── DEX liquidity & bridging ──────────────────────────────────────
+  /** A cross-chain bridge transfer was submitted and signed. Chains and the
+   * routing tool name our product surface; amounts, assets and addresses are
+   * deliberately absent (the privacy rules above apply doubly to a
+   * money-moving event). Measures whether the bridge surface earns its keep. */
+  bridge_executed: { from_chain: string; to_chain: string; tool: string }
+  /** An LP position write was submitted from the manage-liquidity pane.
+   * Which verb people use decides where that pane's polish budget goes. */
+  lp_action_submitted: {
+    action: 'collect' | 'decrease' | 'increase'
+    chain: string
+  }
+
+  // ── Discovery ─────────────────────────────────────────────────────
+  /** Movers pane tab switch — answers whether the New listings tab (and the
+   * long-tail tabs) are found at all. The tab id names our surface. */
+  movers_tab_selected: { tab: string }
+
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }
   alert_triggered: { kind: string }

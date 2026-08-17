@@ -3,10 +3,13 @@
 /**
  * What the wallet's ranges have earned and not yet taken out.
  *
- * The claimable figure is exact and comes from the chain itself: a static
- * `collect` against the position manager, sent from the owner's address, which
- * returns what a real collect would pay this block. Both legs, per position,
- * plus the totals.
+ * The figure comes from the chain itself, and what "claimable" means depends on
+ * what the chain can be asked. On EVM chains it is exact: a static `collect`
+ * against the position manager, sent from the owner's address, returning what a
+ * real collect would pay this block. Solana's CLMMs offer no such simulation
+ * and settle fees into the position when it is next touched, so those rows
+ * carry `feesAsOf: 'last-touch'` and are labelled as the floor they are. Both
+ * legs, per position, plus the totals.
  *
  * What is NOT here, and why the footnote says so. Fees ALREADY collected leave
  * no trace in state, so there is no fees-to-date figure and therefore no fee
@@ -233,6 +236,13 @@ function FeeRow({
                 ? ''
                 : `${formatAmount(view.quoteFees)} ${view.quoteSymbol}`}
             </span>
+            {/* A floor, not a live claim: Solana's CLMMs only settle fees into
+                the position when it is next touched. */}
+            {entry.feesAsOf === 'last-touch' ? (
+              <span className="block text-[9.5px] font-normal text-muted-foreground">
+                {t('feeAccrual.lastTouch')}
+              </span>
+            ) : null}
           </>
         )}
       </td>

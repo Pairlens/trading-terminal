@@ -1,12 +1,12 @@
 ---
 title: DEX and wallets
-description: Swap on-chain from the same crypto trading terminal, on Solana via Jupiter and five EVM chains via KyberSwap, with pool stats and a quoted route in place of a fabricated order book, and your private key stored only on your device.
+description: Swap on-chain from the same crypto trading terminal, on Solana via Jupiter and five EVM chains via KyberSwap, bridge between chains through LI.FI, read and manage concentrated-liquidity positions, and keep your private key on your own device.
 group: traders
 parent: trading
 order: 5
 eyebrow: For traders
 updated: 17 AUG 2026
-readTime: 10 min read
+readTime: 14 min read
 ---
 
 On-chain markets work like any other market in Pairlens. Same chart, same
@@ -113,6 +113,10 @@ quoted only where that chain's own resolver finds a pool for the pair, and a
 chain where it does not is drawn dimmed and says so rather than being quietly
 dropped.
 
+The rest of that board is how you act on the ladder: **Bridge Route** and **In
+Flight** sit beside it, so the chain that wins on total value is one panel away
+from the transfer that gets you there.
+
 ## Placing a swap
 
 Select an on-chain pair and the ticket adjusts:
@@ -167,19 +171,30 @@ answers the chart or the pool map.
 ## LP positions
 
 **LP Position** and **Fee Accrual** read your concentrated-liquidity positions
-straight off the chain, on all five EVM chains. Connect an EVM wallet and the
-panels ask each chain's position manager what that address holds: Uniswap v3
-everywhere, plus PancakeSwap v3 on BNB Chain, where most of that chain's
-concentrated liquidity sits.
+straight off the chain, on all five EVM chains and on Solana. Connect a wallet
+and the panels ask each chain what that address holds: Uniswap v3 on every EVM
+chain, PancakeSwap v3 on BNB Chain where most of that chain's concentrated
+liquidity sits, and Orca Whirlpool plus Raydium CLMM on Solana.
 
 What you get per position is measured, not modelled. The band in prices rather
 than ticks, whether the pool is trading inside it, how much headroom is left
 before the upper bound, the two token amounts the liquidity currently stands for,
-the fee tier, and what a collect would pay you this block. The composition
-figures are computed from the pool's own `slot0` each refresh, so they are what a
-burn would return right now rather than what was deposited. Fees come from a
-static `collect` simulation sent from your address, which is the exact number the
-real call would pay.
+the fee tier, and what is owed in fees. The composition figures are computed from
+the pool's own state each refresh, so they are what a burn would return right now
+rather than what was deposited.
+
+**The fee figure means two different things, and the pane says which.** On EVM it
+is a static `collect` simulation sent from your address: the exact number the real
+call would pay this block. On Solana neither program offers that simulation, so
+the panes report the settled figure, the fees the position banked the last time it
+was touched, captioned _as of last pool touch_. That is a floor rather than a
+live number, and a floor labelled as one is useful in a way that the same number
+presented as live is not.
+
+Reading a Solana position is six batched RPC calls for a wallet of any size: the
+position NFTs, the program accounts derived from their mints, the pools behind
+them, and the token mints for decimals. A wallet holding no position NFTs stops
+after the first two.
 
 Only the address is involved. A position read is public chain state, so it works
 with a sealed vault and never asks for a key, and nothing on that path can sign.
@@ -192,22 +207,85 @@ tick, not its history), and **loss versus simply holding**, which needs the firs
 two. Each needs an indexer or a fee-growth snapshot diffed over time. An invented
 impermanent-loss figure is a number somebody closes a real position on.
 
-Solana is still pending: Orca and Raydium keep positions in program accounts
-rather than in an ERC-721, so it needs its own reader.
+## Managing a position
 
-## What is not here yet
+**Manage Liquidity** does the three things you can do to an EVM position without
+replacing it, on Uniswap v3 and PancakeSwap v3.
 
-**Manage Liquidity** is still a frame. Moving a range, adding or pulling
-liquidity and claiming fees are signed transactions against a position manager,
-and no connector builds one yet, so the panel renders no controls rather than a
-greyed-out editor that teaches you a feature exists and then does nothing. When
-it lands it goes through the same guarded order path an order does.
+**Collect** claims the fees the position has earned, both tokens, straight to
+your wallet.
 
-Bridging is the same story. **Bridge Route** and **In Flight** are frames: the
-DEX connectors route within one chain, KyberSwap across a chain's pools and
-Jupiter across Solana's, and nothing in the app quotes a cross-chain transfer
-or watches one confirm. What is answerable today is one panel away, in the
-chain ladder.
+**Remove** takes part of the range back. Pick 25%, 50%, 75% or 100%, or drag the
+slider to any whole percent. A removal is sent as one `multicall` pairing
+`decreaseLiquidity` with `collect`, so the burnt amounts and the fees land in the
+same transaction rather than sitting credited-but-unswept inside the position
+manager. That is also why removing a quarter still pays out all of the fees: the
+collect leg takes everything the position owes.
+
+**Add** puts more in, in the ratio the current price implies for that band.
+
+Every one of them is two steps. A section states what would happen, then a
+confirmation card restates exactly what will be signed: the action, the position,
+the chain, the manager contract, the amounts and the minimum those amounts may
+not fall below. Slippage is a chip on the card, 0.1%, 0.5%, 1% or 3%, and it is
+what sets that minimum. Nothing here submits from a single click, because nothing
+here is reversible.
+
+**There is no range editor, on purpose.** Moving a band is not an edit. It burns
+the position and mints a new one at new ticks, which is a different NFT, a
+different token id and a fresh set of approvals. Shipping that as a slider beside
+the other three would make an irreversible replacement look like an adjustment.
+Do it as a remove and a re-add and you can see both halves.
+
+Solana positions are read-only for now: Orca and Raydium build their instructions
+differently enough that the writer is its own piece of work.
+
+## Bridging
+
+**Bridge Route** and **In Flight** move one asset between the five EVM chains,
+quoted and routed through the LI.FI aggregator.
+
+**Bridge Route** takes a source chain, a target chain and a size, and answers
+with a live route: what lands, the guaranteed floor under it, the bridge's own
+fee, the source chain's gas, and which bridge would carry it. Fee and gas stay
+two figures because two different things go wrong with them, and the floor sits
+next to the estimate because the floor is the number a transfer executes against.
+
+The confirm step matters more here than anywhere else in the app. A bridge quote
+goes stale in about a minute and bridges re-price, so the pane freezes the terms
+it is asking about, restates them, and the connector re-quotes at signing time
+and refuses anything worse than what you confirmed. It signs with the EVM wallet
+you already connected, so there is no second connect step and no second copy of
+the key.
+
+**In Flight** tracks what is still crossing. A bridge send outlives the tab it
+was made in, so the rows come from a local transfer ledger and the poller keeps
+running against the aggregator until each transfer settles or fails. There is no
+progress bar, deliberately: LI.FI publishes a stage ("waiting for the destination
+transaction"), not a block count, and a bar drawn from that would advance
+smoothly on a transfer that is stuck. Each row states the stage, the elapsed time
+against the quoted estimate, and links both transactions so you can go and look.
+
+Solana legs are refused rather than quoted. A Solana transfer needs a Solana
+signer and a different transaction shape, so the route comes back as a typed
+refusal and the pane says so.
+
+## The Solana endpoint
+
+Every Solana surface, balances, swap sends, resting trigger orders and LP reads,
+goes through one endpoint, and that endpoint is a plugin rather than a constant.
+**Helius Solana RPC** ships in the box and answers the `rpc:solana` capability.
+
+Paste a free Helius key into the plugin's settings and every Solana read in the
+terminal follows it. Without a key it falls back to the public
+`api.mainnet-beta.solana.com` node and says so, which is a degraded mode rather
+than a refusal: a fresh install still reads a wallet. The public node sheds load
+with a bare 403 and no retry hint, which is why a Solana wallet occasionally read
+as empty before the key existed.
+
+Prefer your own validator or another provider? Install a plugin declaring
+`rpc:solana` at a lower priority number and every Solana read follows it, with no
+connector change.
 
 ## Guardrails still apply
 

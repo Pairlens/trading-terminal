@@ -4,7 +4,7 @@ description: Add venues, AI providers, panels, indicators, and themes from the P
 group: traders
 order: 9
 eyebrow: For traders
-updated: AUG 2026
+updated: 17 AUG 2026
 readTime: 7 min read
 ---
 
@@ -81,9 +81,9 @@ Uninstall those three and there is no prediction surface left anywhere in the
 app. The same pattern works for any class: **Crypto Futures** is Pairlens CEX
 Futures plus Binance, KuCoin and Kraken perpetuals; **Equities** is Alpaca plus
 Pairlens Equities, which ships the stock layouts; **On-Chain DEX** is the chain
-connectors plus the DEX data providers and Pairlens DEX, which ships the
-on-chain layouts. The Installed tab's family groups tell you exactly which
-plugins are in each one.
+connectors plus the LI.FI bridge, the Helius Solana RPC provider, the DEX data
+providers and Pairlens DEX, which ships the on-chain layouts. The Installed
+tab's family groups tell you exactly which plugins are in each one.
 
 If you only want them out of the way rather than gone, the family switch on the
 Installed tab disables every member in one click.
@@ -91,19 +91,19 @@ Installed tab disables every member in one click.
 ## Families
 
 Every plugin we ship belongs to a family, and the **Installed** tab groups them
-that way rather than listing forty entries alphabetically.
+that way rather than listing sixty-odd entries alphabetically.
 
-| Family                 | What is in it                                                              |
-| ---------------------- | -------------------------------------------------------------------------- |
-| **Core**               | The terminal itself: charts, order book, trade entry, workspaces           |
-| **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence                 |
-| **Crypto Exchanges**   | The 14 centralized spot venues                                             |
-| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk |
-| **On-Chain DEX**       | Swap venues, DEX data providers, and Pairlens DEX for the on-chain layouts |
-| **Equities**           | Alpaca, and Pairlens Equities for the stock layouts                        |
-| **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts               |
-| **AI Providers**       | Bring-your-own-key models and web search                                   |
-| **Themes**             | The eighteen bundled themes                                                |
+| Family                 | What is in it                                                                                                         |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Core**               | The terminal itself: charts, order book, trade entry, workspaces                                                      |
+| **Intelligence**       | Hosted AI, instrument discovery, news, market intelligence                                                            |
+| **Crypto Exchanges**   | The 14 centralized spot venues                                                                                        |
+| **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk                                            |
+| **On-Chain DEX**       | Swap venues, the LI.FI bridge, the Solana RPC provider, DEX data providers, and Pairlens DEX for the on-chain layouts |
+| **Equities**           | Alpaca, and Pairlens Equities for the stock layouts                                                                   |
+| **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts                                                          |
+| **AI Providers**       | Bring-your-own-key models and web search                                                                              |
+| **Themes**             | The eighteen bundled themes                                                                                           |
 
 Each group carries one switch that enables or disables everything inside it, so
 turning off an asset class you never trade is one click rather than fourteen.

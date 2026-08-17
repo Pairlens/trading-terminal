@@ -47,6 +47,7 @@ import {
   Terminal,
   Timer,
   TrendingUp,
+  UserRound,
   Vote,
   Wallet,
   Waves,
@@ -107,6 +108,7 @@ const PANE_ICONS: Record<string, LucideIcon> = {
   SlidersHorizontal,
   Tags,
   Timer,
+  UserRound,
   Waves,
   Waypoints,
 }

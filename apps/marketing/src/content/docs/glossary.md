@@ -29,6 +29,10 @@ trades. It cannot execute them unattended. See
 **Bot.** A Python strategy deployed to a market, evaluating on closed candles
 and acting on its own. Not an LLM. See [bots](/docs/bots).
 
+**Bridge.** Moving one asset from one chain to another. Pairlens quotes and
+tracks EVM-to-EVM transfers through the LI.FI aggregator, signed with the wallet
+you already connected. See [DEX and wallets](/docs/dex-trading#bridging).
+
 **Capability.** What a plugin declares it provides, such as
 `market-data:candles`, `trading:orders`, `ai:inference`, or `theme:override`.
 The resolver picks the best plugin for each requested capability at runtime.
@@ -145,6 +149,11 @@ the [Level 1 panel](/docs/equities) stands in for an order book with.
 **Leverage.** How much exposure you hold per unit of margin posted. It changes
 the margin a venue holds against a position, never the size of the position
 itself.
+
+**Liquidation cluster.** A price bucket holding real force-order prints from a
+venue, measured rather than modelled. Pairlens collects them for Binance
+Futures; other venues get the estimate marks instead, and the pane says which it
+is drawing. See [perpetual futures](/docs/cex-futures#reading-the-risk).
 
 **Liquidation price.** The price at which a leveraged position no longer has
 enough margin behind it and the venue closes it for you. Pairlens shows an

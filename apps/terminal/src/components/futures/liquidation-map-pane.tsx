@@ -1,37 +1,47 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Liquidation Map — where your size stops being yours.
+ * Liquidation Map — where size stops being anyone's.
  *
- * The honest version of a pane the reference design drew as a venue-wide
- * liquidation heatmap. **No exchange in the fleet publishes aggregate
- * liquidation clusters**, and the vendors that sell one are modelling it from
- * open interest and leverage assumptions rather than observing it. Drawing bars
- * that look like measured depth would be the most confident kind of wrong, so
- * this pane draws only two things it can stand behind:
+ * Three layers over one price axis, each with a different claim behind it:
  *
+ * - **Measured clusters**: what the venue actually liquidated in the selected
+ *   window, from the App Server's collector holding Binance Futures' public
+ *   force-order stream. These are prints, not a model. Vendors that sell a
+ *   liquidation heatmap usually infer one from open interest and assumed
+ *   leverage; this one is the tape of positions that were closed.
  * - **Your own liquidation prices**, straight from each venue's position
  *   payload, sized by the notional at risk.
  * - **Leverage reference marks**: where a position opened at the current price
- *   would liquidate at 5x, 10x and 25x, computed by the same estimator the
- *   ticket uses and labelled as an estimate.
+ *   would liquidate at 5x, 10x and 25x, from the same estimator the ticket
+ *   uses and labelled as an estimate.
  *
  * The caption says which is which, in the pane, not in a tooltip.
  *
- * Absolutely-positioned divs over a plain axis, deliberately: this is a
- * fifteen-marker static picture, and putting a WebGL chart context behind it
- * would cost a second GPU surface under the real chart.
+ * Time is a SELECTOR, not a second axis. The wire carries minute buckets, but
+ * this pane is a strip over price, so the minutes are summed per price bucket
+ * and the window becomes four chips. A real 2D time-by-price heatmap belongs
+ * over the chart, where there is already a time axis to hang it on.
+ *
+ * Absolutely-positioned divs over a plain axis, deliberately: this is a static
+ * picture of at most a few dozen markers, and putting a WebGL chart context
+ * behind it would cost a second GPU surface under the real chart.
  */
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Crosshair, Info } from 'lucide-react'
 import { usePanePair } from '@pairlens/plugin-sdk'
 
 import { cn } from '@pairlens/ui/lib/utils'
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@pairlens/ui/components/ui/toggle-group'
 import type { NormalizedPosition } from '@pairlens/market-engine/types'
+import type { LiquidationWindowHours } from '@/lib/futures/liquidation-clusters'
 
 import { PaneEmpty } from '@/components/panes/pane-primitives'
-import { formatChartPrice } from '@/lib/format-price'
+import { formatChartPrice, formatCompactUsd } from '@/lib/format-price'
 import {
   useOptionalCandleData,
   useOptionalTickerData,
@@ -43,12 +53,44 @@ import {
 } from '@/lib/futures/funding-math'
 import { estimateLiquidationPrice } from '@/lib/futures/ticket-math'
 import {
+  LIQUIDATION_WINDOWS,
+  aggregateByPrice,
+  clusterIntensity,
+  clusterPriceBounds,
+  dominantSide,
+  liquidationTotals,
+  peakNotional,
+} from '@/lib/futures/liquidation-clusters'
+import {
   useFuturesAccounts,
   useFuturesPositions,
 } from '@/hooks/use-futures-positions'
+import { useLiquidationClusters } from '@/hooks/use-liquidation-clusters'
 
 /** Leverage tiers the reference marks are drawn for. */
 const REFERENCE_LEVERAGE = [5, 10, 25] as const
+
+/**
+ * Alpha the densest cluster column is painted at. Low on purpose: the clusters
+ * are context behind the two things a trader acts on, and a wash that competed
+ * with the position bands would bury the number that is actually theirs.
+ */
+const MAX_CLUSTER_ALPHA = 0.42
+/** Narrowest a column may be drawn, in axis percent, so one print stays visible. */
+const MIN_CLUSTER_WIDTH_PCT = 0.5
+
+/**
+ * Chip labels as whole literals rather than a built key. `1h` is `1時間` in
+ * Japanese, so the chips are translated; and a key assembled from a variable is
+ * invisible to the i18n orphan audit, which is how a stale key survives a
+ * rename.
+ */
+const WINDOW_LABEL_KEYS: Record<LiquidationWindowHours, string> = {
+  1: 'liquidationMap.windows.h1',
+  6: 'liquidationMap.windows.h6',
+  24: 'liquidationMap.windows.h24',
+  72: 'liquidationMap.windows.h72',
+}
 
 type Band = {
   key: string
@@ -65,6 +107,7 @@ export function LiquidationMapPane() {
   const activePair = usePanePair()
   const accounts = useFuturesAccounts()
   const { data: results } = useFuturesPositions(accounts)
+  const [windowHours, setWindowHours] = useState<LiquidationWindowHours>(24)
 
   // The mark from the position payload where there is one, otherwise the pair's
   // own last candle. Neither opens a subscription this pane owns: the chart
@@ -72,6 +115,9 @@ export function LiquidationMapPane() {
   const candle = useOptionalCandleData()
   const ticker = useOptionalTickerData()
   const pairKey = activePair?.pairKey ?? ''
+  const market = activePair?.market ?? ''
+
+  const clusters = useLiquidationClusters(market, pairKey, windowHours)
 
   const positions = useMemo(() => {
     const out: Array<{ position: NormalizedPosition; venueLabel: string }> = []
@@ -133,6 +179,17 @@ export function LiquidationMapPane() {
     return out
   }, [current])
 
+  const priceClusters = useMemo(
+    () => aggregateByPrice(clusters.data?.buckets ?? []),
+    [clusters.data],
+  )
+  const totals = useMemo(
+    () => liquidationTotals(clusters.data?.buckets ?? []),
+    [clusters.data],
+  )
+  const peak = useMemo(() => peakNotional(priceClusters), [priceClusters])
+  const bucketWidth = clusters.data?.bucketWidth ?? 0
+
   if (current === null) {
     return (
       <PaneEmpty
@@ -143,9 +200,12 @@ export function LiquidationMapPane() {
     )
   }
 
+  // Cluster bounds widen the axis: a strip whose heaviest column sat off the
+  // edge would report that liquidations stopped where the axis did.
   const markers = [
     ...bands.map((b) => b.price),
     ...references.flatMap((r) => [r.long, r.short]),
+    ...clusterPriceBounds(priceClusters, bucketWidth),
   ].filter((p): p is number => p !== null)
   const range = priceAxisRange(markers, current)
   if (!range) {
@@ -159,6 +219,15 @@ export function LiquidationMapPane() {
   }
 
   const currentAt = axisPosition(current, range) * 100
+  const span = range.max - range.min
+  const clusterWidthPct =
+    span > 0 && bucketWidth > 0
+      ? Math.max((bucketWidth / span) * 100, MIN_CLUSTER_WIDTH_PCT)
+      : MIN_CLUSTER_WIDTH_PCT
+
+  // The chips only exist where a collector does; on an untracked venue they
+  // would be four controls that change nothing.
+  const showWindows = clusters.unavailable !== 'not_tracked'
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -166,13 +235,72 @@ export function LiquidationMapPane() {
         <span className="truncate text-[11.5px] text-muted-foreground">
           {t('liquidationMap.subtitle')}
         </span>
-        <span className="shrink-0 rounded-md border border-[var(--chart-4)] px-1.5 py-px font-mono text-[9px] uppercase tracking-[.06em] text-[var(--chart-4)]">
-          {t('liquidationMap.estimateBadge')}
-        </span>
+        <div className="flex shrink-0 items-center gap-2">
+          {showWindows && (
+            <ToggleGroup
+              aria-label={t('liquidationMap.windowLabel')}
+              multiple={false}
+              onValueChange={(next) => {
+                const value = Number(next[0])
+                if (
+                  LIQUIDATION_WINDOWS.includes(value as LiquidationWindowHours)
+                ) {
+                  setWindowHours(value as LiquidationWindowHours)
+                }
+              }}
+              size="sm"
+              value={[String(windowHours)]}
+              variant="outline"
+            >
+              {LIQUIDATION_WINDOWS.map((hours) => (
+                <ToggleGroupItem
+                  className="px-1.5 font-mono text-[10px]"
+                  key={hours}
+                  value={String(hours)}
+                >
+                  {t(WINDOW_LABEL_KEYS[hours])}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          )}
+          <span className="shrink-0 rounded-md border border-[var(--chart-4)] px-1.5 py-px font-mono text-[9px] uppercase tracking-[.06em] text-[var(--chart-4)]">
+            {t('liquidationMap.estimateBadge')}
+          </span>
+        </div>
       </header>
 
       <div className="relative min-h-0 flex-1 px-3 pb-6 pt-3">
-        {/* Reference tiers first, so a real position band always draws over
+        {/* Measured clusters first, as a wash under everything: they are the
+            context, not the call to action. */}
+        {priceClusters.map((cluster) => {
+          const left = axisPosition(cluster.price, range) * 100
+          const side = dominantSide(cluster)
+          const alpha =
+            clusterIntensity(cluster.total, peak) * MAX_CLUSTER_ALPHA
+          return (
+            <span
+              className="absolute bottom-6 top-3"
+              key={`cluster:${cluster.price}`}
+              style={{
+                left: `${left}%`,
+                width: `${clusterWidthPct}%`,
+                backgroundColor: side === 'long' ? 'var(--down)' : 'var(--up)',
+                opacity: alpha,
+              }}
+              title={t('liquidationMap.clusterHint', {
+                count: cluster.count,
+                notional: formatCompactUsd(cluster.total),
+                price: formatChartPrice(cluster.price),
+                side:
+                  side === 'long'
+                    ? t('liquidationMap.sideLong')
+                    : t('liquidationMap.sideShort'),
+              })}
+            />
+          )
+        })}
+
+        {/* Reference tiers next, so a real position band always draws over
             them: the estimate must never hide the measured number. */}
         {references.map((reference) =>
           (['long', 'short'] as const).map((side) => {
@@ -250,16 +378,93 @@ export function LiquidationMapPane() {
         </span>
       </div>
 
+      {totals.total > 0 && (
+        <div className="flex shrink-0 items-center gap-3 border-t border-border px-3 py-1 font-mono text-[10px] [font-variant-numeric:tabular-nums]">
+          <span className="flex items-center gap-1 text-down">
+            <span className="size-2 rounded-sm bg-down" />
+            {t('liquidationMap.legendLong', {
+              value: formatCompactUsd(totals.long),
+            })}
+          </span>
+          <span className="flex items-center gap-1 text-up">
+            <span className="size-2 rounded-sm bg-up" />
+            {t('liquidationMap.legendShort', {
+              value: formatCompactUsd(totals.short),
+            })}
+          </span>
+          <span className="ml-auto text-muted-foreground">
+            {t('liquidationMap.legendPrints', { count: totals.count })}
+          </span>
+        </div>
+      )}
+
       <footer className="flex shrink-0 items-start gap-2 border-t border-border px-3 py-1.5">
         <Info className="mt-px size-3 shrink-0 text-muted-foreground/60" />
         <p className="text-[11px] leading-relaxed text-muted-foreground">
           {bands.length === 0
             ? t('liquidationMap.noPositionsCaption')
-            : t('liquidationMap.caption')}
+            : t('liquidationMap.caption')}{' '}
+          <ClusterNote
+            count={priceClusters.length}
+            error={clusters.error}
+            isLoading={clusters.isLoading}
+            trackedSince={clusters.trackedSince}
+            unavailable={clusters.unavailable}
+            windowHours={windowHours}
+          />
         </p>
       </footer>
     </div>
   )
+}
+
+/**
+ * The sentence about the cluster layer, which is the only part of the caption
+ * that can be wrong on a given venue. Kept honest state by state rather than
+ * collapsed into one hedge: "no feed for this venue" and "collecting since
+ * 14:02" are different promises.
+ */
+function ClusterNote({
+  count,
+  error,
+  isLoading,
+  trackedSince,
+  unavailable,
+  windowHours,
+}: {
+  count: number
+  error: string | null
+  isLoading: boolean
+  trackedSince: number | null
+  unavailable: 'not_tracked' | 'collecting' | 'standalone' | null
+  windowHours: number
+}) {
+  const { t } = useTranslation()
+
+  if (unavailable === 'standalone') {
+    return <>{t('liquidationMap.standaloneCaption')}</>
+  }
+  if (unavailable === 'not_tracked') {
+    return <>{t('liquidationMap.notTrackedCaption')}</>
+  }
+  if (unavailable === 'collecting') {
+    return (
+      <>
+        {t('liquidationMap.collectingCaption', {
+          since:
+            trackedSince === null
+              ? t('liquidationMap.collectingJustStarted')
+              : new Date(trackedSince).toLocaleString(),
+        })}
+      </>
+    )
+  }
+  if (error) return <>{t('liquidationMap.clustersErrorCaption')}</>
+  if (isLoading) return <>{t('liquidationMap.clustersLoadingCaption')}</>
+  if (count === 0) {
+    return <>{t('liquidationMap.noClustersCaption', { window: windowHours })}</>
+  }
+  return <>{t('liquidationMap.clustersCaption', { window: windowHours })}</>
 }
 
 /** Notional the position carries, or 0 when the venue priced neither leg. */

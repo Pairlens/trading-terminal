@@ -167,6 +167,7 @@ const PANES_NEEDING_PAIR = new Set([
   'route-bridge',
   'level-1',
   'company',
+  'insider-activity',
   'your-position',
 ])
 

@@ -217,6 +217,14 @@ export {
   createGeckoterminalDataProviderPlugin,
 } from './geckoterminal-data-provider/index.ts'
 export {
+  heliusRpcProviderManifest,
+  createHeliusRpcProviderPlugin,
+} from './helius-rpc-provider/index.ts'
+export {
   jupiterDexConnectorManifest,
   createJupiterDexConnectorPlugin,
 } from './jupiter-dex-connector/index.ts'
+export {
+  lifiBridgeConnectorManifest,
+  createLifiBridgeConnectorPlugin,
+} from './lifi-bridge-connector/index.ts'

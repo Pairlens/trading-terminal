@@ -1443,6 +1443,9 @@ export function useChartTerminalState(
 
     // Ticker
     lastTradePrice: ticker?.last ?? null,
+    // Identity-stable across ticks (see useTickerStream), so the ticker
+    // context memo below it does not rebuild on every price patch.
+    tradingStatus: ticker?.tradingStatus ?? null,
 
     // Helpers
     runCommand,

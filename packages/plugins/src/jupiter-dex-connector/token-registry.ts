@@ -122,6 +122,41 @@ export async function resolveToken(
   return match
 }
 
+/**
+ * Mint → token, or a cached null. Separate from `symbolIndex` on purpose: this
+ * one is never consulted by symbol and never pins anything.
+ */
+const mintIndex = new Map<string, JupiterToken | null>()
+
+/**
+ * Resolve a MINT to its metadata WITHOUT pinning anything.
+ *
+ * `resolveToken` is the trading path: it pins (symbol → mint) for the session
+ * and publishes to the shared token directory, which is last-write-wins. That
+ * is right when the user picked the token. It is dangerous when the mint came
+ * from somewhere the user did not choose: an LP position's pool can hold a
+ * token calling itself USDC, and labelling that row through the trading path
+ * would re-point USDC for every later swap, chart and pool lookup in the
+ * session.
+ *
+ * So this reads only, and only accepts an EXACT address match. A search that
+ * does not return the mint asked about answers null rather than the closest
+ * thing, and the null is cached so a scam mint is not re-queried per refresh.
+ */
+export async function lookupTokenByMint(
+  mint: string,
+): Promise<JupiterToken | null> {
+  if (!isSolanaAddress(mint)) return null
+  const known = getKnownTokenByMint(mint)
+  if (known) return known
+  const cached = mintIndex.get(mint)
+  if (cached !== undefined) return cached
+  const results = await fetchTokens(searchUrl(mint))
+  const match = results.find((t) => t.address === mint) ?? null
+  mintIndex.set(mint, match)
+  return match
+}
+
 /** Look up an already-seen token by its mint (for balance labelling). */
 export function getKnownTokenByMint(mint: string): JupiterToken | null {
   for (const t of symbolIndex.values()) {
@@ -194,4 +229,5 @@ export function clearTokenCache(): void {
   topTokens = []
   topFetchTs = 0
   symbolIndex.clear()
+  mintIndex.clear()
 }

@@ -4,7 +4,7 @@ description: How the terminal, connector plugins, strategy engine, and optional 
 group: get-started
 order: 6
 eyebrow: Get started
-updated: 15 AUG 2026
+updated: 17 AUG 2026
 readTime: 5 min read
 ---
 
@@ -32,9 +32,18 @@ CLI.
 Web Worker, executing your indicator and strategy scripts. Local only, on
 desktop and browser alike.
 
-**App Server** (optional, not in this repo). Auth, cross-device sync, and an
-OpenAI-compatible AI proxy. It never talks to exchanges and never stores
-exchange credentials.
+**App Server** (optional, not in this repo). Auth, cross-device sync, an
+OpenAI-compatible AI proxy, and the reference data no venue publishes about
+itself: news, the economic and IPO calendars, insider filings, new listings, and
+aggregated liquidation clusters. It never stores exchange credentials.
+
+Two of those touch exchange data, and both are narrow and deliberate. The
+listings sweeper reads public, unauthenticated venue metadata to compile the
+discovery snapshot, which pairs each venue lists and nothing else. The
+liquidation collector holds Binance Futures' public force-order stream open and
+buckets the prints. Neither carries a credential, neither acts on anyone's
+behalf, and neither ever handles prices, books, candles or trades. Everything
+you actually trade against streams from the venue straight to your machine.
 
 ## Where data lives
 

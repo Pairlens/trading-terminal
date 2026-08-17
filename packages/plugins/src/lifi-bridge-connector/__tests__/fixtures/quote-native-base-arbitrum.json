@@ -1,0 +1,93 @@
+{
+  "type": "lifi",
+  "id": "08b34475-447f-4202-97ef-6156dbbfa832:0",
+  "tool": "layerswap",
+  "action": {
+    "fromToken": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "chainId": 8453,
+      "symbol": "ETH",
+      "decimals": 18,
+      "name": "ETH"
+    },
+    "fromAmount": "100000000000000000",
+    "toToken": {
+      "address": "0x0000000000000000000000000000000000000000",
+      "chainId": 42161,
+      "symbol": "ETH",
+      "decimals": 18,
+      "name": "ETH"
+    },
+    "fromChainId": 8453,
+    "toChainId": 42161,
+    "slippage": 0.005,
+    "fromAddress": "0x000000000000000000000000000000000000dEaD",
+    "toAddress": "0x000000000000000000000000000000000000dEaD"
+  },
+  "estimate": {
+    "tool": "layerswap",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmountMin": "99745550000000000",
+    "toAmount": "99745550000000000",
+    "fromAmount": "100000000000000000",
+    "feeCosts": [
+      {
+        "name": "LIFI Fixed Fee",
+        "token": {
+          "address": "0x0000000000000000000000000000000000000000",
+          "chainId": 8453,
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "ETH"
+        },
+        "amount": "250000000000000",
+        "amountUSD": "0.4760",
+        "percentage": "0.0025",
+        "included": true
+      },
+      {
+        "name": "LayerSwap fee",
+        "token": {
+          "address": "0x0000000000000000000000000000000000000000",
+          "chainId": 8453,
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "ETH"
+        },
+        "amount": "4460000000000",
+        "amountUSD": "0.008497",
+        "percentage": "0.0000",
+        "included": true
+      }
+    ],
+    "gasCosts": [
+      {
+        "type": "SEND",
+        "price": "5500000",
+        "estimate": "493000",
+        "limit": "1040900",
+        "amount": "2711500000000",
+        "amountUSD": "0.0052",
+        "token": {
+          "address": "0x0000000000000000000000000000000000000000",
+          "chainId": 8453,
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "ETH"
+        }
+      }
+    ],
+    "executionDuration": 4,
+    "fromAmountUSD": "190.4120",
+    "toAmountUSD": "189.9544"
+  },
+  "transactionRequest": {
+    "value": "0x16345785d8a0000",
+    "to": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "data": "0x4c279d6b00000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000220",
+    "from": "0x000000000000000000000000000000000000dEaD",
+    "chainId": 8453,
+    "gasPrice": "0x53ec60",
+    "gasLimit": "0xfe204"
+  }
+}

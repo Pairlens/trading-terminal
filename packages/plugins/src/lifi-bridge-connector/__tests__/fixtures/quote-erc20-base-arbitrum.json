@@ -1,0 +1,79 @@
+{
+  "type": "lifi",
+  "id": "0304d02a-161b-4dc8-a336-fabaddc2c21c:0",
+  "tool": "eco",
+  "action": {
+    "fromToken": {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "chainId": 8453,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin"
+    },
+    "fromAmount": "100000000",
+    "toToken": {
+      "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "chainId": 42161,
+      "symbol": "USDC",
+      "decimals": 6,
+      "name": "USD Coin"
+    },
+    "fromChainId": 8453,
+    "toChainId": 42161,
+    "slippage": 0.001,
+    "fromAddress": "0x000000000000000000000000000000000000dEaD",
+    "toAddress": "0x000000000000000000000000000000000000dEaD"
+  },
+  "estimate": {
+    "tool": "eco",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmountMin": "99750000",
+    "toAmount": "99750000",
+    "fromAmount": "100000000",
+    "feeCosts": [
+      {
+        "name": "LIFI Fixed Fee",
+        "token": {
+          "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "chainId": 8453,
+          "symbol": "USDC",
+          "decimals": 6,
+          "name": "USD Coin"
+        },
+        "amount": "250000",
+        "amountUSD": "0.2497",
+        "percentage": "0.0025",
+        "included": true
+      }
+    ],
+    "gasCosts": [
+      {
+        "type": "SEND",
+        "price": "5500000",
+        "estimate": "623000",
+        "limit": "1209900",
+        "amount": "3426500000000",
+        "amountUSD": "0.0065",
+        "token": {
+          "address": "0x0000000000000000000000000000000000000000",
+          "chainId": 8453,
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "ETH"
+        }
+      }
+    ],
+    "executionDuration": 7,
+    "fromAmountUSD": "99.8863",
+    "toAmountUSD": "99.8087"
+  },
+  "transactionRequest": {
+    "value": "0x0",
+    "to": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "data": "0x9e75aa9500000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000220",
+    "from": "0x000000000000000000000000000000000000dEaD",
+    "chainId": 8453,
+    "gasPrice": "0x53ec60",
+    "gasLimit": "0x12762c"
+  }
+}

@@ -20,6 +20,13 @@ import { Loader2, Search, Vote } from 'lucide-react'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import { Input } from '@pairlens/ui/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@pairlens/ui/components/ui/select'
 
 import { EventDialog } from './event-dialog'
 import { EventThumbnail, MarketRow } from './event-pieces'
@@ -28,12 +35,14 @@ import type {
   PredictionMarketSummary,
 } from '@pairlens/shared/instrument-types'
 import type { PredictionVenueResult } from '@/hooks/use-prediction-events'
+import type { EventListSort } from '@/lib/predictions/board'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import {
   categoriesOf,
   usePredictionEvents,
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
+import { EVENT_LIST_SORTS, sortEventSummaries } from '@/lib/predictions/board'
 import { formatCompactUsd } from '@/lib/format-price'
 import { predictionEntryFor } from '@/lib/predictions/pin'
 import { formatTimeUntil } from '@/lib/format-time'
@@ -55,6 +64,22 @@ const MAX_MARKETS_PER_CARD = 4
 /** Outcomes a card shows per market. Binary markets are unaffected. */
 const MAX_OUTCOMES_PER_MARKET = 4
 
+/**
+ * Literal keys, not a template: the i18n audit can only verify a `t()` call
+ * whose key is a literal.
+ *
+ * 'trending' is labelled "venue order" here rather than "trending", because
+ * that is what it is — this pane lists one block per venue in the order the
+ * venue returned, and calling that a ranking of our own would claim a judgement
+ * nobody made.
+ */
+const SORT_LABEL_KEYS: Record<EventListSort, string> = {
+  trending: 'events.sort.venueOrder',
+  new: 'events.sort.new',
+  endingSoon: 'events.sort.endingSoon',
+  volume: 'events.sort.volume',
+}
+
 export function EventsPane() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -62,6 +87,7 @@ export function EventsPane() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<string | null>(null)
   const [venueFilter, setVenueFilter] = useState<string | null>(null)
+  const [sort, setSort] = useState<EventListSort>('trending')
   // The open event, captured with the venue it came from. Held by value
   // rather than by id: the payload behind it refetches on a 60s stale timer,
   // and an id would leave the dialog resolving against a list that had moved.
@@ -132,9 +158,20 @@ export function EventsPane() {
   }
 
   const all = data ?? []
-  const results = venueFilter
+  const visible = venueFilter
     ? all.filter((r) => r.market === venueFilter)
     : all
+  // Sorted per venue block, not across them: the blocks are the pane's own
+  // grouping and merging them to rank globally would lose which venue lists
+  // what. 'trending' returns the venue's array untouched, so the memoized cards
+  // keep their identity on every keystroke.
+  const results =
+    sort === 'trending'
+      ? visible
+      : visible.map((venue) => ({
+          ...venue,
+          events: sortEventSummaries(venue.events, sort),
+        }))
   const hasRows = results.some((r) => r.events.length > 0)
   const allDesktopOnly =
     results.length > 0 && results.every((r) => r.desktopOnly)
@@ -147,14 +184,38 @@ export function EventsPane() {
   return (
     <div className="flex h-full flex-col">
       <header className="flex flex-col gap-2 border-b px-3 py-2.5">
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            className="h-8 rounded-lg pl-7 text-xs"
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('events.searchPlaceholder')}
-            value={query}
-          />
+        <div className="flex items-center gap-2">
+          <div className="relative min-w-0 flex-1">
+            <Search className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              className="h-8 rounded-lg pl-7 text-xs"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t('events.searchPlaceholder')}
+              value={query}
+            />
+          </div>
+          <Select
+            onValueChange={(value) => setSort(value as EventListSort)}
+            value={sort}
+          >
+            <SelectTrigger
+              className="h-8 w-[136px] shrink-0 rounded-lg text-[11px]"
+              size="sm"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {EVENT_LIST_SORTS.map((option) => (
+                <SelectItem
+                  className="text-[11.5px]"
+                  key={option}
+                  value={option}
+                >
+                  {t(SORT_LABEL_KEYS[option])}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {venues.length > 1 && (

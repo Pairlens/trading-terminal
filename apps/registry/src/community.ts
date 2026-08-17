@@ -38,11 +38,17 @@ export const MAX_COMMUNITY_MODULE_BYTES = 512 * 1024
 /**
  * Capabilities a community plugin may NOT declare. Trading stays out of the
  * community tier: nothing repo-submitted can route orders or read balances.
+ *
+ * `rpc:solana` is on the list for a different reason. It hands its consumer a
+ * node URL with the user's API key embedded, which a repo-submitted plugin has
+ * no business either serving or reading.
  */
 export const COMMUNITY_DENIED_CAPABILITIES: ReadonlyArray<string> = [
   'trading:orders',
   'trading:balances',
   'trading:positions',
+  'trading:bridge',
+  'rpc:solana',
 ]
 
 /**
