@@ -15,73 +15,165 @@ import type {
 
 /**
  * Prediction Terminal — the default pair layout for the `prediction` asset
- * class. The Events browser gets a full-height column of its own: on a
- * prediction market the question next door (the other outcomes of the same
- * event, the adjacent strikes) is half the analysis. The data strip opens on
- * the tape and carries `prediction-positions` (open contracts) instead of the
- * spot positions pane.
+ * class, shaped for a binary contract. The event header leads: a contract is a
+ * question, and the question, its resolution source and the probability being
+ * paid belong above the chart rather than in a tooltip.
+ *
+ * The data strip opens on `what-moved-it`, which stamps each headline with the
+ * probability move it caused, and keeps the tape and open contracts behind it.
+ * The right column still carries the event browser, because on a prediction
+ * market the question next door (the other outcomes, the adjacent strikes) is
+ * half the analysis, with open contracts under it.
  */
 export const PREDICTION_TERMINAL_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 52,
+      widthPercent: 62,
       cells: [
         {
+          id: 'cell-event-header',
+          heightPercent: 20,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-event-header', type: 'event-header' }],
+        },
+        {
           id: 'cell-chart',
-          heightPercent: 68,
+          heightPercent: 49,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
           id: 'cell-bottom',
-          heightPercent: 27,
+          heightPercent: 31,
           activeTabIndex: 0,
           panes: [
+            { id: 'pane-what-moved-it', type: 'what-moved-it' },
             { id: 'pane-trades', type: 'trades' },
             {
               id: 'pane-prediction-positions',
               type: 'prediction-positions',
             },
-            { id: 'pane-data-log', type: 'data-log' },
           ],
-        },
-        {
-          id: 'cell-risk',
-          heightPercent: 5,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-risk', type: 'risk' }],
         },
       ],
     },
     {
       id: 'col-market',
-      widthPercent: 22,
+      widthPercent: 18,
       cells: [
         {
           id: 'cell-orderbook',
-          heightPercent: 55,
+          heightPercent: 38,
           activeTabIndex: 0,
           panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
         },
         {
           id: 'cell-trade',
-          heightPercent: 45,
+          heightPercent: 62,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
         },
       ],
     },
     {
-      id: 'col-events',
-      widthPercent: 26,
+      id: 'col-event',
+      widthPercent: 20,
       cells: [
         {
           id: 'cell-events',
-          heightPercent: 100,
+          heightPercent: 61,
           activeTabIndex: 0,
           panes: [{ id: 'pane-events', type: 'events' }],
+        },
+        {
+          id: 'cell-positions',
+          heightPercent: 39,
+          activeTabIndex: 0,
+          panes: [
+            {
+              id: 'pane-prediction-positions-2',
+              type: 'prediction-positions',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * Prediction Race — the layout for an event with many runners rather than two.
+ * The header carries the runner count and the overround, the chart stacks the
+ * shares, and the outcome ladder takes the bottom of the column.
+ *
+ * The ladder is the fix for "show 124 more": every runner priced, sortable,
+ * searchable, and stakeable from its own row. The basket beside it sums to a
+ * stated overround, so sweeping every outcome is visibly not free money.
+ */
+export const PREDICTION_RACE_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 63,
+      cells: [
+        {
+          id: 'cell-event-header',
+          heightPercent: 16,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-event-header', type: 'event-header' }],
+        },
+        {
+          id: 'cell-chart',
+          heightPercent: 44,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-ladder',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-outcome-ladder', type: 'outcome-ladder' }],
+        },
+      ],
+    },
+    {
+      id: 'col-basket',
+      widthPercent: 17,
+      cells: [
+        {
+          id: 'cell-orderbook',
+          heightPercent: 33,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
+        },
+        {
+          id: 'cell-basket',
+          heightPercent: 67,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-basket-ticket', type: 'basket-ticket' }],
+        },
+      ],
+    },
+    {
+      id: 'col-tape',
+      widthPercent: 20,
+      cells: [
+        {
+          id: 'cell-trades',
+          heightPercent: 71,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trades', type: 'trades' }],
+        },
+        {
+          id: 'cell-positions',
+          heightPercent: 29,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-prediction-positions', type: 'prediction-positions' },
+          ],
         },
       ],
     },
@@ -91,52 +183,55 @@ export const PREDICTION_TERMINAL_LAYOUT = {
 /**
  * Prediction Discovery — the home board for event markets. The scanner on the
  * default board reads a catalog of pairs, and prediction outcomes are never in
- * it: they are born and resolved daily. So the event browser takes the wide
- * column here, with the news wire beside it (an event contract is a headline
- * with a price) and a light rail carrying the watchlist over sentiment.
+ * it: they are born and resolved daily. So the event board takes the wide
+ * column here, with a category rail to narrow it and a right rail carrying the
+ * biggest odds moves over what settles soonest.
+ *
+ * Everything on it renders through `formatPredictionPrice`, so no dollar
+ * figure ever appears beside a 78c contract.
  */
 export const PREDICTION_DISCOVERY_LAYOUT = {
   version: 1,
   columns: [
     {
-      id: 'col-events',
-      widthPercent: 58,
+      id: 'col-categories',
+      widthPercent: 14,
       cells: [
         {
-          id: 'cell-events',
+          id: 'cell-categories',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-events', type: 'events' }],
+          panes: [{ id: 'pane-categories', type: 'categories' }],
         },
       ],
     },
     {
-      id: 'col-news',
-      widthPercent: 24,
+      id: 'col-board',
+      widthPercent: 66,
       cells: [
         {
-          id: 'cell-news',
+          id: 'cell-event-board',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-news', type: 'news' }],
+          panes: [{ id: 'pane-event-board', type: 'event-board' }],
         },
       ],
     },
     {
-      id: 'col-pulse',
-      widthPercent: 18,
+      id: 'col-rail',
+      widthPercent: 20,
       cells: [
         {
-          id: 'cell-watchlist',
-          heightPercent: 55,
+          id: 'cell-odds-movers',
+          heightPercent: 52,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
+          panes: [{ id: 'pane-odds-movers', type: 'odds-movers' }],
         },
         {
-          id: 'cell-sentiment',
-          heightPercent: 45,
+          id: 'cell-resolving',
+          heightPercent: 48,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-fear-greed', type: 'fear-greed' }],
+          panes: [{ id: 'pane-resolving-soon', type: 'resolving-soon' }],
         },
       ],
     },
@@ -158,9 +253,9 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'pair',
     routeMenu: true,
     icon: 'Scale',
-    tagline: 'Chart the odds with the whole event beside them.',
+    tagline: 'The question first, then the odds.',
     description:
-      'The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and a full-height event browser on the right, because the neighbouring outcomes are half the analysis.',
+      'The default prediction-market layout: the event header over a probability chart, with the headlines that moved it below, the book and a ticket that states max payout and max loss before you stake, and the neighbouring outcomes on the right.',
     facets: {
       traderTypes: ['news-trader', 'swing-trader'],
       assetClasses: ['predictions'],
@@ -183,7 +278,7 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'Vote',
     tagline: 'Browse live event markets, not a catalog of pairs.',
     description:
-      'A home board built for event contracts: the event browser takes the wide column, the news wire runs beside it, and a light rail carries your watchlist over the sentiment gauge. Install a prediction venue such as Kalshi or Polymarket to fill the board.',
+      'A home board built for event contracts: a category rail beside the event board, with the biggest odds moves over the contracts closest to settling. Install a prediction venue such as Kalshi or Polymarket to fill it.',
     facets: {
       traderTypes: ['news-trader', 'swing-trader'],
       assetClasses: ['predictions'],
@@ -191,5 +286,26 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     },
     tags: ['discovery', 'predictions', 'events'],
     layout: PREDICTION_DISCOVERY_LAYOUT,
+  },
+  {
+    id: 'template:prediction-race',
+    name: 'Prediction Race',
+    menuLabel: 'Race',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'ListOrdered',
+    tagline: 'Every runner priced, and the overround stated.',
+    description:
+      'For an event with a field rather than two sides: the header with the runner count and the overround, a stacked-shares chart, and a ladder that prices every runner and stakes from the row. The basket sums to the overround, so sweeping the field is visibly not free money.',
+    facets: {
+      traderTypes: ['news-trader', 'swing-trader'],
+      assetClasses: ['predictions'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['predictions', 'events', 'race'],
+    layout: PREDICTION_RACE_LAYOUT,
+    // No default market: a contract expires, so seeding a copied workspace
+    // with one would chart a settled outcome next month.
+    pairDefault: null,
   },
 ]

@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "無期限先物と現物",
+    "subtitle": "同じ資産を両方のデスクで並べて表示",
+    "spot": "現物 {{price}}",
+    "spotMissing": "インデックスなし",
+    "perp": "無期限 {{price}}",
+    "bps": "{{value}} bps",
+    "rowHint": "{{venue}} の {{pair}}",
+    "emptyTitle": "まだ比較できるものがありません",
+    "emptyBody": "ベーシスにはマーク価格とインデックス価格が必要です。両方を公開している無期限先物の取引所を接続してください。"
+  },
+  "basketTicket": {
+    "noPairTitle": "イベントが未選択です",
+    "noPairBody": "レースを開くと、複数のアウトカムにまとめて張れます。",
+    "emptyTitle": "まだ何も入っていません",
+    "emptyBody": "ラダーのプラスボタンでアウトカムを追加し、それぞれの金額を入力してください。",
+    "stakeFor": "{{name}} への投入額",
+    "removeLeg": "{{name}} をバスケットから削除",
+    "totalCost": "合計コスト",
+    "covers": "カバー率",
+    "overroundAsk": "候補群（売り気配）",
+    "overroundLast": "候補群（最終値）",
+    "maxPayout": "最大受取額",
+    "maxLoss": "最大損失",
+    "unusable_one": "1 件は金額か価格が使えないため送信されません。",
+    "unusable_other": "{{count}} 件は金額か価格が使えないため送信されません。",
+    "place_one": "1 件を発注",
+    "place_other": "{{count}} 件を発注",
+    "placing": "発注中…",
+    "placedTitle_one": "1 件を発注しました",
+    "placedTitle_other": "{{count}} 件を発注しました",
+    "placedBody": "各明細は表示価格の指値注文として送信されました。",
+    "partialTitle": "バスケットが途中で停止しました",
+    "partialBody": "{{total}} 件中 {{placed}} 件を発注。{{outcome}} は拒否されました: {{reason}}",
+    "failedTitle": "バスケットを発注できませんでした",
+    "hint": "各明細は実際の指値注文です。"
+  },
+  "bridgePanes": {
+    "routeTitle": "ブリッジにはブリッジプロバイダが必要です",
+    "routeBody": "接続されていません。オンチェーンコネクタは単一チェーン内のルーティングのみで、チェーンをまたぐ送金の手数料や所要時間は見積もれません。チェーンラダーは、すでに取引できる範囲を比較します。",
+    "wouldQuote": "{{chain}} から出る {{asset}} を見積もります",
+    "inFlightTitle": "送金追跡にはブリッジプロバイダが必要です",
+    "inFlightBody": "確認数は資金を動かしたブリッジから得ます。接続がなければ問い合わせ先がなく、裏付けのないバーは滞留中の送金でも進み続けてしまいます。"
+  },
+  "chainLadder": {
+    "title": "チェーン横断の {{asset}}",
+    "subtitle": "最良気配ではなく、ガス控除後に手元に残る額で並べ替え",
+    "sizedFor": "{{value}} 想定",
+    "best": "最良",
+    "versusBest": "{{bps}} bps",
+    "notFound": "ここに {{asset}} のプールはありません",
+    "footnote": "最も厚いプールが最良の約定とは限りません。高いチェーンでの安い気配は、ガスがほぼ無料の場所のやや劣る気配に負けます。",
+    "columns": {
+      "chain": "チェーン",
+      "price": "価格",
+      "impact": "インパクト",
+      "gas": "ガス",
+      "youReceive": "受取額"
+    },
+    "noPairTitle": "ペア未設定",
+    "noPairBody": "このパネルにペアを紐づけると、接続済みの各チェーンが同じサイズで見積もります。",
+    "noChainsTitle": "チェーンコネクタがありません",
+    "noChainsBody": "オンチェーンコネクタをインストールすると、そのチェーンがこのラダーに加わります。"
+  },
+  "company": {
+    "unknownName": "会社名を取得できません",
+    "needsProviderTitle": "ファンダメンタルズにはプロバイダーが必要です",
+    "needsProviderBody": "ブローカーは気配と約定を扱いますが、バリュエーション・成長率・利益率は公開しません。ファンダメンタルズのプラグインを導入するとこのペインが埋まります。"
+  },
+  "dexChains": {
+    "title": "資金が流れている場所",
+    "subtitleNetwork": "24時間出来高（チェーン全体）",
+    "subtitleSampled": "各チェーンの主要プールの24時間出来高",
+    "liquidityValue": "流動性 {{value}}",
+    "poolsValue_one": "{{count}} プール",
+    "poolsValue_other": "{{count}} プール",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "優先手数料",
+    "notInstalled": "コネクタ未インストール",
+    "installConnector": "コネクタをインストール",
+    "emptyTitle": "表示できるチェーンがありません",
+    "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。"
+  },
+  "earningsCalendar": {
+    "title": "決算",
+    "subtitle": "寄り付き前と引け後",
+    "emptyTitle": "決算フィードが未導入です",
+    "emptyBody": "このカレンダーはファンダメンタルズ提供プラグインが埋めます。ブローカーが公開するのは自社のセッション時間であり、今週の決算予定ではありません。",
+    "columns": {
+      "symbol": "銘柄",
+      "when": "時間帯",
+      "epsEstimate": "EPS予想",
+      "revenueEstimate": "売上予想",
+      "impliedMove": "予想変動率"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "マクロフィードが未導入です",
+    "emptyBody": "マクロデータ提供プラグインが、発表時刻・市場予想・前回値でこのカレンダーを埋めます。",
+    "columns": {
+      "time": "時刻",
+      "event": "イベント",
+      "actual": "結果",
+      "consensus": "予想",
+      "prior": "前回"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "1 件のライブマーケットを検索",
+    "searchPlaceholder_other": "{{count}} 件のライブマーケットを検索",
+    "loadingTitle": "ボードを読み込み中",
+    "loadingBody": "各取引所に、いま何が取引されているかを問い合わせています。",
+    "sort": {
+      "trending": "話題",
+      "endingSoon": "まもなく終了",
+      "volume": "出来高",
+      "biggestMove": "変動幅"
+    },
+    "unchanged": "変化なし",
+    "movedPoints": "{{arrow}} 本日 {{points}} ポイント",
+    "volumeUnknown": "出来高は非公開",
+    "liquidity": "流動性 {{value}}",
+    "outcomeCount_one": "候補 1 件",
+    "outcomeCount_other": "候補 {{count}} 件",
+    "topShare_one": "首位が確率全体の {{percent}} % を占めています。",
+    "topShare_other": "上位 {{count}} 件が確率全体の {{percent}} % を占めています。",
+    "openFullField_one": "全候補を開く（他 1 件）",
+    "openFullField_other": "全候補を開く（他 {{count}} 件）"
+  },
+  "eventHeader": {
+    "noPairTitle": "契約が未選択です",
+    "noPairBody": "Discovery からイベントを開くと、設問・決着日・市場が織り込む確率を確認できます。",
+    "resolves": "決着",
+    "venue": "取引所",
+    "rules": "決着ルール",
+    "rulesTitle": "決着の方法",
+    "rulesSource": "{{venue}} の公開内容",
+    "tradeableOutcomes": "件の取引可能なアウトカム",
+    "statusClosed": "取引終了",
+    "statusResolved": "決着済み",
+    "changeToday": "本日 {{value}} ポイント",
+    "loadingPrice": "取引所のボードを読み取り中…",
+    "noPrice": "この取引所は現在このアウトカムに値付けしていません。",
+    "noOverround": "値付けされた候補が少なすぎて合計できません。",
+    "sideYes": "Yes {{percent}} %",
+    "sideNo": "No {{percent}} % · {{price}}",
+    "overroundLabel": "Yes 価格の合計",
+    "overroundOver": "オーバーラウンド {{percent}} %。全アウトカムを買うとちょうどこの分だけ損をします。板の厚みが許せば、全候補を売るのが裁定です。",
+    "overroundUnder": "公正値より {{percent}} % 低い水準です。板の厚みが許せば、全アウトカムを買うとこの分だけ得られます。",
+    "basisAsk_one": "1 件の売り気配を合計",
+    "basisAsk_other": "{{count}} 件の売り気配を合計",
+    "basisLast_one": "1 件の最終値を合計",
+    "basisLast_other": "{{count}} 件の最終値を合計",
+    "basisMissing_one": "値付けなしの候補 1 件",
+    "basisMissing_other": "値付けなしの候補 {{count}} 件"
+  },
+  "funding": {
+    "loading": "ファンディングレートを読み込み中…",
+    "na": "該当なし",
+    "stampUnknown": "未公開",
+    "desktopOnly": "の公開APIにはデスクトップアプリからしか到達できません。",
+    "manageConnectors": "コネクタを管理",
+    "cellHint": "{{pair}} · {{hours}}時間ごとに {{rate}}",
+    "cellHintAssumed": "{{pair}} · {{rate}}。取引所が公開していないため、{{hours}}時間ごとの精算と仮定"
+  },
+  "fundingBelt": {
+    "now": "現在のファンディング · {{hours}}時間",
+    "longsPay": "ロングがショートに支払い",
+    "shortsPay": "ショートがロングに支払い",
+    "nextPayment": "次回支払い",
+    "costYou": "コストは {{amount}}",
+    "costPerReference": "保有 {{notional}} あたり {{amount}}",
+    "annualised": "年率",
+    "weekAverage": "7日平均 {{value}}",
+    "noHistory": "精算履歴はまだありません",
+    "paidLabel": "保有ポジションの支払い",
+    "paidLabelReference": "保有 {{notional}} あたりのコスト",
+    "otherVenues": "同じ契約、他の取引所",
+    "onlyVenue": "この契約で接続している取引所はここだけです。",
+    "emptyTitle": "無期限先物の契約を選択",
+    "emptyBody": "このベルトは無期限先物を1つ追跡します。レート、精算時刻、保有コスト。無期限先物のペアを開くと表示されます。",
+    "noRateTitle": "ファンディングは未公開",
+    "noRateBody": "{{venue}} はこの契約のファンディングレートを返しませんでした。"
+  },
+  "fundingExtremes": {
+    "subtitle": "接続中の取引所で最も高いキャリーと最も安いキャリー（年率）。",
+    "longsPay": "ロングの負担が最大",
+    "shortsPay": "ショートの負担が最大",
+    "perInterval": "{{hours}}時間ごとに {{rate}}",
+    "emptyTitle": "並べ替えるレートがありません",
+    "emptyBody": "無期限先物の取引所が応答すると、最も高い契約と最も安い契約がここに並びます。"
+  },
+  "fundingMatrix": {
+    "title": "ファンディング（年率）",
+    "subtitle": "プラス = ロングがショートに支払い",
+    "nextPayment": "次回支払いまで",
+    "colSpread": "差",
+    "points": "{{value}}pp",
+    "spreadHint": "最も高い取引所と最も安い取引所の差（年率ファンディングのポイント）",
+    "sortBy": "{{venue}}で並べ替え",
+    "note": "セルをクリックするとその取引所の当該契約が開きます。差の列はキャッシュ・アンド・キャリーです。ファンディングが最も安い方をロング、最も高い方をショート。",
+    "noRows": "ファンディングレートを返した取引所はありません。",
+    "emptyTitle": "無期限先物の取引所が有効ではありません",
+    "emptyBody": "ファンディングは公開データなのでAPIキーは不要です。無期限先物コネクタを入れれば表は自動で埋まります。"
+  },
+  "level1": {
+    "emptyTitle": "気配値がまだありません",
+    "emptyBody": "この銘柄の買い気配・売り気配はまだ配信されていません。",
+    "bid": "買気配",
+    "ask": "売気配",
+    "spread": "スプレッド",
+    "bps": "bp",
+    "dayRange": "当日レンジ",
+    "feed": "フィード",
+    "depthNote": "ブローカーは板の最良気配のみを配信するため、この2つの価格の背後に板の厚みはありません。"
+  },
+  "liquidationMap": {
+    "subtitle": "自分の強制決済価格と、ここで建てたレバレッジの行き先",
+    "estimateBadge": "推定",
+    "sideLong": "ロング",
+    "sideShort": "ショート",
+    "referenceHint": "現在価格で建てた{{leverage}}倍の{{side}}は {{price}} 付近で強制決済",
+    "caption": "バーは各取引所が報告した自分自身の強制決済価格です。細い線は、現在価格で建てたポジションが5倍・10倍・25倍で強制決済される水準を示します。集計された清算クラスターを公開している取引所はないため、描画していません。",
+    "noPositionsCaption": "細い線は、現在価格で建てたポジションが5倍・10倍・25倍で強制決済される水準を示します。自分の強制決済価格はポジションを持つとバーで表示されます。",
+    "noPriceTitle": "基準となる価格がありません",
+    "noPriceBody": "このマップには契約のライブ価格が必要です。隣のチャートに価格が入ると同時に表示されます。",
+    "emptyTitle": "描画するものがありません",
+    "emptyBody": "無期限先物のポジションを建てるか契約を選ぶと、価格軸が埋まります。"
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "プールを選択",
+    "noPoolBody": "マップでプールを選ぶと、そこを通った資金が5分刻みでここに表示されます。",
+    "loadingTitle": "スワップを読み込み中",
+    "loadingBody": "このプールの直近スワップを取得しています。",
+    "emptyTitle": "スワップはまだありません",
+    "emptyBody": "最近このプールで約定がないため、相殺する流れがありません。",
+    "barsLabel": "テイカーの純フロー、{{pool}}",
+    "netHour": "直近1時間で {{value}}",
+    "bucketTooltip": "買い {{buy}}、売り {{sell}}",
+    "axisNote": "5分ごとの買い引く売り。LPによる流動性の追加や引き出しはこのフィードに含まれません。",
+    "biggestLabel": "最大のスワップ"
+  },
+  "lpPanes": {
+    "positionTitle": "LPポジションにはポジション取得元が必要です",
+    "positionBody": "接続済みのどれも、まだ流動性ポジションを読めません。読むにはチェーンのポジションマネージャにこのウォレットのレンジを問い合わせる必要があり、現在それを行うコネクタはありません。",
+    "feesTitle": "手数料の履歴にはポジション取得元が必要です",
+    "feesBody": "日ごとの獲得手数料は、インデクサか、時間をかけて測った fee growth から得ます。どちらも接続されておらず、推計のチャートは実測のように見えてしまいます。",
+    "manageTitle": "レンジ変更には流動性アクションが必要です",
+    "manageBody": "流動性の追加・引き出し・レンジ再設定はいずれも署名付きトランザクションで、まだどのコネクタも組み立てられません。実際に機能するまで操作要素は出しません。",
+    "venueFallback": "このチェーン",
+    "wouldRead": "{{chain}} の {{pool}} で {{wallet}} を読み取ります"
+  },
+  "marginHealth": {
+    "title": "証拠金の健全性",
+    "marginRatio": "証拠金維持率",
+    "safe": "安全",
+    "marginCall": "追証 80%",
+    "liquidation": "強制決済",
+    "equity": "有効証拠金",
+    "maintenance": "維持証拠金",
+    "liqDistance": "強制決済までの距離",
+    "adl": "ADLキュー",
+    "adlHint": "取引所は公開していません",
+    "stressLabel": "価格が不利に動いた場合",
+    "ratioAfter": "維持率 {{value}}%",
+    "liquidated": "強制決済",
+    "flatBody": "この口座はノーポジションです。最初のポジションを持つと証拠金の状況が表示されます。",
+    "noVenueTitle": "無期限先物の取引所が有効ではありません",
+    "noVenueBody": "証拠金の健全性は先物コネクタが報告するポジションを読み取ります。使うにはコネクタを入れてください。"
+  },
+  "marketPulse": {
+    "emptyTitle": "市場データがありません",
+    "emptyBody": "App Server も公開フォールバックも応答していません。どちらかが応答した時点で表示されます。",
+    "totalCap": "時価総額合計",
+    "window24h": "24時間",
+    "volume24h": "24時間出来高",
+    "turnover": "時価総額の{{pct}}%が売買",
+    "dominance": "BTCドミナンス",
+    "breadth": "騰落 · {{total}} 銘柄",
+    "up": "上昇",
+    "down": "下落",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "暗号資産の恐怖・強欲指数。0が極度の恐怖、100が極度の強欲です。"
+  },
+  "movers": {
+    "emptyTitle": "市場データがありません",
+    "emptyBody": "App Server も公開フォールバックも応答していないため、まだ並べ替えるものがありません。",
+    "noBrokerTitle": "株式の接続先がありません",
+    "noBrokerBody": "Plugin Store からブローカーのコネクタを入れると、その日の値動きがここに並びます。",
+    "tabs": {
+      "gainers": "上昇",
+      "losers": "下落",
+      "volume": "出来高",
+      "volatility": "ボラティリティ",
+      "unusual": "異常値"
+    },
+    "window": "集計期間",
+    "columns": {
+      "pair": "ペア",
+      "change": "{{window}}変化",
+      "price": "価格",
+      "volume": "出来高",
+      "trend": "トレンド"
+    },
+    "turnoverTooltip": "24時間出来高と、同じスナップショットの中央値に対してその銘柄が自分自身をどれだけ売買したか。自身の30日平均との比較ではありません。スナップショットにその値は含まれていません。",
+    "empty": {
+      "gainers": "この期間で上昇した銘柄はありません。",
+      "losers": "この期間で下落した銘柄はありません。",
+      "volume": "まだ出来高を報告した取引所がありません。",
+      "volatility": "順位が付くほど動いた銘柄がありません。",
+      "unusual": "規模に対して異常な売買をしている銘柄はありません。"
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "24 時間の確率変動が大きい順",
+    "loadingTitle": "ボードを読み取り中",
+    "loadingBody": "各取引所が応答すると変動が表示されます。",
+    "emptyTitle": "動きなし",
+    "emptyBody": "本日、行として出すほど動いた契約はありません。",
+    "noChangeFrom": "対象外: {{venues}} は 24 時間の変動を公開していません。"
+  },
   "onboarding": {
     "phase": {
       "ready": "準備完了"
@@ -208,6 +529,187 @@
       "sub": "プライベート、ローカル、あなたの取引スタイルに合わせて調整済み。ターミナルの準備が整いました。"
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "オンチェーンのペアではありません",
+    "notOnChainBody": "このテープはAMMプールを通るスワップを読みます。紐づくペアは中央集権取引所のものです。",
+    "filterAll": "すべて",
+    "filterLarge": "{{value}} 超",
+    "buy": "買い",
+    "sell": "売り",
+    "openTx": "トランザクションを開く",
+    "net1h": "純額1時間",
+    "columns": {
+      "time": "時刻",
+      "side": "売買",
+      "value": "USD",
+      "price": "価格",
+      "wallet": "ウォレット"
+    },
+    "loadingTitle": "スワップを読み込み中",
+    "loadingBody": "このプールで確定したスワップを取得しています。",
+    "emptyTitle": "スワップはまだありません",
+    "emptyBody": "プロバイダが返す期間内に、このプールでの約定はありません。"
+  },
+  "openInterest": {
+    "title": "建玉上位",
+    "changeLabel": "24時間変化",
+    "notPublished": "はAPIで建玉を公開していません。",
+    "emptyTitle": "建玉はまだありません",
+    "emptyBody": "建玉はファンディングの取得と一緒に届きます。接続中の取引所が気配を出している契約が表示されます。"
+  },
+  "outcomeLadder": {
+    "noPairTitle": "イベントが未選択です",
+    "noPairBody": "Discovery からレースを開くと、全候補の価格を 1 つの表で確認できます。",
+    "loadingTitle": "候補を読み込み中",
+    "loadingBody": "取引所が応答すると全候補が表示されます。",
+    "notFoundTitle": "取引所のボードにこのイベントがありません",
+    "notFoundBody": "取引所がこのイベントを返さなかったため、他のアウトカムを一覧できません。チャートと注文票は引き続き使えます。",
+    "emptyTitle": "他のアウトカムはありません",
+    "emptyBody": "この設問はマーケットが 1 つだけなので、順位付けする候補群がありません。",
+    "filterPlaceholder_one": "1 件のアウトカムを絞り込み",
+    "filterPlaceholder_other": "{{count}} 件のアウトカムを絞り込み",
+    "sort": {
+      "probability": "並び順 · 確率",
+      "change": "並び順 · 24 時間変動",
+      "volume": "並び順 · 出来高",
+      "name": "並び順 · 名前"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "アウトカム",
+      "yes": "Yes",
+      "change": "24 時間",
+      "trend": "30 日",
+      "volume": "出来高",
+      "trade": "取引"
+    },
+    "yesChip": "Yes {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "{{name}} をバスケットに追加",
+    "noMatches": "その条件に一致するアウトカムはありません。",
+    "tailBelow_one": "{{price}} 未満があと 1 件 · 合計出来高 {{volume}}",
+    "tailBelow_other": "{{price}} 未満があと {{count}} 件 · 合計出来高 {{volume}}",
+    "tailMore_one": "あと 1 件 · 合計出来高 {{volume}}",
+    "tailMore_other": "あと {{count}} 件 · 合計出来高 {{volume}}",
+    "showMore_one": "1 件を表示",
+    "showMore_other": "{{count}} 件を表示"
+  },
+  "pairDossier": {
+    "marketCap": "時価総額",
+    "rank": "{{rank}}位",
+    "volume24h": "24時間出来高",
+    "turnover": "時価総額の{{pct}}%",
+    "change7d": "7日変化",
+    "change7dSub": "1週間前との比較",
+    "sector": "セクター",
+    "sectorMove": "セクター24時間 {{change}}",
+    "quotedOn": "気配のある取引所",
+    "ofVenues": "{{total}} 取引所中",
+    "tightestSpread": "最狭スプレッド",
+    "bps": "{{bps}} bps",
+    "range24h": "24時間レンジ",
+    "rangeLowHigh": "{{low}} 〜 {{high}}",
+    "volatility": "ボラティリティ",
+    "volatilityWindow": "{{timeframe}}足 {{span}} 分から年率換算",
+    "spreadByVenue": "取引所別スプレッド · 最良気配",
+    "spreadByVenueTooltip": "各取引所が今どれだけ狭く気配を出しているかを、仲値基準のベーシスポイントで示します。ティッカーは数量を持たないため、これは最良気配で板を越えるコストであり、その奥の厚みではありません。",
+    "noBooks": "このペアの両側の板を出している接続済み取引所はまだありません。",
+    "sizingNote": "板を越えるコストは {{tight}} で {{tightBps}} bps、{{wide}} で {{wideBps}} bps です。発注量はペアではなく取引所に合わせてください。",
+    "sizingNoteSingle": "実板を出しているのは {{venue}} だけで、{{bps}} bps です。"
+  },
+  "poolDetail": {
+    "emptyTitle": "プール未選択",
+    "emptyBody": "マップからプールを選ぶと、流動性・出来高・フローが表示され、チャートまで1クリックです。",
+    "change24h": "{{value}} 24時間",
+    "liquidity": "流動性",
+    "volume24h": "出来高24時間",
+    "turnover": "出来高 / 流動性",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "取引数24時間",
+    "feeTier": "手数料ティア",
+    "pressureByValue": "買い圧力と売り圧力（24時間、金額ベース）",
+    "pressureByCount": "買い圧力と売り圧力（24時間、取引数ベース）",
+    "loading": "プール情報を読み込み中です。",
+    "openChart": "チャートを開いてスワップ"
+  },
+  "poolMap": {
+    "title": "{{chain}} のプール",
+    "subtitle": "自らの流動性をどれだけ回しているかで並べ替え",
+    "sortTurnover": "回転率",
+    "sortVolume": "出来高",
+    "sortLiquidity": "流動性",
+    "turnoverValue": "{{value}}x",
+    "openPair": "チャートを開く",
+    "columns": {
+      "pool": "プール",
+      "price": "価格",
+      "change": "24時間",
+      "volume": "出来高24時間",
+      "liquidity": "流動性",
+      "turnover": "出来高 / 流動性"
+    },
+    "noChainTitle": "チェーンを選択",
+    "noChainBody": "左のレールでチェーンを選ぶと、そのプールが出来高と裏付け流動性の比でここに並びます。",
+    "loadingTitle": "プールを読み込み中",
+    "loadingBody": "このチェーンの上位プールを取得しています。",
+    "emptyTitle": "プールが返りませんでした",
+    "emptyBody": "データプロバイダはこのチェーンについて何も返しませんでした。次回更新時に再試行します。"
+  },
+  "poolStats": {
+    "notOnChainTitle": "オンチェーンのペアではありません",
+    "notOnChainBody": "このパネルはAMMプールの状態を読みます。紐づくペアは中央集権取引所のもので、代わりに板があります。",
+    "loadingTitle": "プールを読み込み中",
+    "loadingBody": "このペアで最も厚いプールを特定しています。",
+    "emptyTitle": "プール情報なし",
+    "emptyBody": "データプロバイダはこのプールについて何も返しませんでした。次回更新時に再試行します。",
+    "liquidity": "流動性",
+    "volume24h": "出来高24時間",
+    "turnoverSub": "流動性の {{value}}倍",
+    "feeTier": "手数料ティア",
+    "feeTierUnknown": "この venue は非公開",
+    "reserves": "リザーブ",
+    "reservesUnavailable": "両サイドはデスクトップのみ",
+    "trades24h": "取引数24時間",
+    "tradersSub_one": "トレーダー {{count}} 人",
+    "tradersSub_other": "トレーダー {{count}} 人",
+    "poolAge": "プール開設からの期間",
+    "ageToday": "本日",
+    "ageDays_one": "{{count}} 日",
+    "ageDays_other": "{{count}} 日",
+    "ageMonths_one": "{{count}} か月",
+    "ageMonths_other": "{{count}} か月",
+    "impactLabel": "注文サイズ別の価格インパクト",
+    "impactNote": "各サイズでその場で見積もった値で、リザーブからの推計ではありません。そのため分割ルートがこのプール単体の曲線を上回ることがあります。"
+  },
+  "predictionCategories": {
+    "all": "すべて",
+    "noneBody": "この取引所はイベントにカテゴリを付けていません。",
+    "venueHeading": "取引所",
+    "desktopOnly": "デスクトップ",
+    "venueError": "エラー"
+  },
+  "resolvingSoon": {
+    "resolves": "{{when}} に決着",
+    "loadingTitle": "期限を読み取り中",
+    "loadingBody": "各取引所が応答すると決着日が表示されます。",
+    "emptyTitle": "まもなく決着するものはありません",
+    "emptyBody": "ここにある未決済の契約で、今後の決着日を公開しているものはありません。"
+  },
+  "riskControls": {
+    "maxDailyLoss": "1日の最大損失",
+    "maxDailyTrades": "1日の最大取引回数",
+    "maxPositionSize": "最大ポジションサイズ",
+    "usedPercent": "{{value}}% 使用",
+    "usedCount": "{{value}} 件発注",
+    "perOrder": "毎回の注文で確認",
+    "off": "オフ",
+    "resetWindow": "リセット周期",
+    "resetIn": "{{time}} 後にリセット",
+    "killSwitch": "緊急停止",
+    "killSwitchHint": "再開するまですべての注文をブロック",
+    "haltOrders": "注文を停止",
+    "resumeOrders": "再開"
+  },
   "sectionTours": {
     "back": "戻る",
     "next": "次へ",
@@ -397,6 +899,50 @@
     "signInConsent": "続行することで、<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。",
     "analyticsNote": "収集する情報と、決して扱わない情報は<privacy>プライバシーポリシー</privacy>に記載しています。",
     "checkoutConsent": "ご登録いただくことで、<terms>利用規約</terms>に同意したことになります。"
+  },
+  "sectorPeers": {
+    "emptyTitle": "このペアのセクターがありません",
+    "emptyBody": "{{pair}} は厳選セクターカタログに含まれていないため、比較対象がありません。",
+    "loadingBody": "セクターカタログを読み込み中です。",
+    "subtitle": "{{sector}} · {{total}} 銘柄。24時間で並べ替え、{{symbol}} が先頭です。"
+  },
+  "sectorTape": {
+    "emptyTitle": "セクターデータがありません",
+    "emptyBody": "セクターは銘柄カタログと市場スナップショットを突き合わせて作ります。まだどちらも応答していません。",
+    "subtitle": "時価総額で加重。バーは何銘柄が同じ方向に動いたかを示します。",
+    "window": "セクターの期間",
+    "leads": "{{total}} 銘柄 · {{symbol}} が牽引",
+    "drags": "{{total}} 銘柄 · {{symbol}} が重し",
+    "assets": "{{total}} 銘柄"
+  },
+  "session": {
+    "noVenueTitle": "ブローカー未接続",
+    "noVenueBody": "取引時間はブローカー自身のカレンダーから取得します。株式コネクタをインストールすると、ここにセッション時間が表示されます。",
+    "noVenueAction": "コネクタを見る",
+    "loading": "取引カレンダーを読み込み中…",
+    "unavailableTitle": "セッション情報を取得できません",
+    "unavailableBody": "ブローカーから時刻もカレンダーも返りませんでした。自動で再試行します。",
+    "stateOpen": "取引時間中",
+    "statePre": "プレマーケット",
+    "statePost": "アフターマーケット",
+    "stateClosed": "取引時間外",
+    "closesIn": "{{time}}後に引け",
+    "opensIn": "{{time}}後に寄り付き",
+    "afterHoursEndsIn": "アフターマーケットは{{time}}後に終了",
+    "preMarketIn": "{{time}}後にプレマーケット",
+    "durationDh": "{{days}}日{{hours}}時間",
+    "durationHm": "{{hours}}時間{{minutes}}分",
+    "durationMs": "{{minutes}}分{{seconds}}秒",
+    "barPre": "プレ",
+    "barOpen": "寄り付き",
+    "barClose": "引け",
+    "barPost": "アフター",
+    "halfDay": "半日立会",
+    "nextSession": "次のセッション {{day}}",
+    "noSchedule": "予定されたセッションはありません",
+    "clockOnly": "開場・閉場のみ。セッションの時間帯は公開されていません。",
+    "ticketExtendedNote": "このセッションは指値注文のみ受け付けます。成行を約定させる継続的な板がありません。",
+    "ticketClosedNote": "市場は閉場中です。指値注文は次のセッションが始まるまで待機します。"
   },
   "settings": {
     "title": "設定",
@@ -1067,6 +1613,20 @@
       "thanks": "ありがとうございます。本当に助かります。"
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "オンチェーンのペアではありません",
+    "notOnChainBody": "ルートとは、アグリゲータがスワップを複数プールに分割することです。紐づくペアは中央集権取引所のものです。",
+    "probeLabel": "見積もり額",
+    "loadingTitle": "見積もり中",
+    "loadingBody": "このサイズをどう約定させるか、アグリゲータに問い合わせています。",
+    "noRouteTitle": "ルートなし",
+    "noRouteBody": "このペアでこのサイズを約定させる経路が見つかりませんでした。",
+    "noQuotePriceBody": "クォート通貨のUSD価格が公開されていないため、見積もるサイズを決められません。",
+    "emptyTitle": "表示できる分割がありません",
+    "youReceive": "受取額",
+    "priceImpact": "価格インパクト",
+    "networkFee": "ネットワーク手数料"
+  },
   "userMenu": {
     "accountMenu": "アカウントメニュー",
     "settings": "設定",
@@ -1105,6 +1665,45 @@
     "newWindow": "新しいウィンドウ",
     "back": "戻る",
     "forward": "進む"
+  },
+  "venueLadder": {
+    "emptyTitle": "比較できる取引所がありません",
+    "emptyBody": "このアセットクラスを扱う取引所をもう一つ接続すると、売買する側に合わせて並び替えます。",
+    "columns": {
+      "venue": "取引所",
+      "bid": "買値",
+      "ask": "売値",
+      "bps": "bps"
+    },
+    "switchSide": "売買の向きを切り替え",
+    "rankedByAsk": "売値順。買うのに最も安い取引所が先頭",
+    "rankedByBid": "買値順。売るのに最も高い取引所が先頭",
+    "bpsTooltip": "板の最良気配のスプレッドを仲値で測った値。両側の実板を出さない取引所は順位に入りません。",
+    "best": "最良",
+    "desktopOnlyRow": "{{venue}} はデスクトップ版が必要です",
+    "switchTo": "このペアを {{venue}} でチャート表示",
+    "desktopOnly": "デスクトップ",
+    "notListed": "ペア未上場",
+    "noBook": "気配なし"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "契約が未選択です",
+    "noPairBody": "イベントを開くと、確率がいつ動いたかを確認できます。",
+    "loadingTitle": "履歴を読み取り中",
+    "loadingBody": "確率の履歴が読み込まれるとタイムラインが表示されます。",
+    "flatTitle": "行にするほどの変動なし",
+    "flatBody": "読み込んだ履歴の範囲で、この契約は 3 セントを超えて動いていません。",
+    "columns": {
+      "when": "日時",
+      "move": "変動",
+      "what": "できごと",
+      "traded": "約定"
+    },
+    "movedFromTo": "確率が {{from}} から {{to}} へ動きました",
+    "contracts_one": "1 枚",
+    "contracts_other": "{{count}} 枚",
+    "footerMatched": "見出しは原因ではなく時刻で {{ticker}} に対応づけています。いずれも値洗いの最中に最後に配信されたものです。",
+    "footerNoTicker": "ニュースはティッカー単位で索引されており、この設問はティッカーを含まないため、各行は変動のみを表示します。"
   },
   "workspace": {
     "rename": "名前を変更",
@@ -2275,7 +2874,49 @@
     "empty": "空",
     "events": "イベント",
     "predictionPositions": "予測ポジション",
-    "futuresPositions": "先物ポジション"
+    "futuresPositions": "先物ポジション",
+    "venueLadder": "取引所ラダー",
+    "pairDossier": "ペアプロファイル",
+    "marketPulse": "マーケットパルス",
+    "movers": "値動き上位",
+    "sectorTape": "セクターレール",
+    "sectorPeers": "セクター銘柄",
+    "fundingMatrix": "ファンディングマトリクス",
+    "basisMonitor": "ベーシスモニター",
+    "openInterest": "建玉",
+    "fundingExtremes": "ファンディング極値",
+    "fundingBelt": "ファンディングベルト",
+    "liquidationMap": "清算マップ",
+    "marginHealth": "証拠金状況",
+    "riskControls": "リスク管理",
+    "categories": "カテゴリー",
+    "eventBoard": "イベントボード",
+    "oddsMovers": "確率変動",
+    "resolvingSoon": "決済間近",
+    "eventHeader": "イベントヘッダー",
+    "whatMovedIt": "変動要因",
+    "outcomeLadder": "結果ラダー",
+    "basketTicket": "バスケットチケット",
+    "chains": "チェーン",
+    "poolMap": "プールマップ",
+    "liquidityFlow": "流動性フロー",
+    "poolDetail": "プール詳細",
+    "poolStats": "プール統計",
+    "onchainTrades": "オンチェーン約定履歴",
+    "route": "ルート",
+    "feeAccrual": "手数料累計",
+    "lpPosition": "LPポジション",
+    "manageLiquidity": "流動性管理",
+    "chainLadder": "チェーンラダー",
+    "routeBridge": "ブリッジルート",
+    "inFlight": "送金中",
+    "session": "セッション",
+    "earningsCalendar": "決算カレンダー",
+    "economicCalendar": "経済指標カレンダー",
+    "sessionClock": "セッションクロック",
+    "level1": "Level 1",
+    "company": "企業情報",
+    "yourPosition": "保有ポジション"
   },
   "paneDescriptions": {
     "markets": "全取引所の全取引ペアを閲覧",
@@ -2302,7 +2943,49 @@
     "recentTickers": "素早く切り替えられる、ライブ価格付きの最近見たペア",
     "events": "予測市場のイベントを閲覧し、結果のチャートを開きます",
     "predictionPositions": "保有している契約、そのコスト、決済時期",
-    "futuresPositions": "未決済の無期限ポジション、マーク価格と清算価格"
+    "futuresPositions": "未決済の無期限ポジション、マーク価格と清算価格",
+    "venueLadder": "接続した各取引所のこのペアの最良気配を、最も安く約定できる順に並べた一覧",
+    "pairDossier": "サイズを決める統計値：レンジ、出来高、上下1%以内の流動性、そしてこのペアが最も厚く取引されている場所",
+    "marketPulse": "市場全体を示す3つの数値と、何がなぜ動いたかを1行で",
+    "movers": "その日の値上がり・値下がり上位を出来高とともに表示し、本物の値動きとヒゲを見分けられます",
+    "sectorTape": "全セクターをチップ表示し、値動きと騰落バーを添えることで、資金のローテーションが一目でわかります",
+    "sectorPeers": "このペアが属するセクターの今日の値動きを一覧、ペア自体は先頭に固定表示",
+    "fundingMatrix": "接続したすべての取引所の全無期限先物のファンディングを1つのグリッドにまとめ、どの列でも並べ替え可能",
+    "basisMonitor": "無期限先物と現物の価格差をベーシスポイントと年率で表示し、キャリーを単なる差ではなく利回りとして読めます",
+    "openInterest": "各契約の建玉と24時間変化を表示し、価格が動く前にポジションの集中を捉えます",
+    "fundingExtremes": "現在最も高いファンディングレートと最も低いファンディングレート、それぞれの取引所とともに表示",
+    "fundingBelt": "次回のファンディング精算までのカウントダウン、現在と予測のレート、そしてあなたのサイズが支払う額または受け取る額",
+    "liquidationMap": "あなたのポジションが強制決済される価格を、市場全体が抱える清算ポジションと重ねて表示",
+    "marginHealth": "証拠金維持率、維持証拠金と利用可能証拠金の比較、そして口座が自動デレバレッジ(ADL)にどれだけ近いか",
+    "riskControls": "日次損失の上限、取引回数、ポジションサイズ、緊急停止スイッチを、取引が行われるその場で編集可能",
+    "categories": "全イベントカテゴリーをリアルタイムの契約数とともに表示し、ワンクリックでボードを絞り込めます",
+    "eventBoard": "進行中のイベント市場をカードで表示：質問文、YesとNoのセント建て価格、出来高、決済時期",
+    "oddsMovers": "今日最も確率が変動した契約を、変動幅（ポイント）とともに表示",
+    "resolvingSoon": "決済が最も近い契約を、出来高ではなく時間順に並べて表示",
+    "eventHeader": "質問文、決済の時期と方法、そして市場が今織り込んでいる確率",
+    "whatMovedIt": "見出しをタイムラインで表示し、それぞれが引き起こした確率の変動を添えて",
+    "outcomeLadder": "イベント内の全結果をセント建てで表示し、並べ替えと検索が可能、各行にベットボタン付き",
+    "basketTicket": "複数の結果に同時にベットでき、総コスト、オーバーラウンド、そして提出前の最大損失を表示",
+    "chains": "コネクタを持つ全チェーンを、ガス代・流動性・24時間出来高とともに表示",
+    "poolMap": "出来高と流動性の比率でプールを順位付けし、実際に取引されているプールを先頭に表示",
+    "liquidityFlow": "一定間隔ごとの流動性の純増減を表示し、価格が動く前にプールの枯渇を捉えます",
+    "poolDetail": "選択したプールを一目で確認、ワンクリックでチャートとスワップへ",
+    "poolStats": "両サイドの準備金、預入資産総額(TVL)、24時間出来高、手数料ティア、そして3段階のサイズでの価格インパクト",
+    "onchainTrades": "プールを通過する全スワップを確定ごとに表示し、ウォレットとトランザクションへのリンクを添えて",
+    "route": "アグリゲーターがスワップを複数のプールにどう分割したか、スリッページの原因を明示します",
+    "feeAccrual": "あなたのポジションが積み上げた手数料収益、そこから導かれるAPR、そして今すぐ請求可能な金額",
+    "lpPosition": "設定したレンジと現在価格の位置関係、レンジ内滞在時間、そして単純保有と比較したインパーマネントロス",
+    "manageLiquidity": "チャートを離れることなく、レンジの変更、流動性の追加・引き出し、手数料の請求ができます",
+    "chainLadder": "同じトークンを全チェーンで価格比較、ガス代を織り込んだ上で、見かけの価格ではなく総額で最良を選べます",
+    "routeBridge": "移動元チェーン、移動先チェーン、使用するブリッジ、その手数料と所要時間を表示、そのまま実行可能",
+    "inFlight": "まだ確定していない送金を、待機中のブロック確認数とともに表示",
+    "session": "ブローカー自身のカレンダーに基づく、今まさにどの取引セッションにあるか。祝日や短縮取引日も反映",
+    "earningsCalendar": "誰がいつ決算を発表するか、寄り付き前か引け後か、そして上回るべき市場予想とともに",
+    "economicCalendar": "経済指標を発表時刻順に、重要度・前回値・市場予想とともに表示",
+    "sessionClock": "取引日の状態を1行で示すクロックで、時間外の注文で驚くことがなくなります",
+    "level1": "気配値とそのサイズ、スプレッド、当日のレンジをブローカーのフィードから表示",
+    "company": "バリュエーション、成長率、利益率、次のカタリスト、そしてアナリストの見立てを1つのペインに集約",
+    "yourPosition": "この銘柄であなたが保有するもの：数量、コスト、マーク価格、そして当日と保有全体の損益"
   },
   "multiPrice": {
     "venue": "取引所",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens 予測",
-        "description": "予測市場のイベントブラウザと建玉ポジション"
+        "description": "予測市場の機能：イベントボード、結果ラダー、バスケット、保有契約ポジション"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures マーケットコネクタ",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens 先物",
-        "description": "未決済の無期限ポジション。建値、マーク価格、清算価格つき"
+        "description": "無期限先物の機能：保有ポジション、ファンディング・ベーシススキャナー、清算・証拠金ペイン"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "オンチェーンのワークスペース: DEX ターミナルとデジェン探索ボード"
+        "description": "オンチェーンの機能：プール統計、スワップルート、LPポジション、クロスチェーンラダー"
       },
       "pairlens-equities": {
         "title": "Pairlens 株式",
-        "description": "株式のワークスペース: 株式ターミナルとスキャナー主導のデスク"
+        "description": "株式の機能：セッションクロック、Level 1気配、企業ファンダメンタルズ、決算カレンダー"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "マーケットデータのみ。ここでは取引できません。"
     },
     "trade": {
+      "allOutcomes": "全 {{total}} 件",
+      "avgFillPrice": "平均約定価格",
+      "contractCount_one": "{{formatted}} 枚",
+      "contractCount_other": "{{formatted}} 枚",
+      "fundingAtEntry": "エントリー時のファンディング",
+      "fundingLongsPay": "ロングがショートに支払い",
+      "fundingShortsPay": "ショートがロングに支払い",
+      "ifDoesNotWin": "{{outcome}} が外れた場合",
+      "ifWins": "{{outcome}} が的中した場合",
       "limitBuy": "指値買い",
       "limitSell": "指値売り",
       "bought": "約定（買い）",
+      "maxAmount": "最大",
+      "maxPayout": "最大受取額",
+      "profitLine": "利益 {{amount}} · {{roi}}",
+      "resolvesOn": "{{date}} に決着",
       "sold": "約定（売り）",
       "limitOrderFailed": "指値注文に失敗しました",
+      "stakeLine": "投入 {{amount}}",
       "swapFailed": "スワップに失敗しました",
+      "switchOutcome": "結果を切り替え",
       "workflowUnsupported": "この市場ではワークフローに対応していません",
       "orderBlocked": "リスク上限により注文がブロックされました",
       "orderRejected": "注文が拒否されました",
@@ -3083,8 +3781,6 @@
       "maxLoss": "最大損失",
       "priceCents": "価格（¢）",
       "thisOutcome": "この結果",
-      "decreaseContracts": "契約を1枚減らす",
-      "increaseContracts": "契約を1枚増やす",
       "priceCentsRange": "0¢ から 100¢ の価格を入力してください",
       "leverage": "レバレッジ",
       "reduceOnly": "リデュースオンリー",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "予測市場ターミナル",
-        "tagline": "確率をチャートで、そのイベント全体を隣に。",
-        "description": "予測市場のデフォルトレイアウト：確率チャートの下に約定履歴と保有中の契約、中央にオーダーブックと取引チケット、右に全高のイベントブラウザ。隣り合う結果を見ることが分析の半分だからです。",
+        "tagline": "質問を先に、確率はそのあとに。",
+        "description": "予測市場のデフォルトレイアウト：イベントヘッダー、その下に確率チャート、さらにそれを動かした見出し、そして最大払戻と最大損失をベット前に示すオーダーブックとチケット、右に隣接する結果。",
         "menuLabel": "デフォルト"
       },
       "prediction-discovery": {
         "name": "予測マーケット探索",
         "tagline": "ペア一覧ではなく、進行中のイベント市場を見渡す。",
-        "description": "イベント契約のためのホームボードです。イベントブラウザが広い列を占め、その隣にニュースフィードが流れ、細いレールがウォッチリストとセンチメント指標を縦に並べます。Kalshi や Polymarket などの予測取引所を追加するとボードが埋まります。",
+        "description": "イベント契約のために作られたホームボード：イベントボードの隣にカテゴリーレール、そして最大の確率変動、その下に決済間近の契約。Kalshi や Polymarket などの予測取引所をインストールするとボードが埋まります。",
         "menuLabel": "デフォルト"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "DEXターミナル",
         "tagline": "見せかけの板がない、オンチェーン取引。",
-        "description": "オンチェーンのデフォルトレイアウト：チャートの下にプール統計と約定履歴、新規上場を捉えるための最近見たティッカーの上にスワップチケット、右にソーシャルフィード。オーダーブックの列はありません：プールから算出される板の厚みは擬似的なものなので表示しません。",
+        "description": "オンチェーンのデフォルトレイアウト：チャート、その下にプール統計、隣にオンチェーン約定履歴、そしてアグリゲーターのルートの上にスワップチケットを配置し、スリッページの原因を明示します。オーダーブックの列はありません：プールから算出される板の厚みは擬似的なものなので表示しません。",
         "menuLabel": "デフォルト"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "株式ターミナル",
-        "tagline": "株式を、銘柄ニュースの上に取引チケットを重ねて。",
-        "description": "株式のデフォルトレイアウト：チャートの下に約定履歴、ポジション、ファンダメンタルズ、銘柄ニュースの上に取引チケット。暗号資産をフローが動かすように、株式は材料が動かすからです。",
+        "tagline": "セッションクロックをチャートの上に、Level 1を取引チケットの上に。",
+        "description": "株式のデフォルトレイアウト：セッションクロックを先頭に、その下にチャート、さらに約定履歴とポジション、そしてLevel 1気配をチケットと銘柄ニュースの上に配したレール。通常取引時間外はクロックがそれを示し、チケットは指値注文のみになります。",
         "menuLabel": "デフォルト"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "ウルトラワイドまたはセカンドモニターを埋め尽くす4カラムのコマンドセンター：スキャナー、チャート、オーダーブックと板の厚み、そして保有ポジションの上に置いた取引チケット。最大主義のレイアウトです。"
       },
       "classic-terminal": {
-        "name": "クラシックターミナル",
-        "tagline": "定番のPairlensデスク：チャート、データ、板、チケット。",
-        "description": "デフォルトのターミナルレイアウト：左に大きなチャートとタブ切り替え式のデータストリップ、リスクバー、右にオーダーブックとその下に取引チケット。",
+        "name": "現物執行",
+        "tagline": "接続したすべての取引所の最良気配。",
+        "description": "現物のデフォルトレイアウト：チャート、その下に約定履歴とポジション、そして取引所ラダーを先頭にオーダーブックと取引チケットへ続くレール。",
         "menuLabel": "デフォルト"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "4Kモニター向けに画面を埋め尽くす全部盛り：オーダーブックとペア情報、リスクバーを添えたチャート、ポジションとソーシャル、そして取引チケットのカラム。"
       },
       "home-pulse": {
-        "name": "ホーム",
-        "tagline": "デフォルトのボード：スキャナー、センチメント、値動き上位、ニュース。",
-        "description": "デフォルトのホームボード：マーケットスキャナー、Fear & Greedゲージとトップコインをウォッチリストとタブ切り替えできるマーケットパルスレール、そしてフル高さのニュースカラム。すべてアカウントなしで動作します。",
+        "name": "現物の探索",
+        "tagline": "開いた瞬間、何が動いたかとその理由がわかる。",
+        "description": "現物のホームボード：マーケットパルスのストリップ、その下に値動き上位テーブルとセクターレール、隣にフルスキャナー、ウォッチリストの上にニュース。すべてアカウントなしで使えます。",
         "menuLabel": "デフォルト"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "無期限先物の探索",
-        "tagline": "建玉を横に置いて無期限先物をスキャン。",
-        "description": "先物のホームボード：無期限契約に絞り込んだマーケットスキャナーの横に、マーク価格と清算価格つきの建玉、その下にマルチ価格レール、そしてセンチメントの下にニュースフィードを配置します。",
+        "tagline": "価格ではなく、保有コストでスキャン。",
+        "description": "先物のホームボード：ファンディングマトリクス、その下にベーシスモニター、隣に建玉とファンディング極値。無期限先物を保有コストで順位付けし、価格スキャナーには答えられない問いに答えます。",
         "menuLabel": "デフォルト"
       },
       "dex-discovery": {
         "name": "DEX探索",
-        "tagline": "オンチェーンの新規上場、ソーシャル、ウォッチリスト。",
-        "description": "オンチェーンのホームボード：DEXペアに絞り込んだマーケットスキャナー、新規上場を捉えるための最近のティッカーとソーシャルフィード、そしてウォッチリストとニュースフィードを並べます。",
+        "tagline": "まずチェーンを選び、それからプールを。",
+        "description": "オンチェーンのホームボード：ガス代と流動性を示すチェーンレール、出来高対流動性で順位付けしたプール、その下にフローチャート、そして右に選択中のプール、ワンクリックでチャートとスワップへ。コネクタを持たないチェーンは表示されません。",
         "menuLabel": "デフォルト"
       },
       "equities-discovery": {
         "name": "株式の探索",
-        "tagline": "銘柄スキャナーの隣にウォッチリストとニュース。",
-        "description": "株式のホームボード：株式に絞り込んだマーケットスキャナー、マルチ価格レールの上のウォッチリスト、そして全高のニュース列。株価は開示と見出しで動くからです。",
+        "tagline": "取引日を、それを動かすカレンダーで。",
+        "description": "株式のホームボード：今どのセッションにあるか、誰がいつ決算を発表するか、そして予定されている経済指標、隣に値動き上位とニュースワイヤー。クロックはブローカーのカレンダーに基づくため、祝日や短縮取引日も正確です。",
         "menuLabel": "デフォルト"
+      },
+      "spot-research": {
+        "name": "現物リサーチ",
+        "tagline": "発注の前に、理由を。",
+        "description": "セッションを超えて保有するポジション向け：ペアプロファイルの上にチャート、その隣にペア専用のニュースワイヤー、セクター銘柄の上に見積もりサイズの取引チケット。オーダーブックはなく、板の深度ストリームも開きません。",
+        "menuLabel": "リサーチ"
+      },
+      "perps-carry": {
+        "name": "無期限先物キャリー",
+        "tagline": "次のファンディング精算が、あなたにいくらかかるか。",
+        "description": "保有し続けるつもりの無期限先物向け：チャートの上にカウントダウン付きのファンディングベルト、現在と予測のレート、あなたのサイズが支払う額または受け取る額を表示、その下に建玉、そしてオーダーブックの下にレバレッジ対応の取引チケット。",
+        "menuLabel": "キャリー"
+      },
+      "perps-risk": {
+        "name": "無期限先物リスク",
+        "tagline": "ポジションが消える場所と、それを止める上限。",
+        "description": "同じペアをエクスポージャーとして読む画面：チャート、その下に清算マップ、証拠金状況の下にガードレール、そして右にチケット。上限はその場で編集できるので、サイズの上限は設定画面ではなく取引が行われるその場で調整します。",
+        "menuLabel": "リスク"
+      },
+      "dex-liquidity": {
+        "name": "DEX流動性",
+        "tagline": "あなたのレンジ、あなたの手数料、あなたのインパーマネントロス。",
+        "description": "プールのLP側の画面：レンジを重ねたチャート、積み上がった手数料とそこから導かれるAPR、レンジ内滞在時間、そして単純保有と比較したインパーマネントロス。隣にレンジエディタがあるので、チャートを離れずにポジションを再調整できます。",
+        "menuLabel": "流動性"
+      },
+      "dex-cross-chain": {
+        "name": "DEXクロスチェーン",
+        "tagline": "同じトークンを、全チェーンで、ガス代込みで。",
+        "description": "チェーン間の移動のためのボード：チェーンラダーがガス代を織り込んだ総額でトークンをあらゆるチェーンで価格表示し、ブリッジルートが手数料と所要時間を明示、その隣に確認待ちの送金がブロック確認数とともに並びます。",
+        "menuLabel": "クロスチェーン"
+      },
+      "equities-company": {
+        "name": "株式カンパニー",
+        "tagline": "ティッカーの向こうにある事業。",
+        "description": "売買するというより保有するための株式画面：チャート、その下にバリュエーション、成長率、利益率、次のカタリスト、アナリスト予想レンジ、隣に銘柄ニュース、取引チケットの上に保有ポジション。",
+        "menuLabel": "企業"
+      },
+      "prediction-race": {
+        "name": "予測レース",
+        "tagline": "全結果に値がつき、オーバーラウンドも明示。",
+        "description": "二択ではなく多数の候補がある予測市場向け：結果数とオーバーラウンドを示すヘッダー、積み上げシェアチャート、そして全結果に値をつけ行から直接ベットできるラダー。バスケットの合計はオーバーラウンド分になるため、全結果を買い占めても無料の利益にはならないことが一目でわかります。",
+        "menuLabel": "レース"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "ローソク足",
         "description": "チャートとシグナルのためのライブOHLCVローソク足ストリーム"
       },
+      "funding": {
+        "label": "ファンディング",
+        "description": "無期限先物のファンディングレート、マーク価格とインデックス価格、建玉"
+      },
+      "pool-stats": {
+        "label": "プール統計",
+        "description": "AMMプールの状態、そのスワップ、チェーンの上位プール"
+      },
+      "session": {
+        "label": "セッションカレンダー",
+        "description": "祝日や半日立会を含む、取引日の時計とカレンダー"
+      },
       "ticker": {
         "label": "ティッカー",
         "description": "リアルタイムの最終価格と24時間変化のストリーム"
@@ -5274,5 +6024,23 @@
     "closeBody": "{{venue}} で {{pair}} を {{contracts}} 枚、リデュースオンリーの成行注文で決済します。",
     "closeConfirm": "ポジションを決済",
     "closeSubmitted": "決済注文を送信しました"
+  },
+  "yourPosition": {
+    "noVenueTitle": "ブローカー未接続",
+    "noVenueBody": "株式ブローカーを接続すると、この銘柄の保有状況が表示されます。",
+    "noAccountsTitle": "証券口座がありません",
+    "noAccountsBody": "ブローカーのAPIキーを登録すると保有状況が表示されます。ペーパー用のキーでも構いません。",
+    "connect": "口座を接続",
+    "flatTitle": "{{symbol}}のポジションはありません",
+    "flatBody": "この銘柄の約定はここに表示されます。",
+    "shares_one": "{{shares}}株",
+    "shares_other": "{{shares}}株",
+    "sharesShort_one": "{{shares}}株の売建",
+    "sharesShort_other": "{{shares}}株の売建",
+    "openPnlPercent": "取得原価に対する損益率",
+    "avgCost": "平均取得単価",
+    "mark": "評価価格",
+    "marketValue": "評価額",
+    "dayChange": "本日"
   }
 }

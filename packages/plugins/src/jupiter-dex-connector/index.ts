@@ -8,6 +8,7 @@ import {
   searchTokens,
 } from './token-registry'
 import { executeSwap, getQuote } from './swap-executor'
+import { quoteSwapRoute } from './route-preview'
 import {
   cancelTriggerOrder,
   createTriggerOrder,
@@ -162,6 +163,19 @@ export function createJupiterDexConnectorPlugin(
 
     if (capability === 'trading:orders') {
       const action = String(p['action'] ?? 'place')
+
+      // Read-only, and deliberately ahead of the wallet lookup: the route pane
+      // and the price-impact tiers quote sizes nobody has agreed to trade, so
+      // requiring an account would gate a preview behind a key. Ends at data —
+      // no `/swap` call, no transaction, no signature.
+      if (action === 'quote') {
+        return quoteSwapRoute({
+          market: 'jupiter',
+          pair: String(p['pair'] ?? ''),
+          side: String(p['side'] ?? 'buy') === 'sell' ? 'sell' : 'buy',
+          size: String(p['size'] ?? '0'),
+        })
+      }
 
       if (action === 'list') {
         // Market swaps are atomic, but resting Trigger (limit) orders

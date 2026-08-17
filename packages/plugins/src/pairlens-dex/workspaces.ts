@@ -14,15 +14,80 @@ import type {
 } from '@pairlens/shared/plugin-types'
 
 /**
- * DEX Terminal — the default pair layout for the `dex` asset class. No order
- * book column: DEX data providers synthesize bid/ask from pool state, so a
- * book pane would render fabricated depth. Pair Info leads the data strip
- * (pool stats always stream from the data providers, while the tape depends on
- * the venue), the swap ticket pairs with Recent Tickers for new listings, and
- * the social feed takes the right rail, because on-chain alpha travels there
- * first.
+ * DEX Terminal — the default pair layout for the `dex` asset class. Chart over
+ * pool stats, the on-chain tape in the middle, and the swap ticket above the
+ * aggregator route.
+ *
+ * Still no order book and no depth pane, and now for a stated reason rather
+ * than an absence: DEX data providers synthesize bid/ask from pool state, so
+ * that pane would render fabricated depth. `pool-stats` is what an AMM
+ * actually has (reserves both sides, value locked, 24h volume, fee tier, and
+ * impact at three sizes), and `route` shows the aggregator's split, so the
+ * slippage on the ticket has a cause you can read.
  */
 export const DEX_TERMINAL_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 58,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 65,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-pool-stats',
+          heightPercent: 35,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-pool-stats', type: 'pool-stats' }],
+        },
+      ],
+    },
+    {
+      id: 'col-tape',
+      widthPercent: 24,
+      cells: [
+        {
+          id: 'cell-onchain',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-onchain-trades', type: 'onchain-trades' }],
+        },
+      ],
+    },
+    {
+      id: 'col-swap',
+      widthPercent: 18,
+      cells: [
+        {
+          id: 'cell-trade',
+          heightPercent: 77,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+        {
+          id: 'cell-route',
+          heightPercent: 23,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-route', type: 'route' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * DEX Liquidity — the LP side of the same pool. Chart over fees accrued, the
+ * position in the middle, and the range editor on the right.
+ *
+ * Every pane here reads a wallet's own position, so the template opens bound
+ * to an account rather than read-only: a range and an impermanent-loss figure
+ * with nobody holding them is a chart of nothing.
+ */
+export const DEX_LIQUIDITY_LAYOUT = {
   version: 1,
   columns: [
     {
@@ -31,55 +96,101 @@ export const DEX_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-chart',
-          heightPercent: 70,
+          heightPercent: 69,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
-          id: 'cell-bottom',
-          heightPercent: 25,
+          id: 'cell-fees',
+          heightPercent: 31,
           activeTabIndex: 0,
-          panes: [
-            { id: 'pane-pair-info', type: 'pair-info' },
-            { id: 'pane-trades', type: 'trades' },
-            { id: 'pane-data-log', type: 'data-log' },
-          ],
-        },
-        {
-          id: 'cell-risk',
-          heightPercent: 5,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-risk', type: 'risk' }],
+          panes: [{ id: 'pane-fee-accrual', type: 'fee-accrual' }],
         },
       ],
     },
     {
-      id: 'col-swap',
-      widthPercent: 20,
-      cells: [
-        {
-          id: 'cell-trade',
-          heightPercent: 45,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
-        },
-        {
-          id: 'cell-recent',
-          heightPercent: 55,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-recent-tickers', type: 'recent-tickers' }],
-        },
-      ],
-    },
-    {
-      id: 'col-right',
+      id: 'col-position',
       widthPercent: 24,
       cells: [
         {
-          id: 'cell-social',
+          id: 'cell-lp-position',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-social', type: 'social' }],
+          panes: [{ id: 'pane-lp-position', type: 'lp-position' }],
+        },
+      ],
+    },
+    {
+      id: 'col-manage',
+      widthPercent: 20,
+      cells: [
+        {
+          id: 'cell-manage',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-manage-liquidity', type: 'manage-liquidity' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * DEX Cross-Chain — the same token, priced per chain, with the bridge next to
+ * it. The chain ladder leads, over the chart; the bridge route takes the
+ * middle column, and transfers still confirming sit above recent tickers.
+ *
+ * Ladder totals are gas-adjusted, which is the only comparison worth making:
+ * the cheapest quote on the most expensive chain is routinely the worst fill.
+ */
+export const DEX_CROSS_CHAIN_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 59,
+      cells: [
+        {
+          id: 'cell-chain-ladder',
+          heightPercent: 34,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chain-ladder', type: 'chain-ladder' }],
+        },
+        {
+          id: 'cell-chart',
+          heightPercent: 66,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+      ],
+    },
+    {
+      id: 'col-bridge',
+      widthPercent: 23,
+      cells: [
+        {
+          id: 'cell-route-bridge',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-route-bridge', type: 'route-bridge' }],
+        },
+      ],
+    },
+    {
+      id: 'col-flight',
+      widthPercent: 18,
+      cells: [
+        {
+          id: 'cell-in-flight',
+          heightPercent: 78,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-in-flight', type: 'in-flight' }],
+        },
+        {
+          id: 'cell-recent',
+          heightPercent: 22,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-recent-tickers', type: 'recent-tickers' }],
         },
       ],
     },
@@ -130,59 +241,56 @@ export const DEX_DEGEN_LAYOUT = {
 } satisfies ContributedWorkspaceLayout
 
 /**
- * DEX Discovery — the home board for on-chain markets. On-chain discovery is a
- * flow problem rather than a table problem: what just listed, what people are
- * posting about. So the scanner shares the board with recent tickers over the
- * social feed, and the right rail keeps the watchlist above the news wire.
+ * DEX Discovery — the home board for on-chain markets. Chain first, then pool:
+ * a chain rail on the left, pools ranked by volume against liquidity in the
+ * middle over the flow chart, and the selected pool's detail on the right.
+ *
+ * Chain rows come from the installed chain connectors, so a chain with no
+ * connector is absent rather than a dead link, and the pool rows under it are
+ * always ones this install can actually chart and swap.
  */
 export const DEX_DISCOVERY_LAYOUT = {
   version: 1,
   columns: [
     {
-      id: 'col-markets',
-      widthPercent: 46,
+      id: 'col-chains',
+      widthPercent: 20,
       cells: [
         {
-          id: 'cell-markets',
+          id: 'cell-chains',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-markets', type: 'markets' }],
+          panes: [{ id: 'pane-chains', type: 'chains' }],
         },
       ],
     },
     {
-      id: 'col-flow',
-      widthPercent: 30,
+      id: 'col-pools',
+      widthPercent: 58,
       cells: [
         {
-          id: 'cell-recent',
-          heightPercent: 45,
+          id: 'cell-pool-map',
+          heightPercent: 64,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-recent-tickers', type: 'recent-tickers' }],
+          panes: [{ id: 'pane-pool-map', type: 'pool-map' }],
         },
         {
-          id: 'cell-social',
-          heightPercent: 55,
+          id: 'cell-flow',
+          heightPercent: 36,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-social', type: 'social' }],
+          panes: [{ id: 'pane-liquidity-flow', type: 'liquidity-flow' }],
         },
       ],
     },
     {
-      id: 'col-pulse',
-      widthPercent: 24,
+      id: 'col-detail',
+      widthPercent: 22,
       cells: [
         {
-          id: 'cell-watchlist',
-          heightPercent: 50,
+          id: 'cell-pool-detail',
+          heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
-        },
-        {
-          id: 'cell-news',
-          heightPercent: 50,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-news', type: 'news' }],
+          panes: [{ id: 'pane-pool-detail', type: 'pool-detail' }],
         },
       ],
     },
@@ -202,7 +310,7 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
     icon: 'Flame',
     tagline: 'On-chain trading without the fake order book.',
     description:
-      'The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the social feed on the right. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
+      'The default on-chain layout: a chart over pool stats, the on-chain tape beside it, and a swap ticket above the aggregator route so slippage has a stated cause. There is no order book column: pool-quoted depth is synthetic, so it is not shown.',
     facets: {
       traderTypes: ['dex-degen', 'day-trader'],
       assetClasses: ['dex'],
@@ -241,9 +349,9 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'discovery',
     routeMenu: true,
     icon: 'Flame',
-    tagline: 'On-chain listings, the social feed, and your watchlist.',
+    tagline: 'Pick the chain, then the pool.',
     description:
-      'The on-chain home board: the markets scanner filtered to DEX pairs, recent tickers over the social feed for catching what just listed, and your watchlist above the news wire.',
+      'The on-chain home board: a chain rail with gas and liquidity, pools ranked by volume against liquidity over the flow chart, and the selected pool on the right, one click from its chart and a swap. Chains you have no connector for never appear.',
     facets: {
       traderTypes: ['dex-degen', 'day-trader'],
       assetClasses: ['dex'],
@@ -251,5 +359,43 @@ export const DEX_WORKSPACES: Array<ContributedWorkspace> = [
     },
     tags: ['discovery', 'dex', 'onchain'],
     layout: DEX_DISCOVERY_LAYOUT,
+  },
+  {
+    id: 'template:dex-liquidity',
+    name: 'DEX Liquidity',
+    menuLabel: 'Liquidity',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Droplets',
+    tagline: 'Your range, your fees, your impermanent loss.',
+    description:
+      'The LP side of a pool: the chart with your range on it, fees accrued and the APR they imply, time in range, and impermanent loss measured against simply holding. The range editor sits beside it, so a position is rebalanced without leaving the chart.',
+    facets: {
+      traderTypes: ['dex-degen', 'position-investor'],
+      assetClasses: ['dex'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['dex', 'onchain', 'liquidity'],
+    layout: DEX_LIQUIDITY_LAYOUT,
+    pairDefault: { pairKey: 'SOL-USDC', market: 'jupiter' },
+  },
+  {
+    id: 'template:dex-cross-chain',
+    name: 'DEX Cross-Chain',
+    menuLabel: 'Cross-Chain',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Waypoints',
+    tagline: 'The same token, every chain, gas included.',
+    description:
+      'A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their block counters.',
+    facets: {
+      traderTypes: ['dex-degen', 'quant'],
+      assetClasses: ['dex'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['dex', 'onchain', 'bridge'],
+    layout: DEX_CROSS_CHAIN_LAYOUT,
+    pairDefault: { pairKey: 'ETH-USDC', market: 'ethereum' },
   },
 ]

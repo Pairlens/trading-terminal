@@ -3,11 +3,12 @@
 /**
  * `pairlens-cex-futures` — the perpetual-futures surfaces, as a plugin.
  *
- * Panels only: no capabilities, no runtime. The positions pane reads
- * `trading:positions` from whichever futures connector is active, so this
- * plugin serves nothing itself. It exists so the pane ships, installs,
- * disables and uninstalls with the `cex-futures` family rather than riding in
- * `pairlens-core`, which a deployment that drops futures still keeps.
+ * Panels only: no capabilities, no runtime. Every pane here reads from
+ * whichever futures connector is active (`trading:positions`, funding and
+ * open-interest fetches), so this plugin serves nothing itself. It exists so
+ * the perp surfaces ship, install, disable and uninstall with the
+ * `cex-futures` family rather than riding in `pairlens-core`, which a
+ * deployment that drops futures still keeps.
  *
  * Same shape and same reasoning as `pairlens-predictions`. An empty
  * `capabilities` array is deliberate and legal (`validateManifest` asks only
@@ -28,7 +29,7 @@ export const pairlensCexFuturesManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Perpetual futures surfaces — open positions with entry, mark and liquidation',
+    'Perpetual futures surfaces: open positions, funding and basis scanners, liquidation and margin panes',
   homepage: 'https://pairlens.finance',
   icon: 'https://pairlens.finance/favicon.svg',
   metadata: { family: 'cex-futures' },
@@ -48,6 +49,85 @@ export const pairlensCexFuturesManifest: PluginManifest = {
         icon: 'Layers',
         category: 'trading',
         minHeight: 120,
+      },
+      {
+        id: 'funding-matrix',
+        label: 'Funding Matrix',
+        labelKey: 'panes.fundingMatrix',
+        descriptionKey: 'paneDescriptions.fundingMatrix',
+        icon: 'Grid3X3',
+        category: 'discovery',
+        minHeight: 150,
+      },
+      {
+        id: 'basis-monitor',
+        label: 'Basis Monitor',
+        labelKey: 'panes.basisMonitor',
+        descriptionKey: 'paneDescriptions.basisMonitor',
+        icon: 'Scale',
+        category: 'discovery',
+        minHeight: 100,
+      },
+      {
+        id: 'open-interest',
+        label: 'Open Interest',
+        labelKey: 'panes.openInterest',
+        descriptionKey: 'paneDescriptions.openInterest',
+        icon: 'BarChart3',
+        category: 'discovery',
+        minHeight: 100,
+      },
+      {
+        id: 'funding-extremes',
+        label: 'Funding Extremes',
+        labelKey: 'panes.fundingExtremes',
+        descriptionKey: 'paneDescriptions.fundingExtremes',
+        icon: 'ArrowDownUp',
+        category: 'discovery',
+        minHeight: 100,
+      },
+      {
+        id: 'funding-belt',
+        label: 'Funding Belt',
+        labelKey: 'panes.fundingBelt',
+        descriptionKey: 'paneDescriptions.fundingBelt',
+        icon: 'Timer',
+        category: 'charting',
+        minHeight: 72,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        id: 'liquidation-map',
+        label: 'Liquidation Map',
+        labelKey: 'panes.liquidationMap',
+        descriptionKey: 'paneDescriptions.liquidationMap',
+        icon: 'Crosshair',
+        category: 'charting',
+        minHeight: 120,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        // The only pane here that needs an account picked: a margin ratio is
+        // per-account, so there is nothing to draw until one is selected.
+        id: 'margin-health',
+        label: 'Margin Health',
+        labelKey: 'panes.marginHealth',
+        descriptionKey: 'paneDescriptions.marginHealth',
+        icon: 'Gauge',
+        category: 'trading',
+        minHeight: 120,
+        requires: ['workspace:active-wallet'],
+      },
+      {
+        // Guardrails are local config, not venue state, so this pane is
+        // useful with nothing connected at all.
+        id: 'risk-controls',
+        label: 'Risk Controls',
+        labelKey: 'panes.riskControls',
+        descriptionKey: 'paneDescriptions.riskControls',
+        icon: 'SlidersHorizontal',
+        category: 'trading',
+        minHeight: 140,
       },
     ],
     // The perps desk ships with the family that owns it: uninstall this plugin

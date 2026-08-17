@@ -76,60 +76,177 @@ export const PERPS_TERMINAL_LAYOUT = {
 } satisfies ContributedWorkspaceLayout
 
 /**
- * Perps Discovery — the home board for the futures section. A perp trader
- * browses with exposure already on: the scanner takes the wide column and open
- * contracts sit right beside it, over a multi-price rail for the majors the
- * whole market trades off. Sentiment and the news wire close the board, because
- * funding follows the same headlines spot does.
+ * Perps Discovery — the home board for the futures section. It scans by cost
+ * of carry rather than by price, which is the thing a perp desk actually
+ * shops for: the funding matrix takes the wide column with the basis monitor
+ * under it, and open interest sits beside them over the funding extremes.
+ *
+ * A price scanner already lives on the spot board, and repeating it here made
+ * the section the same page a fifth time. All four panes read the
+ * `fetchFundingRates` / `fetchOpenInterest` pair the perps venues already
+ * serve, so the board opens nothing new.
  */
 export const PERPS_DISCOVERY_LAYOUT = {
   version: 1,
   columns: [
     {
-      id: 'col-markets',
-      widthPercent: 48,
+      id: 'col-funding',
+      widthPercent: 62,
       cells: [
         {
-          id: 'cell-markets',
+          id: 'cell-funding-matrix',
+          heightPercent: 60,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-funding-matrix', type: 'funding-matrix' }],
+        },
+        {
+          id: 'cell-basis',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-basis-monitor', type: 'basis-monitor' }],
+        },
+      ],
+    },
+    {
+      id: 'col-oi',
+      widthPercent: 38,
+      cells: [
+        {
+          id: 'cell-oi',
+          heightPercent: 56,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-open-interest', type: 'open-interest' }],
+        },
+        {
+          id: 'cell-extremes',
+          heightPercent: 44,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-funding-extremes', type: 'funding-extremes' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * Perps Carry — the desk for holding a perp rather than scalping one. The
+ * funding belt gets a 12% cell of its own above the chart: the countdown to
+ * the next stamp, the current and predicted rate, what the last 8h, 24h and 7d
+ * paid or earned, and what holding the current size to the next stamp costs.
+ *
+ * A cell rather than chart chrome, so removing the pane gives the height back
+ * to the candles instead of leaving a gap.
+ */
+export const PERPS_CARRY_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 80,
+      cells: [
+        {
+          id: 'cell-funding-belt',
+          heightPercent: 12,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-funding-belt', type: 'funding-belt' }],
+        },
+        {
+          id: 'cell-chart',
+          heightPercent: 63,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-bottom',
+          heightPercent: 25,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-futures-positions', type: 'futures-positions' },
+            { id: 'pane-trades', type: 'trades' },
+            { id: 'pane-data-log', type: 'data-log' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'col-market',
+      widthPercent: 20,
+      cells: [
+        {
+          id: 'cell-orderbook',
+          heightPercent: 31,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
+        },
+        {
+          id: 'cell-trade',
+          heightPercent: 69,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * Perps Risk — the same pair, read as exposure. The chart sits over the
+ * liquidation map, margin health leads the middle column, and the guardrails
+ * are editable right there instead of behind Settings.
+ *
+ * `risk-controls` writes the same `risk-config-store` the 24px risk strip
+ * summarises: max daily loss, max daily trades, max position size, kill
+ * switch. Putting the limits where the trade happens is the whole point of the
+ * board.
+ */
+export const PERPS_RISK_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 59,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 71,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-liq-map',
+          heightPercent: 29,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-liquidation-map', type: 'liquidation-map' }],
+        },
+      ],
+    },
+    {
+      id: 'col-margin',
+      widthPercent: 23,
+      cells: [
+        {
+          id: 'cell-margin',
+          heightPercent: 41,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-margin-health', type: 'margin-health' }],
+        },
+        {
+          id: 'cell-risk-controls',
+          heightPercent: 59,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-risk-controls', type: 'risk-controls' }],
+        },
+      ],
+    },
+    {
+      id: 'col-trade',
+      widthPercent: 18,
+      cells: [
+        {
+          id: 'cell-trade',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-markets', type: 'markets' }],
-        },
-      ],
-    },
-    {
-      id: 'col-desk',
-      widthPercent: 28,
-      cells: [
-        {
-          id: 'cell-positions',
-          heightPercent: 45,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-futures-positions', type: 'futures-positions' }],
-        },
-        {
-          id: 'cell-multi-price',
-          heightPercent: 55,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-multi-price', type: 'multi-price' }],
-        },
-      ],
-    },
-    {
-      id: 'col-pulse',
-      widthPercent: 24,
-      cells: [
-        {
-          id: 'cell-sentiment',
-          heightPercent: 38,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-fear-greed', type: 'fear-greed' }],
-        },
-        {
-          id: 'cell-news',
-          heightPercent: 62,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-news', type: 'news' }],
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
         },
       ],
     },
@@ -166,9 +283,9 @@ export const CEX_FUTURES_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'discovery',
     routeMenu: true,
     icon: 'TrendingUp',
-    tagline: 'Scan perps with your open contracts beside them.',
+    tagline: 'Scan by cost of carry, not by price.',
     description:
-      'The futures home board: the markets scanner filtered to perpetual contracts, your open positions with mark and liquidation next to it over a multi-price rail, and sentiment above the news wire.',
+      'The futures home board: the funding matrix over the basis monitor, with open interest and the funding extremes beside them. It ranks perps by what holding them costs, which is the question a price scanner never answers.',
     facets: {
       traderTypes: ['day-trader', 'scalper'],
       assetClasses: ['crypto-perp'],
@@ -176,5 +293,43 @@ export const CEX_FUTURES_WORKSPACES: Array<ContributedWorkspace> = [
     },
     tags: ['discovery', 'futures', 'perps'],
     layout: PERPS_DISCOVERY_LAYOUT,
+  },
+  {
+    id: 'template:perps-carry',
+    name: 'Perps Carry',
+    menuLabel: 'Carry',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Timer',
+    tagline: 'What the next funding stamp costs you.',
+    description:
+      'For a perp you intend to hold: the funding belt above the chart with the countdown, the current and predicted rate and what your size pays or earns, open contracts below, and the book over a leverage-aware ticket.',
+    facets: {
+      traderTypes: ['swing-trader', 'day-trader'],
+      assetClasses: ['crypto-perp'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['futures', 'perps', 'funding'],
+    layout: PERPS_CARRY_LAYOUT,
+    pairDefault: { pairKey: 'BTC-USDT-USDT', market: 'binance-futures' },
+  },
+  {
+    id: 'template:perps-risk',
+    name: 'Perps Risk',
+    menuLabel: 'Risk',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'ShieldCheck',
+    tagline: 'Where the position dies, and the limits that stop it.',
+    description:
+      'The same pair read as exposure: the chart over a liquidation map, margin health above your guardrails, and the ticket on the right. The limits are editable in place, so a size cap is adjusted where the trade happens rather than in Settings.',
+    facets: {
+      traderTypes: ['day-trader', 'swing-trader'],
+      assetClasses: ['crypto-perp'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['futures', 'perps', 'risk'],
+    layout: PERPS_RISK_LAYOUT,
+    pairDefault: { pairKey: 'BTC-USDT-USDT', market: 'binance-futures' },
   },
 ]

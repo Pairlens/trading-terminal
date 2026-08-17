@@ -114,6 +114,25 @@ export function normalizeAlternativeFng(
 
 type ApiFetch = (path: string) => Promise<Response>
 
+/**
+ * An unreachable App Server rejects fast; a half-dead one accepts the socket
+ * and never answers, which without a deadline would pin every consumer in
+ * loading forever with the fallback never consulted.
+ */
+const PRIMARY_TIMEOUT_MS = 8_000
+
+function primaryDeadline<T>(promise: Promise<T>, label: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) => {
+      setTimeout(
+        () => reject(new Error(`${label} timed out`)),
+        PRIMARY_TIMEOUT_MS,
+      )
+    }),
+  ])
+}
+
 async function jsonOrThrow<T>(res: Response, label: string): Promise<T> {
   if (!res.ok) throw new Error(`${label} failed (${res.status})`)
   return (await res.json()) as T
@@ -130,7 +149,7 @@ export async function fetchTopCoinsWithFallback(
   apiFetch: ApiFetch,
 ): Promise<TopCoinsResponse> {
   try {
-    const res = await apiFetch('/api/top-coins')
+    const res = await primaryDeadline(apiFetch('/api/top-coins'), 'top-coins')
     return await jsonOrThrow<TopCoinsResponse>(res, 'top-coins')
   } catch {
     return fetchCoinGeckoTopCoins()
@@ -142,7 +161,7 @@ export async function fetchHeatmapWithFallback(
   apiFetch: ApiFetch,
 ): Promise<HeatmapResponse> {
   try {
-    const res = await apiFetch('/api/heatmap')
+    const res = await primaryDeadline(apiFetch('/api/heatmap'), 'heatmap')
     return await jsonOrThrow<HeatmapResponse>(res, 'heatmap')
   } catch {
     return topCoinsToHeatmap(await fetchCoinGeckoTopCoins())
@@ -154,7 +173,7 @@ export async function fetchFearGreedWithFallback(
   apiFetch: ApiFetch,
 ): Promise<FearGreedResponse> {
   try {
-    const res = await apiFetch('/api/fear-greed')
+    const res = await primaryDeadline(apiFetch('/api/fear-greed'), 'fear-greed')
     return await jsonOrThrow<FearGreedResponse>(res, 'fear-greed')
   } catch {
     const res = await fetch(ALTERNATIVE_FNG_URL)

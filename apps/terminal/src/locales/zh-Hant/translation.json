@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "永續與現貨",
+    "subtitle": "同一資產在兩個交易檯上並排顯示",
+    "spot": "現貨 {{price}}",
+    "spotMissing": "無指數",
+    "perp": "永續 {{price}}",
+    "bps": "{{value}} 個基點",
+    "rowHint": "{{venue}} 上的 {{pair}}",
+    "emptyTitle": "尚無可比較的資料",
+    "emptyBody": "基差需要標記價格與指數價格。請連接同時公布兩者的永續合約交易所。"
+  },
+  "basketTicket": {
+    "noPairTitle": "尚未選擇事件",
+    "noPairBody": "開啟一場競逐，就能一次押注多個結果。",
+    "emptyTitle": "籃子還是空的",
+    "emptyBody": "用階梯裡的加號按鈕加入結果，再為每個結果填上金額。",
+    "stakeFor": "投入 {{name}} 的金額",
+    "removeLeg": "把 {{name}} 從籃子裡移除",
+    "totalCost": "總成本",
+    "covers": "覆蓋",
+    "overroundAsk": "按賣價合計",
+    "overroundLast": "按最新價合計",
+    "maxPayout": "最大收益",
+    "maxLoss": "最大虧損",
+    "unusable_one": "有 1 條腿的金額或價格無法使用，不會送出。",
+    "unusable_other": "有 {{count}} 條腿的金額或價格無法使用，不會送出。",
+    "place_one": "下 1 筆單",
+    "place_other": "下 {{count}} 筆單",
+    "placing": "正在下單…",
+    "placedTitle_one": "已下 1 筆單",
+    "placedTitle_other": "已下 {{count}} 筆單",
+    "placedBody": "每條腿都按顯示價格作為限價單送出。",
+    "partialTitle": "籃子提前停止",
+    "partialBody": "{{total}} 筆中已下 {{placed}} 筆。{{outcome}} 遭拒絕：{{reason}}",
+    "failedTitle": "籃子下單失敗",
+    "hint": "每條腿都是真實的限價單。"
+  },
+  "bridgePanes": {
+    "routeTitle": "跨鏈橋需要橋接服務商",
+    "routeBody": "目前沒有任何服務商接入。鏈上連接器只在單一鏈內路由，因此這裡無法報出跨鏈轉移的費用或耗時。鏈階梯比較的是你已經能交易的範圍。",
+    "wouldQuote": "將為從 {{chain}} 轉出的 {{asset}} 報價",
+    "inFlightTitle": "轉帳追蹤需要橋接服務商",
+    "inFlightBody": "確認數來自搬運資金的那座橋。沒有接入的橋就無處輪詢，而背後沒有資料的進度條會在卡住的轉帳上繼續前進。"
+  },
+  "chainLadder": {
+    "title": "跨鏈的 {{asset}}",
+    "subtitle": "依扣掉 gas 後實際到手的數量排序，而非依最佳報價",
+    "sizedFor": "以 {{value}} 計算",
+    "best": "最佳",
+    "versusBest": "{{bps}} 個基點",
+    "notFound": "這裡沒有 {{asset}} 池子",
+    "footnote": "最深的池子不等於最好的成交。貴鏈上的便宜報價，會輸給 gas 幾乎為零的鏈上稍差的報價。",
+    "columns": {
+      "chain": "鏈",
+      "price": "價格",
+      "impact": "影響",
+      "gas": "Gas",
+      "youReceive": "你將收到"
+    },
+    "noPairTitle": "未綁定交易對",
+    "noPairBody": "把此面板綁定到一個交易對，每條已連線的鏈都會以同一規模報價。",
+    "noChainsTitle": "沒有鏈連接器",
+    "noChainsBody": "安裝一個鏈上連接器，它的鏈就會加入這張階梯。"
+  },
+  "company": {
+    "unknownName": "尚無公司名稱",
+    "needsProviderTitle": "基本面資料需要資料供應者",
+    "needsProviderBody": "券商負責報價與成交，不發布估值、成長與利潤率。安裝基本面外掛即可填入此面板。"
+  },
+  "dexChains": {
+    "title": "資金流向何處",
+    "subtitleNetwork": "24 小時成交額，全鏈",
+    "subtitleSampled": "各鏈最活躍池子的 24 小時成交額",
+    "liquidityValue": "流動性 {{value}}",
+    "poolsValue_one": "{{count}} 個池",
+    "poolsValue_other": "{{count}} 個池",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "優先費",
+    "notInstalled": "未安裝連接器",
+    "installConnector": "安裝連接器",
+    "emptyTitle": "沒有可瀏覽的鏈",
+    "emptyBody": "此版本未包含鏈上連接器，因此沒有可以排序池子的鏈。"
+  },
+  "earningsCalendar": {
+    "title": "財報",
+    "subtitle": "開盤前與收盤後",
+    "emptyTitle": "未安裝財報資料來源",
+    "emptyBody": "填入這份日曆的是基本面資料外掛。券商只公布自己的交易時段，不提供本週誰發財報。",
+    "columns": {
+      "symbol": "代號",
+      "when": "時段",
+      "epsEstimate": "預估每股盈餘",
+      "revenueEstimate": "預估營收",
+      "impliedMove": "隱含波動幅度"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "未安裝總體經濟資料來源",
+    "emptyBody": "總體經濟資料外掛會以發布時間、市場預期與前值填入這份日曆。",
+    "columns": {
+      "time": "時間",
+      "event": "事件",
+      "actual": "公布值",
+      "consensus": "預期",
+      "prior": "前值"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "在 1 個在售市場中搜尋",
+    "searchPlaceholder_other": "在 {{count}} 個在售市場中搜尋",
+    "loadingTitle": "正在載入看板",
+    "loadingBody": "正在向各平台詢問目前有哪些市場在交易。",
+    "sort": {
+      "trending": "熱門",
+      "endingSoon": "即將結束",
+      "volume": "成交額",
+      "biggestMove": "漲跌最大"
+    },
+    "unchanged": "無變化",
+    "movedPoints": "{{arrow}} 今日 {{points}} 個點",
+    "volumeUnknown": "未公布成交額",
+    "liquidity": "流動性 {{value}}",
+    "outcomeCount_one": "1 位候選",
+    "outcomeCount_other": "{{count}} 位候選",
+    "topShare_one": "領先者占據 {{percent}} % 的機率份額。",
+    "topShare_other": "前 {{count}} 位占據 {{percent}} % 的機率份額。",
+    "openFullField_one": "開啟全部候選（還有 1 位）",
+    "openFullField_other": "開啟全部候選（還有 {{count}} 位）"
+  },
+  "eventHeader": {
+    "noPairTitle": "尚未選擇合約",
+    "noPairBody": "在 Discovery 中開啟一個事件，就能看到問題、結算時間以及市場給出的機率。",
+    "resolves": "結算",
+    "venue": "平台",
+    "rules": "結算規則",
+    "rulesTitle": "如何結算",
+    "rulesSource": "由 {{venue}} 公布",
+    "tradeableOutcomes": "個可交易結果",
+    "statusClosed": "已停止交易",
+    "statusResolved": "已結算",
+    "changeToday": "今日 {{value}} 個點",
+    "loadingPrice": "正在讀取平台報價…",
+    "noPrice": "這個平台目前沒有為這項結果報價。",
+    "noOverround": "有報價的候選太少，無法求和。",
+    "sideYes": "Yes {{percent}} %",
+    "sideNo": "No {{percent}} % · {{price}}",
+    "overroundLabel": "全部 Yes 價格之和",
+    "overroundOver": "超額 {{percent}} %。買下所有結果正好虧這麼多；若深度允許，賣出整個盤口才是套利。",
+    "overroundUnder": "比公允盤口低 {{percent}} %。若深度允許，買下所有結果可以賺到這麼多。",
+    "basisAsk_one": "由 1 個賣價求和",
+    "basisAsk_other": "由 {{count}} 個賣價求和",
+    "basisLast_one": "由 1 個最新價求和",
+    "basisLast_other": "由 {{count}} 個最新價求和",
+    "basisMissing_one": "1 位候選無報價",
+    "basisMissing_other": "{{count}} 位候選無報價"
+  },
+  "funding": {
+    "loading": "正在讀取資金費率…",
+    "na": "無",
+    "stampUnknown": "未公布",
+    "desktopOnly": "的公開 API 只能從桌面版存取。",
+    "manageConnectors": "管理連接器",
+    "cellHint": "{{pair}} · 每 {{hours}} 小時 {{rate}}",
+    "cellHintAssumed": "{{pair}} · {{rate}}，交易所未公布週期，以每 {{hours}} 小時結算估算"
+  },
+  "fundingBelt": {
+    "now": "目前資金費率 · {{hours}} 小時",
+    "longsPay": "多頭支付空頭",
+    "shortsPay": "空頭支付多頭",
+    "nextPayment": "下次結算",
+    "costYou": "將花費 {{amount}}",
+    "costPerReference": "每持有 {{notional}} 為 {{amount}}",
+    "annualised": "年化",
+    "weekAverage": "7 日均值 {{value}}",
+    "noHistory": "尚無已結算紀錄",
+    "paidLabel": "你的部位已支付",
+    "paidLabelReference": "每持有 {{notional}} 的成本",
+    "otherVenues": "同一合約，其他交易所",
+    "onlyVenue": "這是你為該合約連接的唯一交易所。",
+    "emptyTitle": "請選擇一個永續合約",
+    "emptyBody": "這條只追蹤一個永續合約：費率、結算時鐘與持倉成本。開啟一個永續交易對即可填入。",
+    "noRateTitle": "未公布資金費率",
+    "noRateBody": "{{venue}} 未回傳該合約的資金費率。"
+  },
+  "fundingExtremes": {
+    "subtitle": "已連接交易所中最貴與最便宜的持倉成本，皆為年化。",
+    "longsPay": "多頭支付最多",
+    "shortsPay": "空頭支付最多",
+    "perInterval": "每 {{hours}} 小時 {{rate}}",
+    "emptyTitle": "沒有可排序的費率",
+    "emptyBody": "永續合約交易所一旦回應，其最貴與最便宜的合約就會出現在這裡。"
+  },
+  "fundingMatrix": {
+    "title": "資金費率（年化）",
+    "subtitle": "正值 = 多頭支付空頭",
+    "nextPayment": "距下次結算",
+    "colSpread": "價差",
+    "points": "{{value}} 個百分點",
+    "spreadHint": "最貴與最便宜交易所之間的差距，以年化資金費率的百分點計",
+    "sortBy": "依 {{venue}} 排序",
+    "note": "點一格即可在該交易所開啟該合約。價差欄就是現貨期貨套利：在資金費率最低處做多，在最高處做空。",
+    "noRows": "沒有交易所回覆資金費率。",
+    "emptyTitle": "沒有啟用的永續合約交易所",
+    "emptyBody": "資金費率是公開資料，不需要 API 金鑰。安裝一個永續合約連接器，表格會自動填滿。"
+  },
+  "level1": {
+    "emptyTitle": "尚無報價",
+    "emptyBody": "此標的的買價或賣價尚未推送。",
+    "bid": "買價",
+    "ask": "賣價",
+    "spread": "價差",
+    "bps": "個基點",
+    "dayRange": "當日區間",
+    "feed": "資料來源",
+    "depthNote": "券商只提供盤口最佳價，這兩個價格背後沒有深度。"
+  },
+  "liquidationMap": {
+    "subtitle": "你的強制平倉價格，以及在此開倉的槓桿會走到哪裡",
+    "estimateBadge": "估算",
+    "sideLong": "多頭",
+    "sideShort": "空頭",
+    "referenceHint": "以目前價格開倉的 {{leverage}} 倍{{side}}將在 {{price}} 附近被強制平倉",
+    "caption": "長條是各交易所回報的你自己的強制平倉價格。細線標出以目前價格開倉在 5 倍、10 倍與 25 倍槓桿下的強制平倉位置。沒有交易所公布彙總的清算叢集，因此不繪製。",
+    "noPositionsCaption": "細線標出以目前價格開倉在 5 倍、10 倍與 25 倍槓桿下的強制平倉位置。你自己的強制平倉價格會在持有部位後以長條顯示。",
+    "noPriceTitle": "沒有可對照的價格",
+    "noPriceBody": "這張圖需要合約的即時價格。旁邊的圖表一有價格就會填入。",
+    "emptyTitle": "沒有可繪製的內容",
+    "emptyBody": "開一個永續部位，或選擇一個合約，價格軸就會填入。"
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "選擇一個池子",
+    "noPoolBody": "在圖中選一個池子，穿過它的資金會以五分鐘為單位顯示在這裡。",
+    "loadingTitle": "正在載入兌換",
+    "loadingBody": "正在取得該池子的近期兌換。",
+    "emptyTitle": "尚無兌換",
+    "emptyBody": "這個池子近期沒有成交，因此沒有可軋差的資金流。",
+    "barsLabel": "吃單方淨流量，{{pool}}",
+    "netHour": "最近一小時 {{value}}",
+    "bucketTooltip": "買入 {{buy}}，賣出 {{sell}}",
+    "axisNote": "每 5 分鐘買入減賣出。LP 加入或撤出的流動性不在此資料流中。",
+    "biggestLabel": "最大兌換"
+  },
+  "lpPanes": {
+    "positionTitle": "LP 部位需要部位資料來源",
+    "positionBody": "目前已連線的元件都還讀不到流動性部位。那需要向鏈上的 position manager 查詢這個錢包自己的價格區間，而今天沒有連接器這樣做。",
+    "feesTitle": "手續費歷史需要部位資料來源",
+    "feesBody": "每日賺取的手續費來自索引器，或來自隨時間量測的 fee growth。兩者都尚未連線，而估算出的圖表看起來會像實測資料。",
+    "manageTitle": "調整區間需要流動性操作",
+    "manageBody": "加入、撤出與重新置中流動性都是需要簽章的交易，目前沒有連接器能建構。這些控制項在真正可用之前不會出現。",
+    "venueFallback": "這條鏈",
+    "wouldRead": "將讀取 {{chain}} 上 {{pool}} 的 {{wallet}}"
+  },
+  "marginHealth": {
+    "title": "保證金狀況",
+    "marginRatio": "保證金率",
+    "safe": "安全",
+    "marginCall": "追繳保證金 80%",
+    "liquidation": "強制平倉",
+    "equity": "權益",
+    "maintenance": "維持保證金",
+    "liqDistance": "距強制平倉",
+    "adl": "自動減倉佇列",
+    "adlHint": "交易所未公布",
+    "stressLabel": "若價格朝不利方向變動",
+    "ratioAfter": "保證金率 {{value}}%",
+    "liquidated": "已強制平倉",
+    "flatBody": "此帳戶沒有部位。開出第一個部位後即可看到保證金狀況。",
+    "noVenueTitle": "沒有啟用的永續合約交易所",
+    "noVenueBody": "保證金狀況讀取合約連接器回報的部位。安裝一個連接器即可使用此面板。"
+  },
+  "marketPulse": {
+    "emptyTitle": "暫無市場數據",
+    "emptyBody": "App Server 與公開備援來源都沒有回應。任一方恢復後，這條概覽會立即填入。",
+    "totalCap": "總市值",
+    "window24h": "24 小時",
+    "volume24h": "24 小時成交額",
+    "turnover": "成交額相當於市值的 {{pct}}%",
+    "dominance": "BTC 佔比",
+    "breadth": "漲跌家數 · {{total}} 個資產",
+    "up": "上漲",
+    "down": "下跌",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "加密市場恐懼與貪婪指數。0 表示極度恐懼，100 表示極度貪婪。"
+  },
+  "movers": {
+    "emptyTitle": "暫無市場數據",
+    "emptyBody": "App Server 與公開備援來源都沒有回應，暫時無從排名。",
+    "noBrokerTitle": "未安裝股票交易所",
+    "noBrokerBody": "從外掛商店安裝一個券商連接器，當天的異動就會出現在這裡。",
+    "tabs": {
+      "gainers": "漲幅榜",
+      "losers": "跌幅榜",
+      "volume": "成交額",
+      "volatility": "波動",
+      "unusual": "異常"
+    },
+    "window": "排名區間",
+    "columns": {
+      "pair": "交易對",
+      "change": "{{window}}漲跌",
+      "price": "價格",
+      "volume": "成交額",
+      "trend": "走勢"
+    },
+    "turnoverTooltip": "24 小時成交額，以及該資產相對同一批快照中位數換手了自身多少倍。這不是與它自己 30 天均值的比較，快照裡沒有那個數據。",
+    "empty": {
+      "gainers": "該區間內沒有上漲的資產。",
+      "losers": "該區間內沒有下跌的資產。",
+      "volume": "還沒有交易所報出成交額。",
+      "volatility": "沒有資產波動到足以進入榜單。",
+      "unusual": "沒有資產相對自身體量出現異常成交。"
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "24 小時機率變動最大",
+    "loadingTitle": "正在讀取看板",
+    "loadingBody": "各平台回應後就會顯示變動。",
+    "emptyTitle": "沒有明顯變動",
+    "emptyBody": "今天沒有合約變動到值得單列一行。",
+    "noChangeFrom": "未參與排名：{{venues}} 不公布 24 小時變動。"
+  },
   "onboarding": {
     "phase": {
       "ready": "完成"
@@ -208,6 +529,187 @@
       "sub": "私密、在地運算，並依你的交易方式調校完成。你的終端機已準備就緒。"
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "不是鏈上交易對",
+    "notOnChainBody": "此逐筆讀取穿過 AMM 池子的兌換。綁定的交易對在中心化交易所成交。",
+    "filterAll": "全部",
+    "filterLarge": "超過 {{value}}",
+    "buy": "買入",
+    "sell": "賣出",
+    "openTx": "開啟交易",
+    "net1h": "1 小時淨額",
+    "columns": {
+      "time": "時間",
+      "side": "方向",
+      "value": "USD",
+      "price": "價格",
+      "wallet": "錢包"
+    },
+    "loadingTitle": "正在載入兌換",
+    "loadingBody": "正在取得該池子已確認的兌換。",
+    "emptyTitle": "尚無兌換",
+    "emptyBody": "在資料提供方回傳的時間範圍內，該池子沒有任何成交。"
+  },
+  "openInterest": {
+    "title": "未平倉量排行",
+    "changeLabel": "24 小時變化",
+    "notPublished": "的 API 不公布未平倉量。",
+    "emptyTitle": "尚無未平倉量",
+    "emptyBody": "未平倉量隨資金費率一併讀取，顯示已連接交易所正在報價的合約。"
+  },
+  "outcomeLadder": {
+    "noPairTitle": "尚未選擇事件",
+    "noPairBody": "在 Discovery 中開啟一場競逐，就能在一張表裡看到每位候選的價格。",
+    "loadingTitle": "正在載入候選",
+    "loadingBody": "平台回應後就會顯示全部候選。",
+    "notFoundTitle": "平台看板上沒有這個事件",
+    "notFoundBody": "平台沒有回傳這個事件，因此無法列出它的其他結果。圖表和下單票券仍可使用。",
+    "emptyTitle": "沒有其他結果",
+    "emptyBody": "這個問題只有一個市場，沒有可排名的候選。",
+    "filterPlaceholder_one": "篩選 1 個結果",
+    "filterPlaceholder_other": "篩選 {{count}} 個結果",
+    "sort": {
+      "probability": "排序 · 機率",
+      "change": "排序 · 24 小時變動",
+      "volume": "排序 · 成交額",
+      "name": "排序 · 名稱"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "結果",
+      "yes": "Yes",
+      "change": "24 小時",
+      "trend": "30 天",
+      "volume": "成交額",
+      "trade": "交易"
+    },
+    "yesChip": "Yes {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "把 {{name}} 加入籃子",
+    "noMatches": "沒有結果符合這個篩選條件。",
+    "tailBelow_one": "還有 1 個結果低於 {{price}} · 合計成交額 {{volume}}",
+    "tailBelow_other": "還有 {{count}} 個結果低於 {{price}} · 合計成交額 {{volume}}",
+    "tailMore_one": "還有 1 個結果 · 合計成交額 {{volume}}",
+    "tailMore_other": "還有 {{count}} 個結果 · 合計成交額 {{volume}}",
+    "showMore_one": "再顯示 1 個",
+    "showMore_other": "再顯示 {{count}} 個"
+  },
+  "pairDossier": {
+    "marketCap": "市值",
+    "rank": "第 {{rank}} 名",
+    "volume24h": "24 小時成交額",
+    "turnover": "相當於市值的 {{pct}}%",
+    "change7d": "7 天漲跌",
+    "change7dSub": "與一週前相比",
+    "sector": "板塊",
+    "sectorMove": "板塊 24 小時 {{change}}",
+    "quotedOn": "報價交易所",
+    "ofVenues": "共 {{total}} 家",
+    "tightestSpread": "最窄價差",
+    "bps": "{{bps}} 基點",
+    "range24h": "24 小時區間",
+    "rangeLowHigh": "{{low}} 至 {{high}}",
+    "volatility": "波動率",
+    "volatilityWindow": "以 {{span}} 的 {{timeframe}} K 線年化",
+    "spreadByVenue": "各交易所價差 · 盤口頂端",
+    "spreadByVenueTooltip": "各交易所此刻報價有多緊，以中間價為基準的基點。行情不帶掛單量，所以這是在盤口頂端吃單的成本，不是後面的深度。",
+    "noBooks": "目前沒有已連接的交易所為該交易對提供雙邊盤口。",
+    "sizingNote": "吃單成本在 {{tight}} 為 {{tightBps}} 基點，在 {{wide}} 為 {{wideBps}} 基點。依交易所而不是依交易對來決定下單量。",
+    "sizingNoteSingle": "只有 {{venue}} 提供真實盤口，價差 {{bps}} 基點。"
+  },
+  "poolDetail": {
+    "emptyTitle": "未選擇池子",
+    "emptyBody": "從圖中選一個池子，即可查看流動性、成交額與資金流，離圖表只差一次點擊。",
+    "change24h": "{{value}} 24 小時",
+    "liquidity": "流動性",
+    "volume24h": "24 小時成交額",
+    "turnover": "成交額 / 流動性",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "24 小時成交筆數",
+    "feeTier": "費率級距",
+    "pressureByValue": "買賣壓力，24 小時依金額",
+    "pressureByCount": "買賣壓力，24 小時依成交筆數",
+    "loading": "正在載入池子狀態。",
+    "openChart": "開啟圖表並兌換"
+  },
+  "poolMap": {
+    "title": "{{chain}} 池子",
+    "subtitle": "依每個池子把自身流動性用得多兇來排序",
+    "sortTurnover": "周轉率",
+    "sortVolume": "成交額",
+    "sortLiquidity": "流動性",
+    "turnoverValue": "{{value}}x",
+    "openPair": "開啟圖表",
+    "columns": {
+      "pool": "池子",
+      "price": "價格",
+      "change": "24 小時",
+      "volume": "24 小時成交額",
+      "liquidity": "流動性",
+      "turnover": "成交額 / 流動性"
+    },
+    "noChainTitle": "選擇一條鏈",
+    "noChainBody": "在左側選一條鏈，它的池子就會依成交額對背後流動性的比值排在這裡。",
+    "loadingTitle": "正在載入池子",
+    "loadingBody": "正在取得該鏈的排序池子。",
+    "emptyTitle": "未回傳任何池子",
+    "emptyBody": "資料提供方沒有為這條鏈回傳任何內容。下次重新整理時會重試。"
+  },
+  "poolStats": {
+    "notOnChainTitle": "不是鏈上交易對",
+    "notOnChainBody": "此面板讀取 AMM 池子狀態。綁定的交易對在中心化交易所成交，那裡有的是委託簿。",
+    "loadingTitle": "正在載入池子",
+    "loadingBody": "正在為該交易對找出最深的池子。",
+    "emptyTitle": "沒有池子狀態",
+    "emptyBody": "資料提供方沒有為該池子回傳任何內容。下次重新整理時會重試。",
+    "liquidity": "流動性",
+    "volume24h": "24 小時成交額",
+    "turnoverSub": "流動性的 {{value}} 倍",
+    "feeTier": "費率級距",
+    "feeTierUnknown": "該平台未公布",
+    "reserves": "儲備",
+    "reservesUnavailable": "兩側僅在桌面版可見",
+    "trades24h": "24 小時成交筆數",
+    "tradersSub_one": "{{count}} 位交易者",
+    "tradersSub_other": "{{count}} 位交易者",
+    "poolAge": "池子存續時間",
+    "ageToday": "今天",
+    "ageDays_one": "{{count}} 天",
+    "ageDays_other": "{{count}} 天",
+    "ageMonths_one": "{{count}} 個月",
+    "ageMonths_other": "{{count}} 個月",
+    "impactLabel": "依下單規模的價格影響",
+    "impactNote": "每個規模都是即時報價，不是用儲備推算，因此拆分路由可能勝過這個池子本身的曲線。"
+  },
+  "predictionCategories": {
+    "all": "全部",
+    "noneBody": "這個平台沒有為事件劃分分類。",
+    "venueHeading": "平台",
+    "desktopOnly": "桌面版",
+    "venueError": "錯誤"
+  },
+  "resolvingSoon": {
+    "resolves": "{{when}} 結算",
+    "loadingTitle": "正在讀取結算時間",
+    "loadingBody": "各平台回應後就會顯示結算日期。",
+    "emptyTitle": "近期沒有結算",
+    "emptyBody": "這裡的未結合約都沒有公布即將到來的結算日期。"
+  },
+  "riskControls": {
+    "maxDailyLoss": "每日最大虧損",
+    "maxDailyTrades": "每日最大交易次數",
+    "maxPositionSize": "最大部位規模",
+    "usedPercent": "已用 {{value}}%",
+    "usedCount": "已送出 {{value}} 筆",
+    "perOrder": "每筆委託都會檢查",
+    "off": "關閉",
+    "resetWindow": "重設週期",
+    "resetIn": "{{time}} 後重設",
+    "killSwitch": "緊急停止",
+    "killSwitchHint": "在你恢復之前阻擋所有委託",
+    "haltOrders": "停止委託",
+    "resumeOrders": "恢復"
+  },
   "sectionTours": {
     "back": "上一步",
     "next": "下一步",
@@ -397,6 +899,50 @@
     "signInConsent": "繼續即表示你同意我們的<terms>服務條款</terms>與<privacy>隱私權政策</privacy>。",
     "analyticsNote": "我們收集哪些資訊、絕不碰觸哪些資訊，詳見<privacy>隱私權政策</privacy>。",
     "checkoutConsent": "訂閱即表示你同意我們的<terms>服務條款</terms>。"
+  },
+  "sectorPeers": {
+    "emptyTitle": "該交易對沒有板塊",
+    "emptyBody": "{{pair}} 不在精選板塊目錄中，因此沒有可比較的同類資產。",
+    "loadingBody": "正在讀取板塊目錄。",
+    "subtitle": "{{sector}} · {{total}} 個資產。依 24 小時排序，{{symbol}} 在最前。"
+  },
+  "sectorTape": {
+    "emptyTitle": "暫無板塊數據",
+    "emptyBody": "板塊由標的目錄與市場快照拼接而成，目前兩邊都還沒有回應。",
+    "subtitle": "依市值加權。下方的長條顯示有多少成員跟上了這次移動。",
+    "window": "板塊區間",
+    "leads": "{{total}} 個資產 · {{symbol}} 領漲",
+    "drags": "{{total}} 個資產 · {{symbol}} 拖累",
+    "assets": "{{total}} 個資產"
+  },
+  "session": {
+    "noVenueTitle": "尚未連接券商",
+    "noVenueBody": "交易日來自券商自己的日曆。安裝股票連接器後即可在此查看各時段。",
+    "noVenueAction": "瀏覽連接器",
+    "loading": "正在讀取交易日曆…",
+    "unavailableTitle": "無法取得交易時段",
+    "unavailableBody": "券商既未回傳時鐘也未回傳日曆，系統會自動重試。",
+    "stateOpen": "市場開盤",
+    "statePre": "盤前",
+    "statePost": "盤後",
+    "stateClosed": "市場休市",
+    "closesIn": "{{time}}後收盤",
+    "opensIn": "{{time}}後開盤",
+    "afterHoursEndsIn": "盤後交易將在{{time}}後結束",
+    "preMarketIn": "{{time}}後進入盤前",
+    "durationDh": "{{days}}天{{hours}}小時",
+    "durationHm": "{{hours}}小時{{minutes}}分",
+    "durationMs": "{{minutes}}分{{seconds}}秒",
+    "barPre": "盤前",
+    "barOpen": "開盤",
+    "barClose": "收盤",
+    "barPost": "盤後",
+    "halfDay": "半日市",
+    "nextSession": "下一交易時段 {{day}}",
+    "noSchedule": "沒有安排交易時段",
+    "clockOnly": "只能判斷開市或休市：未公布交易時段區間。",
+    "ticketExtendedNote": "此時段只接受限價單。沒有連續競價可以成交市價單。",
+    "ticketClosedNote": "市場已休市。限價單會掛到下一個時段開盤。"
   },
   "settings": {
     "title": "設定",
@@ -1067,6 +1613,20 @@
       "thanks": "謝謝，這真的很有幫助。"
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "不是鏈上交易對",
+    "notOnChainBody": "路由是聚合器把一筆兌換拆到多個池子。綁定的交易對在中心化交易所成交。",
+    "probeLabel": "報價規模",
+    "loadingTitle": "報價中",
+    "loadingBody": "正在詢問聚合器會如何成交這個規模。",
+    "noRouteTitle": "沒有路由",
+    "noRouteBody": "聚合器找不到為該交易對成交這個規模的方式。",
+    "noQuotePriceBody": "計價代幣沒有公布美元價格，因此無法決定報價規模。",
+    "emptyTitle": "沒有可顯示的拆分",
+    "youReceive": "你將收到",
+    "priceImpact": "價格影響",
+    "networkFee": "網路費"
+  },
   "userMenu": {
     "accountMenu": "帳戶選單",
     "settings": "設定",
@@ -1105,6 +1665,45 @@
     "newWindow": "新視窗",
     "back": "上一頁",
     "forward": "下一頁"
+  },
+  "venueLadder": {
+    "emptyTitle": "沒有可比較的交易所",
+    "emptyBody": "再連接一家上架該資產類別的交易所，階梯就會依你交易的方向排序。",
+    "columns": {
+      "venue": "交易所",
+      "bid": "買價",
+      "ask": "賣價",
+      "bps": "基點"
+    },
+    "switchSide": "切換方向",
+    "rankedByAsk": "依賣價排序，買進最便宜的在前",
+    "rankedByBid": "依買價排序，賣出最划算的在前",
+    "bpsTooltip": "盤口頂端的價差，以中間價衡量。未提供真實雙邊盤口的交易所不參與排名。",
+    "best": "最優",
+    "desktopOnlyRow": "{{venue}} 需要桌面應用程式",
+    "switchTo": "在 {{venue}} 檢視該交易對圖表",
+    "desktopOnly": "桌面版",
+    "notListed": "未上架該交易對",
+    "noBook": "尚無報價"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "尚未選擇合約",
+    "noPairBody": "開啟一個事件，看看它的機率是什麼時候變的。",
+    "loadingTitle": "正在讀取歷史",
+    "loadingBody": "機率歷史載入完成後就會顯示時間軸。",
+    "flatTitle": "沒有值得單列的變動",
+    "flatBody": "在已載入的歷史中，這份合約的重新定價沒有超過三美分。",
+    "columns": {
+      "when": "時間",
+      "move": "變動",
+      "what": "發生了什麼",
+      "traded": "成交"
+    },
+    "movedFromTo": "機率從 {{from}} 變到 {{to}}",
+    "contracts_one": "1 張合約",
+    "contracts_other": "{{count}} 張合約",
+    "footerMatched": "新聞是按時間而非因果與 {{ticker}} 對應：每則都是市場重新定價期間最後發布的一則。",
+    "footerNoTicker": "新聞源以代碼索引，而這個問題不含任何代碼，因此每一列只顯示變動本身。"
   },
   "workspace": {
     "rename": "重新命名",
@@ -2275,7 +2874,49 @@
     "empty": "空白",
     "events": "事件",
     "predictionPositions": "預測部位",
-    "futuresPositions": "期貨部位"
+    "futuresPositions": "期貨部位",
+    "venueLadder": "交易所階梯",
+    "pairDossier": "交易對檔案",
+    "marketPulse": "市場脈動",
+    "movers": "漲跌幅排行榜",
+    "sectorTape": "產業欄",
+    "sectorPeers": "同產業",
+    "fundingMatrix": "資金費率矩陣",
+    "basisMonitor": "基差監控",
+    "openInterest": "未平倉量",
+    "fundingExtremes": "資金費極值",
+    "fundingBelt": "資金費倒數",
+    "liquidationMap": "強平地圖",
+    "marginHealth": "保證金狀況",
+    "riskControls": "風險管控",
+    "categories": "分類",
+    "eventBoard": "事件看板",
+    "oddsMovers": "機率變動",
+    "resolvingSoon": "即將結算",
+    "eventHeader": "事件資訊",
+    "whatMovedIt": "變動原因",
+    "outcomeLadder": "結果階梯",
+    "basketTicket": "籃子下單面板",
+    "chains": "區塊鏈",
+    "poolMap": "資金池地圖",
+    "liquidityFlow": "流動性流向",
+    "poolDetail": "資金池詳情",
+    "poolStats": "資金池數據",
+    "onchainTrades": "鏈上成交紀錄",
+    "route": "路由",
+    "feeAccrual": "手續費累計",
+    "lpPosition": "LP 部位",
+    "manageLiquidity": "流動性管理",
+    "chainLadder": "跨鏈階梯",
+    "routeBridge": "跨鏈路由",
+    "inFlight": "轉帳中",
+    "session": "交易時段",
+    "earningsCalendar": "財報日曆",
+    "economicCalendar": "財經日曆",
+    "sessionClock": "交易時鐘",
+    "level1": "Level 1",
+    "company": "公司資訊",
+    "yourPosition": "持倉明細"
   },
   "paneDescriptions": {
     "markets": "瀏覽各交易所所有可用的交易對",
@@ -2302,7 +2943,49 @@
     "recentTickers": "近期查看過的交易對即時報價，方便快速切換",
     "events": "瀏覽預測市場事件並開啟某個結果的圖表",
     "predictionPositions": "你持有的合約、成本以及結算時間",
-    "futuresPositions": "未平倉永續部位、標記價格與強平價位"
+    "futuresPositions": "未平倉永續部位、標記價格與強平價位",
+    "venueLadder": "已連接的每個交易所對這個交易對的最優買賣價，依最優成交價排序，最上一列就是最划算的成交",
+    "pairDossier": "決定部位大小的關鍵數據：波動區間、成交量、上下 1% 以內的流動性，以及這個交易對成交最集中的地方",
+    "marketPulse": "用三個數字概括整個市場，再用一行說明發生了什麼變化及原因",
+    "movers": "當日漲跌幅最大的商品，連同背後的成交量，讓真實行情和影線一目了然",
+    "sectorTape": "把每個產業做成標籤，配上漲跌幅和漲跌比例條，輪動一眼看清",
+    "sectorPeers": "這個交易對所屬產業中其他商品的今日表現，交易對本身固定置頂",
+    "fundingMatrix": "把已連接每個交易所的所有永續合約資金費率彙整成一張表，任何欄位都能排序",
+    "basisMonitor": "永續合約與現貨的價差以基點和年化利率呈現，讓持倉成本讀起來像收益率而不是價差",
+    "openInterest": "每個合約的未平倉量及 24 小時變化，讓資金擁擠先於價格顯現",
+    "fundingExtremes": "目前資金費率最高和最低的合約，以及各自所在的交易所",
+    "fundingBelt": "距離下次資金費結算的倒數、目前與預測費率，以及你的部位規模要支付或賺取的金額",
+    "liquidationMap": "你的部位在價格軸上被強平的位置，與市場其餘部分承受的強平量對照顯示",
+    "marginHealth": "保證金率、維持保證金與可用保證金的對比，以及帳戶距離自動減倉(ADL)還有多近",
+    "riskControls": "每日虧損上限、交易筆數、部位規模和緊急停止開關，就在交易發生的地方直接編輯",
+    "categories": "所有事件分類均附帶即時合約數量，一鍵即可縮小看板範圍",
+    "eventBoard": "以卡片形式展示進行中的事件市場：問題、以美分計價的 Yes 和 No、成交量與結算時間",
+    "oddsMovers": "今天機率變動最大的合約，變動幅度以點數表示",
+    "resolvingSoon": "按結算時間而非成交量排序，展示最接近結算的合約",
+    "eventHeader": "問題內容、結算的時間與方式，以及市場當前定價的機率",
+    "whatMovedIt": "以時間線呈現頭條新聞，每條都標註它引發的機率變動",
+    "outcomeLadder": "事件中的每個結果都以美分計價，可排序可搜尋，每一列都有下注按鈕",
+    "basketTicket": "一次性對多個結果下注，提交前顯示總花費、超額機率和最壞情況",
+    "chains": "已設定連接器的每條鏈，附帶 Gas 費、流動性與 24 小時成交量",
+    "poolMap": "按成交量與流動性的比例給資金池排名，真正在交易的池子排在最前",
+    "liquidityFlow": "按時間區間顯示流動性的淨流入流出，讓資金池枯竭先於價格顯現",
+    "poolDetail": "一覽已選資金池的概況，一鍵直達圖表與兌換",
+    "poolStats": "兩側儲備量、鎖倉價值(TVL)、24 小時成交量、手續費檔位，以及三種規模下的價格影響",
+    "onchainTrades": "資金池中每一筆兌換在確認時即時顯示，附帶錢包地址與交易連結",
+    "route": "聚合器如何把你的兌換拆分到各個資金池，讓滑點有據可查",
+    "feeAccrual": "你的部位隨時間累積的手續費收益、由此推算的 APR，以及現在可領取的金額",
+    "lpPosition": "你的價格區間與即時價格的對比、區間內停留時間，以及相對於單純持有測算的無常損失",
+    "manageLiquidity": "無需離開圖表即可調整區間、增減流動性並領取手續費",
+    "chainLadder": "同一代幣在每條鏈上的報價，已計入 Gas 費，比拼的是總成本而不是表面報價",
+    "routeBridge": "來源鏈、目標鏈、使用的跨鏈橋及其手續費與所需時間，一切就緒即可執行",
+    "inFlight": "仍在確認中的轉帳，附帶各自等待的區塊確認數",
+    "session": "依據券商自身日曆顯示目前交易日所處的時段，包含假期與半日市",
+    "earningsCalendar": "誰將在何時發布財報，盤前還是盤後，以及需要超越的市場預期",
+    "economicCalendar": "總體經濟數據按發布時間排列，附帶重要性、前值與市場預期",
+    "sessionClock": "用一行顯示交易日狀態的時鐘，盤後下單不會再讓你措手不及",
+    "level1": "來自券商行情的買賣報價及其數量、價差和當日波動區間",
+    "company": "估值、成長率、利潤率、下一個催化劑，以及分析師的看法，全部集中在一個面板",
+    "yourPosition": "你在這個標的上的持倉：數量、成本、標記價格，以及當日與持倉浮動損益"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens 預測",
-        "description": "預測市場的事件瀏覽器與未平倉合約部位"
+        "description": "預測市場功能：事件看板、結果階梯、籃子下單與持倉合約"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures 市場連接器",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens 期貨",
-        "description": "未平倉永續部位，含開倉價、標記價與強平價"
+        "description": "永續合約功能：部位、資金費率與基差掃描器、強平與保證金面板"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "鏈上工作區預設：DEX 終端與衝土狗看板"
+        "description": "鏈上功能：資金池數據、兌換路由、LP 部位與跨鏈階梯"
       },
       "pairlens-equities": {
         "title": "Pairlens 股票",
-        "description": "股票工作區預設：股票終端與掃描器主導的交易台"
+        "description": "股票功能：交易時鐘、Level 1 報價、公司基本面與財報日曆"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "僅提供行情資料，無法在此交易。"
     },
     "trade": {
+      "allOutcomes": "全部 {{total}} 項",
+      "avgFillPrice": "平均成交價",
+      "contractCount_one": "{{formatted}} 張合約",
+      "contractCount_other": "{{formatted}} 張合約",
+      "fundingAtEntry": "進場資金費率",
+      "fundingLongsPay": "多頭支付空頭",
+      "fundingShortsPay": "空頭支付多頭",
+      "ifDoesNotWin": "若 {{outcome}} 不成立",
+      "ifWins": "若 {{outcome}} 成立",
       "limitBuy": "限價買入",
       "limitSell": "限價賣出",
       "bought": "已買入",
+      "maxAmount": "最大",
+      "maxPayout": "最大回報",
+      "profitLine": "獲利 {{amount}} · {{roi}}",
+      "resolvesOn": "{{date}} 結算",
       "sold": "已賣出",
       "limitOrderFailed": "限價單失敗",
+      "stakeLine": "投入 {{amount}}",
       "swapFailed": "兌換失敗",
+      "switchOutcome": "切換結果",
       "workflowUnsupported": "該市場不支援工作流",
       "orderBlocked": "訂單被風險限額攔截",
       "orderRejected": "訂單被拒絕",
@@ -3083,8 +3781,6 @@
       "maxLoss": "最大虧損",
       "priceCents": "價格（¢）",
       "thisOutcome": "目前結果",
-      "decreaseContracts": "減少一份合約",
-      "increaseContracts": "增加一份合約",
       "priceCentsRange": "請輸入 0¢ 到 100¢ 之間的價格",
       "leverage": "槓桿",
       "reduceOnly": "只減倉",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "預測市場終端",
-        "tagline": "把機率畫成圖表，整個事件就在旁邊。",
-        "description": "預測市場的預設版面：機率圖表下方是成交紀錄與你持有的合約，中間是委託簿與下單面板，右側是通高的事件瀏覽器，因為相鄰的結果就是分析的一半。",
+        "tagline": "先看問題，賠率隨後。",
+        "description": "預測市場預設版面：事件資訊，其下方是機率圖表，再往下是引發波動的頭條新聞，以及在下注前顯示最高賠付與最大損失的委託簿與下單面板，右側是相鄰的其他結果。",
         "menuLabel": "預設"
       },
       "prediction-discovery": {
         "name": "預測市場探索",
         "tagline": "瀏覽正在進行的事件市場，而不是交易對目錄。",
-        "description": "為事件合約打造的首頁看板：事件瀏覽器佔據寬欄，新聞流在旁邊捲動，窄欄把自選清單放在情緒指標之上。安裝 Kalshi 或 Polymarket 等預測平台即可填滿看板。",
+        "description": "為事件合約打造的首頁看板：事件看板旁邊是分類欄，最大的機率變動，其下方是即將結算的合約。安裝 Kalshi 或 Polymarket 等預測平台即可填滿看板。",
         "menuLabel": "預設"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "DEX 終端",
         "tagline": "鏈上交易，不需要假的委託簿。",
-        "description": "鏈上預設版面：圖表下方是流動性池數據與成交紀錄，兌換面板疊在近期行情之上，方便捕捉新上線代幣，右側是社群動態。沒有委託簿欄位：由資金池推算的深度是合成的，因此不予顯示。",
+        "description": "鏈上預設版面：圖表，其下方是資金池數據，旁邊是鏈上成交紀錄，聚合器路由上方是兌換面板，讓滑點有據可查。沒有委託簿欄位：由資金池推算的深度是合成的，因此不予顯示。",
         "menuLabel": "預設"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "股票終端",
-        "tagline": "股票交易，下單面板就在商品新聞之上。",
-        "description": "股票的預設版面：圖表下方是成交紀錄、持倉部位與基本面資料，下單面板位於商品新聞之上，因為催化劑推動股票，就像資金流推動加密貨幣。",
+        "tagline": "交易時鐘置於圖表之上，Level 1 置於下單面板之上。",
+        "description": "股票預設版面：交易時鐘領頭，其下方是圖表，再加上成交紀錄與部位，以及把 Level 1 報價放在下單面板和商品新聞之上的邊欄。正常交易時間之外，時鐘會明確標示，下單面板也只接受限價單。",
         "menuLabel": "預設"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "填滿超寬螢幕或第二個螢幕的四欄指揮中心：掃描器、圖表、委託簿與深度，以及疊在你持倉部位之上的下單面板。極繁主義版面。"
       },
       "classic-terminal": {
-        "name": "經典終端",
-        "tagline": "經典 Pairlens 工作台：圖表、數據、委託簿、下單面板。",
-        "description": "預設終端版面：左側是大圖表搭配標籤式資料條與風險條，右側是委託簿疊加下單面板。",
+        "name": "現貨執行",
+        "tagline": "所有已連接交易所中的最優買一賣一。",
+        "description": "現貨預設版面：圖表，其下方是成交紀錄與部位，以交易所階梯打頭，依序接上委託簿與下單面板的邊欄。",
         "menuLabel": "預設"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "為 4K 螢幕鋪滿全部內容：委託簿與交易對資訊、帶風險條的圖表、持倉部位與社群動態，以及下單面板欄。"
       },
       "home-pulse": {
-        "name": "首頁",
-        "tagline": "預設看板：掃描器、情緒、漲跌幅排行榜與新聞。",
-        "description": "預設首頁看板：市場掃描器、帶恐懼與貪婪指數和熱門幣種的市場脈動欄（與你的自選清單同標籤頁），以及通欄新聞欄。全部功能無需帳戶即可使用。",
+        "name": "現貨探索",
+        "tagline": "打開就看到誰在動，為什麼動。",
+        "description": "現貨首頁看板：市場脈動條，其下方是漲跌幅排行榜和產業欄，旁邊是完整掃描器，自選清單之上是新聞。全部功能無需帳戶即可使用。",
         "menuLabel": "預設"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "永續合約探索",
-        "tagline": "掃描永續合約，未平倉部位就在旁邊。",
-        "description": "合約首頁看板：依永續合約篩選的市場掃描器，旁邊是帶標記價與強平價的部位，下方為多價格列，情緒指標位於新聞牆之上。",
+        "tagline": "按持倉成本掃描，而不是按價格。",
+        "description": "期貨首頁看板：資金費率矩陣，其下方是基差監控，旁邊是未平倉量與資金費極值。它按持有成本給永續合約排名，這正是價格掃描器永遠回答不了的問題。",
         "menuLabel": "預設"
       },
       "dex-discovery": {
         "name": "DEX 探索",
-        "tagline": "鏈上新幣、社群動態與自選清單。",
-        "description": "鏈上首頁看板：依 DEX 交易對篩選的市場掃描器，社群動態之上是最近查看的代幣，用來抓剛上架的新幣，自選清單位於新聞牆之上。",
+        "tagline": "先選鏈，再選池。",
+        "description": "鏈上首頁看板：顯示 Gas 費與流動性的鏈上欄，按成交量對流動性排名的資金池，其下方是流向圖表，右側是已選資金池，一鍵直達圖表與兌換。沒有連接器的鏈不會出現。",
         "menuLabel": "預設"
       },
       "equities-discovery": {
         "name": "股票探索",
-        "tagline": "股票掃描器、自選清單與新聞並排。",
-        "description": "股票首頁看板：依股票篩選的市場掃描器，多價格列之上是自選清單，再加一整列新聞，因為股票靠公告與頭條驅動。",
+        "tagline": "交易日，跟著驅動它的日曆走。",
+        "description": "股票首頁看板：目前交易時段的狀態、誰將在何時發布財報、即將公布的總體經濟數據，旁邊是漲跌幅排行榜和新聞來源。時鐘資料來自券商日曆，因此假期與半日市都準確無誤。",
         "menuLabel": "預設"
+      },
+      "spot-research": {
+        "name": "現貨研究",
+        "tagline": "下單之前，先要有理由。",
+        "description": "面向持倉超過一個交易時段的部位：交易對檔案上方是圖表，旁邊是這個交易對專屬的新聞來源，同產業上方是報價規模的下單面板。沒有委託簿，因此不會開啟深度資料流。",
+        "menuLabel": "研究"
+      },
+      "perps-carry": {
+        "name": "永續合約資金成本",
+        "tagline": "下一次資金費結算，會花你多少錢。",
+        "description": "面向打算持續持有的永續合約：圖表上方是帶倒數的資金費倒數條，顯示目前與預測費率，以及你的部位規模要支付或賺取的金額，下方是未平倉合約，委託簿下方是支援槓桿的下單面板。",
+        "menuLabel": "資金成本"
+      },
+      "perps-risk": {
+        "name": "永續合約風險",
+        "tagline": "部位在哪裡歸零，以及阻止它的限額。",
+        "description": "把同一個交易對當作風險敞口來看：圖表下方是強平地圖，保證金狀況下方是護欄設定，右側是下單面板。限額可就地編輯，規模上限的調整就在交易發生的地方，而不必跑去設定頁面。",
+        "menuLabel": "風險"
+      },
+      "dex-liquidity": {
+        "name": "DEX 流動性",
+        "tagline": "你的區間，你的手續費，你的無常損失。",
+        "description": "資金池的 LP 視角：圖表上疊加你的價格區間，累積的手續費及由此推算的 APR，區間內停留時間，以及相對於單純持有測算的無常損失。旁邊就是區間編輯器，無需離開圖表即可調整部位。",
+        "menuLabel": "流動性"
+      },
+      "dex-cross-chain": {
+        "name": "DEX 跨鏈",
+        "tagline": "同一枚代幣，每條鏈都有，Gas 費全部算進去。",
+        "description": "用於跨鏈轉移的看板：跨鏈階梯以計入 Gas 費的總成本，在每條鏈上為代幣報價，跨鏈路由註明手續費與所需時間，旁邊並列著仍在確認中的轉帳及其區塊確認數。",
+        "menuLabel": "跨鏈"
+      },
+      "equities-company": {
+        "name": "股票公司",
+        "tagline": "股票代碼背後的生意。",
+        "description": "面向持有而非交易股票的畫面：圖表下方是估值、成長率、利潤率、下一個催化劑、分析師預期區間，旁邊是商品新聞，下單面板上方是持倉明細。",
+        "menuLabel": "公司"
+      },
+      "prediction-race": {
+        "name": "預測競猜",
+        "tagline": "每個結果都標價，超額機率也一併列明。",
+        "description": "面向多個候選而非二選一的事件：頁首顯示結果數量與超額機率，一個堆疊份額圖表，以及為每個結果標價、可直接在列內下注的階梯。籃子的總價等於超額機率部分，所以掃光全部結果顯然不是免費的錢。",
+        "menuLabel": "競猜"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "K 線",
         "description": "為圖表與訊號提供即時 OHLCV K 線串流"
       },
+      "funding": {
+        "label": "資金費率",
+        "description": "永續合約資金費率、標記價格與指數價格，以及未平倉量"
+      },
+      "pool-stats": {
+        "label": "池子統計",
+        "description": "AMM 池子狀態、它的兌換，以及某條鏈的排序池子"
+      },
+      "session": {
+        "label": "交易時段日曆",
+        "description": "交易日的時鐘與日曆，包含假日與半日市"
+      },
       "ticker": {
         "label": "行情",
         "description": "即時最新價格與 24 小時漲跌幅串流"
@@ -5274,5 +6024,23 @@
     "closeBody": "將在 {{venue}} 送出一筆只減倉市價單，數量為 {{pair}} 的 {{contracts}} 張合約。",
     "closeConfirm": "平倉",
     "closeSubmitted": "平倉訂單已送出"
+  },
+  "yourPosition": {
+    "noVenueTitle": "尚未連接券商",
+    "noVenueBody": "連接股票券商後即可查看你在此標的上的持股。",
+    "noAccountsTitle": "沒有證券帳戶",
+    "noAccountsBody": "加入券商 API 金鑰即可查看持股，模擬帳戶金鑰同樣可用。",
+    "connect": "連接帳戶",
+    "flatTitle": "沒有 {{symbol}} 的部位",
+    "flatBody": "此標的的成交會顯示在這裡。",
+    "shares_one": "{{shares}} 股",
+    "shares_other": "{{shares}} 股",
+    "sharesShort_one": "放空 {{shares}} 股",
+    "sharesShort_other": "放空 {{shares}} 股",
+    "openPnlPercent": "成本報酬率",
+    "avgCost": "平均成本",
+    "mark": "參考價",
+    "marketValue": "市值",
+    "dayChange": "今日"
   }
 }

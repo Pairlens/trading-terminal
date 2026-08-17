@@ -71,6 +71,32 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     description: 'Browse prediction-market events and their outcomes',
   },
   {
+    id: 'market-data:pool-stats',
+    label: 'Pool Stats',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description: "AMM pool state, its swaps, and a chain's ranked pools",
+  },
+  {
+    id: 'market-data:session',
+    label: 'Session Calendar',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description:
+      'Trading-day clock and calendar, including holidays and half days',
+  },
+  {
+    id: 'market-data:funding',
+    label: 'Funding',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description:
+      'Perpetual funding rates, mark and index prices, and open interest',
+  },
+  {
     id: 'market-data:discovery',
     label: 'Discovery',
     domain: 'market-data',

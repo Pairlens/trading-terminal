@@ -4,10 +4,15 @@ import { layoutId, normalizeLayout } from './utils'
 import type { TerminalLayout } from './types'
 
 /**
- * Default — Chart+Data left, and a narrow Order Book+Trade rail on the right.
- * The AI assistant used to hold a 24% column of its own; it now lives in the
- * floating dock outside the grid, so that width goes back to the chart and the
- * rail keeps the exact pixel size it always had.
+ * Spot Execution — the spot pair default. Chart, tabbed data strip and the
+ * risk bar on the left; a rail that leads with the cross-venue ladder above
+ * the order book and the ticket.
+ *
+ * The ladder goes first on purpose. `use-venue-quotes` already streams every
+ * connected venue's best bid and ask for the latency probe, so ranking them by
+ * price costs nothing and answers the question a trader asks right before
+ * clicking: which venue fills this cheapest. The book below it then shows the
+ * depth on the one they picked.
  *
  * The data strip opens on Trades rather than Positions. A fresh terminal has
  * no positions to show, so the first tab was an empty state on every install;
@@ -37,7 +42,6 @@ export const PRESET_DEFAULT: TerminalLayout = {
             { id: 'pane-data-log', type: 'data-log' },
             { id: 'pane-depth', type: 'depth' },
             { id: 'pane-pair-info', type: 'pair-info' },
-            { id: 'pane-social', type: 'social' },
           ],
         },
         {
@@ -53,16 +57,90 @@ export const PRESET_DEFAULT: TerminalLayout = {
       widthPercent: 21,
       cells: [
         {
+          id: 'cell-venue-ladder',
+          heightPercent: 23,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-venue-ladder', type: 'venue-ladder' }],
+        },
+        {
           id: 'cell-orderbook',
-          heightPercent: 52,
+          heightPercent: 34,
           activeTabIndex: 0,
           panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
         },
         {
           id: 'cell-trade',
-          heightPercent: 48,
+          heightPercent: 43,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+      ],
+    },
+  ],
+}
+
+/**
+ * Spot Research — for a position held longer than a session. Chart over the
+ * pair dossier, the pair's own news wire beside it, and a ticket above sector
+ * peers.
+ *
+ * No order book and no depth pane, which is the point rather than an
+ * omission: those are the two panes that open a per-venue depth stream, and a
+ * board meant to stay open all day should not hold one. What replaces them is
+ * context: what the pair did, what is being written about it, and how the rest
+ * of its sector traded.
+ */
+export const SPOT_RESEARCH_LAYOUT: TerminalLayout = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 59,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 69,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-dossier',
+          heightPercent: 31,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-pair-dossier', type: 'pair-dossier' }],
+        },
+      ],
+    },
+    {
+      id: 'col-news',
+      widthPercent: 23,
+      cells: [
+        {
+          id: 'cell-news',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-symbol-news', type: 'symbol-news' },
+            { id: 'pane-social', type: 'social' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'col-rail',
+      widthPercent: 18,
+      cells: [
+        {
+          id: 'cell-trade',
+          heightPercent: 43,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+        {
+          id: 'cell-peers',
+          heightPercent: 57,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-sector-peers', type: 'sector-peers' }],
         },
       ],
     },

@@ -215,6 +215,7 @@ describe('pairWorkspaceFor', () => {
       'template:chart-focus',
       'template:trading',
       'template:chart-analysis',
+      'template:spot-research',
       'template:dual-charts',
       'template:triple-charts',
       'template:quad-charts',

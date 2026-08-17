@@ -3,8 +3,8 @@
 /**
  * The prediction panels are only reachable if three registries agree: the
  * bootstrap bundle carries the plugin, the pane registry keys its panels
- * WITHOUT a plugin prefix (so a saved layout that names `events` resolves),
- * and the workspace-store analyzer knows who owns those pane types.
+ * WITHOUT a plugin prefix (so a saved layout that names `event-board`
+ * resolves), and the workspace-store analyzer knows who owns those pane types.
  *
  * Each of those is a separate hardcoded id list, which is exactly the shape of
  * thing that gets updated in two places out of three.
@@ -12,6 +12,7 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
 import { lazy } from 'react'
 
+import { PANE_CATEGORY_DEFINITIONS } from '@pairlens/shared/pane-categories'
 import { BOOTSTRAP_PLUGINS } from '../plugins/bootstrap-bundle'
 import { DynamicPaneRegistry } from '../layout/pane-registry'
 import { getPaneIcon } from '../layout/pane-icons'
@@ -42,14 +43,25 @@ const PREDICTIONS = BOOTSTRAP_PLUGINS.find(
   (p) => p.manifest.id === 'pairlens-predictions',
 )
 
-const PANEL_IDS = ['events', 'prediction-positions']
+const PANEL_IDS = [
+  'events',
+  'prediction-positions',
+  'categories',
+  'event-board',
+  'odds-movers',
+  'resolving-soon',
+  'event-header',
+  'what-moved-it',
+  'outcome-ladder',
+  'basket-ticket',
+]
 
 describe('pairlens-predictions', () => {
   it('ships in the bootstrap bundle', () => {
     expect(PREDICTIONS).toBeDefined()
   })
 
-  it('contributes exactly the two prediction panels', () => {
+  it('contributes exactly the prediction panels', () => {
     const panels = PREDICTIONS!.manifest.contributes?.panels ?? []
     expect(panels.map((p) => p.id).sort()).toEqual([...PANEL_IDS].sort())
   })
@@ -97,12 +109,27 @@ describe('pairlens-predictions', () => {
     }
   })
 
-  it('gates neither panel on a workspace variable', () => {
+  it('gates each panel on exactly what it structurally needs', () => {
     // Kalshi trades from API keys and Polymarket from a wallet, so
     // 'workspace:active-wallet' would hide the positions pane from half the
-    // family; the panes say what is missing themselves.
+    // family; those panes say what is missing themselves. The per-contract
+    // panes still need a pair, and the basket needs both, because it prices a
+    // multi-outcome stake against one account.
+    const REQUIRES: Record<string, Array<string>> = {
+      'event-header': ['workspace:active-pair'],
+      'what-moved-it': ['workspace:active-pair'],
+      'outcome-ladder': ['workspace:active-pair'],
+      'basket-ticket': ['workspace:active-pair', 'workspace:active-wallet'],
+    }
     for (const panel of PREDICTIONS!.manifest.contributes?.panels ?? []) {
-      expect(panel.requires ?? []).toEqual([])
+      expect(panel.requires ?? [], panel.id).toEqual(REQUIRES[panel.id] ?? [])
+    }
+  })
+
+  it('files every panel under a real pane category', () => {
+    const CATEGORIES = new Set(PANE_CATEGORY_DEFINITIONS.map((c) => c.id))
+    for (const panel of PREDICTIONS!.manifest.contributes?.panels ?? []) {
+      expect(CATEGORIES.has(panel.category), panel.id).toBe(true)
     }
   })
 })

@@ -4,8 +4,8 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 16 AUG 2026
-readTime: 6 min read
+updated: 17 AUG 2026
+readTime: 7 min read
 ---
 
 Pairlens opens on a live chart. Everything else is one click or one keystroke
@@ -31,26 +31,41 @@ Below those sit your workspaces, your recent pairs, and the Workspace Store.
 ## The workspace grid
 
 A workspace is a saved arrangement of panels. Every panel is contributed by a
-plugin, which is why the catalogue grows when you install one. Panels fall into
-four categories:
+plugin, which is why the catalogue grows when you install one. Sixty-seven ship
+in the box, in four categories:
 
-**Discovery.** Markets, Watchlist, Recent Tickers, Top Coins, Heatmap, News,
-Fear and Greed, Web.
+**Discovery.** The scanner and the watchlist, the crypto context panes (Market
+Pulse, Movers, Sector Tape, Top Coins, Heatmap, Fear and Greed), the perp
+scanners (Funding Matrix, Basis Monitor, Open Interest, Funding Extremes), the
+on-chain rails (Chains, Pool Map, Liquidity Flow, Pool Detail), the stock
+calendars (Session, Earnings, Economic), the event surfaces (Events,
+Categories, Event Board, Odds Movers, Resolving Soon), and Web.
 
-**Charting and data.** Chart, Order Book, Market Depth, Liquidity Heatmap, Pair
-Info, Data Log.
+**Charting and data.** Chart, Order Book, Market Depth, Liquidity Heatmap,
+Multi-Price, Venue Ladder, Pair Info, Pair Dossier, Data Log, plus the
+class-specific ones: Funding Belt and Liquidation Map on a perp, Pool Stats,
+On-chain Trades and Chain Ladder on a pool, Session Clock, Level 1 and Company
+on a stock, Event Header on a contract.
 
-**Trading.** Trade Entry, Positions, Portfolio, Risk.
+**Trading.** Trade Entry, Positions, Portfolio, Risk, Futures Positions, Margin
+Health, Risk Controls, Prediction Positions, Outcome Ladder, Basket Ticket,
+Your Position, Route, and the LP and bridge panels.
 
-**News and sentiment.** Social, Symbol News.
+**News and sentiment.** News, Symbol News, Social, What Moved It.
 
 Drag a separator to resize. Use the pane menu to split, replace, or close.
-Panels marked as singletons can only appear once per workspace. Both the pair
-page and Discovery keep a separate layout per asset class, each with a default
-built for what it trades: rearranging your perps desk leaves your spot desk
-alone. On Discovery those layouts are the tabs beside the title, and you can
-drag them into the order you work in. Full details
-in [panels](/docs/panels), and the layout model in
+Sixteen panels are singletons and appear once per workspace. Both the pair page
+and Discovery keep a separate layout per asset class, each with a default built
+for what it trades: rearranging your perps desk leaves your spot desk alone.
+Beyond that default, each class carries its own named boards in the
+<kbd>⌘⇧L</kbd> menu, Research on spot, Carry and Risk on perps, Liquidity and
+Cross-Chain on-chain, Company on stocks, Race on predictions.
+
+On Discovery those layouts are the tabs beside the title, and you can drag them
+into the order you work in. Only one of the five boards is a list of pairs:
+futures opens on funding and basis, DEX on chains and pools, equities on the
+session and the calendars, predictions on the event board. Full details in
+[panels](/docs/panels), and the layout model in
 [workspaces](/docs/workspaces).
 
 ## The pair header

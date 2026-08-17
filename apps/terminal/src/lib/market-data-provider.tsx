@@ -125,7 +125,9 @@ function orderAnalyticsProps(params: Record<string, unknown>): TradeEventProps {
     order_type: params['trigger'] ? `trigger_${type}` : type,
     mode,
     source:
-      source === 'copilot' || source === 'workflow' ? source : 'trade_panel',
+      source === 'copilot' || source === 'workflow' || source === 'basket'
+        ? source
+        : 'trade_panel',
   }
 }
 

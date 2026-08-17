@@ -162,6 +162,12 @@ export const binanceFuturesCcxtVenue: CcxtFuturesVenueConfig = {
   // page that filters to nothing latches `exhausted` for the session.
   historyPageParams: (endTs) => ({ until: pageEndMs(endTs) }),
   livenessTimeoutMs: 120_000,
+  // USD-M settles every eight hours, and the premium-index rows ccxt parses
+  // carry no period at all — so this is the value nearly every contract
+  // annualises against. The exceptions (a handful settle every four hours) come
+  // from `fetchFundingIntervals`, which this venue does publish; `funding.ts`
+  // prefers that table wherever it has a row.
+  fundingIntervalHours: 8,
   geoCheck: (country) => {
     // No US derivatives host exists to route to, unlike the spot connector.
     if (country.toUpperCase() === 'US') {

@@ -3,6 +3,7 @@
 import { fetchOhlcv } from './ohlcv-client'
 import { closeAllConnections, subscribeTicker } from './ticker-client'
 import { clearPoolCache, networkForMarket } from './pool-resolver'
+import { fetchNetworkStats, fetchPoolStats } from './pool-stats-client'
 import type { CandleUpdate, TickerUpdate } from '@pairlens/market-engine/types'
 import type {
   PluginExecuteParams,
@@ -43,6 +44,16 @@ export const dexpaprikaDataProviderManifest: PluginManifest = {
       priority: 6,
       streaming: false,
     },
+    // Behind GeckoTerminal, and worth reaching anyway: this is the only
+    // provider that publishes per-token reserves, the 24h buy/sell split and
+    // chain-WIDE totals rather than a sampled sum.
+    {
+      id: 'market-data:pool-stats',
+      singleton: false,
+      markets: ['*'],
+      priority: 6,
+      streaming: false,
+    },
   ],
   config: {},
 }
@@ -68,6 +79,31 @@ export function createDexpaprikaDataProviderPlugin(
         timeframe,
         limit,
         networkForMarket(context.market),
+      )
+    }
+
+    if (capability === 'market-data:pool-stats') {
+      // See the GeckoTerminal provider: `params.market` wins over the
+      // manager's shared context, which belongs to the terminal's own venue.
+      const market = String(p['market'] ?? context.market ?? '')
+
+      if (String(p['action'] ?? 'stats') === 'networks') {
+        const markets = Array.isArray(p['markets'])
+          ? (p['markets'] as Array<unknown>).map(String)
+          : [market]
+        return fetchNetworkStats(
+          markets.map((id) => ({ market: id, network: networkForMarket(id) })),
+        )
+      }
+
+      // `pools` and `trades` are GeckoTerminal-only for now; answering null
+      // rather than throwing keeps the pane's "no data" honest instead of
+      // reporting a provider failure that did not happen.
+      if (String(p['action'] ?? 'stats') !== 'stats') return null
+
+      return fetchPoolStats(
+        String(p['pair'] ?? context.pair),
+        networkForMarket(market),
       )
     }
 

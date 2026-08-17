@@ -2275,7 +2275,49 @@
     "empty": "Empty",
     "events": "Events",
     "predictionPositions": "Prediction Positions",
-    "futuresPositions": "Futures Positions"
+    "futuresPositions": "Futures Positions",
+    "venueLadder": "Venue Ladder",
+    "pairDossier": "Pair Dossier",
+    "marketPulse": "Market Pulse",
+    "movers": "Movers",
+    "sectorTape": "Sector Tape",
+    "sectorPeers": "Sector Peers",
+    "fundingMatrix": "Funding Matrix",
+    "basisMonitor": "Basis Monitor",
+    "openInterest": "Open Interest",
+    "fundingExtremes": "Funding Extremes",
+    "fundingBelt": "Funding Belt",
+    "liquidationMap": "Liquidation Map",
+    "marginHealth": "Margin Health",
+    "riskControls": "Risk Controls",
+    "categories": "Categories",
+    "eventBoard": "Event Board",
+    "oddsMovers": "Odds Movers",
+    "resolvingSoon": "Resolving Soon",
+    "eventHeader": "Event Header",
+    "whatMovedIt": "What Moved It",
+    "outcomeLadder": "Outcome Ladder",
+    "basketTicket": "Basket Ticket",
+    "chains": "Chains",
+    "poolMap": "Pool Map",
+    "liquidityFlow": "Liquidity Flow",
+    "poolDetail": "Pool Detail",
+    "poolStats": "Pool Stats",
+    "onchainTrades": "On-chain Trades",
+    "route": "Route",
+    "feeAccrual": "Fee Accrual",
+    "lpPosition": "LP Position",
+    "manageLiquidity": "Manage Liquidity",
+    "chainLadder": "Chain Ladder",
+    "routeBridge": "Bridge Route",
+    "inFlight": "In Flight",
+    "session": "Session",
+    "earningsCalendar": "Earnings Calendar",
+    "economicCalendar": "Economic Calendar",
+    "sessionClock": "Session Clock",
+    "level1": "Level 1",
+    "company": "Company",
+    "yourPosition": "Your Position"
   },
   "paneDescriptions": {
     "markets": "Browse all available trading pairs across exchanges",
@@ -2302,7 +2344,150 @@
     "recentTickers": "Recently viewed pairs with live prices for quick switching",
     "events": "Browse prediction-market events and open an outcome's chart",
     "predictionPositions": "Contracts you hold, their cost and when they resolve",
-    "futuresPositions": "Open perpetual positions, their mark price and liquidation level"
+    "futuresPositions": "Open perpetual positions, their mark price and liquidation level",
+    "venueLadder": "Every connected venue's best bid and ask for this pair, ranked so the cheapest fill is the top row",
+    "pairDossier": "The stats that decide a size: range, volume, liquidity within one percent, and where the pair trades best",
+    "marketPulse": "Three numbers for the whole market, with one line on what moved and why",
+    "movers": "The day's biggest gainers and losers with the volume behind them, so a real move stands out from a wick",
+    "sectorTape": "Every sector as a chip with its move and a breadth bar, so rotation reads in one glance",
+    "sectorPeers": "How the rest of this pair's sector traded today, with the pair itself pinned on top",
+    "fundingMatrix": "Funding for every perp on every venue you connected, in one grid you can sort by any column",
+    "basisMonitor": "Perp against spot in basis points and annualised, so carry reads as a yield instead of a gap",
+    "openInterest": "Open interest per contract with its 24h change, so crowding shows up before price does",
+    "fundingExtremes": "The most positive and most negative funding rates right now, with the venue paying each one",
+    "fundingBelt": "The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns",
+    "liquidationMap": "Where your position dies on the price axis, against the liquidation the rest of the market is carrying",
+    "marginHealth": "Margin ratio, maintenance against available, and how close the account sits to auto-deleveraging",
+    "riskControls": "Your daily loss cap, trade count, position size and kill switch, editable where the trade happens",
+    "categories": "Every event category with a live contract count, so the board narrows in one click",
+    "eventBoard": "Live event markets as cards: the question, Yes and No in cents, volume, and when it resolves",
+    "oddsMovers": "The contracts whose probability moved most today, with the move stated in points",
+    "resolvingSoon": "Contracts closest to settlement, sorted by the clock rather than by volume",
+    "eventHeader": "The question, when and how it resolves, and the probability the market is paying right now",
+    "whatMovedIt": "Headlines on a timeline, each stamped with the probability move it caused",
+    "outcomeLadder": "Every runner in the event priced in cents, sortable and searchable, with a stake button on each row",
+    "basketTicket": "Stake several outcomes at once, with the total cost, the stated overround and your worst case before you submit",
+    "chains": "Every chain you have a connector for, with gas, liquidity and 24h volume beside it",
+    "poolMap": "Pools ranked by volume against liquidity, so the ones actually trading come first",
+    "liquidityFlow": "Net liquidity in and out per interval, so a pool draining shows up before the price does",
+    "poolDetail": "The selected pool at a glance, one click from its chart and a swap",
+    "poolStats": "Reserves on both sides, value locked, 24h volume, the fee tier, and price impact at three sizes",
+    "onchainTrades": "Every swap through the pool as it confirms, with the wallet and a link to the transaction",
+    "route": "How the aggregator splits your swap across pools, so the slippage has a stated cause",
+    "feeAccrual": "Fees your position has earned over time, the APR that implies, and what is claimable now",
+    "lpPosition": "Your range against the live price, time in range, and impermanent loss measured against simply holding",
+    "manageLiquidity": "Move the range, add or pull liquidity, and claim fees without leaving the chart",
+    "chainLadder": "The same token priced on every chain, with gas folded in, so the best total wins rather than the best quote",
+    "routeBridge": "Source chain, target chain, the bridge, its fee and how long it takes, ready to execute",
+    "inFlight": "Transfers still confirming, each with the block counter it is waiting on",
+    "session": "Where the trading day is right now, from the broker's own calendar, holidays and half days included",
+    "earningsCalendar": "Who reports and when, before or after the bell, with the estimate they have to beat",
+    "economicCalendar": "Macro releases by the clock, with importance, the prior print and consensus",
+    "sessionClock": "A one-line clock for the trading day, so an out-of-hours ticket is never a surprise",
+    "level1": "Bid and ask with their sizes, the spread, and the day's range from the broker feed",
+    "company": "Valuation, growth, margins, the next catalyst and where the analysts sit, in one pane",
+    "yourPosition": "What you hold in this symbol: quantity, cost, mark, and both the day and the open profit"
+  },
+  "venueLadder": {
+    "emptyTitle": "No venue to compare",
+    "emptyBody": "Connect a second exchange that lists this asset class and the ladder ranks them by the side you are trading.",
+    "columns": {
+      "venue": "Venue",
+      "bid": "Bid",
+      "ask": "Ask",
+      "bps": "bps"
+    },
+    "switchSide": "Switch side",
+    "rankedByAsk": "Ranked by ask, cheapest to buy first",
+    "rankedByBid": "Ranked by bid, best to sell first",
+    "bpsTooltip": "Top of book spread against the mid. A venue that publishes no real two sided book is never ranked.",
+    "best": "Best",
+    "desktopOnlyRow": "{{venue}} needs the desktop app",
+    "switchTo": "Chart this pair on {{venue}}",
+    "desktopOnly": "Desktop",
+    "notListed": "pair not listed",
+    "noBook": "no quotes yet"
+  },
+  "pairDossier": {
+    "marketCap": "Market cap",
+    "rank": "rank {{rank}}",
+    "volume24h": "24h volume",
+    "turnover": "{{pct}}% of cap",
+    "change7d": "7d change",
+    "change7dSub": "against a week ago",
+    "sector": "Sector",
+    "sectorMove": "sector {{change}} 24h",
+    "quotedOn": "Quoted on",
+    "ofVenues": "of {{total}} venues",
+    "tightestSpread": "Tightest spread",
+    "bps": "{{bps}} bps",
+    "range24h": "24h range",
+    "rangeLowHigh": "{{low}} to {{high}}",
+    "volatility": "Volatility",
+    "volatilityWindow": "annualised from {{span}} of {{timeframe}} candles",
+    "spreadByVenue": "Spread by venue · top of book",
+    "spreadByVenueTooltip": "How tightly each venue is quoting right now, in basis points against the mid. A ticker carries no size, so this is the cost of crossing at the top of the book, not the depth behind it.",
+    "noBooks": "No connected venue is publishing a two sided book for this pair yet.",
+    "sizingNote": "Crossing costs {{tightBps}} bps on {{tight}} and {{wideBps}} bps on {{wide}}. Size the order to the venue, not the pair.",
+    "sizingNoteSingle": "{{venue}} is the only venue quoting a real book, at {{bps}} bps."
+  },
+  "marketPulse": {
+    "emptyTitle": "No market snapshot",
+    "emptyBody": "Neither the App Server nor the public fallback answered. The strip fills in the moment one of them does.",
+    "totalCap": "Total cap",
+    "window24h": "24h",
+    "volume24h": "24h volume",
+    "turnover": "{{pct}}% of cap traded",
+    "dominance": "BTC dominance",
+    "breadth": "Breadth · {{total}} assets",
+    "up": "up",
+    "down": "down",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "The crypto Fear and Greed index. 0 is extreme fear, 100 is extreme greed."
+  },
+  "movers": {
+    "emptyTitle": "No market snapshot",
+    "emptyBody": "Neither the App Server nor the public fallback answered, so there is nothing to rank yet.",
+    "noBrokerTitle": "No equities venue installed",
+    "noBrokerBody": "Install a broker connector from the Plugin Store and the day's movers land here.",
+    "tabs": {
+      "gainers": "Gainers",
+      "losers": "Losers",
+      "volume": "Volume",
+      "volatility": "Volatility",
+      "unusual": "Unusual"
+    },
+    "window": "Ranking window",
+    "columns": {
+      "pair": "Pair",
+      "change": "{{window}} change",
+      "price": "Price",
+      "volume": "Volume",
+      "trend": "Trend"
+    },
+    "turnoverTooltip": "24h volume, then how much of itself the asset traded against the median coin in this snapshot. It is not a comparison with its own 30 day average, which no snapshot carries.",
+    "empty": {
+      "gainers": "Nothing is up over this window.",
+      "losers": "Nothing is down over this window.",
+      "volume": "No venue has reported volume yet.",
+      "volatility": "Nothing has moved enough to rank.",
+      "unusual": "No asset is trading unusually hard for its size."
+    }
+  },
+  "sectorTape": {
+    "emptyTitle": "No sector data",
+    "emptyBody": "Sectors come from the instrument catalog joined against the market snapshot. Neither has answered yet.",
+    "subtitle": "Weighted by market cap. The bar is how many members went with the move.",
+    "window": "Sector window",
+    "leads": "{{total}} assets · {{symbol}} leads",
+    "drags": "{{total}} assets · {{symbol}} drags",
+    "assets": "{{total}} assets"
+  },
+  "sectorPeers": {
+    "emptyTitle": "No sector for this pair",
+    "emptyBody": "{{pair}} is not in the curated sector catalog, so there are no peers to rank it against.",
+    "loadingBody": "Reading the sector catalog.",
+    "subtitle": "{{sector}} · {{total}} assets. Ranked by 24h, {{symbol}} first."
   },
   "multiPrice": {
     "venue": "Venue",
@@ -2902,7 +3087,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens Predictions",
-        "description": "Event browser and open contract positions for prediction markets"
+        "description": "Prediction-market surfaces: the event board, the outcome ladder, baskets and open contract positions"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures Market Connector",
@@ -2918,15 +3103,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens Futures",
-        "description": "Open perpetual positions with entry, mark price and liquidation level"
+        "description": "Perpetual futures surfaces: open positions, funding and basis scanners, liquidation and margin panes"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "On-chain workspace presets: the DEX terminal and the degen hunting board"
+        "description": "On-chain surfaces: pool stats, the swap route, LP positions and the cross-chain ladder"
       },
       "pairlens-equities": {
         "title": "Pairlens Equities",
-        "description": "Stock workspace presets: the equities terminal and the scanner-led desk"
+        "description": "Stock surfaces: the session clock, Level 1 quotes, company fundamentals and the earnings calendar"
       }
     },
     "families": {
@@ -3083,14 +3268,27 @@
       "maxLoss": "Max loss",
       "priceCents": "Price (¢)",
       "thisOutcome": "This outcome",
-      "decreaseContracts": "One contract fewer",
-      "increaseContracts": "One contract more",
       "priceCentsRange": "Enter a price between 0¢ and 100¢",
       "leverage": "Leverage",
       "reduceOnly": "Reduce only",
       "reduceOnlyHint": "Shrinks an open position and never opens the opposite side.",
       "notional": "Notional",
-      "estLiquidation": "Est. liquidation"
+      "estLiquidation": "Est. liquidation",
+      "resolvesOn": "Resolves {{date}}",
+      "contractCount_one": "{{formatted}} contract",
+      "contractCount_other": "{{formatted}} contracts",
+      "maxAmount": "Max",
+      "avgFillPrice": "Avg fill price",
+      "maxPayout": "Max payout",
+      "ifWins": "If {{outcome}} wins",
+      "ifDoesNotWin": "If {{outcome}} does not win",
+      "stakeLine": "Stake {{amount}}",
+      "profitLine": "Profit {{amount}} · {{roi}}",
+      "switchOutcome": "Switch outcome",
+      "allOutcomes": "All {{total}}",
+      "fundingAtEntry": "Funding at entry",
+      "fundingLongsPay": "Longs pay shorts",
+      "fundingShortsPay": "Shorts pay longs"
     },
     "status": {
       "connecting": "Connecting…",
@@ -3418,9 +3616,9 @@
         "menuLabel": "Chart Focus"
       },
       "classic-terminal": {
-        "name": "Classic Terminal",
-        "tagline": "The classic Pairlens desk: chart, data, book, ticket.",
-        "description": "The default terminal layout: a large chart with a tabbed data strip and risk bar on the left, and the order book over a trade ticket on the right.",
+        "name": "Spot Execution",
+        "tagline": "Best bid and ask across every venue you connected.",
+        "description": "The default spot layout: chart with the tape and positions below it, and a rail that leads with the cross-venue ladder above the book and ticket.",
         "menuLabel": "Default"
       },
       "command-center": {
@@ -3446,7 +3644,7 @@
       "dex-terminal": {
         "name": "DEX Terminal",
         "tagline": "On-chain trading without the fake order book.",
-        "description": "The default on-chain layout: a chart with pool stats and the tape below it, a swap ticket over your recent tickers for catching new listings, and the social feed on the right. There is no order book column: pool-quoted depth is synthetic, so it is not shown.",
+        "description": "The default on-chain layout: a chart over pool stats, the on-chain tape beside it, and a swap ticket above the aggregator route so slippage has a stated cause. There is no order book column: pool-quoted depth is synthetic, so it is not shown.",
         "menuLabel": "Default"
       },
       "dual-charts": {
@@ -3462,14 +3660,14 @@
       },
       "equities-terminal": {
         "name": "Equities Terminal",
-        "tagline": "Stocks with the ticket over the symbol news wire.",
-        "description": "The default stock layout: a chart with the tape, positions, and fundamentals below it, and the order ticket above the symbol news wire, because catalysts move stocks the way flow moves crypto.",
+        "tagline": "The session clock over the chart, Level 1 over the ticket.",
+        "description": "The default stock layout: the session clock leads, then the chart with time and sales and positions below it, and a rail carrying Level 1 quotes over the ticket and the symbol wire. Outside regular hours the clock says so, and the ticket goes limit-only.",
         "menuLabel": "Default"
       },
       "home-pulse": {
-        "name": "Home",
-        "tagline": "The default board: scanner, sentiment, movers, and news.",
-        "description": "The default home board: markets scanner, a market-pulse rail with the Fear & Greed gauge and top coins tabbed with your watchlist, and a full-height news column. Everything on it works without an account.",
+        "name": "Spot Discovery",
+        "tagline": "Open on what moved, and why.",
+        "description": "The spot home board: a market pulse strip over the movers table and the sector tape, with the full scanner beside it and news over your watchlist. Everything on it works without an account.",
         "menuLabel": "Default"
       },
       "laptop-focus": {
@@ -3518,14 +3716,14 @@
       },
       "prediction-terminal": {
         "name": "Prediction Terminal",
-        "tagline": "Chart the odds with the whole event beside them.",
-        "description": "The default prediction-market layout: a probability chart with the tape and your open contracts below it, the order book and ticket in the middle, and a full-height event browser on the right, because the neighbouring outcomes are half the analysis.",
+        "tagline": "The question first, then the odds.",
+        "description": "The default prediction-market layout: the event header over a probability chart, with the headlines that moved it below, the book and a ticket that states max payout and max loss before you stake, and the neighbouring outcomes on the right.",
         "menuLabel": "Default"
       },
       "prediction-discovery": {
         "name": "Prediction Discovery",
         "tagline": "Browse live event markets, not a catalog of pairs.",
-        "description": "A home board built for event contracts: the event browser takes the wide column, the news wire runs beside it, and a light rail carries your watchlist over the sentiment gauge. Install a prediction venue such as Kalshi or Polymarket to fill the board.",
+        "description": "A home board built for event contracts: a category rail beside the event board, with the biggest odds moves over the contracts closest to settling. Install a prediction venue such as Kalshi or Polymarket to fill it.",
         "menuLabel": "Default"
       },
       "quad-charts": {
@@ -3584,21 +3782,63 @@
       },
       "perps-discovery": {
         "name": "Perps Discovery",
-        "tagline": "Scan perps with your open contracts beside them.",
-        "description": "The futures home board: the markets scanner filtered to perpetual contracts, your open positions with mark and liquidation next to it over a multi-price rail, and sentiment above the news wire.",
+        "tagline": "Scan by cost of carry, not by price.",
+        "description": "The futures home board: the funding matrix over the basis monitor, with open interest and the funding extremes beside them. It ranks perps by what holding them costs, which is the question a price scanner never answers.",
         "menuLabel": "Default"
       },
       "dex-discovery": {
         "name": "DEX Discovery",
-        "tagline": "On-chain listings, the social feed, and your watchlist.",
-        "description": "The on-chain home board: the markets scanner filtered to DEX pairs, recent tickers over the social feed for catching what just listed, and your watchlist above the news wire.",
+        "tagline": "Pick the chain, then the pool.",
+        "description": "The on-chain home board: a chain rail with gas and liquidity, pools ranked by volume against liquidity over the flow chart, and the selected pool on the right, one click from its chart and a swap. Chains you have no connector for never appear.",
         "menuLabel": "Default"
       },
       "equities-discovery": {
         "name": "Equities Discovery",
-        "tagline": "The stock scanner beside your basket and the wire.",
-        "description": "The stock home board: the markets scanner filtered to equities, your watchlist over a multi-price rail, and a full-height news column, because stocks move on filings and headlines.",
+        "tagline": "The trading day, by the calendar that runs it.",
+        "description": "The stock home board: where the session is right now, who reports and when, and the macro releases due, with the movers and the news wire beside them. The clock comes from the broker calendar, so holidays and half days are right.",
         "menuLabel": "Default"
+      },
+      "spot-research": {
+        "name": "Spot Research",
+        "tagline": "A reason before a ticket.",
+        "description": "For positions held longer than a session: chart over the pair dossier, the pair's own news wire beside it, and a quote-sized ticket over its sector peers. No order book, so no depth stream opens.",
+        "menuLabel": "Research"
+      },
+      "perps-carry": {
+        "name": "Perps Carry",
+        "tagline": "What the next funding stamp costs you.",
+        "description": "For a perp you intend to hold: the funding belt above the chart with the countdown, the current and predicted rate and what your size pays or earns, open contracts below, and the book over a leverage-aware ticket.",
+        "menuLabel": "Carry"
+      },
+      "perps-risk": {
+        "name": "Perps Risk",
+        "tagline": "Where the position dies, and the limits that stop it.",
+        "description": "The same pair read as exposure: the chart over a liquidation map, margin health above your guardrails, and the ticket on the right. The limits are editable in place, so a size cap is adjusted where the trade happens rather than in Settings.",
+        "menuLabel": "Risk"
+      },
+      "dex-liquidity": {
+        "name": "DEX Liquidity",
+        "tagline": "Your range, your fees, your impermanent loss.",
+        "description": "The LP side of a pool: the chart with your range on it, fees accrued and the APR they imply, time in range, and impermanent loss measured against simply holding. The range editor sits beside it, so a position is rebalanced without leaving the chart.",
+        "menuLabel": "Liquidity"
+      },
+      "dex-cross-chain": {
+        "name": "DEX Cross-Chain",
+        "tagline": "The same token, every chain, gas included.",
+        "description": "A board for moving between chains: the chain ladder prices the token everywhere with gas folded into the total, the bridge route states its fee and how long it takes, and transfers still confirming sit beside them with their block counters.",
+        "menuLabel": "Cross-Chain"
+      },
+      "equities-company": {
+        "name": "Equities Company",
+        "tagline": "The business behind the ticker.",
+        "description": "For holding a stock rather than trading it: the chart over valuation, growth, margins, the next catalyst and the analyst range, with the symbol wire beside it and your position above the ticket.",
+        "menuLabel": "Company"
+      },
+      "prediction-race": {
+        "name": "Prediction Race",
+        "tagline": "Every runner priced, and the overround stated.",
+        "description": "For an event with a field rather than two sides: the header with the runner count and the overround, a stacked-shares chart, and a ladder that prices every runner and stakes from the row. The basket sums to the overround, so sweeping the field is visibly not free money.",
+        "menuLabel": "Race"
       }
     },
     "traderTypes": {
@@ -4833,8 +5073,175 @@
       }
     }
   },
+  "dexChains": {
+    "title": "Where the flow is",
+    "subtitleNetwork": "24h volume, chain wide",
+    "subtitleSampled": "24h volume across each chain's busiest pools",
+    "liquidityValue": "{{value}} liquidity",
+    "poolsValue_one": "{{count}} pool",
+    "poolsValue_other": "{{count}} pools",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "priority fee",
+    "notInstalled": "No connector installed",
+    "installConnector": "Install connector",
+    "emptyTitle": "No chains to browse",
+    "emptyBody": "This build ships no on-chain connectors, so there is no chain to rank pools on."
+  },
+  "poolMap": {
+    "title": "{{chain}} pools",
+    "subtitle": "Ranked by how hard each pool works its own liquidity",
+    "sortTurnover": "Turnover",
+    "sortVolume": "Volume",
+    "sortLiquidity": "Liquidity",
+    "turnoverValue": "{{value}}x",
+    "openPair": "Open chart",
+    "columns": {
+      "pool": "Pool",
+      "price": "Price",
+      "change": "24h",
+      "volume": "Vol 24h",
+      "liquidity": "Liquidity",
+      "turnover": "Vol / liq"
+    },
+    "noChainTitle": "Pick a chain",
+    "noChainBody": "Choose a chain in the rail and its pools rank here, volume against the liquidity backing it.",
+    "loadingTitle": "Loading pools",
+    "loadingBody": "Fetching this chain's ranked pools.",
+    "emptyTitle": "No pools returned",
+    "emptyBody": "The data provider listed nothing for this chain. It retries on the next refresh."
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "Pick a pool",
+    "noPoolBody": "Select a pool in the map and the money crossing it shows up here, five minutes at a time.",
+    "loadingTitle": "Loading swaps",
+    "loadingBody": "Fetching this pool's recent swaps.",
+    "emptyTitle": "No swaps yet",
+    "emptyBody": "Nothing has traded through this pool recently, so there is no flow to net out.",
+    "barsLabel": "Net taker flow, {{pool}}",
+    "netHour": "{{value}} last hour",
+    "bucketTooltip": "{{buy}} bought, {{sell}} sold",
+    "axisNote": "Buys minus sells per 5 minutes. Liquidity added or pulled by LPs is not in this feed.",
+    "biggestLabel": "Biggest swaps"
+  },
+  "poolDetail": {
+    "emptyTitle": "No pool selected",
+    "emptyBody": "Pick a pool from the map to see its liquidity, volume and flow, one click from the chart.",
+    "change24h": "{{value}} 24h",
+    "liquidity": "Liquidity",
+    "volume24h": "Volume 24h",
+    "turnover": "Vol / liq",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "Trades 24h",
+    "feeTier": "Fee tier",
+    "pressureByValue": "Buy and sell pressure, 24h by value",
+    "pressureByCount": "Buy and sell pressure, 24h by trade count",
+    "loading": "Loading pool state.",
+    "openChart": "Open chart and swap"
+  },
+  "poolStats": {
+    "notOnChainTitle": "Not an on-chain pair",
+    "notOnChainBody": "This pane reads AMM pool state. The pair it is bound to trades on a centralized venue, which has a book instead.",
+    "loadingTitle": "Loading pool",
+    "loadingBody": "Resolving the deepest pool for this pair.",
+    "emptyTitle": "No pool state",
+    "emptyBody": "The data provider returned nothing for this pool. It retries on the next refresh.",
+    "liquidity": "Liquidity",
+    "volume24h": "Volume 24h",
+    "turnoverSub": "{{value}}x liquidity",
+    "feeTier": "Fee tier",
+    "feeTierUnknown": "Not published by this venue",
+    "reserves": "Reserves",
+    "reservesUnavailable": "Both sides only on desktop",
+    "trades24h": "Trades 24h",
+    "tradersSub_one": "{{count}} trader",
+    "tradersSub_other": "{{count}} traders",
+    "poolAge": "Pool age",
+    "ageToday": "Today",
+    "ageDays_one": "{{count}} day",
+    "ageDays_other": "{{count}} days",
+    "ageMonths_one": "{{count}} month",
+    "ageMonths_other": "{{count}} months",
+    "impactLabel": "Price impact by order size",
+    "impactNote": "Quoted live at each size, not modelled from reserves, so a split route can beat this pool's own curve."
+  },
+  "onchainTrades": {
+    "notOnChainTitle": "Not an on-chain pair",
+    "notOnChainBody": "This tape reads swaps through an AMM pool. The pair it is bound to trades on a centralized venue.",
+    "filterAll": "All",
+    "filterLarge": "Over {{value}}",
+    "buy": "Buy",
+    "sell": "Sell",
+    "openTx": "Open transaction",
+    "net1h": "Net 1h",
+    "columns": {
+      "time": "Time",
+      "side": "Side",
+      "value": "USD",
+      "price": "Price",
+      "wallet": "Wallet"
+    },
+    "loadingTitle": "Loading swaps",
+    "loadingBody": "Fetching confirmed swaps through this pool.",
+    "emptyTitle": "No swaps yet",
+    "emptyBody": "Nothing has traded through this pool in the window the provider returns."
+  },
+  "swapRoute": {
+    "notOnChainTitle": "Not an on-chain pair",
+    "notOnChainBody": "A route is an aggregator splitting a swap across pools. The pair it is bound to trades on a centralized venue.",
+    "probeLabel": "Quoted for",
+    "loadingTitle": "Quoting",
+    "loadingBody": "Asking the aggregator how it would fill this size.",
+    "noRouteTitle": "No route",
+    "noRouteBody": "The aggregator found no way to fill this size for this pair.",
+    "noQuotePriceBody": "The quote token has no published USD price, so there is no size to quote against.",
+    "emptyTitle": "No split to show",
+    "youReceive": "You receive",
+    "priceImpact": "Price impact",
+    "networkFee": "Network fee"
+  },
+  "chainLadder": {
+    "title": "{{asset}} across chains",
+    "subtitle": "Ranked by what lands after gas, not by the best quote",
+    "sizedFor": "Sized for {{value}}",
+    "best": "Best",
+    "versusBest": "{{bps}} bps",
+    "notFound": "No {{asset}} pool here",
+    "footnote": "The deepest pool is not the best fill. A cheap quote on an expensive chain loses to a slightly worse one where gas is nothing.",
+    "columns": {
+      "chain": "Chain",
+      "price": "Price",
+      "impact": "Impact",
+      "gas": "Gas",
+      "youReceive": "You receive"
+    },
+    "noPairTitle": "No pair bound",
+    "noPairBody": "Bind this pane to a pair and every connected chain quotes the same size for it.",
+    "noChainsTitle": "No chain connectors",
+    "noChainsBody": "Install an on-chain connector and its chain joins the ladder."
+  },
+  "lpPanes": {
+    "positionTitle": "LP positions need a position source",
+    "positionBody": "Nothing connected can read a liquidity position yet. That means asking the chain's position manager for this wallet's own ranges, which no connector does today.",
+    "feesTitle": "Fee history needs a position source",
+    "feesBody": "Fees earned per day come from an indexer, or from fee growth measured over time. Neither is connected, and an estimated chart would look measured.",
+    "manageTitle": "Range editing needs a liquidity action",
+    "manageBody": "Adding, removing and re-centring liquidity are signed transactions no connector builds yet. The controls stay out until they do something.",
+    "venueFallback": "this chain",
+    "wouldRead": "Would read {{wallet}} on {{pool}}, {{chain}}"
+  },
+  "bridgePanes": {
+    "routeTitle": "Bridging needs a bridge provider",
+    "routeBody": "None is connected. The on-chain connectors route inside a single chain, so nothing here can quote a fee or a time to move funds across one. The chain ladder compares what you can already trade.",
+    "wouldQuote": "Would quote {{asset}} out of {{chain}}",
+    "inFlightTitle": "Transfer tracking needs a bridge provider",
+    "inFlightBody": "A confirmation count comes from the bridge that moved the funds. With none connected there is nothing to poll, and a bar with nothing behind it would keep advancing on a transfer that is stuck."
+  },
   "capabilities": {
     "market-data": {
+      "pool-stats": {
+        "label": "Pool Stats",
+        "description": "AMM pool state, its swaps, and a chain's ranked pools"
+      },
       "candles": {
         "label": "Candles",
         "description": "Live OHLCV candle streams for charts and signals"
@@ -4874,6 +5281,14 @@
       "events": {
         "label": "Events",
         "description": "Browse prediction-market events and their outcomes"
+      },
+      "session": {
+        "label": "Session Calendar",
+        "description": "Trading-day clock and calendar, including holidays and half days"
+      },
+      "funding": {
+        "label": "Funding",
+        "description": "Perpetual funding rates, mark and index prices, and open interest"
       }
     },
     "domains": {
@@ -5252,6 +5667,159 @@
     "colResolves": "Resolves",
     "resolved": "Resolved"
   },
+  "predictionCategories": {
+    "all": "All",
+    "noneBody": "This venue does not tag its events by category.",
+    "venueHeading": "Venue",
+    "desktopOnly": "desktop",
+    "venueError": "error"
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "Search 1 live market",
+    "searchPlaceholder_other": "Search {{count}} live markets",
+    "loadingTitle": "Loading the board",
+    "loadingBody": "Asking each venue what is trading right now.",
+    "sort": {
+      "trending": "Trending",
+      "endingSoon": "Ending soon",
+      "volume": "Volume",
+      "biggestMove": "Biggest move"
+    },
+    "unchanged": "unchanged",
+    "movedPoints": "{{arrow}} {{points}} pts today",
+    "volumeUnknown": "Volume not published",
+    "liquidity": "Liq {{value}}",
+    "outcomeCount_one": "1 candidate",
+    "outcomeCount_other": "{{count}} candidates",
+    "topShare_one": "The leader holds {{percent}}% of the probability mass.",
+    "topShare_other": "Top {{count}} hold {{percent}}% of the probability mass.",
+    "openFullField_one": "Open the full field (1 more)",
+    "openFullField_other": "Open the full field ({{count}} more)"
+  },
+  "oddsMovers": {
+    "subtitle": "Biggest probability shifts, 24h",
+    "loadingTitle": "Reading the board",
+    "loadingBody": "Moves appear once the venues answer.",
+    "emptyTitle": "Nothing moved",
+    "emptyBody": "No contract shifted enough today to be worth a row.",
+    "noChangeFrom": "Not ranked: {{venues}} publishes no 24h move."
+  },
+  "resolvingSoon": {
+    "resolves": "Resolves {{when}}",
+    "loadingTitle": "Reading the clock",
+    "loadingBody": "Resolution dates appear once the venues answer.",
+    "emptyTitle": "Nothing settling soon",
+    "emptyBody": "No open contract here publishes a resolution date ahead."
+  },
+  "eventHeader": {
+    "noPairTitle": "No contract selected",
+    "noPairBody": "Open an event from Discovery to see the question, when it resolves and the probability being paid.",
+    "resolves": "Resolves",
+    "venue": "Venue",
+    "rules": "Resolution rules",
+    "rulesTitle": "How this resolves",
+    "rulesSource": "As published by {{venue}}",
+    "tradeableOutcomes": "tradeable outcomes",
+    "statusClosed": "Closed for trading",
+    "statusResolved": "Resolved",
+    "changeToday": "{{value}} pts today",
+    "loadingPrice": "Reading the venue's board…",
+    "noPrice": "This venue is not quoting the outcome right now.",
+    "noOverround": "Too few runners are quoted to sum the field.",
+    "sideYes": "{{percent}}% Yes",
+    "sideNo": "{{percent}}% No · {{price}}",
+    "overroundLabel": "Sum of all Yes prices",
+    "overroundOver": "{{percent}}% of overround. Buying every outcome loses that much; selling the whole field is the arb, if depth allows.",
+    "overroundUnder": "{{percent}}% under a fair field. Buying every outcome pays that much, if depth allows.",
+    "basisAsk_one": "Summed from 1 ask",
+    "basisAsk_other": "Summed from {{count}} asks",
+    "basisLast_one": "Summed from 1 last price",
+    "basisLast_other": "Summed from {{count}} last prices",
+    "basisMissing_one": "1 runner unquoted",
+    "basisMissing_other": "{{count}} runners unquoted"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "No contract selected",
+    "noPairBody": "Open an event to see when its probability moved.",
+    "loadingTitle": "Reading the history",
+    "loadingBody": "The timeline appears once the probability history loads.",
+    "flatTitle": "No move worth a row",
+    "flatBody": "This contract has not repriced by more than three cents in the loaded history.",
+    "columns": {
+      "when": "When",
+      "move": "Move",
+      "what": "What happened",
+      "traded": "Traded"
+    },
+    "movedFromTo": "Probability moved from {{from}} to {{to}}",
+    "contracts_one": "1 contract",
+    "contracts_other": "{{count}} contracts",
+    "footerMatched": "Headlines are matched to {{ticker}} by time, not by cause: each is the last one published while the market repriced.",
+    "footerNoTicker": "The news feed is keyed by ticker and this question names none, so rows show the move alone."
+  },
+  "outcomeLadder": {
+    "noPairTitle": "No event selected",
+    "noPairBody": "Open a race from Discovery to price every runner in one table.",
+    "loadingTitle": "Loading the field",
+    "loadingBody": "Every runner appears once the venue answers.",
+    "notFoundTitle": "Event not on the venue's board",
+    "notFoundBody": "The venue did not return this event, so its other outcomes cannot be listed. The chart and the ticket still work.",
+    "emptyTitle": "No other outcomes",
+    "emptyBody": "This question has a single market, so there is no field to rank.",
+    "filterPlaceholder_one": "Filter 1 outcome",
+    "filterPlaceholder_other": "Filter {{count}} outcomes",
+    "sort": {
+      "probability": "Sort · probability",
+      "change": "Sort · 24h move",
+      "volume": "Sort · volume",
+      "name": "Sort · name"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "Outcome",
+      "yes": "Yes",
+      "change": "24h",
+      "trend": "30-day",
+      "volume": "Volume",
+      "trade": "Trade"
+    },
+    "yesChip": "Yes {{price}}",
+    "noChip": "No {{price}}",
+    "addToBasket": "Add {{name}} to the basket",
+    "noMatches": "No outcome matches that filter.",
+    "tailBelow_one": "1 more outcome below {{price}} · {{volume}} combined volume",
+    "tailBelow_other": "{{count}} more outcomes below {{price}} · {{volume}} combined volume",
+    "tailMore_one": "1 more outcome · {{volume}} combined volume",
+    "tailMore_other": "{{count}} more outcomes · {{volume}} combined volume",
+    "showMore_one": "Show 1 more",
+    "showMore_other": "Show {{count}} more"
+  },
+  "basketTicket": {
+    "noPairTitle": "No event selected",
+    "noPairBody": "Open a race to stake several outcomes at once.",
+    "emptyTitle": "Nothing staked yet",
+    "emptyBody": "Add outcomes from the ladder with the plus button, then set what each one is worth.",
+    "stakeFor": "Stake on {{name}}",
+    "removeLeg": "Remove {{name}} from the basket",
+    "totalCost": "Total cost",
+    "covers": "Covers",
+    "overroundAsk": "Field at ask",
+    "overroundLast": "Field at last",
+    "maxPayout": "Max payout",
+    "maxLoss": "Max loss",
+    "unusable_one": "1 leg has no usable stake or price and will not be sent.",
+    "unusable_other": "{{count}} legs have no usable stake or price and will not be sent.",
+    "place_one": "Place 1 order",
+    "place_other": "Place {{count}} orders",
+    "placing": "Placing…",
+    "placedTitle_one": "1 order placed",
+    "placedTitle_other": "{{count}} orders placed",
+    "placedBody": "Each leg went out as a limit order at the price shown.",
+    "partialTitle": "Basket stopped early",
+    "partialBody": "{{placed}} of {{total}} orders placed. {{outcome}} was rejected: {{reason}}",
+    "failedTitle": "Basket could not be placed",
+    "hint": "Every leg is a live limit order."
+  },
   "futuresPositions": {
     "connect": "Connect an account",
     "noAccountsTitle": "No futures account connected",
@@ -5274,5 +5842,205 @@
     "closeBody": "Places a reduce-only market order for {{contracts}} contracts of {{pair}} on {{venue}}.",
     "closeConfirm": "Close position",
     "closeSubmitted": "Close order submitted"
+  },
+  "funding": {
+    "loading": "Reading funding rates…",
+    "na": "n/a",
+    "stampUnknown": "Not published",
+    "desktopOnly": "reaches its public API only from the desktop app.",
+    "manageConnectors": "Manage connectors",
+    "cellHint": "{{pair}} · {{rate}} every {{hours}}h",
+    "cellHintAssumed": "{{pair}} · {{rate}}, assuming a {{hours}}h settlement the venue does not publish"
+  },
+  "fundingMatrix": {
+    "title": "Funding, annualised",
+    "subtitle": "Positive = longs pay shorts",
+    "nextPayment": "Next payment in",
+    "colSpread": "Spread",
+    "points": "{{value}}pp",
+    "spreadHint": "Gap between the dearest and cheapest venue, in points of annualised funding",
+    "sortBy": "Sort by {{venue}}",
+    "note": "A cell opens that contract on that venue. The Spread column is the cash-and-carry: long the cheapest funding, short the dearest.",
+    "noRows": "No venue answered with a funding rate.",
+    "emptyTitle": "No perpetual venue active",
+    "emptyBody": "Funding is public data, so no API key is needed. Install a perpetual futures connector and the matrix fills itself."
+  },
+  "basisMonitor": {
+    "title": "Perp vs. spot",
+    "subtitle": "The same asset on both desks, side by side",
+    "spot": "spot {{price}}",
+    "spotMissing": "no index",
+    "perp": "perp {{price}}",
+    "bps": "{{value}} bps",
+    "rowHint": "{{pair}} on {{venue}}",
+    "emptyTitle": "Nothing to compare yet",
+    "emptyBody": "Basis needs a mark and an index price. Connect a perpetual venue that publishes both."
+  },
+  "openInterest": {
+    "title": "OI leaders",
+    "changeLabel": "24h change",
+    "notPublished": "publishes no open interest through its API.",
+    "emptyTitle": "No open interest yet",
+    "emptyBody": "Open interest arrives with the funding sweep. It shows the contracts your connected venues are quoting."
+  },
+  "fundingExtremes": {
+    "subtitle": "The dearest and cheapest carry across your connected venues, annualised.",
+    "longsPay": "Longs paying most",
+    "shortsPay": "Shorts paying most",
+    "perInterval": "{{rate}} every {{hours}}h",
+    "emptyTitle": "No rates to rank",
+    "emptyBody": "Once a perpetual venue answers, its richest and cheapest contracts land here."
+  },
+  "fundingBelt": {
+    "now": "Funding now · {{hours}}h",
+    "longsPay": "longs pay shorts",
+    "shortsPay": "shorts pay longs",
+    "nextPayment": "Next payment",
+    "costYou": "costs you {{amount}}",
+    "costPerReference": "{{amount}} per {{notional}} held",
+    "annualised": "Annualised",
+    "weekAverage": "7d avg {{value}}",
+    "noHistory": "no settled history yet",
+    "paidLabel": "Paid on your position",
+    "paidLabelReference": "Cost per {{notional}} held",
+    "otherVenues": "Same contract, other venues",
+    "onlyVenue": "The only venue you have connected for this contract.",
+    "emptyTitle": "Pick a perpetual contract",
+    "emptyBody": "The belt tracks one perp: its rate, its clock and what holding it costs. Open a perpetual pair to fill it.",
+    "noRateTitle": "No funding published",
+    "noRateBody": "{{venue}} returned no funding rate for this contract."
+  },
+  "liquidationMap": {
+    "subtitle": "Your liquidation prices, and where leverage opened here would end",
+    "estimateBadge": "ESTIMATE",
+    "sideLong": "long",
+    "sideShort": "short",
+    "referenceHint": "A {{leverage}}x {{side}} opened at the current price liquidates near {{price}}",
+    "caption": "Bars are your own liquidation prices, reported by each venue. The thin marks are where a position opened at the current price would liquidate at 5x, 10x and 25x. No exchange publishes aggregate liquidation clusters, so none are drawn.",
+    "noPositionsCaption": "The thin marks show where a position opened at the current price would liquidate at 5x, 10x and 25x. Your own liquidation prices appear as bars once a position is open.",
+    "noPriceTitle": "No price to map against",
+    "noPriceBody": "The map needs a live price for the contract. It fills in as soon as the chart beside it has one.",
+    "emptyTitle": "Nothing to plot",
+    "emptyBody": "Open a perpetual position, or pick a contract, and the price axis fills in."
+  },
+  "marginHealth": {
+    "title": "Margin health",
+    "marginRatio": "Margin ratio",
+    "safe": "safe",
+    "marginCall": "margin call 80%",
+    "liquidation": "liquidation",
+    "equity": "Equity",
+    "maintenance": "Maintenance",
+    "liqDistance": "Liq distance",
+    "adl": "ADL queue",
+    "adlHint": "Not published by the venue",
+    "stressLabel": "If price moves against you",
+    "ratioAfter": "ratio {{value}}%",
+    "liquidated": "liquidated",
+    "flatBody": "This account is flat. Margin health appears with the first open position.",
+    "noVenueTitle": "No perpetual venue active",
+    "noVenueBody": "Margin health reads the positions a futures connector reports. Install one to use this pane."
+  },
+  "riskControls": {
+    "maxDailyLoss": "Max daily loss",
+    "maxDailyTrades": "Max daily trades",
+    "maxPositionSize": "Max position size",
+    "usedPercent": "{{value}}% used",
+    "usedCount": "{{value}} placed",
+    "perOrder": "Checked on every order",
+    "off": "Off",
+    "resetWindow": "Reset window",
+    "resetIn": "Resets in {{time}}",
+    "killSwitch": "Kill switch",
+    "killSwitchHint": "Blocks every order until you resume",
+    "haltOrders": "Halt orders",
+    "resumeOrders": "Resume"
+  },
+  "session": {
+    "noVenueTitle": "No broker connected",
+    "noVenueBody": "The trading day comes from a broker's own calendar. Install a stock connector to see session hours here.",
+    "noVenueAction": "Browse connectors",
+    "loading": "Reading the trading calendar…",
+    "unavailableTitle": "Session unavailable",
+    "unavailableBody": "The broker answered with neither a clock nor a calendar. It will try again on its own.",
+    "stateOpen": "Market open",
+    "statePre": "Pre-market",
+    "statePost": "After-hours",
+    "stateClosed": "Market closed",
+    "closesIn": "Closes in {{time}}",
+    "opensIn": "Opens in {{time}}",
+    "afterHoursEndsIn": "After-hours ends in {{time}}",
+    "preMarketIn": "Pre-market in {{time}}",
+    "durationDh": "{{days}}d {{hours}}h",
+    "durationHm": "{{hours}}h {{minutes}}m",
+    "durationMs": "{{minutes}}m {{seconds}}s",
+    "barPre": "pre",
+    "barOpen": "open",
+    "barClose": "close",
+    "barPost": "post",
+    "halfDay": "Half day",
+    "nextSession": "Next session {{day}}",
+    "noSchedule": "No session scheduled",
+    "clockOnly": "Open or closed only: no session windows were published.",
+    "ticketExtendedNote": "This session takes limit orders only. There is no continuous auction to fill a market order against.",
+    "ticketClosedNote": "The market is closed. A limit order rests until the next session opens."
+  },
+  "earningsCalendar": {
+    "title": "Earnings",
+    "subtitle": "Before the bell and after the close",
+    "emptyTitle": "No earnings feed installed",
+    "emptyBody": "A fundamentals provider plugin fills this calendar. A broker publishes its own session hours, not who reports this week.",
+    "columns": {
+      "symbol": "Symbol",
+      "when": "When",
+      "epsEstimate": "EPS est.",
+      "revenueEstimate": "Revenue est.",
+      "impliedMove": "Implied move"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "No macro feed installed",
+    "emptyBody": "A macro data provider plugin fills this calendar with release times, consensus and the prior print.",
+    "columns": {
+      "time": "Time",
+      "event": "Event",
+      "actual": "Actual",
+      "consensus": "Consensus",
+      "prior": "Prior"
+    }
+  },
+  "level1": {
+    "emptyTitle": "No quote yet",
+    "emptyBody": "The venue has not sent a bid or an ask for this symbol yet.",
+    "bid": "Bid",
+    "ask": "Ask",
+    "spread": "Spread",
+    "bps": "bps",
+    "dayRange": "day range",
+    "feed": "Feed",
+    "depthNote": "The broker quotes top of book only, so there is no depth behind these two prices."
+  },
+  "company": {
+    "unknownName": "Company name unavailable",
+    "needsProviderTitle": "Fundamentals need a provider",
+    "needsProviderBody": "A broker quotes and fills; it does not publish valuation, growth or margins. Install a fundamentals plugin to fill this pane."
+  },
+  "yourPosition": {
+    "noVenueTitle": "No broker connected",
+    "noVenueBody": "Connect a stock broker to see what you hold in this symbol.",
+    "noAccountsTitle": "No brokerage account",
+    "noAccountsBody": "Add broker API keys to see your holdings. Paper keys work too.",
+    "connect": "Connect an account",
+    "flatTitle": "No position in {{symbol}}",
+    "flatBody": "Fills in this symbol show up here.",
+    "shares_one": "{{shares}} share",
+    "shares_other": "{{shares}} shares",
+    "sharesShort_one": "{{shares}} share short",
+    "sharesShort_other": "{{shares}} shares short",
+    "openPnlPercent": "Return on cost",
+    "avgCost": "Avg cost",
+    "mark": "Mark",
+    "marketValue": "Market value",
+    "dayChange": "Today"
   }
 }

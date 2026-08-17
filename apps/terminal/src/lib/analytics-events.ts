@@ -35,8 +35,9 @@ export type TradeMode = 'paper' | 'live'
 /** How the user reached the assistant. Names our own affordances only. */
 export type AssistantOpenSource = 'orb' | 'shortcut' | 'palette'
 
-/** Where an order originated: manual panel, copilot proposal, or workflow. */
-export type TradeSource = 'trade_panel' | 'copilot' | 'workflow'
+/** Where an order originated: manual panel, copilot proposal, workflow, or
+ * the prediction basket (one submission fans out to one order per leg). */
+export type TradeSource = 'trade_panel' | 'copilot' | 'workflow' | 'basket'
 
 /** Which layout surface — never a user-assigned workspace name or id. */
 export type WorkspaceKind = 'pair' | 'discovery' | 'custom'

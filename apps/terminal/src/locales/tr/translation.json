@@ -1,4 +1,325 @@
 {
+  "basisMonitor": {
+    "title": "Vadesiz ile spot",
+    "subtitle": "Aynı varlık iki masada, yan yana",
+    "spot": "spot {{price}}",
+    "spotMissing": "endeks yok",
+    "perp": "vadesiz {{price}}",
+    "bps": "{{value}} bp",
+    "rowHint": "{{venue}} üzerinde {{pair}}",
+    "emptyTitle": "Henüz karşılaştırılacak bir şey yok",
+    "emptyBody": "Baz için hem mark hem endeks fiyatı gerekir. İkisini de yayınlayan bir vadesiz borsa bağlayın."
+  },
+  "basketTicket": {
+    "noPairTitle": "Seçili olay yok",
+    "noPairBody": "Birden çok sonuca aynı anda pozisyon almak için bir yarış açın.",
+    "emptyTitle": "Henüz sepette bir şey yok",
+    "emptyBody": "Merdivenden artı düğmesiyle sonuç ekleyin, sonra her birine ne kadar ayıracağınızı yazın.",
+    "stakeFor": "{{name}} için tutar",
+    "removeLeg": "{{name}} sepetten çıkarılsın",
+    "totalCost": "Toplam maliyet",
+    "covers": "Kapsıyor",
+    "overroundAsk": "Liste satış fiyatıyla",
+    "overroundLast": "Liste son fiyatla",
+    "maxPayout": "Azami ödeme",
+    "maxLoss": "Azami zarar",
+    "unusable_one": "1 bacağın kullanılabilir tutarı veya fiyatı yok, gönderilmeyecek.",
+    "unusable_other": "{{count}} bacağın kullanılabilir tutarı veya fiyatı yok, gönderilmeyecek.",
+    "place_one": "1 emir gönder",
+    "place_other": "{{count}} emir gönder",
+    "placing": "Gönderiliyor…",
+    "placedTitle_one": "1 emir gönderildi",
+    "placedTitle_other": "{{count}} emir gönderildi",
+    "placedBody": "Her bacak gösterilen fiyattan limit emri olarak gitti.",
+    "partialTitle": "Sepet erken durdu",
+    "partialBody": "{{total}} emirden {{placed}} tanesi gönderildi. {{outcome}} reddedildi: {{reason}}",
+    "failedTitle": "Sepet gönderilemedi",
+    "hint": "Her bacak gerçek bir limit emridir."
+  },
+  "bridgePanes": {
+    "routeTitle": "Köprüleme bir köprü sağlayıcısı gerektirir",
+    "routeBody": "Bağlı sağlayıcı yok. Zincir üstü konektörler tek bir zincir içinde yönlendirir, dolayısıyla burada zincirler arası bir transferin ücretini veya süresini kote edecek bir şey yok. Zincir merdiveni, zaten işlem yapabildiklerinizi karşılaştırır.",
+    "wouldQuote": "{{chain}} çıkışlı {{asset}} kote edilecekti",
+    "inFlightTitle": "Transfer takibi bir köprü sağlayıcısı gerektirir",
+    "inFlightBody": "Onay sayısı, parayı taşıyan köprüden gelir. Bağlı köprü yokken sorgulanacak bir şey de yoktur ve arkasında veri olmayan bir çubuk, tıkanmış bir transferde bile ilerlemeye devam eder."
+  },
+  "chainLadder": {
+    "title": "Zincirler arası {{asset}}",
+    "subtitle": "En iyi koteye göre değil, gazdan sonra elinize geçene göre sıralanır",
+    "sizedFor": "{{value}} için hesaplandı",
+    "best": "En iyi",
+    "versusBest": "{{bps}} bps",
+    "notFound": "Burada {{asset}} havuzu yok",
+    "footnote": "En derin havuz en iyi gerçekleşme değildir. Pahalı bir zincirdeki ucuz kote, gazın hiç maliyeti olmadığı yerdeki biraz daha kötü koteye kaybeder.",
+    "columns": {
+      "chain": "Zincir",
+      "price": "Fiyat",
+      "impact": "Etki",
+      "gas": "Gaz",
+      "youReceive": "Alacağınız"
+    },
+    "noPairTitle": "Bağlı parite yok",
+    "noPairBody": "Bu paneli bir pariteye bağlayın, bağlı her zincir onun için aynı büyüklüğü kote etsin.",
+    "noChainsTitle": "Zincir konektörü yok",
+    "noChainsBody": "Bir zincir üstü konektör kurun, zinciri bu merdivene katılsın."
+  },
+  "company": {
+    "unknownName": "Şirket adı yok",
+    "needsProviderTitle": "Temel veriler bir sağlayıcı ister",
+    "needsProviderBody": "Aracı kurum fiyat verir ve emir gerçekleştirir; değerleme, büyüme veya marj yayınlamaz. Bu paneli doldurmak için bir temel veri eklentisi kur."
+  },
+  "dexChains": {
+    "title": "Akış nerede",
+    "subtitleNetwork": "24s hacim, zincir geneli",
+    "subtitleSampled": "Her zincirin en hareketli havuzlarındaki 24s hacim",
+    "liquidityValue": "{{value}} likidite",
+    "poolsValue_one": "{{count}} havuz",
+    "poolsValue_other": "{{count}} havuz",
+    "gasValue": "{{gwei}} gwei",
+    "gasPriority": "öncelik ücreti",
+    "notInstalled": "Konektör kurulu değil",
+    "installConnector": "Konektörü kur",
+    "emptyTitle": "Gezilecek zincir yok",
+    "emptyBody": "Bu derleme zincir üstü konektör içermiyor, dolayısıyla havuzları sıralanacak bir zincir yok."
+  },
+  "earningsCalendar": {
+    "title": "Bilançolar",
+    "subtitle": "Açılıştan önce ve kapanıştan sonra",
+    "emptyTitle": "Bilanço akışı kurulu değil",
+    "emptyBody": "Bu takvimi bir temel veri eklentisi doldurur. Aracı kurum kendi seans saatlerini yayınlar, bu hafta kimin bilanço açıkladığını değil.",
+    "columns": {
+      "symbol": "Sembol",
+      "when": "Ne zaman",
+      "epsEstimate": "Beklenen EPS",
+      "revenueEstimate": "Beklenen gelir",
+      "impliedMove": "İma edilen hareket"
+    }
+  },
+  "economicCalendar": {
+    "emptyTitle": "Makro akış kurulu değil",
+    "emptyBody": "Bir makro veri eklentisi bu takvimi açıklama saatleri, beklenti ve önceki veriyle doldurur.",
+    "columns": {
+      "time": "Saat",
+      "event": "Veri",
+      "actual": "Gerçekleşen",
+      "consensus": "Beklenti",
+      "prior": "Önceki"
+    }
+  },
+  "eventBoard": {
+    "searchPlaceholder_one": "1 aktif piyasada ara",
+    "searchPlaceholder_other": "{{count}} aktif piyasada ara",
+    "loadingTitle": "Pano yükleniyor",
+    "loadingBody": "Her borsaya şu anda ne işlem gördüğü soruluyor.",
+    "sort": {
+      "trending": "Öne çıkanlar",
+      "endingSoon": "Yakında bitiyor",
+      "volume": "Hacim",
+      "biggestMove": "En büyük hareket"
+    },
+    "unchanged": "değişmedi",
+    "movedPoints": "{{arrow}} bugün {{points}} puan",
+    "volumeUnknown": "Hacim yayımlanmadı",
+    "liquidity": "Likidite {{value}}",
+    "outcomeCount_one": "1 aday",
+    "outcomeCount_other": "{{count}} aday",
+    "topShare_one": "Önde giden olasılığın {{percent}} %'sini elinde tutuyor.",
+    "topShare_other": "İlk {{count}} olasılığın {{percent}} %'sini elinde tutuyor.",
+    "openFullField_one": "Tüm listeyi aç (1 tane daha)",
+    "openFullField_other": "Tüm listeyi aç ({{count}} tane daha)"
+  },
+  "eventHeader": {
+    "noPairTitle": "Seçili sözleşme yok",
+    "noPairBody": "Sorusunu, ne zaman sonuçlanacağını ve piyasanın ödediği olasılığı görmek için Discovery'den bir olay açın.",
+    "resolves": "Sonuçlanma",
+    "venue": "Borsa",
+    "rules": "Sonuçlanma kuralları",
+    "rulesTitle": "Bu nasıl sonuçlanır",
+    "rulesSource": "{{venue}} tarafından yayımlandığı şekliyle",
+    "tradeableOutcomes": "işlem yapılabilir sonuç",
+    "statusClosed": "İşleme kapalı",
+    "statusResolved": "Sonuçlandı",
+    "changeToday": "bugün {{value}} puan",
+    "loadingPrice": "Borsanın panosu okunuyor…",
+    "noPrice": "Bu borsa şu anda o sonuca fiyat vermiyor.",
+    "noOverround": "Toplamı almak için fiyatlanan aday sayısı çok az.",
+    "sideYes": "%{{percent}} Evet",
+    "sideNo": "%{{percent}} Hayır · {{price}}",
+    "overroundLabel": "Tüm Evet fiyatlarının toplamı",
+    "overroundOver": "%{{percent}} overround. Her sonucu satın almak tam bu kadar kaybettirir; tüm listeyi satmak arbitrajdır, derinlik yeterse.",
+    "overroundUnder": "Adil bir listenin %{{percent}} altında. Her sonucu satın almak bu kadar kazandırır, derinlik yeterse.",
+    "basisAsk_one": "1 satış fiyatı üzerinden toplandı",
+    "basisAsk_other": "{{count}} satış fiyatı üzerinden toplandı",
+    "basisLast_one": "1 son fiyat üzerinden toplandı",
+    "basisLast_other": "{{count}} son fiyat üzerinden toplandı",
+    "basisMissing_one": "1 aday fiyatsız",
+    "basisMissing_other": "{{count}} aday fiyatsız"
+  },
+  "funding": {
+    "loading": "Fonlama oranları okunuyor…",
+    "na": "yok",
+    "stampUnknown": "Yayınlanmıyor",
+    "desktopOnly": "genel API'sine yalnızca masaüstü uygulamasından erişilebiliyor.",
+    "manageConnectors": "Bağlayıcıları yönet",
+    "cellHint": "{{pair}} · her {{hours}} saatte {{rate}}",
+    "cellHintAssumed": "{{pair}} · {{rate}}, borsanın yayınlamadığı {{hours}} saatlik bir hesaplaşma varsayılıyor"
+  },
+  "fundingBelt": {
+    "now": "Şimdiki fonlama · {{hours}} sa",
+    "longsPay": "longlar shortlara öder",
+    "shortsPay": "shortlar longlara öder",
+    "nextPayment": "Sonraki ödeme",
+    "costYou": "size {{amount}} maliyeti var",
+    "costPerReference": "tutulan her {{notional}} için {{amount}}",
+    "annualised": "Yıllıklandırılmış",
+    "weekAverage": "7g ort. {{value}}",
+    "noHistory": "henüz hesaplanmış geçmiş yok",
+    "paidLabel": "Pozisyonunuz için ödenen",
+    "paidLabelReference": "Tutulan her {{notional}} için maliyet",
+    "otherVenues": "Aynı sözleşme, diğer borsalar",
+    "onlyVenue": "Bu sözleşme için bağladığınız tek borsa.",
+    "emptyTitle": "Bir vadesiz sözleşme seçin",
+    "emptyBody": "Bu şerit tek bir vadesizi izler: oranı, saati ve tutmanın maliyeti. Doldurmak için bir vadesiz parite açın.",
+    "noRateTitle": "Fonlama yayınlanmadı",
+    "noRateBody": "{{venue}} bu sözleşme için fonlama oranı döndürmedi."
+  },
+  "fundingExtremes": {
+    "subtitle": "Bağlı borsalarınızdaki en pahalı ve en ucuz taşıma maliyeti, yıllıklandırılmış.",
+    "longsPay": "En çok longlar ödüyor",
+    "shortsPay": "En çok shortlar ödüyor",
+    "perInterval": "her {{hours}} saatte {{rate}}",
+    "emptyTitle": "Sıralanacak oran yok",
+    "emptyBody": "Bir vadesiz borsa yanıt verir vermez en pahalı ve en ucuz sözleşmeleri buraya düşer."
+  },
+  "fundingMatrix": {
+    "title": "Fonlama, yıllıklandırılmış",
+    "subtitle": "Pozitif = longlar shortlara öder",
+    "nextPayment": "Sonraki ödemeye",
+    "colSpread": "Fark",
+    "points": "{{value}} puan",
+    "spreadHint": "En pahalı ve en ucuz borsa arasındaki fark, yıllıklandırılmış fonlama puanı olarak",
+    "sortBy": "{{venue}} sütununa göre sırala",
+    "note": "Bir hücre o sözleşmeyi o borsada açar. Fark sütunu cash-and-carry'dir: fonlaması en ucuz olanda long, en pahalı olanda short.",
+    "noRows": "Hiçbir borsa fonlama oranı döndürmedi.",
+    "emptyTitle": "Etkin vadesiz borsa yok",
+    "emptyBody": "Fonlama herkese açık veridir, API anahtarı gerekmez. Bir vadesiz vadeli işlem bağlayıcısı kurun, matris kendiliğinden dolar."
+  },
+  "level1": {
+    "emptyTitle": "Henüz kotasyon yok",
+    "emptyBody": "Bu sembol için alış ya da satış kotasyonu henüz gelmedi.",
+    "bid": "Alış",
+    "ask": "Satış",
+    "spread": "Makas",
+    "bps": "bp",
+    "dayRange": "gün aralığı",
+    "feed": "Kaynak",
+    "depthNote": "Aracı kurum yalnızca defterin tepesini kote eder, bu iki fiyatın arkasında derinlik yoktur."
+  },
+  "liquidationMap": {
+    "subtitle": "Tasfiye fiyatlarınız ve burada açılan kaldıracın bittiği yer",
+    "estimateBadge": "TAHMİN",
+    "sideLong": "long",
+    "sideShort": "short",
+    "referenceHint": "Güncel fiyattan açılan {{leverage}}x {{side}} yaklaşık {{price}} seviyesinde tasfiye olur",
+    "caption": "Çubuklar, her borsanın bildirdiği kendi tasfiye fiyatlarınızdır. İnce işaretler, güncel fiyattan açılan bir pozisyonun 5x, 10x ve 25x'te nerede tasfiye olacağını gösterir. Hiçbir borsa toplu tasfiye kümeleri yayınlamadığı için hiçbiri çizilmiyor.",
+    "noPositionsCaption": "İnce işaretler, güncel fiyattan açılan bir pozisyonun 5x, 10x ve 25x'te nerede tasfiye olacağını gösterir. Kendi tasfiye fiyatlarınız bir pozisyon açıldığında çubuk olarak görünür.",
+    "noPriceTitle": "Referans alınacak fiyat yok",
+    "noPriceBody": "Haritanın sözleşme için canlı bir fiyata ihtiyacı var. Yanındaki grafik fiyat aldığı anda dolar.",
+    "emptyTitle": "Çizilecek bir şey yok",
+    "emptyBody": "Bir vadesiz pozisyon açın ya da bir sözleşme seçin, fiyat ekseni dolsun."
+  },
+  "liquidityFlow": {
+    "noPoolTitle": "Bir havuz seçin",
+    "noPoolBody": "Haritadan bir havuz seçin, içinden geçen para burada beşer dakikalık dilimlerle görünsün.",
+    "loadingTitle": "Takaslar yükleniyor",
+    "loadingBody": "Bu havuzun son takasları getiriliyor.",
+    "emptyTitle": "Henüz takas yok",
+    "emptyBody": "Son dönemde bu havuzdan hiçbir işlem geçmedi, dolayısıyla netleştirilecek akış yok.",
+    "barsLabel": "Net taker akışı, {{pool}}",
+    "netHour": "son bir saatte {{value}}",
+    "bucketTooltip": "{{buy}} alım, {{sell}} satım",
+    "axisNote": "5 dakikada bir alımlar eksi satımlar. LP'lerin eklediği veya çektiği likidite bu akışta yok.",
+    "biggestLabel": "En büyük takaslar"
+  },
+  "lpPanes": {
+    "positionTitle": "LP pozisyonları bir pozisyon kaynağı gerektirir",
+    "positionBody": "Bağlı hiçbir şey henüz bir likidite pozisyonunu okuyamıyor. Bunun için zincirin position manager'ına bu cüzdanın aralıklarını sormak gerekir ve bugün bunu yapan bir konektör yok.",
+    "feesTitle": "Ücret geçmişi bir pozisyon kaynağı gerektirir",
+    "feesBody": "Günlük kazanılan ücretler ya bir indeksleyiciden ya da zaman içinde ölçülen fee growth'tan gelir. İkisi de bağlı değil ve tahmini bir grafik ölçülmüş gibi görünür.",
+    "manageTitle": "Aralık düzenleme bir likidite işlemi gerektirir",
+    "manageBody": "Likidite ekleme, çekme ve yeniden ortalama, hiçbir konektörün henüz oluşturmadığı imzalı işlemlerdir. Kontroller bir işe yarayana kadar gösterilmez.",
+    "venueFallback": "bu zincir",
+    "wouldRead": "{{chain}} üzerindeki {{pool}} için {{wallet}} okunacaktı"
+  },
+  "marginHealth": {
+    "title": "Marj sağlığı",
+    "marginRatio": "Marj oranı",
+    "safe": "güvenli",
+    "marginCall": "marj çağrısı %80",
+    "liquidation": "tasfiye",
+    "equity": "Özkaynak",
+    "maintenance": "Sürdürme marjı",
+    "liqDistance": "Tasfiyeye uzaklık",
+    "adl": "ADL sırası",
+    "adlHint": "Borsa yayınlamıyor",
+    "stressLabel": "Fiyat aleyhinize hareket ederse",
+    "ratioAfter": "oran %{{value}}",
+    "liquidated": "tasfiye",
+    "flatBody": "Bu hesapta pozisyon yok. Marj sağlığı ilk açık pozisyonla görünür.",
+    "noVenueTitle": "Etkin vadesiz borsa yok",
+    "noVenueBody": "Marj sağlığı, bir vadeli işlem bağlayıcısının bildirdiği pozisyonları okur. Bu paneli kullanmak için bir tane kurun."
+  },
+  "marketPulse": {
+    "emptyTitle": "Piyasa verisi yok",
+    "emptyBody": "Ne App Server ne de genel yedek kaynak yanıt verdi. Bunlardan biri yanıt verir vermez şerit dolar.",
+    "totalCap": "Toplam piyasa değeri",
+    "window24h": "24s",
+    "volume24h": "24s hacim",
+    "turnover": "piyasa değerinin %{{pct}} kadarı işlem gördü",
+    "dominance": "BTC hakimiyeti",
+    "breadth": "Piyasa genişliği · {{total}} varlık",
+    "up": "yükselen",
+    "down": "düşen",
+    "fearGreed": "Fear & Greed",
+    "fearGreedTooltip": "Kripto korku ve açgözlülük endeksi. 0 aşırı korku, 100 aşırı açgözlülüktür."
+  },
+  "movers": {
+    "emptyTitle": "Piyasa verisi yok",
+    "emptyBody": "Ne App Server ne de genel yedek kaynak yanıt verdi, dolayısıyla sıralanacak bir şey yok.",
+    "noBrokerTitle": "Kurulu hisse borsası yok",
+    "noBrokerBody": "Eklenti Mağazası'ndan bir aracı kurum bağlayıcısı kurun, günün hareketleri buraya gelsin.",
+    "tabs": {
+      "gainers": "Yükselenler",
+      "losers": "Düşenler",
+      "volume": "Hacim",
+      "volatility": "Volatilite",
+      "unusual": "Sıra dışı"
+    },
+    "window": "Sıralama aralığı",
+    "columns": {
+      "pair": "Parite",
+      "change": "{{window}} değişim",
+      "price": "Fiyat",
+      "volume": "Hacim",
+      "trend": "Trend"
+    },
+    "turnoverTooltip": "24 saatlik hacim ve varlığın kendi büyüklüğünün ne kadarını, aynı anlık görüntüdeki medyan varlığa kıyasla işlem gördüğü. Bu, kendi 30 günlük ortalamasıyla bir karşılaştırma değildir; o veri anlık görüntüde yoktur.",
+    "empty": {
+      "gainers": "Bu aralıkta yükselen yok.",
+      "losers": "Bu aralıkta düşen yok.",
+      "volume": "Henüz hacim bildiren borsa yok.",
+      "volatility": "Sıralanacak kadar hareket eden olmadı.",
+      "unusual": "Büyüklüğüne göre sıra dışı işlem gören varlık yok."
+    }
+  },
+  "oddsMovers": {
+    "subtitle": "24 saatteki en büyük olasılık değişimleri",
+    "loadingTitle": "Pano okunuyor",
+    "loadingBody": "Borsalar yanıt verdiğinde hareketler görünecek.",
+    "emptyTitle": "Hiçbir şey kıpırdamadı",
+    "emptyBody": "Bugün hiçbir sözleşme satır açacak kadar hareket etmedi.",
+    "noChangeFrom": "Sıralanmadı: {{venues}} 24 saatlik hareketi yayımlamıyor."
+  },
   "onboarding": {
     "phase": {
       "ready": "Hazır"
@@ -208,6 +529,187 @@
       "sub": "Özel, yerel ve nasıl işlem yaptığına göre ayarlandı. Terminalin hazır."
     }
   },
+  "onchainTrades": {
+    "notOnChainTitle": "Zincir üstü bir parite değil",
+    "notOnChainBody": "Bu şerit bir AMM havuzundan geçen takasları okur. Bağlı olduğu parite merkezi bir borsada işlem görüyor.",
+    "filterAll": "Tümü",
+    "filterLarge": "{{value}} üzeri",
+    "buy": "Alım",
+    "sell": "Satım",
+    "openTx": "İşlemi aç",
+    "net1h": "Net 1s",
+    "columns": {
+      "time": "Saat",
+      "side": "Yön",
+      "value": "USD",
+      "price": "Fiyat",
+      "wallet": "Cüzdan"
+    },
+    "loadingTitle": "Takaslar yükleniyor",
+    "loadingBody": "Bu havuzda onaylanmış takaslar getiriliyor.",
+    "emptyTitle": "Henüz takas yok",
+    "emptyBody": "Sağlayıcının döndürdüğü pencerede bu havuzdan hiçbir işlem geçmedi."
+  },
+  "openInterest": {
+    "title": "Açık pozisyon liderleri",
+    "changeLabel": "24s değişim",
+    "notPublished": "API'sinde açık pozisyon yayınlamıyor.",
+    "emptyTitle": "Henüz açık pozisyon yok",
+    "emptyBody": "Açık pozisyon fonlama taramasıyla birlikte gelir. Bağlı borsalarınızın kote ettiği sözleşmeleri gösterir."
+  },
+  "outcomeLadder": {
+    "noPairTitle": "Seçili olay yok",
+    "noPairBody": "Her adayı tek tabloda fiyatlamak için Discovery'den bir yarış açın.",
+    "loadingTitle": "Liste yükleniyor",
+    "loadingBody": "Borsa yanıt verdiğinde tüm adaylar görünecek.",
+    "notFoundTitle": "Olay borsanın panosunda değil",
+    "notFoundBody": "Borsa bu olayı döndürmedi, bu yüzden diğer sonuçlar listelenemiyor. Grafik ve emir fişi çalışmaya devam ediyor.",
+    "emptyTitle": "Başka sonuç yok",
+    "emptyBody": "Bu sorunun tek bir piyasası var, sıralanacak bir liste yok.",
+    "filterPlaceholder_one": "1 sonucu filtrele",
+    "filterPlaceholder_other": "{{count}} sonucu filtrele",
+    "sort": {
+      "probability": "Sırala · olasılık",
+      "change": "Sırala · 24 saatlik hareket",
+      "volume": "Sırala · hacim",
+      "name": "Sırala · ad"
+    },
+    "columns": {
+      "rank": "#",
+      "outcome": "Sonuç",
+      "yes": "Evet",
+      "change": "24 sa",
+      "trend": "30 gün",
+      "volume": "Hacim",
+      "trade": "İşlem"
+    },
+    "yesChip": "Evet {{price}}",
+    "noChip": "Hayır {{price}}",
+    "addToBasket": "{{name}} sepete eklensin",
+    "noMatches": "Bu filtreye uyan sonuç yok.",
+    "tailBelow_one": "{{price}} altında 1 sonuç daha · toplam {{volume}} hacim",
+    "tailBelow_other": "{{price}} altında {{count}} sonuç daha · toplam {{volume}} hacim",
+    "tailMore_one": "1 sonuç daha · toplam {{volume}} hacim",
+    "tailMore_other": "{{count}} sonuç daha · toplam {{volume}} hacim",
+    "showMore_one": "1 tane daha göster",
+    "showMore_other": "{{count}} tane daha göster"
+  },
+  "pairDossier": {
+    "marketCap": "Piyasa değeri",
+    "rank": "{{rank}}. sıra",
+    "volume24h": "24s hacim",
+    "turnover": "piyasa değerinin %{{pct}} kadarı",
+    "change7d": "7g değişim",
+    "change7dSub": "bir hafta öncesine göre",
+    "sector": "Sektör",
+    "sectorMove": "sektör 24s {{change}}",
+    "quotedOn": "Kote edildiği yer",
+    "ofVenues": "{{total}} borsadan",
+    "tightestSpread": "En dar spread",
+    "bps": "{{bps}} bp",
+    "range24h": "24s aralık",
+    "rangeLowHigh": "{{low}} ile {{high}} arası",
+    "volatility": "Volatilite",
+    "volatilityWindow": "{{span}} tutarında {{timeframe}} mumdan yıllıklandırıldı",
+    "spreadByVenue": "Borsaya göre spread · defterin tepesi",
+    "spreadByVenueTooltip": "Her borsanın şu anda ne kadar dar kote ettiği, orta fiyata göre baz puan olarak. Bir ticker büyüklük taşımaz; bu yüzden bu, defterin tepesinde karşıya geçmenin maliyetidir, arkasındaki derinlik değil.",
+    "noBooks": "Bu parite için henüz çift taraflı defter yayımlayan bağlı bir borsa yok.",
+    "sizingNote": "Karşıya geçmek {{tight}} üzerinde {{tightBps}} bp, {{wide}} üzerinde {{wideBps}} bp tutuyor. Emri pariteye göre değil borsaya göre boyutlandırın.",
+    "sizingNoteSingle": "Gerçek defter yayımlayan tek borsa {{venue}}, {{bps}} bp ile."
+  },
+  "poolDetail": {
+    "emptyTitle": "Havuz seçilmedi",
+    "emptyBody": "Haritadan bir havuz seçin; likiditesini, hacmini ve akışını görün, grafiğe bir tık uzakta.",
+    "change24h": "{{value}} 24s",
+    "liquidity": "Likidite",
+    "volume24h": "Hacim 24s",
+    "turnover": "Hac / lik",
+    "turnoverValue": "{{value}}x",
+    "trades24h": "İşlem 24s",
+    "feeTier": "Ücret kademesi",
+    "pressureByValue": "Alım ve satım baskısı, 24s değere göre",
+    "pressureByCount": "Alım ve satım baskısı, 24s işlem sayısına göre",
+    "loading": "Havuz durumu yükleniyor.",
+    "openChart": "Grafiği aç ve takas yap"
+  },
+  "poolMap": {
+    "title": "{{chain}} havuzları",
+    "subtitle": "Her havuzun kendi likiditesini ne kadar çalıştırdığına göre sıralanır",
+    "sortTurnover": "Devir",
+    "sortVolume": "Hacim",
+    "sortLiquidity": "Likidite",
+    "turnoverValue": "{{value}}x",
+    "openPair": "Grafiği aç",
+    "columns": {
+      "pool": "Havuz",
+      "price": "Fiyat",
+      "change": "24s",
+      "volume": "Hac 24s",
+      "liquidity": "Likidite",
+      "turnover": "Hac / lik"
+    },
+    "noChainTitle": "Bir zincir seçin",
+    "noChainBody": "Yandaki listeden bir zincir seçin, havuzları burada sıralansın: hacim, arkasındaki likiditeye karşı.",
+    "loadingTitle": "Havuzlar yükleniyor",
+    "loadingBody": "Bu zincirin sıralanmış havuzları getiriliyor.",
+    "emptyTitle": "Havuz dönmedi",
+    "emptyBody": "Veri sağlayıcı bu zincir için hiçbir şey listelemedi. Bir sonraki yenilemede tekrar denenecek."
+  },
+  "poolStats": {
+    "notOnChainTitle": "Zincir üstü bir parite değil",
+    "notOnChainBody": "Bu panel AMM havuz durumunu okur. Bağlı olduğu parite merkezi bir borsada işlem görüyor, orada havuz yerine emir defteri var.",
+    "loadingTitle": "Havuz yükleniyor",
+    "loadingBody": "Bu parite için en derin havuz belirleniyor.",
+    "emptyTitle": "Havuz durumu yok",
+    "emptyBody": "Veri sağlayıcı bu havuz için hiçbir şey döndürmedi. Bir sonraki yenilemede tekrar denenecek.",
+    "liquidity": "Likidite",
+    "volume24h": "Hacim 24s",
+    "turnoverSub": "likiditenin {{value}} katı",
+    "feeTier": "Ücret kademesi",
+    "feeTierUnknown": "Bu platform yayımlamıyor",
+    "reserves": "Rezervler",
+    "reservesUnavailable": "İki taraf yalnızca masaüstünde",
+    "trades24h": "İşlem 24s",
+    "tradersSub_one": "{{count}} işlemci",
+    "tradersSub_other": "{{count}} işlemci",
+    "poolAge": "Havuz yaşı",
+    "ageToday": "Bugün",
+    "ageDays_one": "{{count}} gün",
+    "ageDays_other": "{{count}} gün",
+    "ageMonths_one": "{{count}} ay",
+    "ageMonths_other": "{{count}} ay",
+    "impactLabel": "Emir büyüklüğüne göre fiyat etkisi",
+    "impactNote": "Her büyüklük için canlı kote edilir, rezervlerden modellenmez; bu yüzden bölünmüş bir rota bu havuzun kendi eğrisini geçebilir."
+  },
+  "predictionCategories": {
+    "all": "Tümü",
+    "noneBody": "Bu borsa olaylarını kategoriye ayırmıyor.",
+    "venueHeading": "Borsa",
+    "desktopOnly": "masaüstü",
+    "venueError": "hata"
+  },
+  "resolvingSoon": {
+    "resolves": "Sonuçlanma {{when}}",
+    "loadingTitle": "Takvim okunuyor",
+    "loadingBody": "Borsalar yanıt verdiğinde sonuçlanma tarihleri görünecek.",
+    "emptyTitle": "Yakında sonuçlanan yok",
+    "emptyBody": "Buradaki açık sözleşmelerin hiçbiri yaklaşan bir sonuçlanma tarihi bildirmiyor."
+  },
+  "riskControls": {
+    "maxDailyLoss": "Günlük maks. zarar",
+    "maxDailyTrades": "Günlük maks. işlem",
+    "maxPositionSize": "Maks. pozisyon büyüklüğü",
+    "usedPercent": "%{{value}} kullanıldı",
+    "usedCount": "{{value}} verildi",
+    "perOrder": "Her emirde kontrol edilir",
+    "off": "Kapalı",
+    "resetWindow": "Sıfırlama penceresi",
+    "resetIn": "{{time}} sonra sıfırlanır",
+    "killSwitch": "Acil durdurma",
+    "killSwitchHint": "Siz devam ettirene kadar tüm emirleri engeller",
+    "haltOrders": "Emirleri durdur",
+    "resumeOrders": "Devam et"
+  },
   "sectionTours": {
     "back": "Geri",
     "next": "İleri",
@@ -397,6 +899,50 @@
     "signInConsent": "Devam ederek <terms>Şartlar ve Koşullarımızı</terms> ve <privacy>Gizlilik Politikamızı</privacy> kabul etmiş olursun.",
     "analyticsNote": "Neleri topladığımız ve nelere hiç dokunmadığımız <privacy>Gizlilik Politikamızda</privacy> yazıyor.",
     "checkoutConsent": "Abone olarak <terms>Şartlar ve Koşullarımızı</terms> kabul etmiş olursun."
+  },
+  "sectorPeers": {
+    "emptyTitle": "Bu parite için sektör yok",
+    "emptyBody": "{{pair}} seçilmiş sektör kataloğunda yer almıyor, bu yüzden karşılaştırılacak benzer yok.",
+    "loadingBody": "Sektör kataloğu okunuyor.",
+    "subtitle": "{{sector}} · {{total}} varlık. 24 saate göre sıralı, önce {{symbol}}."
+  },
+  "sectorTape": {
+    "emptyTitle": "Sektör verisi yok",
+    "emptyBody": "Sektörler, enstrüman kataloğunun piyasa anlık görüntüsüyle eşleştirilmesinden gelir. İkisi de henüz yanıt vermedi.",
+    "subtitle": "Piyasa değerine göre ağırlıklı. Çubuk, harekete kaç üyenin eşlik ettiğini gösterir.",
+    "window": "Sektör aralığı",
+    "leads": "{{total}} varlık · {{symbol}} önde",
+    "drags": "{{total}} varlık · {{symbol}} geride",
+    "assets": "{{total}} varlık"
+  },
+  "session": {
+    "noVenueTitle": "Bağlı aracı kurum yok",
+    "noVenueBody": "İşlem günü aracı kurumun kendi takviminden gelir. Seans saatlerini burada görmek için bir hisse konektörü kur.",
+    "noVenueAction": "Konektörlere göz at",
+    "loading": "İşlem takvimi okunuyor…",
+    "unavailableTitle": "Seans bilgisi yok",
+    "unavailableBody": "Aracı kurum ne saat ne de takvim döndürdü. Kendiliğinden yeniden denenecek.",
+    "stateOpen": "Piyasa açık",
+    "statePre": "Açılış öncesi",
+    "statePost": "Kapanış sonrası",
+    "stateClosed": "Piyasa kapalı",
+    "closesIn": "{{time}} sonra kapanıyor",
+    "opensIn": "{{time}} sonra açılıyor",
+    "afterHoursEndsIn": "Kapanış sonrası seans {{time}} sonra bitiyor",
+    "preMarketIn": "Açılış öncesi seans {{time}} sonra",
+    "durationDh": "{{days}} g {{hours}} sa",
+    "durationHm": "{{hours}} sa {{minutes}} dk",
+    "durationMs": "{{minutes}} dk {{seconds}} sn",
+    "barPre": "öncesi",
+    "barOpen": "açılış",
+    "barClose": "kapanış",
+    "barPost": "sonrası",
+    "halfDay": "Yarım gün",
+    "nextSession": "Sonraki seans {{day}}",
+    "noSchedule": "Planlanmış seans yok",
+    "clockOnly": "Yalnızca açık ya da kapalı: seans aralıkları yayınlanmadı.",
+    "ticketExtendedNote": "Bu seans yalnızca limitli emir kabul eder. Piyasa emrinin eşleşeceği sürekli müzayede yok.",
+    "ticketClosedNote": "Piyasa kapalı. Limitli emir bir sonraki seans açılana kadar bekler."
   },
   "settings": {
     "title": "Ayarlar",
@@ -1067,6 +1613,20 @@
       "thanks": "Teşekkürler. Gerçekten işe yarıyor."
     }
   },
+  "swapRoute": {
+    "notOnChainTitle": "Zincir üstü bir parite değil",
+    "notOnChainBody": "Rota, bir toplayıcının takası havuzlara bölmesidir. Bağlı parite merkezi bir borsada işlem görüyor.",
+    "probeLabel": "Kote edilen tutar",
+    "loadingTitle": "Kote ediliyor",
+    "loadingBody": "Toplayıcıya bu büyüklüğü nasıl gerçekleştireceği soruluyor.",
+    "noRouteTitle": "Rota yok",
+    "noRouteBody": "Toplayıcı bu parite için bu büyüklüğü gerçekleştirecek bir yol bulamadı.",
+    "noQuotePriceBody": "Kote para biriminin yayımlanmış bir USD fiyatı yok, dolayısıyla kote edilecek bir büyüklük de yok.",
+    "emptyTitle": "Gösterilecek bölünme yok",
+    "youReceive": "Alacağınız",
+    "priceImpact": "Fiyat etkisi",
+    "networkFee": "Ağ ücreti"
+  },
   "userMenu": {
     "accountMenu": "Hesap menüsü",
     "settings": "Ayarlar",
@@ -1105,6 +1665,45 @@
     "newWindow": "Yeni pencere",
     "back": "Geri",
     "forward": "İleri"
+  },
+  "venueLadder": {
+    "emptyTitle": "Karşılaştırılacak borsa yok",
+    "emptyBody": "Bu varlık sınıfını listeleyen ikinci bir borsa bağlayın; merdiven onları işlem yaptığınız tarafa göre sıralar.",
+    "columns": {
+      "venue": "Borsa",
+      "bid": "Alış",
+      "ask": "Satış",
+      "bps": "bp"
+    },
+    "switchSide": "Tarafı değiştir",
+    "rankedByAsk": "Satışa göre sıralı, almak için en ucuzu üstte",
+    "rankedByBid": "Alışa göre sıralı, satmak için en iyisi üstte",
+    "bpsTooltip": "Defterin tepesindeki spread, orta fiyata göre ölçülür. Gerçek çift taraflı defter yayımlamayan borsa hiç sıralanmaz.",
+    "best": "En iyi",
+    "desktopOnlyRow": "{{venue}} masaüstü uygulamayı gerektirir",
+    "switchTo": "Bu paritenin grafiğini {{venue}} üzerinde aç",
+    "desktopOnly": "Masaüstü",
+    "notListed": "parite listelenmemiş",
+    "noBook": "henüz kotasyon yok"
+  },
+  "whatMovedIt": {
+    "noPairTitle": "Seçili sözleşme yok",
+    "noPairBody": "Olasılığının ne zaman hareket ettiğini görmek için bir olay açın.",
+    "loadingTitle": "Geçmiş okunuyor",
+    "loadingBody": "Olasılık geçmişi yüklendiğinde zaman çizelgesi görünecek.",
+    "flatTitle": "Satır açacak hareket yok",
+    "flatBody": "Bu sözleşme yüklenen geçmişte üç sentten fazla yeniden fiyatlanmadı.",
+    "columns": {
+      "when": "Ne zaman",
+      "move": "Hareket",
+      "what": "Ne oldu",
+      "traded": "İşlem"
+    },
+    "movedFromTo": "Olasılık {{from}} seviyesinden {{to}} seviyesine geçti",
+    "contracts_one": "1 sözleşme",
+    "contracts_other": "{{count}} sözleşme",
+    "footerMatched": "Başlıklar {{ticker}} ile nedene göre değil zamana göre eşleşir: her biri piyasa yeniden fiyatlanırken yayımlanan sonuncudur.",
+    "footerNoTicker": "Haber akışı ticker'a göre dizinlenir ve bu soru bir ticker içermiyor, bu yüzden satırlar yalnızca hareketi gösterir."
   },
   "workspace": {
     "rename": "Yeniden adlandır",
@@ -2275,7 +2874,49 @@
     "empty": "Boş",
     "events": "Olaylar",
     "predictionPositions": "Tahmin pozisyonları",
-    "futuresPositions": "Vadeli pozisyonlar"
+    "futuresPositions": "Vadeli pozisyonlar",
+    "venueLadder": "Borsa Sıralaması",
+    "pairDossier": "Parite Dosyası",
+    "marketPulse": "Piyasa Nabzı",
+    "movers": "Hareket Edenler",
+    "sectorTape": "Sektör Şeridi",
+    "sectorPeers": "Sektör Emsalleri",
+    "fundingMatrix": "Fonlama Matrisi",
+    "basisMonitor": "Bazis Takibi",
+    "openInterest": "Açık Pozisyon",
+    "fundingExtremes": "Fonlama Uçları",
+    "fundingBelt": "Fonlama Kuşağı",
+    "liquidationMap": "Likidasyon Haritası",
+    "marginHealth": "Marjin Sağlığı",
+    "riskControls": "Risk Kontrolleri",
+    "categories": "Kategoriler",
+    "eventBoard": "Olay Panosu",
+    "oddsMovers": "Olasılık Hareketleri",
+    "resolvingSoon": "Yakında Sonuçlanacaklar",
+    "eventHeader": "Olay Başlığı",
+    "whatMovedIt": "Ne Hareket Ettirdi",
+    "outcomeLadder": "Sonuç Sıralaması",
+    "basketTicket": "Sepet Emri",
+    "chains": "Zincirler",
+    "poolMap": "Havuz Haritası",
+    "liquidityFlow": "Likidite Akışı",
+    "poolDetail": "Havuz Detayı",
+    "poolStats": "Havuz İstatistikleri",
+    "onchainTrades": "Zincir Üstü İşlemler",
+    "route": "Rota",
+    "feeAccrual": "Biriken Ücretler",
+    "lpPosition": "LP Pozisyonu",
+    "manageLiquidity": "Likidite Yönetimi",
+    "chainLadder": "Zincir Sıralaması",
+    "routeBridge": "Köprü Rotası",
+    "inFlight": "Transfer Halinde",
+    "session": "Seans",
+    "earningsCalendar": "Kazanç Takvimi",
+    "economicCalendar": "Ekonomik Takvim",
+    "sessionClock": "Seans Saati",
+    "level1": "Level 1",
+    "company": "Şirket",
+    "yourPosition": "Pozisyonunuz"
   },
   "paneDescriptions": {
     "markets": "Borsalar genelindeki tüm mevcut işlem paritelerine göz at",
@@ -2302,7 +2943,49 @@
     "recentTickers": "Hızlı geçiş için canlı fiyatlarla son görüntülenen pariteler",
     "events": "Tahmin piyasası olaylarına göz atın ve bir sonucun grafiğini açın",
     "predictionPositions": "Elinizdeki kontratlar, maliyetleri ve ne zaman sonuçlanacakları",
-    "futuresPositions": "Açık süresiz pozisyonlar, işaret fiyatı ve likidasyon seviyesi"
+    "futuresPositions": "Açık süresiz pozisyonlar, işaret fiyatı ve likidasyon seviyesi",
+    "venueLadder": "Bağlı her borsanın bu parite için en iyi alış ve satış fiyatı, en ucuz gerçekleşme en üstte olacak şekilde sıralanır",
+    "pairDossier": "Boyutu belirleyen istatistikler: aralık, hacim, yüzde bir içindeki likidite ve paritenin en iyi işlem gördüğü yer",
+    "marketPulse": "Tüm piyasa için üç sayı, neyin ve neden hareket ettiğine dair tek satırlık bir not ile",
+    "movers": "Günün en çok yükselen ve düşenleri, arkalarındaki hacimle birlikte; böylece gerçek bir hareket bir fitilden ayırt edilir",
+    "sectorTape": "Her sektör, hareketi ve genişlik çubuğuyla birlikte bir etiket olarak; böylece rotasyon tek bakışta okunur",
+    "sectorPeers": "Bu paritenin sektörünün geri kalanı bugün nasıl işlem gördü, paritenin kendisi en üste sabitlenmiş halde",
+    "fundingMatrix": "Bağladığın her borsadaki her perp için fonlama, herhangi bir sütuna göre sıralayabileceğin tek bir ızgarada",
+    "basisMonitor": "Perp'in spot karşısındaki farkı baz puan cinsinden ve yıllıklandırılmış olarak, böylece taşıma maliyeti bir açık yerine getiri gibi okunur",
+    "openInterest": "Kontrat başına açık pozisyon ve 24 saatlik değişimi, böylece kalabalıklaşma fiyattan önce görünür",
+    "fundingExtremes": "Şu anki en pozitif ve en negatif fonlama oranları, her birini ödeyen borsayla birlikte",
+    "fundingBelt": "Bir sonraki fonlama anına geri sayım, güncel ve tahmini oran, ve boyutunun ne ödediği ya da kazandığı",
+    "liquidationMap": "Pozisyonunun fiyat ekseninde nerede biteceği, piyasanın geri kalanının taşıdığı likidasyona karşı",
+    "marginHealth": "Marjin oranı, bakım marjini karşısında kullanılabilir bakiye, ve hesabın otomatik kaldıraç azaltmaya ne kadar yakın olduğu",
+    "riskControls": "Günlük zarar sınırın, işlem sayın, pozisyon büyüklüğün ve acil durdurman, işlemin yapıldığı yerde düzenlenebilir",
+    "categories": "Canlı kontrat sayısıyla her olay kategorisi, böylece pano tek tıkla daralır",
+    "eventBoard": "Kart halinde canlı olay piyasaları: soru, sent cinsinden Evet ve Hayır, hacim ve ne zaman sonuçlanacağı",
+    "oddsMovers": "Bugün olasılığı en çok değişen kontratlar, hareket puan cinsinden belirtilmiş halde",
+    "resolvingSoon": "Sonuçlanmaya en yakın kontratlar, hacme değil saate göre sıralanmış",
+    "eventHeader": "Soru, nasıl ve ne zaman sonuçlanacağı, ve piyasanın şu an fiyatladığı olasılık",
+    "whatMovedIt": "Bir zaman çizelgesinde başlıklar, her biri neden olduğu olasılık hareketiyle damgalanmış",
+    "outcomeLadder": "Olaydaki her sonuç sent cinsinden fiyatlanmış, sıralanabilir ve aranabilir, her satırda bir bahis düğmesiyle",
+    "basketTicket": "Birden çok sonuca aynı anda bahis koy; gönderemeden önce toplam maliyet, belirtilen overround ve en kötü senaryonla birlikte",
+    "chains": "Bağlayıcın olan her zincir, yanında gaz, likidite ve 24 saatlik hacimle",
+    "poolMap": "Havuzlar likiditeye karşı hacme göre sıralanır, böylece gerçekten işlem görenler önce gelir",
+    "liquidityFlow": "Aralık başına net likidite girişi ve çıkışı, böylece boşalan bir havuz fiyattan önce görünür",
+    "poolDetail": "Seçili havuz tek bakışta, grafiğine ve bir takasa tek tık uzaklıkta",
+    "poolStats": "Her iki taraftaki rezervler, kilitli değer, 24 saatlik hacim, ücret katmanı, ve üç farklı büyüklükte fiyat etkisi",
+    "onchainTrades": "Havuz üzerinden onaylandıkça her takas, cüzdanı ve işleme bağlantısıyla birlikte",
+    "route": "Aggregator'ın takasını havuzlar arasında nasıl böldüğü, böylece kaymanın belirtilen bir nedeni olur",
+    "feeAccrual": "Pozisyonunun zaman içinde kazandığı ücretler, bunların işaret ettiği APR, ve şu an talep edilebilir olan",
+    "lpPosition": "Aralığın canlı fiyata karşı durumu, aralıkta geçirilen süre, ve sadece elde tutmaya karşı ölçülen kalıcı olmayan zarar",
+    "manageLiquidity": "Aralığı taşı, likidite ekle ya da çek, ve grafikten ayrılmadan ücretleri talep et",
+    "chainLadder": "Aynı token her zincirde fiyatlanmış, gaz dahil edilmiş halde; böylece en iyi teklif değil en iyi toplam kazanır",
+    "routeBridge": "Kaynak zincir, hedef zincir, köprü, ücreti ve ne kadar sürdüğü, yürütmeye hazır halde",
+    "inFlight": "Hâlâ onaylanmakta olan transferler, her biri beklediği blok sayacıyla birlikte",
+    "session": "İşlem gününün şu an nerede olduğu, aracı kurumun kendi takviminden; tatiller ve yarım günler dahil",
+    "earningsCalendar": "Kimin ne zaman rapor vereceği, kapanış öncesi ya da sonrası, geçmeleri gereken tahminle birlikte",
+    "economicCalendar": "Saatine göre makro veriler, önemiyle, önceki rakamla ve piyasa beklentisiyle birlikte",
+    "sessionClock": "İşlem günü için tek satırlık bir saat, böylece mesai dışı bir emir asla sürpriz olmaz",
+    "level1": "Boyutlarıyla birlikte alış ve satış, spread ve aracı kurum akışından günün aralığı",
+    "company": "Değerleme, büyüme, marjlar, bir sonraki katalizör, ve analistlerin nerede durduğu, tek bir panoda",
+    "yourPosition": "Bu sembolde elinde tuttuğun: miktar, maliyet, işaret fiyatı, ve hem günlük hem açık kâr"
   },
   "multiPrice": {
     "venue": "Borsa",
@@ -2902,7 +3585,7 @@
       },
       "pairlens-predictions": {
         "title": "Pairlens Tahminler",
-        "description": "Tahmin piyasaları için olay tarayıcısı ve açık kontrat pozisyonları"
+        "description": "Tahmin piyasası yüzeyleri: olay panosu, sonuç sıralaması, sepetler ve açık kontrat pozisyonları"
       },
       "binance-futures-market-connector": {
         "title": "Binance Futures Piyasa Bağlayıcısı",
@@ -2918,15 +3601,15 @@
       },
       "pairlens-cex-futures": {
         "title": "Pairlens Vadeli",
-        "description": "Giriş, işaret fiyatı ve likidasyon seviyesiyle açık süresiz pozisyonlar"
+        "description": "Süresiz vadeli işlem yüzeyleri: açık pozisyonlar, fonlama ve bazis tarayıcıları, likidasyon ve marjin panoları"
       },
       "pairlens-dex": {
         "title": "Pairlens DEX",
-        "description": "Zincir üstü çalışma alanı şablonları: DEX terminali ve degen avı panosu"
+        "description": "Zincir üstü yüzeyler: havuz istatistikleri, takas rotası, LP pozisyonları ve çoklu zincir sıralaması"
       },
       "pairlens-equities": {
         "title": "Pairlens Hisse",
-        "description": "Hisse çalışma alanı şablonları: hisse terminali ve tarayıcı öncelikli masa"
+        "description": "Hisse yüzeyleri: seans saati, Level 1 kotasyonları, şirket temelleri ve kazanç takvimi"
       }
     },
     "families": {
@@ -3040,12 +3723,27 @@
       "gateNoTrading": "Yalnızca piyasa verisi. Burada işlem yapılamaz."
     },
     "trade": {
+      "allOutcomes": "Tümü {{total}}",
+      "avgFillPrice": "Ort. gerçekleşme fiyatı",
+      "contractCount_one": "{{formatted}} kontrat",
+      "contractCount_other": "{{formatted}} kontrat",
+      "fundingAtEntry": "Girişte funding",
+      "fundingLongsPay": "Longlar shortlara öder",
+      "fundingShortsPay": "Shortlar longlara öder",
+      "ifDoesNotWin": "{{outcome}} kazanmazsa",
+      "ifWins": "{{outcome}} kazanırsa",
       "limitBuy": "Limitli alış",
       "limitSell": "Limitli satış",
       "bought": "Alındı",
+      "maxAmount": "Maks",
+      "maxPayout": "Maks. ödeme",
+      "profitLine": "Kâr {{amount}} · {{roi}}",
+      "resolvesOn": "{{date}} sonuçlanır",
       "sold": "Satıldı",
       "limitOrderFailed": "Limit emri başarısız",
+      "stakeLine": "Yatırılan {{amount}}",
       "swapFailed": "Swap başarısız",
+      "switchOutcome": "Sonucu değiştir",
       "workflowUnsupported": "Bu piyasada iş akışı desteklenmiyor",
       "orderBlocked": "Emir risk limiti tarafından engellendi",
       "orderRejected": "Emir reddedildi",
@@ -3083,8 +3781,6 @@
       "maxLoss": "Maks. kayıp",
       "priceCents": "Fiyat (¢)",
       "thisOutcome": "Bu sonuç",
-      "decreaseContracts": "Bir kontrat azalt",
-      "increaseContracts": "Bir kontrat artır",
       "priceCentsRange": "0¢ ile 100¢ arasında bir fiyat girin",
       "leverage": "Kaldıraç",
       "reduceOnly": "Yalnızca azalt",
@@ -3437,14 +4133,14 @@
       },
       "prediction-terminal": {
         "name": "Tahmin Terminali",
-        "tagline": "Olasılıkları grafikte, olayın tamamı hemen yanında.",
-        "description": "Tahmin piyasaları için varsayılan düzen: altında işlemler ve açık sözleşmelerin bulunduğu bir olasılık grafiği, ortada emir defteri ve işlem paneli, sağda ise tam yükseklikte bir olay tarayıcısı; çünkü komşu sonuçlar analizin yarısıdır.",
+        "tagline": "Önce soru, sonra olasılıklar.",
+        "description": "Varsayılan tahmin piyasası düzeni: bir olasılık grafiğinin üzerinde olay başlığı, altında onu hareket ettiren başlıklar, bahis koymadan önce maksimum kazanç ve maksimum zararı belirten emir defteri ve işlem paneli, ve sağda komşu sonuçlar.",
         "menuLabel": "Varsayılan"
       },
       "prediction-discovery": {
         "name": "Tahmin Keşfi",
         "tagline": "Parite listesi değil, canlı olay piyasalarına göz atın.",
-        "description": "Olay sözleşmeleri için tasarlanmış bir giriş panosu: olay tarayıcısı geniş sütunu alır, haber akışı yanında ilerler ve ince bir şerit izleme listenizi duyarlılık göstergesinin üzerinde taşır. Panoyu doldurmak için Kalshi veya Polymarket gibi bir tahmin borsası kurun.",
+        "description": "Olay kontratları için kurulmuş bir ana pano: olay panosunun yanında bir kategori rayı, sonuçlanmaya en yakın kontratların üzerinde en büyük olasılık hareketleri. Doldurmak için Kalshi ya da Polymarket gibi bir tahmin borsası kur.",
         "menuLabel": "Varsayılan"
       },
       "dex-degen": {
@@ -3455,7 +4151,7 @@
       "dex-terminal": {
         "name": "DEX Terminali",
         "tagline": "Sahte emir defteri olmadan zincir üstü işlem.",
-        "description": "Varsayılan zincir üstü düzen: altında havuz istatistikleri ve işlemler bulunan bir grafik, yeni listelemeleri yakalamak için son görülen paritelerin üzerinde bir takas paneli ve sağda sosyal akış. Emir defteri sütunu yok: havuzdan türetilen derinlik sentetiktir, bu yüzden gösterilmez.",
+        "description": "Varsayılan zincir üstü düzen: havuz istatistiklerinin üzerinde grafik, yanında zincir üstü işlem şeridi, ve kaymanın belirtilen bir nedeni olması için aggregator rotasının üzerinde bir takas paneli. Emir defteri sütunu yok: havuzdan fiyatlanan derinlik sentetiktir, bu yüzden gösterilmez.",
         "menuLabel": "Varsayılan"
       },
       "quant-signals": {
@@ -3470,8 +4166,8 @@
       },
       "equities-terminal": {
         "name": "Hisse Senedi Terminali",
-        "tagline": "İşlem paneli sembol haber akışının üzerinde, hisse senetleri için.",
-        "description": "Hisse senetleri için varsayılan düzen: altında işlemler, pozisyonlar ve temel veriler bulunan bir grafik ve sembol haber akışının üzerinde işlem paneli; çünkü akış kriptoyu nasıl hareket ettiriyorsa, katalizörler de hisseleri öyle hareket ettirir.",
+        "tagline": "Grafiğin üzerinde seans saati, işlem panelinin üzerinde Level 1.",
+        "description": "Varsayılan hisse düzeni: önce seans saati, ardından altında işlem akışı ve zaman ve satışlar ile pozisyonların olduğu grafik, ve işlem panelinin ve sembol haber akışının üzerinde Level 1 kotasyonları taşıyan bir ray. Normal seans dışında saat bunu belirtir, ve işlem paneli yalnızca limit emre döner.",
         "menuLabel": "Varsayılan"
       },
       "ultrawide-trading-floor": {
@@ -3480,9 +4176,9 @@
         "description": "Ultra geniş veya ikinci bir monitörü dolduran dört sütunlu bir komuta merkezi: tarayıcı, grafik, emir defteri ve derinlik, ve açık pozisyonlarının üzerinde bir işlem paneli. Maksimalist düzen."
       },
       "classic-terminal": {
-        "name": "Klasik Terminal",
-        "tagline": "Klasik Pairlens masası: grafik, veri, emir defteri, panel.",
-        "description": "Varsayılan terminal düzeni: solda sekmeli bir veri şeridi ve risk çubuğu olan büyük bir grafik, sağda ise işlem panelinin üzerinde emir defteri.",
+        "name": "Spot İşlem",
+        "tagline": "Bağladığın her borsada en iyi alış ve satış.",
+        "description": "Varsayılan spot düzen: altında işlem akışı ve pozisyonların olduğu grafik, ve emir defteri ile işlem panelinin üzerinde borsalar arası sıralamayla başlayan bir ray.",
         "menuLabel": "Varsayılan"
       },
       "chart-focus": {
@@ -3547,9 +4243,9 @@
         "description": "4K bir monitör için ekrandaki her şey: emir defteri ve parite bilgisi, risk çubuğuyla grafik, pozisyonlar ve sosyal, ve bir işlem paneli sütunu."
       },
       "home-pulse": {
-        "name": "Ana Sayfa",
-        "tagline": "Varsayılan pano: tarayıcı, duyarlılık, hareket edenler ve haberler.",
-        "description": "Varsayılan ana sayfa panosu: piyasa tarayıcısı, Korku ve Açgözlülük göstergesi ile en iyi coinlerin izleme listenle sekmelendiği bir piyasa nabzı rayı ve tam yükseklikte bir haber sütunu. Üzerindeki her şey hesap olmadan çalışır.",
+        "name": "Spot Keşfi",
+        "tagline": "Neyin hareket ettiğiyle aç, ve nedenini.",
+        "description": "Spot ana sayfa panosu: hareket edenler tablosunun ve sektör şeridinin üzerinde bir piyasa nabzı rayı, yanında tam tarayıcı, ve izleme listenin üzerinde haberler. Üzerindeki her şey hesap olmadan çalışır.",
         "menuLabel": "Varsayılan"
       },
       "markets-board": {
@@ -3584,21 +4280,63 @@
       },
       "perps-discovery": {
         "name": "Perp Keşfi",
-        "tagline": "Açık kontratlarınız yanınızdayken perpleri tarayın.",
-        "description": "Vadeli işlemler ana panosu: kalıcı kontratlara göre süzülmüş piyasa tarayıcısı, yanında işaret ve tasfiye fiyatlı açık pozisyonlarınız, altında çoklu fiyat şeridi ve haber akışının üstünde piyasa duyarlılığı.",
+        "tagline": "Fiyata değil, taşıma maliyetine göre tara.",
+        "description": "Vadeli işlemler ana panosu: bazis takibinin üzerinde fonlama matrisi, yanlarında açık pozisyon ve fonlama uçları. Perp'leri onları tutmanın maliyetine göre sıralar; bu da bir fiyat tarayıcısının asla yanıtlamadığı sorudur.",
         "menuLabel": "Varsayılan"
       },
       "dex-discovery": {
         "name": "DEX Keşfi",
-        "tagline": "Zincir üstü listelemeler, sosyal akış ve listeniz.",
-        "description": "Zincir üstü ana pano: DEX çiftlerine göre süzülmüş piyasa tarayıcısı, yeni listelemeleri yakalamak için sosyal akışın üstünde son tickerlar ve haber akışının üstünde izleme listeniz.",
+        "tagline": "Önce zinciri seç, sonra havuzu.",
+        "description": "Zincir üstü ana panosu: gaz ve likiditeli bir zincir rayı, akış grafiğinin üzerinde likiditeye karşı hacme göre sıralanmış havuzlar, ve sağda seçili havuz, grafiğine ve bir takasa tek tık uzaklıkta. Bağlayıcın olmayan zincirler asla görünmez.",
         "menuLabel": "Varsayılan"
       },
       "equities-discovery": {
         "name": "Hisse Keşfi",
-        "tagline": "Hisse tarayıcısı, listeniz ve haber akışı yan yana.",
-        "description": "Hisse ana panosu: hisselere göre süzülmüş piyasa tarayıcısı, çoklu fiyat şeridinin üstünde izleme listeniz ve tam boy bir haber sütunu, çünkü hisseler bildirimlerle hareket eder.",
+        "tagline": "İşlem günü, onu yöneten takvime göre.",
+        "description": "Hisse ana panosu: seansın şu an nerede olduğu, kimin ne zaman rapor vereceği, ve gelecek makro veriler, yanlarında hareket edenler ve haber akışı. Saat, aracı kurum takviminden gelir; bu yüzden tatiller ve yarım günler doğrudur.",
         "menuLabel": "Varsayılan"
+      },
+      "spot-research": {
+        "name": "Spot Araştırma",
+        "tagline": "Bir işlem panelinden önce bir gerekçe.",
+        "description": "Bir seanstan daha uzun tutulan pozisyonlar için: parite dosyasının üzerinde grafik, yanında paritenin kendi haber akışı, ve sektör emsallerinin üzerinde teklif boyutunda bir işlem paneli. Emir defteri yok, bu yüzden hiçbir derinlik akışı açılmaz.",
+        "menuLabel": "Araştırma"
+      },
+      "perps-carry": {
+        "name": "Perp Taşıma Maliyeti",
+        "tagline": "Bir sonraki fonlama anının sana maliyeti.",
+        "description": "Tutmayı planladığın bir perp için: geri sayımlı fonlama kuşağı grafiğin üzerinde, güncel ve tahmini oran ile boyutunun ne ödediği ya da kazandığı, altında açık kontratlar, ve kaldıracı hesaba katan bir işlem panelinin üzerinde emir defteri.",
+        "menuLabel": "Taşıma"
+      },
+      "perps-risk": {
+        "name": "Perp Riski",
+        "tagline": "Pozisyonun nerede biteceği, ve onu durduran sınırlar.",
+        "description": "Aynı parite maruziyet olarak okunur: bir likidasyon haritasının üzerinde grafik, korkuluklarının üzerinde marjin sağlığı, ve sağda işlem paneli. Sınırlar yerinde düzenlenebilir; böylece bir boyut sınırı Ayarlar'da değil, işlemin yapıldığı yerde ayarlanır.",
+        "menuLabel": "Risk"
+      },
+      "dex-liquidity": {
+        "name": "DEX Likiditesi",
+        "tagline": "Senin aralığın, senin ücretlerin, senin kalıcı olmayan zararın.",
+        "description": "Bir havuzun LP tarafı: üzerinde aralığının işaretli olduğu grafik, biriken ücretler ve işaret ettikleri APR, aralıkta geçirilen süre, ve sadece elde tutmaya karşı ölçülen kalıcı olmayan zarar. Aralık düzenleyici yanında durur; böylece bir pozisyon grafikten ayrılmadan yeniden dengelenir.",
+        "menuLabel": "Likidite"
+      },
+      "dex-cross-chain": {
+        "name": "DEX Çoklu Zincir",
+        "tagline": "Aynı token, her zincir, gaz dahil.",
+        "description": "Zincirler arasında geçiş için bir pano: zincir sıralaması token'ı her yerde gaz toplama dahil edilmiş halde fiyatlar, köprü rotası ücretini ve ne kadar sürdüğünü belirtir, ve hâlâ onaylanmakta olan transferler blok sayaçlarıyla yanlarında durur.",
+        "menuLabel": "Çoklu Zincir"
+      },
+      "equities-company": {
+        "name": "Hisse Şirketi",
+        "tagline": "Ticker'ın arkasındaki iş.",
+        "description": "Bir hisseyi işlem yapmak yerine elde tutmak için: değerleme, büyüme, marjlar, bir sonraki katalizör ve analist aralığının üzerinde grafik, yanında sembol haber akışı ve işlem panelinin üzerinde pozisyonun.",
+        "menuLabel": "Şirket"
+      },
+      "prediction-race": {
+        "name": "Tahmin Yarışı",
+        "tagline": "Her sonuç fiyatlanmış, ve overround belirtilmiş.",
+        "description": "İki taraf yerine bir alanın olduğu bir olay için: sonuç sayısı ve overround'ı gösteren başlık, yığılmış paylar grafiği, ve her sonucu fiyatlayan ve satırdan bahis alan bir sıralama. Sepet overround'a denk gelir; böylece tüm alanı süpürmenin bedava para olmadığı açıkça görülür.",
+        "menuLabel": "Yarış"
       }
     },
     "traderTypes": {
@@ -4839,6 +5577,18 @@
         "label": "Mumlar",
         "description": "Grafikler ve sinyaller için canlı OHLCV mum akışları"
       },
+      "funding": {
+        "label": "Fonlama",
+        "description": "Vadesiz sözleşme fonlama oranları, mark ve endeks fiyatları ve açık pozisyon"
+      },
+      "pool-stats": {
+        "label": "Havuz İstatistikleri",
+        "description": "AMM havuz durumu, takasları ve bir zincirin sıralanmış havuzları"
+      },
+      "session": {
+        "label": "Seans Takvimi",
+        "description": "Tatiller ve yarım günler dahil, işlem gününün saati ve takvimi"
+      },
       "ticker": {
         "label": "Ticker",
         "description": "Gerçek zamanlı son fiyat ve 24 saatlik değişim akışları"
@@ -5274,5 +6024,23 @@
     "closeBody": "{{venue}} üzerinde {{pair}} için {{contracts}} sözleşmelik yalnızca-azalt piyasa emri verir.",
     "closeConfirm": "Pozisyonu kapat",
     "closeSubmitted": "Kapatma emri gönderildi"
+  },
+  "yourPosition": {
+    "noVenueTitle": "Bağlı aracı kurum yok",
+    "noVenueBody": "Bu sembolde ne taşıdığını görmek için bir hisse aracı kurumu bağla.",
+    "noAccountsTitle": "Yatırım hesabı yok",
+    "noAccountsBody": "Pozisyonlarını görmek için aracı kurum API anahtarlarını ekle. Demo anahtarlar da çalışır.",
+    "connect": "Hesap bağla",
+    "flatTitle": "{{symbol}} üzerinde pozisyon yok",
+    "flatBody": "Bu semboldeki gerçekleşen emirler burada görünür.",
+    "shares_one": "{{shares}} adet",
+    "shares_other": "{{shares}} adet",
+    "sharesShort_one": "{{shares}} adet açığa satış",
+    "sharesShort_other": "{{shares}} adet açığa satış",
+    "openPnlPercent": "Maliyete göre getiri",
+    "avgCost": "Ort. maliyet",
+    "mark": "Güncel fiyat",
+    "marketValue": "Piyasa değeri",
+    "dayChange": "Bugün"
   }
 }

@@ -3,6 +3,10 @@
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import { fetchOhlcv } from './ohlcv-client'
 import { clearPoolCache, networkForMarket, resolvePool } from './pool-resolver'
+import { fetchPoolStats } from './pool-stats-client'
+import { fetchPoolTrades } from './pool-trades-client'
+import { aggregateChainStats, fetchTopPools } from './pool-listing-client'
+import type { PoolStatsAction } from '@pairlens/shared/instrument-types'
 import type {
   PluginExecuteParams,
   PluginInstance,
@@ -44,6 +48,16 @@ export const geckoterminalDataProviderManifest: PluginManifest = {
       priority: 5,
       streaming: false,
     },
+    // Pool state, the pool's swaps, ranked pools and chain aggregates — one
+    // capability with an `action` param, because they share a provider, a
+    // pool cache and one free-tier request budget.
+    {
+      id: 'market-data:pool-stats',
+      singleton: false,
+      markets: ['*'],
+      priority: 5,
+      streaming: false,
+    },
   ],
   config: {},
 }
@@ -72,6 +86,59 @@ export function createGeckoterminalDataProviderPlugin(
         limit,
         networkForMarket(context.market),
       )
+    }
+
+    if (capability === 'market-data:pool-stats') {
+      // `params.market` FIRST, and this is not a nicety: the manager's context
+      // carries the terminal's own current venue, which for a pool pane on a
+      // second chain is the wrong network entirely — and networkForMarket
+      // silently defaults to Solana rather than failing.
+      const market = String(p['market'] ?? context.market ?? '')
+      const network = networkForMarket(market)
+      const action = String(p['action'] ?? 'stats') as PoolStatsAction
+
+      if (action === 'trades') {
+        const minVolumeUsd =
+          typeof p['minVolumeUsd'] === 'number' ? p['minVolumeUsd'] : 0
+        return fetchPoolTrades(
+          String(p['pair'] ?? context.pair),
+          network,
+          minVolumeUsd,
+        )
+      }
+
+      if (action === 'pools') {
+        const pools = await fetchTopPools(network)
+        return { network, pools, source: 'geckoterminal' as const }
+      }
+
+      if (action === 'networks') {
+        // One listing request per chain — see the aggregate's `coverage`.
+        const markets = Array.isArray(p['markets'])
+          ? (p['markets'] as Array<unknown>).map(String)
+          : [market]
+        const names = (p['displayNames'] ?? {}) as Record<string, string>
+        // Settled, not all: one rate-limited chain must not blank the whole
+        // rail. But if EVERY chain failed this is a provider failure rather
+        // than an answer, so it throws and the manager can try DexPaprika,
+        // which has a real network endpoint on desktop.
+        const settled = await Promise.allSettled(
+          markets.map(async (id) => {
+            const slug = networkForMarket(id)
+            const pools = await fetchTopPools(slug)
+            return aggregateChainStats(slug, id, names[id] ?? id, pools)
+          }),
+        )
+        const rows = settled
+          .filter((r) => r.status === 'fulfilled')
+          .map((r) => r.value)
+        if (rows.length === 0 && markets.length > 0) {
+          throw new Error('GeckoTerminal: no network could be sampled')
+        }
+        return rows
+      }
+
+      return fetchPoolStats(String(p['pair'] ?? context.pair), network)
     }
 
     return null

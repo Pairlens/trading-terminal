@@ -252,7 +252,9 @@ describe('TradeCandleAggregator — folding a finer candle stream', () => {
     })
     const monday = Date.UTC(2026, 7, 10)
     const wednesday = monday + 2 * DAY
-    // Backfill: the week so far, plus the daily bars behind it.
+    // Backfill: the week so far, plus the daily bars behind it. The clock is
+    // pinned inside the seeded week; seed()'s Date.now() default would make
+    // this test rot the day the real clock left the fixture's week.
     agg.seed(
       [candle(monday, 100, 140, 90, 135, 30)],
       [
@@ -260,6 +262,7 @@ describe('TradeCandleAggregator — folding a finer candle stream', () => {
         candle(monday + DAY, 118, 140, 90, 132, 12),
         candle(wednesday, 132, 136, 130, 135, 8),
       ],
+      wednesday + DAY / 2,
     )
     const result = agg.pushSourceCandle(
       candle(wednesday, 132, 150, 128, 149, 20),

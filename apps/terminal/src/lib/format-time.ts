@@ -32,3 +32,24 @@ export function formatTimeUntil(when: string | number): string {
   if (hours < 24) return i18n.t('time.inHours', { n: hours })
   return i18n.t('time.inDays', { n: Math.floor(hours / 24) })
 }
+
+/**
+ * The calendar date a contract settles on, in the reader's own locale.
+ *
+ * The counterpart to `formatTimeUntil`, for the places that answer "when is
+ * this decided" rather than "how long do I have". An order ticket is one of
+ * them: a countdown beside a size field reads as urgency, and the number a
+ * trader actually weighs a 68¢ price against is the date they get their
+ * collateral back. The year appears only when it is not this one, which is
+ * what keeps the line short enough to sit beside the outcome chip.
+ */
+export function formatResolutionDate(when: string | number): string {
+  const date = new Date(when)
+  if (!Number.isFinite(date.getTime())) return ''
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year:
+      date.getFullYear() === new Date().getFullYear() ? undefined : 'numeric',
+  })
+}

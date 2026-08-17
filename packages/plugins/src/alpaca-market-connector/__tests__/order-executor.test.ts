@@ -9,6 +9,7 @@ import {
   cancelAlpacaOrder,
   fetchAlpacaBalances,
   fetchAlpacaOpenOrders,
+  fetchAlpacaPositions,
   normalizeAlpacaOrder,
   placeAlpacaOrder,
 } from '../order-executor'
@@ -608,5 +609,78 @@ describe('fetchAlpacaOpenOrders', () => {
     expect(orders).toHaveLength(1)
     expect(orders[0].status).toBe('live')
     assertOrderConformant(orders[0])
+  })
+})
+
+/**
+ * A cash-equity position, verbatim from GET /v2/positions. Kept whole rather
+ * than trimmed to the fields read today: the ones that go unused are exactly
+ * the ones a future field-name typo would silently pick up.
+ */
+const REAL_POSITION = {
+  asset_id: '904837e3-3b76-47ec-b432-046db621571b',
+  symbol: 'NVDA',
+  exchange: 'NASDAQ',
+  asset_class: 'us_equity',
+  avg_entry_price: '104.18',
+  qty: '220',
+  qty_available: '220',
+  side: 'long',
+  market_value: '26642.00',
+  cost_basis: '22919.60',
+  unrealized_pl: '3722.40',
+  unrealized_plpc: '0.1624',
+  unrealized_intraday_pl: '589.00',
+  unrealized_intraday_plpc: '0.0226',
+  current_price: '121.10',
+  lastday_price: '118.42',
+  change_today: '0.02263',
+}
+
+describe('fetchAlpacaPositions', () => {
+  it('normalizes a long stock holding onto the shared position shape', async () => {
+    const { calls } = stubFetch([REAL_POSITION])
+    const positions = await fetchAlpacaPositions(CREDS, 'paper')
+
+    expect(calls[0].url).toBe('https://paper-api.alpaca.markets/v2/positions')
+    expect(positions).toHaveLength(1)
+    expect(positions[0]).toEqual({
+      pair: 'NVDA-USD',
+      side: 'long',
+      contracts: 220,
+      entryPrice: 104.18,
+      markPrice: 121.1,
+      unrealizedPnl: 3722.4,
+      notionalUsd: 26642,
+      intradayPnl: 589,
+      changeToday: 0.02263,
+    })
+    // No liquidation price on a cash equity: absent, not zero, or the pane
+    // draws a price at which nothing happens.
+    expect(positions[0].liquidationPrice).toBeUndefined()
+  })
+
+  it('reports a short as a positive count with the direction in side', async () => {
+    stubFetch([
+      { ...REAL_POSITION, qty: '-40', side: 'short', market_value: '-4844.00' },
+    ])
+    const positions = await fetchAlpacaPositions(CREDS, 'paper')
+    expect(positions[0].side).toBe('short')
+    expect(positions[0].contracts).toBe(40)
+  })
+
+  it('drops a flat row rather than rendering a zero-share holding', async () => {
+    stubFetch([
+      { ...REAL_POSITION, qty: '0' },
+      { symbol: '', qty: '5' },
+    ])
+    expect(await fetchAlpacaPositions(CREDS, 'paper')).toEqual([])
+  })
+
+  it('throws on a refused read, so an empty book is never inferred', async () => {
+    stubFetch({ message: 'account is not authorized' }, 403)
+    await expect(fetchAlpacaPositions(CREDS, 'live')).rejects.toThrow(
+      'account is not authorized',
+    )
   })
 })

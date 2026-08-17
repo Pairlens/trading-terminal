@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 
-import type { SparklineState } from '@/hooks/use-sparkline'
+import type { SparklineState, SparklineWindow } from '@/hooks/use-sparkline'
 import { buildSparkline, skeletonValues } from '@/lib/sparkline-path'
 import { useSparkline } from '@/hooks/use-sparkline'
 
@@ -236,11 +236,18 @@ export const MiniPriceChart = memo(function MiniPriceChart({
   market,
   pair,
   className,
+  historyWindow,
 }: {
   /** Venue to price the trend against — already resolved for the asset class. */
   market: string | undefined
   pair: string | undefined
   className?: string
+  /**
+   * Span to draw, when a day of hourly closes is the wrong one. Prediction
+   * outcomes ask for a month: their 24h move is already its own column, so
+   * the line earns its space by showing the arc the day cannot.
+   */
+  historyWindow?: SparklineWindow
 }) {
   const [inView, setInView] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -262,7 +269,7 @@ export const MiniPriceChart = memo(function MiniPriceChart({
 
   useEffect(() => () => observerRef.current?.disconnect(), [])
 
-  const { values, state } = useSparkline(market, pair, inView)
+  const { values, state } = useSparkline(market, pair, inView, historyWindow)
   return (
     <MiniPriceChartView
       ref={observe}

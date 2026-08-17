@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import {
   memo,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -38,6 +39,9 @@ import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
 import { TradeConfirmButton } from './trade-confirm-button'
 import { TradeConnectGate } from './trade-connect-gate'
+import { FundingEntryRow } from './funding-entry-row'
+import { PredictionOrderSummary } from './prediction-payout-card'
+import { RaceOutcomeSwitch } from './race-outcome-switch'
 import { CHAIN_NAME } from './wallet-selector'
 import type { RefObject } from 'react'
 
@@ -64,11 +68,13 @@ import {
 } from '@/lib/futures/ticket-math'
 import {
   centsToPrice,
+  contractsForAmount,
   normalizeContracts,
-  predictionMaxLoss,
+  predictionFillPrice,
   predictionSibling,
   priceToCents,
 } from '@/lib/predictions/ticket-math'
+import { formatResolutionDate } from '@/lib/format-time'
 import { predictionCollateral } from '@/lib/predictions/collateral'
 import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
 import {
@@ -92,6 +98,7 @@ import {
 import { usePaneWallet } from '@/lib/layout/pane-context'
 import { isRegionExplicitlySet } from '@/lib/region-settings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useEquitySessionPhase } from '@/hooks/use-equity-session'
 import { useTradeConfirmMode } from '@/hooks/use-trade-confirm'
 import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
@@ -487,10 +494,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   )
   // A separate slot rather than a swapped key: `usePersistedState` binds its
   // key at mount, and a prediction pair's "quote" is a date fragment
-  // (`KXBTCD-26AUG15-T53`) that would name a nonsense preset bucket.
-  const [contractPresets, setContractPresets] = usePersistedState<
+  // (`KXBTCD-26AUG15-T53`) that would name a nonsense preset bucket. Three
+  // slots, not four: the fourth chip in the row is Max, which is a balance and
+  // not a preset.
+  const [predictionPresets, setPredictionPresets] = usePersistedState<
     Array<number>
-  >('trade:presets:contracts', [1, 5, 10, 25])
+  >('trade:presets:predictionUsd', [25, 50, 100])
 
   // ── Prediction identity ──
   // The pair key is a venue ticker; what it MEANS was pinned by the row that
@@ -500,6 +509,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const directoryEntries = usePredictionDirectoryStore((s) => s.entries)
   const outcomeLabel = pinnedOutcome?.outcome ?? ''
   const question = pinnedOutcome ? predictionQuestionOf(pinnedOutcome) : pairKey
+  const resolvesAt = pinnedOutcome?.endMs
   const sibling = useMemo(
     () =>
       isPrediction
@@ -594,6 +604,38 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     if (!extendedHoursEligible && extendedHours) setExtendedHours(false)
   }, [extendedHoursEligible, extendedHours])
 
+  // Where the trading day is, from the broker's own calendar. Null on a crypto
+  // venue, and null until the first read lands — neither of which may be read
+  // as "the market is open".
+  const sessionPhase = useEquitySessionPhase(isEquities)
+  /**
+   * Outside regular hours the venue accepts nothing but a limit order: those
+   * sessions have no continuous auction to fill a market order against. The
+   * ticket coerces the type and says why, rather than letting the trader
+   * compose an order the venue will reject after they press Buy.
+   */
+  const outsideRegularHours =
+    isEquities && sessionPhase !== null && sessionPhase !== 'rth'
+  useEffect(() => {
+    if (outsideRegularHours && orderType !== 'limit') setOrderType('limit')
+  }, [outsideRegularHours, orderType])
+
+  // Pre-market and after-hours default the routing ON: an order entered at
+  // 07:40 is meant for the session the trader is looking at, and the previous
+  // default queued it silently for the next open. Still one tap to clear, and
+  // still never persisted — once the user has an opinion on this ticket, it is
+  // theirs until the pair changes.
+  const [extendedHoursTouched, setExtendedHoursTouched] = useState(false)
+  useEffect(() => {
+    setExtendedHoursTouched(false)
+  }, [market, pairKey])
+  useEffect(() => {
+    if (extendedHoursTouched || !extendedHoursEligible) return
+    if (sessionPhase === 'pre' || sessionPhase === 'post') {
+      setExtendedHours(true)
+    }
+  }, [extendedHoursTouched, extendedHoursEligible, sessionPhase])
+
   // Leverage and reduce-only. Deliberately NOT persisted, for the reason
   // `extendedHours` is not: 25x left over from last night is a decision the
   // trader stopped thinking about, and a reduce-only flag carried onto a
@@ -686,11 +728,44 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const availableQuote = balanceMap.get(quoteAsset)?.total ?? '0'
   // One shared rule with the phone's ticket — see `predictionCollateral`.
   const collateral = predictionCollateral((c) => balanceMap.get(c)?.total)
+  // What the Max chip stakes. Floored to cents rather than rounded: a chip
+  // that asks for a hundredth of a cent more than the account holds is a
+  // rejection the user cannot see the cause of.
+  const maxCollateral = (() => {
+    const total = Number(collateral.total)
+    if (!Number.isFinite(total) || total <= 0) return ''
+    return String(Math.floor(total * 100) / 100)
+  })()
   const availableDisplay = isPrediction
     ? `${formatAvailable(collateral.total)} ${collateral.currency}`
     : side === 'sell'
       ? `${formatAvailable(availableBase)} ${baseAsset}`
       : `${formatAvailable(availableQuote)} ${quoteAsset}`
+
+  // ── Live price sample ──
+  // The ref above is written by the stream without waking this component, and
+  // on a desk whose holdings are all stablecoins nothing else re-renders the
+  // form — the notional, the liquidation estimate and the prediction payout
+  // sat frozen at whatever the price was when the ticket last happened to
+  // repaint. `TicketPriceSampler` is the bounded fix: it subscribes to the
+  // per-tick contexts itself and wakes this form at most once a second.
+  //
+  // Mounted only where a figure actually moves on its own — a market order. A
+  // limit ticket prices off the field the user typed.
+  const [priceSample, setPriceSample] = useState<TicketPriceSample | null>(null)
+  const samplingPrice = (isPerp || isPrediction) && orderType === 'market'
+  // Identity-stable when nothing moved, so a quiet book does not re-render the
+  // fields being typed into once a second.
+  const handlePriceSample = useCallback((sample: TicketPriceSample) => {
+    setPriceSample((prev) =>
+      prev &&
+      prev.last === sample.last &&
+      prev.bid === sample.bid &&
+      prev.ask === sample.ask
+        ? prev
+        : sample,
+    )
+  }, [])
 
   // ── Prediction order figures ──
   // Cents in the field, dollars on the wire. The conversion happens here and
@@ -700,40 +775,47 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // every consumer below refuses on null rather than substituting a bound: a
   // price left over from another instrument is not a price, and clamping it
   // silently bought contracts at the venue's worst offer.
-  const contracts = isPrediction ? Number(size) : 0
   const predictionLimitPrice = isPrediction ? centsToPrice(limitPrice) : null
   const predictionPriceInvalid =
     isPrediction &&
     orderType === 'limit' &&
     limitPrice !== '' &&
     predictionLimitPrice === null
+  // The price the order is SIZED against, which is the far touch on a market
+  // order — a 61/68 book is a 10% difference in how many contracts $100 buys.
   const predictionPrice = isPrediction
-    ? orderType === 'limit'
-      ? predictionLimitPrice
-      : (pricesRef.current.latestPrice ?? null)
+    ? predictionFillPrice({
+        limitPrice: orderType === 'limit' ? predictionLimitPrice : null,
+        bid: priceSample?.bid ?? pricesRef.current.bestBid,
+        ask: priceSample?.ask ?? pricesRef.current.bestAsk,
+        last: priceSample?.last ?? pricesRef.current.latestPrice ?? null,
+        side,
+      })
     : null
-  const maxLoss = isPrediction
-    ? predictionMaxLoss({ contracts, price: predictionPrice, side })
-    : null
+  // Dollars in the field, contracts on the wire. The field holds what the user
+  // typed; this is the only thing that reaches `placeOrder`, and the summary
+  // and the submit gate both read it so the three can never disagree.
+  const contracts = isPrediction
+    ? Number(
+        contractsForAmount({
+          amountUsd: Number(size),
+          price: predictionPrice,
+          side,
+        }),
+      )
+    : 0
 
   // ── Perp order figures ──
   // The reference price is the limit price when there is one and the live last
   // price otherwise, exactly as the risk guard picks it — so the notional this
-  // ticket shows is the notional the guard will measure.
-  //
-  // A market-order ticket reads that live price from a SAMPLE, not from the
-  // ref. The ref is written by the stream without waking this component, and
-  // on a desk whose holdings are all stablecoins nothing else re-renders the
-  // form — the notional and the liquidation estimate sat frozen at whatever
-  // the price was when the ticket last happened to repaint. `PerpPriceSampler`
-  // is the bounded fix, and it only mounts where the figure actually moves.
-  const [perpSample, setPerpSample] = useState<number | null>(null)
-  const perpSampling = isPerp && orderType === 'market'
+  // ticket shows is the notional the guard will measure. On a market order it
+  // comes from the sampler above rather than the ref, for the reason stated
+  // there.
   const perpReferencePrice = !isPerp
     ? null
     : orderType === 'limit'
       ? Number(limitPrice) || null
-      : (perpSample ?? pricesRef.current.latestPrice ?? null)
+      : (priceSample?.last ?? pricesRef.current.latestPrice ?? null)
   const perpContracts = isPerp ? Number(size) : 0
   const perpBaseEquivalent =
     showBaseEquivalent && perpContracts > 0
@@ -759,7 +841,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     mdStatus === 'connected' &&
     !submitting &&
     Number(size) > 0 &&
-    (!isPrediction || Number.isInteger(Number(size))) &&
+    // A prediction amount that buys less than one whole contract is not an
+    // order the venue can take, however valid the dollar figure looks.
+    (!isPrediction || contracts >= 1) &&
     (orderType === 'market' ||
       (orderType === 'limit' &&
         (isPrediction
@@ -848,8 +932,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           pair: pairKey,
           side,
           type: orderType === 'limit' ? 'limit' : 'market',
-          // Contracts, whole. The venue counts them; nothing is converted.
-          size: normalizeContracts(size),
+          // Contracts, whole. The venue counts them, and the field's dollars
+          // were converted once, above, where the summary read the same figure.
+          size: normalizeContracts(contracts),
           ...(orderType === 'limit' && priceDollars !== null
             ? { price: String(priceDollars) }
             : {}),
@@ -862,7 +947,8 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           showTradeToast({
             side,
             orderType: orderType === 'limit' ? 'limit' : 'market',
-            size,
+            // What was sent, not what was typed: the toast is the receipt.
+            size: String(contracts),
             sizeAsset: t('terminal.trade.contracts'),
             pairKey,
             market,
@@ -1371,30 +1457,50 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {/* What this ticket is actually betting on. The pair key says
             KXBTCD-26AUG15-T53; the question is the only readable identity. */}
         {isPrediction && (
-          <div className="space-y-1.5">
+          <div className="flex flex-col gap-1.5 rounded-xl border bg-muted/20 px-2.5 py-2">
             <p className="text-xs font-medium leading-snug">{question}</p>
-            {sibling ? (
-              <div className="flex gap-1 rounded-xl bg-secondary p-1">
-                <span className="flex-1 rounded-lg bg-background py-1 text-center text-xs font-semibold">
-                  {outcomeLabel || t('terminal.trade.thisOutcome')}
-                </span>
-                <button
-                  className="flex-1 rounded-lg py-1 text-center text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
-                  onClick={handleSwitchOutcome}
-                  type="button"
+            <div className="flex items-center justify-between gap-2">
+              {sibling ? (
+                <div className="flex min-w-0 flex-1 gap-1 rounded-xl bg-secondary p-1">
+                  <span className="flex-1 truncate rounded-lg bg-background py-1 text-center text-xs font-semibold">
+                    {outcomeLabel || t('terminal.trade.thisOutcome')}
+                  </span>
+                  <button
+                    className="flex-1 truncate rounded-lg py-1 text-center text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={handleSwitchOutcome}
+                    type="button"
+                  >
+                    {sibling.label}
+                  </button>
+                </div>
+              ) : outcomeLabel ? (
+                <Badge
+                  className="h-4 min-w-0 px-1.5 font-mono text-[10px] tracking-[.08em]"
+                  variant="outline"
                 >
-                  {sibling.label}
-                </button>
-              </div>
-            ) : outcomeLabel ? (
-              <Badge
-                className="h-4 px-1.5 font-mono text-[10px] tracking-[.08em]"
-                variant="outline"
-              >
-                {outcomeLabel}
-              </Badge>
-            ) : null}
+                  <span className="truncate">{outcomeLabel}</span>
+                </Badge>
+              ) : (
+                <span />
+              )}
+              {/* When the collateral comes back. A 68¢ price a month out and
+                  the same price an hour out are different bets, and the pair
+                  key carries neither date. */}
+              {resolvesAt !== undefined && (
+                <span className="shrink-0 text-[10.5px] text-muted-foreground">
+                  {t('terminal.trade.resolvesOn', {
+                    date: formatResolutionDate(resolvesAt),
+                  })}
+                </span>
+              )}
+            </div>
           </div>
+        )}
+
+        {/* A field market's other runners. Renders nothing on a binary
+            question, where the toggle above is the whole switch. */}
+        {isPrediction && (
+          <RaceOutcomeSwitch market={market} pairKey={pairKey} />
         )}
 
         {/* Buy / Sell toggle */}
@@ -1455,7 +1561,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             }
           >
             <TabsList className="h-8 w-full rounded-xl bg-secondary">
-              <TabsTrigger value="market" className="flex-1 rounded-lg text-xs">
+              {/* Disabled rather than hidden outside regular hours: the choice
+                  exists, the session is what removed it, and a control that
+                  vanishes teaches nobody that. */}
+              <TabsTrigger
+                value="market"
+                disabled={outsideRegularHours}
+                className="flex-1 rounded-lg text-xs"
+              >
                 {t('terminal.trade.orderTypeMarket')}
               </TabsTrigger>
               <TabsTrigger value="limit" className="flex-1 rounded-lg text-xs">
@@ -1464,6 +1577,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               {!isDex && !isPrediction && (
                 <TabsTrigger
                   value="workflow"
+                  disabled={outsideRegularHours}
                   className="flex-1 rounded-lg text-xs"
                 >
                   {t('terminal.trade.workflow')}
@@ -1471,6 +1585,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               )}
             </TabsList>
           </Tabs>
+        )}
+
+        {/* Why the choice is gone. One line, under the control it explains. */}
+        {outsideRegularHours && sessionPhase !== null && (
+          <p className="text-[10.5px] leading-snug text-[var(--chart-4)]">
+            {t(
+              sessionPhase === 'closed'
+                ? 'session.ticketClosedNote'
+                : 'session.ticketExtendedNote',
+            )}
+          </p>
         )}
 
         {/* Workflow selector */}
@@ -1587,13 +1712,15 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* Amount input. A prediction ticket sizes in whole contracts, so it
-            gets a stepper and no base/quote switch — there is no second leg to
-            denominate in. */}
+        {/* Amount input. A prediction ticket takes DOLLARS and shows what they
+            buy: traders decide in money, both venues settle in contracts, and
+            the count under the field is the conversion stated rather than left
+            to be done in the head. No base/quote switch either way on a
+            contract ticket — there is no second leg to denominate in. */}
         <div className="space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-              {isPrediction || isPerp
+              {isPerp
                 ? t('terminal.trade.contracts')
                 : t('terminal.trade.amount')}
             </span>
@@ -1615,38 +1742,29 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             {t('terminal.trade.available', { amount: availableDisplay })}
           </div>
           {isPrediction ? (
-            <div className="flex items-center gap-1">
-              <Button
-                aria-label={t('terminal.trade.decreaseContracts')}
-                className="size-8 shrink-0 rounded-lg"
-                onClick={() =>
-                  setSize(normalizeContracts(Math.max(0, contracts - 1)))
-                }
-                size="icon"
-                type="button"
-                variant="outline"
-              >
-                −
-              </Button>
+            <div className="relative">
+              <span className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-muted-foreground">
+                $
+              </span>
               <Input
-                className="h-8 rounded-lg text-center font-mono text-sm tabular-nums"
-                inputMode="numeric"
-                onChange={(e) => setSize(normalizeContracts(e.target.value))}
+                aria-label={t('terminal.trade.amount')}
+                className="h-9 rounded-lg pl-6 pr-[104px] font-mono text-[15px] font-semibold tabular-nums"
+                inputMode="decimal"
+                onChange={(e) => setSize(e.target.value)}
                 placeholder="0"
-                step={1}
                 type="number"
                 value={size}
               />
-              <Button
-                aria-label={t('terminal.trade.increaseContracts')}
-                className="size-8 shrink-0 rounded-lg"
-                onClick={() => setSize(normalizeContracts(contracts + 1))}
-                size="icon"
-                type="button"
-                variant="outline"
-              >
-                +
-              </Button>
+              {/* What the amount actually buys, floored to whole contracts.
+                  This is the number that goes on the wire. */}
+              <span className="pointer-events-none absolute right-2.5 top-1/2 max-w-[96px] -translate-y-1/2 truncate font-mono text-[10px] tabular-nums text-muted-foreground">
+                {contracts >= 1
+                  ? t('terminal.trade.contractCount', {
+                      count: contracts,
+                      formatted: contracts.toLocaleString(),
+                    })
+                  : ''}
+              </span>
             </div>
           ) : (
             <Input
@@ -1671,10 +1789,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           )}
         </div>
 
-        {/* Contract presets — counts, not amounts of money. */}
+        {/* Stake presets, in collateral. Max is the whole balance, floored to
+            cents so the chip can never ask for more than the account holds. */}
         {isPrediction && (
           <div className="flex items-center gap-1">
-            {contractPresets.map((p) => (
+            {predictionPresets.map((p) => (
               <button
                 key={p}
                 type="button"
@@ -1684,11 +1803,32 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     ? 'border-primary text-foreground'
                     : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
                 )}
+                style={
+                  size === String(p)
+                    ? {
+                        backgroundColor:
+                          'color-mix(in oklch, var(--primary) 14%, transparent)',
+                      }
+                    : undefined
+                }
                 onClick={() => setSize(String(p))}
               >
-                {p}
+                ${p}
               </button>
             ))}
+            <button
+              type="button"
+              className={cn(
+                'flex-1 rounded-md border px-1 py-1 text-[11.5px] transition-colors',
+                maxCollateral !== '' && size === maxCollateral
+                  ? 'border-primary text-foreground'
+                  : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+              )}
+              disabled={maxCollateral === ''}
+              onClick={() => setSize(maxCollateral)}
+            >
+              {t('terminal.trade.maxAmount')}
+            </button>
             <button
               type="button"
               className="ml-0.5 text-muted-foreground hover:text-foreground"
@@ -1844,9 +1984,10 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         )}
 
         {/* Pre-market / after-hours routing (equities limit orders only —
-            the venue accepts nothing else in those sessions). Off by default
-            and never remembered: the thin book is the whole point of making
-            this a deliberate choice each time. */}
+            the venue accepts nothing else in those sessions). Defaulted ON
+            only while one of those sessions is actually running, and never
+            remembered: the thin book is the whole point of making this a
+            deliberate choice each time. */}
         {extendedHoursEligible && (
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -1867,7 +2008,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               id="trade-extended-hours"
               aria-label={t('terminal.trade.extendedHours')}
               checked={extendedHours}
-              onCheckedChange={setExtendedHours}
+              onCheckedChange={(checked) => {
+                // The user now owns this switch for as long as the ticket
+                // stays on this pair, so the session default stops applying.
+                setExtendedHoursTouched(true)
+                setExtendedHours(checked)
+              }}
               className="mt-0.5 shrink-0"
             />
           </div>
@@ -1903,7 +2049,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             level is explicitly an estimate: the real one depends on the whole
             margin balance, the venue's maintenance tier and funding paid since
             entry, none of which exist before the position does. */}
-        {perpSampling && <PerpPriceSampler onSample={setPerpSample} />}
+        {samplingPrice && <TicketPriceSampler onSample={handlePriceSample} />}
 
         {isPerp && (
           <div className="flex flex-col gap-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
@@ -1928,19 +2074,20 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* What this order can lose. A bought contract risks the premium; a
-            sold one risks the rest of the dollar it may have to pay out. */}
+        {/* What holding it costs. Renders nothing where the venue publishes no
+            rate for this contract. */}
+        {isPerp && <FundingEntryRow market={market} pairKey={pairKey} />}
+
+        {/* What this order returns and what it can lose. A bought contract
+            risks the premium; a sold one risks the rest of the dollar it may
+            have to pay out. Both return the whole dollar when they are right. */}
         {isPrediction && (
-          <div className="flex items-center justify-between font-mono text-[10px] tabular-nums text-muted-foreground">
-            <span className="uppercase tracking-[.16em]">
-              {t('terminal.trade.maxLoss')}
-            </span>
-            {/* A dash, not a stale figure: an unusable price has no worst
-                case, and the last valid one would read as this order's. */}
-            <span className="text-foreground">
-              {maxLoss === null ? '—' : `$${maxLoss.toFixed(2)}`}
-            </span>
-          </div>
+          <PredictionOrderSummary
+            contracts={contracts}
+            outcomeLabel={outcomeLabel}
+            price={predictionPrice}
+            side={side}
+          />
         )}
 
         {/* Submit — press & hold to commit (single click if the user set that
@@ -1977,11 +2124,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
       {/* Presets config dialog */}
       <PresetsConfigDialog
-        presets={isPrediction ? contractPresets : presets}
-        onChange={isPrediction ? setContractPresets : setPresets}
+        presets={isPrediction ? predictionPresets : presets}
+        onChange={isPrediction ? setPredictionPresets : setPresets}
         open={presetsConfigOpen}
         onOpenChange={setPresetsConfigOpen}
-        quoteAsset={isPrediction ? t('terminal.trade.contracts') : quoteAsset}
+        quoteAsset={isPrediction ? collateral.currency : quoteAsset}
       />
     </div>
   )
@@ -2014,7 +2161,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   )
 })
 
-// ── Perp price sampler ────────────────────────────────────────────────
+// ── Ticket price sampler ──────────────────────────────────────────────
 //
 // Renders null, subscribes to the two per-tick contexts, and wakes its parent
 // at most once a second. Same shape as the phone ticket's `LivePriceProbe`
@@ -2022,22 +2169,38 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 // reason for existing — the tick reaches this function, not the 900-line form
 // whose fields the user is typing into.
 //
-// Mounted only while a perp market order is on screen. A limit ticket reads
-// its own typed price, and a spot ticket has no figure that moves on its own.
-const PERP_SAMPLE_MS = 1000
+// Mounted only while a market order is on screen for a venue whose figures
+// move on their own: a perp's notional and liquidation estimate, a prediction
+// ticket's contract count and payout. A limit ticket prices off its own typed
+// field, and a spot ticket has no derived figure at all.
+//
+// Both touches ride along with the last price because a probability ticket
+// sizes against the far touch — the spread on a 61/68 book is 10% of the
+// position, which is not a rounding difference.
+const PRICE_SAMPLE_MS = 1000
 
-const PerpPriceSampler = memo(function PerpPriceSampler({
+type TicketPriceSample = {
+  last: number | null
+  bid: number | null
+  ask: number | null
+}
+
+const TicketPriceSampler = memo(function TicketPriceSampler({
   onSample,
 }: {
-  onSample: (price: number | null) => void
+  onSample: (sample: TicketPriceSample) => void
 }) {
   const ticker = useOptionalTickerData()
   const candleData = useOptionalCandleData()
-  const latest =
-    ticker?.lastTradePrice ??
-    ticker?.midPrice ??
-    candleData?.latestCandle?.close ??
-    null
+  const latest: TicketPriceSample = {
+    last:
+      ticker?.lastTradePrice ??
+      ticker?.midPrice ??
+      candleData?.latestCandle?.close ??
+      null,
+    bid: ticker?.bestBid ?? null,
+    ask: ticker?.bestAsk ?? null,
+  }
 
   const latestRef = useRef(latest)
   latestRef.current = latest
@@ -2046,7 +2209,7 @@ const PerpPriceSampler = memo(function PerpPriceSampler({
 
   useEffect(() => {
     const now = Date.now()
-    const due = lastEmit.current + PERP_SAMPLE_MS
+    const due = lastEmit.current + PRICE_SAMPLE_MS
     if (now >= due) {
       lastEmit.current = now
       onSample(latestRef.current)

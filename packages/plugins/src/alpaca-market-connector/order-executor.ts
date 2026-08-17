@@ -6,6 +6,7 @@ import { resolveAlpacaTradingUrls } from './regions'
 import type {
   NormalizedBalance,
   NormalizedOrderUpdate,
+  NormalizedPosition,
   OrderParams,
   OrderResult,
 } from '@pairlens/market-engine/types'
@@ -342,6 +343,76 @@ export async function fetchAlpacaBalances(
     return balances
   } catch {
     return []
+  }
+}
+
+// ── Fetch positions ──────────────────────────────────────────────────
+
+/**
+ * Open stock positions, normalized onto the shared position shape.
+ *
+ * A share is the contract: `contracts` is the share count and `contractSize`
+ * is deliberately absent, because 1 is what every consumer already assumes and
+ * stating it would invite a multiplication that does nothing.
+ *
+ * `qty` is negative on a short, and `side` says so independently — both are
+ * read, and the count is reported as a magnitude so a shorted row never
+ * renders "-40 shares short". There is no liquidation price on a cash equity
+ * position and Alpaca reports none, so that field stays absent rather than
+ * being filled with a zero the UI would draw as a price.
+ */
+export async function fetchAlpacaPositions(
+  credentials: AlpacaCredentials,
+  mode: 'paper' | 'live',
+): Promise<Array<NormalizedPosition>> {
+  const urls = resolveAlpacaTradingUrls(mode === 'paper')
+
+  const resp = await fetch(`${urls.restBase}/v2/positions`, {
+    headers: authHeaders(credentials),
+  })
+  if (!resp.ok) {
+    let message = `Alpaca positions error ${resp.status}`
+    try {
+      const json = (await resp.json()) as Record<string, unknown>
+      message = String(json['message'] ?? '') || message
+    } catch {
+      // No body — the status is the message.
+    }
+    throw new Error(message)
+  }
+
+  const json = (await resp.json()) as Array<Record<string, unknown>>
+  const out: Array<NormalizedPosition> = []
+  for (const row of Array.isArray(json) ? json : []) {
+    const position = normalizeAlpacaPosition(row)
+    if (position) out.push(position)
+  }
+  return out
+}
+
+/** A finite number, or undefined — never a zero standing in for "unknown". */
+function optionalNum(v: unknown): number | undefined {
+  const n = Number(v)
+  return Number.isFinite(n) ? n : undefined
+}
+
+export function normalizeAlpacaPosition(
+  d: Record<string, unknown>,
+): NormalizedPosition | null {
+  const symbol = String(d['symbol'] ?? '')
+  const qty = Number(d['qty'] ?? 0)
+  if (!symbol || !Number.isFinite(qty) || qty === 0) return null
+
+  return {
+    pair: toPairKey(symbol),
+    side: String(d['side'] ?? '') === 'short' || qty < 0 ? 'short' : 'long',
+    contracts: Math.abs(qty),
+    entryPrice: optionalNum(d['avg_entry_price']),
+    markPrice: optionalNum(d['current_price']),
+    unrealizedPnl: optionalNum(d['unrealized_pl']),
+    notionalUsd: optionalNum(d['market_value']),
+    intradayPnl: optionalNum(d['unrealized_intraday_pl']),
+    changeToday: optionalNum(d['change_today']),
   }
 }
 

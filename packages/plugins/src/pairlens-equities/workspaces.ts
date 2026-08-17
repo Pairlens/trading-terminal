@@ -21,57 +21,127 @@ const ALPACA_REQUIREMENT = {
 
 /**
  * Equities Terminal — the default pair layout for the `stocks` asset class.
- * No order book column: the broker feed quotes top-of-book, not depth. The
- * ticket sits above the symbol's news wire (catalysts move stocks the way
- * order flow moves crypto) and positions ride the data strip beside the tape.
+ * The session clock leads the column, the chart takes the middle, and the data
+ * strip carries time and sales beside positions.
+ *
+ * Still no order book: the broker feed quotes top-of-book, not depth, so
+ * `level-1` stands in for it, and a stock has one venue and a spread rather
+ * than fourteen tapes. The clock sits directly above the ticket because
+ * extended hours change what the ticket will accept, not just a label on it.
  */
 export const EQUITIES_TERMINAL_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 79,
+      widthPercent: 80,
       cells: [
         {
+          id: 'cell-session-clock',
+          heightPercent: 13,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-session-clock', type: 'session-clock' }],
+        },
+        {
           id: 'cell-chart',
-          heightPercent: 66,
+          heightPercent: 59,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
           id: 'cell-bottom',
-          heightPercent: 29,
+          heightPercent: 28,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-trades', type: 'trades' },
             { id: 'pane-positions', type: 'positions' },
             { id: 'pane-data-log', type: 'data-log' },
-            { id: 'pane-pair-info', type: 'pair-info' },
           ],
-        },
-        {
-          id: 'cell-risk',
-          heightPercent: 5,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-risk', type: 'risk' }],
         },
       ],
     },
     {
-      id: 'col-market',
-      widthPercent: 21,
+      id: 'col-rail',
+      widthPercent: 20,
       cells: [
         {
-          id: 'cell-trade',
-          heightPercent: 45,
+          id: 'cell-level-1',
+          heightPercent: 28,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+          panes: [{ id: 'pane-level-1', type: 'level-1' }],
         },
         {
+          id: 'cell-trade',
+          heightPercent: 72,
+          activeTabIndex: 0,
+          panes: [
+            { id: 'pane-trade-entry', type: 'trade-entry' },
+            { id: 'pane-symbol-news', type: 'symbol-news' },
+          ],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * Equities Company — the pair as a business rather than a price. Chart over
+ * the company pane, the symbol wire beside it, and your position above the
+ * ticket.
+ *
+ * One pane replaces what used to be a five-tab strip: valuation, growth,
+ * margins, the next catalyst and the analyst range. When the connector cannot
+ * supply fundamentals the pane says so, rather than drawing a grid of dashes
+ * that reads as real data with every number missing.
+ */
+export const EQUITIES_COMPANY_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-left',
+      widthPercent: 58,
+      cells: [
+        {
+          id: 'cell-chart',
+          heightPercent: 65,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-chart', type: 'chart' }],
+        },
+        {
+          id: 'cell-company',
+          heightPercent: 35,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-company', type: 'company' }],
+        },
+      ],
+    },
+    {
+      id: 'col-news',
+      widthPercent: 24,
+      cells: [
+        {
           id: 'cell-news',
-          heightPercent: 55,
+          heightPercent: 100,
           activeTabIndex: 0,
           panes: [{ id: 'pane-symbol-news', type: 'symbol-news' }],
+        },
+      ],
+    },
+    {
+      id: 'col-rail',
+      widthPercent: 18,
+      cells: [
+        {
+          id: 'cell-your-position',
+          heightPercent: 77,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-your-position', type: 'your-position' }],
+        },
+        {
+          id: 'cell-trade',
+          heightPercent: 23,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
         },
       ],
     },
@@ -128,48 +198,57 @@ export const EQUITIES_DESK_LAYOUT = {
 } satisfies ContributedWorkspaceLayout
 
 /**
- * Equities Discovery — the home board for stocks. The scanner leads, the
- * watchlist sits over a multi-price rail so a basket reads at a glance, and
- * the news wire takes its own column: equities move on filings and headlines.
- * No sentiment gauge and no heatmap here — both read a crypto index and would
- * be quietly wrong above a list of tickers.
+ * Equities Discovery — the home board for stocks, built around the calendar
+ * rather than the tape. The session state leads, earnings sit under it, macro
+ * releases under those, with the movers and the news wire beside them.
+ *
+ * The clock comes from the broker connector's own calendar rather than a
+ * hardcoded 09:30, because holidays and half days are exactly the days it
+ * matters. No sentiment gauge and no heatmap here — both read a crypto index
+ * and would be quietly wrong above a list of tickers.
  */
 export const EQUITIES_DISCOVERY_LAYOUT = {
   version: 1,
   columns: [
     {
-      id: 'col-markets',
-      widthPercent: 46,
+      id: 'col-session',
+      widthPercent: 56,
       cells: [
         {
-          id: 'cell-markets',
-          heightPercent: 100,
+          id: 'cell-session',
+          heightPercent: 16,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-markets', type: 'markets' }],
+          panes: [{ id: 'pane-session', type: 'session' }],
+        },
+        {
+          id: 'cell-earnings',
+          heightPercent: 44,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-earnings-calendar', type: 'earnings-calendar' }],
+        },
+        {
+          id: 'cell-econ',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-economic-calendar', type: 'economic-calendar' }],
         },
       ],
     },
     {
-      id: 'col-watch',
-      widthPercent: 28,
+      id: 'col-movers',
+      widthPercent: 25,
       cells: [
         {
-          id: 'cell-watchlist',
-          heightPercent: 55,
+          id: 'cell-movers',
+          heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
-        },
-        {
-          id: 'cell-multi-price',
-          heightPercent: 45,
-          activeTabIndex: 0,
-          panes: [{ id: 'pane-multi-price', type: 'multi-price' }],
+          panes: [{ id: 'pane-movers', type: 'movers' }],
         },
       ],
     },
     {
       id: 'col-news',
-      widthPercent: 26,
+      widthPercent: 19,
       cells: [
         {
           id: 'cell-news',
@@ -193,9 +272,9 @@ export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'pair',
     routeMenu: true,
     icon: 'BarChart3',
-    tagline: 'Stocks with the ticket over the symbol news wire.',
+    tagline: 'The session clock over the chart, Level 1 over the ticket.',
     description:
-      'The default stock layout: a chart with the tape, positions, and fundamentals below it, and the order ticket above the symbol news wire, because catalysts move stocks the way flow moves crypto.',
+      'The default stock layout: the session clock leads, then the chart with time and sales and positions below it, and a rail carrying Level 1 quotes over the ticket and the symbol wire. Outside regular hours the clock says so, and the ticket goes limit-only.',
     facets: {
       traderTypes: ['day-trader', 'position-investor'],
       assetClasses: ['equities'],
@@ -230,9 +309,9 @@ export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'discovery',
     routeMenu: true,
     icon: 'BarChart3',
-    tagline: 'The stock scanner beside your basket and the wire.',
+    tagline: 'The trading day, by the calendar that runs it.',
     description:
-      'The stock home board: the markets scanner filtered to equities, your watchlist over a multi-price rail, and a full-height news column, because stocks move on filings and headlines.',
+      'The stock home board: where the session is right now, who reports and when, and the macro releases due, with the movers and the news wire beside them. The clock comes from the broker calendar, so holidays and half days are right.',
     facets: {
       traderTypes: ['day-trader', 'position-investor'],
       assetClasses: ['equities'],
@@ -240,6 +319,26 @@ export const EQUITIES_WORKSPACES: Array<ContributedWorkspace> = [
     },
     tags: ['discovery', 'equities', 'stocks'],
     layout: EQUITIES_DISCOVERY_LAYOUT,
+    requiredPlugins: [ALPACA_REQUIREMENT],
+  },
+  {
+    id: 'template:equities-company',
+    name: 'Equities Company',
+    menuLabel: 'Company',
+    context: 'pair',
+    routeMenu: true,
+    icon: 'Building2',
+    tagline: 'The business behind the ticker.',
+    description:
+      'For holding a stock rather than trading it: the chart over valuation, growth, margins, the next catalyst and the analyst range, with the symbol wire beside it and your position above the ticket.',
+    facets: {
+      traderTypes: ['position-investor', 'swing-trader'],
+      assetClasses: ['equities'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['equities', 'stocks', 'fundamentals'],
+    layout: EQUITIES_COMPANY_LAYOUT,
+    pairDefault: { pairKey: 'AAPL', market: 'alpaca' },
     requiredPlugins: [ALPACA_REQUIREMENT],
   },
 ]

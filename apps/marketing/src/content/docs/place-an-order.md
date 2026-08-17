@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 2
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 17 AUG 2026
 readTime: 7 min read
 ---
 
@@ -80,26 +80,30 @@ slippage tolerance. See [DEX and wallets](/docs/dex-trading).
 Stocks trade on a schedule, so the ticket behaves a little differently on
 Alpaca.
 
-Orders placed outside regular market hours, 9:30am to 4:00pm Eastern on trading
-days, are accepted and queued for the next open rather than filled on the spot.
-They show up in Positions as live orders in the meantime, and a market order
-placed on a Friday evening sits until Monday morning.
+Orders placed outside regular market hours are accepted and queued for the next
+open rather than filled on the spot. They show up in Positions as live orders
+in the meantime, and an order placed on a Friday evening sits until Monday
+morning. Where the day actually is comes from the broker's own calendar, so
+half days and holidays are right. See [US equities](/docs/equities).
 
 ### Extended hours
 
-To trade before the open or after the close instead of waiting for it, switch
-the ticket to **Limit** and turn on **Extended hours**. The order then works
-the pre-market session from 4:00am and the after-hours session through 8:00pm
-Eastern. The toggle appears only on stock venues and only for limit orders. It
-stays on while you keep placing limit orders, clears the moment you switch to
-Market or Workflow, and is never carried over to your next session: those
-sessions are thin and spreads are wider, so routing into them should be a
-choice you still remember making, not one inherited from last night.
+Outside regular hours the ticket goes limit-only. The Market and Workflow tabs
+are disabled rather than hidden, with a line under them saying why: those
+sessions have no continuous auction for a market order to fill against.
 
-Only limit orders are eligible. A market order has no continuous auction to
-fill against out of session, and stops and take-profits are not accepted at
-all, so the ticket refuses those combinations up front and tells you which one
-to change rather than sending an order the venue will bounce.
+To work the pre-market or after-hours session rather than waiting for the open,
+leave **Extended hours** on. It turns itself on during those two sessions,
+because an order entered at 07:40 is meant for the session you are looking at,
+and it is one tap to clear. The toggle appears only on stock venues and only
+for limit orders, clears the moment you switch to Market or Workflow, and is
+never persisted or carried across a pair change: those sessions are thin and
+spreads are wider, so routing into them should be a choice you still remember
+making, not one inherited from last night.
+
+Stops and take-profits are not accepted in those sessions at all, so the ticket
+refuses those combinations up front and tells you which one to change rather
+than sending an order the venue will bounce.
 
 Fractional shares work, and the percentage buttons in the ticket produce them
 routinely: selling 25% of a 7 share position is 1.75 shares. Alpaca accepts
@@ -116,13 +120,17 @@ size field to USD, which is how you buy $500 of a stock trading at $305.
 
 ## Event contracts
 
-For a prediction-market outcome the ticket switches to contracts. The question
-replaces the ticker at the top, sizes are whole contracts rather than an amount
-of an asset, prices are typed in cents, and a max loss line above the submit
-button says what the order can cost you. When the question has exactly one other
-side, a switch beside it flips the whole ticket to that outcome. There is no
-Workflow tab, because neither prediction venue has trigger orders, and Kalshi
-offers Limit only. See [prediction markets](/docs/prediction-markets).
+For a prediction-market outcome the ticket switches to probabilities. The
+question replaces the ticker at the top, with its resolution date beside it.
+You size in dollars of collateral, with $25, $50, $100 and Max presets, and the
+ticket converts that into contracts. Prices are typed in cents. Above the
+submit button a payout card states what the order returns if the outcome
+happens, over rows for max payout, max loss and the average fill price. When
+the question has exactly one other side, a switch beside it flips the whole
+ticket to that outcome; on a race, the other runners are listed instead. There
+is no Workflow tab, because neither prediction venue has trigger orders, and
+Kalshi offers Limit only. See
+[prediction markets](/docs/prediction-markets).
 
 ## Perpetual futures
 

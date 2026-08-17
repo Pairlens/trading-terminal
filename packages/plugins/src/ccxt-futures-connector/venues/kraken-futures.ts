@@ -45,7 +45,10 @@ import { createCcxtFuturesConnectorPlugin } from '../index'
 import { withDerivedCandles } from '../../ccxt-connector/derived-candle-plugin'
 import type { LiveCandleSource } from '../../ccxt-connector/derived-candle-plugin'
 import type { CcxtExchangeCtor } from '../../ccxt-connector/types'
-import type { CcxtFuturesVenueConfig } from '../futures-types'
+import type {
+  CcxtFuturesExchangeLike,
+  CcxtFuturesVenueConfig,
+} from '../futures-types'
 import type { Timeframe } from '@pairlens/shared/types'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
@@ -269,6 +272,56 @@ export const krakenFuturesCcxtVenue: CcxtFuturesVenueConfig = {
   // Only market data is inbound traffic (no server heartbeat is subscribed),
   // so the silence budget is generous — a false positive costs one reconnect.
   livenessTimeoutMs: 120_000,
+  // Kraken settles funding EVERY HOUR, where the other two settle every eight.
+  // ccxt's own row says so (`interval: '1h'`), so this is only the fallback —
+  // but it has to be right, because assuming eight hours here would report a
+  // Kraken carry at an eighth of its real annualised cost.
+  fundingIntervalHours: 1,
+  openInterestFallback: krakenFuturesOpenInterest,
+}
+
+/**
+ * Open interest from the funding payload, because ccxt exposes no
+ * `fetchOpenInterest` for this venue.
+ *
+ * Kraken's `tickers` endpoint carries `openInterest` on every contract and
+ * ccxt's `fetchFundingRates` already parses those exact rows — it simply never
+ * projects the field onto the unified open-interest structure. Reading it off
+ * `info` is one call for the whole venue and no new endpoint.
+ *
+ * The value leg is `openInterest × markPrice`: Kraken's flagship perps are
+ * one-unit-of-base contracts, so the product is the notional in the quote
+ * currency. Omitted rather than guessed when either side is missing.
+ */
+async function krakenFuturesOpenInterest(
+  exchange: CcxtFuturesExchangeLike,
+  symbols: Array<string>,
+): Promise<Array<Record<string, unknown>>> {
+  if (!exchange.fetchFundingRates) return []
+  const raw = await exchange.fetchFundingRates(symbols)
+  const rows =
+    raw && typeof raw === 'object'
+      ? Object.values(raw as Record<string, Record<string, unknown>>)
+      : []
+  const wanted = new Set(symbols)
+  const out: Array<Record<string, unknown>> = []
+  for (const row of rows) {
+    const symbol = typeof row['symbol'] === 'string' ? row['symbol'] : ''
+    if (!symbol || !wanted.has(symbol)) continue
+    const info = (row['info'] ?? {}) as Record<string, unknown>
+    const amount = numberOf(info['openInterest'])
+    if (amount === null) continue
+    const mark = numberOf(row['markPrice'])
+    out.push({
+      symbol,
+      openInterestAmount: amount,
+      ...(mark !== null ? { openInterestValue: amount * mark } : {}),
+      ...(typeof row['timestamp'] === 'number'
+        ? { timestamp: row['timestamp'] }
+        : {}),
+    })
+  }
+  return out
 }
 
 /** Every declared timeframe is aggregated from the tape — see the header. */

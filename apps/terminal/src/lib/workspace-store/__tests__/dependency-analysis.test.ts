@@ -17,6 +17,7 @@ import type { PluginManifest } from '@pairlens/plugin-system'
 
 import type { WorkspaceTemplate } from '../types'
 import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
+import { paneTypeKey } from '@/lib/layout/pane-registry'
 import { WORKSPACE_ICONS } from '@/components/workspace/workspace-icons'
 
 // In-memory localStorage shim — the analyzer reads the plugin ledger (trust).
@@ -47,14 +48,10 @@ const INTEL = BOOTSTRAP_PLUGINS.find(
 )!
 
 // Pane types that structurally require an active pair, per the real manifests.
-const FIRST_PARTY = new Set([
-  'pairlens-core',
-  'pairlens-intelligence',
-  'pairlens-predictions',
-])
-function typeKey(pluginId: string, panelId: string): string {
-  return FIRST_PARTY.has(pluginId) ? panelId : `${pluginId}:${panelId}`
-}
+// Keyed through the registry's own `paneTypeKey` rather than a local copy of
+// the first-party allowlist: the copy went stale the moment a fifth plugin
+// joined the set, and a stale key here reads as "no drift" instead of failing.
+const typeKey = paneTypeKey
 const PANES_REQUIRING_PAIR = new Set<string>()
 for (const { manifest } of BOOTSTRAP_PLUGINS) {
   for (const panel of manifest.contributes?.panels ?? []) {

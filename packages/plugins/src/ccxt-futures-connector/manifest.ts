@@ -37,6 +37,11 @@ const FUTURES_CAPABILITIES = [
   { id: 'market-data:orderbook', streaming: true },
   { id: 'market-data:trades', streaming: true },
   { id: 'market-data:history', streaming: false },
+  // Public and credential-free: funding, mark/index and open interest are the
+  // same numbers for every account, so the scanners read them with nothing
+  // connected. Market-scoped like the rest, because the funding panes fan out
+  // across venues by name and need each one's own market id.
+  { id: 'market-data:funding', streaming: false },
   { id: 'trading:orders', streaming: true, sideEffect: true },
   { id: 'trading:balances', streaming: true },
   { id: 'trading:positions', streaming: false },

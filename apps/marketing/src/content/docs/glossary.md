@@ -4,8 +4,8 @@ description: Every term Pairlens uses with a specific meaning, from capabilities
 group: reference
 order: 1
 eyebrow: Reference
-updated: 16 AUG 2026
-readTime: 5 min read
+updated: 17 AUG 2026
+readTime: 6 min read
 ---
 
 Terms that mean something particular in Pairlens, and the market terms the docs
@@ -96,8 +96,8 @@ local storage under one data key, wrapped by each protector you enrol. On
 desktop, credentials live in the OS keychain instead. See
 [the security model](/docs/security-model).
 
-**Venue.** An exchange, broker, event exchange, or on-chain aggregator.
-Seventeen ship in the box, plus the on-chain connectors.
+**Venue.** An exchange, broker, event exchange, or on-chain aggregator. Twenty
+ship in the box, plus the on-chain connectors.
 
 **Workspace.** A saved arrangement of panes, with variables that bind them to a
 pair, venue, and account. See [workspaces](/docs/workspaces).
@@ -109,6 +109,10 @@ pair, venue, and account. See [workspaces](/docs/workspaces).
 
 **Ask / offer.** The lowest price a seller will accept. The right side of the
 book.
+
+**Basis.** The gap between a [perpetual](/docs/cex-futures) and the spot index
+it tracks. Pairlens quotes it in basis points and annualised, so carry reads as
+a yield rather than as a price difference.
 
 **Bid.** The highest price a buyer will pay. The left side of the book.
 
@@ -131,6 +135,10 @@ buckets levels into. The venue's own tick is the floor.
 
 **Imbalance.** The ratio of resting bid depth to ask depth. Suggestive, and
 easily manufactured, because resting orders can be cancelled.
+
+**Level 1.** The top of the book and nothing behind it: best bid, best ask,
+their sizes, and the spread. What a broker's free stock feed carries, and what
+the [Level 1 panel](/docs/equities) stands in for an order book with.
 
 **Limit order.** Executes only at your price or better. May not fill.
 
@@ -170,9 +178,20 @@ strategy engine. Strategies that work in one fail in the other.
 **Slippage.** The gap between the price you expected and the price you got. A
 function of depth and order size.
 
+**Open interest.** The total size currently open in a contract, on one venue.
+Rising open interest into a move means new money; falling means positions
+closing. Pairlens never sums it across venues, because the total would mean one
+exchange on a fresh install and three on a full one. See
+[perpetual futures](/docs/cex-futures).
+
 **Outcome.** One side of an event contract, Yes or No on a binary question, or
 one of several on a categorical one. Each outcome is its own instrument with its
 own book, and you can buy or sell either side.
+
+**Overround.** The sum of every Yes price across an event's outcomes. Over 100%
+is the book's margin, which is why sweeping the whole field is not free money;
+under 100% is a field the book has not finished quoting. The event header and
+the [basket ticket](/docs/prediction-markets) both state it.
 
 **Spot.** Buying the asset itself, settled immediately. Pairlens trades spot.
 There are no margin positions, which is why the Positions tab is empty by

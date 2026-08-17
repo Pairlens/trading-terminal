@@ -131,29 +131,44 @@ describe('discoveryWorkspaceFor', () => {
     }
   })
 
-  test('every board leads a scanner or a browser — a section has to show markets', () => {
+  test('every board carries the scanner its own class browses by', () => {
+    // A section that renders the same price table five times is the bug these
+    // boards exist to fix, so each one names the pane its class actually
+    // shops with: perps by cost of carry, DEX by pool, stocks by calendar,
+    // predictions by event.
+    const SCANNERS: Record<InstrumentClass, string> = {
+      spot: 'markets',
+      perp: 'funding-matrix',
+      dex: 'pool-map',
+      stocks: 'earnings-calendar',
+      prediction: 'event-board',
+    }
     for (const cls of INSTRUMENT_CLASSES) {
       const types = paneTypes(discoveryWorkspaceFor(cls).defaultPreset)
-      expect(types.has('markets') || types.has('events'), cls).toBe(true)
+      expect(types.has(SCANNERS[cls]), cls).toBe(true)
     }
   })
 
   test('boards skip the panes that read a different market', () => {
-    // Prediction outcomes are never in the pair catalog, so the events browser
+    // Prediction outcomes are never in the pair catalog, so the event board
     // stands in for the scanner; equities have no Fear & Greed index.
     expect(
       paneTypes(discoveryWorkspaceFor('prediction').defaultPreset),
-    ).toContain('events')
+    ).toContain('event-board')
+    expect(
+      paneTypes(discoveryWorkspaceFor('prediction').defaultPreset),
+    ).not.toContain('markets')
     expect(
       paneTypes(discoveryWorkspaceFor('stocks').defaultPreset),
     ).not.toContain('fear-greed')
     expect(
       paneTypes(discoveryWorkspaceFor('stocks').defaultPreset),
     ).not.toContain('heatmap')
-    // Open contracts belong on the desk that can have them.
-    expect(paneTypes(discoveryWorkspaceFor('perp').defaultPreset)).toContain(
-      'futures-positions',
-    )
+    // The perp board scans by what holding a contract costs, so the shared
+    // price scanner is deliberately absent from it too.
+    expect(
+      paneTypes(discoveryWorkspaceFor('perp').defaultPreset),
+    ).not.toContain('markets')
   })
 
   test('each section menu leads with one Default matching the board it opens on', () => {

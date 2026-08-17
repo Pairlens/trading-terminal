@@ -8,6 +8,7 @@ import {
   searchTokens,
 } from './token-client'
 import { executeSwap, getRoute, scaleAmount } from './swap-executor'
+import { fetchGasPriceWei, quoteSwapRoute } from './route-preview'
 import {
   cancelLimitOrder,
   createLimitOrder,
@@ -190,6 +191,28 @@ export function createEvmDexConnectorPlugin(
 
     if (capability === 'trading:orders') {
       const action = String(p['action'] ?? 'place')
+
+      // ── Read-only actions, before anything touches a wallet slot ──
+      // A quote and a gas price are what the route pane, the impact tiers and
+      // the chain ladder read, and none of them has (or should need) an
+      // account. Both paths end at data: no approval, no calldata, no key.
+      if (action === 'quote') {
+        return quoteSwapRoute({
+          chain,
+          pair: String(p['pair'] ?? ''),
+          side: String(p['side'] ?? 'buy') === 'sell' ? 'sell' : 'buy',
+          size: String(p['size'] ?? '0'),
+        })
+      }
+
+      if (action === 'gas') {
+        const wei = await fetchGasPriceWei(rpcUrl)
+        return {
+          market: chain.market,
+          nativeSymbol: chain.nativeSymbol,
+          gasPriceWei: wei === null ? null : wei.toString(),
+        }
+      }
 
       if (action === 'list') {
         // Market swaps are atomic, but resting KyberSwap limit orders
