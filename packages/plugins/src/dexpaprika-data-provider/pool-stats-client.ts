@@ -16,6 +16,8 @@
  * it sits at priority 6 behind GeckoTerminal rather than in front of it.
  */
 import { restFetch as fetch } from '@pairlens/market-engine/http'
+import { assertNotThrottled } from '@pairlens/market-engine/provider-throttle'
+import { DEXPAPRIKA_PROVIDER } from './throttle'
 import { resolvePool } from './pool-resolver'
 import type {
   ChainPoolStats,
@@ -156,6 +158,7 @@ export async function fetchPoolStats(
   const res = await fetch(
     `${API_BASE}/networks/${pool.network}/pools/${pool.id}`,
   )
+  assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
   if (!res.ok) {
     throw new Error(`DexPaprika pool ${pool.id}: HTTP ${res.status}`)
   }
@@ -204,6 +207,7 @@ export async function fetchNetworkStats(
   wanted: Array<{ market: string; network: string }>,
 ): Promise<Array<ChainPoolStats>> {
   const res = await fetch(`${API_BASE}/networks`)
+  assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
   if (!res.ok) throw new Error(`DexPaprika networks: HTTP ${res.status}`)
   const rows = (await res.json()) as Array<RawDexPaprikaNetwork>
   return parseNetworkStats(Array.isArray(rows) ? rows : [], wanted)

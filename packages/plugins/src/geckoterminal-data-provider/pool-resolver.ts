@@ -4,7 +4,8 @@ import {
   isTokenAddress,
   lookupToken,
 } from '@pairlens/market-engine/token-directory'
-import { restFetch as fetch } from '@pairlens/market-engine/http'
+import { isProviderThrottledError } from '@pairlens/market-engine/errors'
+import { geckoFetch as fetch } from './rate-limiter'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
 
@@ -106,7 +107,8 @@ async function resolvePoolByTokenAddress(
       (p) => poolQuoteSymbol(p.attributes.name) === wantQuote,
     )
     return toPoolInfo(quoteMatch ?? pools[0], network)
-  } catch {
+  } catch (err) {
+    if (isProviderThrottledError(err)) throw err
     return null
   }
 }
@@ -115,6 +117,11 @@ async function resolvePoolByTokenAddress(
  * Resolve a trading pair (e.g. "SOL-USDC", or "<address>-USDC" for memecoins)
  * to the most liquid GeckoTerminal pool on the given network (GeckoTerminal
  * slug, see networkForMarket). Caches results for 1 hour.
+ *
+ * null means the provider answered and there is no pool. A throttle THROWS:
+ * this resolver sits in front of every other read, so swallowing a 429 here
+ * would tell the pool panes "no pool on this chain" and the chart "this venue
+ * does not list the pair", for the whole minute the limit lasts.
  */
 export async function resolvePool(
   pair: string,
@@ -162,7 +169,8 @@ export async function resolvePool(
     const pool = toPoolInfo(candidates[0], network)
     poolCache.set(cacheKey, { pool, ts: Date.now() })
     return pool
-  } catch {
+  } catch (err) {
+    if (isProviderThrottledError(err)) throw err
     return null
   }
 }

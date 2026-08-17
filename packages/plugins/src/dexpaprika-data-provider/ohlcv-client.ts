@@ -1,6 +1,9 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { restFetch as fetch } from '@pairlens/market-engine/http'
+import { isProviderThrottledError } from '@pairlens/market-engine/errors'
+import { assertNotThrottled } from '@pairlens/market-engine/provider-throttle'
+import { DEXPAPRIKA_PROVIDER } from './throttle'
 import { resolvePool } from './pool-resolver'
 import type { Candle } from '@pairlens/shared/types'
 
@@ -52,6 +55,9 @@ export async function fetchOhlcv(
     const res = await fetch(
       `${API_BASE}/networks/${network}/pools/${pool.id}/ohlcv?interval=${interval}&limit=${fetchLimit}`,
     )
+    // A throttle is not an empty chart: it has to propagate so the terminal
+    // retries instead of recording the pair as one this venue does not carry.
+    assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
     if (!res.ok) return []
 
     const bars = (await res.json()) as Array<OhlcvBar>
@@ -68,7 +74,8 @@ export async function fetchOhlcv(
 
     // Aggregate 1h bars into 4h bars
     return aggregate(candles, 4).slice(-limit)
-  } catch {
+  } catch (err) {
+    if (isProviderThrottledError(err)) throw err
     return []
   }
 }

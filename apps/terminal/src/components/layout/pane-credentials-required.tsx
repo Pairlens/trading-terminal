@@ -13,6 +13,12 @@
  * `compact` follows the same rule as its sibling: the narrow panes state the
  * fact and stop, because the chart pane beside them already carries the CTA
  * and four unlock buttons in one workspace is noise, not helpfulness.
+ *
+ * `kind` picks WHICH truth is told. The default body says the venue publishes no
+ * public price feed, which is the reason a chart, book or tape needs a key. An
+ * account pane's reason is a different one — margin, positions and balances are
+ * private on every venue, public feed or not — so telling it the price-feed
+ * sentence is simply false there.
  */
 import { KeyRound, LockKeyhole } from 'lucide-react'
 import { useState } from 'react'
@@ -24,11 +30,43 @@ import { Button } from '@pairlens/ui/components/ui/button'
 
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 
+/**
+ * The copy each pane kind gets, as whole literals so the i18n orphan audit can
+ * see them.
+ *
+ * The sealed TITLE is shared on purpose: "Unlock to load {{venue}} data" is
+ * accurate for a chart and for a margin gauge alike, and a second key would be
+ * seventeen catalogs of the same sentence.
+ */
+const COPY = {
+  market: {
+    sealed: {
+      title: 'layout.paneCredentials.sealedTitle',
+      body: 'layout.paneCredentials.sealedDescription',
+    },
+    missing: {
+      title: 'layout.paneCredentials.missingTitle',
+      body: 'layout.paneCredentials.missingDescription',
+    },
+  },
+  account: {
+    sealed: {
+      title: 'layout.paneCredentials.sealedTitle',
+      body: 'layout.paneCredentials.accountSealedDescription',
+    },
+    missing: {
+      title: 'layout.paneCredentials.accountMissingTitle',
+      body: 'layout.paneCredentials.accountMissingDescription',
+    },
+  },
+} as const
+
 export function PaneCredentialsRequired({
   state,
   market,
   venueLabel,
   compact = false,
+  kind = 'market',
 }: {
   state: 'sealed' | 'missing'
   /** Venue id, for the `?connect=` deep link the CTA carries. */
@@ -36,12 +74,19 @@ export function PaneCredentialsRequired({
   venueLabel: string
   /** Narrow-pane layout: tighter type, no buttons. */
   compact?: boolean
+  /**
+   * `market` (default): the key is what streams prices. `account`: the key is
+   * what reads balances, positions and orders, on a venue whose prices are
+   * public — margin health, your position.
+   */
+  kind?: 'market' | 'account'
 }) {
   const { t } = useTranslation()
   const [unlockOpen, setUnlockOpen] = useState(false)
 
   const sealed = state === 'sealed'
   const Icon = sealed ? LockKeyhole : KeyRound
+  const copy = COPY[kind][state]
 
   return (
     // `flex-1` for the same reason as PaneDataUnavailable: the parent is a
@@ -68,12 +113,7 @@ export function PaneCredentialsRequired({
             compact ? 'text-xs' : 'text-sm',
           )}
         >
-          {t(
-            sealed
-              ? 'layout.paneCredentials.sealedTitle'
-              : 'layout.paneCredentials.missingTitle',
-            { venue: venueLabel },
-          )}
+          {t(copy.title, { venue: venueLabel })}
         </p>
         <p
           className={cn(
@@ -81,12 +121,7 @@ export function PaneCredentialsRequired({
             compact ? 'text-[10px] leading-snug' : 'text-xs leading-relaxed',
           )}
         >
-          {t(
-            sealed
-              ? 'layout.paneCredentials.sealedDescription'
-              : 'layout.paneCredentials.missingDescription',
-            { venue: venueLabel },
-          )}
+          {t(copy.body, { venue: venueLabel })}
         </p>
 
         {!compact && sealed && (

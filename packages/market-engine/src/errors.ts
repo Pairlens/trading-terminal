@@ -89,6 +89,124 @@ export function isPlatformRestrictedError(
   )
 }
 
+/**
+ * The provider is refusing requests right now, and the SAME request would
+ * succeed later — a free-tier rate limit (429) or a transient server error
+ * (5xx).
+ *
+ * This exists because a throttled provider looks exactly like a missing market
+ * to everything downstream. GeckoTerminal's free tier allows roughly 30
+ * requests a minute across one IP; a busy DEX board plus a charted pair can
+ * reach that, and once it does the candle probe comes back empty and the
+ * terminal used to record the pair as "not carried by this venue" — a verdict
+ * that outlived the throttle. So the DEX clients raise this instead of
+ * returning an empty result, and every consumer that would otherwise publish a
+ * permanent verdict checks for it first.
+ *
+ * `retryAfterMs` is the provider's own `Retry-After` where it sends one, and a
+ * conservative default otherwise. It is advice, not a guarantee.
+ */
+export class ProviderThrottledError extends Error {
+  /** Sentinel for the cross-bundle type guard (survives name mangling). */
+  readonly __providerThrottled = true
+  /** Display name of the data provider, for the pane's error banner. */
+  readonly provider: string
+  /** HTTP status that triggered detection (429, or a 5xx). */
+  readonly status: number
+  /** How long to wait before the next attempt is worth making. */
+  readonly retryAfterMs: number
+
+  constructor(provider: string, status: number, retryAfterMs: number) {
+    super(
+      status === 429
+        ? `${provider} is rate limiting requests. Try again shortly.`
+        : `${provider} is temporarily unavailable (HTTP ${status}). Try again shortly.`,
+    )
+    this.name = 'ProviderThrottledError'
+    this.provider = provider
+    this.status = status
+    this.retryAfterMs = retryAfterMs
+  }
+}
+
+/** True when `e` is a ProviderThrottledError (robust across bundles). */
+export function isProviderThrottledError(
+  e: unknown,
+): e is ProviderThrottledError {
+  return (
+    e instanceof Error &&
+    (e.name === 'ProviderThrottledError' ||
+      (e as Partial<ProviderThrottledError>).__providerThrottled === true)
+  )
+}
+
+/** Cool-off for a 429 that carried no usable `Retry-After`. */
+export const THROTTLE_COOLDOWN_MS = 15_000
+/** Cool-off for a 5xx. Shorter: an overloaded edge usually recovers fast. */
+export const TRANSIENT_COOLDOWN_MS = 3_000
+
+/**
+ * `Retry-After` in milliseconds. The header is either delta-seconds or an
+ * HTTP date; anything else (and a date already in the past) reads as absent.
+ */
+export function parseRetryAfterMs(
+  value: string | null | undefined,
+): number | null {
+  if (!value) return null
+  const seconds = Number(value.trim())
+  if (Number.isFinite(seconds)) {
+    return seconds > 0 ? Math.round(seconds * 1000) : null
+  }
+  const at = Date.parse(value)
+  if (!Number.isFinite(at)) return null
+  const delta = at - Date.now()
+  return delta > 0 ? delta : null
+}
+
+/** Just enough of a `Response` to classify it. Keeps this testable. */
+type ClassifiableResponse = {
+  status: number
+  headers?: { get: (name: string) => string | null } | undefined
+}
+
+/**
+ * Classify a response as a throttle/transient refusal, or null when the status
+ * says something else entirely (including a 2xx).
+ *
+ * One source of truth for WHICH statuses are worth retrying, because the two
+ * DEX data providers and the paced GeckoTerminal transport all have to agree:
+ * if one of them treated a 429 as "no such pool", the pane would latch an empty
+ * state the other two are still retrying out of.
+ */
+export function providerThrottleFromResponse(
+  resp: ClassifiableResponse,
+  provider: string,
+): ProviderThrottledError | null {
+  if (resp.status === 429) {
+    let retryAfter: number | null = null
+    try {
+      retryAfter = parseRetryAfterMs(resp.headers?.get('retry-after'))
+    } catch {
+      // A Response implementation without usable headers (or a Tauri-side
+      // shim) must not turn a throttle into an unhandled error.
+      retryAfter = null
+    }
+    return new ProviderThrottledError(
+      provider,
+      429,
+      retryAfter ?? THROTTLE_COOLDOWN_MS,
+    )
+  }
+  if (resp.status >= 500 && resp.status <= 599) {
+    return new ProviderThrottledError(
+      provider,
+      resp.status,
+      TRANSIENT_COOLDOWN_MS,
+    )
+  }
+  return null
+}
+
 /** Substrings exchanges use in geo-block response bodies (case-insensitive). */
 const GEO_BLOCK_MARKERS = [
   'restricted',

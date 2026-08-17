@@ -104,6 +104,10 @@ export const gateCcxtVenue: CcxtVenueConfig = {
   // runtime fetches a reference price and passes it through.
   marketBuyRequiresPrice: true,
   requiresDesktop: true,
+  // `/__gate-global` and `/__gate-testnet` exist in
+  // apps/terminal/vite.config.ts, so browser dev reaches this venue and must
+  // not be refused.
+  devProxy: true,
   // Orders and cancels ride the venue's WS trade API — single static host,
   // already routed by this venue's URL hooks and inside the CSP baseline.
   // See CcxtVenueConfig.wsOrders for why this is per-venue opt-in.

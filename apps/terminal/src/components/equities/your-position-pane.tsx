@@ -68,6 +68,9 @@ function YourPositionPaneInner({ pairKey }: { pairKey: string }) {
     return (
       <PaneCredentialsRequired
         compact
+        // The pane shows this account's own shares, cost basis and P&L, so the
+        // sibling panes' "no public price feed" is the wrong reason here.
+        kind="account"
         market={venue.market}
         state={gate.state}
         venueLabel={gate.venueLabel}

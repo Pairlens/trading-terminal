@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} 没有公开行情源。图表、订单簿和报价都由你的 API 密钥推送，而密钥目前处于锁定状态。",
       "missingTitle": "连接 {{venue}} 以查看价格",
       "missingDescription": "{{venue}} 没有公开行情源。连接你的账户后，图表、订单簿和报价将直接从中推送。",
+      "accountSealedDescription": "余额、持仓和订单都通过你的 {{venue}} API 密钥读取，而密钥目前处于锁定状态。",
+      "accountMissingTitle": "连接 {{venue}} 以查看你的账户",
+      "accountMissingDescription": "只有你的 {{venue}} API 密钥才能读取余额、持仓和订单。密钥只保存在本设备。",
       "connectAction": "连接 {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "切换计价单位",
       "max": "最大",
       "orderValue": "订单金额",
+      "underOneContract": "按此价格不足一份合约",
       "available": "可用",
       "riskUsed": "风险占用",
       "riskUsedValue": "{{used}} / {{cap}} 上限",

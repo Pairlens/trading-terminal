@@ -135,9 +135,10 @@ live events with their outcome prices, and **All events** for the full list
 with the same search and venue filter. Tapping an outcome opens its chart, the
 way clicking a card does on the desktop; tapping the event heading opens the
 same full event as its own screen. The section is only there when a prediction
-connector is installed and enabled. The phone's ticket still sizes in whole
-contracts rather than in dollars, so the two surfaces differ on that one point
-for now. See [Mobile terminal](/docs/mobile-terminal).
+connector is installed and enabled. The phone's ticket sizes in dollars too,
+with the same presets, the same payout card and the same conversion to whole
+contracts; what it does not carry is the preset editor, the outcome and race
+switches, and the basket. See [Mobile terminal](/docs/mobile-terminal).
 
 Search works from the pair picker too. It grows a **Predictions** tab beside
 Crypto and Stocks, and prediction rows are rendered as the question rather than

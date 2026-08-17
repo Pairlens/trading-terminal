@@ -3128,6 +3128,9 @@
       "sealedDescription": "{{venue}} nie ma publicznego strumienia cen. Wykres, arkusz zleceń i notowania płyną z Twoich kluczy API, a te są w tej chwili zablokowane.",
       "missingTitle": "Połącz {{venue}}, aby zobaczyć ceny",
       "missingDescription": "{{venue}} nie ma publicznego strumienia cen. Połącz konto, a wykres, arkusz zleceń i notowania popłyną prosto z niego.",
+      "accountSealedDescription": "Salda, pozycje i zlecenia czytają Twoje klucze API {{venue}}, a te są w tej chwili zablokowane.",
+      "accountMissingTitle": "Połącz {{venue}}, aby zobaczyć swoje konto",
+      "accountMissingDescription": "Salda, pozycje i zlecenia czytają tylko Twoje klucze API {{venue}}. Zostają na tym urządzeniu.",
       "connectAction": "Połącz {{venue}}"
     },
     "paneTransition": {
@@ -5912,6 +5915,7 @@
       "switchSizeCurrency": "Przełącz walutę wielkości",
       "max": "Maks.",
       "orderValue": "Wartość zlecenia",
+      "underOneContract": "Mniej niż jeden kontrakt w tej cenie",
       "available": "Dostępne",
       "riskUsed": "Wykorzystane ryzyko",
       "riskUsedValue": "{{used}} z limitu {{cap}}",

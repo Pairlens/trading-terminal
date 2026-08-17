@@ -146,6 +146,9 @@ export const bitfinexCcxtVenue: CcxtVenueConfig = {
   // No sandbox; CREDENTIAL_SCHEMAS lists Bitfinex as live-only.
   defaultMode: 'live',
   requiresDesktop: true,
+  // `/__bitfinex` and `/__bitfinex-auth` exist in apps/terminal/vite.config.ts,
+  // so browser dev reaches this venue and must not be refused.
+  devProxy: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/bitfinex.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor

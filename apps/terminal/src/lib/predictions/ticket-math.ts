@@ -208,6 +208,18 @@ export function predictionPayout(input: MaxLossInput): PredictionPayout | null {
   }
 }
 
+/**
+ * Collateral units, as both tickets print them.
+ *
+ * Whole dollars stay whole, and that rule is shared rather than reinvented per
+ * shell: a contract settles at exactly one unit, so a payout of 147 contracts
+ * is "$147" and not "$147.00", while a stake of 99 contracts at 68¢ is "$67.32"
+ * to the cent.
+ */
+export function formatCollateral(value: number): string {
+  return `$${value.toFixed(Number.isInteger(value) ? 0 : 2)}`
+}
+
 /** A probability is strictly inside (0, 1); the bounds are not prices. */
 function isProbability(value: number): boolean {
   return Number.isFinite(value) && value > 0 && value < 1

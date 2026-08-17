@@ -249,6 +249,12 @@ export type PredictionVenueConfig = {
   defaultMode: 'paper' | 'live'
   /** Venue is unreachable from a browser build — see the manifest flag's doc. */
   requiresDesktop?: boolean
+  /**
+   * A `/__*` dev proxy prefix in apps/terminal/vite.config.ts covers this
+   * venue's REST hosts, so `requiresDesktop` must not refuse under
+   * `bun run dev`. Neither prediction venue has one — see `isVenueRestBlocked`.
+   */
+  devProxy?: boolean
   outcomeAddressing: OutcomeAddressing
   /** REST polling (`pro: false`) or ccxt `watch*` run-loops. */
   streaming: 'poll' | 'watch'

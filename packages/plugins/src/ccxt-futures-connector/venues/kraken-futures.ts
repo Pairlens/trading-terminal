@@ -11,7 +11,8 @@
  *   `access-control-allow-origin`, on the preflight and on the GET alike
  *   (measured 2026-08-15), so a browser blocks the response. Note this differs
  *   from spot Kraken, which IS browser-capable — the futures host is a separate
- *   deployment.
+ *   deployment, and the spot `/__kraken` dev proxy does not cover it, so no
+ *   `devProxy` is declared and browser dev is refused too.
  * - **Its own credentials.** Futures keys are minted on futures.kraken.com and
  *   the spot account's keys do not sign here, so the manifest carries NO
  *   `credentialAlias` and the connect wizard shows a separate card.

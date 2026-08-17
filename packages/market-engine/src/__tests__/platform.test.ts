@@ -6,6 +6,7 @@ import {
   isCorsConstrained,
   isDevProxyAvailable,
   isTauriRuntime,
+  isVenueRestBlocked,
 } from '../platform'
 
 const g = globalThis as { window?: unknown }
@@ -99,6 +100,48 @@ describe('isCorsConstrained', () => {
     for (const win of [{}, { __TAURI_INTERNALS__: {} }]) {
       g.window = win
       if (isDevProxyAvailable()) expect(isCorsConstrained()).toBe(false)
+    }
+  })
+})
+
+describe('isVenueRestBlocked', () => {
+  /**
+   * The regression, and the only cell of the matrix `isCorsConstrained()` gets
+   * wrong: browser dev, where a proxy exists for SOME venue. KuCoin Futures,
+   * Kraken Futures and Kalshi have no `/__*` prefix of their own, so the gate
+   * fell open and the funding matrix, the open-interest pane and the events
+   * board each showed a bare `fetch failed` per venue.
+   */
+  it('blocks a proxy-less venue in browser dev, where a proxied one is fine', () => {
+    g.window = {}
+    expect(isVenueRestBlocked(true, true)).toBe(false)
+    expect(isVenueRestBlocked(false, true)).toBe(true)
+  })
+
+  it('blocks both in a production browser build — no proxy exists at all', () => {
+    g.window = {}
+    expect(isVenueRestBlocked(true, false)).toBe(true)
+    expect(isVenueRestBlocked(false, false)).toBe(true)
+  })
+
+  // Desktop reaches every venue through the Rust HTTP client, proxy or not.
+  it('blocks nothing in the desktop webview', () => {
+    g.window = { __TAURI_INTERNALS__: {} }
+    expect(isVenueRestBlocked(false, false)).toBe(false)
+    expect(isVenueRestBlocked(false, true)).toBe(false)
+  })
+
+  it('blocks nothing without a document — the CLI has no origin', () => {
+    delete g.window
+    expect(isVenueRestBlocked(false, false)).toBe(false)
+  })
+
+  // The proxied case is exactly the old question, so the fourteen spot venues
+  // keep the behavior they were tuned against.
+  it('agrees with isCorsConstrained for a proxied venue', () => {
+    for (const win of [{}, { __TAURI_INTERNALS__: {} }]) {
+      g.window = win
+      expect(isVenueRestBlocked(true)).toBe(isCorsConstrained())
     }
   })
 })

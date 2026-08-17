@@ -12,7 +12,7 @@
  */
 
 import { PlatformRestrictedError } from '@pairlens/market-engine/errors'
-import { isCorsConstrained } from '@pairlens/market-engine/platform'
+import { isVenueRestBlocked } from '@pairlens/market-engine/platform'
 import type {
   PluginCapabilityDeclaration,
   PluginExecuteParams,
@@ -236,6 +236,18 @@ export type CexConnectorSpec<TCredentials extends CexCredentials> = {
    */
   requiresDesktop?: boolean
   /**
+   * A Vite dev proxy prefix (`/__*` in apps/terminal/vite.config.ts) covers
+   * this venue's REST hosts, so `bun run dev` reaches them CORS-free and
+   * `requiresDesktop` must not refuse there.
+   *
+   * Default false, because the venues that HAVE a prefix are a closed list and
+   * everything else is blocked in every browser. Getting it backwards is what
+   * the raw `fetch failed` banners on the futures and predictions boards were:
+   * KuCoin Futures, Kraken Futures and Kalshi have no prefix, and the gate read
+   * "a dev proxy exists" as "this venue is reachable".
+   */
+  devProxy?: boolean
+  /**
    * Geo restriction check for order execution, run after credential-slot
    * resolution with the slot's provisioned country — so a missing credential
    * still surfaces as 'No credentials configured' rather than a geo error.
@@ -325,7 +337,7 @@ export function createCexConnectorPlugin<TCredentials extends CexCredentials>(
    * so both restrictions are decided in exactly one place per entry point.
    */
   function platformCheck(): void {
-    if (spec.requiresDesktop && isCorsConstrained()) {
+    if (spec.requiresDesktop && isVenueRestBlocked(spec.devProxy === true)) {
       // manifest.name is the human label ("KuCoin"), which reaches the user
       // verbatim wherever a pane renders the raw error message.
       throw new PlatformRestrictedError(manifest.name || spec.marketId)

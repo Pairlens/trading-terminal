@@ -14,8 +14,11 @@
  *   terminal's region dialog rather than leaving the pane empty.
  */
 
-import { describe, expect, it } from 'bun:test'
-import { GeoRestrictedError } from '@pairlens/market-engine/errors'
+import { afterEach, describe, expect, it } from 'bun:test'
+import {
+  GeoRestrictedError,
+  isPlatformRestrictedError,
+} from '@pairlens/market-engine/errors'
 import { createCcxtFuturesConnectorPlugin } from '../index'
 import { createCexFuturesConnectorManifest } from '../manifest'
 import { memoryFuturesMarketsStorage } from '../futures-markets'
@@ -131,6 +134,15 @@ const CONTEXT = {
   country: 'DE',
 }
 
+const g = globalThis as { window?: unknown }
+const hadWindow = 'window' in g
+const originalWindow = g.window
+
+afterEach(() => {
+  if (hadWindow) g.window = originalWindow
+  else delete g.window
+})
+
 describe('market-data:funding through the plugin', () => {
   it('declares the capability scoped to its own market', () => {
     const plugin = buildPlugin()
@@ -173,6 +185,56 @@ describe('market-data:funding through the plugin', () => {
         context: CONTEXT,
       }),
     ).rejects.toThrow(/unsupported execute capability/)
+    await plugin.destroy?.()
+  })
+
+  /**
+   * The funding fan-out renders a venue's refusal in place of its column, and
+   * only a TYPED refusal becomes "needs the desktop app" — anything else is
+   * printed verbatim, which is how `kucoinfutures GET https://api-futures
+   * .kucoin.com/api/v1/contracts/active fetch failed` reached the board. The
+   * gate has to fire before the markets table is even asked for, so the
+   * assertion is that no exchange call happened.
+   */
+  it('refuses a desktop-only venue from a browser, before any venue call', async () => {
+    let calls = 0
+    class CountingExchange extends FakeFuturesExchange {
+      override async loadMarkets(): Promise<unknown> {
+        calls += 1
+        return super.loadMarkets()
+      }
+    }
+    g.window = {}
+    const plugin = buildPlugin({
+      requiresDesktop: true,
+      loadExchangeClass: async () =>
+        CountingExchange as unknown as CcxtExchangeCtor,
+    })
+    let thrown: unknown
+    try {
+      await plugin.execute({
+        capability: 'market-data:funding',
+        params: { action: 'funding-rates' },
+        context: CONTEXT,
+      })
+    } catch (error) {
+      thrown = error
+    }
+    expect(isPlatformRestrictedError(thrown)).toBe(true)
+    expect((thrown as Error).message).toContain('Fake Futures')
+    expect(calls).toBe(0)
+    await plugin.destroy?.()
+  })
+
+  it('lets a desktop-only venue through in the desktop webview', async () => {
+    g.window = { __TAURI_INTERNALS__: {} }
+    const plugin = buildPlugin({ requiresDesktop: true })
+    const response = (await plugin.execute({
+      capability: 'market-data:funding',
+      params: { action: 'funding-rates' },
+      context: CONTEXT,
+    })) as FundingSnapshotResponse
+    expect(response.entries).toHaveLength(1)
     await plugin.destroy?.()
   })
 

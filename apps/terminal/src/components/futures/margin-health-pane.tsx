@@ -75,6 +75,9 @@ export function MarginHealthPane() {
     }
     return (
       <PaneCredentialsRequired
+        // Perp prices are public on every venue in the fleet; margin, leverage
+        // and liquidation distance are not.
+        kind="account"
         market={venue.market}
         state={status === 'sealed' ? 'sealed' : 'missing'}
         venueLabel={venue.label}

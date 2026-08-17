@@ -143,7 +143,11 @@ it.
 
 **Data-provider rate limits.** On-chain price data comes from public APIs with
 request limits, so a page full of on-chain panels updates less often than a CEX
-chart streaming over a WebSocket.
+chart streaming over a WebSocket. Pairlens paces its own requests to stay inside
+GeckoTerminal's free tier, so opening a board across five chains queues instead
+of tripping the limit. When a provider throttles anyway, the pane says it is
+rate limited and keeps retrying: a limit is never reported as a pair the venue
+does not carry.
 
 **Providers disagree on what they publish.** GeckoTerminal reports value locked
 as one USD figure and nothing per side; DexPaprika reports both reserves and

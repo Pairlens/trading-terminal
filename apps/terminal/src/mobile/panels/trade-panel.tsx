@@ -10,8 +10,11 @@
  * that decides an outcome — `placeOrder` (the attended, guarded path, and the
  * ONLY way an order leaves this file), `useHoldConfirm` + `tradeHoldMs` for the
  * confirm gesture, `orderNotionalUsd` / `evaluatePositionSize` for the risk
- * row, the credential and wallet stores, and the same `trade:*` persisted
- * preferences the desktop ticket writes.
+ * row, `lib/predictions/ticket-math` for every figure on a prediction ticket
+ * (dollars → contracts, fill price, payout, max loss), the credential and
+ * wallet stores, and the same `trade:*` persisted preferences the desktop
+ * ticket writes — stake presets included, so a list edited on the desk is the
+ * list offered on the phone.
  *
  * Render budget: the ticket reads no stream context. The live price arrives
  * through a render-null probe that writes a ref on every tick and wakes this
@@ -40,13 +43,19 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { PRESS } from '../primitives/press'
 import { TradeOrderbookStrip } from './trade-orderbook-strip'
+import { TradePayoutCard } from './trade-payout-card'
 import { TradeRiskRow } from './trade-risk-row'
 import { TradeSlideConfirm } from './trade-slide-confirm'
 import type { MobileOrderType } from '../lib/order-draft-store'
 import type { ReactNode, RefObject } from 'react'
 import { haptic } from '@/lib/haptics'
 import { splitPairAssets } from '@/lib/pairs'
-import { formatAmount, formatPrice } from '@/lib/format-price'
+import {
+  formatAmount,
+  formatPredictionPrice,
+  formatPrice,
+} from '@/lib/format-price'
+import { formatResolutionDate } from '@/lib/format-time'
 import { useContractSize } from '@/lib/futures/contract-size'
 import {
   balanceScopeFor,
@@ -84,11 +93,16 @@ import { venuePluginId, venuePosterSrc } from '@/components/accounts/venue-art'
 import { CHAIN_NAME } from '@/components/terminal/wallet-selector'
 import {
   centsToPrice,
+  contractsForAmount,
+  formatCollateral,
   normalizeContracts,
-  predictionMaxLoss,
+  predictionFillPrice,
+  predictionPayout,
   priceToCents,
 } from '@/lib/predictions/ticket-math'
 import { predictionCollateral } from '@/lib/predictions/collateral'
+import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
+import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 
 // ── Live price, without a per-tick render ─────────────────────────────
 
@@ -249,6 +263,14 @@ export default memo(function MobileTradePanel() {
   const [prices, setPrices] = useState<LivePrices>(EMPTY_PRICES)
   const [slippageBps] = usePersistedState<number>('trade:slippageBps', 100)
   const [confirmMode] = useTradeConfirmMode()
+  // The same slot the desktop ticket's stake chips write, so a preset edited on
+  // the desk is the preset offered on the phone. Read-only here: editing the
+  // list is a desktop affordance (a gear beside the row), and three chips plus
+  // Max is the whole control at 402px.
+  const [predictionPresets] = usePersistedState<Array<number>>(
+    'trade:presets:predictionUsd',
+    [25, 50, 100],
+  )
 
   // The draft belongs to a (venue, pair); moving pair clears the numbers.
   useEffect(() => {
@@ -375,6 +397,25 @@ export default memo(function MobileTradePanel() {
     USDT: useBalance('USDT', balanceScope),
   }
   const collateral = predictionCollateral((c) => collateralBalances[c])
+  // What the Max chip stakes. Floored to cents rather than rounded, exactly as
+  // on the desktop chip: a chip that asks for a hundredth of a cent more than
+  // the account holds is a rejection with no visible cause.
+  const maxCollateral = (() => {
+    const total = Number(collateral.total)
+    if (!Number.isFinite(total) || total <= 0) return ''
+    return String(Math.floor(total * 100) / 100)
+  })()
+
+  // ── Prediction identity ──
+  // The pair key is a venue ticker (`KXBTCD-26AUG15-T53`); what it MEANS was
+  // pinned by the row that opened it. The context bar over the chart already
+  // carries the subject and the side, so what the ticket adds is the question
+  // itself and the date the collateral comes back — a 68¢ price a month out and
+  // the same price an hour out are different bets, and the key carries neither.
+  const pinnedOutcome = usePredictionOutcome(focusedPair)
+  const outcomeLabel = pinnedOutcome?.outcome ?? ''
+  const question = pinnedOutcome ? predictionQuestionOf(pinnedOutcome) : ''
+  const resolvesAt = pinnedOutcome?.endMs
 
   // ── Order-type availability ──
   const supportsLimit = !isDex || marketInfo?.dexLimitOrders === true
@@ -535,10 +576,18 @@ export default memo(function MobileTradePanel() {
     orderType === 'limit' &&
     limitPrice !== '' &&
     predictionLimitPrice === null
+  // The price the order is SIZED against, which on a market order is the far
+  // touch rather than the last trade: an outcome quoted 61 bid / 68 ask is a
+  // 10% difference in how many contracts a hundred dollars buys, and sizing off
+  // the last print would overstate the position by that much.
   const predictionPrice = isPrediction
-    ? orderType === 'limit'
-      ? predictionLimitPrice
-      : (prices.last ?? null)
+    ? predictionFillPrice({
+        limitPrice: orderType === 'limit' ? predictionLimitPrice : null,
+        bid: prices.bestBid,
+        ask: prices.bestAsk,
+        last: prices.last,
+        side,
+      })
     : null
   const referencePrice = isPrediction
     ? predictionPrice
@@ -546,9 +595,23 @@ export default memo(function MobileTradePanel() {
       ? (prices.last ?? null)
       : typedPrice || null
   const sizeNumber = toNumber(amount)
-  const maxLoss = isPrediction
-    ? predictionMaxLoss({
-        contracts: sizeNumber,
+  // Dollars in the field, contracts on the wire. This is the ONLY conversion —
+  // the count under the field, the payout card, the risk row, the submit gate
+  // and `placeOrder` all read this one number, so none of them can disagree
+  // with what the user was shown. Floored inside `contractsForAmount`, so the
+  // committed stake is always at or under what was typed.
+  const predictionContracts = isPrediction
+    ? Number(
+        contractsForAmount({
+          amountUsd: sizeNumber,
+          price: predictionPrice,
+          side,
+        }),
+      )
+    : 0
+  const payout = isPrediction
+    ? predictionPayout({
+        contracts: predictionContracts,
         price: predictionPrice,
         side,
       })
@@ -588,13 +651,19 @@ export default memo(function MobileTradePanel() {
   const [riskBlocks, setRiskBlocks] = useState(false)
 
   const isLiveOrder = usesWallet || selectedCred?.mode === 'live'
+  // A stake that buys less than one whole contract is not an order the venue
+  // can take, however valid the dollar figure in the field looks. Named rather
+  // than inlined into the gate below: `trade-risk-gate.test.ts` reads that
+  // expression as text, and a comment inside it truncates what the test sees.
+  const predictionSizeOk = !isPrediction || predictionContracts >= 1
+
   const canSubmit =
     !needsConnect &&
     (usesWallet ? selectedWallet != null : selectedCred != null) &&
     mdStatus === 'connected' &&
     !submitting &&
     sizeNumber > 0 &&
-    (!isPrediction || Number.isInteger(sizeNumber)) &&
+    predictionSizeOk &&
     (orderType === 'market' ||
       (isPrediction ? predictionLimitPrice !== null : typedPrice > 0)) &&
     !riskBlocks
@@ -616,7 +685,13 @@ export default memo(function MobileTradePanel() {
         const account = usesWallet ? selectedWallet : selectedCred
         if (!account) return
         params['credentialId'] = account.id
-        params['size'] = normalizeContracts(amount)
+        // Contracts, whole — the venue counts them, and the field's dollars
+        // were converted once, above, where the payout card read the same
+        // figure. Sent as displayed rather than reconverted against the live
+        // ref: the user just committed to a stated stake and payout, and a
+        // sample-fresh divisor would quietly send a different count than the
+        // card they were reading.
+        params['size'] = normalizeContracts(predictionContracts)
         if (orderType === 'limit') {
           // Belt and braces behind the disabled slider: an out-of-range field
           // must never reach the venue as a clamped worst-case price.
@@ -767,11 +842,22 @@ export default memo(function MobileTradePanel() {
       }
 
       haptic('success')
+      // The receipt states what was SENT, which on a prediction ticket is not
+      // what was typed: the field holds dollars, the venue took contracts, and
+      // a prediction pair key has no base leg to name (`splitPairAssets` on
+      // `KXBTCD-26AUG15-T53` yields a date fragment).
+      const filledAsset = isPrediction
+        ? outcomeLabel || t('terminal.trade.contracts')
+        : baseAsset
       toast.success(
         side === 'buy'
-          ? t('terminal.trade.buyAsset', { asset: baseAsset })
-          : t('terminal.trade.sellAsset', { asset: baseAsset }),
-        { description: `${amount} ${sizeAsset} · ${venueLabel}` },
+          ? t('terminal.trade.buyAsset', { asset: filledAsset })
+          : t('terminal.trade.sellAsset', { asset: filledAsset }),
+        {
+          description: isPrediction
+            ? `${predictionContracts} ${t('terminal.trade.contracts')} · ${venueLabel}`
+            : `${amount} ${sizeAsset} · ${venueLabel}`,
+        },
       )
       clearAmount()
     } catch (err) {
@@ -794,6 +880,8 @@ export default memo(function MobileTradePanel() {
     contractSize,
     contractSizeKnown,
     predictionLimitPrice,
+    predictionContracts,
+    outcomeLabel,
     usesWallet,
     selectedWallet,
     selectedCred,
@@ -843,6 +931,26 @@ export default memo(function MobileTradePanel() {
 
   const ticket = (
     <div className="flex flex-col gap-2.5 px-4 pb-2 pt-1">
+      {/* What this ticket is actually betting on, and when it settles. Renders
+          nothing on a cold link the directory has never seen — a bare ticker
+          restated in a card would be a heading with no content. */}
+      {isPrediction && (question !== '' || resolvesAt !== undefined) ? (
+        <div className="flex flex-col gap-1 rounded-xl bg-[color:var(--pl-wash-strong)] px-3 py-2">
+          {question !== '' ? (
+            <p className="line-clamp-2 text-[12.5px] font-medium leading-snug text-foreground">
+              {question}
+            </p>
+          ) : null}
+          {resolvesAt !== undefined ? (
+            <span className="text-[11px] leading-none text-muted-foreground">
+              {t('terminal.trade.resolvesOn', {
+                date: formatResolutionDate(resolvesAt),
+              })}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
       {/* Buy / Sell */}
       <div className="flex gap-2">
         <SideButton
@@ -934,18 +1042,20 @@ export default memo(function MobileTradePanel() {
         </div>
       ) : null}
 
+      {/* Amount. A prediction ticket takes DOLLARS — traders decide in money,
+          both venues settle in contracts — and states the conversion under the
+          field rather than leaving it to be done in the head under a live
+          quote. A perp still takes contracts: there its size IS the count. */}
       <NumericField
         label={
-          isPrediction || isPerp
-            ? t('terminal.trade.contracts')
-            : t('terminal.trade.amount')
+          isPerp ? t('terminal.trade.contracts') : t('terminal.trade.amount')
         }
         locale={i18n.language}
-        onChange={
-          isPrediction ? (v) => setAmount(normalizeContracts(v)) : setAmount
-        }
+        onChange={setAmount}
         unit={
-          isPrediction || isPerp ? (
+          isPrediction ? (
+            <FieldUnit>{collateral.currency}</FieldUnit>
+          ) : isPerp ? (
             <FieldUnit>{t('terminal.trade.contracts')}</FieldUnit>
           ) : (
             <button
@@ -968,6 +1078,55 @@ export default memo(function MobileTradePanel() {
         }
         value={amount}
       />
+
+      {/* What the stake buys, floored to whole contracts — the number that goes
+          on the wire. Stated before the gesture rather than discovered on the
+          fill, and when the stake does not reach one contract it says so: the
+          slider is disabled there and a silent dead control explains nothing. */}
+      {isPrediction && sizeNumber > 0 ? (
+        <p
+          className={cn(
+            '-mt-1 px-1 text-right text-[11px] leading-snug',
+            predictionContracts >= 1
+              ? 'text-muted-foreground'
+              : 'text-destructive',
+          )}
+        >
+          {predictionContracts >= 1
+            ? t('terminal.trade.contractCount', {
+                count: predictionContracts,
+                formatted: predictionContracts.toLocaleString(i18n.language),
+              })
+            : t('mobile.trade.underOneContract')}
+        </p>
+      ) : null}
+
+      {/* Stake presets, in collateral. Max is the whole balance, floored to
+          cents so a chip can never ask for more than the account holds. */}
+      {isPrediction ? (
+        <div className="flex gap-2">
+          {predictionPresets.map((preset) => (
+            <StakeChip
+              active={amount === String(preset)}
+              key={preset}
+              label={`$${preset}`}
+              onPress={() => {
+                haptic('selection')
+                setAmount(String(preset))
+              }}
+            />
+          ))}
+          <StakeChip
+            active={maxCollateral !== '' && amount === maxCollateral}
+            disabled={maxCollateral === ''}
+            label={t('mobile.trade.max')}
+            onPress={() => {
+              haptic('selection')
+              setAmount(maxCollateral)
+            }}
+          />
+        </div>
+      ) : null}
 
       {/* Percent buttons. A share of a balance means nothing in contracts —
           on a prediction ticket, and on a perp, where a sell opens a short
@@ -1078,10 +1237,31 @@ export default memo(function MobileTradePanel() {
             />
           </>
         ) : isPrediction ? (
-          <SummaryRow
-            label={t('terminal.trade.maxLoss')}
-            value={maxLoss == null ? '—' : `$${maxLoss.toFixed(2)}`}
-          />
+          <>
+            {/* The price the stake was divided by, and the worst case. Both
+                read the same `predictionPayout` as the card below, so the rows,
+                the card and the size on the wire cannot drift apart. A dash
+                rather than a stale figure when the price is unusable: the last
+                valid one would read as this order's.
+
+                No max-payout row, unlike the desktop ticket: the card's hero
+                figure IS the max payout, in the same colour and 30px lower, and
+                a phone cannot spend a line restating a number already on
+                screen — the confirm slider is what the height buys. */}
+            <SummaryRow
+              label={t('terminal.trade.avgFillPrice')}
+              value={
+                predictionPrice === null
+                  ? '—'
+                  : formatPredictionPrice(predictionPrice)
+              }
+            />
+            <SummaryRow
+              label={t('terminal.trade.maxLoss')}
+              tone="down"
+              value={payout === null ? '—' : formatCollateral(payout.stake)}
+            />
+          </>
         ) : (
           <SummaryRow
             label={t('mobile.trade.orderValue')}
@@ -1118,11 +1298,25 @@ export default memo(function MobileTradePanel() {
           onBlocksChange={setRiskBlocks}
           pairKey={focusedPair}
           price={referencePrice}
-          quoteDenominated={sizeCcy === 'quote'}
+          // A prediction size is a contract COUNT (the guard prices a contract
+          // at its probability, capped at $1), never the dollars in the field:
+          // handing it the stake would measure a $100 order as 100 contracts.
+          quoteDenominated={isPrediction ? false : sizeCcy === 'quote'}
           side={side}
-          size={sizeNumber}
+          size={isPrediction ? predictionContracts : sizeNumber}
         />
       </div>
+
+      {/* What the order returns if it is right, immediately above the gesture
+          that commits it. A bought contract risks the premium, a sold one the
+          rest of the dollar it may owe, and both return the whole dollar. */}
+      {isPrediction && payout !== null ? (
+        <TradePayoutCard
+          outcome={outcomeLabel || t('terminal.trade.thisOutcome')}
+          payout={payout}
+          side={side}
+        />
+      ) : null}
 
       <TradeSlideConfirm
         busy={submitting}
@@ -1298,12 +1492,79 @@ function NumericField({
   )
 }
 
-function SummaryRow({ label, value }: { label: string; value: string }) {
+function SummaryRow({
+  label,
+  value,
+  tone,
+}: {
+  label: string
+  value: string
+  /**
+   * Colours the figure where the figure IS a direction: what an order can win
+   * against what it can lose. A dash keeps the neutral colour — an absent
+   * number is not good news.
+   */
+  tone?: 'up' | 'down'
+}) {
   return (
     <div className="flex items-baseline justify-between gap-3 text-[12px] leading-normal">
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-mono tabular-nums text-foreground">{value}</span>
+      <span
+        className={cn(
+          'font-mono tabular-nums',
+          value === '—' || tone === undefined
+            ? 'text-foreground'
+            : tone === 'up'
+              ? 'text-up'
+              : 'text-down',
+        )}
+      >
+        {value}
+      </span>
     </div>
+  )
+}
+
+/**
+ * A stake preset, in collateral. Same 31px row geometry as the percent chips it
+ * replaces on a prediction ticket, with the selected one carrying the primary
+ * tint so the last tap is visible after the keyboard closes over the field.
+ */
+function StakeChip({
+  active,
+  disabled,
+  label,
+  onPress,
+}: {
+  active: boolean
+  disabled?: boolean
+  label: string
+  onPress: () => void
+}) {
+  return (
+    <button
+      className={cn(
+        'pl-press h-[31px] flex-1 rounded-[9px] border font-mono text-[12px] tabular-nums',
+        active
+          ? 'border-primary text-foreground'
+          : 'border-[color:var(--pl-edge)] text-muted-foreground',
+        disabled && 'opacity-35',
+      )}
+      disabled={disabled}
+      onClick={onPress}
+      style={
+        active
+          ? {
+              backgroundColor:
+                'color-mix(in oklch, var(--primary) 14%, transparent)',
+            }
+          : undefined
+      }
+      type="button"
+      {...PRESS}
+    >
+      {label}
+    </button>
   )
 }
 

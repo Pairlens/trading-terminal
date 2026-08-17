@@ -12,7 +12,9 @@
  *   answer 403 to any request carrying a foreign `Origin` header, and the
  *   OPTIONS preflight 403s too (measured 2026-08-15 with curl; a request with
  *   no Origin, which is what the Tauri Rust HTTP client sends, passes). Same
- *   tier as Coinbase, Gate, KuCoin, MEXC and Bitfinex.
+ *   tier as Coinbase, Gate, KuCoin, MEXC and Bitfinex — except that those five
+ *   have a `/__*` dev proxy prefix and this venue has none, so it declares no
+ *   `devProxy` and browser dev is refused alongside the hosted build.
  * - **Three timeframes.** `period_interval` accepts 1, 60 and 1440 minutes and
  *   400s on anything else, so the manifest advertises `1m`, `1h`, `1d` and the
  *   connector refuses the rest before a request is made.

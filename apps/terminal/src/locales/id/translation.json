@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} tidak punya umpan harga publik. Grafik, order book, dan kuotasi dialirkan lewat kunci API Anda, dan kunci itu sedang terkunci.",
       "missingTitle": "Hubungkan {{venue}} untuk melihat harga",
       "missingDescription": "{{venue}} tidak punya umpan harga publik. Hubungkan akun Anda dan grafik, order book, serta kuotasi akan mengalir langsung dari sana.",
+      "accountSealedDescription": "Saldo, posisi, dan order dibaca lewat kunci API {{venue}} Anda, dan kunci itu sedang terkunci.",
+      "accountMissingTitle": "Hubungkan {{venue}} untuk melihat akun Anda",
+      "accountMissingDescription": "Hanya kunci API {{venue}} Anda yang bisa membaca saldo, posisi, dan order. Kunci itu tetap di perangkat ini.",
       "connectAction": "Hubungkan {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Ganti mata uang ukuran",
       "max": "Maks",
       "orderValue": "Nilai order",
+      "underOneContract": "Kurang dari satu kontrak pada harga ini",
       "available": "Tersedia",
       "riskUsed": "Risiko terpakai",
       "riskUsedValue": "{{used}} dari batas {{cap}}",

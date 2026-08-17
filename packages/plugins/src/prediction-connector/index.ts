@@ -33,7 +33,7 @@
  */
 
 import { PlatformRestrictedError } from '@pairlens/market-engine/errors'
-import { isCorsConstrained } from '@pairlens/market-engine/platform'
+import { isVenueRestBlocked } from '@pairlens/market-engine/platform'
 import { sortCandlesAscending } from '@pairlens/market-engine/candle-buffer'
 import { olderThan } from '@pairlens/market-engine/candle-paging'
 import { timeframeToMs } from '@pairlens/shared'
@@ -170,7 +170,11 @@ export function createPredictionConnectorPlugin(
 
   /** Refuse a venue this build cannot reach. Mirrors geoCheck's placement. */
   function platformCheck(): void {
-    if (venue.requiresDesktop && isCorsConstrained()) {
+    // `venue.devProxy` and not `isCorsConstrained()`: `external-api.kalshi.com`
+    // has no `/__*` prefix in apps/terminal/vite.config.ts, so browser dev is
+    // as blocked as the hosted build and the events board showed a bare
+    // `fetch failed` there.
+    if (venue.requiresDesktop && isVenueRestBlocked(venue.devProxy === true)) {
       // manifest.name is the human label, which reaches the user verbatim
       // wherever a pane renders the raw error message.
       throw new PlatformRestrictedError(manifest.name || venue.marketId)

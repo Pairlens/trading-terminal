@@ -1,11 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { restFetch as fetch } from '@pairlens/market-engine/http'
+import { isProviderThrottledError } from '@pairlens/market-engine/errors'
 import { fetchOhlcv } from './ohlcv-client'
 import { clearPoolCache, networkForMarket, resolvePool } from './pool-resolver'
 import { fetchPoolStats } from './pool-stats-client'
 import { fetchPoolTrades } from './pool-trades-client'
-import { aggregateChainStats, fetchTopPools } from './pool-listing-client'
+import {
+  aggregateChainStats,
+  clearListingCache,
+  fetchTopPools,
+} from './pool-listing-client'
+import { geckoFetch as fetch } from './rate-limiter'
 import type { PoolStatsAction } from '@pairlens/shared/instrument-types'
 import type {
   PluginExecuteParams,
@@ -133,6 +138,14 @@ export function createGeckoterminalDataProviderPlugin(
           .filter((r) => r.status === 'fulfilled')
           .map((r) => r.value)
         if (rows.length === 0 && markets.length > 0) {
+          // Rethrow the throttle rather than flattening it into a generic
+          // failure: the rail's message is the difference between "retrying"
+          // and "this chain has no pools".
+          const throttled = settled.find(
+            (r) =>
+              r.status === 'rejected' && isProviderThrottledError(r.reason),
+          )
+          if (throttled?.status === 'rejected') throw throttled.reason
           throw new Error('GeckoTerminal: no network could be sampled')
         }
         return rows
@@ -157,35 +170,48 @@ export function createGeckoterminalDataProviderPlugin(
       const key = `${network}:${pair}:${timeframe}`
 
       // Initial snapshot. GeckoTerminal's free tier rate-limits aggressively
-      // (~30 calls/min); if the snapshot is dropped, the poller below retries
-      // a FULL snapshot until one lands, then switches to incremental updates.
+      // (~30 calls/min, paced by ./rate-limiter); if the snapshot is dropped,
+      // the poller below retries a FULL snapshot until one lands, then switches
+      // to incremental updates.
       let snapshotDelivered = false
-      fetchOhlcv(pair, timeframe, 500, network).then((candles) => {
-        if (candles.length > 0) {
-          snapshotDelivered = true
-          callback({ type: 'snapshot', candles } satisfies CandleUpdate)
+      // One request in flight at a time. With the limiter in front, a queued
+      // request can outlive the 15s interval, and a second one behind it would
+      // spend budget re-asking a question already on the wire.
+      let inFlight = false
+
+      const pollCandles = async () => {
+        if (inFlight) return
+        inFlight = true
+        try {
+          if (!snapshotDelivered) {
+            const candles = await fetchOhlcv(pair, timeframe, 500, network)
+            if (candles.length > 0) {
+              snapshotDelivered = true
+              callback({ type: 'snapshot', candles } satisfies CandleUpdate)
+            }
+            return
+          }
+          const candles = await fetchOhlcv(pair, timeframe, 2, network)
+          if (candles.length > 0) {
+            callback({ type: 'update', candles } satisfies CandleUpdate)
+          }
+        } catch {
+          // Throttled or transient. The provider-level cool-off is already
+          // recorded (see ./rate-limiter), the terminal reads it rather than
+          // publishing a no-data verdict, and the next tick retries.
+        } finally {
+          inFlight = false
         }
-      })
+      }
+
+      void pollCandles()
 
       // Clear any existing poller for this key to prevent leaks
       const existing = candlePollers.get(key)
       if (existing) clearInterval(existing)
 
       // Poll for updates every 15s
-      const timer = setInterval(async () => {
-        if (!snapshotDelivered) {
-          const candles = await fetchOhlcv(pair, timeframe, 500, network)
-          if (candles.length > 0) {
-            snapshotDelivered = true
-            callback({ type: 'snapshot', candles } satisfies CandleUpdate)
-          }
-          return
-        }
-        const candles = await fetchOhlcv(pair, timeframe, 2, network)
-        if (candles.length > 0) {
-          callback({ type: 'update', candles } satisfies CandleUpdate)
-        }
-      }, 15_000)
+      const timer = setInterval(() => void pollCandles(), 15_000)
 
       candlePollers.set(key, timer)
 
@@ -202,15 +228,18 @@ export function createGeckoterminalDataProviderPlugin(
 
       // GeckoTerminal doesn't have SSE — poll REST. 10s keeps one active
       // pair (ticker + candles + resolution) well inside the ~30 req/min
-      // free-tier rate limit.
+      // free-tier rate limit, which ./rate-limiter enforces for the whole
+      // provider rather than per poller.
       let active = true
+      let inFlight = false
 
       const poll = async () => {
-        if (!active) return
-        const pool = await resolvePool(pair, network)
-        if (!pool || !active) return
-
+        if (!active || inFlight) return
+        inFlight = true
         try {
+          const pool = await resolvePool(pair, network)
+          if (!pool || !active) return
+
           const res = await fetch(
             `${API_BASE}/networks/${pool.network}/pools/${pool.address}`,
           )
@@ -244,7 +273,11 @@ export function createGeckoterminalDataProviderPlugin(
             },
           } satisfies TickerUpdate)
         } catch {
-          // Retry next interval
+          // Retry next interval. A throttle has already recorded the
+          // provider's cool-off, so the terminal knows the silence is
+          // temporary.
+        } finally {
+          inFlight = false
         }
       }
 
@@ -252,8 +285,8 @@ export function createGeckoterminalDataProviderPlugin(
       const existingTicker = tickerPollers.get(pollerKey)
       if (existingTicker) clearInterval(existingTicker)
 
-      poll()
-      const timer = setInterval(poll, 10_000)
+      void poll()
+      const timer = setInterval(() => void poll(), 10_000)
       tickerPollers.set(pollerKey, timer)
 
       return () => {
@@ -278,6 +311,7 @@ export function createGeckoterminalDataProviderPlugin(
       for (const timer of tickerPollers.values()) clearInterval(timer)
       tickerPollers.clear()
       clearPoolCache()
+      clearListingCache()
     },
   }
 }
