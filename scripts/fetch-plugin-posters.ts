@@ -67,6 +67,7 @@ const DOMAINS: Record<string, string> = {
   'polygon-dex-connector': 'polygon.technology',
   'geckoterminal-data-provider': 'geckoterminal.com',
   'dexpaprika-data-provider': 'dexpaprika.com',
+  'dexscreener-data-provider': 'dexscreener.com',
   // Both prediction venues refuse direct image fetches (kalshi.com resets the
   // TLS handshake, polymarket.com sits behind bot protection), so the Google
   // favicon fallback is the one source that resolves them. It returns their

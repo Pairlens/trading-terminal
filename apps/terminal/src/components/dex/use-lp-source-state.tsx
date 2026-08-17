@@ -27,6 +27,15 @@ export type LpSourceState = {
   gate: React.ReactElement | null
   /** "Would read <wallet> on <pool>" — null when there is nothing to name. */
   readsLabel: string | null
+  /**
+   * The wallet the panes read positions for. Non-null exactly when `gate` is
+   * null, so a pane that has passed the gate never has to re-derive it — and
+   * the two can never disagree about which address is on screen.
+   *
+   * The ADDRESS only. Position reads are public chain state and must work with
+   * the vault sealed, so nothing downstream of this is allowed to want a key.
+   */
+  wallet: { id: string; address: string } | null
 }
 
 export function useLpSourceState(
@@ -59,6 +68,7 @@ export function useLpSourceState(
         />
       ),
       readsLabel: null,
+      wallet: null,
     }
   }
 
@@ -70,7 +80,13 @@ export function useLpSourceState(
       pool: legs ? `${legs.base}/${legs.quote}` : (activePair?.pairKey ?? ''),
       chain: chain?.displayName ?? activePair?.market ?? '',
     }),
+    wallet: { id: wallet.id, address: wallet.address },
   }
+}
+
+/** `0x1234…abcd` — the wallet label the LP pane headers carry. */
+export function shortWalletLabel(address: string | undefined): string {
+  return shortWallet(address)
 }
 
 function shortWallet(address: string | undefined): string {

@@ -11,6 +11,12 @@ import type {
   IntelligencePlanId,
 } from '@pairlens/shared/billing-types'
 import type { AccountDeletionSummary } from '@pairlens/shared/account-types'
+import type {
+  CompanyOverviewResponse,
+  EarningsCalendarResponse,
+  EquityFundamentalsUnavailableReason,
+  EquityFundamentalsUnavailableResponse,
+} from '@pairlens/shared/instrument-types'
 import {
   APP_SERVER_CREDENTIALS,
   authClient,
@@ -371,6 +377,59 @@ export class SyncDisabledError extends Error {
 }
 
 // ---------------------------------------------------------------------------
+// Equity fundamentals transport
+//
+// The two equities routes answer a typed 5xx when the provider fails, and the
+// panes need that reason: "this build has no fundamentals provider" is the
+// honest seam the Company pane shipped with, while "the provider is refusing
+// us" is a temporary thing to say differently. `fetchApi` flattens both into a
+// bare status string, so these calls read the body instead.
+// ---------------------------------------------------------------------------
+
+/** A provider failure, carrying which one it was. */
+export class EquityFundamentalsUnavailableError extends Error {
+  readonly reason: EquityFundamentalsUnavailableReason
+
+  constructor(reason: EquityFundamentalsUnavailableReason) {
+    super(`Equity fundamentals unavailable: ${reason}`)
+    this.name = 'EquityFundamentalsUnavailableError'
+    this.reason = reason
+  }
+}
+
+async function fetchFundamentals<T>(path: string): Promise<T> {
+  // Standalone builds have nowhere to ask, which is the same news for a pane
+  // as a server with no provider key: keep today's seam, skip the request.
+  if (!hasAppServer) {
+    throw new EquityFundamentalsUnavailableError('not_configured')
+  }
+
+  const response = await authFetch(`${appServerUrl}${path}`)
+
+  if (!response.ok) {
+    // An App Server built before these routes existed answers 404. Same seam:
+    // this deployment cannot serve fundamentals.
+    if (response.status === 404) {
+      throw new EquityFundamentalsUnavailableError('not_configured')
+    }
+    // Our own per-IP limiter on the company route answers a plain 429 with no
+    // typed reason. It means the same thing to a pane as the provider's own
+    // throttling: wait, do not go looking for a plugin to install.
+    if (response.status === 429) {
+      throw new EquityFundamentalsUnavailableError('rate_limited')
+    }
+    const body = (await response
+      .json()
+      .catch(() => null)) as EquityFundamentalsUnavailableResponse | null
+    throw new EquityFundamentalsUnavailableError(
+      body?.reason ?? 'upstream_error',
+    )
+  }
+
+  return response.json() as Promise<T>
+}
+
+// ---------------------------------------------------------------------------
 // API functions — routed to App Server
 // ---------------------------------------------------------------------------
 
@@ -592,6 +651,33 @@ export const api = {
     const qs = new URLSearchParams({ ticker })
     if (assetClass) qs.set('assetClass', assetClass)
     return fetchApi<TickerOverview>(`/api/ticker-overview?${qs.toString()}`)
+  },
+
+  /**
+   * One listed company as a business, plus its next scheduled report. Throws
+   * `EquityFundamentalsUnavailableError` when the provider, not the symbol, is
+   * the reason there is nothing.
+   */
+  getCompanyOverview: (symbol: string) =>
+    fetchFundamentals<CompanyOverviewResponse>(
+      `/api/company-overview?symbol=${encodeURIComponent(symbol)}`,
+    ),
+
+  /** Who reports inside a window. Defaults to the next week, whole market. */
+  getEarningsCalendar: (params?: {
+    days?: number
+    /** ISO 'YYYY-MM-DD'; defaults to today on the server. */
+    start?: string
+    symbols?: Array<string>
+  }) => {
+    const qs = new URLSearchParams()
+    if (params?.days) qs.set('days', String(params.days))
+    if (params?.start) qs.set('start', params.start)
+    if (params?.symbols?.length) qs.set('symbols', params.symbols.join(','))
+    const suffix = qs.toString() ? `?${qs.toString()}` : ''
+    return fetchFundamentals<EarningsCalendarResponse>(
+      `/api/earnings-calendar${suffix}`,
+    )
   },
 
   getTradeJournal: (params?: {

@@ -64,9 +64,54 @@
     "noChainsBody": "Installieren Sie einen On-Chain-Connector, dann kommt seine Chain in die Leiter."
   },
   "company": {
+    "analystBuy": "{{count}} Kauf",
+    "analystCoverage_one": "{{count}} Analyst",
+    "analystCoverage_other": "{{count}} Analysten",
+    "analystHold": "{{count}} Halten",
+    "analystSell": "{{count}} Verkauf",
+    "beta": "Beta",
+    "consensusEps": "Konsens-EPS",
+    "dividendYield": "Div.-Rendite",
+    "earningsGrowth": "Gewinn JoJ",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "Bewertung",
+      "growth": "Wachstum",
+      "margins": "Margen",
+      "context": "Kontext",
+      "analyst": "Analysten"
+    },
+    "marketCap": "Marktkap.",
+    "nextReport": "Nächster Bericht",
+    "noCoverageBody": "Der Anbieter deckt börsennotierte operative Unternehmen ab. Ein ETF, ein geschlossener Fonds oder eine sehr neue Notierung hat oft keine Abschlüsse dahinter.",
+    "noCoverageTitle": "Keine Fundamentaldaten für {{symbol}}",
+    "noFiguresBody": "Der Anbieter kennt diese Notierung, hat aber keine der hier gezeigten Zahlen veröffentlicht.",
+    "noFiguresTitle": "Noch nichts veröffentlicht",
+    "notEquityBody": "Dieser Bereich beschreibt ein börsennotiertes Unternehmen. {{venue}} ist keine Aktienbörse, und dasselbe Kürzel ist dort ein anderer Vermögenswert.",
+    "notEquityTitle": "Fundamentaldaten brauchen eine Aktie",
+    "operatingMargin": "Operative Marge",
+    "pe": "KGV",
+    "peForward": "KGV · erw.",
+    "peg": "PEG",
+    "profitMargin": "Nettomarge",
+    "providerBusyBody": "Der Datenanbieter bremst uns. Die Zahlen kommen von selbst zurück, sobald das Zeitfenster zurückgesetzt ist.",
+    "providerBusyTitle": "Fundamentaldaten sind ratenbegrenzt",
+    "providerErrorBody": "Der Anbieter hat etwas Unbrauchbares geantwortet. An deinen Konten und Connectoren liegt es nicht.",
+    "providerErrorTitle": "Fundamentaldaten nicht geladen",
+    "reportsInDays_one": "In {{count}} Tag",
+    "reportsInDays_other": "In {{count}} Tagen",
+    "reportsToday": "Berichtet heute",
+    "reportsTomorrow": "Berichtet morgen",
+    "returnOnEquity": "Eigenkapitalrendite",
+    "revenueGrowth": "Umsatz JoJ",
+    "revenueTtm": "Umsatz TTM",
+    "sharesOutstanding": "Aktien ausst.",
+    "targetPrice": "Analystenziel",
     "unknownName": "Firmenname nicht verfügbar",
     "needsProviderTitle": "Fundamentaldaten brauchen einen Anbieter",
-    "needsProviderBody": "Ein Broker quotiert und führt aus; er veröffentlicht keine Bewertung, kein Wachstum und keine Margen. Installiere ein Fundamentaldaten-Plugin für diesen Bereich."
+    "needsProviderBody": "Dieser Build hat keine Fundamentaldaten-Quelle. Bewertung, Wachstum und Margen kommen vom App Server; ein Broker-Connector stellt nur Kurse und Ausführungen.",
+    "week52": "52 Wochen Tief · Hoch"
   },
   "dexChains": {
     "title": "Wo der Fluss ist",
@@ -83,17 +128,37 @@
     "emptyBody": "Dieser Build enthält keine On-Chain-Connectoren, also gibt es keine Chain, deren Pools sich ranken ließen."
   },
   "earningsCalendar": {
+    "capped": "Zeigt die ersten {{shown}} von {{total}} Berichten.",
+    "noEstimate": "keine Schätzung",
+    "noneInWindowBody": {
+      "today": "Heute berichtet kein Unternehmen im Kalender.",
+      "week": "In den nächsten sieben Tagen berichtet niemand.",
+      "watchlist": "Keine der beobachteten Aktien berichtet im nächsten Quartal."
+    },
+    "noneInWindowTitle": "Nichts geplant",
+    "noWatchedBody": "Markiere eine Aktie und dieser Bereich zeigt ihren nächsten Bericht. Alle anderen Bereiche decken den gesamten Markt ab.",
+    "noWatchedTitle": "Keine Aktien beobachtet",
+    "providerBusyBody": "Der Datenanbieter bremst uns. Der Terminplan kommt von selbst zurück, sobald das Zeitfenster zurückgesetzt ist.",
+    "providerBusyTitle": "Earnings-Feed ist ratenbegrenzt",
+    "providerErrorBody": "Der Anbieter hat etwas Unbrauchbares geantwortet. An deinen Konten und Connectoren liegt es nicht.",
+    "providerErrorTitle": "Earnings-Feed nicht geladen",
+    "scopeLabel": "Berichtszeitraum",
+    "scopes": {
+      "today": "Heute",
+      "week": "Diese Woche",
+      "watchlist": "Watchlist"
+    },
     "title": "Quartalszahlen",
-    "subtitle": "Vor der Eröffnung und nach dem Schluss",
-    "emptyTitle": "Kein Earnings-Feed installiert",
-    "emptyBody": "Ein Fundamentaldaten-Plugin füllt diesen Kalender. Ein Broker veröffentlicht seine eigenen Handelszeiten, nicht wer diese Woche berichtet.",
+    "emptyTitle": "Kein Earnings-Feed",
+    "emptyBody": "Dieser Build hat keinen Earnings-Anbieter. Der Terminplan kommt vom App Server; ein Broker veröffentlicht seine eigenen Handelszeiten, nicht wer diese Woche berichtet.",
     "columns": {
+      "company": "Unternehmen",
+      "quarterEnd": "Quartalsende",
       "symbol": "Symbol",
-      "when": "Wann",
-      "epsEstimate": "EPS-Schätzung",
-      "revenueEstimate": "Umsatzschätzung",
-      "impliedMove": "Implizite Bewegung"
-    }
+      "epsEstimate": "EPS-Schätzung"
+    },
+    "today": "Heute",
+    "tomorrow": "Morgen"
   },
   "economicCalendar": {
     "emptyTitle": "Kein Makro-Feed installiert",
@@ -154,6 +219,26 @@
     "basisLast_other": "Summiert aus {{count}} letzten Kursen",
     "basisMissing_one": "1 Teilnehmer ohne Kurs",
     "basisMissing_other": "{{count}} Teilnehmer ohne Kurs"
+  },
+  "feeAccrual": {
+    "title": "Gebühren",
+    "subtitle_one": "{{wallet}} · {{count}} Bereich",
+    "subtitle_other": "{{wallet}} · {{count}} Bereiche",
+    "claimableLabel": "Jetzt abholbar",
+    "nothingClaimable": "In diesen Bereichen ist noch nichts abzuholen.",
+    "notRead": "Pool nicht gelesen",
+    "columns": {
+      "position": "Position",
+      "fee": "Gebühr",
+      "claimable": "Abholbar"
+    },
+    "loadingTitle": "Gebühren werden gelesen",
+    "loadingBody": "Für jede Position wird ein Collect simuliert, um zu sehen, was er gerade auszahlen würde.",
+    "emptyTitle": "Keine Liquiditätspositionen",
+    "emptyBody": "{{wallet}} hält keine Positionen, die Gebühren ansammeln. Stelle auf einer verbundenen Chain Liquidität bereit, dann erscheint der Betrag hier.",
+    "noChainsTitle": "Keine Chain-Konnektoren",
+    "noChainsBody": "Installiere einen On-Chain-Konnektor, dann liest dieses Panel, was seine Pools deiner Wallet schulden.",
+    "footnote": "Was ein Collect in diesem Block auszahlen würde, beide Seiten, pro Position. Bereits abgeholte Gebühren hinterlassen keine Spur on-chain, deshalb brauchen Gebühren-APR, Zeit im Bereich und Verlust gegenüber Halten einen Indexer und werden nicht gezeigt."
   },
   "funding": {
     "loading": "Funding-Raten werden gelesen…",
@@ -242,14 +327,38 @@
     "biggestLabel": "Größte Swaps"
   },
   "lpPanes": {
-    "positionTitle": "LP-Positionen brauchen eine Positionsquelle",
-    "positionBody": "Nichts Verbundenes kann bislang eine Liquiditätsposition lesen. Dafür müsste der Position Manager der Chain nach den Ranges dieser Wallet gefragt werden, was heute kein Connector tut.",
-    "feesTitle": "Gebührenhistorie braucht eine Positionsquelle",
-    "feesBody": "Täglich verdiente Gebühren kommen aus einem Indexer oder aus über Zeit gemessenem Fee Growth. Beides ist nicht verbunden, und ein geschätzter Chart würde gemessen aussehen.",
     "manageTitle": "Range-Bearbeitung braucht eine Liquiditätsaktion",
     "manageBody": "Liquidität hinzufügen, entfernen und neu zentrieren sind signierte Transaktionen, die bislang kein Connector baut. Die Bedienelemente bleiben aus, bis sie etwas bewirken.",
     "venueFallback": "diese Chain",
     "wouldRead": "Würde {{wallet}} auf {{pool}}, {{chain}} lesen"
+  },
+  "lpPosition": {
+    "title": "LP-Position",
+    "subtitle_one": "{{wallet}} · {{count}} Bereich",
+    "subtitle_other": "{{wallet}} · {{count}} Bereiche",
+    "capped": "{{count}} nicht angezeigt",
+    "value": "Positionswert",
+    "poolUnread": "Pool nicht gelesen",
+    "range": "Bereich",
+    "ticks": "Ticks {{lower}} bis {{upper}}",
+    "band": "±{{band}}% Band",
+    "bandWithHeadroom": "±{{band}}% Band · {{headroom}}% Luft bis zur oberen Grenze",
+    "composition": "Zusammensetzung",
+    "uncollected": "Nicht abgeholte Gebühren",
+    "tokenId": "Position",
+    "pool": "Pool",
+    "feeTier": "{{value}}% Gebühr",
+    "inRange": "Im Bereich",
+    "outOfRange": "Außerhalb",
+    "rangeUnknown": "Pool nicht gelesen",
+    "otherPositions": "Deine weiteren Positionen",
+    "loadingTitle": "Positionen werden gelesen",
+    "loadingBody": "Der Position Manager jeder verbundenen Chain wird gefragt, was diese Wallet hält.",
+    "emptyTitle": "Keine Liquiditätspositionen",
+    "emptyBody": "{{wallet}} hält auf den verbundenen Chains keine Positionen bei Uniswap v3 oder PancakeSwap v3. Stelle auf einer Liquidität bereit, dann erscheint sie hier.",
+    "noChainsTitle": "Keine Chain-Konnektoren",
+    "noChainsBody": "Installiere einen On-Chain-Konnektor, dann liest dieses Panel den Position Manager dieser Chain für deine Wallet.",
+    "footnote": "Von der Chain gelesen: das Band, der aktuelle Wert der Liquidität und noch nicht abgeholte Gebühren. Eine Position speichert ihren Einstand nicht, deshalb gibt es keine Zahl gegenüber reinem Halten."
   },
   "marginHealth": {
     "title": "Margin-Status",
@@ -668,7 +777,8 @@
     "feeTier": "Fee-Tier",
     "feeTierUnknown": "Von dieser Venue nicht veröffentlicht",
     "reserves": "Reserven",
-    "reservesUnavailable": "Beide Seiten nur in der Desktop-App",
+    "reservesUnavailable": "Für diesen Pool nicht veröffentlicht",
+    "reservesSource": "Reserven von {{provider}}",
     "trades24h": "Trades 24h",
     "tradersSub_one": "{{count}} Trader",
     "tradersSub_other": "{{count}} Trader",
@@ -2973,14 +3083,14 @@
     "poolStats": "Reserven auf beiden Seiten, gebundener Wert, 24h-Volumen, die Gebührenstufe und der Preis-Impact bei drei Größen",
     "onchainTrades": "Jeder Swap durch den Pool, sobald er bestätigt, mit dem Wallet und einem Link zur Transaktion",
     "route": "Wie der Aggregator deinen Swap über Pools aufteilt, sodass die Slippage eine benannte Ursache hat",
-    "feeAccrual": "Gebühren, die deine Position über die Zeit verdient hat, die daraus folgende APR, und was jetzt beanspruchbar ist",
-    "lpPosition": "Deine Range gegen den aktuellen Preis, Zeit in der Range, und Impermanent Loss gemessen gegen einfaches Halten",
+    "feeAccrual": "Was ein Collect deiner Wallet jetzt auszahlen würde, beide Seiten, pro Position und insgesamt",
+    "lpPosition": "Deine Range gegen den Live-Poolpreis, die Zusammensetzung der Liquidität und noch nicht eingesammelte Gebühren",
     "manageLiquidity": "Verschiebe die Range, füge Liquidität hinzu oder entziehe sie, und beanspruche Gebühren, ohne den Chart zu verlassen",
     "chainLadder": "Derselbe Token bepreist auf jeder Blockchain, mit eingerechnetem Gas, sodass die beste Gesamtsumme gewinnt statt des besten Kurses",
     "routeBridge": "Quell-Chain, Ziel-Chain, die Bridge, ihre Gebühr und wie lange es dauert, bereit zur Ausführung",
     "inFlight": "Transfers, die noch bestätigen, jeder mit dem Block-Zähler, auf den er wartet",
     "session": "Wo der Handelstag gerade steht, nach dem eigenen Kalender des Brokers, Feiertage und halbe Handelstage eingeschlossen",
-    "earningsCalendar": "Wer wann berichtet, vor Handelsbeginn oder nach Handelsschluss, mit der Schätzung, die geschlagen werden muss",
+    "earningsCalendar": "Wer wann berichtet, nach Tagen gruppiert, mit der Konsensschätzung, die geschlagen werden muss",
     "economicCalendar": "Makro-Veröffentlichungen nach der Uhr, mit Wichtigkeit, dem vorherigen Wert und dem Konsens",
     "sessionClock": "Eine einzeilige Uhr für den Handelstag, sodass ein Ticket außerhalb der Handelszeiten nie eine Überraschung ist",
     "level1": "Geld und Brief mit ihren Größen, der Spread und die Tagesspanne aus dem Broker-Feed",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DEX-Marktdaten, bereitgestellt von DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Pool-Reserven und Pool-Kennzahlen von DexScreener. Ohne API-Key und CORS-offen, deshalb funktionieren Reserven beider Seiten auch im Browser. Keine Kerzen und keine Pool-Ranglisten: dieser Anbieter ergänzt die anderen, er ersetzt sie nicht."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

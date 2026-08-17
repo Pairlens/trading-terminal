@@ -64,9 +64,54 @@
     "noChainsBody": "Bir zincir üstü konektör kurun, zinciri bu merdivene katılsın."
   },
   "company": {
+    "analystBuy": "{{count}} al",
+    "analystCoverage_one": "{{count}} analist",
+    "analystCoverage_other": "{{count}} analist",
+    "analystHold": "{{count}} tut",
+    "analystSell": "{{count}} sat",
+    "beta": "Beta",
+    "consensusEps": "Beklenen HBK",
+    "dividendYield": "Temettü verimi",
+    "earningsGrowth": "Kâr yıllık",
+    "ebitda": "FAVÖK",
+    "epsTtm": "HBK TTM",
+    "groups": {
+      "valuation": "Değerleme",
+      "growth": "Büyüme",
+      "margins": "Marjlar",
+      "context": "Bağlam",
+      "analyst": "Analistler"
+    },
+    "marketCap": "Piyasa değeri",
+    "nextReport": "Sıradaki bilanço",
+    "noCoverageBody": "Sağlayıcı, borsada işlem gören faaliyet şirketlerini kapsar. Bir ETF, kapalı uçlu fon veya çok yeni bir kotasyonun arkasında genelde finansal tablo bulunmaz.",
+    "noCoverageTitle": "{{symbol}} için temel veri yok",
+    "noFiguresBody": "Sağlayıcı bu kotasyonu tanıyor ama bu panelin gösterdiği rakamların hiçbirini açıklamamış.",
+    "noFiguresTitle": "Henüz açıklanmış bir şey yok",
+    "notEquityBody": "Bu panel borsada işlem gören bir şirketi anlatır. {{venue}} bir hisse borsası değil ve aynı sembol orada başka bir varlıktır.",
+    "notEquityTitle": "Temel veriler bir hisse gerektirir",
+    "operatingMargin": "Faaliyet marjı",
+    "pe": "F/K",
+    "peForward": "F/K · beklenti",
+    "peg": "PEG",
+    "profitMargin": "Net marj",
+    "providerBusyBody": "Veri sağlayıcı bizi kısıtlıyor. Pencere sıfırlandığında rakamlar kendiliğinden geri gelir.",
+    "providerBusyTitle": "Temel veriler hız sınırında",
+    "providerErrorBody": "Sağlayıcı kullanılamaz bir yanıt verdi. Hesaplarında ya da konektörlerinde bir sorun yok.",
+    "providerErrorTitle": "Temel veriler yüklenmedi",
+    "reportsInDays_one": "{{count}} gün sonra",
+    "reportsInDays_other": "{{count}} gün sonra",
+    "reportsToday": "Bugün açıklıyor",
+    "reportsTomorrow": "Yarın açıklıyor",
+    "returnOnEquity": "Özkaynak kârlılığı",
+    "revenueGrowth": "Gelir yıllık",
+    "revenueTtm": "Gelir TTM",
+    "sharesOutstanding": "Dolaşımdaki pay",
+    "targetPrice": "Analist hedefi",
     "unknownName": "Şirket adı yok",
     "needsProviderTitle": "Temel veriler bir sağlayıcı ister",
-    "needsProviderBody": "Aracı kurum fiyat verir ve emir gerçekleştirir; değerleme, büyüme veya marj yayınlamaz. Bu paneli doldurmak için bir temel veri eklentisi kur."
+    "needsProviderBody": "Bu derlemede temel veri kaynağı yok. Değerleme, büyüme ve marjlar App Server üzerinden gelir; aracı kurum konektörü yalnızca fiyat verir ve emir gerçekleştirir.",
+    "week52": "52 hafta düşük · yüksek"
   },
   "dexChains": {
     "title": "Akış nerede",
@@ -83,17 +128,37 @@
     "emptyBody": "Bu derleme zincir üstü konektör içermiyor, dolayısıyla havuzları sıralanacak bir zincir yok."
   },
   "earningsCalendar": {
+    "capped": "{{total}} bilançonun ilk {{shown}} tanesi gösteriliyor.",
+    "noEstimate": "beklenti yok",
+    "noneInWindowBody": {
+      "today": "Takvimdeki hiçbir şirket bugün bilanço açıklamıyor.",
+      "week": "Önümüzdeki yedi günde açıklama yapan yok.",
+      "watchlist": "İzlediğin hisselerin hiçbiri önümüzdeki çeyrekte bilanço açıklamıyor."
+    },
+    "noneInWindowTitle": "Planlanmış bir şey yok",
+    "noWatchedBody": "Bir hisseyi izlemeye al, bu görünüm onun sıradaki bilançosunu gösterir. Diğer görünümler tüm piyasayı kapsar.",
+    "noWatchedTitle": "İzlenen hisse yok",
+    "providerBusyBody": "Veri sağlayıcı bizi kısıtlıyor. Pencere sıfırlandığında takvim kendiliğinden geri gelir.",
+    "providerBusyTitle": "Bilanço akışı hız sınırında",
+    "providerErrorBody": "Sağlayıcı kullanılamaz bir yanıt verdi. Hesaplarında ya da konektörlerinde bir sorun yok.",
+    "providerErrorTitle": "Bilanço takvimi yüklenmedi",
+    "scopeLabel": "Bilanço penceresi",
+    "scopes": {
+      "today": "Bugün",
+      "week": "Bu hafta",
+      "watchlist": "İzleme listesi"
+    },
     "title": "Bilançolar",
-    "subtitle": "Açılıştan önce ve kapanıştan sonra",
-    "emptyTitle": "Bilanço akışı kurulu değil",
-    "emptyBody": "Bu takvimi bir temel veri eklentisi doldurur. Aracı kurum kendi seans saatlerini yayınlar, bu hafta kimin bilanço açıkladığını değil.",
+    "emptyTitle": "Bilanço akışı yok",
+    "emptyBody": "Bu derlemede bilanço sağlayıcısı yok. Takvim App Server üzerinden gelir; aracı kurum kendi seans saatlerini yayınlar, bu hafta kimin bilanço açıkladığını değil.",
     "columns": {
+      "company": "Şirket",
+      "quarterEnd": "Çeyrek sonu",
       "symbol": "Sembol",
-      "when": "Ne zaman",
-      "epsEstimate": "Beklenen EPS",
-      "revenueEstimate": "Beklenen gelir",
-      "impliedMove": "İma edilen hareket"
-    }
+      "epsEstimate": "Beklenen EPS"
+    },
+    "today": "Bugün",
+    "tomorrow": "Yarın"
   },
   "economicCalendar": {
     "emptyTitle": "Makro akış kurulu değil",
@@ -154,6 +219,26 @@
     "basisLast_other": "{{count}} son fiyat üzerinden toplandı",
     "basisMissing_one": "1 aday fiyatsız",
     "basisMissing_other": "{{count}} aday fiyatsız"
+  },
+  "feeAccrual": {
+    "title": "Biriken ücretler",
+    "subtitle_one": "{{wallet}} · {{count}} aralık",
+    "subtitle_other": "{{wallet}} · {{count}} aralık",
+    "claimableLabel": "Şimdi alınabilir",
+    "nothingClaimable": "Bu aralıklarda alınacak bir şey henüz yok.",
+    "notRead": "Havuz okunamadı",
+    "columns": {
+      "position": "Pozisyon",
+      "fee": "Ücret",
+      "claimable": "Alınabilir"
+    },
+    "loadingTitle": "Ücretler okunuyor",
+    "loadingBody": "Her pozisyon için collect simüle ediliyor; şu anda ne ödeyeceği görülüyor.",
+    "emptyTitle": "Likidite pozisyonu yok",
+    "emptyBody": "{{wallet}} ücret biriktirecek bir pozisyon tutmuyor. Bağlı bir zincirde likidite sağlayın, tutar burada görünür.",
+    "noChainsTitle": "Zincir konektörü yok",
+    "noChainsBody": "Bir on-chain konektör kurun; bu panel havuzlarının cüzdanınıza ne borçlu olduğunu okur.",
+    "footnote": "Bir collect bu blokta ne öderdi, iki bacak, pozisyon başına. Tahsil edilmiş ücretler zincirde iz bırakmaz; bu yüzden ücret APR'ı, aralıkta geçen süre ve elde tutmaya karşı kayıp bir indeksleyici gerektirir ve gösterilmez."
   },
   "funding": {
     "loading": "Fonlama oranları okunuyor…",
@@ -242,14 +327,38 @@
     "biggestLabel": "En büyük takaslar"
   },
   "lpPanes": {
-    "positionTitle": "LP pozisyonları bir pozisyon kaynağı gerektirir",
-    "positionBody": "Bağlı hiçbir şey henüz bir likidite pozisyonunu okuyamıyor. Bunun için zincirin position manager'ına bu cüzdanın aralıklarını sormak gerekir ve bugün bunu yapan bir konektör yok.",
-    "feesTitle": "Ücret geçmişi bir pozisyon kaynağı gerektirir",
-    "feesBody": "Günlük kazanılan ücretler ya bir indeksleyiciden ya da zaman içinde ölçülen fee growth'tan gelir. İkisi de bağlı değil ve tahmini bir grafik ölçülmüş gibi görünür.",
     "manageTitle": "Aralık düzenleme bir likidite işlemi gerektirir",
     "manageBody": "Likidite ekleme, çekme ve yeniden ortalama, hiçbir konektörün henüz oluşturmadığı imzalı işlemlerdir. Kontroller bir işe yarayana kadar gösterilmez.",
     "venueFallback": "bu zincir",
     "wouldRead": "{{chain}} üzerindeki {{pool}} için {{wallet}} okunacaktı"
+  },
+  "lpPosition": {
+    "title": "LP pozisyonu",
+    "subtitle_one": "{{wallet}} · {{count}} aralık",
+    "subtitle_other": "{{wallet}} · {{count}} aralık",
+    "capped": "{{count}} gösterilmiyor",
+    "value": "Pozisyon değeri",
+    "poolUnread": "Havuz okunamadı",
+    "range": "Aralık",
+    "ticks": "tick {{lower}} ile {{upper}}",
+    "band": "±{{band}}% bant",
+    "bandWithHeadroom": "±{{band}}% bant · üst sınıra {{headroom}}% pay kaldı",
+    "composition": "Bileşim",
+    "uncollected": "Tahsil edilmemiş ücretler",
+    "tokenId": "Pozisyon",
+    "pool": "Havuz",
+    "feeTier": "{{value}}% ücret",
+    "inRange": "Aralıkta",
+    "outOfRange": "Aralık dışında",
+    "rangeUnknown": "Havuz okunamadı",
+    "otherPositions": "Diğer pozisyonlarınız",
+    "loadingTitle": "Pozisyonlar okunuyor",
+    "loadingBody": "Bağlı her zincirin position manager sözleşmesine bu cüzdanda ne olduğu soruluyor.",
+    "emptyTitle": "Likidite pozisyonu yok",
+    "emptyBody": "{{wallet}} bağlı zincirlerde Uniswap v3 veya PancakeSwap v3 pozisyonu tutmuyor. Birinde likidite sağlayın, burada görünür.",
+    "noChainsTitle": "Zincir konektörü yok",
+    "noChainsBody": "Bir on-chain konektör kurun; bu panel o zincirin position manager sözleşmesini cüzdanınız için okur.",
+    "footnote": "Zincirden okunur: bant, likiditenin şu andaki değeri ve tahsil edilmemiş ücretler. Bir pozisyon maliyetini saklamadığı için elde tutmaya karşı bir rakam yok."
   },
   "marginHealth": {
     "title": "Marj sağlığı",
@@ -668,7 +777,8 @@
     "feeTier": "Ücret kademesi",
     "feeTierUnknown": "Bu platform yayımlamıyor",
     "reserves": "Rezervler",
-    "reservesUnavailable": "İki taraf yalnızca masaüstünde",
+    "reservesUnavailable": "Bu havuz için yayınlanmıyor",
+    "reservesSource": "Rezervler {{provider}} kaynaklı",
     "trades24h": "İşlem 24s",
     "tradersSub_one": "{{count}} işlemci",
     "tradersSub_other": "{{count}} işlemci",
@@ -2973,14 +3083,14 @@
     "poolStats": "Her iki taraftaki rezervler, kilitli değer, 24 saatlik hacim, ücret katmanı, ve üç farklı büyüklükte fiyat etkisi",
     "onchainTrades": "Havuz üzerinden onaylandıkça her takas, cüzdanı ve işleme bağlantısıyla birlikte",
     "route": "Aggregator'ın takasını havuzlar arasında nasıl böldüğü, böylece kaymanın belirtilen bir nedeni olur",
-    "feeAccrual": "Pozisyonunun zaman içinde kazandığı ücretler, bunların işaret ettiği APR, ve şu an talep edilebilir olan",
-    "lpPosition": "Aralığın canlı fiyata karşı durumu, aralıkta geçirilen süre, ve sadece elde tutmaya karşı ölçülen kalıcı olmayan zarar",
+    "feeAccrual": "Bir collect işleminin cüzdanınıza şu anda ne ödeyeceği, iki bacak, pozisyon başına ve toplamda",
+    "lpPosition": "Canlı havuz fiyatına karşı aralığınız, likiditenin bileşimi ve henüz toplanmamış ücretler",
     "manageLiquidity": "Aralığı taşı, likidite ekle ya da çek, ve grafikten ayrılmadan ücretleri talep et",
     "chainLadder": "Aynı token her zincirde fiyatlanmış, gaz dahil edilmiş halde; böylece en iyi teklif değil en iyi toplam kazanır",
     "routeBridge": "Kaynak zincir, hedef zincir, köprü, ücreti ve ne kadar sürdüğü, yürütmeye hazır halde",
     "inFlight": "Hâlâ onaylanmakta olan transferler, her biri beklediği blok sayacıyla birlikte",
     "session": "İşlem gününün şu an nerede olduğu, aracı kurumun kendi takviminden; tatiller ve yarım günler dahil",
-    "earningsCalendar": "Kimin ne zaman rapor vereceği, kapanış öncesi ya da sonrası, geçmeleri gereken tahminle birlikte",
+    "earningsCalendar": "Kim ne zaman bilanço açıklıyor, güne göre gruplanmış, aşılması gereken beklentiyle birlikte",
     "economicCalendar": "Saatine göre makro veriler, önemiyle, önceki rakamla ve piyasa beklentisiyle birlikte",
     "sessionClock": "İşlem günü için tek satırlık bir saat, böylece mesai dışı bir emir asla sürpriz olmaz",
     "level1": "Boyutlarıyla birlikte alış ve satış, spread ve aracı kurum akışından günün aralığı",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DexPaprika tarafından sağlanan DEX piyasa verisi"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "DexScreener'dan havuz rezervleri ve havuz istatistikleri. Anahtar gerekmez ve CORS açıktır, bu yüzden iki taraflı rezervler tarayıcıda da çalışır. Mum grafiği ve sıralı havuz listesi yok: bu sağlayıcı diğerlerini tamamlar, yerini almaz."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

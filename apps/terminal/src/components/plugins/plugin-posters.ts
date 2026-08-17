@@ -6,15 +6,11 @@
 // remain trademarks of their respective owners.
 
 export const BUNDLED_POSTERS: Record<string, string> = {
-  'alpaca-market-connector': '/posters/alpaca-market-connector.png',
   'anthropic-inference': '/posters/anthropic-inference.png',
-  'arbitrum-dex-connector': '/posters/arbitrum-dex-connector.png',
-  'base-dex-connector': '/posters/base-dex-connector.png',
   'binance-market-connector': '/posters/binance-market-connector.png',
   'bitfinex-market-connector': '/posters/bitfinex-market-connector.png',
   'bitget-market-connector': '/posters/bitget-market-connector.png',
   'bitvavo-market-connector': '/posters/bitvavo-market-connector.png',
-  'bsc-dex-connector': '/posters/bsc-dex-connector.png',
   'bybit-market-connector': '/posters/bybit-market-connector.png',
   'coinbase-market-connector': '/posters/coinbase-market-connector.png',
   'cryptocom-market-connector': '/posters/cryptocom-market-connector.png',

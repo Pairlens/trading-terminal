@@ -64,9 +64,54 @@
     "noChainsBody": "Pasang konektor on-chain, lalu chain-nya ikut masuk ke tangga ini."
   },
   "company": {
+    "analystBuy": "{{count}} beli",
+    "analystCoverage_one": "{{count}} analis",
+    "analystCoverage_other": "{{count}} analis",
+    "analystHold": "{{count}} tahan",
+    "analystSell": "{{count}} jual",
+    "beta": "Beta",
+    "consensusEps": "EPS konsensus",
+    "dividendYield": "Yield dividen",
+    "earningsGrowth": "Laba YoY",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "Valuasi",
+      "growth": "Pertumbuhan",
+      "margins": "Margin",
+      "context": "Konteks",
+      "analyst": "Analis"
+    },
+    "marketCap": "Kapitalisasi pasar",
+    "nextReport": "Laporan berikutnya",
+    "noCoverageBody": "Penyedia mencakup perusahaan operasional yang tercatat. ETF, reksa dana tertutup, atau pencatatan yang sangat baru sering tidak punya laporan keuangan di belakangnya.",
+    "noCoverageTitle": "Tidak ada data fundamental untuk {{symbol}}",
+    "noFiguresBody": "Penyedia mengenali pencatatan ini tetapi belum mempublikasikan satu pun angka yang panel ini tampilkan.",
+    "noFiguresTitle": "Belum ada yang dipublikasikan",
+    "notEquityBody": "Panel ini menjelaskan perusahaan tercatat. {{venue}} bukan bursa saham, dan ticker yang sama di sana adalah aset lain.",
+    "notEquityTitle": "Data fundamental butuh saham",
+    "operatingMargin": "Margin operasi",
+    "pe": "PER",
+    "peForward": "PER · proyeksi",
+    "peg": "PEG",
+    "profitMargin": "Margin laba bersih",
+    "providerBusyBody": "Penyedia data sedang membatasi permintaan kami. Angkanya kembali sendiri begitu jendela batas direset.",
+    "providerBusyTitle": "Data fundamental sedang dibatasi",
+    "providerErrorBody": "Penyedia menjawab dengan sesuatu yang tidak bisa dipakai. Bukan masalah akun atau konektor kamu.",
+    "providerErrorTitle": "Data fundamental gagal dimuat",
+    "reportsInDays_one": "{{count}} hari lagi",
+    "reportsInDays_other": "{{count}} hari lagi",
+    "reportsToday": "Melapor hari ini",
+    "reportsTomorrow": "Melapor besok",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "Pendapatan YoY",
+    "revenueTtm": "Pendapatan TTM",
+    "sharesOutstanding": "Saham beredar",
+    "targetPrice": "Target analis",
     "unknownName": "Nama perusahaan tidak tersedia",
     "needsProviderTitle": "Data fundamental butuh penyedia",
-    "needsProviderBody": "Broker mengutip harga dan mengeksekusi order; ia tidak menerbitkan valuasi, pertumbuhan, atau margin. Pasang plugin fundamental untuk mengisi panel ini."
+    "needsProviderBody": "Build ini tidak punya sumber data fundamental. Valuasi, pertumbuhan, dan margin datang dari App Server; konektor broker hanya mengutip harga dan mengeksekusi order.",
+    "week52": "52 minggu terendah · tertinggi"
   },
   "dexChains": {
     "title": "Ke mana arus bergerak",
@@ -83,17 +128,37 @@
     "emptyBody": "Build ini tidak menyertakan konektor on-chain, jadi tidak ada chain yang pool-nya bisa diperingkat."
   },
   "earningsCalendar": {
+    "capped": "Menampilkan {{shown}} dari {{total}} laporan pertama.",
+    "noEstimate": "tanpa estimasi",
+    "noneInWindowBody": {
+      "today": "Tidak ada perusahaan di kalender yang melapor hari ini.",
+      "week": "Tidak ada yang melapor dalam tujuh hari ke depan.",
+      "watchlist": "Tidak ada saham yang kamu pantau melapor pada kuartal berikutnya."
+    },
+    "noneInWindowTitle": "Tidak ada jadwal",
+    "noWatchedBody": "Tandai sebuah saham dan tampilan ini menunjukkan laporan berikutnya. Tampilan lain mencakup seluruh pasar.",
+    "noWatchedTitle": "Belum ada saham dipantau",
+    "providerBusyBody": "Penyedia data sedang membatasi permintaan kami. Jadwalnya kembali sendiri begitu jendela batas direset.",
+    "providerBusyTitle": "Feed laporan sedang dibatasi",
+    "providerErrorBody": "Penyedia menjawab dengan sesuatu yang tidak bisa dipakai. Bukan masalah akun atau konektor kamu.",
+    "providerErrorTitle": "Jadwal laporan gagal dimuat",
+    "scopeLabel": "Jendela pelaporan",
+    "scopes": {
+      "today": "Hari ini",
+      "week": "Minggu ini",
+      "watchlist": "Watchlist"
+    },
     "title": "Laporan keuangan",
-    "subtitle": "Sebelum pembukaan dan setelah penutupan",
-    "emptyTitle": "Belum ada feed laporan keuangan",
-    "emptyBody": "Plugin penyedia data fundamental yang mengisi kalender ini. Broker menerbitkan jam sesinya sendiri, bukan siapa yang melapor minggu ini.",
+    "emptyTitle": "Tidak ada feed laporan keuangan",
+    "emptyBody": "Build ini tidak punya penyedia jadwal laporan. Jadwalnya datang dari App Server; broker menerbitkan jam sesinya sendiri, bukan siapa yang melapor minggu ini.",
     "columns": {
+      "company": "Perusahaan",
+      "quarterEnd": "Akhir kuartal",
       "symbol": "Simbol",
-      "when": "Waktu",
-      "epsEstimate": "Est. EPS",
-      "revenueEstimate": "Est. pendapatan",
-      "impliedMove": "Pergerakan implisit"
-    }
+      "epsEstimate": "Est. EPS"
+    },
+    "today": "Hari ini",
+    "tomorrow": "Besok"
   },
   "economicCalendar": {
     "emptyTitle": "Belum ada feed makro",
@@ -154,6 +219,26 @@
     "basisLast_other": "Dijumlahkan dari {{count}} harga terakhir",
     "basisMissing_one": "1 peserta tanpa kutipan",
     "basisMissing_other": "{{count}} peserta tanpa kutipan"
+  },
+  "feeAccrual": {
+    "title": "Akumulasi fee",
+    "subtitle_one": "{{wallet}} · {{count}} rentang",
+    "subtitle_other": "{{wallet}} · {{count}} rentang",
+    "claimableLabel": "Bisa diklaim sekarang",
+    "nothingClaimable": "Belum ada yang bisa diklaim dari rentang ini.",
+    "notRead": "Pool belum terbaca",
+    "columns": {
+      "position": "Posisi",
+      "fee": "Fee",
+      "claimable": "Bisa diklaim"
+    },
+    "loadingTitle": "Membaca fee",
+    "loadingBody": "Mensimulasikan collect pada setiap posisi untuk melihat berapa yang akan dibayar sekarang.",
+    "emptyTitle": "Tidak ada posisi likuiditas",
+    "emptyBody": "{{wallet}} tidak memegang posisi yang bisa mengumpulkan fee. Sediakan likuiditas di chain yang terhubung dan jumlahnya akan muncul di sini.",
+    "noChainsTitle": "Tidak ada konektor chain",
+    "noChainsBody": "Pasang konektor on-chain dan panel ini akan membaca berapa yang pool-nya utang ke wallet Anda.",
+    "footnote": "Jumlah yang akan dibayar collect pada blok ini, kedua sisi, per posisi. Fee yang sudah diambil tidak meninggalkan jejak di chain, jadi APR fee, waktu dalam rentang, dan kerugian dibanding menahan aset butuh indexer dan tidak ditampilkan."
   },
   "funding": {
     "loading": "Membaca tingkat pendanaan…",
@@ -242,14 +327,38 @@
     "biggestLabel": "Swap terbesar"
   },
   "lpPanes": {
-    "positionTitle": "Posisi LP butuh sumber posisi",
-    "positionBody": "Belum ada yang terhubung yang bisa membaca posisi likuiditas. Itu berarti menanyakan position manager di chain tentang range dompet ini, dan sekarang belum ada konektor yang melakukannya.",
-    "feesTitle": "Riwayat fee butuh sumber posisi",
-    "feesBody": "Fee harian berasal dari indexer, atau dari fee growth yang diukur seiring waktu. Keduanya belum terhubung, dan grafik perkiraan akan terlihat seperti hasil pengukuran.",
     "manageTitle": "Mengubah range butuh aksi likuiditas",
     "manageBody": "Menambah, menarik dan memusatkan ulang likuiditas adalah transaksi bertanda tangan yang belum dibangun konektor mana pun. Kontrolnya tidak ditampilkan sampai benar-benar berfungsi.",
     "venueFallback": "chain ini",
     "wouldRead": "Akan membaca {{wallet}} pada {{pool}}, {{chain}}"
+  },
+  "lpPosition": {
+    "title": "Posisi LP",
+    "subtitle_one": "{{wallet}} · {{count}} rentang",
+    "subtitle_other": "{{wallet}} · {{count}} rentang",
+    "capped": "{{count}} tidak ditampilkan",
+    "value": "Nilai posisi",
+    "poolUnread": "Pool belum terbaca",
+    "range": "Rentang",
+    "ticks": "tick {{lower}} sampai {{upper}}",
+    "band": "pita ±{{band}}%",
+    "bandWithHeadroom": "pita ±{{band}}% · sisa {{headroom}}% sebelum batas atas",
+    "composition": "Komposisi",
+    "uncollected": "Fee belum diambil",
+    "tokenId": "Posisi",
+    "pool": "Pool",
+    "feeTier": "fee {{value}}%",
+    "inRange": "Dalam rentang",
+    "outOfRange": "Di luar rentang",
+    "rangeUnknown": "Pool belum terbaca",
+    "otherPositions": "Posisi Anda yang lain",
+    "loadingTitle": "Membaca posisi",
+    "loadingBody": "Menanyakan position manager di setiap chain yang terhubung tentang isi wallet ini.",
+    "emptyTitle": "Tidak ada posisi likuiditas",
+    "emptyBody": "{{wallet}} tidak memegang posisi Uniswap v3 atau PancakeSwap v3 di chain yang terhubung. Sediakan likuiditas di salah satunya dan posisinya akan muncul di sini.",
+    "noChainsTitle": "Tidak ada konektor chain",
+    "noChainsBody": "Pasang konektor on-chain dan panel ini akan membaca position manager chain tersebut untuk wallet Anda.",
+    "footnote": "Dibaca dari chain: pita harga, nilai likuiditas saat ini, dan fee yang belum diambil. Posisi tidak menyimpan biaya awalnya, jadi tidak ada angka pembanding terhadap sekadar menahan aset."
   },
   "marginHealth": {
     "title": "Kesehatan margin",
@@ -668,7 +777,8 @@
     "feeTier": "Tingkat fee",
     "feeTierUnknown": "Tidak dipublikasikan venue ini",
     "reserves": "Cadangan",
-    "reservesUnavailable": "Kedua sisi hanya di desktop",
+    "reservesUnavailable": "Tidak dipublikasikan untuk pool ini",
+    "reservesSource": "Cadangan dari {{provider}}",
     "trades24h": "Transaksi 24j",
     "tradersSub_one": "{{count}} trader",
     "tradersSub_other": "{{count}} trader",
@@ -2973,14 +3083,14 @@
     "poolStats": "Cadangan di kedua sisi, value locked, volume 24 jam, tier fee, dan dampak harga pada tiga ukuran",
     "onchainTrades": "Setiap swap lewat pool saat dikonfirmasi, beserta dompet dan tautan ke transaksinya",
     "route": "Bagaimana agregator membagi swap Anda lintas pool, sehingga slippage punya penyebab yang jelas",
-    "feeAccrual": "Fee yang diperoleh posisi Anda seiring waktu, APR yang tersirat darinya, dan apa yang bisa diklaim sekarang",
-    "lpPosition": "Rentang harga Anda terhadap harga live, waktu di dalam rentang, dan impermanent loss yang diukur terhadap sekadar hold",
+    "feeAccrual": "Berapa yang akan dibayarkan collect ke wallet Anda sekarang, kedua sisi, per posisi dan total",
+    "lpPosition": "Rentang Anda terhadap harga pool langsung, komposisi likuiditas, dan fee yang belum ditarik",
     "manageLiquidity": "Pindahkan rentang harga, tambah atau tarik likuiditas, dan klaim fee tanpa meninggalkan chart",
     "chainLadder": "Token yang sama diberi harga di setiap chain, dengan gas sudah termasuk, sehingga total terbaik yang menang, bukan sekadar kuotasi terbaik",
     "routeBridge": "Chain asal, chain tujuan, bridge-nya, fee-nya, dan berapa lama waktunya, siap dieksekusi",
     "inFlight": "Transfer yang masih dikonfirmasi, masing-masing dengan penghitung blok yang sedang ditunggunya",
     "session": "Di titik mana hari trading berada sekarang, dari kalender broker itu sendiri, termasuk hari libur dan setengah hari",
-    "earningsCalendar": "Siapa yang melaporkan dan kapan, sebelum atau sesudah bel penutupan, beserta estimasi yang harus dilampaui",
+    "earningsCalendar": "Siapa melapor dan kapan, dikelompokkan per hari, dengan estimasi konsensus yang harus dilewati",
     "economicCalendar": "Rilis data makro berdasarkan waktunya, dengan tingkat kepentingan, angka periode sebelumnya, dan konsensus",
     "sessionClock": "Jam satu baris untuk hari trading, sehingga order di luar jam trading tidak pernah jadi kejutan",
     "level1": "Bid dan ask beserta ukurannya, spread, dan rentang harga hari ini dari feed broker",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Data market DEX yang didukung oleh DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Cadangan pool dan statistik pool dari DexScreener. Tanpa kunci API dan CORS terbuka, jadi cadangan kedua sisi bisa dibaca di browser. Tanpa candle dan tanpa peringkat daftar pool: penyedia ini melengkapi yang lain, bukan menggantinya."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

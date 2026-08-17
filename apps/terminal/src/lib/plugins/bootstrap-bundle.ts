@@ -130,6 +130,10 @@ import {
   dexpaprikaDataProviderManifest,
 } from '@pairlens/plugins/dexpaprika-data-provider'
 import {
+  createDexscreenerDataProviderPlugin,
+  dexscreenerDataProviderManifest,
+} from '@pairlens/plugins/dexscreener-data-provider'
+import {
   createGeckoterminalDataProviderPlugin,
   geckoterminalDataProviderManifest,
 } from '@pairlens/plugins/geckoterminal-data-provider'
@@ -292,6 +296,10 @@ export const BOOTSTRAP_DEX_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: geckoterminalDataProviderManifest,
     factory: createGeckoterminalDataProviderPlugin,
+  },
+  {
+    manifest: dexscreenerDataProviderManifest,
+    factory: createDexscreenerDataProviderPlugin,
   },
   {
     manifest: jupiterDexConnectorManifest,

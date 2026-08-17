@@ -70,9 +70,58 @@
     "noChainsBody": "Zainstaluj konektor on-chain, a jego łańcuch dołączy do drabinki."
   },
   "company": {
+    "analystBuy": "{{count}} kupuj",
+    "analystCoverage_few": "analityków: {{count}}",
+    "analystCoverage_many": "analityków: {{count}}",
+    "analystCoverage_one": "{{count}} analityk",
+    "analystCoverage_other": "analityków: {{count}}",
+    "analystHold": "{{count}} trzymaj",
+    "analystSell": "{{count}} sprzedaj",
+    "beta": "Beta",
+    "consensusEps": "Konsensus EPS",
+    "dividendYield": "Stopa dywidendy",
+    "earningsGrowth": "Zysk r/r",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "Wycena",
+      "growth": "Wzrost",
+      "margins": "Marże",
+      "context": "Kontekst",
+      "analyst": "Analitycy"
+    },
+    "marketCap": "Kapitalizacja",
+    "nextReport": "Najbliższy raport",
+    "noCoverageBody": "Dostawca pokrywa notowane spółki operacyjne. Za ETF-em, funduszem zamkniętym albo bardzo świeżym notowaniem zwykle nie stoją sprawozdania.",
+    "noCoverageTitle": "Brak fundamentów dla {{symbol}}",
+    "noFiguresBody": "Dostawca zna to notowanie, ale nie opublikował żadnej z liczb pokazywanych w tym panelu.",
+    "noFiguresTitle": "Jeszcze nic nie opublikowano",
+    "notEquityBody": "Ten panel opisuje spółkę notowaną na giełdzie. {{venue}} nie jest giełdą akcji, a ten sam ticker oznacza tam inny instrument.",
+    "notEquityTitle": "Fundamenty wymagają akcji",
+    "operatingMargin": "Marża operacyjna",
+    "pe": "C/Z",
+    "peForward": "C/Z · progn.",
+    "peg": "PEG",
+    "profitMargin": "Marża netto",
+    "providerBusyBody": "Dostawca danych nas przytrzymuje. Liczby wrócą same, gdy okno limitu się odnowi.",
+    "providerBusyTitle": "Dane fundamentalne są ograniczane",
+    "providerErrorBody": "Dostawca odpowiedział czymś bezużytecznym. Twoje konta i konektory są tu bez winy.",
+    "providerErrorTitle": "Nie udało się wczytać fundamentów",
+    "reportsInDays_few": "Za {{count}} dni",
+    "reportsInDays_many": "Za {{count}} dni",
+    "reportsInDays_one": "Za {{count}} dzień",
+    "reportsInDays_other": "Za {{count}} dni",
+    "reportsToday": "Raportuje dziś",
+    "reportsTomorrow": "Raportuje jutro",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "Przychody r/r",
+    "revenueTtm": "Przychody TTM",
+    "sharesOutstanding": "Akcje w obrocie",
+    "targetPrice": "Cel analityków",
     "unknownName": "Nazwa spółki niedostępna",
     "needsProviderTitle": "Dane fundamentalne wymagają dostawcy",
-    "needsProviderBody": "Broker kwotuje i realizuje zlecenia; nie publikuje wyceny, wzrostu ani marż. Zainstaluj wtyczkę z danymi fundamentalnymi, aby wypełnić ten panel."
+    "needsProviderBody": "Ta kompilacja nie ma źródła danych fundamentalnych. Wycena, wzrost i marże pochodzą z App Servera, a konektor brokera tylko kwotuje i realizuje zlecenia.",
+    "week52": "52 tygodnie min · max"
   },
   "dexChains": {
     "title": "Gdzie płynie kapitał",
@@ -91,17 +140,37 @@
     "emptyBody": "Ta kompilacja nie zawiera konektorów on-chain, więc nie ma łańcucha, którego pule można uszeregować."
   },
   "earningsCalendar": {
+    "capped": "Pokazano pierwsze {{shown}} z {{total}} raportów.",
+    "noEstimate": "brak prognozy",
+    "noneInWindowBody": {
+      "today": "Dziś żadna spółka z kalendarza nie raportuje.",
+      "week": "W najbliższych siedmiu dniach nie raportuje nikt.",
+      "watchlist": "Żadna z obserwowanych spółek nie raportuje w następnym kwartale."
+    },
+    "noneInWindowTitle": "Nic nie zaplanowano",
+    "noWatchedBody": "Dodaj spółkę do listy, a ten widok pokaże jej najbliższy raport. Pozostałe widoki obejmują cały rynek.",
+    "noWatchedTitle": "Brak obserwowanych spółek",
+    "providerBusyBody": "Dostawca danych nas przytrzymuje. Kalendarz wróci sam, gdy okno limitu się odnowi.",
+    "providerBusyTitle": "Kanał wyników jest ograniczany",
+    "providerErrorBody": "Dostawca odpowiedział czymś bezużytecznym. Twoje konta i konektory są tu bez winy.",
+    "providerErrorTitle": "Nie udało się wczytać kalendarza wyników",
+    "scopeLabel": "Okno raportów",
+    "scopes": {
+      "today": "Dziś",
+      "week": "Ten tydzień",
+      "watchlist": "Lista"
+    },
     "title": "Wyniki spółek",
-    "subtitle": "Przed otwarciem i po zamknięciu",
-    "emptyTitle": "Brak źródła danych o wynikach",
-    "emptyBody": "Ten kalendarz wypełnia wtyczka z danymi fundamentalnymi. Broker publikuje godziny własnych sesji, a nie listę spółek raportujących w tym tygodniu.",
+    "emptyTitle": "Brak kanału wyników",
+    "emptyBody": "Ta kompilacja nie ma dostawcy wyników. Kalendarz pochodzi z App Servera, a broker publikuje godziny własnych sesji, nie listę spółek raportujących.",
     "columns": {
+      "company": "Spółka",
+      "quarterEnd": "Koniec kwartału",
       "symbol": "Symbol",
-      "when": "Kiedy",
-      "epsEstimate": "Prog. EPS",
-      "revenueEstimate": "Prog. przychodów",
-      "impliedMove": "Implikowany ruch"
-    }
+      "epsEstimate": "Prog. EPS"
+    },
+    "today": "Dziś",
+    "tomorrow": "Jutro"
   },
   "economicCalendar": {
     "emptyTitle": "Brak źródła danych makro",
@@ -176,6 +245,28 @@
     "basisMissing_few": "{{count}} uczestników bez kwotowania",
     "basisMissing_many": "{{count}} uczestników bez kwotowania",
     "basisMissing_other": "{{count}} uczestnika bez kwotowania"
+  },
+  "feeAccrual": {
+    "title": "Naliczone opłaty",
+    "subtitle_one": "{{wallet}} · {{count}} zakres",
+    "subtitle_few": "{{wallet}} · {{count}} zakresy",
+    "subtitle_many": "{{wallet}} · {{count}} zakresów",
+    "subtitle_other": "{{wallet}} · {{count}} zakresu",
+    "claimableLabel": "Do pobrania teraz",
+    "nothingClaimable": "W tych zakresach nie ma jeszcze nic do pobrania.",
+    "notRead": "Pula nieodczytana",
+    "columns": {
+      "position": "Pozycja",
+      "fee": "Opłata",
+      "claimable": "Do pobrania"
+    },
+    "loadingTitle": "Czytamy opłaty",
+    "loadingBody": "Symulujemy collect na każdej pozycji, aby zobaczyć, ile wypłaciłby teraz.",
+    "emptyTitle": "Brak pozycji płynności",
+    "emptyBody": "{{wallet}} nie ma pozycji, na których naliczają się opłaty. Dostarcz płynność na podłączonym łańcuchu i kwota pojawi się tutaj.",
+    "noChainsTitle": "Brak konektorów łańcuchów",
+    "noChainsBody": "Zainstaluj konektor on-chain, a ten panel odczyta, ile jego pule są winne twojemu portfelowi.",
+    "footnote": "Ile wypłaciłby collect w tym bloku, obie strony, na pozycję. Już pobrane opłaty nie zostawiają śladu w łańcuchu, więc APR opłat, czas w zakresie i strata wobec trzymania wymagają indeksera i nie są pokazywane."
   },
   "funding": {
     "loading": "Wczytywanie stawek finansowania…",
@@ -264,14 +355,40 @@
     "biggestLabel": "Największe swapy"
   },
   "lpPanes": {
-    "positionTitle": "Pozycje LP wymagają źródła pozycji",
-    "positionBody": "Nic z podłączonych rzeczy nie potrafi jeszcze odczytać pozycji płynności. Wymagałoby to zapytania position managera łańcucha o zakresy tego portfela, czego dziś nie robi żaden konektor.",
-    "feesTitle": "Historia prowizji wymaga źródła pozycji",
-    "feesBody": "Prowizje zarobione dziennie pochodzą z indeksera albo z fee growth mierzonego w czasie. Żadne z tych źródeł nie jest podłączone, a szacunkowy wykres wyglądałby jak pomiar.",
     "manageTitle": "Edycja zakresu wymaga akcji płynności",
     "manageBody": "Dodanie, wycofanie i wyśrodkowanie płynności to podpisywane transakcje, których żaden konektor jeszcze nie buduje. Kontrolki pozostają ukryte, dopóki nie będą nic robić.",
     "venueFallback": "ten łańcuch",
     "wouldRead": "Odczytałby {{wallet}} na {{pool}}, {{chain}}"
+  },
+  "lpPosition": {
+    "title": "Pozycja LP",
+    "subtitle_one": "{{wallet}} · {{count}} zakres",
+    "subtitle_few": "{{wallet}} · {{count}} zakresy",
+    "subtitle_many": "{{wallet}} · {{count}} zakresów",
+    "subtitle_other": "{{wallet}} · {{count}} zakresu",
+    "capped": "{{count}} nie pokazano",
+    "value": "Wartość pozycji",
+    "poolUnread": "Pula nieodczytana",
+    "range": "Zakres",
+    "ticks": "ticki {{lower}} do {{upper}}",
+    "band": "pasmo ±{{band}}%",
+    "bandWithHeadroom": "pasmo ±{{band}}% · do górnej granicy zostało {{headroom}}%",
+    "composition": "Skład",
+    "uncollected": "Niepobrane opłaty",
+    "tokenId": "Pozycja",
+    "pool": "Pula",
+    "feeTier": "opłata {{value}}%",
+    "inRange": "W zakresie",
+    "outOfRange": "Poza zakresem",
+    "rangeUnknown": "Pula nieodczytana",
+    "otherPositions": "Twoje inne pozycje",
+    "loadingTitle": "Czytamy pozycje",
+    "loadingBody": "Pytamy position manager każdego podłączonego łańcucha, co trzyma ten portfel.",
+    "emptyTitle": "Brak pozycji płynności",
+    "emptyBody": "{{wallet}} nie ma pozycji Uniswap v3 ani PancakeSwap v3 na podłączonych łańcuchach. Dostarcz płynność na jednym z nich i pozycja pojawi się tutaj.",
+    "noChainsTitle": "Brak konektorów łańcuchów",
+    "noChainsBody": "Zainstaluj konektor on-chain, a ten panel odczyta position manager tego łańcucha dla twojego portfela.",
+    "footnote": "Odczytane z łańcucha: pasmo, obecna wartość płynności i niepobrane opłaty. Pozycja nie przechowuje ceny wejścia, więc nie ma tu porównania ze zwykłym trzymaniem."
   },
   "marginHealth": {
     "title": "Kondycja depozytu",
@@ -698,7 +815,8 @@
     "feeTier": "Poziom prowizji",
     "feeTierUnknown": "Niepublikowany przez tę venue",
     "reserves": "Rezerwy",
-    "reservesUnavailable": "Obie strony tylko na komputerze",
+    "reservesUnavailable": "Nieopublikowane dla tej puli",
+    "reservesSource": "Rezerwy z {{provider}}",
     "trades24h": "Transakcje 24h",
     "tradersSub_one": "{{count}} trader",
     "tradersSub_few": "{{count}} traderów",
@@ -3033,14 +3151,14 @@
     "poolStats": "Rezerwy po obu stronach, zablokowana wartość, wolumen 24h, poziom opłat oraz wpływ na cenę przy trzech wielkościach",
     "onchainTrades": "Każdy swap przez pulę w miarę potwierdzania, z portfelem i linkiem do transakcji",
     "route": "Jak agregator dzieli Twój swap między pule, więc poślizg cenowy ma podaną przyczynę",
-    "feeAccrual": "Opłaty, które zarobiła Twoja pozycja w czasie, wynikający z nich APR oraz to, co można teraz odebrać",
-    "lpPosition": "Twój zakres względem bieżącej ceny, czas w zakresie oraz strata nietrwała mierzona względem zwykłego trzymania",
+    "feeAccrual": "Ile collect wypłaciłby teraz do twojego portfela, obie nogi, na pozycję i łącznie",
+    "lpPosition": "Twój zakres na tle bieżącej ceny puli, skład płynności i jeszcze niepobrane opłaty",
     "manageLiquidity": "Przesuwaj zakres, dodawaj lub wycofuj płynność oraz odbieraj opłaty bez opuszczania wykresu",
     "chainLadder": "Ten sam token wyceniony na każdym blockchainie, z uwzględnionym gas, więc wygrywa najlepsza suma całkowita, a nie najlepsza wycena",
     "routeBridge": "Blockchain źródłowy, blockchain docelowy, most, jego opłata i ile to trwa, gotowe do wykonania",
     "inFlight": "Transfery wciąż się potwierdzające, każdy z licznikiem bloków, na który czeka",
     "session": "Gdzie teraz jest dzień sesyjny, według kalendarza samego brokera, wliczając święta i skrócone sesje",
-    "earningsCalendar": "Kto publikuje wyniki i kiedy, przed otwarciem czy po zamknięciu sesji, z prognozą, którą trzeba pobić",
+    "earningsCalendar": "Kto raportuje i kiedy, pogrupowane po dniach, z konsensusem, który trzeba pobić",
     "economicCalendar": "Publikacje makroekonomiczne o wyznaczonej porze, z ważnością, poprzednim odczytem i konsensusem",
     "sessionClock": "Jednowierszowy zegar dla dnia sesyjnego, więc zlecenie poza godzinami handlu nigdy nie zaskoczy",
     "level1": "Bid i ask z ich wielkościami, spread i dzienny zakres z feedu brokera",
@@ -3613,6 +3731,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "Dane rynkowe DEX dostarczane przez DexPaprika"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "Rezerwy i statystyki puli z DexScreener. Bez klucza API i z otwartym CORS, więc rezerwy obu stron działają w przeglądarce. Bez świec i bez rankingu puli: ten dostawca uzupełnia pozostałe, nie zastępuje ich."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",

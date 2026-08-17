@@ -3,11 +3,13 @@
 /**
  * Macro releases by the clock.
  *
- * Same standing as the earnings pane: the frame is real, the body is honest.
- * Nothing bundled serves a macro feed — a broker's calendar covers its own
- * sessions, not CPI — so the pane names the kind of provider that fills it and
- * shows the columns such a provider must produce
- * (`EconCalendarEvent` in `lib/equities/calendar-types.ts`).
+ * The frame is real, the body is honest. Nothing serves a macro feed here: a
+ * broker's calendar covers its own sessions, not CPI, and the App Server's
+ * fundamentals provider publishes company filings and earnings dates with no
+ * forward macro calendar behind them. So this pane keeps the seam the earnings
+ * pane just outgrew: it names the kind of provider that fills it and shows the
+ * columns such a provider must produce (`EconCalendarEvent` in
+ * `lib/equities/calendar-types.ts`).
  *
  * Release times ride the wire as instants, never as a wall clock: '08:30' is
  * only a time if you already know which city, and this pane is read from every

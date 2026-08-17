@@ -53,6 +53,7 @@
         { "url": "https://jup.ag/*" },
         { "url": "https://*.jup.ag/*" },
         { "url": "https://*.dexpaprika.com/*" },
+        { "url": "https://*.dexscreener.com/*" },
         { "url": "https://*.geckoterminal.com/*" },
         { "url": "https://*.publicnode.com/*" },
         { "url": "https://*.solana.com/*" }

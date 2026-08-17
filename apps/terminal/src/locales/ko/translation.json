@@ -64,9 +64,54 @@
     "noChainsBody": "온체인 커넥터를 설치하면 해당 체인이 이 사다리에 합류합니다."
   },
   "company": {
+    "analystBuy": "매수 {{count}}",
+    "analystCoverage_one": "애널리스트 {{count}}명",
+    "analystCoverage_other": "애널리스트 {{count}}명",
+    "analystHold": "중립 {{count}}",
+    "analystSell": "매도 {{count}}",
+    "beta": "베타",
+    "consensusEps": "컨센서스 EPS",
+    "dividendYield": "배당수익률",
+    "earningsGrowth": "이익 전년비",
+    "ebitda": "EBITDA",
+    "epsTtm": "EPS TTM",
+    "groups": {
+      "valuation": "밸류에이션",
+      "growth": "성장률",
+      "margins": "마진",
+      "context": "참고 지표",
+      "analyst": "애널리스트"
+    },
+    "marketCap": "시가총액",
+    "nextReport": "다음 실적 발표",
+    "noCoverageBody": "제공자는 상장된 사업회사를 다룹니다. ETF, 폐쇄형 펀드, 상장 직후 종목은 뒷받침할 공시가 없는 경우가 많습니다.",
+    "noCoverageTitle": "{{symbol}} 재무 데이터 없음",
+    "noFiguresBody": "제공자는 이 종목을 알고 있지만 이 창이 보여 주는 수치를 아직 공시하지 않았습니다.",
+    "noFiguresTitle": "아직 공시된 수치가 없습니다",
+    "notEquityBody": "이 창은 상장 기업을 설명합니다. {{venue}}는 주식 거래소가 아니며, 같은 티커라도 다른 자산입니다.",
+    "notEquityTitle": "재무 데이터는 주식에만 있습니다",
+    "operatingMargin": "영업이익률",
+    "pe": "PER",
+    "peForward": "PER · 예상",
+    "peg": "PEG",
+    "profitMargin": "순이익률",
+    "providerBusyBody": "데이터 제공자가 요청을 제한하고 있습니다. 제한 구간이 초기화되면 수치가 저절로 돌아옵니다.",
+    "providerBusyTitle": "재무 데이터가 요청 제한 상태입니다",
+    "providerErrorBody": "제공자가 사용할 수 없는 응답을 보냈습니다. 계정이나 커넥터 문제가 아닙니다.",
+    "providerErrorTitle": "재무 데이터를 불러오지 못했습니다",
+    "reportsInDays_one": "{{count}}일 뒤",
+    "reportsInDays_other": "{{count}}일 뒤",
+    "reportsToday": "오늘 발표",
+    "reportsTomorrow": "내일 발표",
+    "returnOnEquity": "ROE",
+    "revenueGrowth": "매출 전년비",
+    "revenueTtm": "매출 TTM",
+    "sharesOutstanding": "발행주식수",
+    "targetPrice": "목표주가",
     "unknownName": "회사명을 가져올 수 없음",
     "needsProviderTitle": "재무 지표에는 제공자가 필요합니다",
-    "needsProviderBody": "브로커는 호가와 체결을 다룰 뿐 밸류에이션, 성장률, 마진을 제공하지 않습니다. 재무 데이터 플러그인을 설치하면 이 창이 채워집니다."
+    "needsProviderBody": "이 빌드에는 재무 데이터 소스가 없습니다. 밸류에이션, 성장률, 마진은 App Server에서 오고 브로커 커넥터는 호가와 체결만 담당합니다.",
+    "week52": "52주 저가 · 고가"
   },
   "dexChains": {
     "title": "자금이 흐르는 곳",
@@ -83,17 +128,37 @@
     "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다."
   },
   "earningsCalendar": {
+    "capped": "{{total}}건 중 처음 {{shown}}건을 보여 줍니다.",
+    "noEstimate": "추정치 없음",
+    "noneInWindowBody": {
+      "today": "오늘 실적을 발표하는 기업이 캘린더에 없습니다.",
+      "week": "앞으로 7일 동안 발표하는 기업이 없습니다.",
+      "watchlist": "관심목록의 종목 중 다음 분기에 발표하는 종목이 없습니다."
+    },
+    "noneInWindowTitle": "예정된 발표가 없습니다",
+    "noWatchedBody": "종목을 관심목록에 담으면 이 화면에서 다음 발표일을 보여 줍니다. 다른 화면은 시장 전체를 다룹니다.",
+    "noWatchedTitle": "관심 종목이 없습니다",
+    "providerBusyBody": "데이터 제공자가 요청을 제한하고 있습니다. 제한 구간이 초기화되면 일정이 저절로 돌아옵니다.",
+    "providerBusyTitle": "실적 피드가 요청 제한 상태입니다",
+    "providerErrorBody": "제공자가 사용할 수 없는 응답을 보냈습니다. 계정이나 커넥터 문제가 아닙니다.",
+    "providerErrorTitle": "실적 피드를 불러오지 못했습니다",
+    "scopeLabel": "실적 발표 기간",
+    "scopes": {
+      "today": "오늘",
+      "week": "이번 주",
+      "watchlist": "관심목록"
+    },
     "title": "실적",
-    "subtitle": "개장 전과 마감 후",
-    "emptyTitle": "실적 피드가 설치되지 않음",
-    "emptyBody": "이 캘린더는 재무 데이터 제공 플러그인이 채웁니다. 브로커는 자기 세션 시간을 공개할 뿐, 이번 주 실적 발표 일정은 제공하지 않습니다.",
+    "emptyTitle": "실적 피드가 없습니다",
+    "emptyBody": "이 빌드에는 실적 데이터 제공자가 없습니다. 일정은 App Server에서 옵니다. 브로커는 자기 세션 시간을 공개할 뿐, 이번 주 발표 일정은 제공하지 않습니다.",
     "columns": {
+      "company": "기업",
+      "quarterEnd": "분기 말",
       "symbol": "종목",
-      "when": "시점",
-      "epsEstimate": "EPS 예상",
-      "revenueEstimate": "매출 예상",
-      "impliedMove": "내재 변동폭"
-    }
+      "epsEstimate": "EPS 예상"
+    },
+    "today": "오늘",
+    "tomorrow": "내일"
   },
   "economicCalendar": {
     "emptyTitle": "매크로 피드가 설치되지 않음",
@@ -154,6 +219,26 @@
     "basisLast_other": "최종가 {{count}}개를 합산",
     "basisMissing_one": "호가 없는 후보 1개",
     "basisMissing_other": "호가 없는 후보 {{count}}개"
+  },
+  "feeAccrual": {
+    "title": "수수료 적립",
+    "subtitle_one": "{{wallet}} · 구간 {{count}}개",
+    "subtitle_other": "{{wallet}} · 구간 {{count}}개",
+    "claimableLabel": "지금 받을 수 있는 금액",
+    "nothingClaimable": "이 구간에서는 아직 받을 것이 없습니다.",
+    "notRead": "풀 조회 실패",
+    "columns": {
+      "position": "포지션",
+      "fee": "수수료",
+      "claimable": "수취 가능"
+    },
+    "loadingTitle": "수수료 조회 중",
+    "loadingBody": "각 포지션에 collect를 시뮬레이션해 지금 얼마가 지급되는지 확인하고 있습니다.",
+    "emptyTitle": "유동성 포지션 없음",
+    "emptyBody": "{{wallet}}에는 수수료가 쌓일 포지션이 없습니다. 연결된 체인에 유동성을 공급하면 금액이 여기에 표시됩니다.",
+    "noChainsTitle": "체인 커넥터 없음",
+    "noChainsBody": "온체인 커넥터를 설치하면 이 패널이 해당 풀이 지갑에 지급할 금액을 조회합니다.",
+    "footnote": "이 블록에서 collect가 지급할 금액을 양쪽 자산, 포지션별로 보여줍니다. 이미 받은 수수료는 체인에 흔적이 남지 않으므로 수수료 APR, 구간 내 시간, 단순 보유 대비 손실은 인덱서가 필요하며 표시하지 않습니다."
   },
   "funding": {
     "loading": "펀딩 비율을 읽는 중…",
@@ -242,14 +327,38 @@
     "biggestLabel": "최대 스왑"
   },
   "lpPanes": {
-    "positionTitle": "LP 포지션에는 포지션 소스가 필요합니다",
-    "positionBody": "연결된 어떤 것도 아직 유동성 포지션을 읽지 못합니다. 체인의 포지션 매니저에 이 지갑의 범위를 물어야 하는데, 현재 그렇게 하는 커넥터가 없습니다.",
-    "feesTitle": "수수료 내역에는 포지션 소스가 필요합니다",
-    "feesBody": "일별 수수료는 인덱서에서 오거나, 시간에 걸쳐 측정한 fee growth에서 나옵니다. 둘 다 연결되어 있지 않고, 추정 차트는 실측처럼 보이게 됩니다.",
     "manageTitle": "범위 수정에는 유동성 액션이 필요합니다",
     "manageBody": "유동성 추가, 회수, 재조정은 모두 서명 트랜잭션이며 아직 어떤 커넥터도 만들지 못합니다. 실제로 동작하기 전까지 컨트롤은 표시하지 않습니다.",
     "venueFallback": "이 체인",
     "wouldRead": "{{chain}}의 {{pool}}에서 {{wallet}}을 읽습니다"
+  },
+  "lpPosition": {
+    "title": "LP 포지션",
+    "subtitle_one": "{{wallet}} · 구간 {{count}}개",
+    "subtitle_other": "{{wallet}} · 구간 {{count}}개",
+    "capped": "{{count}}개 미표시",
+    "value": "포지션 가치",
+    "poolUnread": "풀 조회 실패",
+    "range": "구간",
+    "ticks": "틱 {{lower}} ~ {{upper}}",
+    "band": "±{{band}}% 밴드",
+    "bandWithHeadroom": "±{{band}}% 밴드 · 상단까지 {{headroom}}% 남음",
+    "composition": "구성",
+    "uncollected": "미수취 수수료",
+    "tokenId": "포지션",
+    "pool": "풀",
+    "feeTier": "수수료 {{value}}%",
+    "inRange": "구간 내",
+    "outOfRange": "구간 밖",
+    "rangeUnknown": "풀 조회 실패",
+    "otherPositions": "내 다른 포지션",
+    "loadingTitle": "포지션 조회 중",
+    "loadingBody": "연결된 각 체인의 position manager에 이 지갑의 보유 내역을 조회하고 있습니다.",
+    "emptyTitle": "유동성 포지션 없음",
+    "emptyBody": "{{wallet}}에는 연결된 체인의 Uniswap v3 또는 PancakeSwap v3 포지션이 없습니다. 한 곳에 유동성을 공급하면 여기에 표시됩니다.",
+    "noChainsTitle": "체인 커넥터 없음",
+    "noChainsBody": "온체인 커넥터를 설치하면 이 패널이 해당 체인의 position manager를 지갑 기준으로 조회합니다.",
+    "footnote": "체인에서 읽은 값: 밴드, 지금 유동성의 가치, 아직 받지 않은 수수료. 포지션은 진입 원가를 저장하지 않으므로 단순 보유 대비 수치는 없습니다."
   },
   "marginHealth": {
     "title": "증거금 상태",
@@ -668,7 +777,8 @@
     "feeTier": "수수료 구간",
     "feeTierUnknown": "이 venue는 공개하지 않음",
     "reserves": "예치량",
-    "reservesUnavailable": "양쪽 모두는 데스크톱에서만",
+    "reservesUnavailable": "이 풀에는 공개되지 않음",
+    "reservesSource": "예치량 출처: {{provider}}",
     "trades24h": "24시간 체결 수",
     "tradersSub_one": "트레이더 {{count}}명",
     "tradersSub_other": "트레이더 {{count}}명",
@@ -2973,14 +3083,14 @@
     "poolStats": "양쪽 준비금, 예치 자산 총액(TVL), 24시간 거래량, 수수료 등급, 세 가지 규모에서의 가격 영향",
     "onchainTrades": "풀을 거치는 모든 스왑을 확정되는 대로 표시, 지갑 주소와 트랜잭션 링크와 함께",
     "route": "애그리게이터가 스왑을 여러 풀에 어떻게 나누는지, 슬리피지의 원인을 명시",
-    "feeAccrual": "내 포지션이 시간에 걸쳐 벌어들인 수수료, 그것이 의미하는 APR, 그리고 지금 청구 가능한 금액",
-    "lpPosition": "설정한 가격 범위와 실시간 가격의 관계, 범위 내 체류 시간, 그리고 단순 보유 대비 비영구적 손실",
+    "feeAccrual": "지금 수령하면 지갑에 들어오는 금액을 양쪽 레그, 포지션별, 합계로 표시",
+    "lpPosition": "실시간 풀 가격 대비 내 범위, 유동성 구성, 아직 수령하지 않은 수수료",
     "manageLiquidity": "차트를 벗어나지 않고 가격 범위 이동, 유동성 추가 또는 회수, 수수료 청구까지",
     "chainLadder": "같은 토큰을 모든 체인에서 가격 비교, 가스비까지 포함해 표면 시세가 아니라 총액 기준으로 최적을 선택",
     "routeBridge": "출발 체인, 목적지 체인, 사용할 브리지, 수수료와 소요 시간까지 표시, 바로 실행 가능",
     "inFlight": "아직 확정되지 않은 전송을, 대기 중인 블록 확인 수와 함께 표시",
     "session": "브로커 자체 캘린더를 기준으로 지금 거래일이 어느 시점에 있는지, 휴장일과 조기 마감일까지 반영",
-    "earningsCalendar": "누가 언제 실적을 발표하는지, 장 시작 전인지 마감 후인지, 넘어야 할 시장 예상치와 함께",
+    "earningsCalendar": "누가 언제 발표하는지 날짜별로 묶어, 넘어야 할 컨센서스까지 함께",
     "economicCalendar": "매크로 지표를 발표 시각 순으로, 중요도와 이전치, 시장 예상치와 함께",
     "sessionClock": "거래일 상태를 한 줄로 보여주는 시계, 시간외 주문에 놀랄 일이 없도록",
     "level1": "브로커 피드에서 받아온 매수/매도 호가와 수량, 스프레드, 당일 가격 범위",
@@ -3549,6 +3659,10 @@
       "dexpaprika-data-provider": {
         "title": "DexPaprika",
         "description": "DexPaprika가 제공하는 DEX 마켓 데이터"
+      },
+      "dexscreener-data-provider": {
+        "title": "DexScreener",
+        "description": "DexScreener의 풀 예치량과 풀 지표. API 키가 필요 없고 CORS가 열려 있어 브라우저에서도 양쪽 예치량을 읽습니다. 캔들과 풀 순위 목록은 없습니다. 다른 제공자를 대체하지 않고 보완합니다."
       },
       "geckoterminal-data-provider": {
         "title": "GeckoTerminal",
