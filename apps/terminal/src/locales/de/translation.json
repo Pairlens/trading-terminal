@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} hat keinen öffentlichen Kursfeed. Chart, Orderbuch und Kurse laufen über deine API-Schlüssel, und die sind gerade gesperrt.",
       "missingTitle": "{{venue}} verbinden, um Kurse zu sehen",
       "missingDescription": "{{venue}} hat keinen öffentlichen Kursfeed. Verbinde dein Konto, dann kommen Chart, Orderbuch und Kurse direkt von dort.",
+      "accountSealedDescription": "Guthaben, Positionen und Orders kommen über deine {{venue}}-API-Schlüssel, und die sind gerade gesperrt.",
+      "accountMissingTitle": "{{venue}} verbinden, um dein Konto zu sehen",
+      "accountMissingDescription": "Guthaben, Positionen und Orders kommen über deine {{venue}}-API-Schlüssel. Die bleiben auf diesem Gerät.",
       "connectAction": "{{venue}} verbinden"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Größenwährung wechseln",
       "max": "Max",
       "orderValue": "Ordervolumen",
+      "underOneContract": "Weniger als ein Kontrakt zu diesem Preis",
       "available": "Verfügbar",
       "riskUsed": "Genutztes Risiko",
       "riskUsedValue": "{{used}} von {{cap}} Limit",

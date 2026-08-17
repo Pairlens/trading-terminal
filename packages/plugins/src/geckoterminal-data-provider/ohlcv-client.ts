@@ -1,7 +1,8 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { restFetch as fetch } from '@pairlens/market-engine/http'
+import { isProviderThrottledError } from '@pairlens/market-engine/errors'
 import { resolvePool } from './pool-resolver'
+import { geckoFetch as fetch } from './rate-limiter'
 import type { Candle } from '@pairlens/shared/types'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
@@ -30,6 +31,11 @@ type OhlcvBar = [
 /**
  * Fetch OHLCV candle data from GeckoTerminal.
  * Supports up to 1000 candles per request.
+ *
+ * An empty array means "nothing to chart here" and is a real answer. A THROTTLE
+ * is not: it propagates as `ProviderThrottledError` so the caller retries
+ * instead of the terminal recording the pair as unlisted. Every other failure
+ * still degrades to empty, as it always did.
  */
 export async function fetchOhlcv(
   pair: string,
@@ -78,7 +84,8 @@ export async function fetchOhlcv(
 
     if (!needs30mAgg) return candles.slice(-limit)
     return aggregate(candles, 2).slice(-limit)
-  } catch {
+  } catch (err) {
+    if (isProviderThrottledError(err)) throw err
     return []
   }
 }

@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} には公開の価格フィードがありません。チャート、板情報、気配値はあなたの API キーで配信されますが、そのキーが今ロックされています。",
       "missingTitle": "価格を表示するには {{venue}} を接続してください",
       "missingDescription": "{{venue}} には公開の価格フィードがありません。アカウントを接続すると、チャート、板情報、気配値がそこから直接配信されます。",
+      "accountSealedDescription": "残高、ポジション、注文は {{venue}} の API キーで読み取りますが、そのキーが今ロックされています。",
+      "accountMissingTitle": "口座を表示するには {{venue}} を接続してください",
+      "accountMissingDescription": "残高、ポジション、注文を読み取れるのは {{venue}} の API キーだけです。キーはこの端末に保存されます。",
       "connectAction": "{{venue}} を接続"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "サイズの通貨を切り替え",
       "max": "最大",
       "orderValue": "注文額",
+      "underOneContract": "この価格では1枚に届きません",
       "available": "利用可能",
       "riskUsed": "使用中のリスク",
       "riskUsedValue": "{{cap}}の上限に対して{{used}}",

@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} không có nguồn giá công khai. Biểu đồ, sổ lệnh và báo giá đều chạy qua khóa API của bạn, và khóa đang bị khóa lúc này.",
       "missingTitle": "Kết nối {{venue}} để xem giá",
       "missingDescription": "{{venue}} không có nguồn giá công khai. Kết nối tài khoản của bạn và biểu đồ, sổ lệnh cùng báo giá sẽ chạy thẳng từ đó.",
+      "accountSealedDescription": "Số dư, vị thế và lệnh đều đọc qua khóa API {{venue}} của bạn, và khóa đang bị khóa lúc này.",
+      "accountMissingTitle": "Kết nối {{venue}} để xem tài khoản của bạn",
+      "accountMissingDescription": "Chỉ khóa API {{venue}} của bạn đọc được số dư, vị thế và lệnh. Khóa vẫn nằm trên thiết bị này.",
       "connectAction": "Kết nối {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Đổi đơn vị khối lượng",
       "max": "Tối đa",
       "orderValue": "Giá trị lệnh",
+      "underOneContract": "Chưa đủ một hợp đồng ở giá này",
       "available": "Khả dụng",
       "riskUsed": "Rủi ro đã dùng",
       "riskUsedValue": "{{used}} trên mức trần {{cap}}",

@@ -40,7 +40,7 @@
  */
 
 import { PlatformRestrictedError } from '@pairlens/market-engine/errors'
-import { isCorsConstrained } from '@pairlens/market-engine/platform'
+import { isVenueRestBlocked } from '@pairlens/market-engine/platform'
 import { createCexConnectorPlugin } from '../cex-connector'
 import {
   CcxtExchangeHost,
@@ -354,6 +354,11 @@ export function createCcxtFuturesConnectorPlugin(
     credentialKeys: venue.credentialKeys,
     defaultMode: venue.defaultMode,
     ...(venue.requiresDesktop ? { requiresDesktop: true } : {}),
+    // No perp host has a `/__*` prefix in apps/terminal/vite.config.ts (the
+    // spot ones do NOT cover them — `api.kucoin.com` is not
+    // `api-futures.kucoin.com`), so this stays absent and browser dev refuses
+    // exactly like the hosted build.
+    ...(venue.devProxy ? { devProxy: true } : {}),
     ...(venue.geoCheck ? { geoCheck: venue.geoCheck } : {}),
     // Runs in the SHELL, after slot resolution and outside the trading
     // runtime's try/catch — a geo refusal raised inside `placeOrder` comes back
@@ -392,7 +397,10 @@ export function createCcxtFuturesConnectorPlugin(
       if (params.capability !== 'market-data:funding') {
         return instance.execute(params)
       }
-      if (venue.requiresDesktop && isCorsConstrained()) {
+      if (
+        venue.requiresDesktop &&
+        isVenueRestBlocked(venue.devProxy === true)
+      ) {
         throw new PlatformRestrictedError(manifest.name || venue.marketId)
       }
       venue.geoCheck?.(params.context.country, params.capability)

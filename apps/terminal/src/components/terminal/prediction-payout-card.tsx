@@ -25,7 +25,10 @@ import { useTranslation } from 'react-i18next'
 
 import type { PredictionPayout } from '@/lib/predictions/ticket-math'
 import { formatPredictionPrice } from '@/lib/format-price'
-import { predictionPayout } from '@/lib/predictions/ticket-math'
+import {
+  formatCollateral,
+  predictionPayout,
+} from '@/lib/predictions/ticket-math'
 
 export type PredictionOrderSummaryProps = {
   /** Contract count the order would send, derived from the amount field. */
@@ -58,14 +61,14 @@ export function PredictionOrderSummary({
         <Row
           label={t('terminal.trade.maxPayout')}
           tone="up"
-          value={payout === null ? '—' : usd(payout.payout)}
+          value={payout === null ? '—' : formatCollateral(payout.payout)}
         />
         {/* A dash, not a stale figure: an unusable price has no worst case,
             and the last valid one would read as this order's. */}
         <Row
           label={t('terminal.trade.maxLoss')}
           tone="down"
-          value={payout === null ? '—' : usd(payout.stake)}
+          value={payout === null ? '—' : formatCollateral(payout.stake)}
         />
       </div>
     </>
@@ -101,7 +104,7 @@ function PayoutCard({
             : t('terminal.trade.ifDoesNotWin', { outcome })}
         </span>
         <span className="shrink-0 font-mono text-[17px] font-semibold tabular-nums text-up">
-          {usd(payout.payout)}
+          {formatCollateral(payout.payout)}
         </span>
       </div>
 
@@ -115,11 +118,13 @@ function PayoutCard({
 
       <div className="flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
         <span>
-          {t('terminal.trade.stakeLine', { amount: usd(payout.stake) })}
+          {t('terminal.trade.stakeLine', {
+            amount: formatCollateral(payout.stake),
+          })}
         </span>
         <span className="truncate">
           {t('terminal.trade.profitLine', {
-            amount: usd(payout.profit),
+            amount: formatCollateral(payout.profit),
             roi: `+${(payout.roi * 100).toFixed(0)}%`,
           })}
         </span>
@@ -155,9 +160,4 @@ function Row({
       </span>
     </div>
   )
-}
-
-/** Collateral units. Whole dollars stay whole: contracts settle at exactly $1. */
-function usd(value: number): string {
-  return `$${value.toFixed(Number.isInteger(value) ? 0 : 2)}`
 }

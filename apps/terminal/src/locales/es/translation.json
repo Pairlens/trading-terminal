@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} no tiene un feed de precios público. Tus claves API son las que transmiten el gráfico, el libro y las cotizaciones, y ahora mismo están bloqueadas.",
       "missingTitle": "Conecta {{venue}} para ver los precios",
       "missingDescription": "{{venue}} no tiene un feed de precios público. Conecta tu cuenta y el gráfico, el libro de órdenes y las cotizaciones llegarán directamente desde ella.",
+      "accountSealedDescription": "Tus claves API de {{venue}} son las que leen saldos, posiciones y órdenes, y ahora mismo están bloqueadas.",
+      "accountMissingTitle": "Conecta {{venue}} para ver tu cuenta",
+      "accountMissingDescription": "Tus claves API son las que leen los saldos, las posiciones y las órdenes de {{venue}}. Se quedan en este dispositivo.",
       "connectAction": "Conectar {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Cambiar la moneda del tamaño",
       "max": "Máx.",
       "orderValue": "Valor de la orden",
+      "underOneContract": "Menos de un contrato a este precio",
       "available": "Disponible",
       "riskUsed": "Riesgo usado",
       "riskUsedValue": "{{used}} de {{cap}} máx.",

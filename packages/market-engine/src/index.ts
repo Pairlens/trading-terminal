@@ -61,4 +61,14 @@ export {
   GeoRestrictedError,
   isGeoRestrictedError,
   assertResponseOk,
+  ProviderThrottledError,
+  isProviderThrottledError,
+  providerThrottleFromResponse,
+  parseRetryAfterMs,
 } from './errors'
+export {
+  noteProviderThrottled,
+  providerThrottledUntil,
+  isProviderThrottled,
+  assertNotThrottled,
+} from './provider-throttle'

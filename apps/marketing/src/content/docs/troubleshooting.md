@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: 15 AUG 2026
+updated: 17 AUG 2026
 readTime: 8 min read
 ---
 
@@ -29,8 +29,9 @@ works around it.
 
 **Eight venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, Bitfinex,
 Kalshi, KuCoin Futures, and Kraken Futures serve REST without CORS headers,
-which a browser will not allow. In the hosted web terminal they refuse with a
-clear message rather than presenting a dead chart.
+which a browser will not allow. In a browser they refuse with a clear message
+rather than presenting a dead chart, and on the futures and predictions
+discovery boards the venue's own row says so instead of going blank.
 [Install the desktop app](/docs/desktop-app) or use one of the other twelve.
 
 **Check the connection page.** [Settings → Connection](/docs/settings#connection)
@@ -63,6 +64,11 @@ The button opens the wizard on Alpaca directly.
 vault is sealed, which is what happens in a browser after every reload. One
 unlock and the chart, the book, and the watchlist quotes fill in without a
 refresh.
+
+Account panels word it differently on purpose. **Your Position** asks you to
+connect Alpaca to see your account, because what a key unlocks there is your own
+shares, cost basis and P&L rather than a price feed. Margin Health does the same
+on the futures boards.
 
 In a browser you can make that unlock a single touch by enrolling a passkey in
 **Settings → Security**. A passkey answers the lock screen and the vault in one

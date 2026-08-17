@@ -11,8 +11,8 @@
  * would be right for a constant-product pool and wrong for every
  * concentrated-liquidity one, which is most of the volume.
  */
-import { restFetch as fetch } from '@pairlens/market-engine/http'
 import { resolvePool } from './pool-resolver'
+import { geckoFetch as fetch } from './rate-limiter'
 import type { PoolStats } from '@pairlens/shared/instrument-types'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
@@ -133,7 +133,8 @@ export function parsePoolStats(
  *
  * Returns null when no pool resolves — a real answer the pane renders as "no
  * pool here". THROWS when the request itself fails, which is what lets the
- * plugin manager walk to DexPaprika instead of latching an empty pane.
+ * plugin manager walk to DexPaprika instead of latching an empty pane; a 429
+ * arrives here as the typed `ProviderThrottledError` from the paced transport.
  */
 export async function fetchPoolStats(
   pair: string,

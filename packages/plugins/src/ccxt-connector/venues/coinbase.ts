@@ -135,6 +135,10 @@ export const coinbaseCcxtVenue: CcxtVenueConfig = {
   // runtime fetches a reference price and passes it through.
   marketBuyRequiresPrice: true,
   requiresDesktop: true,
+  // `/__coinbase` and `/__coinbase-sandbox` exist in
+  // apps/terminal/vite.config.ts, so browser dev reaches this venue and must
+  // not be refused.
+  devProxy: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/coinbase.js')
     return (module.default ?? module) as unknown as CcxtExchangeCtor

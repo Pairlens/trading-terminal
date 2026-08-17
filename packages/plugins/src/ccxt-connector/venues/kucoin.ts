@@ -120,6 +120,10 @@ export const kucoinCcxtVenue: CcxtVenueConfig = {
   // engine.
   paperOrderParams: { test: true },
   requiresDesktop: true,
+  // `/__kucoin-global`, `/__kucoin-eu` and `/__kucoin-sandbox` exist in
+  // apps/terminal/vite.config.ts, so browser dev reaches this venue and must
+  // not be refused. The FUTURES host has no prefix and declares none.
+  devProxy: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/kucoin.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor

@@ -34,6 +34,7 @@
     "./checksum": "./src/checksum.ts",
     "./staleness": "./src/staleness.ts",
     "./errors": "./src/errors.ts",
+    "./provider-throttle": "./src/provider-throttle.ts",
     "./token-directory": "./src/token-directory.ts",
     "./amount": "./src/amount.ts"
   },

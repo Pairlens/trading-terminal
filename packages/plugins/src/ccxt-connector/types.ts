@@ -329,6 +329,13 @@ export type CcxtVenueConfig = {
   /** Venue is unreachable from a CORS-constrained browser build. */
   requiresDesktop?: boolean
   /**
+   * A `/__*` dev proxy prefix in apps/terminal/vite.config.ts covers this
+   * venue's REST hosts, so `requiresDesktop` must not refuse under
+   * `bun run dev`. Declared per venue and defaulting to false — see
+   * `isVenueRestBlocked`.
+   */
+  devProxy?: boolean
+  /**
    * Throw GeoRestrictedError to refuse a capability in a region. Runs at the
    * top of BOTH `execute` and `subscribe`, before slot resolution, with the
    * app-level country — so a refusal from `subscribe` is SYNCHRONOUS, which is

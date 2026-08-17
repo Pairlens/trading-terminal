@@ -9,7 +9,9 @@
  *   `Access-Control-Allow-Origin` at all (measured 2026-08-15), and there is no
  *   CORS-enabled sibling host to read from. The socket is unreachable from a
  *   browser for a second reason on top: its URL is issued by a REST POST
- *   (`/bullet-public`) that the same block covers.
+ *   (`/bullet-public`) that the same block covers. No `devProxy` either: the
+ *   spot venue's `/__kucoin-*` prefixes point at `api.kucoin.com`, so browser
+ *   dev is refused here exactly like the hosted build.
  * - **No sandbox, so no paper.** ccxt declares `urls.test` as
  *   present-but-undefined, which `enableCcxtSandbox` detects and reports as "no
  *   sandbox here", and the venue publishes no dry-run order param for contracts

@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}}에는 공개 시세 피드가 없습니다. 차트와 호가창, 시세는 모두 사용자의 API 키로 전송되는데 지금은 그 키가 잠겨 있습니다.",
       "missingTitle": "가격을 보려면 {{venue}}를 연결하세요",
       "missingDescription": "{{venue}}에는 공개 시세 피드가 없습니다. 계정을 연결하면 차트와 호가창, 시세가 계정에서 바로 전송됩니다.",
+      "accountSealedDescription": "잔고와 포지션, 주문은 {{venue}} API 키로 읽는데 지금은 그 키가 잠겨 있습니다.",
+      "accountMissingTitle": "계정을 보려면 {{venue}}를 연결하세요",
+      "accountMissingDescription": "잔고와 포지션, 주문은 {{venue}} API 키로만 읽습니다. 키는 이 기기에 남아 있습니다.",
       "connectAction": "{{venue}} 연결"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "수량 통화 전환",
       "max": "최대",
       "orderValue": "주문 금액",
+      "underOneContract": "이 가격으로는 계약 1개에 미달",
       "available": "사용 가능",
       "riskUsed": "리스크 사용량",
       "riskUsedValue": "{{cap}} 한도 중 {{used}}",

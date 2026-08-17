@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} n’a pas de flux de prix public. Le graphique, le carnet et les cotations passent par vos clés API, et elles sont verrouillées pour le moment.",
       "missingTitle": "Connectez {{venue}} pour voir les prix",
       "missingDescription": "{{venue}} n’a pas de flux de prix public. Connectez votre compte et le graphique, le carnet d’ordres et les cotations en proviendront directement.",
+      "accountSealedDescription": "Les soldes, les positions et les ordres passent par vos clés API {{venue}}, et elles sont verrouillées pour le moment.",
+      "accountMissingTitle": "Connectez {{venue}} pour voir votre compte",
+      "accountMissingDescription": "Seules vos clés API {{venue}} peuvent lire les soldes, les positions et les ordres. Elles restent sur cet appareil.",
       "connectAction": "Connecter {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Changer la devise de la taille",
       "max": "Max",
       "orderValue": "Valeur de l’ordre",
+      "underOneContract": "Moins d'un contrat à ce prix",
       "available": "Disponible",
       "riskUsed": "Risque utilisé",
       "riskUsedValue": "{{used}} sur {{cap}} de plafond",

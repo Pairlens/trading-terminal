@@ -285,6 +285,7 @@ export function createCcxtConnectorPlugin(
     credentialKeys: venue.credentialKeys,
     defaultMode: venue.defaultMode,
     ...(venue.requiresDesktop ? { requiresDesktop: true } : {}),
+    ...(venue.devProxy ? { devProxy: true } : {}),
     ...(venue.geoCheck ? { geoCheck: venue.geoCheck } : {}),
     // Runs in the SHELL, after slot resolution and outside the trading
     // runtime's try/catch — which is the whole point. A geo refusal raised

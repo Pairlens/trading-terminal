@@ -1,12 +1,18 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { describe, expect, it } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+
+import { ProviderThrottledError } from '@pairlens/market-engine/errors'
+import { resetProviderThrottles } from '@pairlens/market-engine/provider-throttle'
 
 import {
   aggregateChainStats,
+  clearListingCache,
+  fetchTopPools,
   parsePoolListing,
   stripNetworkPrefix,
 } from '../pool-listing-client'
+import { geckoLimiter } from '../rate-limiter'
 import type { RawGeckoPoolRow } from '../pool-listing-client'
 
 const ROWS: Array<RawGeckoPoolRow> = [
@@ -85,5 +91,101 @@ describe('aggregateChainStats', () => {
     expect(stats.volume24hUsd).toBeNull()
     expect(stats.reserveUsd).toBeNull()
     expect(stats.sampledPools).toBe(0)
+  })
+})
+
+/**
+ * The chain rail and the pool map read this endpoint for the same chain from two
+ * unconnected queries. Both halves of the dedupe matter: the in-flight map for
+ * a board opening cold (they ask at once), the TTL for the refreshes after
+ * (they ask seconds apart).
+ */
+describe('fetchTopPools — one request per chain per minute', () => {
+  const realFetch = globalThis.fetch
+
+  const stub = (impl: (url: string) => Promise<Response>) => {
+    const calls: Array<string> = []
+    globalThis.fetch = mock(async (url: unknown) => {
+      calls.push(String(url))
+      return impl(String(url))
+    }) as unknown as typeof fetch
+    return calls
+  }
+
+  const page = (address: string) =>
+    new Response(
+      JSON.stringify({
+        data: [
+          {
+            id: `solana_${address}`,
+            attributes: {
+              address,
+              name: 'SOL / USDC',
+              volume_usd: { h24: '1000' },
+            },
+            relationships: { dex: { data: { id: 'orca' } } },
+          },
+        ],
+      }),
+      { status: 200 },
+    )
+
+  beforeEach(() => {
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  afterEach(() => {
+    globalThis.fetch = realFetch
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  it('collapses concurrent asks for the same chain into one request', async () => {
+    const calls = stub(async () => page('pool1'))
+    const [a, b, c] = await Promise.all([
+      fetchTopPools('solana'),
+      fetchTopPools('solana'),
+      fetchTopPools('solana'),
+    ])
+    expect(calls.length).toBe(1)
+    expect(a[0].address).toBe('pool1')
+    expect(b).toEqual(a)
+    expect(c).toEqual(a)
+  })
+
+  it('serves a repeat ask from the cache', async () => {
+    const calls = stub(async () => page('pool1'))
+    await fetchTopPools('solana')
+    await fetchTopPools('solana')
+    expect(calls.length).toBe(1)
+  })
+
+  it('keeps chains and pages apart', async () => {
+    const calls = stub(async (url) => page(url.includes('base') ? 'b' : 's'))
+    await fetchTopPools('solana')
+    await fetchTopPools('base')
+    await fetchTopPools('solana', 2)
+    expect(calls.length).toBe(3)
+  })
+
+  it('never caches a throttle as an answer', async () => {
+    // Caching a failure would turn one 429 into a minute of empty chain rows,
+    // which is the same class of bug as the availability verdict.
+    let attempt = 0
+    const calls = stub(async () => {
+      attempt += 1
+      if (attempt === 1) {
+        throw new ProviderThrottledError('GeckoTerminal', 429, 15_000)
+      }
+      return page('pool1')
+    })
+
+    await expect(fetchTopPools('solana')).rejects.toThrow(/rate limiting/)
+    const pools = await fetchTopPools('solana')
+    expect(pools[0].address).toBe('pool1')
+    expect(calls.length).toBe(2)
   })
 })

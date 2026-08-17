@@ -4,7 +4,7 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 16 AUG 2026
+updated: 17 AUG 2026
 readTime: 9 min read
 ---
 
@@ -100,6 +100,16 @@ opening the keyboard, and 25/50/75/Max shortcuts. Order types the venue cannot
 do are visibly disabled rather than hidden, so a DEX without limit support says
 so. The limit price is seeded from the live book the first time, which puts the
 line where you are already looking.
+
+**On an event contract the ticket takes dollars.** The question and its
+resolution date sit at the top, the amount is collateral with **$25**, **$50**,
+**$100** and **Max** as presets, and the count it buys is stated under the
+field, floored to whole contracts. Above the confirm bar is the payout card:
+what the order returns if it is right, split against what it costs, with the
+stake, the profit and the return. The limit field takes cents, 53 for 53¢. It is
+the desktop ticket's arithmetic, and the presets are the same list, so a stake
+edited on the desk is the stake offered here. See
+[Prediction markets](/docs/prediction-markets).
 
 **A limit price shows on the chart** as a dashed line with a draggable tag.
 Move the line and the field follows, type in the field and the line follows. It

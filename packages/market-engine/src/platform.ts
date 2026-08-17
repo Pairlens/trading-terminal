@@ -103,3 +103,30 @@ export function isCorsConstrained(): boolean {
   // No document (CLI, bun) means no origin and therefore no CORS.
   return typeof window !== 'undefined'
 }
+
+/**
+ * True when a `requiresDesktop` venue's REST is unreachable from THIS runtime.
+ *
+ * The question `isCorsConstrained()` answers is "does the dev server have a
+ * proxy in front of the app", and that is not the same as "does it have a proxy
+ * in front of THIS venue". The `/__*` prefixes are declared one host at a time
+ * in apps/terminal/vite.config.ts, and three bundled venues have none:
+ * `api-futures.kucoin.com`, `futures.kraken.com` and `external-api.kalshi.com`.
+ * Their REST is as dead under `bun run dev` as it is on the hosted terminal —
+ * but `isCorsConstrained()` reported "not constrained" there, the platform gate
+ * fell open, and the discovery boards showed a bare
+ * `TypeError: fetch failed` per venue instead of "needs the desktop app".
+ *
+ * `hasDevProxy` is the venue's own declaration and the only input that separates
+ * the two cases. `devProxyAvailable` is a parameter because
+ * `import.meta.env.DEV` is a build-time constant no test can force: the
+ * dev-browser cell of the matrix is only reachable by passing it.
+ */
+export function isVenueRestBlocked(
+  hasDevProxy: boolean,
+  devProxyAvailable = isDevProxyAvailable(),
+): boolean {
+  if (isTauriRuntime()) return false
+  if (typeof window === 'undefined') return false
+  return !(hasDevProxy && devProxyAvailable)
+}

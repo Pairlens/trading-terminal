@@ -8,7 +8,9 @@ import { StalenessTracker } from '@pairlens/market-engine/staleness'
 import {
   isGeoRestrictedError,
   isPlatformRestrictedError,
+  isProviderThrottledError,
 } from '@pairlens/market-engine/errors'
+import { isProviderThrottled } from '@pairlens/market-engine/provider-throttle'
 import { scanSignals } from '@pairlens/strategy-engine'
 import type { SignalScan } from '@pairlens/strategy-engine'
 import type { CandleUpdate } from '@pairlens/market-engine/types'
@@ -44,6 +46,14 @@ const PROBE_AFTER_MS = 1_000
 // accumulated updates to a seed — a short live chart beats a dead one.
 // Venue-agnostic: covers third-party connectors that never emit a snapshot.
 const PROMOTE_UPDATES_AFTER_MS = 8_000
+// A rate-limited data provider is silent for the same reason an unlisted pair
+// is, and the verdict below outlives the limit — so while a provider is inside
+// its cool-off window (see @pairlens/market-engine/provider-throttle) the
+// backstop re-arms instead of deciding. Bounded on purpose: the deferral buys
+// the provider a window to recover, not an endless spinner, so after
+// MAX_THROTTLE_DEFERRALS the verdict lands exactly as it did before.
+const THROTTLE_DEFER_MS = 5_000
+const MAX_THROTTLE_DEFERRALS = 6
 
 export type PluginCandle = {
   ts: number
@@ -291,6 +301,42 @@ export function useCandleStream(
     // Settled once the verdict is in (either way), so a late probe reply or a
     // fired timeout can't contradict data that has since arrived.
     let resolved = false
+    let throttleDeferrals = 0
+
+    // Backstop for venues the probe below can't reach (no history endpoint of
+    // their own, or a REST call that never settles).
+    let noDataTimer: ReturnType<typeof setTimeout> | null = null
+    const clearNoDataTimer = () => {
+      if (noDataTimer) {
+        clearTimeout(noDataTimer)
+        noDataTimer = null
+      }
+    }
+    // Declarations rather than consts: the backstop re-arms itself through
+    // deferVerdict, so the two reference each other.
+    function armNoDataTimer(delayMs: number): void {
+      clearNoDataTimer()
+      noDataTimer = setTimeout(() => {
+        noDataTimer = null
+        // Silence from a data provider that is cooling off is not an answer
+        // about the pair. Only the SILENCE path defers: a venue that answered
+        // the probe, emptily or with a refusal, has told us something.
+        if (isProviderThrottled() && deferVerdict()) return
+        markUnavailable()
+      }, delayMs)
+    }
+
+    /**
+     * Re-arm the backstop instead of deciding, and report whether it happened.
+     * Bounded on purpose: this buys a throttled provider a window to recover,
+     * not a spinner that never resolves.
+     */
+    function deferVerdict(): boolean {
+      if (throttleDeferrals >= MAX_THROTTLE_DEFERRALS) return false
+      throttleDeferrals += 1
+      armNoDataTimer(THROTTLE_DEFER_MS)
+      return true
+    }
 
     const markUnavailable = () => {
       if (resolved) return
@@ -301,18 +347,7 @@ export function useCandleStream(
       usePairAvailabilityStore.getState().report(market, normalizedPairKey)
     }
 
-    // Backstop for venues the probe below can't reach (no history endpoint of
-    // their own, or a REST call that never settles).
-    let noDataTimer: ReturnType<typeof setTimeout> | null = setTimeout(() => {
-      noDataTimer = null
-      markUnavailable()
-    }, NO_DATA_TIMEOUT_MS)
-    const clearNoDataTimer = () => {
-      if (noDataTimer) {
-        clearTimeout(noDataTimer)
-        noDataTimer = null
-      }
-    }
+    armNoDataTimer(NO_DATA_TIMEOUT_MS)
 
     // Availability probe. The WS is silent whether the pair is unlisted or the
     // venue is merely slow; REST distinguishes the two in one round trip, so
@@ -341,6 +376,16 @@ export function useCandleStream(
               setDesktopOnly(true)
             }
             return
+          }
+          // The provider refused the REQUEST, not the market. Answering this
+          // with a verdict is the defect: a free-tier 429 while a DEX board is
+          // open made every pair on that connector read as unlisted, and the
+          // verdict survived the limit.
+          if (isProviderThrottledError(err)) {
+            if (resolved) return
+            // Falls through to the verdict once the deferral budget is spent,
+            // so a provider that never recovers still resolves to something.
+            if (deferVerdict()) return
           }
           if (isGeoRestrictedError(err)) {
             useGeoRestrictionStore.getState().report({
@@ -424,6 +469,19 @@ export function useCandleStream(
         }
       })
     } catch (err) {
+      // A throttle is the one synchronous failure that must not settle the
+      // question: the backstop keeps running and the stream is left to retry.
+      // Returns its own cleanup because it leaves a timer armed. Once the
+      // deferral budget is spent it falls through to the paths below rather
+      // than leaving the pane with nothing pending.
+      if (isProviderThrottledError(err) && deferVerdict()) {
+        setStreamError(null)
+        return () => {
+          resolved = true
+          clearNoDataTimer()
+          clearProbeTimer()
+        }
+      }
       // A connector can throw synchronously on subscribe when it statically
       // knows the venue is unavailable for the user's region (proactive geo
       // block, e.g. ByBit in the US). Surface it as a region restriction.

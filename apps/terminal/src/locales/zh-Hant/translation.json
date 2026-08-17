@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} 沒有公開行情來源。圖表、掛單簿與報價都由你的 API 金鑰推送，而金鑰目前處於鎖定狀態。",
       "missingTitle": "連接 {{venue}} 以查看價格",
       "missingDescription": "{{venue}} 沒有公開行情來源。連接你的帳戶後，圖表、掛單簿與報價將直接從中推送。",
+      "accountSealedDescription": "餘額、持倉與委託都透過你的 {{venue}} API 金鑰讀取，而金鑰目前處於鎖定狀態。",
+      "accountMissingTitle": "連接 {{venue}} 以查看你的帳戶",
+      "accountMissingDescription": "只有你的 {{venue}} API 金鑰才能讀取餘額、持倉與委託。金鑰只留在這台裝置。",
       "connectAction": "連接 {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "切換數量幣別",
       "max": "最大",
       "orderValue": "訂單金額",
+      "underOneContract": "以此價格不足一份合約",
       "available": "可用",
       "riskUsed": "已用風險額度",
       "riskUsedValue": "{{used}} / {{cap}} 上限",

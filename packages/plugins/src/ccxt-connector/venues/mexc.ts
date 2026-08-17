@@ -105,6 +105,9 @@ export const mexcCcxtVenue: CcxtVenueConfig = {
   ],
   defaultMode: 'live',
   requiresDesktop: true,
+  // `/__mexc` and `/__mexc-ws` exist in apps/terminal/vite.config.ts, so
+  // browser dev reaches this venue and must not be refused.
+  devProxy: true,
   loadExchangeClass: async () => {
     const module = await import('ccxt/js/src/pro/mexc.js')
     const Base = (module.default ?? module) as unknown as CcxtExchangeCtor

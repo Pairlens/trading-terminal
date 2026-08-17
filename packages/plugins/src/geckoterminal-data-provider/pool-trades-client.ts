@@ -16,8 +16,8 @@
  * and then answer with pools resolved by symbol. The DEX pane polls this
  * instead.
  */
-import { restFetch as fetch } from '@pairlens/market-engine/http'
 import { resolvePool } from './pool-resolver'
+import { geckoFetch as fetch } from './rate-limiter'
 import { numberOrNull } from './pool-stats-client'
 import type { PoolTrade } from '@pairlens/shared/instrument-types'
 

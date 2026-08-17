@@ -3068,6 +3068,9 @@
       "sealedDescription": "A {{venue}} não tem feed público de preços. O gráfico, o livro e as cotações vêm das suas chaves de API, e elas estão bloqueadas agora.",
       "missingTitle": "Conecte a {{venue}} para ver os preços",
       "missingDescription": "A {{venue}} não tem feed público de preços. Conecte sua conta e o gráfico, o livro de ofertas e as cotações vêm direto dela.",
+      "accountSealedDescription": "Saldos, posições e ordens vêm das suas chaves de API da {{venue}}, e elas estão bloqueadas agora.",
+      "accountMissingTitle": "Conecte a {{venue}} para ver sua conta",
+      "accountMissingDescription": "Só as suas chaves de API da {{venue}} leem saldos, posições e ordens. Elas ficam neste dispositivo.",
       "connectAction": "Conectar {{venue}}"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Alternar moeda do tamanho",
       "max": "Máx.",
       "orderValue": "Valor da ordem",
+      "underOneContract": "Menos de um contrato a este preço",
       "available": "Disponível",
       "riskUsed": "Risco utilizado",
       "riskUsedValue": "{{used}} de {{cap}} do limite",

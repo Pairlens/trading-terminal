@@ -3068,6 +3068,9 @@
       "sealedDescription": "{{venue}} için herkese açık bir fiyat akışı yok. Grafik, emir defteri ve kotasyonlar API anahtarlarınızla geliyor ve anahtarlar şu anda kilitli.",
       "missingTitle": "Fiyatları görmek için {{venue}} bağlayın",
       "missingDescription": "{{venue}} için herkese açık bir fiyat akışı yok. Hesabınızı bağlayın; grafik, emir defteri ve kotasyonlar doğrudan oradan gelsin.",
+      "accountSealedDescription": "Bakiyeler, pozisyonlar ve emirler {{venue}} API anahtarlarınızla okunuyor ve anahtarlar şu anda kilitli.",
+      "accountMissingTitle": "Hesabınızı görmek için {{venue}} bağlayın",
+      "accountMissingDescription": "Bakiyeleri, pozisyonları ve emirleri yalnızca {{venue}} API anahtarlarınız okuyabilir. Anahtarlar bu cihazda kalır.",
       "connectAction": "{{venue}} bağla"
     },
     "paneTransition": {
@@ -5830,6 +5833,7 @@
       "switchSizeCurrency": "Miktar birimini değiştir",
       "max": "Maks.",
       "orderValue": "Emir değeri",
+      "underOneContract": "Bu fiyatta bir sözleşmeden az",
       "available": "Kullanılabilir",
       "riskUsed": "Kullanılan risk",
       "riskUsedValue": "{{cap}} sınırından {{used}}",

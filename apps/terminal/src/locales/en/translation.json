@@ -2570,6 +2570,9 @@
       "sealedDescription": "{{venue}} has no public price feed. Your API keys are what stream the chart, the book and quotes, and they are locked right now.",
       "missingTitle": "Connect {{venue}} to see prices",
       "missingDescription": "{{venue}} has no public price feed. Connect your account and the chart, order book and quotes stream straight from it.",
+      "accountSealedDescription": "Your {{venue}} API keys are what read balances, positions and orders, and they are locked right now.",
+      "accountMissingTitle": "Connect {{venue}} to see your account",
+      "accountMissingDescription": "Your API keys are what read {{venue}} balances, positions and orders. They stay on this device.",
       "connectAction": "Connect {{venue}}"
     },
     "paneTransition": {
@@ -5495,6 +5498,7 @@
       "switchSizeCurrency": "Switch size currency",
       "max": "Max",
       "orderValue": "Order value",
+      "underOneContract": "Under one contract at this price",
       "available": "Available",
       "riskUsed": "Risk used",
       "riskUsedValue": "{{used}} of {{cap}} cap",
