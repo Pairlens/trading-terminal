@@ -104,7 +104,7 @@ export function ResolvingSoonPane() {
             key={row.key}
             onClick={() => {
               if (!row.outcome) return
-              select.open({
+              select.select({
                 venue: row.market,
                 event: row.event,
                 market: row.marketSummary,

@@ -15,7 +15,7 @@
  * `contracts × price` the money at risk on a buy and `contracts × (1 − price)`
  * the money at risk on a sell.
  */
-import type { PredictionDirectoryEntry } from '@/stores/prediction-directory-store'
+import type { PredictionOutcomeEntry } from '@/stores/prediction-directory-store'
 import { normalizePairKey } from '@/lib/pairs'
 
 /** A probability is strictly inside (0, 100) cents. Nothing else is a price. */
@@ -274,7 +274,7 @@ export type PredictionSibling = {
 export function predictionSibling(
   pairKey: string,
   market: string,
-  entries: Record<string, PredictionDirectoryEntry>,
+  entries: Record<string, PredictionOutcomeEntry>,
 ): PredictionSibling | null {
   const key = normalizePairKey(pairKey)
   const current = entries[key]

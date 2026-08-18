@@ -19,7 +19,7 @@ import { PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { useLivePairPrice } from '@/hooks/use-live-pair-price'
 import { useMarketRefOrNull } from '@/lib/market-ref/use-market-ref'
 import { useRecentPairs } from '@/lib/recent-tickers'
-import { formatPrice } from '@/lib/format-price'
+import { formatPredictionPrice, formatPrice } from '@/lib/format-price'
 
 // Horizontal scroll speed of the marquee track, px/s.
 const SCROLL_SPEED = 30
@@ -217,7 +217,15 @@ const MarqueeChip = memo(function MarqueeChip({
   onRemove: (inst: InstrumentRef) => void
 }) {
   const symbol = marketRef.id
-  const { price, direction } = useLivePairPrice(symbol, marketRef.market)
+  const { price, direction, outcomeLabel } = useLivePairPrice(
+    symbol,
+    marketRef.market,
+  )
+  // A prediction chip carries two things where every other chip carries one:
+  // the question, and which answer the number belongs to. Without the second
+  // half a 63¢ under "Will the Fed cut in March?" reads as the price of Yes
+  // even when No is the side that is leading.
+  const isPrediction = outcomeLabel !== null
 
   return (
     <div
@@ -244,13 +252,22 @@ const MarqueeChip = memo(function MarqueeChip({
             isActive ? 'text-foreground' : 'text-muted-foreground',
           )}
         />
+        {isPrediction && (
+          <span className="max-w-24 shrink-0 truncate text-[11px] text-muted-foreground">
+            {outcomeLabel}
+          </span>
+        )}
         <span
           className={cn(
             'font-mono tabular-nums transition-colors',
             directionClass(direction),
           )}
         >
-          {price != null ? formatPrice(price) : '—'}
+          {price == null
+            ? '—'
+            : isPrediction
+              ? formatPredictionPrice(price)
+              : formatPrice(price)}
         </span>
       </button>
       {/* Close affordance — like closing a browser tab. Hidden until the chip

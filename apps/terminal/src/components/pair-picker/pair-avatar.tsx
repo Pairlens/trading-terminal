@@ -4,13 +4,17 @@ import { useState } from 'react'
 import { Vote } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 
+import type { PredictionOutcomeEntry } from '@/stores/prediction-directory-store'
 import { useSymbolLogo } from '@/hooks/use-symbol-logo'
 import {
   binarySideOf,
   predictionTicker,
   shortenId,
 } from '@/lib/predictions/event-labels'
-import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import {
+  isPredictionEventEntry,
+  usePredictionPin,
+} from '@/stores/prediction-directory-store'
 
 const AVATAR_COLORS = [
   { bg: 'bg-amber-500/20', text: 'text-amber-700 dark:text-amber-400' },
@@ -103,27 +107,45 @@ type PairSymbolProps = {
 /**
  * The one place a market's ticker is rendered.
  *
- * Two shapes behind one component. A CEX pair is `BASE-QUOTE` and gets the
- * split treatment. A prediction outcome has no ticker at all: its routing key
- * is a hundred characters of event slug, so it renders as subject + side (see
- * `predictionTicker`) and elides rather than overflowing. Every ticker slot in
- * the terminal goes through here, which is what keeps a prediction from
- * breaking a layout built for six characters.
+ * Three shapes behind one component. A CEX pair is `BASE-QUOTE` and gets the
+ * split treatment. A prediction EVENT — which is what a prediction pair is —
+ * has no ticker at all: its routing key is a venue event id, so it renders as
+ * the question and elides rather than overflowing. A prediction OUTCOME, which
+ * still turns up on a position row and in a fill, renders as subject + side.
+ * Every ticker slot in the terminal goes through here, which is what keeps a
+ * prediction from breaking a layout built for six characters.
+ *
+ * The directory read happens HERE rather than in a branch component, and that
+ * is a deliberate change: a Polymarket event id is a bare number and a Kalshi
+ * event ticker has two segments, so the old shape test ("three segments or the
+ * caller told us") could not recognize a prediction pair at all. One zustand
+ * selector per row is the price of that, paid against a store that only writes
+ * when something is pinned.
  */
 export function PairSymbol({ symbol, className, assetClass }: PairSymbolProps) {
-  // Hooks live in the branch component, not here: a store subscription per
-  // row is worth paying only on the rows that can use it, and a plain pair
-  // never can. `-` count is a cheap pre-filter — no CEX pair, perp key or
-  // ticker has three segments, and a false positive costs one map read.
-  const maybePrediction =
-    assetClass === 'prediction' || countSegments(symbol) > 2
-  if (maybePrediction) {
+  const pinned = usePredictionPin(symbol)
+
+  if (pinned && isPredictionEventEntry(pinned)) {
     return (
-      <PredictionSymbol
-        symbol={symbol}
-        className={className}
-        assetClass={assetClass}
-      />
+      <span className={cn('min-w-0 truncate', className)} title={pinned.title}>
+        {pinned.title || shortenId(symbol)}
+      </span>
+    )
+  }
+
+  if (pinned)
+    return (
+      <OutcomeSymbol entry={pinned} symbol={symbol} className={className} />
+    )
+
+  // Nothing pinned. A three-segment key that nothing pinned is a futures key
+  // (`BTC-USDT-USDT`) or a DEX one, so it keeps reading the way it always has;
+  // only a caller that KNOWS the class gets the shortened-id treatment.
+  if (assetClass === 'prediction') {
+    return (
+      <span className={cn('truncate', className)} title={symbol}>
+        {shortenId(symbol)}
+      </span>
     )
   }
   return <PlainSymbol symbol={symbol} className={className} />
@@ -142,22 +164,16 @@ function PlainSymbol({ symbol, className }: PairSymbolProps) {
   )
 }
 
-function PredictionSymbol({ symbol, className, assetClass }: PairSymbolProps) {
-  const pinned = usePredictionOutcome(symbol)
-  // A three-segment key that nothing pinned is not a prediction — it is a
-  // futures key (`BTC-USDT-USDT`) or a DEX one. Falling through keeps those
-  // reading the way they always have.
-  if (!pinned) {
-    if (assetClass !== 'prediction')
-      return <PlainSymbol symbol={symbol} className={className} />
-    return (
-      <span className={cn('truncate', className)} title={symbol}>
-        {shortenId(symbol)}
-      </span>
-    )
-  }
-
-  const { subject, outcome, full } = predictionTicker(pinned, symbol)
+function OutcomeSymbol({
+  entry,
+  symbol,
+  className,
+}: {
+  entry: PredictionOutcomeEntry
+  symbol: string
+  className?: string
+}) {
+  const { subject, outcome, full } = predictionTicker(entry, symbol)
   const side = binarySideOf(outcome)
   return (
     // `min-w-0` on the row is the caller's job; `truncate` here is what turns
@@ -179,12 +195,6 @@ function PredictionSymbol({ symbol, className, assetClass }: PairSymbolProps) {
       </span>
     </span>
   )
-}
-
-function countSegments(symbol: string): number {
-  let n = 1
-  for (const ch of symbol) if (ch === '-') n++
-  return n
 }
 
 type PairLogoProps = {

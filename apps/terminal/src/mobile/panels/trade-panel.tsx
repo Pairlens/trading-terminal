@@ -43,6 +43,7 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useOrderDraftStore } from '../lib/order-draft-store'
 import { PRESS } from '../primitives/press'
 import { predictionIdentity } from '../lib/prediction-identity'
+import { PredictionOutcomeStrip } from './prediction-outcome-strip'
 import { TradeOrderbookStrip } from './trade-orderbook-strip'
 import { TradePayoutCard } from './trade-payout-card'
 import { TradeRiskRow } from './trade-risk-row'
@@ -1006,6 +1007,11 @@ export default memo(function MobileTradePanel() {
         ) : (
           <PredictionQuestionLines identity={identity} />
         )}
+        {/* Every other answer to the same question, one tap each. The pair
+            is the question, so switching sides is a selection inside the
+            ticket rather than a trip back to the chart to find another
+            contract. */}
+        <PredictionOutcomeStrip />
         {/* Collapsed by default, one row tall. It is what a probability is
             worth reading against, and this is the last surface before the
             money moves. */}

@@ -15,9 +15,13 @@ import type {
 
 /**
  * Prediction Terminal — the default pair layout for the `prediction` asset
- * class, shaped for a binary contract. The event header leads: a contract is a
- * question, and the question, its resolution source and the probability being
- * paid belong above the chart rather than in a tooltip.
+ * class. The pair here is an EVENT, so the board is built around a question
+ * and every answer to it rather than around one contract.
+ *
+ * The event header leads: the question, the field as a strip of selectable
+ * answers, its resolution source, and the probability being paid. A contract
+ * is a sentence, and the sentence belongs above the chart rather than in a
+ * tooltip.
  *
  * The chart is `prediction-chart`, not `chart`. A contract that trades between
  * 0 and 1 has no meaningful wick, drawings on a probability are numerology,
@@ -25,15 +29,18 @@ import type {
  * instrument even here, where a binary market has two sides worth seeing
  * against each other.
  *
+ * `outcome-ladder` opens the data strip, and that is the change this layout is
+ * built around. Every answer is priced, sortable and stakeable from its own
+ * row, so trading a prediction starts with reading the field and ends with
+ * picking a side — not the other way round. The tape, the news moves and the
+ * open contracts sit behind it as tabs.
+ *
  * `event-brief` is the other correction. The criteria that decide the payout
  * used to live behind a chip in the header, one hover deep: a trader could
  * read a probability, size a stake and submit without ever seeing the sentence
  * that settles it. It now has a pane on the reading rail, above the event
  * browser, because the question next door is half the analysis and the rules
  * for the question in front of you are the other half.
- *
- * The data strip opens on `what-moved-it`, which stamps each headline with the
- * probability move it caused, and keeps the tape and open contracts behind it.
  */
 export const PREDICTION_TERMINAL_LAYOUT = {
   version: 1,
@@ -44,21 +51,22 @@ export const PREDICTION_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-event-header',
-          heightPercent: 17,
+          heightPercent: 21,
           activeTabIndex: 0,
           panes: [{ id: 'pane-event-header', type: 'event-header' }],
         },
         {
           id: 'cell-chart',
-          heightPercent: 48,
+          heightPercent: 40,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'prediction-chart' }],
         },
         {
           id: 'cell-bottom',
-          heightPercent: 35,
+          heightPercent: 39,
           activeTabIndex: 0,
           panes: [
+            { id: 'pane-outcome-ladder', type: 'outcome-ladder' },
             { id: 'pane-what-moved-it', type: 'what-moved-it' },
             { id: 'pane-trades', type: 'trades' },
             {
@@ -136,13 +144,13 @@ export const PREDICTION_RACE_LAYOUT = {
       cells: [
         {
           id: 'cell-event-header',
-          heightPercent: 15,
+          heightPercent: 19,
           activeTabIndex: 0,
           panes: [{ id: 'pane-event-header', type: 'event-header' }],
         },
         {
           id: 'cell-chart',
-          heightPercent: 47,
+          heightPercent: 43,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'prediction-chart' }],
         },

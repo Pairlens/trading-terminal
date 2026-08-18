@@ -14,7 +14,6 @@
  * and which outcome it named.
  */
 import { memo, useCallback, useMemo, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { Loader2, Search, Vote } from 'lucide-react'
 
@@ -43,12 +42,9 @@ import {
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
 import { EVENT_LIST_SORTS, sortEventSummaries } from '@/lib/predictions/board'
+import { usePredictionSelect } from '@/lib/predictions/navigate'
 import { formatCompactUsd } from '@/lib/format-price'
-import { predictionEntryFor } from '@/lib/predictions/pin'
 import { formatTimeUntil } from '@/lib/format-time'
-import { usePersistedState } from '@/hooks/use-persisted-state'
-import { registerPredictionOutcome } from '@/stores/prediction-directory-store'
-import { chartLinkProps } from '@/lib/market-ref/link'
 
 /**
  * Markets a card shows before it defers to the dialog.
@@ -82,7 +78,7 @@ const SORT_LABEL_KEYS: Record<EventListSort, string> = {
 
 export function EventsPane() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const select = usePredictionSelect()
   const venues = usePredictionVenues()
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<string | null>(null)
@@ -95,11 +91,6 @@ export function EventsPane() {
     venue: PredictionVenueResult
     event: PredictionEventSummary
   } | null>(null)
-  const [, setAssetClassMap] = usePersistedState<Record<string, string>>(
-    'pair-picker.assetClassMap',
-    {},
-  )
-
   // Every venue, every time: the chip is a VIEW, not a narrower fetch. See
   // `usePredictionEvents` — scoping the query by the chip gave each one its
   // own cache entry and refetched what the "all" entry already held.
@@ -121,25 +112,14 @@ export function EventsPane() {
       pairKey: string,
       label: string,
     ) => {
-      registerPredictionOutcome(
-        pairKey,
-        predictionEntryFor(venue.market, event, market, label),
-      )
-      setAssetClassMap((prev) => ({ ...prev, [pairKey]: 'prediction' }))
       setOpenEvent(null)
-      // The venue is in the address, so the card's own venue travels with the
-      // link. This used to need a venue switch as a side effect because
-      // the route could only re-home the pair onto "the first venue that
-      // serves predictions", which is a coin flip with both venues installed.
-      void navigate(
-        chartLinkProps({
-          cls: 'prediction',
-          market: venue.market,
-          id: pairKey,
-        }),
-      )
+      // One selection path for the whole terminal: the event is the pair, so
+      // this opens the question and arrives on the leg the user picked. The
+      // venue travels in the address, which is what stops the route re-homing
+      // the pair onto "the first venue that serves predictions".
+      select.select({ venue: venue.market, event, market, pairKey, label })
     },
-    [navigate, setAssetClassMap],
+    [select],
   )
 
   const handleOpenEvent = useCallback(

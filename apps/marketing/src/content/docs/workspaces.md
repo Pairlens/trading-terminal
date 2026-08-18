@@ -4,7 +4,7 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 10 min read
 ---
 
@@ -100,10 +100,12 @@ on the ticket has a cause you can read.
 change what the ticket will accept rather than just a label on it. Level 1
 quotes sit over the ticket and the symbol wire.
 
-**Prediction Terminal** leads with the event header, since a contract is a
-question and the question belongs above the chart. The data strip opens on
-**What Moved It**, and the right column carries the event browser over your
-open contracts.
+**Prediction Terminal** leads with the event header, since a prediction pair is
+a question and the question belongs above the chart. The data strip opens on the
+**Outcome Ladder**, so every answer to that question is priced and one click
+from the ticket before you have scrolled anywhere; What Moved It, the tape and
+your open contracts sit behind it as tabs. The right column carries the event
+brief over the event browser.
 
 Beyond the default, each class carries its own named boards in the same menu:
 
@@ -113,7 +115,7 @@ Beyond the default, each class carries its own named boards in the same menu:
 | CEX Futures | **Carry**, with the funding belt above the chart; **Risk**, with the liquidation map, margin health and your guardrails editable in place                                                |
 | DEX         | **Liquidity** for the LP side of the pool, with the manage panel beside it; **Cross-Chain** for the same token priced per chain, with the bridge quote and in-flight transfers beside it |
 | Equities    | **Company**, the ticker read as a business rather than a price, with its insider filings under it                                                                                        |
-| Predictions | **Race**, for an event with a field rather than two sides: the outcome ladder under the chart and the basket ticket beside it                                                            |
+| Predictions | **Race**, for a field of a hundred rather than a handful: the outcome ladder gets the whole strip and the basket ticket sits beside it                                                   |
 
 The **Workspaces** menu follows the same rule as the defaults: on a prediction
 market it suggests layouts built for prediction markets, not a spot execution

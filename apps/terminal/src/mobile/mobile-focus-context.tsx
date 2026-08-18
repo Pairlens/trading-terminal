@@ -118,7 +118,24 @@ export type MobileOverlay =
 export type MobileOverlayKind = MobileOverlay['kind']
 
 export type MobileFocusValue = {
+  /**
+   * The leg being streamed and traded.
+   *
+   * The same string as `focusedInstrument` for every asset class but one. On a
+   * prediction it is one ANSWER of the focused question, because a question
+   * has no book of its own, and it is empty for the moment between opening an
+   * event and its field resolving.
+   */
   focusedPair: string
+  /**
+   * What the user opened, and what the address carries.
+   *
+   * On a prediction this is the EVENT: the question is the instrument, and
+   * which side of it you are on is a selection inside it. Everything that
+   * names or saves the market reads THIS — the URL, the watchlist star, the
+   * recents strip — and everything that streams reads `focusedPair`.
+   */
+  focusedInstrument: string
   /**
    * The focused market's asset class. Half of what decides which venue may
    * serve it, and part of the canonical URL, so it travels with the pair
@@ -135,6 +152,19 @@ export type MobileNavValue = {
 
 export type MobileActionsValue = {
   setFocusedPair: (pairKey: string, cls?: InstrumentClass) => void
+  /**
+   * Open a prediction event ON one of its answers, in one commit.
+   *
+   * Two calls would paint a frame of the new question with the old question's
+   * leg still loaded in the ticket, which is the one frame a trading surface
+   * must never show.
+   */
+  setFocusedPrediction: (eventKey: string, outcomeKey: string) => void
+  /**
+   * Switch to another answer of the SAME question. Not a navigation: the
+   * instrument has not changed, so neither does the address or the history.
+   */
+  setFocusedOutcome: (outcomeKey: string) => void
   setFocusedVenue: (market: string) => void
   /**
    * Sets the tab WITHOUT claiming a history entry — the seed path, for a URL
@@ -246,11 +276,15 @@ function restampShellEntry(router: AnyRouter, depth: number): void {
 
 export function MobileFocusProvider({
   focusedPair,
+  focusedInstrument,
   focusedClass,
   onFocusPair,
+  onFocusPrediction,
+  onSelectOutcome,
   children,
 }: {
   focusedPair: string
+  focusedInstrument: string
   focusedClass: InstrumentClass
   /**
    * Owned by MobileTerminalRoot: sets the pair and its class. The URL is
@@ -258,6 +292,8 @@ export function MobileFocusProvider({
    * the root and a rewrite from up there could only guess at it.
    */
   onFocusPair: (pairKey: string, cls?: InstrumentClass) => void
+  onFocusPrediction: (eventKey: string, outcomeKey: string) => void
+  onSelectOutcome: (outcomeKey: string) => void
   children: ReactNode
 }) {
   const { market } = useChartConfig()
@@ -496,8 +532,13 @@ export function MobileFocusProvider({
   useEffect(() => () => window.clearTimeout(disarmRef.current), [])
 
   const focus = useMemo<MobileFocusValue>(
-    () => ({ focusedPair, focusedClass, focusedVenue: market }),
-    [focusedPair, focusedClass, market],
+    () => ({
+      focusedPair,
+      focusedInstrument,
+      focusedClass,
+      focusedVenue: market,
+    }),
+    [focusedPair, focusedInstrument, focusedClass, market],
   )
 
   const nav = useMemo<MobileNavValue>(
@@ -510,6 +551,8 @@ export function MobileFocusProvider({
   const actions = useMemo<MobileActionsValue>(
     () => ({
       setFocusedPair: onFocusPair,
+      setFocusedPrediction: onFocusPrediction,
+      setFocusedOutcome: onSelectOutcome,
       setFocusedVenue: setMarket,
       setActiveTab,
       selectTab,
@@ -521,6 +564,8 @@ export function MobileFocusProvider({
     }),
     [
       onFocusPair,
+      onFocusPrediction,
+      onSelectOutcome,
       setMarket,
       setActiveTab,
       selectTab,

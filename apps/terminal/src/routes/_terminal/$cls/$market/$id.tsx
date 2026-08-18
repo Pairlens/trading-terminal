@@ -51,6 +51,8 @@ import {
   useChartConfig,
 } from '@/lib/chart-terminal-context'
 import { ActivePairProvider, useActivePair } from '@/lib/active-pair-context'
+import { PredictionDeskProvider } from '@/lib/predictions/desk-context'
+import { usePredictionDeskState } from '@/hooks/use-prediction-desk'
 import { ActiveWalletProvider } from '@/lib/active-wallet-context'
 import { useCredentialsStore } from '@/stores/credentials-store'
 import { LayoutProvider } from '@/lib/layout/context'
@@ -58,8 +60,23 @@ import { WorkspaceProvider } from '@/lib/layout/workspace-context'
 import { pairWorkspaceFor } from '@/lib/layout/workspaces/pair-workspace'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 
+/**
+ * `?o=` — which answer of a prediction event the book, the tape and the ticket
+ * are pointed at.
+ *
+ * A search param rather than a fourth path segment, because it is a selection
+ * inside the instrument rather than part of its identity: the event is what is
+ * watched, linked and charted, and the leg is which side of it you are looking
+ * at right now. Every other class ignores it.
+ */
 export const Route = createFileRoute('/_terminal/$cls/$market/$id')({
   component: ChartTerminalPage,
+  validateSearch: (search: Record<string, unknown>): { o?: string } => {
+    const outcome = search['o']
+    return typeof outcome === 'string' && outcome.trim() !== ''
+      ? { o: outcome }
+      : {}
+  },
 })
 
 /** A full-page version of the pane empty states: say what is wrong, and where to go. */
@@ -168,6 +185,21 @@ function ChartTerminalPage() {
       ? { walletId: marketCreds[0]!.id, market: ref.market }
       : null
 
+  // A prediction pair is an EVENT, and an event has no single book to stream:
+  // the page has to resolve the field first and decide which answer the
+  // instrument panes are addressing. Its own arm, above the providers, because
+  // that decision is what feeds them.
+  if (ref.cls === 'prediction') {
+    return (
+      <PredictionTerminalPage
+        initialWallet={initialWallet}
+        marketRef={ref}
+        markets={markets}
+        defaultMarket={defaultMarket}
+      />
+    )
+  }
+
   // Mounted directly, not through ChartTerminalAutoProvider: this page IS the
   // chart terminal, and the two facts the provider needs are already proven
   // above (a parsed ref, a non-empty venue list). The auto provider decides
@@ -178,6 +210,7 @@ function ChartTerminalPage() {
     <ActivePairProvider initial={{ pairKey: ref.id, market: ref.market }}>
       <ActiveWalletProvider initial={initialWallet}>
         <ChartTerminalContent
+          activePairKey={ref.id}
           marketRef={ref}
           markets={markets}
           defaultMarket={defaultMarket}
@@ -188,15 +221,124 @@ function ChartTerminalPage() {
 }
 
 /**
+ * The prediction arm.
+ *
+ * Two identities travel down from here and they are deliberately different.
+ * `marketRef` is the EVENT: it is what the address carries, what the top bar
+ * titles, what the star watches and what the recents strip remembers. The
+ * selected outcome is what the streaming panes address, because a book and a
+ * tape are always of one leg. Keeping them apart is the whole point of the
+ * change: the user picks a question first and a side second, rather than being
+ * made to name a side before the terminal will show them anything.
+ */
+function PredictionTerminalPage({
+  marketRef,
+  markets,
+  defaultMarket,
+  initialWallet,
+}: {
+  marketRef: MarketRef
+  markets: Array<MarketOption>
+  defaultMarket: string
+  initialWallet: { walletId: string; market: string } | null
+}) {
+  const navigate = useNavigate()
+  const search = Route.useSearch()
+
+  // `replace`, always: flicking between the answers of one event is reading,
+  // not navigating, and a back button that has to walk out of twelve runners
+  // is a back button nobody presses.
+  const handleSelectOutcome = useCallback(
+    (outcomeKey: string) => {
+      void navigate({
+        to: '/$cls/$market/$id',
+        params: {
+          cls: marketRef.cls,
+          market: marketRef.market,
+          id: marketRef.id,
+        },
+        search: { o: outcomeKey },
+        replace: true,
+      })
+    },
+    [navigate, marketRef.cls, marketRef.market, marketRef.id],
+  )
+
+  const desk = usePredictionDeskState({
+    venue: marketRef.market,
+    eventKey: marketRef.id,
+    selectedKey: search.o ?? '',
+    onSelect: handleSelectOutcome,
+  })
+
+  // An address that named one LEG rather than the question heals itself: the
+  // desk resolved the event behind it, so the URL becomes that event's with
+  // the leg carried in `?o=`. Old shared links, alerts and rows starred from
+  // the phone all land on the whole field instead of a single side.
+  const resolvedEventId = desk.event?.id
+  useEffect(() => {
+    if (!resolvedEventId) return
+    if (resolvedEventId.toLowerCase() === marketRef.id.toLowerCase()) return
+    void navigate({
+      to: '/$cls/$market/$id',
+      params: {
+        cls: marketRef.cls,
+        market: marketRef.market,
+        id: resolvedEventId,
+      },
+      search: desk.selected ? { o: desk.selected.pairKey } : {},
+      replace: true,
+    })
+  }, [
+    resolvedEventId,
+    marketRef.cls,
+    marketRef.id,
+    marketRef.market,
+    desk.selected,
+    navigate,
+  ])
+
+  // Before the field resolves there is no leg to stream, and the event id is
+  // not one: handing it to the chart would have the connector look up an
+  // outcome that cannot exist. An empty key is what every pane already renders
+  // its "no pair" state for.
+  const activePairKey = desk.selected?.pairKey ?? ''
+
+  return (
+    <PredictionDeskProvider desk={desk}>
+      <ActivePairProvider
+        initial={{ pairKey: activePairKey, market: marketRef.market }}
+      >
+        <ActiveWalletProvider initial={initialWallet}>
+          <ChartTerminalContent
+            activePairKey={activePairKey}
+            marketRef={marketRef}
+            markets={markets}
+            defaultMarket={defaultMarket}
+          />
+        </ActiveWalletProvider>
+      </ActivePairProvider>
+    </PredictionDeskProvider>
+  )
+}
+
+/**
  * Split from the page so the venue-change navigation can be built once, above
  * the provider that consumes it.
  */
 function ChartTerminalContent({
   marketRef,
+  activePairKey,
   markets,
   defaultMarket,
 }: {
   marketRef: MarketRef
+  /**
+   * What the streaming panes address. The same as `marketRef.id` for every
+   * class whose pair IS its instrument, and the selected outcome on a
+   * prediction event, whose pair is a question with several tradeable answers.
+   */
+  activePairKey: string
   markets: Array<MarketOption>
   defaultMarket: string
 }) {
@@ -221,7 +363,7 @@ function ChartTerminalContent({
 
   return (
     <ChartTerminalProvider
-      pairKey={marketRef.id}
+      pairKey={activePairKey}
       markets={markets}
       defaultMarket={defaultMarket}
       marketOverride={marketRef.market}
@@ -234,7 +376,11 @@ function ChartTerminalContent({
           persistence effect would write it into the new class's key. */}
       <WorkspaceProvider config={pairWorkspaceFor(marketRef.cls)}>
         <LayoutProvider key={marketRef.cls}>
-          <ChartTerminalBody marketRef={marketRef} markets={markets} />
+          <ChartTerminalBody
+            activePairKey={activePairKey}
+            marketRef={marketRef}
+            markets={markets}
+          />
         </LayoutProvider>
       </WorkspaceProvider>
     </ChartTerminalProvider>
@@ -243,12 +389,16 @@ function ChartTerminalContent({
 
 function ChartTerminalBody({
   marketRef,
+  activePairKey,
   markets,
 }: {
   marketRef: MarketRef
+  activePairKey: string
   markets: Array<MarketOption>
 }) {
-  const pairKey = marketRef.id
+  // The address names the instrument; `activePairKey` names the book. They are
+  // the same string everywhere except a prediction event.
+  const pairKey = activePairKey
   // By ref, not by ticker: this page may be charting a token, whose stored
   // identity is its address while the header still shows a symbol. The VENUE
   // comes off first for the symbol-shaped arms, because a watchlist entry is
@@ -286,9 +436,9 @@ function ChartTerminalBody({
     track('pair_opened', {
       venue: marketRef.market,
       asset_class: marketRef.cls,
-      pair: pairKey,
+      pair: marketRef.id,
     })
-  }, [pairKey, marketRef.market, marketRef.cls])
+  }, [marketRef.id, marketRef.market, marketRef.cls])
 
   return (
     <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -296,7 +446,8 @@ function ChartTerminalBody({
 
       <TerminalTopBar
         marketOptions={markets}
-        pairKey={pairKey}
+        pairKey={marketRef.id}
+        streamPairKey={pairKey}
         assetClass={marketRef.cls}
         isWatched={isWatched}
         onStarClick={() => openAddDialog(toWatchlistRef(marketRef))}

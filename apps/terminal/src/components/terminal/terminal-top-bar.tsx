@@ -22,7 +22,18 @@ import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 
 type TerminalTopBarProps = {
   marketOptions: Array<MarketOption>
+  /** The instrument's own identity: what the switcher names and the star saves. */
   pairKey: string
+  /**
+   * What is actually streaming, when that is not the same thing.
+   *
+   * A prediction pair is an EVENT and an event has no book, so the readouts
+   * that need one (the latency probe's trade subscription, an alert's binding)
+   * take the selected answer instead. Everything else in the bar stays on the
+   * event, because that is what the user opened. Defaults to `pairKey` for
+   * every class where the two coincide.
+   */
+  streamPairKey?: string
   assetClass?: InstrumentClass
   isWatched: boolean
   onStarClick: () => void
@@ -39,6 +50,7 @@ type TerminalTopBarProps = {
 export function TerminalTopBar({
   marketOptions,
   pairKey,
+  streamPairKey,
   assetClass,
   isWatched,
   onStarClick,
@@ -53,6 +65,7 @@ export function TerminalTopBar({
   // A probability quote reads in cents everywhere else on the screen; the one
   // readout still saying $0.229 would be the odd number out.
   const predictionPrices = useIsPredictionPair(pairKey, market)
+  const streamKey = streamPairKey ?? pairKey
 
   return (
     <PageHeader
@@ -84,7 +97,7 @@ export function TerminalTopBar({
           )}
         />
       </Button>
-      <AlertBell pairKey={pairKey} market={market} />
+      <AlertBell pairKey={streamKey} market={market} />
 
       <Separator orientation="vertical" className="mx-1 self-stretch" />
 
@@ -108,7 +121,7 @@ export function TerminalTopBar({
 
       <LatencyIndicator
         market={market}
-        pairKey={pairKey}
+        pairKey={streamKey}
         venueLabel={marketOptions.find((m) => m.value === market)?.label}
       />
     </PageHeader>

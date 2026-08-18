@@ -403,7 +403,7 @@ const Legend = memo(function Legend({
                 })}
                 className="flex h-full items-center rounded-r-md px-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100"
                 onClick={() =>
-                  select.open({
+                  select.select({
                     venue: context.venue,
                     event: context.event!,
                     market: source.market,

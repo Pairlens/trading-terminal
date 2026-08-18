@@ -108,15 +108,16 @@ line. The ticket's numeric limit field works in either view. Whichever you pick
 is remembered across contracts, and the span is the same one your desktop uses.
 See [the Probability Chart](/docs/prediction-markets#the-probability-chart).
 
-**On an event contract the chart gains a strip.** A prediction routing key is a
-venue ticker, so under the price you get the question in full, the date it
-resolves, and what the outcome is being paid. On a race the reading is the
-leader instead, because a field of 128 candidates has no single probability.
-Tap the strip and the whole event opens: every question it carries, every
-outcome priced, and the venue's resolution rules. On a race the strip also
-carries a second button that ranks the field (below). The strip prices come
-from the venue's board, not the live socket, so nothing on it flickers while you
-read it; the number that moves is the price above it.
+**On an event contract the chart gains a strip.** A prediction pair is a
+question, so under the price you get that question in full, the date it
+resolves, and the price of the answer you are on. Tap the strip and the whole
+event opens: every question it carries, every outcome priced, and the venue's
+resolution rules. Beside it is the ladder button, which is on **every**
+prediction rather than only on a race: the pair is the question, so "show me
+the other answers" is the same request whether there are two of them or a
+hundred. The strip prices come from the venue's board, not the live socket, so
+nothing on it flickers while you read it; the number that moves is the price
+above it.
 
 ## Trading
 
@@ -133,11 +134,18 @@ do are visibly disabled rather than hidden, so a DEX without limit support says
 so. The limit price is seeded from the live book the first time, which puts the
 line where you are already looking.
 
-**On an event contract the ticket takes dollars.** The question, its resolution
-date and a **Resolution rules** disclosure sit above the ticket, beside the
-order book rather than inside it, so they stay readable when the ticket is
-behind a connect card: what a market asks and how it settles is not something a
-missing API key should hide. Tap the question to open the whole event. The
+**On an event contract the ticket takes dollars.** The question, the field, its
+resolution date and a **Resolution rules** disclosure sit above the ticket,
+beside the order book rather than inside it, so they stay readable when the
+ticket is behind a connect card: what a market asks and how it settles is not
+something a missing API key should hide. Tap the question to open the whole
+event.
+
+Under it, every answer as a chip with its price, favourites first, the one you
+are trading ringed. Tap another and the ticket, the chart and the book follow
+without leaving the screen: the pair is the question, so picking a side is a
+selection inside it rather than a trip to a different contract. The chip row
+scrolls, and the ladder button at its end opens the whole field ranked. The
 amount is collateral with **$25**, **$50**, **$100** and **Max** as presets, and
 the count it buys is stated under the field, floored to whole contracts. Above the confirm bar is the payout card:
 what the order returns if it is right, split against what it costs, with the
@@ -181,8 +189,9 @@ reader holds its place while the list keeps filling behind it.
 **Prediction markets** sit between the featured pairs and the news. A handful
 of live events, each with its artwork, its question, how long until it resolves,
 and a price button per outcome in cents, Yes in green and No in red. Tap an
-outcome and it becomes the chart, with the ticket and the book quoting the same
-side. Tap the event heading and the whole event opens as its own screen: every
+outcome and the question becomes the chart with that answer loaded in the
+ticket and the book. Tap the event heading and the whole event opens as its own
+screen: every
 question it carries, every outcome priced. **All events** opens the full board,
 where you can search question text and filter by venue.
 

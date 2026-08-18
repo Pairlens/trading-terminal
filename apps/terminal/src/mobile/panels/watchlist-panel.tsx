@@ -46,6 +46,10 @@ import { PRESS } from '../primitives/press'
 import { TrendQuoteCell } from './trend-quote-cell'
 import type { Instrument } from '@pairlens/shared/instrument-types'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import type {
+  PredictionEventEntry,
+  PredictionOutcomeEntry,
+} from '@/stores/prediction-directory-store'
 import { haptic } from '@/lib/haptics'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { useInstrumentsBySymbols } from '@/hooks/use-market-instruments'
@@ -59,7 +63,10 @@ import {
   PredictionAvatar,
 } from '@/components/pair-picker/pair-avatar'
 import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
-import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import {
+  isPredictionEventEntry,
+  usePredictionPin,
+} from '@/stores/prediction-directory-store'
 
 /** Lists at or below this length render as a plain map. */
 const VIRTUALIZE_ABOVE = 30
@@ -319,11 +326,13 @@ const WatchlistRow = memo(function WatchlistRow({
   const { setFocusedPair, setFocusedVenue, dismissPanel } = useMobileActions()
   const { markets } = useAvailableMarkets()
   const { availableMarkets } = useMarketData()
-  // The instruments index carries no prediction rows, so a watched outcome
+  // The instruments index carries no prediction rows, so a watched market
   // arrives here as `fallbackInstrument` — a bare key with no name. The
   // directory pin is what the row was BUILT from, and it is the only thing
   // that knows what the user was actually looking at when they starred it.
-  const pinned = usePredictionOutcome(instrument.symbol)
+  // A watched prediction is an EVENT, so that map answers first; the outcome
+  // map still covers a leg starred before the question became the pair.
+  const pinned = usePredictionPin(instrument.symbol)
   const isPrediction = refClass === 'prediction' || pinned !== null
   const permission = useVenueTradePermission(market)
 
@@ -389,7 +398,7 @@ const WatchlistRow = memo(function WatchlistRow({
         // what is actually being asked than on repeating a venue name the
         // context bar prints whenever this pair is in focus.
         pinned
-          ? predictionQuestionOf(pinned)
+          ? predictionSubtitle(pinned)
           : t('mobile.panels.venueLine', {
               venue: venueLabel,
               kind: t(VENUE_KIND_KEY[kind]),
@@ -418,3 +427,18 @@ const WatchlistRow = memo(function WatchlistRow({
     />
   )
 })
+
+/**
+ * The one line a prediction row has under its title.
+ *
+ * The title is already the question, so the line is spent on the reading the
+ * question does not carry: which answer the market currently rates highest.
+ * An event with no favourite yet, and a row still holding a single leg, both
+ * fall back to naming what they are.
+ */
+function predictionSubtitle(
+  pinned: PredictionEventEntry | PredictionOutcomeEntry,
+): string {
+  if (!isPredictionEventEntry(pinned)) return predictionQuestionOf(pinned)
+  return pinned.leader?.label ?? pinned.title
+}

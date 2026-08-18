@@ -19,7 +19,11 @@ import { useMemo } from 'react'
 
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { predictionTicker } from '@/lib/predictions/event-labels'
-import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import {
+  isPredictionEventEntry,
+  usePredictionOutcome,
+  usePredictionPin,
+} from '@/stores/prediction-directory-store'
 
 /** Reactive read of the outcome a pair key names, or null. */
 export { usePredictionOutcome }
@@ -34,16 +38,19 @@ export { usePredictionOutcome }
  * event slug drawn across the chart at 48px.
  */
 export function usePairDisplayLabel(pairKey: string): string {
-  const pinned = usePredictionOutcome(pairKey)
+  const pinned = usePredictionPin(pairKey)
   return useMemo(() => {
     if (!pinned) return pairKey
+    // An event is already a sentence; appending its favourite would make the
+    // watermark a paragraph and would go stale the moment the field moved.
+    if (isPredictionEventEntry(pinned)) return pinned.title || pairKey
     const { subject, outcome } = predictionTicker(pinned, pairKey)
     return outcome ? `${subject} · ${outcome}` : subject
   }, [pinned, pairKey])
 }
 
 export function useIsPredictionPair(pairKey: string, market?: string): boolean {
-  const pinned = usePredictionOutcome(pairKey)
+  const pinned = usePredictionPin(pairKey)
   const { markets } = useAvailableMarkets()
 
   return useMemo(() => {

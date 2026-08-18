@@ -41,12 +41,12 @@ import { TradeConfirmButton } from './trade-confirm-button'
 import { TradeConnectGate } from './trade-connect-gate'
 import { FundingEntryRow } from './funding-entry-row'
 import { PredictionOrderSummary } from './prediction-payout-card'
-import { RaceOutcomeSwitch } from './race-outcome-switch'
 import { CHAIN_NAME } from './wallet-selector'
 import type { RefObject } from 'react'
 
 import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
+import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import { track } from '@/lib/analytics-events'
 import { splitPairAssets } from '@/lib/pairs'
 import {
@@ -507,7 +507,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   // opened it. Splitting it on '-' (which the spot path above does) would read
   // `KXBTCD-26AUG15-T53` as the pair KXBTCD/26AUG15.
   const pinnedOutcome = usePredictionOutcome(pairKey)
-  const directoryEntries = usePredictionDirectoryStore((s) => s.entries)
+  const directoryEntries = usePredictionDirectoryStore((s) => s.outcomes)
   const outcomeLabel = pinnedOutcome?.outcome ?? ''
   const question = pinnedOutcome ? predictionQuestionOf(pinnedOutcome) : pairKey
   const resolvesAt = pinnedOutcome?.endMs
@@ -1498,11 +1498,10 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* A field market's other runners. Renders nothing on a binary
-            question, where the toggle above is the whole switch. */}
-        {isPrediction && (
-          <RaceOutcomeSwitch market={market} pairKey={pairKey} />
-        )}
+        {/* Every other answer to the same question, one click each. The
+            Yes/No toggle above is the fallback for a venue the browser cannot
+            reach, where there is no field to list. */}
+        {isPrediction && <OutcomeSwitch market={market} pairKey={pairKey} />}
 
         {/* Buy / Sell toggle */}
         <div className="flex gap-1 rounded-xl bg-secondary p-1">

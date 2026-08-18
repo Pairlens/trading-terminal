@@ -248,6 +248,19 @@ export type PredictionEventSummary = {
 
 /** Params accepted by `market-data:events` execute calls. */
 export type PredictionEventsQuery = {
+  /**
+   * One event, by its venue-native id — the cold-link path.
+   *
+   * A prediction pair key IS an event id, so a shared link, a watchlist row
+   * and a reloaded tab all arrive holding one and nothing else. Both venues
+   * answer it directly (Kalshi fetches `/events/{event_ticker}`, Polymarket
+   * gamma `/events?id=`), which is why the terminal never has to search for an
+   * event by its heading and hope the top hit is the one the link meant.
+   *
+   * Wins over every other selector when set: an id names one event, so a
+   * query or a category alongside it could only narrow it to nothing.
+   */
+  eventId?: string
   /** Free-text search; venue-required when no category is given. */
   query?: string
   category?: string

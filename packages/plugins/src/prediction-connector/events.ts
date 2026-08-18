@@ -67,9 +67,20 @@ export async function fetchPredictionEvents(
   const limit = clampLimit(query.limit, DEFAULT_EVENTS_LIMIT)
   const text = query.query?.trim()
   const category = query.category?.trim()
+  const eventId = query.eventId?.trim()
 
   let raw: Array<Record<string, unknown>>
-  if (!text && !category && ctx.venue.browseEvents) {
+  if (eventId) {
+    // An id is a scope both venues accept, so this never reaches the browse
+    // hook: `browseEvents` lists what is busy, which is the opposite of
+    // "fetch exactly this one".
+    if (typeof exchange.fetchEvents !== 'function') {
+      throw new Error(
+        `${ctx.venue.displayName} does not publish an event index`,
+      )
+    }
+    raw = await exchange.fetchEvents(buildScope(ctx.venue, query, limit))
+  } else if (!text && !category && ctx.venue.browseEvents) {
     raw = await ctx.venue.browseEvents(exchange, limit)
   } else {
     if (typeof exchange.fetchEvents !== 'function') {
@@ -146,6 +157,11 @@ function buildScope(
   limit: number,
 ): Record<string, unknown> {
   const scope: Record<string, unknown> = { limit }
+  // An id short-circuits both venues' scope resolution, so nothing else is
+  // sent with it: a `query` alongside it survives into ccxt's client-side
+  // post-filter on Polymarket and can drop the very event that was asked for.
+  const eventId = query.eventId?.trim()
+  if (eventId) return { limit, eventId }
   const text = query.query?.trim()
   if (text) scope['query'] = text
   const category = query.category?.trim()

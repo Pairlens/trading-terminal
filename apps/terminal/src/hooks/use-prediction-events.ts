@@ -159,3 +159,127 @@ export function categoriesOf(
   }
   return [...seen].sort((a, b) => a.localeCompare(b))
 }
+
+// ── One event, by id ─────────────────────────────────────────────────────
+//
+// The browse above is a fan-out over every venue; this is the opposite call
+// and deserves its own query rather than a filter over that one. A prediction
+// pair key IS an event id, so this is what a shared link, a reloaded tab and a
+// watchlist row all resolve through: one venue, one id, one request, and an
+// answer that cannot be the wrong event because nothing was searched for.
+
+export type PredictionEventLookup = {
+  event: PredictionEventSummary | null
+  state: 'loading' | 'ready' | 'not-found' | 'desktop-only' | 'error'
+  error: string | null
+}
+
+/**
+ * The event a prediction pair key names.
+ *
+ * `enabled` is how a caller says "this pair is not a prediction" without
+ * violating the rules of hooks — the route calls this unconditionally and the
+ * non-prediction classes simply never fetch.
+ *
+ * A minute of stale time, matching the browse: an event's shape (its runners,
+ * its rules, its close time) changes on the scale of a listing, and the prices
+ * on it are a reading aid. Live prices come off the streaming contexts.
+ */
+export function usePredictionEventById({
+  venue,
+  eventId,
+  enabled = true,
+}: {
+  venue: PredictionVenue | null
+  eventId: string
+  enabled?: boolean
+}): PredictionEventLookup {
+  const query = useQuery({
+    queryKey: ['prediction-event', venue?.market ?? '', eventId],
+    queryFn: async (): Promise<PredictionVenueResult> => {
+      const country = getCountrySetting()
+      const { plugin, market, label } = venue!
+      try {
+        const response = (await plugin.execute({
+          capability: 'market-data:events',
+          params: { eventId, limit: 1 },
+          context: {
+            pair: '',
+            market,
+            timeframe: '',
+            mode: 'paper' as const,
+            country,
+          },
+        })) as PredictionEventsResponse
+        return {
+          market,
+          label,
+          events: Array.isArray(response?.events) ? response.events : [],
+          error: null,
+          desktopOnly: false,
+        }
+      } catch (err) {
+        return {
+          market,
+          label,
+          events: [],
+          error: isPlatformRestrictedError(err)
+            ? null
+            : err instanceof Error
+              ? err.message
+              : String(err),
+          desktopOnly: isPlatformRestrictedError(err),
+        }
+      }
+    },
+    enabled: enabled && Boolean(venue) && eventId.trim() !== '',
+    staleTime: 60_000,
+    gcTime: 10 * 60_000,
+  })
+
+  return useMemo(() => {
+    const result = query.data
+    if (query.isLoading && !result) {
+      return { event: null, state: 'loading' as const, error: null }
+    }
+    if (result?.desktopOnly) {
+      return { event: null, state: 'desktop-only' as const, error: null }
+    }
+    if (result?.error) {
+      return { event: null, state: 'error' as const, error: result.error }
+    }
+    if (query.error) {
+      return {
+        event: null,
+        state: 'error' as const,
+        error:
+          query.error instanceof Error
+            ? query.error.message
+            : String(query.error),
+      }
+    }
+    // The venue answers a miss with an empty list rather than an error, and
+    // the two mean different things to the caller: a closed or delisted event
+    // still has a pinned title worth printing, an error does not.
+    const event = matchEvent(result?.events ?? [], eventId)
+    if (!event) return { event: null, state: 'not-found' as const, error: null }
+    return { event, state: 'ready' as const, error: null }
+  }, [query.data, query.error, query.isLoading, eventId])
+}
+
+/**
+ * The event whose id was asked for.
+ *
+ * Both venues answer an id lookup with a list, and Polymarket's gamma
+ * `/events?id=` has been seen returning a neighbour alongside the match. The
+ * comparison is case-insensitive because a pair key travels through a URL,
+ * where a Kalshi ticker survives being lower-cased by a mail client.
+ */
+function matchEvent(
+  events: Array<PredictionEventSummary>,
+  eventId: string,
+): PredictionEventSummary | null {
+  const needle = eventId.trim().toLowerCase()
+  const exact = events.find((e) => e.id.trim().toLowerCase() === needle)
+  return exact ?? events[0] ?? null
+}

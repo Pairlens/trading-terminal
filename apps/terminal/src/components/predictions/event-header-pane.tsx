@@ -38,6 +38,7 @@ import { ScrollArea } from '@pairlens/ui/components/ui/scroll-area'
 import type { EventOverround } from '@/lib/predictions/race'
 import type { PredictionEventContext } from '@/hooks/use-prediction-event'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
+import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { usePredictionEventContext } from '@/hooks/use-prediction-event'
@@ -89,17 +90,20 @@ export function EventHeaderPane() {
                 {context.event.category}
               </Badge>
             )}
-            {context.entry?.outcome && (
-              <Badge
-                className="h-[18px] px-2 text-[10.5px]"
-                variant="secondary"
-              >
-                {context.entry.outcome}
-              </Badge>
-            )}
             <RulesChip context={context} />
           </div>
         </div>
+
+        {/* The field, right under the question. This is what makes the event
+            the instrument rather than one of its answers: every side of the
+            question is on screen and one click away from the ticket, so the
+            board opens on "here is what the market thinks" instead of
+            demanding a side be named before it shows anything. */}
+        <OutcomeSwitch
+          layout="row"
+          market={pane.market}
+          pairKey={pane.pairKey}
+        />
 
         <MetaRow context={context} />
 

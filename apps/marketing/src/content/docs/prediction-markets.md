@@ -1,12 +1,12 @@
 ---
 title: Prediction markets
-description: Trade event contracts on Kalshi and Polymarket from the same terminal, with prices in cents, an event board, a probability chart that draws every outcome on one axis, the resolution criteria in the venue's own words, an outcome ladder, a basket ticket that states its overround, and positions that settle.
+description: Trade event contracts on Kalshi and Polymarket from the same terminal. A pair here is the question rather than one side of it, so opening an event puts every answer on screen, priced in cents and one click from the ticket, with a probability chart over the whole field, the resolution criteria in the venue's own words, an outcome ladder, a basket ticket that states its overround, and positions that settle.
 group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 18 AUG 2026
-readTime: 17 min read
+updated: 19 AUG 2026
+readTime: 18 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -15,6 +15,43 @@ In Pairlens it behaves like any other instrument: it has a chart, an order
 book, a tape, and the same guarded ticket. What changes is the unit. A contract
 is priced between 0 and 1, shown in cents, and pays one unit of collateral if
 its outcome resolves true.
+
+## The pair is the question
+
+This is the one thing worth reading before anything else, because it is where
+predictions stop behaving like every other asset class.
+
+Everywhere else in the terminal a pair is a thing you can buy: BTC-USDT, AAPL,
+a perpetual, a token. A prediction is not shaped like that. "Who wins the 2028
+Democratic nomination?" is one market with thirty answers, and no single one of
+them is the instrument any more than the bid is the instrument on a spot pair.
+
+So a prediction pair is the EVENT. `/prediction/polymarket/903193` is the
+question, and the answers are inside it. Open one and the whole field is on
+screen, priced, with the favourite already loaded in the ticket. Picking Yes,
+picking No, or moving from one runner to the next is a selection, not a
+navigation: the book, the tape and the ticket follow, nothing reloads, and the
+back button still means the question you were on before this one.
+
+What that changes in practice:
+
+- **You never have to choose a side to see a market.** Clicking a question
+  opens the question. It used to open whichever side was leading, which is a
+  position taken on your behalf before you have read anything.
+- **The watchlist and the recents strip hold questions.** A starred prediction
+  is "Will the Fed cut in March?", not "Fed cut in March, No leg". The strip
+  prices it with its favourite and names which answer that number belongs to,
+  because a bare 63¢ under a question reads as the price of Yes whichever side
+  is actually leading.
+- **The phone works the same way.** The mobile shell focuses a question and
+  streams one of its answers, exactly as a desktop board does, so a row starred
+  on either one opens correctly on the other.
+- **A link can still be specific.** `?o=` on the address names one leg, so a
+  link to "this runner" arrives on that runner with the rest of the field
+  around it. Older links that named an outcome directly still work: they
+  resolve to the question that owns them and rewrite themselves.
+- **Orders are unchanged.** The venue still trades one leg at a time, so an
+  order is still for one answer at one price. The selection is what says which.
 
 ## Two venues
 
@@ -82,6 +119,9 @@ an empty grid, because prediction outcomes are never in the pair catalog that
 panel reads: they are listed and resolved daily.
 
 **The Event Board** draws every live question as a card that prices both sides.
+Clicking the card's heading opens the question with its whole field; clicking a
+price chip opens the same question with that answer already loaded in the
+ticket.
 A binary question has one number worth reading, so the probability gets the
 largest type on the board. A race has a hundred and none of them is the
 headline, so its card widens, ranks the field, and says how much of the
@@ -153,8 +193,9 @@ now: category chips across the top, a search box that matches question text, and
 a card per event with its artwork, how long until it closes, its volume, and a
 price for each outcome. Yes is green and No is red, the same two colours the
 terminal uses for long and short everywhere else, because taking Yes is the long
-side. Click an outcome and it opens in the chart terminal. A venue that needs the
-desktop app says so in place of its results rather than returning nothing.
+side. Click an outcome and the event opens with that answer selected. A venue
+that needs the desktop app says so in place of its results rather than returning
+nothing.
 
 Cards are deliberately short. An event like "Democratic Presidential Nominee
 2028" carries thirty candidate markets with two sides each, and drawn in full it
@@ -177,20 +218,25 @@ same full event as its own screen, with each question's resolution rules behind
 a disclosure. The section is only there when a prediction connector is installed
 and enabled.
 
-The phone charts a prediction as odds too. The Chart tab opens on the same
-Probability Chart, laid out for 402px: the plot, a legend under it that prices
-each runner and hides its line on a tap, and the spans in the band the drawing
-toolbar leaves. Drag a finger across the plot and a card reads the whole field
-at that instant. A chip in the corner switches to candles, which brings back the
-interval picker, the drawing toolbar and the draggable limit line for the one
-outcome you are on. It does not lose the event either: the chart carries a strip
-under the price with the question, the resolution date and the outcome's
-probability, and it opens the event again in one tap. A race adds a
-ranked ladder of the whole field, with the sum of every Yes price, reachable
-from that strip and from the event screen. The phone's ticket sizes in dollars too,
-with the same presets, the same payout card and the same conversion to whole
-contracts; what it does not carry is the preset editor, the outcome and race
-switches, and the basket. See [Mobile terminal](/docs/mobile-terminal).
+**The phone works the same way.** A prediction pair is the question there too:
+the address is the event, tapping a question opens the whole field, and picking
+a side is a selection inside it. The Chart tab opens on the same Probability
+Chart, laid out for 402px: the plot, a legend under it that prices each runner
+and hides its line on a tap, and the spans in the band the drawing toolbar
+leaves. Drag a finger across the plot and a card reads the whole field at that
+instant. A chip in the corner switches to candles, which brings back the
+interval picker, the drawing toolbar and the draggable limit line for the answer
+you are on.
+
+The field is one tap from both screens. The chart's strip carries the question,
+the resolution date and the price of the selected answer, with a ladder button
+beside it on every prediction rather than only on a race; the ladder lists every
+answer with a Yes and a No chip, both tappable, and the sum of every Yes price
+at the top. The ticket carries the same field as a scrolling row of chips above
+the Buy/Sell toggle, the one you are trading ringed. It sizes in dollars with
+the same presets, the same payout card and the same conversion to whole
+contracts; what it does not carry is the preset editor and the basket. See
+[Mobile terminal](/docs/mobile-terminal).
 
 Search works from the pair picker too. It grows a **Predictions** tab beside
 Crypto and Stocks, and prediction rows are rendered as the question rather than
@@ -198,13 +244,22 @@ as a ticker, because `KXBTCD-26AUG15-T53` is not something you scan.
 
 ## What a prediction is called
 
-An outcome's routing key can be a hundred characters of event slug. Nothing in
-the terminal shows you one. Wherever a ticker would go, a prediction renders as
-a subject and a side instead: **Gavin Newsom · Yes**, with the whole question on
-hover. The subject is the venue's own short label for that market inside its
-event, which is the one thing that separates two candidates in the same race;
-where a venue publishes none, it falls back to the question, then to the event
-heading.
+A prediction's routing key is a venue event id, and nothing in the terminal
+shows you one. Wherever a ticker would go, a prediction renders as its
+question: **Who wins the 2028 Democratic nomination?**, elided to whatever the
+row has space for, with the whole sentence on hover.
+
+The recents strip carries one extra reading, because a chip there has to print
+a number and a question has no single price. It prints the favourite: the
+answer the market currently rates highest, its label, and what it costs. "Fed
+cuts in March · No 63¢" is honest in a way a bare 63¢ under the question is
+not.
+
+A single answer still renders as a subject and a side where one legitimately
+turns up on its own, on a position row or in a fill: **Gavin Newsom · Yes**.
+The subject is the venue's own short label for that market inside its event,
+which is the one thing that separates two candidates in the same race; where a
+venue publishes none, it falls back to the question, then to the event heading.
 
 That reading is what the recent-pairs strip, the pair switcher in the top bar,
 the watchlist, the chart watermark, the order ticket and the phone's pair chip
@@ -219,10 +274,10 @@ The chart, the order book, the depth curve, the tape, and the mobile shell all
 switch to cents for a prediction instrument, so nothing on screen quotes the
 underlying 0.53.
 
-Each outcome is its own instrument. Yes and No are two separate contracts on
-the same question, and you can buy or sell either one. Selling Yes at 53¢ and
-buying No at 47¢ are close cousins, not the same order, and the book will tell
-you which is cheaper.
+Each answer has its own book. Yes and No are two separate contracts on the same
+question, and you can buy or sell either one from the same page: pick the
+answer, then pick the side. Selling Yes at 53¢ and buying No at 47¢ are close
+cousins, not the same order, and the book will tell you which is cheaper.
 
 ## The Probability Chart
 
@@ -297,21 +352,29 @@ their own, so switching to candles here leaves your crypto charts alone. See
 
 ## The event page
 
-Open an outcome and the pair page loads the prediction layout, which leads with
-the question rather than with the chart. The **Race** board is the variant for
-an event with a field rather than two sides: the same chart and header over the
-outcome ladder, with the basket beside it.
+Open a question and the pair page loads the prediction layout, which leads with
+the question rather than with the chart, and puts the whole field a glance away.
+The **Race** board is the variant for an event with a hundred answers rather
+than two: the same chart and header over the outcome ladder, with the basket
+beside it.
 
-**Event Header.** A contract's identity is a sentence, and the route carries
-`KXBTCD-26AUG15-T53`. This is where the sentence goes, with the two facts that
-change what the price means: when it resolves, and what the venue says decides
-it, with the venue's rules text behind a chip. The full criteria live in the
-**Event Brief** below, open rather than behind a hover. On a binary question it
+**Event Header.** A contract's identity is a sentence, and the route carries an
+event id. This is where the sentence goes, with the two facts that change what
+the price means: when it resolves, and what the venue says decides it, with the
+venue's rules text behind a chip. The full criteria live in the **Event Brief**
+below, open rather than behind a hover.
+
+Under the question is **the field**: a strip of chips, one per answer, each with
+its price. The chip you are trading is outlined, and clicking any other one
+points the chart, the book, the tape and the ticket at it without leaving the
+page. A field larger than six chips keeps the rest behind **All N**, in the same
+order, never hidden.
+
+The reading on the right depends on the shape of the question. On a binary it
 shows one probability large, with the day's move and the split between the two
-sides. On a race the field has no
-single probability, so the headline number is the sum of every Yes price, with
-the basis it was summed from: over 100% is the vig, under 100% is a field the
-book has not finished quoting.
+sides. On a race the field has no single probability, so the headline number is
+the sum of every Yes price, with the basis it was summed from: over 100% is the
+vig, under 100% is a field the book has not finished quoting.
 
 **Probability Chart.** Every outcome on one axis, directly under the header.
 See [the Probability Chart](#the-probability-chart) above for what it draws and
@@ -338,13 +401,16 @@ traded while it did. Headlines attach where the question names an instrument
 the news feed indexes, matched by time, which the pane states as a correlation
 rather than a cause.
 
-**Outcome Ladder.** On the **Race** board, every runner in the field priced in
-cents, sortable and searchable, with Yes and No chips that pin the outcome and
-switch the whole page to it. This is the fix for "show 26 more markets": the
-ninetieth runner is a filter box away instead of four pages deep. Prices come
-off a 60-second timer rather than the tick, so rows hold still while you read
-them, and the footer states what the current page is leaving out rather than
-hiding the tail.
+**Outcome Ladder.** Every answer in the field priced in cents, sortable and
+searchable, with Yes and No chips that point the whole page at that contract.
+It opens the data strip on both boards, because "every way to take a side on
+this question, with a price and a trade button on each" is what a prediction
+board is for, whether the question has two answers or a hundred and twenty-eight.
+This is also the fix for "show 26 more markets": the ninetieth runner is a
+filter box away instead of four pages deep. Prices come off a 60-second timer
+rather than the tick, so rows hold still while you read them, and the footer
+states what the current page is leaving out rather than hiding the tail. The row
+you are trading is highlighted, whichever of its two sides you are on.
 
 **Basket Ticket.** Beside the ladder, a way to stake several outcomes in one
 submit. It prints three numbers, in the order you need them: **coverage**, the
@@ -372,11 +438,12 @@ thing you read before committing is what you are actually trading, with the
 resolution date beside it. A 68¢ price a month out and the same price an hour
 out are different bets, and the pair key carries neither date.
 
-**An outcome switch.** When the question has exactly one other side, a
-segmented control names it. Tap it and the ticket, the chart, and the book
-follow to that contract. A market with several outcomes has no single sibling,
-so in its place a race switch lists the other runners, and picking one moves
-the whole page to it.
+**An outcome switch.** Every other answer to the same question, listed with its
+price, right above the Buy/Sell toggle. Pick one and the ticket, the chart and
+the book follow to that contract without leaving the page. Two answers or a
+hundred, it is the same control: the favourites inline, the rest behind
+**All N**. On a venue this build cannot reach, where there is no field to list,
+it falls back to a plain Yes/No toggle.
 
 **Dollars, not contracts.** Size is an amount of collateral, with **$25**,
 **$50**, **$100** and **Max** as presets and the dollar amounts configurable.
@@ -412,7 +479,8 @@ prediction venue has them.
 ## Positions and settlement
 
 The **Prediction Positions** panel rides the default prediction layout's data
-strip; on a custom workspace, add it from the Add Pane dialog, under Trading.
+strip, behind the outcome ladder; on a custom workspace, add it from the Add
+Pane dialog, under Trading.
 It lists what you hold across your connected prediction venues: the market, the
 outcome, the number of contracts, your average price in cents, what it cost,
 and how long until it resolves. Once a market settles, the row reads

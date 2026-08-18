@@ -25,7 +25,10 @@ const {
   predictionQuestionOf,
 } = await import('@/components/pair-picker/pair-picker-data')
 const {
+  isPredictionEventEntry,
+  lookupPredictionEvent,
   lookupPredictionOutcome,
+  registerPredictionEvent,
   registerPredictionOutcome,
   usePredictionDirectoryStore,
 } = await import('@/stores/prediction-directory-store')
@@ -128,14 +131,14 @@ describe('pinSelectedEntry', () => {
       categories: [],
       rank: 1,
     })
-    expect(usePredictionDirectoryStore.getState().entries).toEqual({})
+    expect(usePredictionDirectoryStore.getState().outcomes).toEqual({})
   })
 
   test('a re-pin of the same outcome does not churn the store', () => {
     pinSelectedEntry(instrumentToPairEntry(OUTCOME))
-    const first = usePredictionDirectoryStore.getState().entries
+    const first = usePredictionDirectoryStore.getState().outcomes
     pinSelectedEntry(instrumentToPairEntry(OUTCOME))
-    expect(usePredictionDirectoryStore.getState().entries).toBe(first)
+    expect(usePredictionDirectoryStore.getState().outcomes).toBe(first)
   })
 })
 
@@ -149,7 +152,67 @@ describe('registerPredictionOutcome', () => {
     })
     const raw = localStorage.getItem('pairlens:prediction-directory')
     expect(raw).toBeTruthy()
-    const parsed = JSON.parse(raw!) as Record<string, { market: string }>
-    expect(parsed['POLY-FED-CUT-YES']?.market).toBe('polymarket')
+    const parsed = JSON.parse(raw!) as {
+      outcomes: Record<string, { market: string }>
+    }
+    expect(parsed.outcomes['POLY-FED-CUT-YES']?.market).toBe('polymarket')
+  })
+})
+
+describe('registerPredictionEvent', () => {
+  const EVENT = {
+    market: 'polymarket',
+    eventId: '903193',
+    title: 'Who wins the 2028 Democratic nomination?',
+    outcomeCount: 12,
+    leader: { pairKey: 'POLY-NEWSOM-YES', label: 'Gavin Newsom', price: 0.31 },
+  }
+
+  test('a pair key names the event, and the pin carries its favourite', () => {
+    registerPredictionEvent('903193', EVENT)
+    const pinned = lookupPredictionEvent('903193')
+    expect(pinned?.title).toBe('Who wins the 2028 Democratic nomination?')
+    expect(pinned?.leader?.label).toBe('Gavin Newsom')
+    expect(pinned?.leader?.pairKey).toBe('POLY-NEWSOM-YES')
+  })
+
+  test('the two maps do not collide — a key can be read as either', () => {
+    registerPredictionEvent('903193', EVENT)
+    registerPredictionOutcome('POLY-NEWSOM-YES', {
+      market: 'polymarket',
+      predictionMarketId: '0xabc',
+      outcome: 'Yes',
+      name: 'Will Gavin Newsom win the nomination? - Yes',
+      eventId: '903193',
+    })
+    expect(lookupPredictionEvent('POLY-NEWSOM-YES')).toBeNull()
+    expect(lookupPredictionOutcome('903193')).toBeNull()
+    expect(lookupPredictionOutcome('POLY-NEWSOM-YES')?.eventId).toBe('903193')
+  })
+
+  test('the guard tells an event pin from an outcome pin', () => {
+    registerPredictionEvent('903193', EVENT)
+    registerPredictionOutcome('POLY-NEWSOM-YES', {
+      market: 'polymarket',
+      predictionMarketId: '0xabc',
+      // An outcome names its event too, so `eventId` narrows nothing.
+      eventId: '903193',
+      outcome: 'Yes',
+      name: 'Will Gavin Newsom win the nomination? - Yes',
+    })
+    expect(isPredictionEventEntry(lookupPredictionEvent('903193'))).toBe(true)
+    expect(
+      isPredictionEventEntry(lookupPredictionOutcome('POLY-NEWSOM-YES')),
+    ).toBe(false)
+  })
+
+  test('survives a reload under its own map', () => {
+    registerPredictionEvent('903193', EVENT)
+    const parsed = JSON.parse(
+      localStorage.getItem('pairlens:prediction-directory')!,
+    ) as { events: Record<string, { title: string }> }
+    expect(parsed.events['903193']?.title).toBe(
+      'Who wins the 2028 Democratic nomination?',
+    )
   })
 })

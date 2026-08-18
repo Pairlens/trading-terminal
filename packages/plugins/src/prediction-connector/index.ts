@@ -260,6 +260,9 @@ export function createPredictionConnectorPlugin(
         exchange,
         { venue, resolver },
         {
+          ...(typeof p['eventId'] === 'string'
+            ? { eventId: p['eventId'] }
+            : {}),
           ...(typeof p['query'] === 'string' ? { query: p['query'] } : {}),
           ...(typeof p['category'] === 'string'
             ? { category: p['category'] }

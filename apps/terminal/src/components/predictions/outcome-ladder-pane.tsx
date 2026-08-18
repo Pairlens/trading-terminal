@@ -11,12 +11,13 @@
  *
  * Three rules the pane is built around.
  *
- * The ladder is the event's NAVIGATION surface. A Yes or No chip pins that
- * outcome and switches the route to it, so the chart, the book and the ticket
- * all follow — which is why the chips are the biggest targets in the row. The
- * basket button beside them is deliberately smaller and separate: adding to a
- * basket must never be something a user does by accident while trying to look
- * at a runner.
+ * The ladder is the event's TRADING surface. A Yes or No chip points the book,
+ * the tape and the ticket at that answer, without leaving the event: the pair
+ * is the question, and picking a side of it is a selection rather than a trip
+ * to another instrument. That is why the chips are the biggest targets in the
+ * row. The basket button beside them is deliberately smaller and separate:
+ * adding to a basket must never be something a user does by accident while
+ * trying to look at a runner.
  *
  * Sorting never happens on a tick. The prices come from the events index on a
  * 60-second stale timer, so rows hold still while you read them; the live
@@ -257,12 +258,16 @@ function Ladder({
           <tbody>
             {visible.map((runner, index) => (
               <LadderRow
-                active={normalizePairKey(runner.yes.pairKey) === active}
+                active={
+                  normalizePairKey(runner.yes.pairKey) === active ||
+                  (runner.no !== null &&
+                    normalizePairKey(runner.no.pairKey) === active)
+                }
                 colorIndex={runnerColorIndex(runners, runner.yes.pairKey)}
                 context={context}
                 eventKey={eventKey}
                 key={runner.yes.pairKey}
-                onOpen={select.open}
+                onOpen={select.select}
                 onStage={select.pin}
                 rank={index + 1}
                 runner={runner}
@@ -369,7 +374,7 @@ const LadderRow = memo(function LadderRow({
   colorIndex: number
   context: PredictionEventContext
   eventKey: string | null
-  onOpen: ReturnType<typeof usePredictionSelect>['open']
+  onOpen: ReturnType<typeof usePredictionSelect>['select']
   onStage: ReturnType<typeof usePredictionSelect>['pin']
 }) {
   const { t } = useTranslation()
@@ -388,6 +393,7 @@ const LadderRow = memo(function LadderRow({
     market: runner.market,
     pairKey,
     label,
+    surface: 'ladder' as const,
   })
 
   const canSelect = context.event !== null

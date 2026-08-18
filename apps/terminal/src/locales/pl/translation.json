@@ -1014,6 +1014,7 @@
       "rank": "#",
       "outcome": "Wynik",
       "yes": "Tak",
+      "no": "Nie",
       "change": "24 h",
       "trend": "30 dni",
       "volume": "Wolumen",

@@ -22,6 +22,7 @@ import type {
   InstrumentRef,
 } from '@pairlens/shared/market-ref'
 import {
+  lookupPredictionEvent,
   lookupPredictionOutcome,
   registerPredictionOutcome,
 } from '@/stores/prediction-directory-store'
@@ -329,6 +330,28 @@ export function pairEntryForRef(
   }
 
   if (ref.cls === 'prediction') {
+    // A prediction ref names an EVENT, so the event map answers first. The
+    // outcome map is the fallback for a ref that still names one leg: an alert
+    // on a single side, a position row's own link.
+    const event = lookupPredictionEvent(ref.id)
+    if (event) {
+      return {
+        id: `${event.market}:${ref.id}`,
+        symbol: ref.id,
+        name: event.title,
+        base: ref.id,
+        quote: '',
+        assetClass: 'prediction',
+        categories: [],
+        rank: Number.MAX_SAFE_INTEGER,
+        predictionMarketId: event.eventId,
+        outcome: event.leader?.label ?? '',
+        market: event.market,
+        eventTitle: event.title,
+        eventId: event.eventId,
+        ...(typeof event.endMs === 'number' ? { endMs: event.endMs } : {}),
+      }
+    }
     const pinned = lookupPredictionOutcome(ref.id)
     if (!pinned) return null
     return {

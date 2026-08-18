@@ -71,13 +71,18 @@ export function useMobileRouteSync(): void {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  const { focusedPair, focusedClass, focusedVenue } = useMobileFocus()
-  const { setFocusedPair, setFocusedVenue, setActiveTab, pushOverlay } =
-    useMobileActions()
+  const { focusedInstrument, focusedClass, focusedVenue } = useMobileFocus()
+  const {
+    setFocusedPair,
+    setFocusedPrediction,
+    setFocusedVenue,
+    setActiveTab,
+    pushOverlay,
+  } = useMobileActions()
 
   const pathname = location.pathname
   const search = location.search as
-    | { connect?: unknown; connectChain?: unknown }
+    | { connect?: unknown; connectChain?: unknown; o?: unknown }
     | undefined
   const connectMarket =
     typeof search?.connect === 'string' ? search.connect : undefined
@@ -91,10 +96,14 @@ export function useMobileRouteSync(): void {
   // effect re-runs on the focus change it just caused and toasts twice.
   const handledRef = useRef<string | null>(null)
 
+  // The INSTRUMENT, never the leg. On a prediction the address is the
+  // question: that is what the user opened, what a share link should reopen,
+  // and what the watchlist and the recents strip already store. Which answer
+  // is loaded in the ticket is shell state, the same way the tab is.
   const canonical: MarketRef = {
     cls: focusedClass,
     market: focusedVenue,
-    id: focusedPair,
+    id: focusedInstrument,
   }
   const canonicalPath = marketRefToPath(canonical)
 
@@ -103,7 +112,7 @@ export function useMobileRouteSync(): void {
     if (routed) {
       handledRef.current = null
       const differs =
-        routed.id !== focusedPair ||
+        routed.id !== focusedInstrument ||
         routed.cls !== focusedClass ||
         routed.market !== focusedVenue
       if (!differs) return
@@ -122,8 +131,16 @@ export function useMobileRouteSync(): void {
       // Adopt what the address says. Venue first: `setFocusedPair` may drop a
       // redundant update, and both halves have to land for one URL.
       if (routed.market !== focusedVenue) setFocusedVenue(routed.market)
-      if (routed.id !== focusedPair || routed.cls !== focusedClass) {
-        setFocusedPair(routed.id, routed.cls)
+      if (routed.id !== focusedInstrument || routed.cls !== focusedClass) {
+        // `?o=` is honoured on the way in and never written back: a link built
+        // on a desktop arrives on the answer it meant, and the phone's own
+        // address stays the question. An empty leg is the desk's cue to open
+        // on the favourite.
+        if (routed.cls === 'prediction') {
+          setFocusedPrediction(routed.id, outcomeFromSearch(search))
+        } else {
+          setFocusedPair(routed.id, routed.cls)
+        }
       }
       return
     }
@@ -185,11 +202,13 @@ export function useMobileRouteSync(): void {
     canonicalPath,
     connectChain,
     connectMarket,
-    focusedPair,
+    focusedInstrument,
     focusedClass,
     focusedVenue,
     navigate,
+    search,
     setFocusedPair,
+    setFocusedPrediction,
     setFocusedVenue,
     setActiveTab,
     pushOverlay,
@@ -202,7 +221,19 @@ export function useMobileRouteSync(): void {
     track('pair_opened', {
       venue: focusedVenue,
       asset_class: focusedClass,
-      pair: focusedPair,
+      pair: focusedInstrument,
     })
-  }, [focusedPair, focusedClass, focusedVenue])
+  }, [focusedInstrument, focusedClass, focusedVenue])
+}
+
+/**
+ * The leg an incoming address names, if it names one.
+ *
+ * Read, never written. A desktop link carries `?o=` so it can point at one
+ * answer; the phone honours that and then keeps its own address on the
+ * question, because the question is the instrument and a link shared from a
+ * phone should open the market rather than someone else's side of it.
+ */
+function outcomeFromSearch(search: { o?: unknown } | undefined): string {
+  return typeof search?.o === 'string' ? normalizePairKey(search.o) : ''
 }
