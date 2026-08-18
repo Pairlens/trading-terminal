@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 7 min read
 ---
 
@@ -130,6 +130,9 @@ Press <kbd>⌘K</kbd> (<kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows and Linux) to ope
 the omni-search palette. It searches across:
 
 - Pairs, including ones you have never opened
+- Venues. On a pair page picking one moves the chart to that venue, the same
+  switch the header dropdown makes; anywhere else it sets the venue new pairs
+  open on, and says so
 - Pages, workspaces, workflows, and notification rules
 - Panels you can add to the current layout
 - Plugins

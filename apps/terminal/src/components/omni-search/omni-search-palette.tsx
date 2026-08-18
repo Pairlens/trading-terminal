@@ -32,7 +32,7 @@ import { SearchFooter } from './search-footer'
 import { useOmniSearchResults } from './use-omni-search-results'
 import type { OmniSearchCategory, OmniSearchResult } from './omni-search-types'
 import { track } from '@/lib/analytics-events'
-import { switchActiveMarket } from '@/lib/switch-market'
+import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useNotificationStore } from '@/stores/notification-store'
 import { usePaneAddRequestStore } from '@/stores/pane-add-request-store'
@@ -82,6 +82,7 @@ export function OmniSearchPalette({
     if (open) track('command_palette_opened')
   }, [open])
   const navigate = useNavigate()
+  const switchVenue = useSwitchVenue()
   const [searchValue, setSearchValue] = useState('')
   const [activeCategory, setActiveCategory] =
     useState<OmniSearchCategory>('all')
@@ -123,12 +124,13 @@ export function OmniSearchPalette({
           break
         }
         case 'market': {
-          // Writes the same synced `terminal.market` value the venue dropdown
-          // owns, so every mounted chart on the shared scope re-streams from
-          // the new connector. Off the chart page the switch has no visible
-          // surface, so say what happened.
-          switchActiveMarket(result.marketId)
-          if (!parseMarketRefPath(window.location.pathname)) {
+          // What a venue switch moves depends on where it lands: on a pair
+          // page the venue is in the URL, so this navigates and the chart,
+          // the book and the ticket all follow. Everywhere else there is no
+          // chart to move and it only writes the venue preference, which has
+          // no visible surface, so that is the case that gets a toast.
+          const scope = switchVenue(result.marketId)
+          if (scope === 'preference') {
             toast.success(t('search.marketSwitched', { name: result.label }))
           }
           break
@@ -182,6 +184,7 @@ export function OmniSearchPalette({
     [
       close,
       navigate,
+      switchVenue,
       t,
       trackRecent,
       resolveMarket,
