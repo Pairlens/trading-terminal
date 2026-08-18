@@ -4027,6 +4027,14 @@
         "title": "Konektor Market Binance Futures",
         "description": "Futures perpetual di Binance Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "Konektor Market ByBit Futures",
+        "description": "Futures perpetual di ByBit Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "Konektor Market OKX Futures",
+        "description": "Futures perpetual di OKX Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "Konektor Market KuCoin Futures",
         "description": "Futures perpetual di KuCoin Futures: posisi long dan short dengan leverage, diselesaikan dalam USDT"

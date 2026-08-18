@@ -4027,6 +4027,14 @@
         "title": "Binance Futures Connettore di Mercato",
         "description": "Futures perpetui su Binance Futures: posizioni long e short con leva, regolate in USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Connettore di Mercato",
+        "description": "Futures perpetui su ByBit Futures: posizioni long e short con leva, regolate in USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Connettore di Mercato",
+        "description": "Futures perpetui su OKX Futures: posizioni long e short con leva, regolate in USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Connettore di Mercato",
         "description": "Futures perpetui su KuCoin Futures: posizioni long e short con leva, regolate in USDT"

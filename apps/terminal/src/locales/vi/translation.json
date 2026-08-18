@@ -4027,6 +4027,14 @@
         "title": "Bộ kết nối Thị trường Binance Futures",
         "description": "Hợp đồng tương lai vĩnh cửu trên Binance Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "Bộ kết nối Thị trường ByBit Futures",
+        "description": "Hợp đồng tương lai vĩnh cửu trên ByBit Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "Bộ kết nối Thị trường OKX Futures",
+        "description": "Hợp đồng tương lai vĩnh cửu trên OKX Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "Bộ kết nối Thị trường KuCoin Futures",
         "description": "Hợp đồng tương lai vĩnh cửu trên KuCoin Futures: vị thế mua và bán có đòn bẩy, thanh toán bằng USDT"

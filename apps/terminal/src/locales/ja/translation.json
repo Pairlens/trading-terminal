@@ -4027,6 +4027,14 @@
         "title": "Binance Futures マーケットコネクタ",
         "description": "Binance Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures マーケットコネクタ",
+        "description": "ByBit Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures マーケットコネクタ",
+        "description": "OKX Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures マーケットコネクタ",
         "description": "KuCoin Futures の無期限先物。レバレッジをかけたロング・ショート建玉、決済通貨は USDT"

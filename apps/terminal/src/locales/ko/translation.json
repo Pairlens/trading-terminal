@@ -4027,6 +4027,14 @@
         "title": "Binance Futures 마켓 커넥터",
         "description": "Binance Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures 마켓 커넥터",
+        "description": "ByBit Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures 마켓 커넥터",
+        "description": "OKX Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures 마켓 커넥터",
         "description": "KuCoin Futures의 무기한 선물. 레버리지 롱/숏 포지션, USDT 정산"

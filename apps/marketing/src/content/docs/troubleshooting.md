@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 8 min read
 ---
 
@@ -32,7 +32,7 @@ Kalshi, KuCoin Futures, and Kraken Futures serve REST without CORS headers,
 which a browser will not allow. In a browser they refuse with a clear message
 rather than presenting a dead chart, and on the futures and predictions
 discovery boards the venue's own row says so instead of going blank.
-[Install the desktop app](/docs/desktop-app) or use one of the other twelve.
+[Install the desktop app](/docs/desktop-app) or use one of the other fourteen.
 
 **Check the connection page.** [Settings → Connection](/docs/settings#connection)
 shows which sockets are actually up.

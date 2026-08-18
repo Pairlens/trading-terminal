@@ -187,7 +187,7 @@ export function useFundingRates(
 /**
  * Open interest for a NAMED set of contracts.
  *
- * Bounded by construction: two of the three venues answer one symbol per REST
+ * Bounded by construction: most of the venues answer one symbol per REST
  * call, so the pane asks only about the contracts it is already showing. A
  * `history` pass costs a second call per contract and is what fills the 24h
  * change bar; venues that serve no series simply come back without one.

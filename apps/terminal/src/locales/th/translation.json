@@ -4027,6 +4027,14 @@
         "title": "ตัวเชื่อมต่อตลาด Binance Futures",
         "description": "สัญญาฟิวเจอร์สถาวรบน Binance Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด ByBit Futures",
+        "description": "สัญญาฟิวเจอร์สถาวรบน ByBit Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "ตัวเชื่อมต่อตลาด OKX Futures",
+        "description": "สัญญาฟิวเจอร์สถาวรบน OKX Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "ตัวเชื่อมต่อตลาด KuCoin Futures",
         "description": "สัญญาฟิวเจอร์สถาวรบน KuCoin Futures สถานะซื้อและขายแบบมีเลเวอเรจ ชำระราคาด้วย USDT"

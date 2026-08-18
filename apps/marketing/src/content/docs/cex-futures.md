@@ -1,6 +1,6 @@
 ---
 title: Perpetual futures
-description: Trade perpetual swaps on Binance Futures, KuCoin Futures and Kraken Futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, measured liquidation clusters from two collected venues, and margin health.
+description: Trade perpetual swaps on Binance, ByBit, OKX, KuCoin and Kraken futures from the same terminal, with funding and basis scanners, a leverage selector, reduce-only orders, measured liquidation clusters from two collected venues, and margin health.
 group: traders
 parent: trading
 order: 8
@@ -17,17 +17,31 @@ guarded ticket. What changes is the unit and the risk. Size is counted in
 contracts rather than in the base asset, a position can be liquidated, and a
 short is a first-class position rather than the absence of a holding.
 
-Pairlens ships three perpetual venues in v1, all of them linear swaps settled
-in a stablecoin or in dollars. Inverse contracts and dated futures are not
+Pairlens ships five perpetual venues, all of them linear swaps settled in a
+stablecoin or in dollars. Inverse contracts and dated futures are not
 supported.
 
-## Three venues
+## Five venues
 
 **Binance Futures.** USD-M perpetuals, settled in USDT, connected with your
-existing Binance API key. It is the one futures venue that works in a browser,
-because its futures API sends the CORS header the others omit. Paper mode runs
-against Binance's own futures testnet, so fills come from a real matching
-engine with no real money behind them.
+existing Binance API key. Works in a browser: `fapi.binance.com` sends the
+CORS header most futures APIs omit. Paper mode runs against Binance's own
+futures testnet, so fills come from a real matching engine with no real money
+behind them. Not available to US accounts, because Binance lists no US
+derivatives at all.
+
+**ByBit Futures.** USDT perpetuals, connected with your existing ByBit key.
+Works in a browser. EU accounts route to `bybit.nl` exactly as they do on
+spot, the US is not served, and paper mode runs against ByBit's one global
+testnet.
+
+**OKX Futures.** USDT perpetuals on the same regional entities as spot OKX,
+connected with your existing OKX key. Works in a browser. The account entity
+picked on the credential card governs futures orders too, because an OKX key
+only exists on the entity where the account was registered, and paper mode is
+OKX demo trading on that same entity's demo hosts. Whether a given account may
+trade swaps is the entity's own call, so an account the entity restricts gets
+OKX's own answer at order time rather than a guess from us.
 
 **KuCoin Futures.** Perpetuals settled in USDT, connected with your existing
 KuCoin API key with futures permission enabled. It needs the
@@ -40,30 +54,30 @@ production.
 separate from your spot Kraken keys. It also needs the desktop app. Paper mode
 runs against Kraken's demo futures environment.
 
-|               | Binance Futures      | KuCoin Futures  | Kraken Futures    |
-| ------------- | -------------------- | --------------- | ----------------- |
-| Where it runs | Anywhere             | Desktop app     | Desktop app       |
-| Connects with | Your Binance key     | Your KuCoin key | Its own key pair  |
-| Settled in    | USDT                 | USDT            | USD               |
-| Max leverage  | 125x                 | Per contract    | Per contract      |
-| Paper mode    | Yes, futures testnet | No, live only   | Yes, demo futures |
-| Margin mode   | Cross                | Cross           | Cross             |
+|               | Binance              | ByBit          | OKX               | KuCoin          | Kraken            |
+| ------------- | -------------------- | -------------- | ----------------- | --------------- | ----------------- |
+| Where it runs | Anywhere             | Anywhere       | Anywhere          | Desktop app     | Desktop app       |
+| Connects with | Your Binance key     | Your ByBit key | Your OKX key      | Your KuCoin key | Its own key pair  |
+| Settled in    | USDT                 | USDT           | USDT              | USDT            | USD               |
+| Max leverage  | 125x                 | 100x           | 100x              | Per contract    | Per contract      |
+| Paper mode    | Yes, futures testnet | Yes, testnet   | Yes, demo trading | No, live only   | Yes, demo futures |
+| Margin mode   | Cross                | Cross          | Cross             | Cross           | Cross             |
 
-All three stream candles, tickers, order books and trades, all three report
-your open positions back to the terminal, and all three serve funding rates and
+All five stream candles, tickers, order books and trades, all five report
+your open positions back to the terminal, and all five serve funding rates and
 open interest, which is what fills the scanners below. A venue you have not
 connected contributes no rows: there is no third-party funding aggregator
 behind any of this, so the board shows the venues you actually reach.
 
 ## Connecting
 
-Binance Futures and KuCoin Futures do not ask for anything new. The key you
-already added for spot lights up the futures venue as well, because the futures
-connector declares the spot venue as its credential source. One entry in
-Accounts, two venues, two independent connections. Your Binance key does need
-Futures permission enabled on Binance's side, and your KuCoin key does need
-Futures permission on KuCoin's, or the venue answers with an authentication
-error the first time you ask it for positions.
+Four of the five venues do not ask for anything new. The key you already added
+for spot Binance, ByBit, OKX or KuCoin lights up the futures venue as well,
+because the futures connector declares the spot venue as its credential
+source. One entry in Accounts, two venues, two independent connections. Your
+Binance key does need Futures permission enabled on Binance's side, and your
+KuCoin key does need Futures permission on KuCoin's, or the venue answers with
+an authentication error the first time you ask it for positions.
 
 Kraken Futures is the exception and gets its own entry:
 **Accounts → Connect Account → Kraken Futures**. Kraken issues futures keys
@@ -82,31 +96,34 @@ guard, so a perpetual can never be confused with the spot pair that shares its
 name.
 
 The pair picker grows a **Futures** tab beside Crypto and Stocks. Contract
-lists come from each venue's own market table rather than from a catalog, so a
-venue you have not connected yet contributes nothing and the tab says so. On a
-phone the venue filter row gains the same Futures chip.
+lists come from each venue's own market table first, and the
+[cloud snapshot](/docs/market-discovery#the-cloud-snapshot) fills in the
+contracts of venues you have not loaded yet, marked as the weaker claim it is.
+A venue's own table always wins for that venue. On a phone the venue filter
+row gains the same Futures chip.
 
 ## The funding layer
 
-A perp desk does not shop by price. The same contract exists on three venues at
-the same price and costs three different amounts to hold, and that difference
+A perp desk does not shop by price. The same contract exists on five venues at
+the same price and costs five different amounts to hold, and that difference
 is the trade. So the **CEX Futures** tab on Discovery opens on carry rather
 than on a scanner, built from four panels that share one snapshot.
 
 **Funding Matrix.** Every base asset against every connected perp venue, one
 cell per contract. Rates are annualised before they are shown, because the
-venues settle on different clocks (Kraken hourly, the other two every eight
-hours) and their printed per-interval numbers are not comparable. Rows are one
+venues settle on different clocks (Kraken hourly, most of the others every
+eight hours, with per-contract exceptions the venues themselves publish) and
+their printed per-interval numbers are not comparable. Rows are one
 base asset rather than one contract, so Binance's USDT-settled BTC and Kraken's
 USD-settled BTC sit side by side with something to compare. Each cell carries
 the venue's own pair key, so clicking it opens exactly the contract that quoted
 the number. Sorting is by asset ranking until you click a venue column, because
 sorting on rate puts whichever illiquid contract printed an outlier at the top
-of the board on every refresh. In a browser two of the three venues are
-missing, because their REST APIs carry no CORS headers. The matrix says so in
-one line rather than an alarm per venue, stops stretching its cells across the
-empty space, and drops the Spread column entirely, since a spread needs two
-quotes.
+of the board on every refresh. In a browser two of the five venues are
+missing, KuCoin and Kraken, because their REST APIs carry no CORS headers. The
+matrix says so in one line rather than an alarm per venue, and stops
+stretching its cells across the empty space. The Spread column only renders
+when at least two venues answer, since a spread needs two quotes.
 
 **Basis Monitor.** The perp against the spot it tracks, in basis points. The
 pane does not annualise that gap: extrapolating a 4 bps discount to the next
@@ -120,7 +137,7 @@ across venues would produce a number no venue publishes.
 **Open Interest.** How much money is in each contract and which way it moved
 today. Deliberately not a cross-venue sum: Pairlens sees the venues you
 connected, so a total would mean one exchange's worth on a fresh install and
-three on a full one under the same label. A row names the venue that measured
+five on a full one under the same label. A row names the venue that measured
 it whenever the list mixes venues; with one venue answering the suffix would
 repeat down the whole list. The list is short because the data is expensive,
 Binance answers one symbol per request and the 24h change is a second request
@@ -188,7 +205,7 @@ the position's size, and funding paid since entry, none of which exist before
 the position does. Treat it as an order-of-magnitude answer to "how close is
 this to the price on the chart", not as a level to plan against.
 
-Margin mode is cross on all three venues in v1. Isolated margin and a per
+Margin mode is cross on all five venues. Isolated margin and a per
 position margin control are not exposed yet.
 
 ## Positions
@@ -250,9 +267,10 @@ what the position actually closed at. Bybit publishes the bankruptcy price, so
 its buckets sit a little further past the liquidation level. The gap is small,
 systematic and always in the same direction.
 
-Bybit appears here as a **data source**, not as a venue you trade. Whether
-Pairlens can route an order to a venue and whether the server holds its public
-prints are separate questions.
+Whether Pairlens can route an order to a venue and whether the server holds
+its public prints are separate questions, and Bybit now answers yes to both:
+its collected stream predates its connector, so a ByBit perp you chart gets
+measured cells from day one.
 
 Retention is 72 hours. Chips pick 1h, 6h, 24h or 72h and the candle interval
 follows, 1m through 1h, so any window lands near a hundred columns instead of
@@ -269,10 +287,11 @@ drawing a blank map. A window a mature collector genuinely has nothing for rende
 the candles with a note: an illiquid contract liquidates nobody for hours, and
 that is data.
 
-**KuCoin Futures and Kraken Futures stay estimate-only** out of the box. Neither
-publishes a public liquidation print stream we can hold open, so there is nothing
-to collect and the pane reports the venue as uncovered, offering the collected
-venues as an explicit alternate source rather than substituting one silently. A terminal running
+**OKX, KuCoin and Kraken futures stay estimate-only** out of the box. KuCoin
+and Kraken publish no public liquidation print stream we can hold open, and
+OKX's channel is not collected yet, so the pane reports those venues as
+uncovered, offering the collected venues as an explicit alternate source
+rather than substituting one silently. A terminal running
 [standalone](/docs/self-hosting#standalone-mode) has no collector at all and says
 that instead. A Coinglass key covers those venues; see below.
 
@@ -280,8 +299,8 @@ that instead. A Coinglass key covers those venues; see below.
 
 The bundled **Coinglass Liquidations** plugin draws the same measured clusters
 for venues Pairlens does not collect, paid for with your own Coinglass API key.
-Add the key in the Plugin Store and the map fills in for Binance, Bybit, KuCoin
-and Kraken perpetuals, with seven days of history instead of three.
+Add the key in the Plugin Store and the map fills in for Binance, ByBit, OKX,
+KuCoin and Kraken perpetuals, with seven days of history instead of three.
 
 It reads exactly one endpoint, `/api/futures/liquidation/order`, which is the
 venue's real prints: a price, a side and a size on each one. Coinglass also
@@ -357,8 +376,9 @@ Funding and mark price are panels rather than chart overlays, so neither is
 plotted on the candles yet, and the liquidation heatmap hosts its own chart rather
 than painting onto the main one. Hovering a cell shows no per-cell readout: the
 totals row states the window, and the tooltip that would name one cell has not
-been built. Also missing: liquidation prints from KuCoin and Kraken themselves
-(neither publishes a stream, so those venues need a vendor key), an ADL
+been built. Also missing: collected liquidation prints from OKX, KuCoin and
+Kraken (OKX publishes a stream nobody holds open yet; the other two publish
+none, so all three need a vendor key), an ADL
 indicator (no venue returns an ADL rank, and a five-bar gauge inferred from
 margin health would look exactly like the venue's own and mean nothing), funding
 history as a series rather than a snapshot, isolated margin, a per position

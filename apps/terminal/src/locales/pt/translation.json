@@ -4027,6 +4027,14 @@
         "title": "Binance Futures Conector de Mercado",
         "description": "Futuros perpétuos na Binance Futures: posições longas e curtas com alavancagem, liquidadas em USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Conector de Mercado",
+        "description": "Futuros perpétuos na ByBit Futures: posições longas e curtas com alavancagem, liquidadas em USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Conector de Mercado",
+        "description": "Futuros perpétuos na OKX Futures: posições longas e curtas com alavancagem, liquidadas em USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Conector de Mercado",
         "description": "Futuros perpétuos na KuCoin Futures: posições longas e curtas com alavancagem, liquidadas em USDT"

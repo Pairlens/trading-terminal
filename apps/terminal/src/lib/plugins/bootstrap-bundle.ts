@@ -118,6 +118,14 @@ import {
   createBinanceFuturesMarketConnectorPlugin,
 } from '@pairlens/plugins/ccxt-futures-connector/binance-futures'
 import {
+  bybitFuturesMarketConnectorManifest,
+  createBybitFuturesMarketConnectorPlugin,
+} from '@pairlens/plugins/ccxt-futures-connector/bybit-futures'
+import {
+  createOkxFuturesMarketConnectorPlugin,
+  okxFuturesMarketConnectorManifest,
+} from '@pairlens/plugins/ccxt-futures-connector/okx-futures'
+import {
   createKucoinFuturesMarketConnectorPlugin,
   kucoinFuturesMarketConnectorManifest,
 } from '@pairlens/plugins/ccxt-futures-connector/kucoin-futures'
@@ -426,6 +434,14 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: binanceFuturesMarketConnectorManifest,
     factory: createBinanceFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: bybitFuturesMarketConnectorManifest,
+    factory: createBybitFuturesMarketConnectorPlugin,
+  },
+  {
+    manifest: okxFuturesMarketConnectorManifest,
+    factory: createOkxFuturesMarketConnectorPlugin,
   },
   {
     manifest: kucoinFuturesMarketConnectorManifest,

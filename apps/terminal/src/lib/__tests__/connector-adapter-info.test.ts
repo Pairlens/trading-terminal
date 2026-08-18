@@ -184,6 +184,8 @@ describe('getConnectorAdapterInfo — futures venues', () => {
   test('the perp asset class reaches assetClasses', () => {
     for (const id of [
       'binance-futures-market-connector',
+      'bybit-futures-market-connector',
+      'okx-futures-market-connector',
       'kucoin-futures-market-connector',
       'kraken-futures-market-connector',
     ]) {
@@ -198,6 +200,10 @@ describe('getConnectorAdapterInfo — futures venues', () => {
     expect(infoFor('binance-futures-market-connector').marketId).toBe(
       'binance-futures',
     )
+    expect(infoFor('bybit-futures-market-connector').marketId).toBe(
+      'bybit-futures',
+    )
+    expect(infoFor('okx-futures-market-connector').marketId).toBe('okx-futures')
     expect(infoFor('kucoin-futures-market-connector').marketId).toBe(
       'kucoin-futures',
     )
@@ -215,6 +221,8 @@ describe('getConnectorAdapterInfo — futures venues', () => {
     // Infinity, which is why the reader validates rather than trusts.
     for (const id of [
       'binance-futures-market-connector',
+      'bybit-futures-market-connector',
+      'okx-futures-market-connector',
       'kucoin-futures-market-connector',
       'kraken-futures-market-connector',
     ]) {
@@ -243,12 +251,18 @@ describe('getConnectorAdapterInfo — futures venues', () => {
   })
 
   test('the two venues a browser cannot reach say so', () => {
-    // fapi.binance.com serves a wildcard CORS header; api-futures.kucoin.com
-    // sends none, and futures.kraken.com omits the origin header on both the
+    // fapi.binance.com serves a wildcard CORS header, api.bybit.com reflects
+    // the request origin, and www.okx.com does too (with the regional-host
+    // fallback the spot venue already runs); api-futures.kucoin.com sends
+    // none, and futures.kraken.com omits the origin header on both the
     // preflight and the GET. Measured, not assumed.
     expect(infoFor('binance-futures-market-connector').requiresDesktop).toBe(
       false,
     )
+    expect(infoFor('bybit-futures-market-connector').requiresDesktop).toBe(
+      false,
+    )
+    expect(infoFor('okx-futures-market-connector').requiresDesktop).toBe(false)
     expect(infoFor('kucoin-futures-market-connector').requiresDesktop).toBe(
       true,
     )
@@ -263,6 +277,8 @@ describe('getConnectorAdapterInfo — futures venues', () => {
         'credentialAlias'
       ]
     expect(alias('binance-futures-market-connector')).toBe('binance')
+    expect(alias('bybit-futures-market-connector')).toBe('bybit')
+    expect(alias('okx-futures-market-connector')).toBe('okx')
     expect(alias('kucoin-futures-market-connector')).toBe('kucoin')
     // Kraken issues futures keys separately from spot, so an alias would
     // silently sign with a key that cannot authenticate on futures.kraken.com.

@@ -41,7 +41,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 
 Three ways in, no account required for any of them:
 
-- **In your browser, right now.** [terminal.pairlens.finance](https://terminal.pairlens.finance) runs the full terminal with nothing to install. On a phone, the same URL becomes a chart-centric mobile trading terminal. Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures, Kraken Futures) don't serve browsers and need the desktop app; the other twelve plus DEXs work everywhere.
+- **In your browser, right now.** [terminal.pairlens.finance](https://terminal.pairlens.finance) runs the full terminal with nothing to install. On a phone, the same URL becomes a chart-centric mobile trading terminal. Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures, Kraken Futures) don't serve browsers and need the desktop app; the other fourteen plus DEXs work everywhere.
 - **On your desktop.** The Tauri app for macOS, Windows, and Linux is the primary distribution: OS-keychain credential storage, background bots, and automatic updates. Builds are published on the [Releases page](https://github.com/Pairlens/trading-terminal/releases) as they ship.
 - **From source, in about two minutes.** The only requirement is [Bun](https://bun.sh) ≥ 1.3 (plus the Rust toolchain for the desktop shell):
 
@@ -73,17 +73,17 @@ Prefer fully offline? `PAIRLENS_STANDALONE=1 bun run dev` turns off every cloud 
 
 Bundled on a fresh install. All 17 crypto venues support both market data and trading:
 
-| Type               | Connectors                                                                                                   |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ |
-| Crypto exchanges   | OKX, Binance, ByBit, Coinbase, Kraken, KuCoin, Gate, Bitget, MEXC, HTX, Crypto.com, Bitfinex, Upbit, Bitvavo |
-| Perpetual futures  | Binance Futures, KuCoin Futures (desktop app only), Kraken Futures (desktop app only)                        |
-| US equities broker | Alpaca                                                                                                       |
-| Prediction markets | Kalshi (desktop app only), Polymarket                                                                        |
-| DEX trading        | Jupiter (Solana), EVM DEX connector (Ethereum, Base, Arbitrum, BSC, Polygon)                                 |
-| DEX market data    | GeckoTerminal, DexPaprika                                                                                    |
-| AI inference       | Groq, OpenAI, Anthropic, OpenRouter (bring your own key)                                                     |
-| AI web search      | Tavily, Exa (bring your own key)                                                                             |
-| Themes             | 18 bundled theme plugins                                                                                     |
+| Type               | Connectors                                                                                                        |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Crypto exchanges   | OKX, Binance, ByBit, Coinbase, Kraken, KuCoin, Gate, Bitget, MEXC, HTX, Crypto.com, Bitfinex, Upbit, Bitvavo      |
+| Perpetual futures  | Binance Futures, ByBit Futures, OKX Futures, KuCoin Futures (desktop app only), Kraken Futures (desktop app only) |
+| US equities broker | Alpaca                                                                                                            |
+| Prediction markets | Kalshi (desktop app only), Polymarket                                                                             |
+| DEX trading        | Jupiter (Solana), EVM DEX connector (Ethereum, Base, Arbitrum, BSC, Polygon)                                      |
+| DEX market data    | GeckoTerminal, DexPaprika                                                                                         |
+| AI inference       | Groq, OpenAI, Anthropic, OpenRouter (bring your own key)                                                          |
+| AI web search      | Tavily, Exa (bring your own key)                                                                                  |
+| Themes             | 18 bundled theme plugins                                                                                          |
 
 Anyone can build a connector by implementing `MarketAdapter` and publishing it to the plugin registry. See `packages/plugin-sdk/` and `bun run create:plugin`.
 

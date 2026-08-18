@@ -4113,6 +4113,14 @@
         "title": "Binance Futures Рыночный коннектор",
         "description": "Бессрочные фьючерсы на Binance Futures: длинные и короткие позиции с плечом, расчёт в USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Рыночный коннектор",
+        "description": "Бессрочные фьючерсы на ByBit Futures: длинные и короткие позиции с плечом, расчёт в USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Рыночный коннектор",
+        "description": "Бессрочные фьючерсы на OKX Futures: длинные и короткие позиции с плечом, расчёт в USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Рыночный коннектор",
         "description": "Бессрочные фьючерсы на KuCoin Futures: длинные и короткие позиции с плечом, расчёт в USDT"

@@ -17,12 +17,14 @@
  * explicit click. Sorting on rate would put whichever illiquid contract printed
  * an outlier at the top of the board on every refresh.
  *
- * **The one-venue board is the common board.** Two of the three perp venues
- * serve REST without CORS headers, so in a browser the matrix is one column
- * wide and has to look deliberate at that width: the missing venues get a
- * single muted line instead of an amber banner each, the grid stops stretching
- * (`gridMaxWidth`), and the Spread column — which needs two quotes to mean
- * anything — is not rendered at all rather than filled with placeholders.
+ * **The narrow board has to look deliberate.** Two of the five perp venues
+ * serve REST without CORS headers, so a browser matrix runs three columns to
+ * the desktop's five, and a single connected venue is still a real state (a
+ * deployment can disable venues, a region can refuse them). At any width the
+ * rules are the same: the missing venues get a single muted line instead of an
+ * amber banner each, the grid stops stretching (`gridMaxWidth`), and the
+ * Spread column — which needs two quotes to mean anything — is not rendered
+ * below two answering venues rather than filled with placeholders.
  */
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'

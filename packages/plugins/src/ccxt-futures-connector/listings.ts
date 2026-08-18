@@ -98,6 +98,10 @@ export const CCXT_FUTURES_VENUE_IDS: ReadonlyArray<{
   marketId: string
 }> = [
   { exchangeId: 'binanceusdm', marketId: 'binance-futures' },
+  // Same ccxt class as the spot venues — the `:swap:` namespace in the cache
+  // key is what keeps these rows from colliding with spot's `bybit`/`okx`.
+  { exchangeId: 'bybit', marketId: 'bybit-futures' },
+  { exchangeId: 'okx', marketId: 'okx-futures' },
   { exchangeId: 'kucoinfutures', marketId: 'kucoin-futures' },
   { exchangeId: 'krakenfutures', marketId: 'kraken-futures' },
 ]

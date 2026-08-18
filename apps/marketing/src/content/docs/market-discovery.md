@@ -73,8 +73,10 @@ collisions are a deliberate tactic.
 ## The cloud snapshot
 
 The App Server compiles a listings index: which pairs each venue lists,
-assembled from public, unauthenticated venue metadata. Your terminal downloads
-that as a single blob at idle and caches it locally.
+assembled from public, unauthenticated venue metadata. It covers the fourteen
+spot exchanges and the five perpetual venues, so a contract can turn up in
+search before you have ever loaded its venue's own table. Your terminal
+downloads that as a single blob at idle and caches it locally.
 
 Three properties are worth knowing.
 

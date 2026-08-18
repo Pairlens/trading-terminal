@@ -9,10 +9,10 @@
  * would liquidate on.
  *
  * The ratio is computed from maintenance over equity rather than read off the
- * venue's own `marginRatio` field, which two of the three venues scale
- * differently (a fraction on one, percent on another) with nothing in the
- * payload to say which. Where the venue's figure is the only one available it
- * is normalised and used, and the header says the source.
+ * venue's own `marginRatio` field, which the venues scale inconsistently (a
+ * fraction on one, percent on another) with nothing in the payload to say
+ * which. Where the venue's figure is the only one available it is normalised
+ * and used, and the header says the source.
  */
 import { useMemo, useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'

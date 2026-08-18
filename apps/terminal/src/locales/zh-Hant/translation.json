@@ -4027,6 +4027,14 @@
         "title": "Binance Futures 市場連接器",
         "description": "Binance Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures 市場連接器",
+        "description": "ByBit Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures 市場連接器",
+        "description": "OKX Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures 市場連接器",
         "description": "KuCoin Futures 的永續合約：可做多做空的槓桿部位，以 USDT 結算"
