@@ -161,6 +161,15 @@ prices that position. With none it prices a stated 1,000 of the settle
 currency, labelled as such, because a cost figure with no size behind it reads
 as a real charge against an account holding nothing.
 
+**The board fills in per venue.** Each exchange is asked on its own, so a
+column paints the moment that venue answers rather than waiting on the slowest
+one in the row. Until an answer arrives the pane still draws itself: the venue
+columns are named from the connectors you have installed, the rows carry the
+ranked assets with their logos, and only the rates are placeholders. Nothing
+jumps when the numbers land, because the layout was already right. A venue
+your build cannot reach is left out of the count from the first paint instead
+of appearing as a column and then vanishing.
+
 None of these panes open a stream. Funding moves once per settlement, so they
 read a shared cached snapshot and only the countdown ticks.
 

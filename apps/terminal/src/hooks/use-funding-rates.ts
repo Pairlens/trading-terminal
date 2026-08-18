@@ -18,9 +18,10 @@
  * on a discovery board.
  */
 import { useMemo } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { isPlatformRestrictedError } from '@pairlens/market-engine/errors'
+import { isVenueRestBlocked } from '@pairlens/market-engine/platform'
 import type { PluginInstance } from '@pairlens/plugin-system/types'
 import type {
   FundingHistoryResponse,
@@ -61,6 +62,14 @@ export type FundingVenueResult = {
   error: string | null
   /** This build cannot reach the venue at all. */
   desktopOnly: boolean
+  /**
+   * This venue's own sweep is still in flight.
+   *
+   * A result exists for a pending venue on purpose: the panes draw its column
+   * from the moment the board mounts and fill the cells when it answers, so a
+   * slow venue costs the reader a shimmering column rather than an empty pane.
+   */
+  pending: boolean
 }
 
 export type OpenInterestVenueResult = {
@@ -106,6 +115,29 @@ async function callVenue({ venue, params }: ExecuteInput): Promise<unknown> {
   })
 }
 
+/**
+ * A venue this build provably cannot reach, known before it is asked.
+ *
+ * The connector refuses these itself with a `PlatformRestrictedError`, and
+ * that refusal stays authoritative. Knowing it up front is a rendering matter:
+ * a board that asks all five venues draws five columns and then drops two the
+ * instant the refusals land, which is a visible reflow on every page load of
+ * the hosted terminal. Skipping the ask keeps the column count right from the
+ * first paint, and saves two plugin calls.
+ *
+ * `isVenueRestBlocked(true)` is the deliberately conservative form: it asks
+ * whether the venue is blocked EVEN IF it declares a dev proxy. Under `bun run
+ * dev` a proxy exists, so nothing is pre-marked and the connector's own rule
+ * decides; in a production browser no proxy can exist, so pre-marking cannot
+ * disagree with it.
+ */
+function venueUnreachable(venue: FuturesVenue): boolean {
+  return (
+    venue.plugin.manifest.metadata?.['requiresDesktop'] === true &&
+    isVenueRestBlocked(true)
+  )
+}
+
 /** A thrown venue failure as the two facts a pane renders differently. */
 function describeFailure(err: unknown): {
   error: string | null
@@ -132,55 +164,106 @@ export type FundingScope = {
    * ignore the hint and return their whole universe.
    */
   bases?: Array<string>
+  /**
+   * Hold the sweep until the caller's hint set is settled.
+   *
+   * The scanners derive `bases` from the top-coins snapshot, which lands a
+   * moment after the board mounts. Sweeping before it arrives and again after
+   * would spend two rounds of REST on every venue and repaint a full matrix
+   * back to skeletons when the second round started, because a changed hint is
+   * a changed cache key. Held queries report `pending`, so the panes shimmer
+   * through the wait instead of claiming the venues answered with nothing.
+   */
+  enabled?: boolean
 }
 
-/** Current funding for the contracts each venue lists. */
+/**
+ * Current funding for the contracts each venue lists — ONE QUERY PER VENUE.
+ *
+ * The fan-out used to be a single `Promise.all` under one cache key, which
+ * made the whole board as slow as its slowest exchange: Binance answers a
+ * venue-wide sweep in a few hundred milliseconds, KuCoin walks twenty-five
+ * contracts one REST call at a time, and the matrix showed nothing at all
+ * until the last one landed. Per venue, a column paints the moment its own
+ * exchange answers, and a venue that hangs never holds the others hostage.
+ *
+ * It also fixes the cache: the old key carried the whole venue list, so
+ * installing a second perp connector threw away the first one's rates and
+ * blanked a board that had been full a second earlier.
+ */
 export function useFundingRates(
   venues: Array<FuturesVenue>,
   scopeInput: FundingScope = {},
 ) {
-  const { pairs, bases } = scopeInput
-  const markets = venues
-    .map((v) => v.market)
-    .sort()
-    .join(',')
+  const { pairs, bases, enabled = true } = scopeInput
   const scope = `${pairs ? [...pairs].sort().join(',') : ''}|${bases?.join(',') ?? ''}`
+  const unreachable = venues.map(venueUnreachable)
 
-  return useQuery({
-    queryKey: ['futures-funding', markets, scope],
-    queryFn: async (): Promise<Array<FundingVenueResult>> =>
-      Promise.all(
-        venues.map(async (venue) => {
-          try {
-            const response = (await callVenue({
-              venue,
-              params: {
-                action: 'funding-rates',
-                ...(pairs && pairs.length > 0 ? { pairs } : {}),
-                ...(bases && bases.length > 0 ? { bases } : {}),
-              },
-            })) as FundingSnapshotResponse
-            return {
-              market: venue.market,
-              label: venue.label,
-              entries: Array.isArray(response?.entries) ? response.entries : [],
-              error: null,
-              desktopOnly: false,
-            }
-          } catch (err) {
-            return {
-              market: venue.market,
-              label: venue.label,
-              entries: [],
-              ...describeFailure(err),
-            }
+  return useQueries({
+    queries: venues.map((venue, index) => ({
+      queryKey: ['futures-funding', venue.market, scope],
+      queryFn: async (): Promise<FundingVenueResult> => {
+        try {
+          const response = (await callVenue({
+            venue,
+            params: {
+              action: 'funding-rates',
+              ...(pairs && pairs.length > 0 ? { pairs } : {}),
+              ...(bases && bases.length > 0 ? { bases } : {}),
+            },
+          })) as FundingSnapshotResponse
+          return {
+            market: venue.market,
+            label: venue.label,
+            entries: Array.isArray(response?.entries) ? response.entries : [],
+            error: null,
+            desktopOnly: false,
+            pending: false,
           }
-        }),
-      ),
-    enabled: venues.length > 0,
-    staleTime: FUNDING_STALE_MS,
-    refetchInterval: FUNDING_REFETCH_MS,
-    gcTime: 10 * 60_000,
+        } catch (err) {
+          return {
+            market: venue.market,
+            label: venue.label,
+            entries: [],
+            ...describeFailure(err),
+            pending: false,
+          }
+        }
+      },
+      enabled: enabled && !unreachable[index],
+      staleTime: FUNDING_STALE_MS,
+      refetchInterval: FUNDING_REFETCH_MS,
+      gcTime: 10 * 60_000,
+    })),
+    combine: (results) => {
+      // A venue still in flight keeps its place in the array so the panes can
+      // draw its column and shimmer the cells. The order is the venue order,
+      // which is what makes the columns stable as answers arrive.
+      const data = results.map((result, index): FundingVenueResult => {
+        const venue = venues[index]
+        const base = {
+          market: venue?.market ?? '',
+          label: venue?.label ?? '',
+          entries: [],
+          error: null,
+        }
+        if (unreachable[index]) {
+          return { ...base, desktopOnly: true, pending: false }
+        }
+        return result.data ?? { ...base, desktopOnly: false, pending: true }
+      })
+      // Both flags count only the venues actually being asked. A board that
+      // waited on the unreachable ones — whose queries are disabled and so
+      // report `pending` forever — would shimmer for the rest of the session.
+      const asked = results.filter((_, index) => !unreachable[index])
+      return {
+        data,
+        /** Nothing at all has landed yet. */
+        isPending: asked.length > 0 && asked.every((r) => r.isPending),
+        /** At least one venue is still sweeping — the board is filling in. */
+        isSettling: asked.some((r) => r.isPending),
+      }
+    },
   })
 }
 
