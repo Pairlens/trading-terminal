@@ -4,7 +4,7 @@ description: How the terminal, connector plugins, strategy engine, and optional 
 group: get-started
 order: 6
 eyebrow: Get started
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 5 min read
 ---
 
@@ -37,13 +37,15 @@ OpenAI-compatible AI proxy, and the reference data no venue publishes about
 itself: news, the economic and IPO calendars, insider filings, new listings, and
 aggregated liquidation clusters. It never stores exchange credentials.
 
-Two of those touch exchange data, and both are narrow and deliberate. The
-listings sweeper reads public, unauthenticated venue metadata to compile the
-discovery snapshot, which pairs each venue lists and nothing else. The
-liquidation collector holds the public liquidation streams of Binance Futures and
-Bybit open and buckets the prints. Neither carries a credential, neither acts on
-anyone's behalf, and neither ever handles prices, books, candles or trades. Everything
-you actually trade against streams from the venue straight to your machine.
+The App Server itself never opens a connection to an exchange. The two capture
+jobs that used to be its narrow exceptions, the listings sweeper that compiles
+the discovery snapshot and the collector that holds the public liquidation
+streams of Binance Futures and Bybit, run in a separate Market Data Collector
+service that writes to the same database the App Server reads. One instance
+runs in the US and one in Europe, each owning the sources its region can
+actually reach. Neither carries a credential, neither acts on anyone's behalf,
+and neither ever proxies books, candles or trades. Everything you actually
+trade against streams from the venue straight to your machine.
 
 ## Where data lives
 

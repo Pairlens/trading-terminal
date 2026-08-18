@@ -121,8 +121,8 @@ and nothing else.
 The **Movers** panel carries a **New listings** tab beside the gainers and
 losers, merging two sources that agree on nothing except a timestamp.
 
-**CEX listings come from our own sweeper.** The App Server stamps the first time
-it saw a venue list a pair, and the row says exactly that: first seen by the
+**CEX listings come from our own sweeper.** The Pairlens index stamps the first
+time it saw a venue list a pair, and the row says exactly that: first seen by the
 Pairlens index, with the date tracking began beside it. It is not the venue's
 announcement date and never claims to be, so a pair listed before we started
 watching never reads as brand new.
