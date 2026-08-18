@@ -1,17 +1,30 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// ── The one conversation ─────────────────────────────────────────────
+// ── The conversation ─────────────────────────────────────────────────
 //
 // Mounted once per window: inside the desktop dock, or as the mobile
-// Co-pilot tab. Never both, because the viewport gate is exclusive and
+// Assistant tab. Never both, because the viewport gate is exclusive and
 // two mounts would mean two runs answering the same user.
 //
 // It stays mounted while the dock is collapsed, which is what lets a
 // long run keep working while the user goes back to the chart.
+//
+// It shows ONE thread at a time out of however many the user has, and
+// the thread it shows is the store's `activeId`. The chat is keyed on
+// that id, so switching rebuilds the AI SDK's Chat around the other
+// thread's messages rather than replaying them into the live one. What
+// makes that safe is the switch effect below: the outgoing run is
+// stopped and written out BEFORE the id the chat is keyed on moves.
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
@@ -20,7 +33,6 @@ import {
   ArrowUpRight,
   Brain,
   Clock,
-  Loader2,
   RefreshCw,
   Sparkles,
 } from 'lucide-react'
@@ -50,7 +62,6 @@ import type {
   CopilotOrderRequest,
 } from '@/components/copilot/copilot-order-card'
 import i18n from '@/lib/i18n'
-import { api, queryKeys } from '@/lib/api'
 import { track } from '@/lib/analytics-events'
 import { useCapabilityAccess } from '@/hooks/use-capability-access'
 import { useStickToBottom } from '@/hooks/use-stick-to-bottom'
@@ -91,22 +102,24 @@ import {
   getScreenshot,
 } from '@/lib/assistant-core/screenshot-store'
 import { useAssistantStore } from '@/stores/assistant-store'
-
-/**
- * The assistant's history is not scoped to a pair any more, so it rides
- * the existing per-pair endpoint under one fixed key. One conversation,
- * one thread, regardless of where the user has been.
- */
-const HISTORY_MARKET = 'assistant'
-const HISTORY_KEY = 'global'
+import { generateConversationTitle } from '@/lib/assistant-core/conversation-title'
+import {
+  ensureActiveConversation,
+  titleFromText,
+  useAssistantConversationsStore,
+} from '@/stores/assistant-conversations-store'
 
 const MAX_SCHEDULED_CHECKS = 8
 
-/** Actions the surrounding chrome drives, published once on mount. */
-export type AssistantConversationHandle = {
-  clear: () => void
-  hasMessages: boolean
-}
+/** Stable identity for an unread thread, so the chat is not rebuilt for it. */
+const EMPTY_THREAD: Array<UIMessage> = []
+
+/**
+ * How long after the last change a thread is written to storage. Long
+ * enough that a streaming answer is not serialized per token, short
+ * enough that a window closed mid-answer keeps almost all of it.
+ */
+const PERSIST_DEBOUNCE_MS = 700
 
 export type AssistantConversationProps = {
   /** Reports run phase up to the orb. Only called when the phase moves. */
@@ -117,22 +130,11 @@ export type AssistantConversationProps = {
    * mobile tab, which has no header, still gets the user's choice.
    */
   persona?: AssistantPersona
-  /**
-   * Filled in with the conversation's controls so the window header can
-   * offer a clear button without the chat owning a second header row.
-   */
-  controlsRef?: React.RefObject<AssistantConversationHandle | null>
 }
 
 export function AssistantConversation(props: AssistantConversationProps) {
   const { t } = useTranslation()
   const access = useCapabilityAccess('ai:inference')
-
-  const historyQuery = useQuery({
-    queryKey: queryKeys.aiMessages(HISTORY_MARKET, HISTORY_KEY),
-    queryFn: () => api.getAiMessages(HISTORY_MARKET, HISTORY_KEY),
-    enabled: access.status === 'granted',
-  })
 
   if (access.status === 'auth-required') {
     return (
@@ -184,30 +186,42 @@ export function AssistantConversation(props: AssistantConversationProps) {
     )
   }
 
-  if (historyQuery.isLoading) {
-    return (
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center">
-        <Loader2 className="text-muted-foreground size-5 animate-spin" />
-      </div>
-    )
-  }
+  return <AssistantConversationHost {...props} />
+}
 
-  return (
-    <AssistantConversationInner
-      {...props}
-      initialMessages={(historyQuery.data ?? []) as Array<UIMessage>}
-    />
-  )
+/**
+ * Resolves which thread is on screen and hands it down as a plain prop.
+ *
+ * Split out so the store is only read once the assistant is actually
+ * usable, and so the chat below can key itself on an id it is simply
+ * given. The ensure runs in a layout effect rather than during render:
+ * creating the first conversation is a store write, and a store write
+ * mid-render is a write the conversation rail is also subscribed to.
+ * Before paint, so the empty frame is never shown.
+ *
+ * It watches `activeId` rather than running once, because there are two
+ * ways to have no thread and only one of them is the first launch. The
+ * other is deleting the last one, which used to leave a blank column
+ * behind until a reload; now it lands you in a fresh conversation, which
+ * is what deleting the only thread means.
+ */
+function AssistantConversationHost(props: AssistantConversationProps) {
+  const activeId = useAssistantConversationsStore((state) => state.activeId)
+  useLayoutEffect(() => {
+    if (!activeId) ensureActiveConversation()
+  }, [activeId])
+
+  if (!activeId) return <div className="min-h-0 flex-1" />
+
+  return <AssistantConversationInner {...props} conversationId={activeId} />
 }
 
 function AssistantConversationInner({
   onStatusChange,
-  controlsRef,
   persona: personaProp,
-  initialMessages,
-}: AssistantConversationProps & { initialMessages: Array<UIMessage> }) {
+  conversationId,
+}: AssistantConversationProps & { conversationId: string }) {
   const { t } = useTranslation()
-  const queryClient = useQueryClient()
   const navigate = useNavigate()
   const resolveMarketRef = useMarketRefWithPreferred()
   const marketData = useMarketData()
@@ -248,6 +262,25 @@ function AssistantConversationInner({
   const depsRef = useRef(deps)
   depsRef.current = deps
 
+  // ── Which thread is on screen ─────────────────────────────────────
+  //
+  // The chat is keyed on `threadId`, NOT on the store's `activeId`
+  // directly. The two are the same except for the one render between a
+  // row being clicked and the switch effect below having stopped and
+  // written out the run that was in flight. Keying straight off the
+  // store would rebuild the Chat first and orphan that run: it would
+  // keep streaming into an object nothing renders, and the half answer
+  // it had already produced would never be written anywhere.
+  const [threadId, setThreadId] = useState(conversationId)
+  // Read through the store's own cache rather than `messagesOf`, which
+  // writes on a miss: `select` and `create` both load the thread before
+  // they publish the id, so by the time it reaches here it is cached.
+  // Unsubscribed on purpose. `useChat` only reads this when it builds a
+  // Chat, which is exactly when `threadId` changes, and subscribing
+  // would rerender the whole conversation on every persisted token.
+  const storedMessages =
+    useAssistantConversationsStore.getState().threads[threadId] ?? EMPTY_THREAD
+
   const transport = useMemo(
     () =>
       new AssistantTransport({
@@ -264,14 +297,15 @@ function AssistantConversationInner({
     messages,
     status,
     sendMessage,
-    setMessages,
     stop,
     error,
     regenerate,
     addToolResult,
   } = useChat({
-    id: 'pairlens-assistant',
-    messages: initialMessages,
+    // Changing this is what swaps threads: the SDK rebuilds its Chat
+    // around `messages` whenever the id moves.
+    id: threadId,
+    messages: storedMessages,
     transport,
     // ask_user and approval-gated surface actions have no execute: the
     // run parks on them and resumes by itself once every call in the
@@ -291,14 +325,11 @@ function AssistantConversationInner({
         },
       )
     },
-    onFinish: ({ message }) => {
+    onFinish: () => {
       track('assistant_run_completed', {
         outcome: 'success',
         tool_calls: runToolCallsRef.current,
         duration_ms: runStartRef.current ? Date.now() - runStartRef.current : 0,
-      })
-      api.saveAiMessage(HISTORY_MARKET, HISTORY_KEY, message).catch(() => {
-        // Persistence is best-effort; the conversation is still live.
       })
     },
   })
@@ -312,6 +343,115 @@ function AssistantConversationInner({
     lastReportedRef.current = key
     onStatusChange?.(runStatus)
   }, [runStatus, onStatusChange])
+
+  // ── Local persistence ─────────────────────────────────────────────
+  //
+  // Threads are written to this device and nowhere else. There is no
+  // account copy any more, which is why the whole `UIMessage` goes down
+  // rather than the flattened text the server used to accept: tool
+  // calls, research cards and order proposals all come back on reload.
+  //
+  // Debounced, because a streaming answer changes the array on every
+  // token and serializing a long thread that often would be felt. The
+  // pending write carries the id it was scheduled for, so a flush that
+  // lands after a switch still writes to the thread it came from.
+  const messagesRef = useRef(messages)
+  messagesRef.current = messages
+  const pendingWriteRef = useRef<{
+    id: string
+    timer: ReturnType<typeof setTimeout>
+  } | null>(null)
+
+  const writeThreadNow = useCallback((id: string) => {
+    const pending = pendingWriteRef.current
+    if (pending?.id === id) {
+      clearTimeout(pending.timer)
+      pendingWriteRef.current = null
+    }
+    useAssistantConversationsStore
+      .getState()
+      .setMessages(id, messagesRef.current)
+  }, [])
+
+  useEffect(() => {
+    // An empty thread is left alone. Opening the dock and closing it
+    // again should not stamp a conversation as touched.
+    if (messages.length === 0) return
+    // A finished run is written at once: the answer is complete and the
+    // window may be closed the moment it lands.
+    if (status === 'ready' || status === 'error') {
+      writeThreadNow(threadId)
+      return
+    }
+    if (pendingWriteRef.current?.id === threadId) return
+    const timer = setTimeout(() => {
+      pendingWriteRef.current = null
+      useAssistantConversationsStore
+        .getState()
+        .setMessages(threadId, messagesRef.current)
+    }, PERSIST_DEBOUNCE_MS)
+    pendingWriteRef.current = { id: threadId, timer }
+  }, [messages, status, threadId, writeThreadNow])
+
+  useEffect(
+    () => () => {
+      const pending = pendingWriteRef.current
+      if (pending) clearTimeout(pending.timer)
+    },
+    [],
+  )
+
+  // ── Switching threads ─────────────────────────────────────────────
+  //
+  // Runs BEFORE `threadId` moves, which is the whole reason the chat is
+  // not keyed off the store directly. Stop first so nothing keeps
+  // streaming into a Chat about to be discarded, then write what did
+  // arrive, then let the render that swaps the thread happen.
+  const stopRef = useRef(stop)
+  stopRef.current = stop
+  useEffect(() => {
+    if (conversationId === threadId) return
+    stopRef.current()
+    if (messagesRef.current.length > 0) writeThreadNow(threadId)
+    // Chart captures are held in memory and never written down, so they
+    // cannot follow a thread across a reload anyway. Dropping them here
+    // is what keeps a long session of switching from accumulating PNGs
+    // for threads nobody is looking at.
+    clearScreenshots()
+    setThreadId(conversationId)
+  }, [conversationId, threadId, writeThreadNow])
+
+  // ── Naming the thread ─────────────────────────────────────────────
+  //
+  // The first user message titles it immediately, so the rail never
+  // shows a nameless row, and the model is asked in the background for
+  // something better. One attempt per thread: a title that failed to
+  // generate is not worth retrying on every render, and the fallback is
+  // already readable.
+  const titledRef = useRef<Set<string>>(new Set())
+  useEffect(() => {
+    if (messages.length === 0 || titledRef.current.has(threadId)) return
+    const first = messages.find((message) => message.role === 'user')
+    const seed = first ? textOf(first) : ''
+    if (!seed.trim()) return
+    titledRef.current.add(threadId)
+
+    const store = useAssistantConversationsStore.getState()
+    const existing = store.conversations.find((meta) => meta.id === threadId)
+    if (existing?.title) return
+    store.rename(threadId, titleFromText(seed))
+
+    let cancelled = false
+    void generateConversationTitle(depsRef.current.pluginManager, seed).then(
+      (title) => {
+        if (cancelled || !title) return
+        useAssistantConversationsStore.getState().rename(threadId, title)
+      },
+    )
+    return () => {
+      cancelled = true
+    }
+  }, [messages, threadId])
 
   // ── Sending ───────────────────────────────────────────────────────
   const pendingQuestion = findPendingQuestion(messages)
@@ -343,16 +483,8 @@ function AssistantConversationInner({
       runToolCallsRef.current = 0
       jumpToLatest()
       sendMessage({ text })
-      api
-        .saveAiMessage(HISTORY_MARKET, HISTORY_KEY, {
-          role: 'user' as const,
-          parts: [{ type: 'text' as const, text }],
-        })
-        .catch(() => {
-          // Best-effort.
-        })
     },
-    [sendMessage],
+    [sendMessage, jumpToLatest],
   )
 
   // One message may wait for the run in flight. A turn can span 28 steps
@@ -427,28 +559,6 @@ function AssistantConversationInner({
     runToolCallsRef.current = 0
     regenerate()
   }, [regenerate, error])
-
-  const handleClear = useCallback(() => {
-    api.clearAiMessages(HISTORY_MARKET, HISTORY_KEY).catch(() => {
-      // Best-effort.
-    })
-    clearScreenshots()
-    setMessages([])
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.aiMessages(HISTORY_MARKET, HISTORY_KEY),
-    })
-  }, [setMessages, queryClient])
-
-  // Published after commit, not during render: a render React throws
-  // away must not be the one the window header ends up holding.
-  const hasMessages = messages.length > 0
-  useEffect(() => {
-    if (!controlsRef) return
-    controlsRef.current = { clear: handleClear, hasMessages }
-    return () => {
-      controlsRef.current = null
-    }
-  }, [controlsRef, handleClear, hasMessages])
 
   // ── Order execution for the confirm cards ─────────────────────────
   const orderActions = useMemo<CopilotOrderActions>(
@@ -896,6 +1006,17 @@ function TypingIndicator() {
       ))}
     </div>
   )
+}
+
+/** Every text part of a message, joined. What a title is written from. */
+function textOf(message: UIMessage): string {
+  const chunks: Array<string> = []
+  for (const part of message.parts) {
+    if (part.type === 'text' && typeof part.text === 'string') {
+      chunks.push(part.text)
+    }
+  }
+  return chunks.join('\n')
 }
 
 // ── Pending question ─────────────────────────────────────────────────

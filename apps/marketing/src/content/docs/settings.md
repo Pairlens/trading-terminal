@@ -4,7 +4,7 @@ description: Every setting in the terminal, from the terminal lock and credentia
 group: traders
 order: 10
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 19 AUG 2026
 readTime: 11 min read
 ---
 
@@ -66,7 +66,6 @@ Then one switch per domain:
 | **Workspaces and layouts**   | Custom workspaces, folders, panel layouts, and workspace variables                                                        |
 | **Workflows and alerts**     | Automation workflows, alert rules, and the pairs they watch                                                               |
 | **Plugins**                  | Which plugins are enabled, their settings, and your provider pins                                                         |
-| **AI chat history**          | Your conversation with the assistant                                                                                      |
 | **Trade journal**            | Trades you or the assistant log                                                                                           |
 
 Three things about these switches are worth knowing before you flip one.
@@ -77,10 +76,12 @@ stale. Switch it back on and the two sides merge, newest change winning, which
 means something you deleted while it was off can come back if your account still
 has it.
 
-**Two of them have no local store.** AI chat history and the trade journal only
-ever live in your account, so off there means not recorded anywhere rather than
-recorded locally. Clearing chat history while sync is off clears this device
-only; the conversations in your account come back when you turn it on again.
+**Assistant conversations are not on the list, and will not be.** They are kept
+on the device you typed them on and never uploaded, so there is nothing to sync
+and no switch for it. See [the assistant](/docs/ai-copilot#where-they-are-stored).
+
+**One of them has no local store.** The trade journal only ever lives in your
+account, so off there means not recorded anywhere rather than recorded locally.
 
 **Plugin settings include plugin API keys.** An AI provider key you typed into a
 plugin's own settings travels with the Plugins domain. Exchange API keys and
@@ -331,10 +332,11 @@ every two weeks, "Maybe later" pauses it for three weeks, and "Don't ask
 again" is permanent.
 
 **Export your data.** Downloads everything held for your account as one JSON
-file: profile, workspaces, chart layouts, AI conversations, trade journal,
-workflows, alerts, plugin settings, and billing history. Exchange API keys and
-wallet secrets are not in it, because they were never on our servers. They stay
-on your device: OS keychain on desktop, encrypted vault in the browser.
+file: profile, workspaces, chart layouts, trade journal, workflows, alerts,
+plugin settings, and billing history. Two things are not in it because they were
+never on our servers: exchange API keys and wallet secrets, which stay in the OS
+keychain on desktop or the encrypted vault in a browser, and your assistant
+conversations, which are only ever on the device you typed them on.
 
 **Delete account.** Permanently erases your account and everything synced to
 it, and cancels any active Intelligence subscription at the same time. You type

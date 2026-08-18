@@ -1513,11 +1513,6 @@
           "title": "Plugins",
           "description": "Welche Plugins du aktiviert hast, ihre Einstellungen und deine Anbieter-Pins. Zu den Einstellungen gehört auch jeder API-Schlüssel, den du in den Einstellungen eines Plugins eingetragen hast, etwa für einen KI-Anbieter. API-Schlüssel von Börsen und Wallet-Secrets sind nie dabei, die bleiben in deinem Schlüsselbund. Anbieter-Pins liegen nur in deinem Konto: abgeschaltet halten sie nur bis zum Beenden der App."
         },
-        "copilot": {
-          "title": "KI-Chatverlauf",
-          "description": "Eine Unterhaltung mit dem Assistenten, für das ganze Terminal.",
-          "caveat": "Solange das aus ist, leert das Löschen des Chatverlaufs nur dieses Gerät. Unterhaltungen in deinem Konto bleiben erhalten und tauchen wieder auf, sobald du die Synchronisierung wieder einschaltest."
-        },
         "trades": {
           "title": "Trade-Journal",
           "description": "Trades, die du oder der Assistent ins Journal einträgst."
@@ -2335,7 +2330,6 @@
     "title": "Assistent",
     "open": "Assistent öffnen",
     "close": "Assistent minimieren",
-    "clear": "Unterhaltung löschen",
     "placeholder": "Frag alles, oder sag mir, was gebaut werden soll...",
     "answerPlaceholder": "Antwort eingeben...",
     "emptyTitle": "Woran arbeiten wir?",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "Ablehnen",
     "approvalApproved": "Freigegeben",
     "approvalDeclined": "Abgelehnt",
-    "resetPosition": "Position zurücksetzen"
+    "resetPosition": "Position zurücksetzen",
+    "conversations": {
+      "new": "Neue Unterhaltung",
+      "untitled": "Ohne Titel",
+      "history": "Verlauf",
+      "close": "Schließen",
+      "empty": "Noch nichts da. Stell eine Frage, sie bleibt auf diesem Gerät.",
+      "localOnly": "Nur auf diesem Gerät gespeichert",
+      "delete": "Unterhaltung löschen",
+      "deleteTitle": "Diese Unterhaltung löschen?",
+      "deleteDescription": "„{{name}}“ und alles darin ist weg. Das lässt sich nicht rückgängig machen.",
+      "cancel": "Abbrechen",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "previous7Days": "Letzte 7 Tage",
+      "older": "Älter"
+    }
   },
   "copilot": {
     "placeholder": "Frag deine Lens...",

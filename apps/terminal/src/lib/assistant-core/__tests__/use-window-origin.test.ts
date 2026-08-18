@@ -8,8 +8,8 @@ import {
   assistantWindowOrigin,
 } from '../use-window-origin'
 
-/** The window as the three placements park it, 440x660. */
-const FRAME = { left: 820, top: 100, width: 440, height: 660 }
+/** The window as the three placements park it, 616x660. */
+const FRAME = { left: 820, top: 100, width: 616, height: 660 }
 
 function origin(orb: { left: number; top: number }) {
   const result = assistantWindowOrigin(FRAME, {

@@ -4,8 +4,8 @@ description: One assistant for the whole terminal, in the nav rail, a strip unde
 group: traders
 order: 4
 eyebrow: For traders
-updated: 16 AUG 2026
-readTime: 10 min read
+updated: 19 AUG 2026
+readTime: 11 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -136,7 +136,7 @@ If a run fails, the error carries a **Retry** rather than making you retype the
 prompt, and every finished answer has a regenerate button beside its copy
 button.
 
-## One assistant, one conversation
+## One assistant, every conversation
 
 There used to be four AI chats in Pairlens: a co-pilot pane scoped to one pair,
 a research pane, and a builder rail on each of the four builder pages. You had
@@ -149,9 +149,48 @@ is still going when you come back. While it works, the orb reports what it is
 doing in place of the suggestion: **Thinking...**, **Using tools...**, **Looking
 on the web...**, so a collapsed assistant is never a black box.
 
-The history is one thread, not one per pair. The window header carries the
-controls that act on it: the persona dropdown, an eraser that clears the
-conversation, and the reset button once you have dragged the window somewhere.
+The window header carries the controls that act on the thread you are in: the
+persona dropdown, a delete button, and the reset button once you have dragged
+the window somewhere.
+
+### Your threads
+
+Down the left of the window is every conversation you have had, newest first,
+grouped by Today, Yesterday, Previous 7 days and Older. **New conversation**
+sits at the top. Clicking a row opens it exactly as you left it: the tool
+activity, the research cards, the order proposals, all of it, because the whole
+message is stored and not just its text.
+
+Threads name themselves. The first thing you ask titles the row immediately,
+then the assistant is asked in the background for something shorter and better
+and swaps it in. Nothing about titling blocks the answer you asked for.
+
+Starting a new conversation while one is still running stops that run and keeps
+what it had already written. The last 50 conversations are kept; past that the
+oldest fall off.
+
+Deleting asks first, and deletes the conversation rather than emptying it. The
+button in the header takes the thread on screen; each row in the rail has its
+own, on hover. Neither is undoable, which is why both confirm.
+
+### Where they are stored
+
+**On your device, and nowhere else.** Conversations live in your browser's local
+storage, or in the desktop app's, on the machine you typed them on. They are not
+uploaded, they are not in your Pairlens account, they do not sync between your
+laptop and your phone, and signing out does not take them with it. Clearing your
+browser data does.
+
+That is a deliberate trade. What you ask the assistant is a fairly complete
+record of what you are thinking about trading, and the safest place for it is
+the machine you are sitting at. Cloud sync covers preferences, layouts, charts,
+automation and the trade journal; chat history is not on the list and there is
+no switch to put it there.
+
+The model still sees your messages, because it has to answer them. Which model
+that is, and who runs it, is your choice on the
+[Plugins](/docs/plugin-system) page: Pairlens Intelligence, or your own key
+against Groq, OpenAI, Anthropic or OpenRouter.
 
 ## What it can do
 

@@ -90,7 +90,6 @@ export type SyncDomainId =
   | 'workspaces'
   | 'automation'
   | 'plugins'
-  | 'copilot'
   | 'trades'
 
 export type SyncDomain = {
@@ -139,16 +138,6 @@ export const SYNC_DOMAINS: ReadonlyArray<SyncDomain> = [
     id: 'plugins',
     labelKey: 'settings.cloudSync.domains.plugins.title',
     descriptionKey: 'settings.cloudSync.domains.plugins.description',
-  },
-  {
-    id: 'copilot',
-    labelKey: 'settings.cloudSync.domains.copilot.title',
-    descriptionKey: 'settings.cloudSync.domains.copilot.description',
-    cloudOnly: true,
-    // "Clear history" while this is off clears only this device; the copy in
-    // the account survives and reappears on re-enable (api.ts no-ops the
-    // remote DELETE on purpose — disabling sync must never erase remote data).
-    caveatKey: 'settings.cloudSync.domains.copilot.caveat',
   },
   {
     id: 'trades',

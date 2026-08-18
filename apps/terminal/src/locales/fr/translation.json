@@ -1513,11 +1513,6 @@
           "title": "Plugins",
           "description": "Les plugins que vous avez activés, leurs réglages et vos fournisseurs épinglés. Les réglages incluent toute clé API saisie dans les paramètres d'un plugin, par exemple celle d'un fournisseur d'IA. Les clés API d'exchange et les secrets de wallet n'en font jamais partie, ils restent dans votre trousseau. Les fournisseurs épinglés ne sont conservés que dans votre compte : désactivé, ils ne durent que jusqu'à la fermeture de l'application."
         },
-        "copilot": {
-          "title": "Historique du chat IA",
-          "description": "Une seule conversation avec l'assistant, pour tout le terminal.",
-          "caveat": "Tant que c'est désactivé, effacer l'historique de chat n'efface que cet appareil. Les conversations déjà présentes dans votre compte sont conservées et réapparaîtront quand vous réactiverez la synchronisation."
-        },
         "trades": {
           "title": "Journal de trading",
           "description": "Les trades que vous ou l'assistant consignez dans le journal."
@@ -2335,7 +2330,6 @@
     "title": "Assistant",
     "open": "Ouvrir l’assistant",
     "close": "Réduire l’assistant",
-    "clear": "Effacer la conversation",
     "placeholder": "Posez une question, ou dites-moi quoi créer...",
     "answerPlaceholder": "Saisissez votre réponse...",
     "emptyTitle": "Sur quoi travaille-t-on ?",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "Refuser",
     "approvalApproved": "Approuvé",
     "approvalDeclined": "Refusé",
-    "resetPosition": "Réinitialiser la position"
+    "resetPosition": "Réinitialiser la position",
+    "conversations": {
+      "new": "Nouvelle conversation",
+      "untitled": "Sans titre",
+      "history": "Historique",
+      "close": "Fermer",
+      "empty": "Rien pour l’instant. Posez une question, elle reste sur cet appareil.",
+      "localOnly": "Conservé sur cet appareil uniquement",
+      "delete": "Supprimer la conversation",
+      "deleteTitle": "Supprimer cette conversation ?",
+      "deleteDescription": "« {{name}} » et tout son contenu disparaissent. Action irréversible.",
+      "cancel": "Annuler",
+      "today": "Aujourd’hui",
+      "yesterday": "Hier",
+      "previous7Days": "7 derniers jours",
+      "older": "Plus anciennes"
+    }
   },
   "copilot": {
     "placeholder": "Interrogez votre lens...",

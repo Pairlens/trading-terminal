@@ -1513,11 +1513,6 @@
           "title": "插件",
           "description": "你启用了哪些插件、它们的设置以及你固定的服务商。设置也包括你在插件自己的设置里填过的 API 密钥，比如 AI 服务商的密钥。交易所 API 密钥和钱包密钥永远不包含在内，它们留在你的钥匙串里。固定的服务商只保存在账号里，关掉后它们只在应用退出前有效。"
         },
-        "copilot": {
-          "title": "AI 聊天记录",
-          "description": "与助手的一段对话，整个终端共用。",
-          "caveat": "关闭期间，清除聊天记录只会清除这台设备上的内容。账号里已有的对话会保留，重新开启同步后会再次出现。"
-        },
         "trades": {
           "title": "交易日志",
           "description": "你或助手记入日志的交易。"
@@ -2335,7 +2330,6 @@
     "title": "助手",
     "open": "打开助手",
     "close": "最小化助手",
-    "clear": "清空对话",
     "placeholder": "问任何问题，或告诉我要构建什么……",
     "answerPlaceholder": "输入你的回答……",
     "emptyTitle": "我们来做点什么？",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "拒绝",
     "approvalApproved": "已批准",
     "approvalDeclined": "已拒绝",
-    "resetPosition": "重置位置"
+    "resetPosition": "重置位置",
+    "conversations": {
+      "new": "新对话",
+      "untitled": "未命名",
+      "history": "历史",
+      "close": "关闭",
+      "empty": "还没有内容。问点什么，它会保存在这台设备上。",
+      "localOnly": "仅保存在这台设备上",
+      "delete": "删除对话",
+      "deleteTitle": "删除这个对话？",
+      "deleteDescription": "“{{name}}”及其中的一切都会消失，无法撤销。",
+      "cancel": "取消",
+      "today": "今天",
+      "yesterday": "昨天",
+      "previous7Days": "过去 7 天",
+      "older": "更早"
+    }
   },
   "copilot": {
     "placeholder": "问问你的透镜……",

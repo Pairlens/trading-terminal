@@ -1513,11 +1513,6 @@
           "title": "Plugin",
           "description": "Những plugin bạn đã bật, cài đặt của chúng và các nhà cung cấp bạn ghim. Cài đặt bao gồm cả khoá API bạn nhập trong phần cài đặt của chính plugin đó, ví dụ khoá của nhà cung cấp AI. Khoá API sàn và bí mật ví không bao giờ nằm trong đó, chúng ở lại trong keychain của bạn. Nhà cung cấp đã ghim chỉ được giữ trong tài khoản, nên khi tắt mục này chúng chỉ tồn tại đến khi bạn đóng ứng dụng."
         },
-        "copilot": {
-          "title": "Lịch sử trò chuyện AI",
-          "description": "Một cuộc trò chuyện duy nhất với trợ lý, dùng chung cho cả terminal.",
-          "caveat": "Khi mục này đang tắt, xóa lịch sử trò chuyện chỉ xóa trên thiết bị này. Các cuộc trò chuyện đã có trong tài khoản vẫn được giữ và sẽ xuất hiện lại khi bật đồng bộ trở lại."
-        },
         "trades": {
           "title": "Nhật ký giao dịch",
           "description": "Các giao dịch mà bạn hoặc trợ lý ghi vào nhật ký."
@@ -2335,7 +2330,6 @@
     "title": "Trợ lý",
     "open": "Mở trợ lý",
     "close": "Thu nhỏ trợ lý",
-    "clear": "Xóa cuộc trò chuyện",
     "placeholder": "Hỏi bất cứ điều gì, hoặc cho tôi biết bạn muốn xây gì...",
     "answerPlaceholder": "Nhập câu trả lời của bạn...",
     "emptyTitle": "Chúng ta làm gì đây?",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "Từ chối",
     "approvalApproved": "Đã chấp nhận",
     "approvalDeclined": "Đã từ chối",
-    "resetPosition": "Đặt lại vị trí"
+    "resetPosition": "Đặt lại vị trí",
+    "conversations": {
+      "new": "Cuộc trò chuyện mới",
+      "untitled": "Chưa đặt tên",
+      "history": "Lịch sử",
+      "close": "Đóng",
+      "empty": "Chưa có gì. Hỏi một câu và nó được giữ trên thiết bị này.",
+      "localOnly": "Chỉ lưu trên thiết bị này",
+      "delete": "Xóa cuộc trò chuyện",
+      "deleteTitle": "Xóa cuộc trò chuyện này?",
+      "deleteDescription": "\"{{name}}\" và mọi thứ trong đó sẽ mất. Không thể hoàn tác.",
+      "cancel": "Hủy",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "previous7Days": "7 ngày qua",
+      "older": "Cũ hơn"
+    }
   },
   "copilot": {
     "placeholder": "Hỏi lens của bạn...",

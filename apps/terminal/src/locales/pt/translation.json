@@ -1513,11 +1513,6 @@
           "title": "Plugins",
           "description": "Que plugins tem ativados, as suas definições e os fornecedores que fixou. As definições incluem qualquer chave de API que tenha escrito nas definições de um plugin, por exemplo a de um fornecedor de IA. As chaves de API das exchanges e os segredos das carteiras nunca são incluídos: ficam no seu porta-chaves. Os fornecedores fixados só são guardados na sua conta, por isso com isto desligado duram até fechar a aplicação."
         },
-        "copilot": {
-          "title": "Histórico de chat com a IA",
-          "description": "Uma única conversa com o assistente, para o terminal inteiro.",
-          "caveat": "Enquanto estiver desligado, limpar o histórico de chat limpa apenas este dispositivo. As conversas que já estão na sua conta mantêm-se e voltarão a aparecer quando reativar a sincronização."
-        },
         "trades": {
           "title": "Diário de operações",
           "description": "Operações que você ou o assistente registam no diário."
@@ -2335,7 +2330,6 @@
     "title": "Assistente",
     "open": "Abrir o assistente",
     "close": "Minimizar o assistente",
-    "clear": "Limpar conversa",
     "placeholder": "Pergunte qualquer coisa, ou diga o que criar...",
     "answerPlaceholder": "Digite sua resposta...",
     "emptyTitle": "No que vamos trabalhar?",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "Recusar",
     "approvalApproved": "Aprovada",
     "approvalDeclined": "Recusada",
-    "resetPosition": "Repor posição"
+    "resetPosition": "Repor posição",
+    "conversations": {
+      "new": "Nova conversa",
+      "untitled": "Sem título",
+      "history": "Histórico",
+      "close": "Fechar",
+      "empty": "Ainda nada. Pergunte algo e fica guardado neste dispositivo.",
+      "localOnly": "Guardado apenas neste dispositivo",
+      "delete": "Excluir conversa",
+      "deleteTitle": "Excluir esta conversa?",
+      "deleteDescription": "\"{{name}}\" e tudo o que há nela desaparecem. Não dá para desfazer.",
+      "cancel": "Cancelar",
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "previous7Days": "Últimos 7 dias",
+      "older": "Mais antigas"
+    }
   },
   "copilot": {
     "placeholder": "Pergunte ao seu lens...",

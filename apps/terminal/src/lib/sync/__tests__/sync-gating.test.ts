@@ -266,10 +266,10 @@ describe('resume', () => {
   })
 
   test('domains with no local store do no network work on resume', async () => {
-    setDomainSyncEnabled('copilot', false)
+    setDomainSyncEnabled('trades', false)
     calls = []
 
-    setDomainSyncEnabled('copilot', true)
+    setDomainSyncEnabled('trades', true)
     await wait(200)
 
     expect(calls).toEqual([])

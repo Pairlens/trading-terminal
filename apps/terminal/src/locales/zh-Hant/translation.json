@@ -1513,11 +1513,6 @@
           "title": "外掛",
           "description": "你啟用了哪些外掛、它們的設定以及你釘選的服務商。設定也包括你在外掛自己的設定裡填過的 API 金鑰，例如 AI 服務商的金鑰。交易所 API 金鑰與錢包密鑰永遠不包含在內，它們留在你的鑰匙圈裡。釘選的服務商只儲存在帳號裡，關掉後它們只在應用程式結束前有效。"
         },
-        "copilot": {
-          "title": "AI 聊天記錄",
-          "description": "與助理的一段對話，整個終端共用。",
-          "caveat": "關閉期間，清除聊天記錄只會清除這台裝置上的內容。帳號裡已有的對話會保留，重新開啟同步後會再次出現。"
-        },
         "trades": {
           "title": "交易日誌",
           "description": "你或助理記入日誌的交易。"
@@ -2335,7 +2330,6 @@
     "title": "助理",
     "open": "開啟助理",
     "close": "縮小助理",
-    "clear": "清除對話",
     "placeholder": "問任何問題，或告訴我要打造什麼…",
     "answerPlaceholder": "輸入你的回答…",
     "emptyTitle": "我們來做什麼？",
@@ -2380,7 +2374,23 @@
     "approvalDecline": "拒絕",
     "approvalApproved": "已核准",
     "approvalDeclined": "已拒絕",
-    "resetPosition": "重設位置"
+    "resetPosition": "重設位置",
+    "conversations": {
+      "new": "新對話",
+      "untitled": "未命名",
+      "history": "紀錄",
+      "close": "關閉",
+      "empty": "還沒有內容。問點什麼，它會保存在這台裝置上。",
+      "localOnly": "僅保存在這台裝置上",
+      "delete": "刪除對話",
+      "deleteTitle": "刪除這個對話？",
+      "deleteDescription": "「{{name}}」及其中的一切都會消失，無法復原。",
+      "cancel": "取消",
+      "today": "今天",
+      "yesterday": "昨天",
+      "previous7Days": "過去 7 天",
+      "older": "更早"
+    }
   },
   "copilot": {
     "placeholder": "詢問你的 AI 透鏡…",
