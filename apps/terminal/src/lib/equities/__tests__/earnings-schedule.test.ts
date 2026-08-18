@@ -2,13 +2,18 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 
-import { earningsDayKind, groupEarningsByDate } from '../earnings-schedule'
+import {
+  earningsDayKind,
+  groupEarningsByDate,
+  groupEarningsBySlot,
+} from '../earnings-schedule'
 import type { EarningsCalendarEntry } from '@pairlens/shared/instrument-types'
 
 function entry(
   symbol: string,
   reportDate: string,
   epsEstimate: number | null = null,
+  reportTime?: EarningsCalendarEntry['reportTime'],
 ): EarningsCalendarEntry {
   return {
     symbol,
@@ -17,6 +22,7 @@ function entry(
     fiscalDateEnding: '2026-07-31',
     epsEstimate,
     currency: 'USD',
+    ...(reportTime ? { reportTime } : {}),
   }
 }
 
@@ -47,6 +53,49 @@ describe('groupEarningsByDate', () => {
 
   it('an empty window has no groups', () => {
     expect(groupEarningsByDate([])).toEqual([])
+  })
+})
+
+describe('groupEarningsBySlot', () => {
+  it('reads a day forwards: before the bell, after the close, then unstated', () => {
+    const groups = groupEarningsBySlot([
+      entry('NVDA', '2026-08-27', 0.74, 'amc'),
+      entry('ZZZ', '2026-08-27'),
+      entry('WMT', '2026-08-27', 0.67, 'bmo'),
+    ])
+    expect(groups.map((g) => g.slot)).toEqual(['bmo', 'amc', 'unstated'])
+    expect(groups[0].entries.map((e) => e.symbol)).toEqual(['WMT'])
+    expect(groups[2].entries.map((e) => e.symbol)).toEqual(['ZZZ'])
+  })
+
+  it('keeps the server order inside a slot', () => {
+    const groups = groupEarningsBySlot([
+      entry('CRM', '2026-08-27', null, 'amc'),
+      entry('AAPL', '2026-08-27', null, 'amc'),
+    ])
+    expect(groups[0].entries.map((e) => e.symbol)).toEqual(['CRM', 'AAPL'])
+  })
+
+  it('omits slots nobody is in rather than heading an empty list', () => {
+    const groups = groupEarningsBySlot([
+      entry('WMT', '2026-08-27', 0.67, 'bmo'),
+    ])
+    expect(groups.map((g) => g.slot)).toEqual(['bmo'])
+  })
+
+  // The slot is what a trader positions on. A row nobody stated one for gets
+  // its own bucket, never the more plausible neighbour's.
+  it('never folds an unstated row into a stated slot', () => {
+    const groups = groupEarningsBySlot([
+      entry('AAA', '2026-08-27'),
+      entry('BBB', '2026-08-27', null, 'bmo'),
+    ])
+    expect(groups.map((g) => g.slot)).toEqual(['bmo', 'unstated'])
+    expect(groups.find((g) => g.slot === 'unstated')!.entries).toHaveLength(1)
+  })
+
+  it('an empty day has no slots', () => {
+    expect(groupEarningsBySlot([])).toEqual([])
   })
 })
 

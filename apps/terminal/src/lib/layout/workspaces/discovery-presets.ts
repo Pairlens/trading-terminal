@@ -6,11 +6,17 @@ import type { TerminalLayout } from '../types'
 // so the Workspace Store catalog can wrap these into templates without a cycle.
 
 // Default home: everything on this board works without an account. It opens on
-// what moved and why rather than on a list of pairs — a pulse strip over the
-// movers table and the sector tape, the full scanner beside them, and news
-// above the local watchlist. The three new panes all read the snapshot
-// `use-top-coins-snapshot` already fetches, so the board costs one REST call
-// rather than three.
+// what moved and why rather than on a list of pairs.
+//
+// Reading order left to right: what the market did (pulse over movers over the
+// sector tape), why it did it (the news column, wide enough for headlines that
+// do not truncate mid-sentence), and what the user personally holds or hunts
+// (the watchlist over the compact scanner). News sits in the middle column
+// because it is the column that explains the one beside it; the scanner is the
+// rail because it is a jumping-off point rather than something to read.
+//
+// The three snapshot panes all read what `use-top-coins-snapshot` already
+// fetches, so the board costs one REST call rather than three.
 export const DISCOVERY_HOME: TerminalLayout = {
   version: 1,
   columns: [
@@ -39,14 +45,14 @@ export const DISCOVERY_HOME: TerminalLayout = {
       ],
     },
     {
-      id: 'col-markets',
+      id: 'col-news',
       widthPercent: 26,
       cells: [
         {
-          id: 'cell-markets',
+          id: 'cell-news',
           heightPercent: 100,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-markets', type: 'markets' }],
+          panes: [{ id: 'pane-news', type: 'news' }],
         },
       ],
     },
@@ -55,16 +61,16 @@ export const DISCOVERY_HOME: TerminalLayout = {
       widthPercent: 18,
       cells: [
         {
-          id: 'cell-news',
+          id: 'cell-watchlist',
           heightPercent: 57,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-news', type: 'news' }],
+          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
         },
         {
-          id: 'cell-watchlist',
+          id: 'cell-markets',
           heightPercent: 43,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
+          panes: [{ id: 'pane-markets', type: 'markets' }],
         },
       ],
     },

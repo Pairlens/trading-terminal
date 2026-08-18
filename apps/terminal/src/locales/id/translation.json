@@ -151,29 +151,34 @@
     "providerBusyTitle": "Feed laporan sedang dibatasi",
     "providerErrorBody": "Penyedia menjawab dengan sesuatu yang tidak bisa dipakai. Bukan masalah akun atau konektor kamu.",
     "providerErrorTitle": "Jadwal laporan gagal dimuat",
-    "reportTime": {
-      "amc": "POST",
-      "amcLabel": "Rilis setelah penutupan",
-      "bmo": "PRE",
-      "bmoLabel": "Rilis sebelum pembukaan"
-    },
     "scopeLabel": "Jendela pelaporan",
     "scopes": {
       "today": "Hari ini",
       "week": "Minggu ini",
-      "watchlist": "Watchlist"
+      "watchlist": "Watchlist saya"
     },
     "title": "Laporan keuangan",
     "emptyTitle": "Tidak ada feed laporan keuangan",
     "emptyBody": "Build ini tidak punya penyedia jadwal laporan. Jadwalnya datang dari App Server; broker menerbitkan jam sesinya sendiri, bukan siapa yang melapor minggu ini.",
     "columns": {
       "company": "Perusahaan",
-      "quarterEnd": "Akhir kuartal",
-      "symbol": "Simbol",
-      "epsEstimate": "Est. EPS"
+      "symbol": "Simbol"
     },
     "today": "Hari ini",
-    "tomorrow": "Besok"
+    "tomorrow": "Besok",
+    "heading": {
+      "today": "Melapor hari ini",
+      "week": "Melapor minggu ini",
+      "watchlist": "Laporan watchlist kamu"
+    },
+    "slots": {
+      "bmo": "Sebelum pasar buka",
+      "amc": "Setelah pasar tutup",
+      "unstated": "Waktu tidak disebutkan"
+    },
+    "consensusEps": "EPS konsensus",
+    "quarterTo": "kuartal hingga {{period}}",
+    "periodEnded": "Kuartal fiskal berakhir {{date}}"
   },
   "economicCalendar": {
     "allDay": "Sepanjang hari",
@@ -217,7 +222,10 @@
     "sourceNote": "Disusun dari jadwal rilis BLS, BEA, Federal Reserve, dan Census. Angka aktual dan sebelumnya berasal dari lembaganya sendiri; angka implisit diturunkan dari harga kontrak Kalshi. Waktu dalam zona Timur AS, sebagaimana lembaga menerbitkannya.",
     "title": "Makro",
     "today": "Hari ini",
-    "tomorrow": "Besok"
+    "tomorrow": "Besok",
+    "countdownDh": "dalam {{days}} hr {{hours}} jam",
+    "countdownHm": "dalam {{hours}} jam {{minutes}} mnt",
+    "countdownM": "dalam {{minutes}} mnt"
   },
   "eventBoard": {
     "listed": "Terdaftar {{when}}",
@@ -233,15 +241,20 @@
       "biggestMove": "Pergerakan terbesar"
     },
     "unchanged": "tidak berubah",
-    "movedPoints": "{{arrow}} {{points}} poin hari ini",
     "volumeUnknown": "Volume tidak dipublikasikan",
     "liquidity": "Lik. {{value}}",
-    "outcomeCount_one": "1 kandidat",
-    "outcomeCount_other": "{{count}} kandidat",
+    "outcomeCount_one": "1 hasil",
+    "outcomeCount_other": "{{count}} hasil",
     "topShare_one": "Pemuncak memegang {{percent}} % dari bobot probabilitas.",
     "topShare_other": "{{count}} teratas memegang {{percent}} % dari bobot probabilitas.",
     "openFullField_one": "Buka seluruh peserta (1 lagi)",
-    "openFullField_other": "Buka seluruh peserta ({{count}} lagi)"
+    "openFullField_other": "Buka seluruh peserta ({{count}} lagi)",
+    "endsIn": "berakhir {{when}}",
+    "openInterest": "OI {{value}}",
+    "candidateCount_one": "1 kandidat",
+    "candidateCount_other": "{{count}} kandidat",
+    "movedPoints_one": "{{arrow}} {{points}} poin hari ini",
+    "movedPoints_other": "{{arrow}} {{points}} poin hari ini"
   },
   "eventHeader": {
     "noPairTitle": "Belum ada kontrak dipilih",
@@ -295,10 +308,11 @@
     "loading": "Membaca tingkat pendanaan…",
     "na": "t/a",
     "stampUnknown": "Tidak dipublikasikan",
-    "desktopOnly": "hanya bisa menjangkau API publiknya dari aplikasi desktop.",
     "manageConnectors": "Kelola konektor",
     "cellHint": "{{pair}} · {{rate}} tiap {{hours}} jam",
-    "cellHintAssumed": "{{pair}} · {{rate}}, mengasumsikan penyelesaian tiap {{hours}} jam yang tidak dipublikasikan bursa"
+    "cellHintAssumed": "{{pair}} · {{rate}}, mengasumsikan penyelesaian tiap {{hours}} jam yang tidak dipublikasikan bursa",
+    "desktopOnlyLine_one": "{{venues}} mengalir dari aplikasi desktop.",
+    "desktopOnlyLine_other": "{{venues}} mengalir dari aplikasi desktop."
   },
   "fundingBelt": {
     "now": "Pendanaan kini · {{hours}} jam",
@@ -320,12 +334,14 @@
     "noRateBody": "{{venue}} tidak mengembalikan tingkat pendanaan untuk kontrak ini."
   },
   "fundingExtremes": {
-    "subtitle": "Carry termahal dan termurah di seluruh bursa yang terhubung, disetahunkan.",
-    "longsPay": "Long membayar paling besar",
-    "shortsPay": "Short membayar paling besar",
+    "subtitle": "Carry termahal dan termurah, diperingkat terhadap rentang 30 hari masing-masing kontrak.",
     "perInterval": "{{rate}} tiap {{hours}} jam",
     "emptyTitle": "Tidak ada tingkat untuk diurutkan",
-    "emptyBody": "Begitu sebuah bursa perpetual menjawab, kontrak termahal dan termurahnya muncul di sini."
+    "emptyBody": "Begitu sebuah bursa perpetual menjawab, kontrak termahal dan termurahnya muncul di sini.",
+    "rangeTop": "berada di {{pct}}% teratas rentang 30 harinya",
+    "rangeBottom": "berada di {{pct}}% terbawah rentang 30 harinya",
+    "crowdedLong": "posisi long padat",
+    "shortsPaying": "short membayar"
   },
   "fundingMatrix": {
     "title": "Pendanaan, disetahunkan",
@@ -451,11 +467,13 @@
     "loadingBody": "Mengambil swap terbaru pada pool ini.",
     "emptyTitle": "Belum ada swap",
     "emptyBody": "Belakangan tidak ada yang melewati pool ini, jadi tidak ada arus untuk dihitung bersih.",
-    "barsLabel": "Arus bersih taker, {{pool}}",
     "netHour": "{{value}} satu jam terakhir",
     "bucketTooltip": "{{buy}} dibeli, {{sell}} dijual",
     "axisNote": "Beli dikurangi jual per 5 menit. Likuiditas yang ditambah atau ditarik LP tidak ada di feed ini.",
-    "biggestLabel": "Swap terbesar"
+    "biggestLabel": "Swap terbesar",
+    "title": "Arus lewat {{pool}}",
+    "subtitle": "Beli dikurangi jual, per lima menit",
+    "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit"
   },
   "lpPanes": {
     "venueFallback": "chain ini",
@@ -586,7 +604,10 @@
     "up": "naik",
     "down": "turun",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "Indeks fear and greed kripto. 0 berarti ketakutan ekstrem, 100 berarti keserakahan ekstrem."
+    "fearGreedTooltip": "Indeks fear and greed kripto. 0 berarti ketakutan ekstrem, 100 berarti keserakahan ekstrem.",
+    "breadthPairs_one": "Keluasan · {{count}} pair",
+    "breadthPairs_other": "Keluasan · {{count}} pair",
+    "fearGreedMissing": "App Server maupun indeks publik belum menjawab. Ubin ini terisi begitu salah satunya menjawab."
   },
   "movers": {
     "emptyTitle": "Tidak ada data pasar",
@@ -629,7 +650,13 @@
       "volume": "Belum ada bursa yang melaporkan volume.",
       "volatility": "Belum ada yang bergerak cukup jauh.",
       "unusual": "Tidak ada aset yang diperdagangkan tidak biasa untuk ukurannya."
-    }
+    },
+    "reason": {
+      "reportsTonight": "Melapor malam ini",
+      "reportedThisMorning": "Sudah melapor tadi pagi",
+      "reportsToday": "Melapor hari ini"
+    },
+    "tradedValueTooltip": "Nilai dolar yang benar-benar diperdagangkan sesi ini: volume saham dikali harga tertimbang volume hari itu, keduanya sebagaimana dilaporkan broker."
   },
   "oddsMovers": {
     "subtitle": "Pergeseran probabilitas terbesar, 24 jam",
@@ -943,21 +970,25 @@
     "liquidity": "Likuiditas",
     "volume24h": "Volume 24j",
     "turnover": "Vol / lik",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "Transaksi 24j",
     "feeTier": "Tingkat fee",
-    "pressureByValue": "Tekanan beli dan jual, 24j berdasarkan nilai",
-    "pressureByCount": "Tekanan beli dan jual, 24j berdasarkan jumlah transaksi",
     "loading": "Memuat kondisi pool.",
-    "openChart": "Buka grafik dan swap"
+    "openChart": "Buka grafik dan swap",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "Dampak harga $10k",
+    "pressure1h": "Tekanan beli / jual 1 jam",
+    "buysValue": "{{value}} dibeli",
+    "sellsValue": "{{value}} dijual",
+    "filledBy": "Celah diisi oleh {{provider}}"
   },
   "poolMap": {
-    "title": "Pool {{chain}}",
+    "title": "{{chain}} · pool teratas",
     "subtitle": "Diurutkan dari seberapa keras tiap pool memutar likuiditasnya sendiri",
     "sortTurnover": "Perputaran",
     "sortVolume": "Volume",
     "sortLiquidity": "Likuiditas",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "Buka grafik",
     "columns": {
       "pool": "Pool",
@@ -969,10 +1000,18 @@
     },
     "noChainTitle": "Pilih chain",
     "noChainBody": "Pilih chain di panel samping, lalu pool-nya diperingkat di sini: volume terhadap likuiditas yang menopangnya.",
-    "loadingTitle": "Memuat pool",
-    "loadingBody": "Mengambil pool terperingkat dari chain ini.",
     "emptyTitle": "Tidak ada pool yang dikembalikan",
-    "emptyBody": "Penyedia data tidak mencantumkan apa pun untuk chain ini. Akan dicoba lagi pada penyegaran berikutnya."
+    "emptyBody": "Penyedia data tidak mencantumkan apa pun untuk chain ini. Akan dicoba lagi pada penyegaran berikutnya.",
+    "listTitle": "{{chain}} · semua pool",
+    "subtitleVolume": "Ukuran menurut volume 24 jam, warna menurut pergerakan 24 jam",
+    "subtitleLiquidity": "Ukuran menurut likuiditas, warna menurut pergerakan 24 jam",
+    "subtitleTrades": "Ukuran menurut jumlah transaksi 24 jam, warna menurut pergerakan 24 jam",
+    "subtitleTurnover": "Ukuran menurut volume terhadap likuiditas, warna menurut pergerakan 24 jam",
+    "sortTrades": "Transaksi",
+    "morePools": "Pool lain di chain ini",
+    "backToMap": "Kembali ke peta",
+    "belowFloorTitle": "Tidak ada yang cukup dalam untuk dipetakan",
+    "belowFloorBody": "Tidak ada yang dikembalikan chain ini yang memadukan likuiditas nyata dengan volume yang sebanding, jadi mengukur pool ini satu sama lain hanya akan mengurutkan noise. Daftar lengkap tetap tersedia."
   },
   "poolStats": {
     "notOnChainTitle": "Bukan pasangan on-chain",
@@ -1002,11 +1041,11 @@
     "impactNote": "Dikutip langsung pada tiap ukuran, bukan dimodelkan dari cadangan, jadi rute terpecah bisa mengalahkan kurva pool ini sendiri."
   },
   "predictionCategories": {
-    "all": "Semua",
     "noneBody": "Bursa ini tidak memberi kategori pada acaranya.",
     "venueHeading": "Bursa",
     "desktopOnly": "desktop",
-    "venueError": "kesalahan"
+    "venueError": "kesalahan",
+    "trending": "Sedang ramai"
   },
   "resolvingSoon": {
     "resolves": "Selesai {{when}}",
@@ -1273,7 +1312,9 @@
     "window": "Rentang sektor",
     "leads": "{{total}} aset · {{symbol}} memimpin",
     "drags": "{{total}} aset · {{symbol}} menahan",
-    "assets": "{{total}} aset"
+    "assets": "{{total}} aset",
+    "title": "Pita sektor",
+    "splitTape": "{{total}} aset · variatif"
   },
   "session": {
     "noVenueTitle": "Belum ada broker terhubung",
@@ -1302,7 +1343,13 @@
     "noSchedule": "Tidak ada sesi terjadwal",
     "clockOnly": "Hanya buka atau tutup: tidak ada rentang sesi yang dipublikasikan.",
     "ticketExtendedNote": "Sesi ini hanya menerima order limit. Tidak ada lelang berkelanjutan untuk mengeksekusi order market.",
-    "ticketClosedNote": "Pasar sedang tutup. Order limit akan menunggu sampai sesi berikutnya dibuka."
+    "ticketClosedNote": "Pasar sedang tutup. Order limit akan menunggu sampai sesi berikutnya dibuka.",
+    "gateTitle": "Hari perdagangan",
+    "gateBody": "Jamnya datang langsung dari kalender {{venue}}.",
+    "headlineOpen": "Pasar {{venue}} buka",
+    "headlinePre": "Pra-pembukaan {{venue}}",
+    "headlinePost": "Pasca-penutupan {{venue}}",
+    "headlineClosed": "Pasar {{venue}} tutup"
   },
   "settings": {
     "title": "Pengaturan",
@@ -3317,7 +3364,7 @@
     "fundingMatrix": "Funding untuk setiap perp di setiap bursa yang Anda hubungkan, dalam satu grid yang bisa diurutkan berdasarkan kolom apa pun",
     "basisMonitor": "Perp terhadap spot dalam basis point dan disetahunkan, sehingga carry terbaca sebagai imbal hasil, bukan sekadar selisih",
     "openInterest": "Open interest per kontrak beserta perubahan 24 jamnya, sehingga penumpukan posisi terlihat sebelum harga bereaksi",
-    "fundingExtremes": "Funding rate paling positif dan paling negatif saat ini, beserta bursa yang membayar masing-masing",
+    "fundingExtremes": "Carry termahal dan termurah, tiap tingkat diperingkat terhadap rentang funding 30 hari kontrak itu sendiri",
     "fundingBelt": "Hitung mundur ke funding berikutnya, rate saat ini dan yang diprediksi, serta berapa yang dibayar atau didapat posisi Anda",
     "liquidationMap": "Heatmap waktu terhadap harga dari apa yang benar-benar dilikuidasi bursa, dilukis di belakang candle kontrak dengan harga likuidasi milikmu di atasnya",
     "marginHealth": "Rasio margin, maintenance terhadap ekuitas, jarak ke likuidasi, dan dampak pergerakan yang berlawanan pada ketiganya",
@@ -3438,7 +3485,10 @@
       "walletMissingTitle": "Hubungkan dompet",
       "walletMissingDescription": "Panel ini bekerja dengan dompet yang terhubung. Tautkan satu dan posisi, biaya, serta transfernya muncul di sini.",
       "walletSealedDescription": "Kunci dompet Anda berada di brankas yang terkunci. Buka kuncinya dan panel ini dapat membaca serta menandatangani untuk dompet itu.",
-      "connectAction": "Hubungkan {{venue}}"
+      "connectAction": "Hubungkan {{venue}}",
+      "compactMissingDescription": "Hubungkan sekali dan panel ini terisi. Kuncinya tetap di perangkat ini.",
+      "compactSealedDescription": "Kunci {{venue}} Anda ada di brankas yang terkunci.",
+      "compactConnectAction": "Hubungkan"
     },
     "paneTransition": {
       "switchingTo": "Beralih ke {{venue}}…",
@@ -5359,7 +5409,31 @@
     "predictionsBrowse": "Buka papan peristiwa",
     "predictionsInstall": "Pasang plugin prediksi",
     "futuresEmptyTitle": "Hubungkan bursa futures untuk menjelajahi kontrak perpetual",
-    "futuresEmptyBody": "Daftar kontrak berasal dari tabel pasar masing-masing bursa, jadi muncul setelah bursa itu terjangkau."
+    "futuresEmptyBody": "Daftar kontrak berasal dari tabel pasar masing-masing bursa, jadi muncul setelah bursa itu terjangkau.",
+    "sector": {
+      "software": "Perangkat lunak",
+      "semiconductors": "Semikonduktor",
+      "internet": "Internet",
+      "hardware": "Perangkat keras",
+      "banks": "Bank",
+      "payments": "Pembayaran",
+      "cryptoEquity": "Kripto",
+      "healthcare": "Kesehatan",
+      "energy": "Energi",
+      "retail": "Ritel",
+      "staples": "Kebutuhan pokok",
+      "media": "Media",
+      "travel": "Perjalanan",
+      "industrials": "Industri",
+      "autos": "Otomotif",
+      "etfEquity": "ETF saham",
+      "etfBonds": "ETF obligasi",
+      "etfCommodity": "ETF komoditas"
+    },
+    "searchPairs_one": "Cari {{count}} pair",
+    "searchPairs_other": "Cari {{count}} pair",
+    "browseAll_one": "Jelajahi semua {{count}} pair",
+    "browseAll_other": "Jelajahi semua {{count}} pair"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -5400,9 +5474,6 @@
   },
   "news": {
     "title": "Berita",
-    "tickerPlaceholder": "Ticker...",
-    "sortLatest": "Terbaru",
-    "sortRelevance": "Relevansi",
     "unavailable": "Berita tidak tersedia",
     "unavailableUpstream": "Penyedia berita tidak merespons. Tidak ada yang dapat dimuat hingga pulih.",
     "unavailableRateLimited": "Batas permintaan penyedia berita telah tercapai. Seharusnya segera pulih.",
@@ -5434,8 +5505,22 @@
       "technology": "Teknologi",
       "finance": "Keuangan",
       "financial_markets": "Pasar Keuangan",
-      "economy_macro": "Ekonomi Makro"
-    }
+      "economy_macro": "Ekonomi Makro",
+      "earnings": "Laporan keuangan"
+    },
+    "scope": {
+      "assets": "Aset kamu",
+      "earnings": "Laporan keuangan",
+      "macro": "Makro",
+      "all": "Semua"
+    },
+    "refresh": "Segarkan berita",
+    "adjustScope": "Tidak ada kabar untuk filter ini. Coba yang lain, atau periksa lagi beberapa menit lagi.",
+    "noWatchedAssets": "Watchlist kamu kosong, jadi tidak ada acuan untuk menyaring kabar. Tandai satu pair, atau baca Makro saja.",
+    "noAssetNews": "Kabar terus mengalir, tapi tidak ada yang menyangkut watchlist kamu. Makro dan Semua masih bergerak.",
+    "noStockNews": "Belum ada kabar tentang saham-saham yang tercantum saat ini. Makro dan Semua masih bergerak.",
+    "mentionsPairs_one": "menyebut {{count}} pair kamu",
+    "mentionsPairs_other": "menyebut {{count}} pair kamu"
   },
   "tray": {
     "show": "Tampilkan Pairlens",

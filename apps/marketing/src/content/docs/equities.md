@@ -1,11 +1,11 @@
 ---
 title: US equities
-description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes with a halt row, an out-of-hours ticket that goes limit-only, insider filings, BMO/AMC badges on earnings, and a macro calendar carrying actual, prior and the market-implied figure.
+description: Trade US stocks and ETFs through Alpaca from the same terminal, with a session clock off the broker's own calendar, Level 1 quotes with a halt row, an out-of-hours ticket that goes limit-only, insider filings, an earnings calendar split before the bell and after the close, and a macro calendar carrying actual, prior and the market-implied figure.
 group: traders
 parent: trading
 order: 9
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 15 min read
 ---
 
@@ -76,9 +76,15 @@ different instrument.
 
 **Movers** ranks the broker's own bulk snapshot on this board rather than the
 crypto one, and drops the tabs that snapshot cannot serve instead of showing
-tabs that would always be empty.
+tabs that would always be empty. It carries a Volume tab priced in dollars
+traded, not shares, and each row wears a reason line when there is one worth
+stating: "Reports tonight" off the earnings calendar, or the name's sector when
+the calendar is silent. Without broker keys the pane asks for them in one
+compact line instead of a full-pane prompt, and the session strip does the
+same, because a board of connect heroes reads as broken rather than as new.
 
-**News** runs down the right.
+**News** runs down the right, scoped to the listed names, with Earnings and
+Macro chips instead of the crypto board's watchlist scope.
 
 The **Earnings Calendar** and the **Economic Calendar** finish the board. Both
 read from the App Server rather than from the broker, because a broker publishes
@@ -241,18 +247,20 @@ that was never a purchase.
 
 ## The earnings calendar
 
-**Earnings** answers who reports and when, grouped by day, with today's group
-named so the row that matters needs no arithmetic. Each row carries the symbol
-and its logo, the company, the fiscal quarter ending, and the consensus EPS
-where the street published one. Rows link straight to the chart.
+**Earnings** answers who reports and when, grouped by day and split within the
+day into **Before the bell** and **After the close** sections, with a third
+section for names whose slot no source states. Each row carries the symbol and
+its logo, the company with the quarter it is reporting ("NVIDIA · quarter to
+Jul 2026"), the consensus EPS where the street published one, and the day's
+move where the broker tape has it. Rows link straight to the chart.
 
-Three scopes: **Today**, **This week**, and **Watchlist**, which looks a quarter
-ahead and shows the next report for each stock you watch. The whole market
-reports a few hundred times a week, so beyond a cap the pane stops drawing rows
-and says how many it left out.
+Three scopes: **Today** (the default), **This week**, and **My watchlist**,
+which looks a quarter ahead and shows the next report for each stock you watch.
+The whole market reports a few hundred times a week, so beyond a cap the pane
+stops drawing rows and says how many it left out.
 
-A row carries a small **BMO** or **AMC** badge when a source states the slot,
-and nothing at all when none does. Two sources feed it, and neither guesses. The
+A row lands in a slot section only when a source states the slot, and in the
+unstated section when none does. Two sources feed it, and neither guesses. The
 provider's calendar states a time of day for reports inside about thirty days,
 which covers most of the names you would trade the print on. Past that it states
 nothing, so the App Server reads the company's own habit off its SEC filings
@@ -266,9 +274,9 @@ coin flip. Matching each filing to the quarter it belongs to picks the earnings
 one.
 
 A company whose timing genuinely moves, or that files as a foreign private
-issuer (a 6-K carries no item codes at all), gets no badge. There is no
-during-market-hours state either: that is real but rare, and it is not something
-this schedule can say, so those rows stay blank too.
+issuer (a 6-K carries no item codes at all), stays in the unstated section.
+There is no during-market-hours state either: that is real but rare, and it is
+not something this schedule can say, so those rows stay unstated too.
 
 **A source toggle switches the pane to IPOs**: the forward pipeline, with the
 symbol, the company, the exchange it will list on, the expected date and the
@@ -316,9 +324,14 @@ and the number looks plausible while being an order of magnitude off.
 published.** The clock passing is not enough. Reading "the latest observation"
 the moment 08:30 ticks over would republish last month's print as this month's,
 which would be a completely believable wrong number, so the row waits for the
-period it is about.
+period it is about. Until then the next timed release counts down in its own
+Actual cell ("in 41m") on a highlighted row, and a figure no source publishes
+renders as a dash glyph rather than as an empty cell, so absent and not-loaded
+never look alike.
 
-**The third column is Implied, and it names Kalshi.** It is not a consensus and
+**The middle figure column is Implied, and it names Kalshi.** It sits between
+Actual and Prior because it is where a reader expects the expectation, and the
+columns read print, expectation, baseline. It is not a consensus and
 is never labelled as one. Kalshi runs regulated markets on these exact releases,
 its market data needs no authentication, and reading the ladder of "above X"
 contracts gives a live distribution: the strike where the market prices even odds

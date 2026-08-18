@@ -6,8 +6,9 @@
  * A perp trader compares numbers that are only comparable once they are put on
  * the same footing, and every one of those conversions is a place two panes
  * would have drifted. The funding matrix, the belt and the extremes rail all
- * annualise; the basis monitor and the belt both price a carry; the margin pane
- * and the liquidation map both measure a distance to liquidation.
+ * annualise; the extremes rail ranks a live rate against the contract's own
+ * settled history; the margin pane and the liquidation map both measure a
+ * distance to liquidation.
  *
  * Conventions used throughout, stated once:
  *
@@ -22,16 +23,6 @@
 
 /** Hours in a 365-day year: the denominator every annualisation shares. */
 export const HOURS_PER_YEAR = 8_760
-
-/**
- * How close to a settlement an annualised basis is still meaningful.
- *
- * Annualising a carry by the time left to the stamp divides by that time, so a
- * minute before settlement the extrapolation runs away to several thousand
- * percent — a true number and a useless one. Inside this window the pane says
- * nothing rather than printing it.
- */
-const MIN_MS_TO_STAMP = 5 * 60_000
 
 /**
  * A per-interval funding rate as a yearly rate.
@@ -69,28 +60,6 @@ export function basisBps(
 ): number | null {
   const fraction = basisFraction(markPrice, indexPrice)
   return fraction === null ? null : fraction * 10_000
-}
-
-/**
- * A basis annualised over the time left until it settles.
- *
- * The perp basis is not a term structure — there is no expiry to converge to —
- * so the only honest horizon is the next funding stamp, at which the two prices
- * are pulled back together. This is the standard cash-and-carry reading: hold
- * the spread to the stamp, repeat all year.
- *
- * Null when the venue publishes no stamp, and null inside the last few minutes
- * before one (see `MIN_MS_TO_STAMP`).
- */
-export function annualizedBasis(
-  basis: number | null,
-  msToNextStamp: number | null | undefined,
-): number | null {
-  if (basis === null) return null
-  if (msToNextStamp == null || !Number.isFinite(msToNextStamp)) return null
-  if (msToNextStamp < MIN_MS_TO_STAMP) return null
-  const hours = msToNextStamp / 3_600_000
-  return basis * (HOURS_PER_YEAR / hours)
 }
 
 /**
@@ -137,6 +106,37 @@ export function fundingOverWindow(
     seen++
   }
   return seen === 0 ? null : total
+}
+
+/**
+ * Where a live rate sits inside a contract's own settled history, 0..100.
+ *
+ * This is the honest version of "the crowd has never paid more to be long
+ * this": the comparison is against the SAME contract on the SAME venue, so a
+ * perp that funds at 40% a year all year long does not read as extreme, and a
+ * quiet contract that has just doubled its usual rate does.
+ *
+ * Ties count half, which is the standard percentile rank and the only
+ * definition that gives a flat history a sane answer: a rate equal to every
+ * stamp behind it is the middle of its range, not the top of it. Null on an
+ * empty history, because a percentile of nothing is not zero.
+ */
+export function percentileOf(
+  current: number,
+  history: Array<number>,
+): number | null {
+  if (!Number.isFinite(current)) return null
+  let below = 0
+  let equal = 0
+  let seen = 0
+  for (const value of history) {
+    if (!Number.isFinite(value)) continue
+    seen++
+    if (value < current) below++
+    else if (value === current) equal++
+  }
+  if (seen === 0) return null
+  return ((below + equal / 2) / seen) * 100
 }
 
 /**

@@ -58,8 +58,19 @@ export type FundingScanner = {
   rows: Array<FundingRow>
   topCoins: Map<string, TopCoin>
   isPending: boolean
-  /** Venues that refused, for the per-venue banners. */
-  failures: Array<FundingVenueResult>
+  /**
+   * Venues this build cannot reach at all, kept apart from the ones that
+   * broke.
+   *
+   * Two thirds of the perp fleet serve REST without CORS headers, so in a
+   * browser they are simply absent — a fact about where the terminal is
+   * running, not about the venue. Rendering that as an error banner per venue
+   * put two amber blocks above a working matrix on every browser session, and
+   * amber above data reads as "this is wrong".
+   */
+  desktopOnly: Array<FundingVenueResult>
+  /** Venues that genuinely failed, for the per-venue banners. */
+  errors: Array<FundingVenueResult>
 }
 
 export function useFundingScanner(): FundingScanner {
@@ -84,12 +95,16 @@ export function useFundingScanner(): FundingScanner {
     return buildFundingRows(results, rankOf)
   }, [results, topCoins])
 
-  const failures = useMemo(
-    () => results.filter((r) => r.error !== null || r.desktopOnly),
+  const desktopOnly = useMemo(
+    () => results.filter((r) => r.desktopOnly),
+    [results],
+  )
+  const errors = useMemo(
+    () => results.filter((r) => !r.desktopOnly && r.error !== null),
     [results],
   )
 
-  return { venues, results, rows, topCoins, isPending, failures }
+  return { venues, results, rows, topCoins, isPending, desktopOnly, errors }
 }
 
 /** Venues that answered with at least one contract, in a stable order. */
@@ -161,6 +176,48 @@ export function rateTint(annualized: number): string {
   const alpha = (6 + intensity * 26).toFixed(0)
   const colour = annualized >= 0 ? 'var(--chart-2)' : 'var(--destructive)'
   return `color-mix(in oklch, ${colour} ${alpha}%, transparent)`
+}
+
+/**
+ * The placeholder a data cell shows for a figure nobody published.
+ *
+ * A glyph rather than the words "n/a": a column of prose in a grid of numbers
+ * is the loudest thing on the pane, and what it says is "nothing here". The
+ * words survive as the accessible name, so a screen reader still gets a
+ * sentence instead of a dash.
+ */
+export function NullGlyph({ className }: { className?: string }) {
+  const { t } = useTranslation()
+  return (
+    <span
+      aria-label={t('funding.na')}
+      className={cn('text-muted-foreground', className)}
+    >
+      —
+    </span>
+  )
+}
+
+/**
+ * Venue names as one readable list, in the reader's own language.
+ *
+ * `Intl.ListFormat` is what knows that English wants "A and B" and Japanese
+ * wants "A、B"; the comma fallback is for the handful of engines that ship
+ * without it, where a slightly stiff list beats a thrown error above a working
+ * pane.
+ */
+export function joinVenueNames(names: Array<string>, language: string): string {
+  if (typeof Intl.ListFormat === 'function') {
+    try {
+      return new Intl.ListFormat(language, {
+        style: 'long',
+        type: 'conjunction',
+      }).format(names)
+    } catch {
+      // An unsupported tag: fall through rather than lose the line.
+    }
+  }
+  return names.join(', ')
 }
 
 /** The token mark a scanner row leads with: real logo, or a lettered disc. */

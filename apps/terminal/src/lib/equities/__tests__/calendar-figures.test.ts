@@ -2,11 +2,8 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, it } from 'bun:test'
 
-import { hasEconomicFigures, reportTimeBadge } from '../calendar-figures'
-import type {
-  EarningsCalendarEntry,
-  EconomicCalendarEntry,
-} from '@pairlens/shared/instrument-types'
+import { hasEconomicFigures } from '../calendar-figures'
+import type { EconomicCalendarEntry } from '@pairlens/shared/instrument-types'
 
 function release(
   over: Partial<EconomicCalendarEntry> = {},
@@ -50,36 +47,5 @@ describe('hasEconomicFigures', () => {
     expect(
       hasEconomicFigures([release({ actual: '', prior: '', implied: '' })]),
     ).toBe(false)
-  })
-})
-
-describe('reportTimeBadge', () => {
-  it('names the two states a source can actually state', () => {
-    expect(reportTimeBadge('bmo')).toEqual({
-      shortKey: 'earningsCalendar.reportTime.bmo',
-      labelKey: 'earningsCalendar.reportTime.bmoLabel',
-    })
-    expect(reportTimeBadge('amc')).toEqual({
-      shortKey: 'earningsCalendar.reportTime.amc',
-      labelKey: 'earningsCalendar.reportTime.amcLabel',
-    })
-  })
-
-  it('renders NOTHING when no source stated a slot', () => {
-    // The whole point. Absent is the answer for every report past about thirty
-    // days and for every foreign private issuer, and a badge reading "unknown"
-    // would be worse than a blank: the slot is what a trader positions on.
-    expect(reportTimeBadge(undefined)).toBeNull()
-  })
-
-  it('refuses a value outside the wire contract rather than rendering it', () => {
-    // 'dmh' is a real outcome the wire cannot carry, and a stray string is a
-    // provider changing shape. Neither becomes a badge.
-    expect(
-      reportTimeBadge('dmh' as EarningsCalendarEntry['reportTime']),
-    ).toBeNull()
-    expect(
-      reportTimeBadge('' as EarningsCalendarEntry['reportTime']),
-    ).toBeNull()
   })
 })

@@ -10,11 +10,14 @@ import {
   clearListingCache,
   fetchNewPools,
   fetchTopPools,
+  mergePoolPages,
   parsePoolCreatedAt,
   parsePoolListing,
+  parseTradeCounts,
   stripNetworkPrefix,
 } from '../pool-listing-client'
 import { geckoLimiter } from '../rate-limiter'
+import type { PoolListingEntry } from '@pairlens/shared/instrument-types'
 import type { RawGeckoPoolRow } from '../pool-listing-client'
 
 const ROWS: Array<RawGeckoPoolRow> = [
@@ -27,6 +30,13 @@ const ROWS: Array<RawGeckoPoolRow> = [
       price_change_percentage: { h24: '2.1' },
       volume_usd: { h24: '1000' },
       reserve_in_usd: '400',
+      // Shapes copied from a live `/networks/solana/pools?page=1` response:
+      // counts are JSON numbers, fdv is a string like the money fields.
+      transactions: {
+        h1: { buys: 0, sells: 0, buyers: 0, sellers: 0 },
+        h24: { buys: 333_617, sells: 134_917, buyers: 5_223, sellers: 1_425 },
+      },
+      fdv_usd: '11178.1223040879',
     },
     relationships: {
       dex: { data: { id: 'orca' } },
@@ -68,6 +78,57 @@ describe('parsePoolListing', () => {
 
   it('skips a row with no address', () => {
     expect(parsePoolListing([{ attributes: { name: 'x' } }], 'eth')).toEqual([])
+  })
+
+  it('carries the 24h trade counts and FDV the listing publishes', () => {
+    // Verified live against `/networks/{solana,base}/pools` and
+    // `/networks/solana/new_pools` before this was parsed: `transactions.h24`
+    // and `fdv_usd` are on the LIST endpoint, not just the pool endpoint.
+    const pools = parsePoolListing(ROWS, 'solana')
+    expect(pools[0].trades24h).toEqual({
+      buys: 333_617,
+      sells: 134_917,
+      buyers: 5_223,
+      sellers: 1_425,
+    })
+    expect(pools[0].fdvUsd).toBeCloseTo(11178.1223, 3)
+  })
+
+  it('leaves counts null on a row that published none', () => {
+    // Null, never a zeroed pair: a trades-sized map has to tell "nobody traded
+    // this" from "this listing carries no counts", and the second one must not
+    // draw as an empty pool.
+    const pools = parsePoolListing(ROWS, 'solana')
+    expect(pools[1].trades24h).toBeNull()
+    expect(pools[1].fdvUsd).toBeNull()
+  })
+})
+
+describe('parseTradeCounts', () => {
+  it('reads a window and keeps wallet counts optional', () => {
+    expect(parseTradeCounts({ buys: 12, sells: 3 })).toEqual({
+      buys: 12,
+      sells: 3,
+      buyers: null,
+      sellers: null,
+    })
+  })
+
+  it('treats one missing side as zero once the window exists', () => {
+    // A window that reported buys and omitted sells traded in one direction;
+    // that is a real reading, unlike a window that reported neither.
+    expect(parseTradeCounts({ buys: 5 })).toEqual({
+      buys: 5,
+      sells: 0,
+      buyers: null,
+      sellers: null,
+    })
+  })
+
+  it('has nothing to report for an absent or empty window', () => {
+    expect(parseTradeCounts(undefined)).toBeNull()
+    expect(parseTradeCounts(null)).toBeNull()
+    expect(parseTradeCounts({})).toBeNull()
   })
 
   it('leaves createdAtMs absent on the ranked listing', () => {
@@ -250,5 +311,90 @@ describe('fetchTopPools — one request per chain per minute', () => {
     const pools = await fetchTopPools('solana')
     expect(pools[0].address).toBe('pool1')
     expect(calls.length).toBe(2)
+  })
+})
+
+describe('fetchTopPools — volume ranking', () => {
+  const realFetch = globalThis.fetch
+
+  const stub = (impl: (url: string) => Promise<Response>) => {
+    const calls: Array<string> = []
+    globalThis.fetch = mock(async (url: unknown) => {
+      calls.push(String(url))
+      return impl(String(url))
+    }) as unknown as typeof fetch
+    return calls
+  }
+
+  const page = (address: string) =>
+    new Response(
+      JSON.stringify({
+        data: [
+          {
+            id: `solana_${address}`,
+            attributes: {
+              address,
+              name: 'SOL / USDC',
+              volume_usd: { h24: '1000' },
+            },
+            relationships: { dex: { data: { id: 'orca' } } },
+          },
+        ],
+      }),
+      { status: 200 },
+    )
+
+  beforeEach(() => {
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  afterEach(() => {
+    globalThis.fetch = realFetch
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  it('asks the provider for the volume order, on its own cache key', async () => {
+    const calls = stub(async () => page('pool1'))
+    await fetchTopPools('solana', 1, 'volume')
+    await fetchTopPools('solana', 1)
+    expect(calls.length).toBe(2)
+    expect(calls[0]).toContain('sort=h24_volume_usd_desc')
+    expect(calls[1]).not.toContain('sort=')
+  })
+})
+
+describe('mergePoolPages', () => {
+  const entry = (network: string, address: string): PoolListingEntry => ({
+    network,
+    address,
+    name: 'SOL / USDC',
+    dexName: 'orca',
+    priceUsd: null,
+    change24hPct: null,
+    volume24hUsd: null,
+    reserveUsd: null,
+    baseSymbol: null,
+    quoteSymbol: null,
+    baseAddress: null,
+  })
+
+  it('keeps first appearance when the ranking repeats a pool across pages', () => {
+    const merged = mergePoolPages([
+      [entry('solana', 'a'), entry('solana', 'b')],
+      [entry('solana', 'b'), entry('solana', 'c')],
+    ])
+    expect(merged.map((p) => p.address)).toEqual(['a', 'b', 'c'])
+  })
+
+  it('never collapses the same address on two different chains', () => {
+    const merged = mergePoolPages([
+      [entry('solana', 'a')],
+      [entry('base', 'a')],
+    ])
+    expect(merged.length).toBe(2)
   })
 })

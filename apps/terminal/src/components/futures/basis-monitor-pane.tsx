@@ -12,6 +12,13 @@
  * against its own index, so averaging across venues would produce a number no
  * venue publishes. The venue picked is the first in the connected order that
  * serves both legs, because a venue with no index has no basis to show at all.
+ *
+ * The pane prints the gap in bps and nothing else. It used to carry the same
+ * gap annualised to the next stamp, which is arithmetically true and reads as
+ * broken: a 4 bps discount eight hours out prints as -196% a year, because the
+ * extrapolation assumes a spread that closes at every settlement instead
+ * compounds. The carry a trader can actually collect is the funding matrix
+ * above, which is measured rather than extrapolated.
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,19 +27,15 @@ import { Scale } from 'lucide-react'
 import { cn } from '@pairlens/ui/lib/utils'
 
 import {
+  NullGlyph,
   answeringVenues,
-  signedPercent,
   useFundingScanner,
   useOpenContract,
 } from './funding-scanner'
 import type { FundingCell } from '@/lib/futures/funding-rows'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { formatChartPrice } from '@/lib/format-price'
-import {
-  annualizedBasis,
-  basisBps,
-  basisFraction,
-} from '@/lib/futures/funding-math'
+import { basisBps } from '@/lib/futures/funding-math'
 import { primaryCell } from '@/lib/futures/funding-rows'
 
 /** Assets on the board. The pane is a glance, not a screener. */
@@ -41,16 +44,15 @@ const ROW_LIMIT = 12
 /**
  * Basis at which the bar is full width, in bps.
  *
- * Perp basis lives inside ±60 bps almost all the time; scaling to the widest
+ * Perp basis lives inside ±80 bps almost all the time; scaling to the widest
  * row instead would make a flat board look dramatic.
  */
-const BAR_FULL_BPS = 60
+const BAR_FULL_BPS = 80
 
 type BasisRow = {
   base: string
   cell: FundingCell
   bps: number | null
-  annual: number | null
 }
 
 export function BasisMonitorPane() {
@@ -68,15 +70,10 @@ export function BasisMonitorPane() {
     for (const row of rows) {
       const cell = primaryCell(row, order)
       if (!cell) continue
-      const fraction = basisFraction(cell.markPrice, cell.indexPrice)
       out.push({
         base: row.base,
         cell,
         bps: basisBps(cell.markPrice, cell.indexPrice),
-        annual: annualizedBasis(
-          fraction,
-          cell.nextFundingMs != null ? cell.nextFundingMs - Date.now() : null,
-        ),
       })
       if (out.length >= ROW_LIMIT) break
     }
@@ -145,9 +142,11 @@ function BasisRowView({
           : t('basisMonitor.spotMissing')}
       </span>
       <span className="w-24 shrink-0 font-mono tabular-nums">
-        {cell.markPrice != null
-          ? t('basisMonitor.perp', { price: formatChartPrice(cell.markPrice) })
-          : t('funding.na')}
+        {cell.markPrice != null ? (
+          t('basisMonitor.perp', { price: formatChartPrice(cell.markPrice) })
+        ) : (
+          <NullGlyph />
+        )}
       </span>
 
       {/* The zero line sits at the middle and the fill grows away from it, so
@@ -176,14 +175,13 @@ function BasisRowView({
               : 'text-down',
         )}
       >
-        {bps === null
-          ? t('funding.na')
-          : t('basisMonitor.bps', {
-              value: `${bps > 0 ? '+' : ''}${bps.toFixed(0)}`,
-            })}
-      </span>
-      <span className="hidden w-16 shrink-0 text-right font-mono tabular-nums text-[11px] text-muted-foreground @md/pane:block">
-        {row.annual === null ? t('funding.na') : signedPercent(row.annual)}
+        {bps === null ? (
+          <NullGlyph />
+        ) : (
+          t('basisMonitor.bps', {
+            value: `${bps > 0 ? '+' : ''}${bps.toFixed(0)}`,
+          })
+        )}
       </span>
     </button>
   )

@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 8 min read
 ---
 
@@ -138,7 +138,10 @@ The tab fetches only while it is the tab on screen.
 
 Every pair your installed connectors can reach, in a list or a grid, with a
 category column, a search box, and your recent pairs pinned at the top. Star a
-pair to add it to a watchlist without leaving the panel.
+pair to add it to a watchlist without leaving the panel. Docked into a narrow
+rail, the panel switches to a compact form: a search field that hands off to
+the command palette, one scrollable chip row, dense quote rows, and a "Browse
+all N pairs" footer, so the same pane earns its place at both widths.
 
 ## Watchlists
 

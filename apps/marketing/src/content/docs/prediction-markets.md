@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 14 min read
 ---
 
@@ -85,27 +85,39 @@ panel reads: they are listed and resolved daily.
 A binary question has one number worth reading, so the probability gets the
 largest type on the board. A race has a hundred and none of them is the
 headline, so its card widens, ranks the field, and says how much of the
-probability mass the leaders hold, with a way through to the full ladder. The
-probability is shown as a percentage and the tradeable prices in cents on
-purpose: the percentage is the reading, the cents are the price. No dollar
-figure appears beside either. The search box narrows the venue's own board when
-it can and asks the venue when it cannot, because the board holds thirty events
-per venue and anything past that only exists behind a venue-side query.
+probability mass the leaders hold, with a way through to the full field: one
+reader listing every market in the event, built from the payload the board
+already has. The probability is shown as a percentage and the tradeable prices
+in cents on purpose: the percentage is the reading, the cents are the price.
+Cents appear on the two chips that trade; the reading rails beside the board
+state probabilities, because there a price is not what you pay, it is what the
+market believes. No dollar figure appears beside either. The search box narrows
+the venue's own board when it can and asks the venue when it cannot, because
+the board holds a hundred events per venue and anything past that only exists
+behind a venue-side query.
 
 **Odds Movers** ranks by how much a contract's probability changed in the last
-day, stated in points rather than percent. A contract going from 64¢ to 78¢
+day, stated in points rather than percent. A contract going from 64 to 78
 moved fourteen points; calling that "+21.9%" is arithmetically true and
-useless, because probabilities are compared by subtraction. A venue that
-publishes no 24h move is excluded and named in the footer, so a silent venue
-never looks like a quiet market.
+useless, because probabilities are compared by subtraction. Rows lead with the
+event, so a race contributes "Democratic Presidential Nominee 2028 · Gavin
+Newsom" rather than a bare "Gavin Newsom". Contracts pegged at either end of
+the range are dropped: a settled-but-listed market keeps publishing a move it
+can no longer trade on. A venue that publishes no 24h move is excluded and
+named in the footer, so a silent venue never looks like a quiet market.
 
 **Resolving Soon** sorts by the clock alone. It is the one thing a
-volume-ranked board cannot tell you: 60¢ a month out and 60¢ an hour out are
+volume-ranked board cannot tell you: 60% a month out and 60% an hour out are
 different bets, and the second one is nearly decided. Anything already settled
 is dropped rather than shown as closed.
 
 The category rail narrows all three at once, and it counts from the unfiltered
 result, so picking a category never shrinks the rail that did the narrowing.
+Polymarket publishes no category, so the rail derives one from the event's
+tags, taking the first tag that names a topic it knows rather than the first
+tag. Counts are of the loaded board, which is what the rail can honestly
+narrow. The top row is Trending: no category filter, and the venue's own
+front-page order.
 
 ## Sorting the board
 

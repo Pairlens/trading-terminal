@@ -163,29 +163,34 @@
     "providerBusyTitle": "Kanał wyników jest ograniczany",
     "providerErrorBody": "Dostawca odpowiedział czymś bezużytecznym. Twoje konta i konektory są tu bez winy.",
     "providerErrorTitle": "Nie udało się wczytać kalendarza wyników",
-    "reportTime": {
-      "amc": "PO",
-      "amcLabel": "Publikuje po zamknięciu",
-      "bmo": "PRZED",
-      "bmoLabel": "Publikuje przed otwarciem"
-    },
     "scopeLabel": "Okno raportów",
     "scopes": {
       "today": "Dziś",
       "week": "Ten tydzień",
-      "watchlist": "Lista"
+      "watchlist": "Moja lista"
     },
     "title": "Wyniki spółek",
     "emptyTitle": "Brak kanału wyników",
     "emptyBody": "Ta kompilacja nie ma dostawcy wyników. Kalendarz pochodzi z App Servera, a broker publikuje godziny własnych sesji, nie listę spółek raportujących.",
     "columns": {
       "company": "Spółka",
-      "quarterEnd": "Koniec kwartału",
-      "symbol": "Symbol",
-      "epsEstimate": "Prog. EPS"
+      "symbol": "Symbol"
     },
     "today": "Dziś",
-    "tomorrow": "Jutro"
+    "tomorrow": "Jutro",
+    "heading": {
+      "today": "Raportują dziś",
+      "week": "Raportują w tym tygodniu",
+      "watchlist": "Raporty z Twojej listy"
+    },
+    "slots": {
+      "bmo": "Przed otwarciem",
+      "amc": "Po zamknięciu",
+      "unstated": "Bez podanej godziny"
+    },
+    "consensusEps": "Kons. EPS",
+    "quarterTo": "kwartał do {{period}}",
+    "periodEnded": "Kwartał obrotowy kończący się {{date}}"
   },
   "economicCalendar": {
     "allDay": "Cały dzień",
@@ -229,7 +234,10 @@
     "sourceNote": "Zestawione z harmonogramów publikacji BLS, BEA, Rezerwy Federalnej i Census. Wynik i poprzednia wartość pochodzą od samych urzędów, wartość implikowana z cen kontraktów Kalshi. Godziny w czasie wschodnim USA, tak jak je publikują urzędy.",
     "title": "Makro",
     "today": "Dziś",
-    "tomorrow": "Jutro"
+    "tomorrow": "Jutro",
+    "countdownDh": "za {{days}} d {{hours}} godz",
+    "countdownHm": "za {{hours}} godz {{minutes}} min",
+    "countdownM": "za {{minutes}} min"
   },
   "eventBoard": {
     "listed": "Wystawiono {{when}}",
@@ -247,13 +255,12 @@
       "biggestMove": "Największy ruch"
     },
     "unchanged": "bez zmian",
-    "movedPoints": "{{arrow}} {{points}} pkt dziś",
     "volumeUnknown": "Wolumen nieopublikowany",
     "liquidity": "Płynność {{value}}",
-    "outcomeCount_one": "1 kandydat",
-    "outcomeCount_few": "{{count}} kandydatów",
-    "outcomeCount_many": "{{count}} kandydatów",
-    "outcomeCount_other": "{{count}} kandydata",
+    "outcomeCount_one": "1 wynik",
+    "outcomeCount_few": "{{count}} wyniki",
+    "outcomeCount_many": "{{count}} wyników",
+    "outcomeCount_other": "{{count}} wyniku",
     "topShare_one": "Lider trzyma {{percent}} % całego prawdopodobieństwa.",
     "topShare_few": "Czołowa {{count}} trzyma {{percent}} % całego prawdopodobieństwa.",
     "topShare_many": "Czołowych {{count}} trzyma {{percent}} % całego prawdopodobieństwa.",
@@ -261,7 +268,17 @@
     "openFullField_one": "Otwórz całą stawkę (jeszcze 1)",
     "openFullField_few": "Otwórz całą stawkę (jeszcze {{count}})",
     "openFullField_many": "Otwórz całą stawkę (jeszcze {{count}})",
-    "openFullField_other": "Otwórz całą stawkę (jeszcze {{count}})"
+    "openFullField_other": "Otwórz całą stawkę (jeszcze {{count}})",
+    "endsIn": "kończy się {{when}}",
+    "openInterest": "OI {{value}}",
+    "candidateCount_one": "1 kandydat",
+    "candidateCount_few": "{{count}} kandydatów",
+    "candidateCount_many": "{{count}} kandydatów",
+    "candidateCount_other": "{{count}} kandydata",
+    "movedPoints_one": "{{arrow}} {{points}} pkt dziś",
+    "movedPoints_few": "{{arrow}} {{points}} pkt dziś",
+    "movedPoints_many": "{{arrow}} {{points}} pkt dziś",
+    "movedPoints_other": "{{arrow}} {{points}} pkt dziś"
   },
   "eventHeader": {
     "noPairTitle": "Nie wybrano kontraktu",
@@ -323,10 +340,13 @@
     "loading": "Wczytywanie stawek finansowania…",
     "na": "b.d.",
     "stampUnknown": "Nieopublikowane",
-    "desktopOnly": "udostępnia swoje publiczne API tylko aplikacji desktopowej.",
     "manageConnectors": "Zarządzaj konektorami",
     "cellHint": "{{pair}} · {{rate}} co {{hours}} h",
-    "cellHintAssumed": "{{pair}} · {{rate}}, przy założeniu rozliczenia co {{hours}} h, którego giełda nie publikuje"
+    "cellHintAssumed": "{{pair}} · {{rate}}, przy założeniu rozliczenia co {{hours}} h, którego giełda nie publikuje",
+    "desktopOnlyLine_one": "{{venues}} przesyła strumień z aplikacji desktopowej.",
+    "desktopOnlyLine_few": "{{venues}} przesyłają strumień z aplikacji desktopowej.",
+    "desktopOnlyLine_many": "{{venues}} przesyłają strumień z aplikacji desktopowej.",
+    "desktopOnlyLine_other": "{{venues}} przesyłają strumień z aplikacji desktopowej."
   },
   "fundingBelt": {
     "now": "Finansowanie teraz · {{hours}} h",
@@ -348,12 +368,14 @@
     "noRateBody": "{{venue}} nie zwróciła stawki finansowania dla tego kontraktu."
   },
   "fundingExtremes": {
-    "subtitle": "Najdroższy i najtańszy carry wśród podłączonych giełd, w skali roku.",
-    "longsPay": "Longi płacą najwięcej",
-    "shortsPay": "Shorty płacą najwięcej",
+    "subtitle": "Najdroższy i najtańszy carry, uszeregowane względem 30-dniowego zakresu każdego kontraktu.",
     "perInterval": "{{rate}} co {{hours}} h",
     "emptyTitle": "Brak stawek do uszeregowania",
-    "emptyBody": "Gdy giełda kontraktów wieczystych odpowie, jej najdroższe i najtańsze kontrakty pojawią się tutaj."
+    "emptyBody": "Gdy giełda kontraktów wieczystych odpowie, jej najdroższe i najtańsze kontrakty pojawią się tutaj.",
+    "rangeTop": "górne {{pct}}% jego 30-dniowego zakresu",
+    "rangeBottom": "dolne {{pct}}% jego 30-dniowego zakresu",
+    "crowdedLong": "zatłoczone longi",
+    "shortsPaying": "shorty płacą"
   },
   "fundingMatrix": {
     "title": "Finansowanie w skali roku",
@@ -483,11 +505,13 @@
     "loadingBody": "Pobieranie ostatnich swapów tej puli.",
     "emptyTitle": "Brak swapów",
     "emptyBody": "Ostatnio nic nie przeszło przez tę pulę, więc nie ma przepływu do zbilansowania.",
-    "barsLabel": "Przepływ netto takerów, {{pool}}",
     "netHour": "{{value}} w ostatniej godzinie",
     "bucketTooltip": "kupiono {{buy}}, sprzedano {{sell}}",
     "axisNote": "Kupno minus sprzedaż co 5 minut. Płynność dodana lub wycofana przez LP nie znajduje się w tym strumieniu.",
-    "biggestLabel": "Największe swapy"
+    "biggestLabel": "Największe swapy",
+    "title": "Przepływ przez {{pool}}",
+    "subtitle": "Kupno minus sprzedaż, w pięciominutowych odcinkach",
+    "subtitleVenue": "{{venue}} · kupno minus sprzedaż, w pięciominutowych odcinkach"
   },
   "lpPanes": {
     "venueFallback": "ten łańcuch",
@@ -622,7 +646,12 @@
     "up": "w górę",
     "down": "w dół",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "Kryptowalutowy indeks strachu i chciwości. 0 to skrajny strach, 100 to skrajna chciwość."
+    "fearGreedTooltip": "Kryptowalutowy indeks strachu i chciwości. 0 to skrajny strach, 100 to skrajna chciwość.",
+    "breadthPairs_one": "Szerokość rynku · {{count}} para",
+    "breadthPairs_few": "Szerokość rynku · {{count}} pary",
+    "breadthPairs_many": "Szerokość rynku · {{count}} par",
+    "breadthPairs_other": "Szerokość rynku · {{count}} par",
+    "fearGreedMissing": "Ani App Server, ani publiczny indeks nie odpowiedziały. Kafelek wypełni się, gdy odpowie którekolwiek z nich."
   },
   "movers": {
     "emptyTitle": "Brak danych rynkowych",
@@ -665,7 +694,13 @@
       "volume": "Żadna giełda nie podała jeszcze wolumenu.",
       "volatility": "Nic nie ruszyło się na tyle, by trafić do rankingu.",
       "unusual": "Żadne aktywo nie handluje nietypowo jak na swój rozmiar."
-    }
+    },
+    "reason": {
+      "reportsTonight": "Raportuje dziś wieczorem",
+      "reportedThisMorning": "Zaraportowała dziś rano",
+      "reportsToday": "Raportuje dziś"
+    },
+    "tradedValueTooltip": "Ile sesja naprawdę obróciła w dolarach: wolumen akcji razy dzienna cena ważona wolumenem, oba tak, jak podaje je broker."
   },
   "oddsMovers": {
     "subtitle": "Największe zmiany prawdopodobieństwa, 24 h",
@@ -987,21 +1022,25 @@
     "liquidity": "Płynność",
     "volume24h": "Wolumen 24h",
     "turnover": "Wol / płyn",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "Transakcje 24h",
     "feeTier": "Poziom prowizji",
-    "pressureByValue": "Presja kupna i sprzedaży, 24h według wartości",
-    "pressureByCount": "Presja kupna i sprzedaży, 24h według liczby transakcji",
     "loading": "Wczytywanie stanu puli.",
-    "openChart": "Otwórz wykres i wykonaj swap"
+    "openChart": "Otwórz wykres i wykonaj swap",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "Wpływ na cenę $10k",
+    "pressure1h": "Presja kupna / sprzedaży 1h",
+    "buysValue": "kupiono {{value}}",
+    "sellsValue": "sprzedano {{value}}",
+    "filledBy": "Luki uzupełnione przez {{provider}}"
   },
   "poolMap": {
-    "title": "Pule {{chain}}",
+    "title": "{{chain}} · czołowe pule",
     "subtitle": "Uszeregowane według tego, jak mocno każda pula pracuje własną płynnością",
     "sortTurnover": "Obrót",
     "sortVolume": "Wolumen",
     "sortLiquidity": "Płynność",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "Otwórz wykres",
     "columns": {
       "pool": "Pula",
@@ -1013,10 +1052,18 @@
     },
     "noChainTitle": "Wybierz łańcuch",
     "noChainBody": "Wybierz łańcuch na liście, a jego pule uszeregują się tutaj: wolumen wobec płynności, która za nim stoi.",
-    "loadingTitle": "Wczytywanie pul",
-    "loadingBody": "Pobieranie uszeregowanych pul tego łańcucha.",
     "emptyTitle": "Brak zwróconych pul",
-    "emptyBody": "Dostawca danych nie wymienił nic dla tego łańcucha. Ponowna próba przy następnym odświeżeniu."
+    "emptyBody": "Dostawca danych nie wymienił nic dla tego łańcucha. Ponowna próba przy następnym odświeżeniu.",
+    "listTitle": "{{chain}} · wszystkie pule",
+    "subtitleVolume": "Rozmiar według wolumenu 24h, kolor według ruchu 24h",
+    "subtitleLiquidity": "Rozmiar według płynności, kolor według ruchu 24h",
+    "subtitleTrades": "Rozmiar według liczby transakcji 24h, kolor według ruchu 24h",
+    "subtitleTurnover": "Rozmiar według wolumenu wobec płynności, kolor według ruchu 24h",
+    "sortTrades": "Transakcje",
+    "morePools": "Więcej pul na tym łańcuchu",
+    "backToMap": "Wróć do mapy",
+    "belowFloorTitle": "Nic dość głębokiego na mapę",
+    "belowFloorBody": "Nic, co zwrócił ten łańcuch, nie łączy prawdziwej płynności z proporcjonalnym wolumenem, więc skalowanie tych pul względem siebie porządkowałoby szum. Pełna lista pozostaje dostępna."
   },
   "poolStats": {
     "notOnChainTitle": "To nie jest para on-chain",
@@ -1052,11 +1099,11 @@
     "impactNote": "Kwotowane na żywo dla każdej wielkości, nie modelowane z rezerw, więc rozdzielona trasa potrafi pobić krzywą samej puli."
   },
   "predictionCategories": {
-    "all": "Wszystkie",
     "noneBody": "Ta giełda nie przypisuje wydarzeniom kategorii.",
     "venueHeading": "Giełda",
     "desktopOnly": "desktop",
-    "venueError": "błąd"
+    "venueError": "błąd",
+    "trending": "Na czasie"
   },
   "resolvingSoon": {
     "resolves": "Rozstrzygnięcie {{when}}",
@@ -1323,7 +1370,9 @@
     "window": "Okno sektora",
     "leads": "{{total}} aktywów · {{symbol}} prowadzi",
     "drags": "{{total}} aktywów · {{symbol}} ciąży",
-    "assets": "{{total}} aktywów"
+    "assets": "{{total}} aktywów",
+    "title": "Wstęga sektorów",
+    "splitTape": "{{total}} aktywów · rynek podzielony"
   },
   "session": {
     "noVenueTitle": "Brak podłączonego brokera",
@@ -1352,7 +1401,13 @@
     "noSchedule": "Brak zaplanowanej sesji",
     "clockOnly": "Tylko otwarty lub zamknięty: nie opublikowano przedziałów sesji.",
     "ticketExtendedNote": "Ta sesja przyjmuje wyłącznie zlecenia z limitem. Nie ma ciągłych notowań, na których wykonałoby się zlecenie po cenie rynkowej.",
-    "ticketClosedNote": "Rynek jest zamknięty. Zlecenie z limitem czeka do otwarcia następnej sesji."
+    "ticketClosedNote": "Rynek jest zamknięty. Zlecenie z limitem czeka do otwarcia następnej sesji.",
+    "gateTitle": "Dzień handlowy",
+    "gateBody": "Godziny pochodzą prosto z kalendarza {{venue}}.",
+    "headlineOpen": "{{venue}}: rynek otwarty",
+    "headlinePre": "{{venue}}: sesja przed otwarciem",
+    "headlinePost": "{{venue}}: sesja po zamknięciu",
+    "headlineClosed": "{{venue}}: rynek zamknięty"
   },
   "settings": {
     "title": "Ustawienia",
@@ -3391,7 +3446,7 @@
     "fundingMatrix": "Finansowanie dla każdego kontraktu wieczystego na każdej podłączonej giełdzie, w jednej tabeli, którą możesz sortować według dowolnej kolumny",
     "basisMonitor": "Kontrakt wieczysty względem spotu w punktach bazowych i w ujęciu rocznym, więc koszt utrzymania pozycji czyta się jak rentowność, a nie lukę",
     "openInterest": "Otwarte kontrakty dla każdego instrumentu, ze zmianą w ciągu 24h, więc zatłoczenie rynku widać, zanim zrobi to cena",
-    "fundingExtremes": "Najbardziej dodatnie i ujemne stopy finansowania w tej chwili, z giełdą, która płaci każdą z nich",
+    "fundingExtremes": "Najdroższy i najtańszy carry, każda stawka uszeregowana względem 30-dniowego zakresu finansowania tego kontraktu",
     "fundingBelt": "Odliczanie do następnej wypłaty finansowania, aktualna i przewidywana stopa oraz to, ile płaci lub zarabia Twoja pozycja",
     "liquidationMap": "Mapa cieplna czasu i ceny tego, co giełda faktycznie zlikwidowała, malowana za świecami kontraktu, z twoimi własnymi cenami likwidacji na wierzchu",
     "marginHealth": "Wskaźnik depozytu, depozyt utrzymaniowy wobec kapitału, dystans do likwidacji i to, co z tą trójką zrobi ruch przeciwny",
@@ -3512,7 +3567,10 @@
       "walletMissingTitle": "Podłącz portfel",
       "walletMissingDescription": "Ten panel działa z podłączonym portfelem. Podłącz go, a jego pozycje, opłaty i transfery pojawią się tutaj.",
       "walletSealedDescription": "Klucz portfela znajduje się w zablokowanym sejfie. Odblokuj go, a panel będzie mógł odczytywać i podpisywać dla tego portfela.",
-      "connectAction": "Połącz {{venue}}"
+      "connectAction": "Połącz {{venue}}",
+      "compactMissingDescription": "Połącz raz, a ten panel się wypełni. Klucz zostaje na tym urządzeniu.",
+      "compactSealedDescription": "Twoje klucze {{venue}} są w zablokowanym sejfie.",
+      "compactConnectAction": "Połącz"
     },
     "paneTransition": {
       "switchingTo": "Przełączanie na {{venue}}…",
@@ -5447,7 +5505,35 @@
     "predictionsBrowse": "Otwórz tablicę zdarzeń",
     "predictionsInstall": "Zainstaluj wtyczkę predykcji",
     "futuresEmptyTitle": "Połącz giełdę futures, aby przeglądać kontrakty wieczyste",
-    "futuresEmptyBody": "Listy kontraktów pochodzą z tabeli rynków każdej giełdy, więc pojawiają się po nawiązaniu z nią połączenia."
+    "futuresEmptyBody": "Listy kontraktów pochodzą z tabeli rynków każdej giełdy, więc pojawiają się po nawiązaniu z nią połączenia.",
+    "sector": {
+      "software": "Oprogramowanie",
+      "semiconductors": "Półprzewodniki",
+      "internet": "Internet",
+      "hardware": "Sprzęt",
+      "banks": "Banki",
+      "payments": "Płatności",
+      "cryptoEquity": "Krypto",
+      "healthcare": "Ochrona zdrowia",
+      "energy": "Energetyka",
+      "retail": "Handel detaliczny",
+      "staples": "Dobra podstawowe",
+      "media": "Media",
+      "travel": "Turystyka",
+      "industrials": "Przemysł",
+      "autos": "Motoryzacja",
+      "etfEquity": "ETF akcji",
+      "etfBonds": "ETF obligacji",
+      "etfCommodity": "ETF surowców"
+    },
+    "searchPairs_one": "Szukaj wśród {{count}} pary",
+    "searchPairs_few": "Szukaj wśród {{count}} par",
+    "searchPairs_many": "Szukaj wśród {{count}} par",
+    "searchPairs_other": "Szukaj wśród {{count}} par",
+    "browseAll_one": "Przeglądaj {{count}} parę",
+    "browseAll_few": "Przeglądaj wszystkie {{count}} pary",
+    "browseAll_many": "Przeglądaj wszystkie {{count}} par",
+    "browseAll_other": "Przeglądaj wszystkie {{count}} par"
   },
   "fearGreed": {
     "title": "Strach i chciwość",
@@ -5488,9 +5574,6 @@
   },
   "news": {
     "title": "Wiadomości",
-    "tickerPlaceholder": "Ticker...",
-    "sortLatest": "Najnowsze",
-    "sortRelevance": "Trafność",
     "unavailable": "Wiadomości niedostępne",
     "unavailableUpstream": "Dostawca wiadomości nie odpowiada. Do czasu przywrócenia nic nie zostanie załadowane.",
     "unavailableRateLimited": "Osiągnięto limit zapytań dostawcy wiadomości. Powinien wkrótce zostać zresetowany.",
@@ -5522,8 +5605,24 @@
       "technology": "Technologia",
       "finance": "Finanse",
       "financial_markets": "Rynki finansowe",
-      "economy_macro": "Makroekonomia"
-    }
+      "economy_macro": "Makroekonomia",
+      "earnings": "Wyniki"
+    },
+    "scope": {
+      "assets": "Twoje aktywa",
+      "earnings": "Wyniki",
+      "macro": "Makro",
+      "all": "Wszystkie"
+    },
+    "refresh": "Odśwież wiadomości",
+    "adjustScope": "Nic z agencji pod ten filtr. Wypróbuj inny albo zajrzyj za kilka minut.",
+    "noWatchedAssets": "Twoja lista jest pusta, więc nie ma czym zawęzić serwisu. Oznacz parę gwiazdką albo czytaj Makro.",
+    "noAssetNews": "Agencje nadają, ale nic nie dotyczy Twojej listy. Makro i Wszystkie wciąż się ruszają.",
+    "noStockNews": "Na razie nic z agencji o notowanych spółkach. Makro i Wszystkie wciąż się ruszają.",
+    "mentionsPairs_one": "wspomina o {{count}} z Twoich par",
+    "mentionsPairs_few": "wspomina o {{count}} z Twoich par",
+    "mentionsPairs_many": "wspomina o {{count}} z Twoich par",
+    "mentionsPairs_other": "wspomina o {{count}} z Twoich par"
   },
   "tray": {
     "show": "Pokaż Pairlens",

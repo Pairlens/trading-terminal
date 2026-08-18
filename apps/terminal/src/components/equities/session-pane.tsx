@@ -24,7 +24,7 @@ import {
   HalfDayBadge,
   SessionDayBar,
   countdownSentence,
-  phaseLabel,
+  phaseHeadline,
   phaseTone,
 } from '@/components/equities/session-pieces'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
@@ -60,12 +60,34 @@ export function SessionPane() {
   }
 
   if (gate !== 'ok') {
+    // The strip's own shape, with the prompt where the day bar goes. A full
+    // centred hero in a pane this short reads as a broken cell; keeping the
+    // left rail and the divider says "this is the session strip, waiting for a
+    // key" without inventing a phase to show. The dot is deliberately neutral:
+    // a green one here would claim the market is open.
     return (
-      <PaneCredentialsRequired
-        market={venue.market}
-        state={gate}
-        venueLabel={venueLabel}
-      />
+      <div className="flex h-full min-h-0 items-center gap-5 p-3">
+        <div className="flex shrink-0 items-center gap-2.5">
+          <span className="size-2.5 shrink-0 rounded-full bg-muted-foreground/30" />
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-muted-foreground">
+              {t('session.gateTitle')}
+            </p>
+            <p className="text-[11px] text-muted-foreground/70">
+              {t('session.gateBody', { venue: venueLabel })}
+            </p>
+          </div>
+        </div>
+
+        <span className="h-10 w-px shrink-0 bg-border" />
+
+        <PaneCredentialsRequired
+          market={venue.market}
+          state={gate}
+          variant="compact"
+          venueLabel={venueLabel}
+        />
+      </div>
     )
   }
 
@@ -108,7 +130,7 @@ export function SessionPane() {
           />
           <div className="min-w-0">
             <p className="flex items-center gap-2 text-sm font-semibold">
-              {phaseLabel(t, state.phase)}
+              {phaseHeadline(t, state.phase, venueLabel)}
               {state.day && <HalfDayBadge day={state.day} />}
             </p>
             <p className="text-[11px] text-muted-foreground">

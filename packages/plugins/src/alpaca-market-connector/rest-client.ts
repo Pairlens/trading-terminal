@@ -176,11 +176,28 @@ export async function fetchAlpacaQuoteBook(
  * saved online still resolves against this. Emitting 'AAPL-USD' here misses
  * every row silently: the price is simply never found and the cell stays
  * blank, which looks exactly like the connector not implementing this at all.
+ *
+ * `volume24h` is the session's traded VALUE, not its share count. The daily bar
+ * carries both halves of that — `v` shares and `vw` the volume-weighted average
+ * they printed at — and their product is the dollars that changed hands. The
+ * share count on its own would be rendered by a currency formatter downstream
+ * and read as "$41M traded" on a stock that traded 41M shares of a $600 name,
+ * which is off by two orders of magnitude in the direction that flatters penny
+ * stocks. A bar with no VWAP falls back to the last print, which is the same
+ * arithmetic with a worse average, and a session with no volume yet reports
+ * nothing at all.
  */
 export async function fetchAlpacaBulkTickers(
   symbols: Array<string>,
   credentials: AlpacaCredentials,
-): Promise<Array<{ symbol: string; price: number; change24h: number }>> {
+): Promise<
+  Array<{
+    symbol: string
+    price: number
+    change24h: number
+    volume24h?: number
+  }>
+> {
   if (symbols.length === 0) return []
 
   const url =
@@ -193,15 +210,39 @@ export async function fetchAlpacaBulkTickers(
   }
 
   const json = (await resp.json()) as Record<string, unknown>
-  const out: Array<{ symbol: string; price: number; change24h: number }> = []
+  const out: Array<{
+    symbol: string
+    price: number
+    change24h: number
+    volume24h?: number
+  }> = []
   for (const symbol of symbols) {
-    const snapshot = parseAlpacaSnapshot(json[symbol])
+    const raw = json[symbol]
+    const snapshot = parseAlpacaSnapshot(raw)
     if (!snapshot || snapshot.last <= 0) continue
+    const notional = dailyNotional(raw, snapshot.volume24h, snapshot.last)
     out.push({
       symbol,
       price: snapshot.last,
       change24h: snapshot.change24h,
+      ...(notional === null ? {} : { volume24h: notional }),
     })
   }
   return out
+}
+
+/** Shares × VWAP: the value the session actually traded, or null. */
+function dailyNotional(
+  raw: unknown,
+  shares: number,
+  last: number,
+): number | null {
+  if (!Number.isFinite(shares) || shares <= 0) return null
+  const daily = (raw as Record<string, Record<string, unknown> | undefined>)?.[
+    'dailyBar'
+  ]
+  const vwap = daily?.['vw']
+  const price = typeof vwap === 'number' && vwap > 0 ? vwap : last
+  if (!Number.isFinite(price) || price <= 0) return null
+  return shares * price
 }

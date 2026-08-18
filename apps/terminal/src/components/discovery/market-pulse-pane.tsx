@@ -30,7 +30,8 @@ import {
   useTopCoinsSnapshot,
   useTopCoinsSnapshotState,
 } from '@/hooks/use-top-coins-snapshot'
-import { summarizeMarket } from '@/lib/spot-market-stats'
+import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
+import { summarizeMarket, summarizePairBreadth } from '@/lib/spot-market-stats'
 import { formatCompactUsd } from '@/lib/format-price'
 import { fetchFearGreedWithFallback } from '@/lib/public-market-data'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
@@ -43,8 +44,13 @@ export function MarketPulsePane() {
   const { t } = useTranslation()
   const coins = useTopCoinsSnapshot()
   const state = useTopCoinsSnapshotState()
+  // The scanner and the markets rail already hold this map, so breadth over
+  // listed pairs costs the board nothing extra — and it counts what the
+  // connected venues actually list rather than the capitalisation ranking.
+  const quotes = useBulkTickerQuotes()
 
   const pulse = useMemo(() => summarizeMarket(coins.values()), [coins])
+  const breadth = useMemo(() => summarizePairBreadth(quotes.values()), [quotes])
 
   if (state === 'unavailable') {
     return (
@@ -57,6 +63,13 @@ export function MarketPulsePane() {
   }
 
   const loading = state === 'loading'
+  // No venue has answered yet (a fresh profile, every connector still
+  // handshaking): the snapshot's own breadth is the honest stand-in rather
+  // than a tile reading "0 up 0 down".
+  const onPairs = breadth.total > 0
+  const advancing = onPairs ? breadth.advancing : pulse.advancing
+  const declining = onPairs ? breadth.declining : pulse.declining
+  const breadthTotal = onPairs ? breadth.total : pulse.breadthCount
 
   return (
     <div className={cn(TILE_GRID, 'overflow-hidden')}>
@@ -102,28 +115,35 @@ export function MarketPulsePane() {
         )}
       </Tile>
 
+      {/* Breadth is counted over listed pairs when the venue tape is in, and
+          over the snapshot when it is not — the label says which, because
+          "598 pairs" and "213 assets" are answers to different questions. */}
       <Tile
-        label={t('marketPulse.breadth', { total: pulse.breadthCount })}
+        label={
+          onPairs
+            ? t('marketPulse.breadthPairs', { count: breadth.total })
+            : t('marketPulse.breadth', { total: pulse.breadthCount })
+        }
         loading={loading}
       >
-        <p className="mt-0.5 flex items-baseline gap-1.5 font-mono text-[15px] font-semibold tabular-nums">
-          <span className="text-up">{pulse.advancing}</span>
-          <span className="font-sans text-[11px] font-normal text-muted-foreground">
+        <p className="mt-0.5 flex items-baseline gap-1.5 font-mono text-[17px] font-semibold tabular-nums">
+          <span className="text-up">{advancing}</span>
+          <span className="font-sans text-[12px] font-normal text-muted-foreground">
             {t('marketPulse.up')}
           </span>
-          <span className="text-down">{pulse.declining}</span>
-          <span className="font-sans text-[11px] font-normal text-muted-foreground">
+          <span className="text-down">{declining}</span>
+          <span className="font-sans text-[12px] font-normal text-muted-foreground">
             {t('marketPulse.down')}
           </span>
         </p>
-        {pulse.breadthCount > 0 && (
+        {breadthTotal > 0 && (
           // The bar IS the ratio: the down side is the track, the up side is
           // what fills it, so a red-heavy tape is red at a glance.
           <div className="mt-1.5 h-1 overflow-hidden rounded-sm [background-color:var(--down)]">
             <span
               className="block h-full [background-color:var(--up)]"
               style={{
-                width: `${((pulse.advancing / pulse.breadthCount) * 100).toFixed(1)}%`,
+                width: `${((advancing / breadthTotal) * 100).toFixed(1)}%`,
               }}
             />
           </div>
@@ -162,7 +182,7 @@ function Tile({
 
 function Value({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-0.5 truncate font-mono text-[15px] font-semibold tabular-nums">
+    <p className="mt-0.5 truncate font-mono text-[17px] font-semibold tabular-nums">
       {children}
     </p>
   )
@@ -195,9 +215,12 @@ function Sub({
  *
  * Same query key as the Fear & Greed pane (both panes belong to the same
  * plugin, so `usePluginQuery` namespaces them identically), which is what
- * makes putting both on one board free. When neither the App Server nor the
- * public fallback answers, the tile is omitted rather than showing a gauge
- * with no needle — the other four still say something.
+ * makes putting both on one board free.
+ *
+ * When neither the App Server nor the public fallback answers, the tile keeps
+ * its slot and prints a dash. Dropping it used to leave four tiles stretched
+ * across five columns, which reads as a design with one fewer number rather
+ * than as a source that is down.
  */
 function FearGreedTile() {
   const { t } = useTranslation()
@@ -212,20 +235,19 @@ function FearGreedTile() {
   })
 
   const latest = data?.latest ?? null
-  if (!latest && !isLoading) return null
 
   return (
-    <Tile label={t('marketPulse.fearGreed')} loading={isLoading || !latest}>
-      {latest && (
+    <Tile label={t('marketPulse.fearGreed')} loading={isLoading}>
+      {latest ? (
         <>
           <p className="mt-0.5 flex items-baseline gap-1.5">
             <span
-              className="font-mono text-[15px] font-semibold tabular-nums"
+              className="font-mono text-[17px] font-semibold tabular-nums"
               style={{ color: fearGreedColor(latest.value) }}
             >
               {latest.value}
             </span>
-            <span className="truncate text-[11px]">
+            <span className="truncate text-[12px]">
               {t(
                 `fearGreed.classification.${classificationSlug(latest.valueClassification)}`,
                 latest.valueClassification,
@@ -251,6 +273,17 @@ function FearGreedTile() {
             <TooltipContent>{t('marketPulse.fearGreedTooltip')}</TooltipContent>
           </Tooltip>
         </>
+      ) : (
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <p className="mt-0.5 font-mono text-[17px] font-semibold text-muted-foreground tabular-nums" />
+            }
+          >
+            —
+          </TooltipTrigger>
+          <TooltipContent>{t('marketPulse.fearGreedMissing')}</TooltipContent>
+        </Tooltip>
       )}
     </Tile>
   )

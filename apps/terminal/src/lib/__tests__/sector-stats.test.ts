@@ -6,7 +6,7 @@ import type {
   InstrumentCategory,
   TopCoin,
 } from '@pairlens/shared/instrument-types'
-import { summarizeSectors } from '@/lib/sector-stats'
+import { isSplitTape, summarizeSectors } from '@/lib/sector-stats'
 
 function coin(partial: Partial<TopCoin> & { symbol: string }): TopCoin {
   return {
@@ -153,5 +153,56 @@ describe('summarizeSectors', () => {
       '24h',
     )
     expect(sectors.map((s) => s.category)).toEqual(['ai', 'layer1', 'meme'])
+  })
+
+  test('a sector its members disagreed about is flagged split', () => {
+    const sectors = summarizeSectors(
+      membership([['meme', ['DOGE', 'PEPE', 'WIF', 'BONK']]]),
+      snapshot([
+        coin({ symbol: 'DOGE', percentChange24h: 4 }),
+        coin({ symbol: 'PEPE', percentChange24h: 2 }),
+        coin({ symbol: 'WIF', percentChange24h: -3 }),
+        coin({ symbol: 'BONK', percentChange24h: -6 }),
+      ]),
+      '24h',
+    )
+    expect(sectors[0]!.split).toBe(true)
+    // The extremes are still known — the caption chooses not to name them.
+    expect(sectors[0]!.leader).not.toBeNull()
+  })
+
+  test('a sector with a side is not split', () => {
+    const sectors = summarizeSectors(
+      membership([['ai', ['TAO', 'RENDER', 'FET']]]),
+      snapshot([
+        coin({ symbol: 'TAO', percentChange24h: 9 }),
+        coin({ symbol: 'RENDER', percentChange24h: 4 }),
+        coin({ symbol: 'FET', percentChange24h: -1 }),
+      ]),
+      '24h',
+    )
+    expect(sectors[0]!.split).toBe(false)
+  })
+})
+
+describe('isSplitTape', () => {
+  test('even counts are split', () => {
+    expect(isSplitTape(3, 3)).toBe(true)
+    expect(isSplitTape(7, 5)).toBe(true)
+  })
+
+  test('a clear majority is not', () => {
+    expect(isSplitTape(8, 4)).toBe(false)
+    expect(isSplitTape(10, 1)).toBe(false)
+  })
+
+  test('unanimity is never split, however small', () => {
+    // The tolerance is a ratio, so 1-against-0 would otherwise round in.
+    expect(isSplitTape(1, 0)).toBe(false)
+    expect(isSplitTape(0, 6)).toBe(false)
+  })
+
+  test('a sector where nothing moved is not split either', () => {
+    expect(isSplitTape(0, 0)).toBe(false)
   })
 })

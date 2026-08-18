@@ -6,30 +6,33 @@
  * The card is where the two shapes of prediction market stop being the same
  * thing. A binary question has one number worth reading — the probability —
  * and the card gives it the largest type on the board. A race has 128 numbers
- * and none of them is the headline, so its card widens, ranks the field and
- * says how much of the probability mass the leaders hold, with a way into the
- * ladder for the rest.
+ * and none of them is the headline, so its card widens to the full board,
+ * ranks the field and says how much of the probability mass the leaders hold,
+ * with a way into the rest.
  *
- * The probability is shown as a percentage and the tradeable prices in cents.
- * They are the same number twice on purpose: the percentage is the reading
- * ("the market thinks 78"), the cents are the price ("you pay 78 to win 100").
- * What never appears is a dollar figure beside either.
+ * Two readings of one number, and the split is deliberate. The percentage is
+ * what the market THINKS ("78") and it carries the headline, the runner rows
+ * and the delta. The cents are what a contract COSTS ("78¢") and they appear
+ * only on the two chips that trade. What never appears is a dollar figure
+ * beside either.
  *
  * The search box narrows the venue's own board when it can, and asks the venue
- * when it cannot: the fetch holds thirty events per venue, so anything past
+ * when it cannot: the fetch holds a hundred events per venue, so anything past
  * that only exists behind a venue-side query.
  */
 import { memo, useDeferredValue, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, Vote } from 'lucide-react'
+import { ArrowRight, Search, Vote } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Input } from '@pairlens/ui/components/ui/input'
 
+import { EventDialog } from './event-dialog'
 import { EventThumbnail } from './event-pieces'
 import type { BoardEvent, BoardSort } from '@/lib/predictions/board'
 import type { PredictionRunner } from '@/lib/predictions/race'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { MONTH_WINDOW } from '@/hooks/use-sparkline'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import {
   usePredictionEvents,
@@ -39,15 +42,24 @@ import {
   BOARD_SORTS,
   createdOf,
   endOf,
+  eventLiquidity,
+  eventOpenInterest,
   eventVolume,
   flattenBoardEvents,
+  liveMarketCount,
   sortBoardEvents,
 } from '@/lib/predictions/board'
+import { track } from '@/lib/analytics-events'
 import { useDiscoveryFilterStore } from '@/lib/predictions/discovery-filter-store'
 import { usePredictionSelect } from '@/lib/predictions/navigate'
+import { binarySideOf } from '@/lib/predictions/event-labels'
+import { runnerColorIndex, runnerToken } from '@/lib/predictions/palette'
 import {
   byProbability,
+  headlineRunner,
   isRaceEvent,
+  massBarSegments,
+  raceFieldKind,
   runnerPrice,
   runnersOf,
   topRunnerShare,
@@ -58,16 +70,8 @@ import { formatRelativeTime, formatTimeUntil } from '@/lib/format-time'
 /** The pane's own `t`, so a helper below can take it as an argument. */
 type Translate = ReturnType<typeof useTranslation>['t']
 
-/** Runners a race card ranks before it defers to the ladder. */
+/** Runners a race card ranks before it defers to the full field. */
 const RACE_PREVIEW = 4
-
-/** Chart tokens the stacked share bar walks, leaders first. */
-const SHARE_TOKENS = [
-  'var(--chart-3)',
-  'var(--chart-2)',
-  'var(--chart-4)',
-  'var(--chart-5)',
-]
 
 /**
  * Literal keys, not a template. The i18n audit can only verify a `t()` call
@@ -85,10 +89,14 @@ const SORT_LABEL_KEYS: Record<BoardSort, string> = {
 export function EventBoardPane() {
   const { t } = useTranslation()
   const venues = usePredictionVenues()
+  const select = usePredictionSelect()
   const category = useDiscoveryFilterStore((s) => s.category)
   const query = useDiscoveryFilterStore((s) => s.query)
   const setQuery = useDiscoveryFilterStore((s) => s.setQuery)
   const [sort, setSort] = useState<BoardSort>('trending')
+  // The event whose full field is open, or null. Held here rather than per
+  // card so only one reader can ever be mounted.
+  const [fullField, setFullField] = useState<BoardEvent | null>(null)
 
   // The venue-side search runs on the deferred value; the local filter runs on
   // every keystroke. So typing narrows what is already loaded instantly, and
@@ -106,15 +114,9 @@ export function EventBoardPane() {
     return sortBoardEvents(flat, sort)
   }, [data, category, query, sort])
 
-  const liveCount = useMemo(
-    () =>
-      (data ?? []).reduce(
-        (n, venue) =>
-          n + (venue.error || venue.desktopOnly ? 0 : venue.events.length),
-        0,
-      ),
-    [data],
-  )
+  // Markets, not events: a market is what the search can find, and a board of
+  // a hundred events is several thousand questions.
+  const liveCount = useMemo(() => liveMarketCount(data), [data])
 
   const blocked = (data ?? []).filter((v) => v.desktopOnly || v.error)
 
@@ -130,7 +132,7 @@ export function EventBoardPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex shrink-0 flex-wrap items-center gap-2 border-b px-3.5 py-2.5">
+      <header className="flex shrink-0 flex-wrap items-center gap-2.5 border-b px-3.5 py-2.5">
         <div className="relative min-w-[180px] flex-1">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -162,12 +164,15 @@ export function EventBoardPane() {
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+      <div className="min-h-0 flex-1 overflow-y-auto px-3.5 py-3">
         {blocked.length > 0 && (
-          <div className="mb-2.5 flex flex-col gap-1.5">
+          <div className="mb-2.5 flex flex-col gap-1">
+            {/* One muted line, not a boxed notice: the venue rail beside this
+                board already carries the venue's state, and a dashed panel
+                across the top of a full board reads as an error. */}
             {blocked.map((venue) => (
               <p
-                className="rounded-lg border border-dashed px-3 py-2 text-[11px] leading-relaxed text-muted-foreground"
+                className="text-[10.5px] leading-relaxed text-muted-foreground"
                 key={venue.market}
               >
                 {venue.desktopOnly
@@ -198,15 +203,45 @@ export function EventBoardPane() {
           />
         ) : (
           // A container query, not a viewport one: this grid is a pane inside
-          // a resizable column, and a race card that split at the viewport
-          // width would go two-column inside a 280px cell.
-          <div className="@container grid grid-cols-[repeat(auto-fill,minmax(272px,1fr))] content-start gap-2.5">
-            {rows.map((row) => (
-              <EventCard key={row.key} row={row} sort={sort} />
-            ))}
+          // a resizable column, and a board that went two-up at the viewport
+          // width would split a 280px cell down the middle. Two fixed columns
+          // above 34rem is the design's own grid; below it the cards stack,
+          // because a binary card at 220px cannot hold a 32px headline and a
+          // sparkline side by side.
+          <div className="@container">
+            <div className="grid grid-cols-1 content-start gap-2.5 @[34rem]:grid-cols-2">
+              {rows.map((row) => (
+                <EventCard
+                  key={row.key}
+                  onOpenField={setFullField}
+                  row={row}
+                  sort={sort}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      {/* The full field, read from the payload the board already holds — see
+          `EventDialog`. Picking a runner there does what picking one on a card
+          does: pin, then navigate. */}
+      <EventDialog
+        event={fullField?.event ?? null}
+        onOpenChange={(open) => !open && setFullField(null)}
+        onSelect={(event, market, pairKey, label) => {
+          if (!fullField) return
+          select.open({
+            venue: fullField.market,
+            event,
+            market,
+            pairKey,
+            label,
+          })
+          setFullField(null)
+        }}
+        venueLabel={fullField?.venueLabel ?? ''}
+      />
     </div>
   )
 }
@@ -214,15 +249,22 @@ export function EventBoardPane() {
 // ── Cards ─────────────────────────────────────────────────────────────
 
 const EventCard = memo(function EventCard({
+  onOpenField,
   row,
   sort,
 }: {
+  onOpenField: (row: BoardEvent) => void
   row: BoardEvent
   sort: BoardSort
 }) {
   const runners = useMemo(() => runnersOf(row.event), [row.event])
   return isRaceEvent(row.event) ? (
-    <RaceCard row={row} runners={runners} sort={sort} />
+    <RaceCard
+      onOpenField={onOpenField}
+      row={row}
+      runners={runners}
+      sort={sort}
+    />
   ) : (
     <BinaryCard row={row} runners={runners} sort={sort} />
   )
@@ -231,9 +273,11 @@ const EventCard = memo(function EventCard({
 function CardHeader({ row, meta }: { row: BoardEvent; meta: string }) {
   return (
     <header className="flex items-start gap-2.5">
-      <EventThumbnail className="size-9" imageUrl={row.event.imageUrl} />
+      {/* The venue's own artwork, with the class glyph as the fallback: forty
+          pictures scan in a way forty text blocks never do. */}
+      <EventThumbnail className="size-[38px]" imageUrl={row.event.imageUrl} />
       <div className="min-w-0 flex-1">
-        <h3 className="text-[13px] font-semibold leading-snug">
+        <h3 className="text-[13.5px] font-semibold leading-snug text-pretty">
           {row.event.title}
         </h3>
         <p className="mt-[3px] truncate text-[10.5px] text-muted-foreground">
@@ -265,10 +309,59 @@ function metaLine(
     created === null
       ? null
       : t('eventBoard.listed', { when: formatRelativeTime(created) }),
-    end === null ? null : formatTimeUntil(end),
+    end === null
+      ? null
+      : t('eventBoard.endsIn', { when: formatTimeUntil(end) }),
   ]
     .filter(Boolean)
     .join(' · ')
+}
+
+/**
+ * The footer stats, in the order the design reads them.
+ *
+ * Absent stats are omitted rather than zero-filled. Polymarket publishes no
+ * per-market open interest and Kalshi publishes no event liquidity, so a card
+ * with two stats is the normal case and a card with three is a bonus.
+ */
+function statLine(
+  row: BoardEvent,
+  { t, withLiquidity }: { t: Translate; withLiquidity: boolean },
+): Array<string> {
+  const stats: Array<string> = []
+  const volume = eventVolume(row.event)
+  if (volume !== null) {
+    stats.push(t('events.volume', { value: formatCompactUsd(volume) }))
+  }
+  const liquidity = withLiquidity ? eventLiquidity(row.event) : null
+  if (liquidity !== null) {
+    stats.push(
+      t('eventBoard.liquidity', { value: formatCompactUsd(liquidity) }),
+    )
+  }
+  const openInterest = eventOpenInterest(row.event)
+  if (openInterest !== null) {
+    // Contracts, not dollars: Kalshi's open interest is a position count, and
+    // formatting it as money would invent a currency figure.
+    stats.push(
+      t('eventBoard.openInterest', {
+        value: Math.round(openInterest).toLocaleString(),
+      }),
+    )
+  }
+  return stats
+}
+
+function StatRow({ stats, t }: { stats: Array<string>; t: Translate }) {
+  return (
+    <div className="flex justify-between gap-2 text-[10.5px] text-muted-foreground">
+      {stats.length === 0 ? (
+        <span>{t('eventBoard.volumeUnknown')}</span>
+      ) : (
+        stats.map((stat) => <span key={stat}>{stat}</span>)
+      )}
+    </div>
+  )
 }
 
 function BinaryCard({
@@ -282,11 +375,20 @@ function BinaryCard({
 }) {
   const { t } = useTranslation()
   const select = usePredictionSelect()
-  const lead = runners[0]
+  // The Yes leg, never `runners[0]`: Polymarket orders a market's legs however
+  // it likes, and reading the first one printed a 92% headline over a question
+  // the market gives an 8% chance.
+  const lead = headlineRunner(runners)
   const price = lead ? runnerPrice(lead) : null
   const change = lead?.yes.change24h
-  const volume = eventVolume(row.event)
-  const liquidity = row.event.liquidity ?? lead?.market.liquidity
+  const moved = change !== undefined && Math.abs(change) >= 0.0005
+  const stats = statLine(row, { t, withLiquidity: true })
+
+  // Yes first, by label rather than by position — same reason as the headline.
+  const chips = useMemo(
+    () => runners.slice(0, 2).sort((a, b) => sideRank(a) - sideRank(b)),
+    [runners],
+  )
 
   const open = (runner: PredictionRunner) =>
     select.open({
@@ -313,38 +415,46 @@ function BinaryCard({
               below carry the same number as what it costs. */}
           <p
             className={cn(
-              'font-mono text-[30px] font-semibold leading-none tabular-nums',
-              change === undefined || change === 0
-                ? 'text-foreground'
-                : change > 0
-                  ? 'text-up'
-                  : 'text-down',
+              'font-mono text-[32px] font-semibold leading-none tabular-nums',
+              !moved ? 'text-foreground' : change > 0 ? 'text-up' : 'text-down',
             )}
           >
             {price === null ? '—' : Math.round(price * 100)}
-            <span className="text-[18px]">%</span>
+            <span className="text-[19px]">%</span>
           </p>
           <ChangeLine change={change} />
         </div>
         {lead && (
           <MiniPriceChart
-            className="h-10 min-w-0 flex-1"
+            className="h-11 min-w-0 flex-1"
+            // A month of daily closes, the same window the ladder draws and
+            // for the same reason: the 24h move is already stated in words
+            // beside this line, and a day of hourly closes on a contract that
+            // trades a few times an hour is a flat line with no history.
+            historyWindow={MONTH_WINDOW}
             market={row.market}
             pair={lead.yes.pairKey}
+            // A card that says "unchanged" must not draw a green line beside
+            // the word: over a month of closes almost every contract is up or
+            // down on the window, and the colour would argue with the delta.
+            tone={moved ? 'auto' : 'muted'}
           />
         )}
       </div>
 
       <div className="flex gap-1.5">
-        {runners.slice(0, 2).map((runner, index) => {
+        {chips.map((runner) => {
           const chipPrice = runnerPrice(runner)
+          const side = binarySideOf(runner.label)
           return (
             <button
               className={cn(
-                'flex-1 rounded-lg px-2 py-[7px] text-center font-mono text-xs font-medium tabular-nums transition-colors',
-                index === 0
-                  ? 'bg-up/15 text-up hover:bg-up/25'
-                  : 'bg-down/12 text-down hover:bg-down/20',
+                'flex-1 rounded-lg px-2 py-[7px] text-center font-mono text-[12.5px] font-medium tabular-nums transition-colors',
+                side === 'no'
+                  ? 'bg-down/12 text-down hover:bg-down/20'
+                  : side === 'yes'
+                    ? 'bg-up/15 text-up hover:bg-up/25'
+                    : 'bg-muted text-foreground hover:bg-accent',
               )}
               key={runner.yes.pairKey}
               onClick={() => open(runner)}
@@ -357,27 +467,26 @@ function BinaryCard({
         })}
       </div>
 
-      <div className="flex justify-between text-[10.5px] text-muted-foreground">
-        <span>
-          {volume === null
-            ? t('eventBoard.volumeUnknown')
-            : t('events.volume', { value: formatCompactUsd(volume) })}
-        </span>
-        {liquidity !== undefined && (
-          <span>
-            {t('eventBoard.liquidity', { value: formatCompactUsd(liquidity) })}
-          </span>
-        )}
-      </div>
+      <StatRow stats={stats} t={t} />
     </article>
   )
 }
 
+/** Yes before No before anything the venue names for itself. */
+function sideRank(runner: PredictionRunner): number {
+  const side = binarySideOf(runner.label)
+  if (side === 'yes') return 0
+  if (side === 'no') return 1
+  return 2
+}
+
 function RaceCard({
+  onOpenField,
   row,
   runners,
   sort,
 }: {
+  onOpenField: (row: BoardEvent) => void
   row: BoardEvent
   runners: Array<PredictionRunner>
   sort: BoardSort
@@ -387,8 +496,11 @@ function RaceCard({
   const ranked = useMemo(() => byProbability(runners), [runners])
   const preview = ranked.slice(0, RACE_PREVIEW)
   const share = topRunnerShare(runners, RACE_PREVIEW)
-  const volume = eventVolume(row.event)
   const hidden = runners.length - preview.length
+  const kind = raceFieldKind(row.event)
+  // Liquidity is left off a race: it is stated per market on both venues, and
+  // a sum across 128 books is a number nobody can act on.
+  const stats = statLine(row, { t, withLiquidity: false })
 
   const open = (runner: PredictionRunner) =>
     select.open({
@@ -400,8 +512,8 @@ function RaceCard({
     })
 
   return (
-    <article className="col-span-full flex flex-col gap-3 rounded-xl border p-3 transition-colors hover:border-primary/40 @[640px]:flex-row @[640px]:gap-4">
-      <div className="flex flex-col gap-2.5 @[640px]:w-[34%] @[640px]:shrink-0">
+    <article className="col-span-full flex flex-col gap-3 rounded-xl border p-3 transition-colors hover:border-primary/40 @[44rem]:flex-row @[44rem]:gap-4">
+      <div className="flex flex-col gap-2.5 @[44rem]:w-[34%] @[44rem]:shrink-0">
         <button
           className="text-left"
           onClick={() => preview[0] && open(preview[0])}
@@ -409,19 +521,18 @@ function RaceCard({
         >
           <CardHeader
             meta={metaLine(row, {
-              extra: t('eventBoard.outcomeCount', { count: runners.length }),
+              extra:
+                kind === 'candidates'
+                  ? t('eventBoard.candidateCount', { count: runners.length })
+                  : t('eventBoard.outcomeCount', { count: runners.length }),
               sort,
               t,
             })}
             row={row}
           />
         </button>
-        {volume !== null && (
-          <p className="text-[10.5px] text-muted-foreground">
-            {t('events.volume', { value: formatCompactUsd(volume) })}
-          </p>
-        )}
-        <ShareBar runners={ranked} />
+        <StatRow stats={stats} t={t} />
+        <MassBar runners={runners} />
         {share !== null && (
           <p className="text-[10.5px] leading-snug text-muted-foreground">
             {t('eventBoard.topShare', {
@@ -433,55 +544,26 @@ function RaceCard({
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-        {preview.map((runner, index) => {
-          const price = runnerPrice(runner)
-          const change = runner.yes.change24h
-          return (
-            <button
-              className="flex items-center gap-2.5 rounded-md py-0.5 text-left transition-colors hover:bg-accent/40"
-              key={runner.yes.pairKey}
-              onClick={() => open(runner)}
-              type="button"
-            >
-              <span className="w-[38%] max-w-[152px] shrink-0 truncate text-[12.5px]">
-                {runner.label}
-              </span>
-              <span className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
-                <span
-                  className="block h-full rounded-full"
-                  style={{
-                    width: `${Math.round((price ?? 0) * 100)}%`,
-                    background: SHARE_TOKENS[index % SHARE_TOKENS.length],
-                  }}
-                />
-              </span>
-              <span className="w-11 shrink-0 text-right font-mono text-[12.5px] font-semibold tabular-nums">
-                {price === null ? '—' : `${(price * 100).toFixed(1)}%`}
-              </span>
-              <span
-                className={cn(
-                  'w-10 shrink-0 text-right font-mono text-[11px] tabular-nums',
-                  change === undefined || change === 0
-                    ? 'text-muted-foreground'
-                    : change > 0
-                      ? 'text-up'
-                      : 'text-down',
-                )}
-              >
-                {change === undefined
-                  ? ''
-                  : `${change > 0 ? '+' : ''}${(change * 100).toFixed(1)}`}
-              </span>
-            </button>
-          )
-        })}
+        {preview.map((runner) => (
+          <RunnerRow
+            key={runner.yes.pairKey}
+            market={row.market}
+            onOpen={() => open(runner)}
+            runner={runner}
+            token={runnerToken(runnerColorIndex(runners, runner.yes.pairKey))}
+          />
+        ))}
         {hidden > 0 && (
           <button
-            className="mt-0.5 self-start text-[11px] text-primary hover:underline"
-            onClick={() => preview[0] && open(preview[0])}
+            className="mt-0.5 flex items-center gap-1 self-start text-[11px] text-primary hover:underline"
+            onClick={() => {
+              track('prediction_full_field_opened', { runners_hidden: hidden })
+              onOpenField(row)
+            }}
             type="button"
           >
             {t('eventBoard.openFullField', { count: hidden })}
+            <ArrowRight className="size-3" />
           </button>
         )}
       </div>
@@ -489,18 +571,98 @@ function RaceCard({
   )
 }
 
-function ShareBar({ runners }: { runners: Array<PredictionRunner> }) {
-  const segments = runners.slice(0, RACE_PREVIEW)
-  const total = runners.reduce((sum, r) => sum + (runnerPrice(r) ?? 0), 0)
-  if (total <= 0) return null
+/**
+ * One runner: name, its share of the bar, its probability, its move, its arc.
+ *
+ * The sparkline is the same month of daily closes the ladder draws, keyed on
+ * the same venue and pair — so a runner's line does not change shape when the
+ * user opens the race board. It is visibility-gated and queued four at a time
+ * by `useSparkline`, which is what keeps a board of race cards from opening a
+ * request per runner on arrival.
+ */
+function RunnerRow({
+  market,
+  onOpen,
+  runner,
+  token,
+}: {
+  market: string
+  onOpen: () => void
+  runner: PredictionRunner
+  token: string
+}) {
+  const price = runnerPrice(runner)
+  const change = runner.yes.change24h
+  const moved = change !== undefined && Math.abs(change) >= 0.0005
+  return (
+    <button
+      className="flex items-center gap-2.5 rounded-md py-0.5 text-left transition-colors hover:bg-accent/40"
+      onClick={onOpen}
+      type="button"
+    >
+      <span className="w-[38%] shrink-0 truncate text-[12.5px] @[44rem]:w-[152px]">
+        {runner.label}
+      </span>
+      <span className="h-2 min-w-0 flex-1 overflow-hidden rounded-full bg-muted">
+        <span
+          className="block h-full rounded-full"
+          style={{
+            width: `${Math.round((price ?? 0) * 100)}%`,
+            background: token,
+          }}
+        />
+      </span>
+      <span className="w-11 shrink-0 text-right font-mono text-[12.5px] font-semibold tabular-nums">
+        {price === null ? '—' : `${(price * 100).toFixed(1)}%`}
+      </span>
+      <span
+        className={cn(
+          'w-11 shrink-0 text-right font-mono text-[11px] tabular-nums',
+          !moved
+            ? 'text-muted-foreground'
+            : change > 0
+              ? 'text-up'
+              : 'text-down',
+        )}
+      >
+        {change === undefined
+          ? '—'
+          : `${change > 0 ? '+' : ''}${(change * 100).toFixed(1)}`}
+      </span>
+      <MiniPriceChart
+        className="h-4 w-[50px]"
+        historyWindow={MONTH_WINDOW}
+        market={market}
+        pair={runner.yes.pairKey}
+        tone={moved ? 'auto' : 'muted'}
+      />
+    </button>
+  )
+}
+
+/**
+ * The leaders' share of the field, in absolute probability.
+ *
+ * The grey tail is half the reading: it is everyone else. Segments are the
+ * runners' own probabilities rather than their share of each other, so four
+ * runners at 5% each fill a fifth of the bar — which is exactly what a race
+ * with no favourite looks like.
+ */
+function MassBar({ runners }: { runners: Array<PredictionRunner> }) {
+  const segments = useMemo(
+    () => massBarSegments(runners, RACE_PREVIEW),
+    [runners],
+  )
+  if (segments.length === 0) return null
   return (
     <div className="flex h-[9px] overflow-hidden rounded-full">
-      {segments.map((runner, index) => (
+      {segments.map((segment) => (
         <span
-          key={runner.yes.pairKey}
+          className="shrink-0"
+          key={segment.pairKey}
           style={{
-            width: `${((runnerPrice(runner) ?? 0) / total) * 100}%`,
-            background: SHARE_TOKENS[index % SHARE_TOKENS.length],
+            width: `${segment.percent}%`,
+            background: runnerToken(runnerColorIndex(runners, segment.pairKey)),
           }}
         />
       ))}
@@ -518,10 +680,12 @@ function ChangeLine({ change }: { change: number | undefined }) {
   if (change === 0 || points < 0.05) {
     return (
       <p className="mt-[3px] text-[11px] text-muted-foreground">
+        <span aria-hidden>— </span>
         {t('eventBoard.unchanged')}
       </p>
     )
   }
+  const shown = points.toFixed(points < 1 ? 1 : 0)
   return (
     <p
       className={cn(
@@ -529,9 +693,13 @@ function ChangeLine({ change }: { change: number | undefined }) {
         change > 0 ? 'text-up' : 'text-down',
       )}
     >
+      {/* The count is the number as PRINTED, not the raw move: a 1.2 point
+          move rounds to "1", and "1 pts today" is the kind of thing a reader
+          notices before they notice anything else on the card. */}
       {t('eventBoard.movedPoints', {
         arrow: change > 0 ? '▲' : '▼',
-        points: points.toFixed(points < 1 ? 1 : 0),
+        count: Number(shown),
+        points: shown,
       })}
     </p>
   )

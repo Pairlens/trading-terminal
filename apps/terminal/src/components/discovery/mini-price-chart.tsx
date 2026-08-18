@@ -86,18 +86,34 @@ function ClipWindow({
   )
 }
 
+/**
+ * How a finished line is painted.
+ *
+ * 'auto' is the rule everywhere a chart sits beside a price: green when the
+ * window closed up, red when it closed down. 'muted' is for the one caller
+ * that already said the opposite in words — a prediction card whose 24h line
+ * reads "unchanged" must not draw a green arc beside it, because over a month
+ * of daily closes almost every contract is up or down on the window and the
+ * colour would be arguing with the delta. It drops the area fill too: the tint
+ * is what makes a sparkline read as a direction.
+ */
+export type SparklineTone = 'auto' | 'muted'
+
 export function MiniPriceChartView({
   values,
   state,
   seed,
   animate = true,
   className,
+  tone = 'auto',
   ref,
 }: {
   values: Array<number>
   state: SparklineState
   /** Keeps a row's loading shape stable, and unlike its neighbours'. */
   seed?: string
+  /** Colour rule for the finished line. Defaults to up/down. */
+  tone?: SparklineTone
   /**
    * Whether this chart is on screen. A list holds far more charts than it
    * shows, and an infinite shimmer on every one of them is real compositing
@@ -146,7 +162,7 @@ export function MiniPriceChartView({
       className={cn(
         'shrink-0 overflow-visible',
         DEFAULT_BOX,
-        geometry
+        geometry && tone === 'auto'
           ? geometry.up
             ? 'text-up'
             : 'text-down'
@@ -171,11 +187,13 @@ export function MiniPriceChartView({
               <ClipWindow className="spark-wipe" />
             </clipPath>
           </defs>
-          <path
-            className="spark-fade-in"
-            d={geometry.area}
-            fill={`url(#${gradientId})`}
-          />
+          {tone === 'auto' && (
+            <path
+              className="spark-fade-in"
+              d={geometry.area}
+              fill={`url(#${gradientId})`}
+            />
+          )}
           <path {...STROKE} d={geometry.line} clipPath={`url(#${clipId})`} />
         </>
       ) : skeleton ? (
@@ -237,11 +255,14 @@ export const MiniPriceChart = memo(function MiniPriceChart({
   pair,
   className,
   historyWindow,
+  tone,
 }: {
   /** Venue to price the trend against — already resolved for the asset class. */
   market: string | undefined
   pair: string | undefined
   className?: string
+  /** Colour rule for the finished line; see `SparklineTone`. */
+  tone?: SparklineTone
   /**
    * Span to draw, when a day of hourly closes is the wrong one. Prediction
    * outcomes ask for a month: their 24h move is already its own column, so
@@ -278,6 +299,7 @@ export const MiniPriceChart = memo(function MiniPriceChart({
       seed={pair}
       animate={inView}
       className={className}
+      {...(tone ? { tone } : {})}
     />
   )
 })

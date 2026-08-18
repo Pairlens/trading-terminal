@@ -38,12 +38,18 @@ export type ImpactTierRow = {
  * @param stats the pool, for the quote leg's USD price. Without it a dollar
  * size cannot be turned into units of the token being spent, and the grid
  * collapses rather than quoting an amount nobody asked for.
+ * @param sizes the notionals to quote. Defaults to the three-size grid the
+ * pool-stats pane draws; a pane that prints a single line (the detail pane's
+ * "$10k") passes one size and spends one quote instead of three. Query keys
+ * are per size, so a caller asking for a subset reuses whatever the fuller
+ * grid already cached for the same pair rather than refetching it.
  */
 export function usePriceImpactTiers(
   market: string | undefined,
   pairKey: string | undefined,
   stats: PoolStats | null,
   enabled = true,
+  sizes: ReadonlyArray<number> = IMPACT_TIER_USD,
 ): Array<ImpactTierRow> {
   const connectors = useDexConnectors()
   const plugin = market ? (connectors.get(market) ?? null) : null
@@ -57,7 +63,7 @@ export function usePriceImpactTiers(
       : null
 
   const results = useQueries({
-    queries: IMPACT_TIER_USD.map((usd) => {
+    queries: sizes.map((usd) => {
       const size = usdToQuoteUnits(usd, stats?.quotePriceUsd ?? null)
       const active = Boolean(enabled && plugin && pairKey && size)
       return {
@@ -84,7 +90,7 @@ export function usePriceImpactTiers(
     }),
   })
 
-  return IMPACT_TIER_USD.map((usd, index) => {
+  return sizes.map((usd, index) => {
     const result = results[index]
     const quote = (result?.data ?? null) as SwapRouteQuote | null
     return {

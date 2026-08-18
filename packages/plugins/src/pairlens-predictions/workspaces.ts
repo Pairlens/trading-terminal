@@ -187,8 +187,10 @@ export const PREDICTION_RACE_LAYOUT = {
  * column here, with a category rail to narrow it and a right rail carrying the
  * biggest odds moves over what settles soonest.
  *
- * Everything on it renders through `formatPredictionPrice`, so no dollar
- * figure ever appears beside a 78c contract.
+ * Prices render through `formatPredictionPrice` on the chips that trade; the
+ * reading rails beside the board state probabilities, because there a price is
+ * not what you pay, it is what the market believes. No dollar figure appears
+ * beside either.
  */
 export const PREDICTION_DISCOVERY_LAYOUT = {
   version: 1,

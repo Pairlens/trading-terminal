@@ -15,6 +15,7 @@ import { numberOrNull, splitPoolName } from './pool-stats-client'
 import type {
   ChainPoolStats,
   PoolListingEntry,
+  PoolTradeCounts,
 } from '@pairlens/shared/instrument-types'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
@@ -36,6 +37,23 @@ export type RawGeckoPoolRow = {
     reserve_in_usd?: string | null
     /** ISO 8601. Published by `/new_pools`; absent from the ranked listing. */
     pool_created_at?: string | null
+    /**
+     * Trade counts per window (`m5`, `h1`, `h6`, `h24`). Numbers here, not the
+     * strings the money fields use, which is why they go through
+     * `numberOrNull` rather than being trusted as-is.
+     */
+    transactions?: Record<
+      string,
+      | {
+          buys?: number | string | null
+          sells?: number | string | null
+          buyers?: number | string | null
+          sellers?: number | string | null
+        }
+      | null
+      | undefined
+    >
+    fdv_usd?: string | null
   }
   relationships?: {
     dex?: { data?: { id?: string } }
@@ -73,6 +91,38 @@ export function parsePoolCreatedAt(
   return Number.isFinite(ms) ? ms : undefined
 }
 
+/**
+ * A window's trade counts, or null when the provider published none.
+ *
+ * Null rather than `{buys: 0, sells: 0}`: a pool map that sizes tiles by trade
+ * count has to tell "nobody traded this" from "this listing does not carry
+ * counts", and a zeroed object collapses the two into a tile of no area.
+ * Buyers and sellers stay nullable because only the wallet-aware windows
+ * publish them.
+ */
+export function parseTradeCounts(
+  window:
+    | {
+        buys?: number | string | null
+        sells?: number | string | null
+        buyers?: number | string | null
+        sellers?: number | string | null
+      }
+    | null
+    | undefined,
+): PoolTradeCounts | null {
+  if (!window) return null
+  const buys = numberOrNull(window.buys)
+  const sells = numberOrNull(window.sells)
+  if (buys === null && sells === null) return null
+  return {
+    buys: buys ?? 0,
+    sells: sells ?? 0,
+    buyers: numberOrNull(window.buyers),
+    sellers: numberOrNull(window.sellers),
+  }
+}
+
 export function parsePoolListingEntry(
   raw: RawGeckoPoolRow,
   network: string,
@@ -100,6 +150,8 @@ export function parsePoolListingEntry(
       raw.relationships?.base_token?.data?.id,
       network,
     ),
+    trades24h: parseTradeCounts(attrs.transactions?.['h24']),
+    fdvUsd: numberOrNull(attrs.fdv_usd),
     // Only `/new_pools` publishes it. Spread so a ranked-pool row keeps the
     // key absent rather than carrying an explicit undefined into a store.
     ...(createdAtMs === undefined ? {} : { createdAtMs }),
@@ -174,17 +226,57 @@ const listingCache = new Map<
 >()
 const listingInFlight = new Map<string, Promise<Array<PoolListingEntry>>>()
 
-/** Top pools by 24h volume. Throws on a failed request (see fetchPoolStats). */
+/** How a listing page is ordered by the provider. */
+export type PoolListingSort = 'trending' | 'volume'
+
+/**
+ * Top pools on a network, one page per request.
+ *
+ * The provider's default order is its trending feed, which on chains with
+ * cheap blockspace is dominated by bot-painted pools; `sort: 'volume'` asks
+ * for the volume ranking instead, which is where the real top pools live once
+ * the map's quality bar strips the fakes. Distinct cache key per order, so a
+ * trending consumer and a volume consumer never poison each other's page.
+ * Throws on a failed request (see fetchPoolStats).
+ */
 export function fetchTopPools(
   network: string,
   page = 1,
+  sort: PoolListingSort = 'trending',
 ): Promise<Array<PoolListingEntry>> {
-  return cachedListing(`${network}:${page}`, () =>
-    requestPoolPage(`${API_BASE}/networks/${network}/pools?page=${page}`, {
-      network,
-      label: 'pools',
-    }),
+  const sortParam = sort === 'volume' ? '&sort=h24_volume_usd_desc' : ''
+  return cachedListing(`${network}:${sort}:${page}`, () =>
+    requestPoolPage(
+      `${API_BASE}/networks/${network}/pools?page=${page}${sortParam}`,
+      {
+        network,
+        label: 'pools',
+      },
+    ),
   )
+}
+
+/**
+ * Several listing pages as one deduped list, first appearance wins.
+ *
+ * The volume ranking repeats a pool across page boundaries when the ranking
+ * shifts mid-walk, and a treemap keyed by address would render the duplicate
+ * as a phantom tile.
+ */
+export function mergePoolPages(
+  pages: ReadonlyArray<ReadonlyArray<PoolListingEntry>>,
+): Array<PoolListingEntry> {
+  const seen = new Set<string>()
+  const merged: Array<PoolListingEntry> = []
+  for (const page of pages) {
+    for (const pool of page) {
+      const key = `${pool.network}:${pool.address}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      merged.push(pool)
+    }
+  }
+  return merged
 }
 
 /**

@@ -232,3 +232,77 @@ export function byProbability(
 export function runnerPrice(runner: PredictionRunner): number | null {
   return priceOf(runner.yes.price) ?? priceOf(runner.yes.ask)
 }
+
+/**
+ * The runner a binary card takes its headline from.
+ *
+ * Not `runners[0]`. Both venues are free to order a market's legs however they
+ * like, and Polymarket regularly puts No first — so the board was printing a
+ * 92% headline in green over a question the market gives an 8% chance. The Yes
+ * leg is the one every other reading on the card is stated from (the 24h move
+ * is signed from it, the chips price it first), so it is the one the number
+ * has to be.
+ */
+export function headlineRunner(
+  runners: Array<PredictionRunner>,
+): PredictionRunner | null {
+  const named = runners.find((r) => binarySideOf(r.yes.label) === 'yes')
+  return named ?? runners[0] ?? null
+}
+
+/**
+ * Which noun the field's count takes.
+ *
+ * A single market carrying many outcomes is a set of OUTCOMES on one question
+ * ("which strike does CPI land above"). An event carrying many markets is a
+ * set of CANDIDATES, each its own question ("does Newsom win the nomination").
+ * The board said "candidates" for both, which reads as nonsense over a scalar
+ * ladder.
+ */
+export type RaceFieldKind = 'outcomes' | 'candidates'
+
+export function raceFieldKind(
+  event: Pick<PredictionEventSummary, 'markets'>,
+): RaceFieldKind {
+  return (event.markets ?? []).length > 1 ? 'candidates' : 'outcomes'
+}
+
+/** One block of the race card's mass bar: a runner and the width it holds. */
+export type MassSegment = {
+  pairKey: string
+  /** Absolute probability as a percentage of the whole bar, 0..100. */
+  percent: number
+}
+
+/**
+ * The leaders' share of the bar, in ABSOLUTE probability.
+ *
+ * The bar's job is to say how much of the field the leaders hold, and the grey
+ * tail is the answer's other half: "everyone else". Normalising the segments by
+ * their own sum destroyed exactly that — four runners at 5% each filled the
+ * whole bar and a race with no favourite looked like a race that was decided.
+ *
+ * A field priced over 100% (the overround, and on a thin book it can be well
+ * over) is squeezed proportionally rather than clipped at whichever runner
+ * crossed the edge: the bar can never say more than "all of it", and the
+ * ranking inside it has to survive the squeeze.
+ */
+export function massBarSegments(
+  runners: Array<PredictionRunner>,
+  n: number,
+): Array<MassSegment> {
+  const segments: Array<MassSegment> = []
+  let total = 0
+  for (const runner of byProbability(runners).slice(0, n)) {
+    const price = runnerPrice(runner)
+    if (price === null) continue
+    segments.push({ pairKey: runner.yes.pairKey, percent: price * 100 })
+    total += price * 100
+  }
+  if (total <= 100) return segments
+  const scale = 100 / total
+  return segments.map((segment) => ({
+    ...segment,
+    percent: segment.percent * scale,
+  }))
+}

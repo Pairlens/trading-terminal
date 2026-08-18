@@ -18,7 +18,7 @@
  * on a discovery board.
  */
 import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { isPlatformRestrictedError } from '@pairlens/market-engine/errors'
 import type { PluginInstance } from '@pairlens/plugin-system/types'
@@ -281,4 +281,145 @@ export function useFundingHistory(
     // a reason to retry a refusal three times per mount.
     retry: false,
   })
+}
+
+/** Stamps covering 30 days of hourly settlement, which is the densest clock. */
+const HISTORY_STAMPS_30D = 720
+
+/**
+ * A settled series only gains a point once per settlement, and the rail reads
+ * it as a 30-day distribution rather than a live number. Fifteen minutes is
+ * therefore already far more often than the answer can change.
+ */
+const HISTORIES_STALE_MS = 15 * 60_000
+
+/** Histories in flight at once, across every venue. */
+const HISTORY_CONCURRENCY = 4
+
+export type FundingHistoryTarget = { market: string; pair: string }
+
+/** `market:pair`, the key a caller looks a resolved history up by. */
+export function fundingHistoryKey(market: string, pair: string): string {
+  return `${market}:${pair}`
+}
+
+/**
+ * A 30-day settled series for each of a bounded set of contracts.
+ *
+ * ONE subscription for the whole batch rather than a hook per contract: the
+ * extremes rail asks about up to sixteen contracts at once, and sixteen
+ * `useQuery` calls would be sixteen subscriptions re-rendering the pane
+ * independently as each landed. The fan-out inside is paced at
+ * `HISTORY_CONCURRENCY`, because these share the same unauthenticated budget
+ * the chart's backfill draws on.
+ *
+ * Each contract still gets its OWN cache entry, filled through `fetchQuery`
+ * rather than fetched inline. That is what makes the rail affordable: its
+ * candidate list is redrawn every time funding refreshes, and a batch cached
+ * as one blob would re-read a month of stamps for fifteen unchanged contracts
+ * because the sixteenth swapped out. Here a churned candidate costs exactly one
+ * request, and the entry it shares with the belt's `useFundingHistory` is the
+ * same shape at the same key.
+ *
+ * A venue that publishes no history for a contract simply has no entry in the
+ * answer. That is the pane's cue to fall back to what it can source, not an
+ * error worth surfacing: Kraken serves a series, KuCoin does not, and the rail
+ * must read correctly either way.
+ */
+export function useFundingHistories(
+  venues: Array<FuturesVenue>,
+  targets: Array<FundingHistoryTarget>,
+  limit = HISTORY_STAMPS_30D,
+) {
+  const client = useQueryClient()
+  const byMarket = useMemo(() => {
+    const map = new Map<string, FuturesVenue>()
+    for (const venue of venues) map.set(venue.market, venue)
+    return map
+  }, [venues])
+
+  const scope = targets
+    .map((t) => fundingHistoryKey(t.market, t.pair))
+    .sort()
+    .join(',')
+
+  return useQuery({
+    queryKey: ['futures-funding-histories', scope, limit],
+    queryFn: async (): Promise<Array<FundingHistoryResponse>> => {
+      const wanted = targets.filter((target) => byMarket.has(target.market))
+      const settled = await mapWithConcurrency(
+        wanted,
+        HISTORY_CONCURRENCY,
+        async (target) => {
+          const venue = byMarket.get(target.market)
+          if (!venue) throw new Error(`No venue for ${target.market}`)
+          return client.fetchQuery({
+            queryKey: [
+              'futures-funding-history',
+              target.market,
+              target.pair,
+              limit,
+            ],
+            queryFn: async (): Promise<FundingHistoryResponse> =>
+              (await callVenue({
+                venue,
+                params: {
+                  action: 'funding-history',
+                  pair: target.pair,
+                  limit,
+                },
+              })) as FundingHistoryResponse,
+            staleTime: HISTORIES_STALE_MS,
+            gcTime: 30 * 60_000,
+            retry: false,
+          })
+        },
+      )
+      const out: Array<FundingHistoryResponse> = []
+      for (const result of settled) {
+        if (result.status !== 'fulfilled') continue
+        if (!result.value || !Array.isArray(result.value.points)) continue
+        out.push(result.value)
+      }
+      return out
+    },
+    enabled: scope !== '',
+    staleTime: HISTORIES_STALE_MS,
+    gcTime: 30 * 60_000,
+    refetchInterval: HISTORIES_STALE_MS,
+    retry: false,
+  })
+}
+
+/**
+ * Run `task` over `items` with at most `limit` in flight, never rejecting.
+ *
+ * One venue refusing a contract must not take the other fifteen answers down
+ * with it, which is what `Promise.all` would do — and firing all sixteen at
+ * once would put the board's first paint behind its own sweep.
+ */
+async function mapWithConcurrency<TIn, TOut>(
+  items: Array<TIn>,
+  limit: number,
+  task: (item: TIn) => Promise<TOut>,
+): Promise<Array<PromiseSettledResult<TOut>>> {
+  const results = new Array<PromiseSettledResult<TOut>>(items.length)
+  let cursor = 0
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, async () => {
+      for (;;) {
+        const index = cursor++
+        if (index >= items.length) return
+        try {
+          results[index] = {
+            status: 'fulfilled',
+            value: await task(items[index]),
+          }
+        } catch (reason) {
+          results[index] = { status: 'rejected', reason }
+        }
+      }
+    }),
+  )
+  return results
 }

@@ -324,6 +324,15 @@ export interface AnalyticsEvents {
   /** Movers pane tab switch — answers whether the New listings tab (and the
    * long-tail tabs) are found at all. The tab id names our surface. */
   movers_tab_selected: { tab: string }
+  /** The prediction board's category rail, used. A rail nobody clicks is a
+   * dead column on the busiest board in the product. Carries our own category
+   * vocabulary, never an event title or a venue's raw tag; null clears back
+   * to Trending. */
+  prediction_category_selected: { category: string | null }
+  /** The full field opened from a race card — answers whether a four-runner
+   * preview is the right depth or the cards should carry more rows. The count
+   * is how many runners the preview hid, never which event. */
+  prediction_full_field_opened: { runners_hidden: number }
 
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }

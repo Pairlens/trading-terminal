@@ -14,6 +14,14 @@
  *  3. Venues that publish no move at all are EXCLUDED and named. A venue whose
  *     rows are all missing would otherwise look like a venue where nothing
  *     happened, which is the one wrong answer a movers board can give.
+ *
+ * Two more rules came out of reading the shipped rail on a live board. Rows
+ * were titled from the MARKET, so a Polymarket race contributed "Harry Kane"
+ * and a scalar ladder contributed "December 31" — true strings, and neither
+ * one names a question. And a settled-but-listed contract publishes a move
+ * into 100¢, which filled the top of the rail with "100→100" rows that no
+ * longer trade. So a row now leads with its event, and anything pegged at
+ * either end of the range is not a mover.
  */
 import type {
   PredictionEventSummary,
@@ -27,6 +35,17 @@ import { yesOutcomeOf } from '@/lib/predictions/race'
 /** Rows one event may contribute, so a race cannot flood the pane. */
 const MAX_ROWS_PER_EVENT = 2
 
+/**
+ * How close to a settled price counts as pegged, in collateral units.
+ *
+ * A contract at 99.6¢ is not a market with an opinion, it is a market waiting
+ * for the paperwork — and both venues keep publishing a 24h move on it.
+ */
+const PEGGED_MARGIN = 0.005
+
+/** The smallest move worth a row: one probability point. */
+const MIN_MOVE = 0.01
+
 export type OddsMoverRow = {
   /** Stable across refetches: venue + outcome, which is the identity. */
   key: string
@@ -35,8 +54,13 @@ export type OddsMoverRow = {
   event: PredictionEventSummary
   marketSummary: PredictionMarketSummary
   outcome: PredictionOutcomeSummary
-  /** What the row calls itself: the runner's label, else the question. */
+  /** What the row calls itself: the EVENT, which is the question being asked. */
   title: string
+  /**
+   * The runner inside that event, when naming it adds something. Null on a
+   * binary question, where the event title already is the market.
+   */
+  qualifier: string | null
   /** Current probability, collateral units. */
   price: number
   /** Where it was 24h ago, derived — never negative, never above 1. */
@@ -74,10 +98,13 @@ export function collectOddsMovers(
         const change = outcome.change24h
         if (typeof change !== 'number' || !Number.isFinite(change)) continue
         venueHasChange = true
-        if (change === 0) continue
+        // Under a point is noise on a probability, and the rail has twenty
+        // rows to spend on questions that actually changed their mind.
+        if (Math.abs(change) < MIN_MOVE) continue
         const price = outcome.price ?? outcome.ask
         if (typeof price !== 'number' || !Number.isFinite(price)) continue
         if (price <= 0 || price > 1) continue
+        if (price >= 1 - PEGGED_MARGIN || price <= PEGGED_MARGIN) continue
 
         perEvent.push({
           key: `${venue.market}:${outcome.pairKey}`,
@@ -86,7 +113,8 @@ export function collectOddsMovers(
           event,
           marketSummary,
           outcome,
-          title: marketSummary.shortTitle?.trim() || marketSummary.title,
+          title: event.title,
+          qualifier: qualifierOf(event, marketSummary),
           price,
           // Clamped: a venue whose stated delta disagrees with its stated
           // price by a hair would otherwise render a bar starting below zero.
@@ -106,6 +134,40 @@ export function collectOddsMovers(
 
   rows.sort((a, b) => Math.abs(b.change) - Math.abs(a.change))
   return { rows: rows.slice(0, limit), venuesWithoutChange }
+}
+
+/**
+ * Which runner moved, when the event has more than one and does not already
+ * say so in its own heading.
+ *
+ * "Democratic Presidential Nominee 2028 · Gavin Newsom" is two facts a reader
+ * needs; "Fed decision in September · Fed decision in September" is one fact
+ * twice, which is what a naive concatenation produces on the binary events
+ * that make up most of a board.
+ */
+function qualifierOf(
+  event: PredictionEventSummary,
+  market: PredictionMarketSummary,
+): string | null {
+  if (event.markets.length < 2) return null
+  const short = market.shortTitle?.trim()
+  if (!short) return null
+  if (event.title.toLowerCase().includes(short.toLowerCase())) return null
+  return short
+}
+
+/**
+ * The move, as the two probabilities it ran between: `64→78`.
+ *
+ * Points rather than cents, because this rail reads the market's opinion
+ * rather than quoting a price — the cents belong on the buttons that trade.
+ * Both endpoints take the same precision, and the tenth appears only on a move
+ * small enough to vanish without it: `18.5→16.4` says something, `18→16` says
+ * a different and rounder thing, and `64.0→78.0` is just noise in a 44px slot.
+ */
+export function formatMovePoints(previous: number, price: number): string {
+  const digits = Math.abs(price - previous) * 100 < 5 ? 1 : 0
+  return `${(previous * 100).toFixed(digits)}→${(price * 100).toFixed(digits)}`
 }
 
 /** Biggest absolute 24h move anywhere in an event, for the board's sort chip. */

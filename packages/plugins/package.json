@@ -28,6 +28,7 @@
     "./pairlens-equities": "./src/pairlens-equities/index.ts",
     "./pairlens-equities/workspaces": "./src/pairlens-equities/workspaces.ts",
     "./basic-symbols": "./src/basic-symbols/index.ts",
+    "./catalog": "./src/catalog.ts",
     "./themes": "./src/themes/index.ts",
     "./alpaca-market-connector": "./src/alpaca-market-connector/index.ts",
     "./dexpaprika-data-provider": "./src/dexpaprika-data-provider/index.ts",

@@ -223,16 +223,21 @@ export type PoolListingResult = {
 export function usePoolListing(
   market: string | null | undefined,
   enabled = true,
+  opts?: { sort?: 'volume'; depth?: number },
 ): PoolListingResult {
   const { pluginManager, pluginsReady } = usePairlens()
   const active = Boolean(enabled && pluginsReady && market)
+  const sort = opts?.sort
+  const depth = opts?.depth
 
   const query = useQuery({
-    queryKey: ['pool-listing', market],
+    queryKey: ['pool-listing', market, sort ?? 'trending', depth ?? 1],
     queryFn: async () =>
       (await pluginManager.execute('market-data:pool-stats', {
         action: 'pools',
         market,
+        ...(sort ? { sort } : {}),
+        ...(depth ? { depth } : {}),
       })) as PoolListingResponse | null,
     enabled: active,
     staleTime: LISTING_REFRESH_MS,

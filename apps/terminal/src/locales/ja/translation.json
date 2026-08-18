@@ -151,29 +151,34 @@
     "providerBusyTitle": "決算フィードがレート制限中です",
     "providerErrorBody": "提供元が使えない応答を返しました。口座やコネクターの問題ではありません。",
     "providerErrorTitle": "決算フィードを読み込めませんでした",
-    "reportTime": {
-      "amc": "引け後",
-      "amcLabel": "引け後に発表",
-      "bmo": "寄付前",
-      "bmoLabel": "寄り付き前に発表"
-    },
     "scopeLabel": "決算の対象期間",
     "scopes": {
       "today": "今日",
       "week": "今週",
-      "watchlist": "ウォッチリスト"
+      "watchlist": "マイウォッチリスト"
     },
     "title": "決算",
     "emptyTitle": "決算フィードがありません",
     "emptyBody": "このビルドには決算データの提供元がありません。日程は App Server から届きます。ブローカーが公開するのは自社のセッション時間で、今週の決算予定ではありません。",
     "columns": {
       "company": "企業名",
-      "quarterEnd": "決算期末",
-      "symbol": "銘柄",
-      "epsEstimate": "EPS予想"
+      "symbol": "銘柄"
     },
     "today": "今日",
-    "tomorrow": "明日"
+    "tomorrow": "明日",
+    "heading": {
+      "today": "本日の決算発表",
+      "week": "今週の決算発表",
+      "watchlist": "ウォッチリスト銘柄の決算発表"
+    },
+    "slots": {
+      "bmo": "寄り付き前",
+      "amc": "引け後",
+      "unstated": "時刻未定"
+    },
+    "consensusEps": "予想EPS",
+    "quarterTo": "{{period}}までの四半期",
+    "periodEnded": "{{date}}に終了する会計四半期"
   },
   "economicCalendar": {
     "allDay": "終日",
@@ -217,7 +222,10 @@
     "sourceNote": "BLS、BEA、連邦準備制度、Census の公表スケジュールから作成。結果と前回は各機関の発表そのもの、織り込みは Kalshi の契約価格から算出しています。時刻は各機関の公表どおり米国東部時間です。",
     "title": "マクロ",
     "today": "今日",
-    "tomorrow": "明日"
+    "tomorrow": "明日",
+    "countdownDh": "{{days}}日{{hours}}時間後",
+    "countdownHm": "{{hours}}時間{{minutes}}分後",
+    "countdownM": "{{minutes}}分後"
   },
   "eventBoard": {
     "listed": "掲載 {{when}}",
@@ -233,15 +241,20 @@
       "biggestMove": "変動幅"
     },
     "unchanged": "変化なし",
-    "movedPoints": "{{arrow}} 本日 {{points}} ポイント",
     "volumeUnknown": "出来高は非公開",
     "liquidity": "流動性 {{value}}",
-    "outcomeCount_one": "候補 1 件",
-    "outcomeCount_other": "候補 {{count}} 件",
+    "outcomeCount_one": "選択肢 1 件",
+    "outcomeCount_other": "選択肢 {{count}} 件",
     "topShare_one": "首位が確率全体の {{percent}} % を占めています。",
     "topShare_other": "上位 {{count}} 件が確率全体の {{percent}} % を占めています。",
     "openFullField_one": "全候補を開く（他 1 件）",
-    "openFullField_other": "全候補を開く（他 {{count}} 件）"
+    "openFullField_other": "全候補を開く（他 {{count}} 件）",
+    "endsIn": "締切 {{when}}",
+    "openInterest": "建玉 {{value}}",
+    "candidateCount_one": "候補 1 件",
+    "candidateCount_other": "候補 {{count}} 件",
+    "movedPoints_one": "{{arrow}} 本日 {{points}}pt",
+    "movedPoints_other": "{{arrow}} 本日 {{points}}pt"
   },
   "eventHeader": {
     "noPairTitle": "契約が未選択です",
@@ -295,10 +308,11 @@
     "loading": "ファンディングレートを読み込み中…",
     "na": "該当なし",
     "stampUnknown": "未公開",
-    "desktopOnly": "の公開APIにはデスクトップアプリからしか到達できません。",
     "manageConnectors": "コネクタを管理",
     "cellHint": "{{pair}} · {{hours}}時間ごとに {{rate}}",
-    "cellHintAssumed": "{{pair}} · {{rate}}。取引所が公開していないため、{{hours}}時間ごとの精算と仮定"
+    "cellHintAssumed": "{{pair}} · {{rate}}。取引所が公開していないため、{{hours}}時間ごとの精算と仮定",
+    "desktopOnlyLine_one": "{{venues}} はデスクトップアプリから配信されます。",
+    "desktopOnlyLine_other": "{{venues}} はデスクトップアプリから配信されます。"
   },
   "fundingBelt": {
     "now": "現在のファンディング · {{hours}}時間",
@@ -320,12 +334,14 @@
     "noRateBody": "{{venue}} はこの契約のファンディングレートを返しませんでした。"
   },
   "fundingExtremes": {
-    "subtitle": "接続中の取引所で最も高いキャリーと最も安いキャリー（年率）。",
-    "longsPay": "ロングの負担が最大",
-    "shortsPay": "ショートの負担が最大",
+    "subtitle": "最も高いキャリーと最も安いキャリーを、各契約自身の30日レンジに照らして順位付け。",
     "perInterval": "{{hours}}時間ごとに {{rate}}",
     "emptyTitle": "並べ替えるレートがありません",
-    "emptyBody": "無期限先物の取引所が応答すると、最も高い契約と最も安い契約がここに並びます。"
+    "emptyBody": "無期限先物の取引所が応答すると、最も高い契約と最も安い契約がここに並びます。",
+    "rangeTop": "30日レンジの上位{{pct}}%",
+    "rangeBottom": "30日レンジの下位{{pct}}%",
+    "crowdedLong": "ロング過熱",
+    "shortsPaying": "ショートが支払い"
   },
   "fundingMatrix": {
     "title": "ファンディング（年率）",
@@ -451,11 +467,13 @@
     "loadingBody": "このプールの直近スワップを取得しています。",
     "emptyTitle": "スワップはまだありません",
     "emptyBody": "最近このプールで約定がないため、相殺する流れがありません。",
-    "barsLabel": "テイカーの純フロー、{{pool}}",
     "netHour": "直近1時間で {{value}}",
     "bucketTooltip": "買い {{buy}}、売り {{sell}}",
     "axisNote": "5分ごとの買い引く売り。LPによる流動性の追加や引き出しはこのフィードに含まれません。",
-    "biggestLabel": "最大のスワップ"
+    "biggestLabel": "最大のスワップ",
+    "title": "{{pool}} を通るフロー",
+    "subtitle": "買い引く売り、5分刻み",
+    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み"
   },
   "lpPanes": {
     "venueFallback": "このチェーン",
@@ -586,7 +604,10 @@
     "up": "上昇",
     "down": "下落",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "暗号資産の恐怖・強欲指数。0が極度の恐怖、100が極度の強欲です。"
+    "fearGreedTooltip": "暗号資産の恐怖・強欲指数。0が極度の恐怖、100が極度の強欲です。",
+    "breadthPairs_one": "騰落 · {{count}} ペア",
+    "breadthPairs_other": "騰落 · {{count}} ペア",
+    "fearGreedMissing": "App Server も公開インデックスも応答していません。どちらかが応答した時点でこのタイルは表示されます。"
   },
   "movers": {
     "emptyTitle": "市場データがありません",
@@ -629,7 +650,13 @@
       "volume": "まだ出来高を報告した取引所がありません。",
       "volatility": "順位が付くほど動いた銘柄がありません。",
       "unusual": "規模に対して異常な売買をしている銘柄はありません。"
-    }
+    },
+    "reason": {
+      "reportsTonight": "今夜決算発表",
+      "reportedThisMorning": "今朝決算発表済み",
+      "reportsToday": "本日決算発表"
+    },
+    "tradedValueTooltip": "このセッションで実際に取引された金額（ドル建て）。株数の出来高に当日の出来高加重平均価格を掛けたもので、どちらもブローカーの報告値です。"
   },
   "oddsMovers": {
     "subtitle": "24 時間の確率変動が大きい順",
@@ -943,21 +970,25 @@
     "liquidity": "流動性",
     "volume24h": "出来高24時間",
     "turnover": "出来高 / 流動性",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "取引数24時間",
     "feeTier": "手数料ティア",
-    "pressureByValue": "買い圧力と売り圧力（24時間、金額ベース）",
-    "pressureByCount": "買い圧力と売り圧力（24時間、取引数ベース）",
     "loading": "プール情報を読み込み中です。",
-    "openChart": "チャートを開いてスワップ"
+    "openChart": "チャートを開いてスワップ",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "価格インパクト $10k",
+    "pressure1h": "買い / 売り圧力 1時間",
+    "buysValue": "買い {{value}}",
+    "sellsValue": "売り {{value}}",
+    "filledBy": "欠損は {{provider}} が補完"
   },
   "poolMap": {
-    "title": "{{chain}} のプール",
+    "title": "{{chain}} · 上位プール",
     "subtitle": "自らの流動性をどれだけ回しているかで並べ替え",
     "sortTurnover": "回転率",
     "sortVolume": "出来高",
     "sortLiquidity": "流動性",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "チャートを開く",
     "columns": {
       "pool": "プール",
@@ -969,10 +1000,18 @@
     },
     "noChainTitle": "チェーンを選択",
     "noChainBody": "左のレールでチェーンを選ぶと、そのプールが出来高と裏付け流動性の比でここに並びます。",
-    "loadingTitle": "プールを読み込み中",
-    "loadingBody": "このチェーンの上位プールを取得しています。",
     "emptyTitle": "プールが返りませんでした",
-    "emptyBody": "データプロバイダはこのチェーンについて何も返しませんでした。次回更新時に再試行します。"
+    "emptyBody": "データプロバイダはこのチェーンについて何も返しませんでした。次回更新時に再試行します。",
+    "listTitle": "{{chain}} · 全プール",
+    "subtitleVolume": "大きさは24時間の出来高、色は24時間の変動",
+    "subtitleLiquidity": "大きさは流動性、色は24時間の変動",
+    "subtitleTrades": "大きさは24時間の取引回数、色は24時間の変動",
+    "subtitleTurnover": "大きさは出来高対流動性、色は24時間の変動",
+    "sortTrades": "取引回数",
+    "morePools": "このチェーンの他のプール",
+    "backToMap": "マップに戻る",
+    "belowFloorTitle": "マップに載せる深さがありません",
+    "belowFloorBody": "このチェーンが返したプールには、実際の流動性とそれに見合う出来高を備えたものがありません。これらを互いにサイズ比較してもノイズを並べるだけです。全プールの一覧は引き続き利用できます。"
   },
   "poolStats": {
     "notOnChainTitle": "オンチェーンのペアではありません",
@@ -1002,11 +1041,11 @@
     "impactNote": "各サイズでその場で見積もった値で、リザーブからの推計ではありません。そのため分割ルートがこのプール単体の曲線を上回ることがあります。"
   },
   "predictionCategories": {
-    "all": "すべて",
     "noneBody": "この取引所はイベントにカテゴリを付けていません。",
     "venueHeading": "取引所",
     "desktopOnly": "デスクトップ",
-    "venueError": "エラー"
+    "venueError": "エラー",
+    "trending": "話題"
   },
   "resolvingSoon": {
     "resolves": "{{when}} に決着",
@@ -1273,7 +1312,9 @@
     "window": "セクターの期間",
     "leads": "{{total}} 銘柄 · {{symbol}} が牽引",
     "drags": "{{total}} 銘柄 · {{symbol}} が重し",
-    "assets": "{{total}} 銘柄"
+    "assets": "{{total}} 銘柄",
+    "title": "セクターテープ",
+    "splitTape": "{{total}} 銘柄 · まちまち"
   },
   "session": {
     "noVenueTitle": "ブローカー未接続",
@@ -1302,7 +1343,13 @@
     "noSchedule": "予定されたセッションはありません",
     "clockOnly": "開場・閉場のみ。セッションの時間帯は公開されていません。",
     "ticketExtendedNote": "このセッションは指値注文のみ受け付けます。成行を約定させる継続的な板がありません。",
-    "ticketClosedNote": "市場は閉場中です。指値注文は次のセッションが始まるまで待機します。"
+    "ticketClosedNote": "市場は閉場中です。指値注文は次のセッションが始まるまで待機します。",
+    "gateTitle": "取引日",
+    "gateBody": "時間は {{venue}} のカレンダーから直接取得します。",
+    "headlineOpen": "{{venue}} 取引時間中",
+    "headlinePre": "{{venue}} プレマーケット",
+    "headlinePost": "{{venue}} アフターマーケット",
+    "headlineClosed": "{{venue}} 取引時間外"
   },
   "settings": {
     "title": "設定",
@@ -3317,7 +3364,7 @@
     "fundingMatrix": "接続したすべての取引所の全無期限先物のファンディングを1つのグリッドにまとめ、どの列でも並べ替え可能",
     "basisMonitor": "無期限先物と現物の価格差をベーシスポイントと年率で表示し、キャリーを単なる差ではなく利回りとして読めます",
     "openInterest": "各契約の建玉と24時間変化を表示し、価格が動く前にポジションの集中を捉えます",
-    "fundingExtremes": "現在最も高いファンディングレートと最も低いファンディングレート、それぞれの取引所とともに表示",
+    "fundingExtremes": "最も高いキャリーと最も安いキャリー。各レートをその契約自身の30日ファンディングレンジに照らして順位付け",
     "fundingBelt": "次回のファンディング精算までのカウントダウン、現在と予測のレート、そしてあなたのサイズが支払う額または受け取る額",
     "liquidationMap": "取引所が実際に清算した額を時間×価格のヒートマップにし、銘柄のローソク足の背後に描画。あなた自身の清算価格を重ねて表示します",
     "marginHealth": "証拠金比率、維持証拠金と有効証拠金、清算までの距離、そして逆行時にその3つがどう動くか",
@@ -3438,7 +3485,10 @@
       "walletMissingTitle": "ウォレットを接続",
       "walletMissingDescription": "このパネルは接続済みウォレットと連動します。接続すると、ポジション、手数料、送金がここに表示されます。",
       "walletSealedDescription": "ウォレットの鍵はロックされた保管庫にあります。解除すると、このパネルがそのウォレットの読み取りと署名を行えます。",
-      "connectAction": "{{venue}} を接続"
+      "connectAction": "{{venue}} を接続",
+      "compactMissingDescription": "一度接続すればこのパネルに表示されます。キーはこの端末に留まります。",
+      "compactSealedDescription": "{{venue}} のキーはロックされた保管庫の中にあります。",
+      "compactConnectAction": "接続"
     },
     "paneTransition": {
       "switchingTo": "{{venue}} に切り替え中…",
@@ -5359,7 +5409,31 @@
     "predictionsBrowse": "イベントボードを開く",
     "predictionsInstall": "予測プラグインをインストール",
     "futuresEmptyTitle": "先物取引所を接続すると無期限銘柄を閲覧できます",
-    "futuresEmptyBody": "銘柄一覧は各取引所自身のマーケット表から取得するため、その取引所に接続できた時点で表示されます。"
+    "futuresEmptyBody": "銘柄一覧は各取引所自身のマーケット表から取得するため、その取引所に接続できた時点で表示されます。",
+    "sector": {
+      "software": "ソフトウェア",
+      "semiconductors": "半導体",
+      "internet": "インターネット",
+      "hardware": "ハードウェア",
+      "banks": "銀行",
+      "payments": "決済",
+      "cryptoEquity": "暗号資産",
+      "healthcare": "ヘルスケア",
+      "energy": "エネルギー",
+      "retail": "小売",
+      "staples": "生活必需品",
+      "media": "メディア",
+      "travel": "旅行",
+      "industrials": "資本財",
+      "autos": "自動車",
+      "etfEquity": "株式ETF",
+      "etfBonds": "債券ETF",
+      "etfCommodity": "コモディティETF"
+    },
+    "searchPairs_one": "{{count}} ペアを検索",
+    "searchPairs_other": "{{count}} ペアを検索",
+    "browseAll_one": "全 {{count}} ペアを見る",
+    "browseAll_other": "全 {{count}} ペアを見る"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -5400,9 +5474,6 @@
   },
   "news": {
     "title": "ニュース",
-    "tickerPlaceholder": "ティッカー...",
-    "sortLatest": "最新",
-    "sortRelevance": "関連度",
     "unavailable": "ニュースを利用できません",
     "unavailableUpstream": "ニュース提供元が応答していません。復旧するまで記事を読み込めません。",
     "unavailableRateLimited": "ニュース提供元のレート制限に達しました。まもなくリセットされる見込みです。",
@@ -5434,8 +5505,22 @@
       "technology": "テクノロジー",
       "finance": "金融",
       "financial_markets": "金融市場",
-      "economy_macro": "マクロ経済"
-    }
+      "economy_macro": "マクロ経済",
+      "earnings": "決算"
+    },
+    "scope": {
+      "assets": "自分の銘柄",
+      "earnings": "決算",
+      "macro": "マクロ",
+      "all": "すべて"
+    },
+    "refresh": "ニュースを更新",
+    "adjustScope": "このフィルターに該当するニュースはありません。別のフィルターを試すか、数分後にもう一度確認してください。",
+    "noWatchedAssets": "ウォッチリストが空のため、絞り込む対象がありません。ペアにスターを付けるか、マクロをお読みください。",
+    "noAssetNews": "ニュースは流れていますが、ウォッチリストに関するものはありません。マクロとすべては動いています。",
+    "noStockNews": "現在、対象銘柄に関するニュースはありません。マクロとすべては動いています。",
+    "mentionsPairs_one": "ウォッチ中のペア {{count}} 件に言及",
+    "mentionsPairs_other": "ウォッチ中のペア {{count}} 件に言及"
   },
   "tray": {
     "show": "Pairlens を表示",

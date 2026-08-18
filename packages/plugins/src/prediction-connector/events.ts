@@ -183,7 +183,9 @@ function toEventSummary(
     id,
     market: ctx.venue.marketId,
     title,
-    ...opt('category', str(raw['category'])),
+    // The venue's own category first; Polymarket publishes none, so its tags
+    // are read instead — see `categoryFromTags`.
+    ...opt('category', str(raw['category']) || categoryFromTags(raw['tags'])),
     ...opt('imageUrl', str(raw['image'])),
     markets,
     // Kalshi maps event volume onto the unified field; Polymarket leaves it
@@ -192,6 +194,84 @@ function toEventSummary(
     ...optNum('liquidity', raw['liquidity'] ?? info['liquidity']),
     ...optNum('endMs', raw['end']),
   }
+}
+
+/**
+ * The categories the rail is built from, and the tag shapes that reach them.
+ *
+ * Kalshi publishes a real `category` per event. Polymarket publishes none at
+ * all: gamma events carry a `tags[]` array, which ccxt's `parseEvent` flattens
+ * to the tag LABELS ('Politics', 'Fed Rates', 'Esports'). Without this the
+ * browser's whole category rail was one row reading "All".
+ *
+ * Tags are not a taxonomy, which is the thing to know before reading the list.
+ * A live browse (measured 2026-08-18) returns tag arrays like
+ * `['fomc', 'Economic Policy', 'Fed Rates', 'Jerome Powell', 'Politics']` and
+ * `['Bitcoin', 'Monthly', 'Hit Price', 'Crypto', 'Recurring']` — the first tag
+ * is as often a subject or an editorial marker as a topic, and gamma also tags
+ * events with operational strings ('Hide From New', 'Earn 4%', 'Multi
+ * Strikes'). So the walk takes the first tag that lands on a KNOWN topic
+ * rather than the first tag, and an event whose tags land on none stays
+ * uncategorised: it is still on the board under Trending, which is a smaller
+ * lie than filing "UK election called by…?" under "pedophile".
+ *
+ * Order matters within the list, not just between tags. 'World Elections'
+ * matches both the election rule and the world rule, and it is an election.
+ */
+const CATEGORY_RULES: Array<[RegExp, string]> = [
+  [/crypto|bitcoin|ethereum|solana|altcoin|memecoin|\bnft\b/i, 'Crypto'],
+  [
+    /sport|soccer|football|basketball|baseball|tennis|hockey|golf|olympic|esport|cricket|boxing|\bmlb\b|\bnfl\b|\bnba\b|\bnhl\b|\bufc\b|\bf1\b|formula 1|league|\bgames\b/i,
+    'Sports',
+  ],
+  // Ahead of the politics rule, which 'geopolitics' would otherwise match on
+  // its own suffix. The broad geopolitics shapes stay below it, because
+  // 'World Elections' is an election first.
+  [/geopolit/i, 'Geopolitics'],
+  [
+    /econom|financ|\bfed\b|fomc|inflation|\bcpi\b|\bgdp\b|interest rate|monetary|recession|unemploy|\bjobs\b|tariff|business/i,
+    'Economics',
+  ],
+  [
+    /politic|election|senate|congress|president|primary|parliament|governor|impeach|nominee|nomination|white house|supreme court|legislat|referendum|prime minister|\bpoll/i,
+    'Politics',
+  ],
+  [
+    /\bwar\b|ukraine|russia|israel|gaza|iran|china|\bnato\b|middle east|conflict|ceasefire|sanction|\bworld\b|global/i,
+    'Geopolitics',
+  ],
+  [
+    /culture|entertain|celebrit|music|movie|\bfilm\b|award|oscar|grammy|emmy|fashion|royal/i,
+    'Culture',
+  ],
+  [
+    /science|space|\bai\b|artificial intelligence|technolog|\btech\b|climate|weather|health|medic|nasa|spacex|rocket/i,
+    'Science',
+  ],
+]
+
+/**
+ * The first tag that names a topic this board knows, or '' for none.
+ *
+ * Exported for the fixture test, which pins it against tag arrays copied off
+ * the live gamma listing rather than invented ones.
+ */
+export function categoryFromTags(value: unknown): string {
+  if (!Array.isArray(value)) return ''
+  for (const entry of value) {
+    // ccxt hands over strings; a raw gamma payload that skipped the parser
+    // would hand over `{ label, slug }`, and reading both costs one line.
+    const tag =
+      typeof entry === 'string'
+        ? entry
+        : str(asRecord(entry)['label']) || str(asRecord(entry)['slug'])
+    const normalized = tag.trim()
+    if (!normalized) continue
+    for (const [pattern, category] of CATEGORY_RULES) {
+      if (pattern.test(normalized)) return category
+    }
+  }
+  return ''
 }
 
 function toMarketSummary(
@@ -240,7 +320,10 @@ function toMarketSummary(
     // the resolution time. Measured against both live APIs 2026-08-15.
     ...optNum('volume', raw['volume'] ?? info['volume']),
     ...optNum('liquidity', raw['liquidity'] ?? info['liquidity']),
-    ...optNum('openInterest', raw['openInterest']),
+    // Kalshi keeps open interest on its own payload rather than on the ccxt
+    // market row (`parseEventToMarkets` copies it into `info`), so the card
+    // footers were dropping a stat the venue does publish.
+    ...optNum('openInterest', raw['openInterest'] ?? info['openInterest']),
     ...optNum('endMs', raw['end'] ?? raw['expiry']),
     // ccxt sets `created: undefined` on a prediction market on both venues, so
     // this reads the venue payload — see `marketCreatedMs`.

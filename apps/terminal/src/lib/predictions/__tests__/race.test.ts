@@ -13,7 +13,10 @@ import { describe, expect, test } from 'bun:test'
 import {
   byProbability,
   eventOverround,
+  headlineRunner,
   isRaceEvent,
+  massBarSegments,
+  raceFieldKind,
   runnersOf,
   topRunnerShare,
   yesOutcomeOf,
@@ -249,5 +252,102 @@ describe('byProbability', () => {
       'b',
       'a',
     ])
+  })
+})
+
+describe('headlineRunner', () => {
+  test('is the Yes leg, whichever order the venue printed the legs in', () => {
+    // Polymarket regularly returns No first. Reading `runners[0]` put a 92%
+    // headline in green over a question the market gives an 8% chance.
+    const inverted = event([
+      market('fed', [
+        { label: 'No', price: 0.32 },
+        { label: 'Yes', price: 0.68 },
+      ]),
+    ])
+    expect(headlineRunner(runnersOf(inverted))?.yes.price).toBe(0.68)
+    expect(headlineRunner(runnersOf(BINARY))?.yes.price).toBe(0.68)
+  })
+
+  test('falls back to the first runner where no leg is named Yes', () => {
+    // A candidate pair ('Newsom' / 'Field') has no affirmative leg to find.
+    const pair = event([
+      market('nominee', [
+        { label: 'Newsom', price: 0.34 },
+        { label: 'Field', price: 0.66 },
+      ]),
+    ])
+    expect(headlineRunner(runnersOf(pair))?.label).toBe('Newsom')
+  })
+
+  test('is null on an empty field rather than throwing', () => {
+    expect(headlineRunner([])).toBeNull()
+  })
+})
+
+describe('raceFieldKind', () => {
+  test('many markets are candidates, each its own question', () => {
+    expect(raceFieldKind(FIELD)).toBe('candidates')
+  })
+
+  test('one market with many outcomes is outcomes on one question', () => {
+    const scalar = event([
+      market('cpi', [
+        { label: 'Above 3.0%', price: 0.2 },
+        { label: '2.5-3.0%', price: 0.5 },
+        { label: 'Below 2.5%', price: 0.3 },
+      ]),
+    ])
+    expect(raceFieldKind(scalar)).toBe('outcomes')
+  })
+})
+
+describe('massBarSegments', () => {
+  test('is absolute probability, so the grey tail means everyone else', () => {
+    // Four runners at 5% each must fill a fifth of the bar. Normalising by
+    // their own sum filled the whole thing and made a wide-open race read as
+    // a decided one.
+    const flat = event([
+      market('a', [{ label: 'Yes', price: 0.05 }]),
+      market('b', [{ label: 'Yes', price: 0.05 }]),
+      market('c', [{ label: 'Yes', price: 0.05 }]),
+      market('d', [{ label: 'Yes', price: 0.05 }]),
+      market('e', [{ label: 'Yes', price: 0.05 }]),
+    ])
+    const segments = massBarSegments(runnersOf(flat), 4)
+    expect(segments).toHaveLength(4)
+    expect(segments.reduce((sum, s) => sum + s.percent, 0)).toBeCloseTo(20, 10)
+  })
+
+  test('ranks the segments richest first, whatever the venue order', () => {
+    const segments = massBarSegments(runnersOf(FIELD), 4)
+    expect(segments.map((s) => Math.round(s.percent))).toEqual([34, 14, 11, 9])
+  })
+
+  test('squeezes an overround field instead of overflowing the bar', () => {
+    // A thin book can price a field well over 100%. The bar can never say
+    // more than "all of it", and the ranking has to survive the squeeze.
+    const overround = event([
+      market('a', [{ label: 'Yes', price: 0.6 }]),
+      market('b', [{ label: 'Yes', price: 0.5 }]),
+      market('c', [{ label: 'Yes', price: 0.4 }]),
+      market('d', [{ label: 'Yes', price: 0.3 }]),
+    ])
+    const segments = massBarSegments(runnersOf(overround), 4)
+    const total = segments.reduce((sum, s) => sum + s.percent, 0)
+    expect(total).toBeCloseTo(100, 10)
+    expect(segments[0].percent).toBeGreaterThan(segments[1].percent)
+    expect(segments.every((s) => s.percent > 0)).toBe(true)
+  })
+
+  test('skips unquoted runners rather than drawing them at zero', () => {
+    const partial = event([
+      market('a', [{ label: 'Yes', price: 0.4 }]),
+      market('b', [{ label: 'Yes' }]),
+      market('c', [{ label: 'Yes', price: 0.1 }]),
+    ])
+    expect(
+      massBarSegments(runnersOf(partial), 4).map((s) => s.pairKey),
+    ).toEqual(['A-YES', 'C-YES'])
   })
 })

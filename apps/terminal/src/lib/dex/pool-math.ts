@@ -46,6 +46,204 @@ export function volumeToTvl(
 }
 
 /**
+ * The map's liquidity bar. Locked reserves are the one figure a wash bot
+ * cannot fake cheaply, so the tile SET is chosen by them; the sizing metric
+ * only ranks pools that already cleared the bar.
+ */
+export const MIN_MAPPABLE_RESERVE_USD = 10_000
+
+/**
+ * The map's wash ceiling, in daily turns of the pool's own liquidity. The
+ * deepest real pools on any chain run ten to twenty turns a day; a listing
+ * whose volume claims hundreds of turns against a small reserve is a bot
+ * painting volume, and sizing tiles by that number hands it the whole map.
+ */
+export const MAX_MAPPABLE_TURNOVER = 50
+
+/**
+ * Whether a pool earns a place on the map.
+ *
+ * The pool map's quality bar, and the auto-select's too. Sizing a treemap over
+ * a listing straight from the provider put a six-figure-liquidity pool with a
+ * wash-traded volume figure on the largest tile, above pools a thousand times
+ * its size, because nothing upstream distinguishes a market from a deployment
+ * with a bot pointed at it. Two rules, both about what cannot be faked: the
+ * pool must hold real published liquidity, and its claimed volume must be in
+ * sane proportion to it. A pool that never published a reserve fails both,
+ * since without one there is no way to tell which kind it is. Everything the
+ * bar excludes is still in the full listing behind the footer strip.
+ */
+export function isRankablePool(pool: {
+  reserveUsd: number | null
+  volume24hUsd: number | null
+}): boolean {
+  if (pool.reserveUsd === null || pool.reserveUsd < MIN_MAPPABLE_RESERVE_USD) {
+    return false
+  }
+  const turnover = volumeToTvl(pool.volume24hUsd, pool.reserveUsd)
+  return turnover === null || turnover <= MAX_MAPPABLE_TURNOVER
+}
+
+/** The metrics a pool tile can be sized by. */
+export type PoolTileMode = 'volume' | 'liquidity' | 'trades' | 'turnover'
+
+/**
+ * Tile area for a pool under the active mode.
+ *
+ * Zero for anything the mode cannot measure, which is what keeps a pool with
+ * no trade count from claiming area on the trades map. Callers drop the zeroes
+ * before handing the set to the treemap: a zero-area tile is invisible but
+ * still costs the layout a slot.
+ */
+export function tileSizeFor(
+  pool: {
+    volume24hUsd: number | null
+    reserveUsd: number | null
+    trades24h?: { buys: number; sells: number } | null
+  },
+  mode: PoolTileMode,
+): number {
+  switch (mode) {
+    case 'volume':
+      return positiveOrZero(pool.volume24hUsd)
+    case 'liquidity':
+      return positiveOrZero(measurableReserveUsd(pool.reserveUsd))
+    case 'trades': {
+      const counts = pool.trades24h
+      if (!counts) return 0
+      return positiveOrZero(counts.buys + counts.sells)
+    }
+    case 'turnover':
+      return positiveOrZero(volumeToTvl(pool.volume24hUsd, pool.reserveUsd))
+  }
+}
+
+function positiveOrZero(value: number | null): number {
+  if (value === null || !Number.isFinite(value) || value <= 0) return 0
+  return value
+}
+
+/** The design's tint band: nothing flatter than 8%, nothing louder than 34%. */
+const TINT_MIN = 8
+const TINT_MAX = 34
+/** Where the ramp saturates. A 15% day is already a very loud tile. */
+const TINT_FULL_PCT = 15
+
+/**
+ * How strongly a tile is tinted by its 24h move, as a `color-mix` percentage.
+ *
+ * Monotonic in the absolute move and compressive rather than linear: most
+ * pools on a normal day sit inside a couple of percent, and a linear ramp
+ * would paint that whole population the same flat floor colour while reserving
+ * the readable end of the band for the two rows that already stand out by
+ * size. The square root spends the band where the pools are.
+ *
+ * Zero for a pool with no published move, which the caller draws untinted. A
+ * floor tint there would be a claim that the pool was flat.
+ */
+export function moveTintAlpha(changePct: number | null): number {
+  if (changePct === null || !Number.isFinite(changePct)) return 0
+  const magnitude = Math.min(Math.abs(changePct), TINT_FULL_PCT)
+  const ramp = Math.sqrt(magnitude / TINT_FULL_PCT)
+  return TINT_MIN + (TINT_MAX - TINT_MIN) * ramp
+}
+
+/**
+ * What a pool tile says at a given size.
+ *
+ * The progressive-disclosure rule, kept out of the component so the thresholds
+ * can be checked rather than eyeballed at one window width. Three shapes: a
+ * large tile carries the pair, its venue and liquidity, and the move; a wide
+ * short tile puts the pair and the move on one line because there is no room
+ * to stack them; a small tile keeps the pair and the move and drops the rest.
+ *
+ * The title is the pool's own name and the KEY is its address (see
+ * `poolTileKey`) — a chain's map routinely lists two pools whose base tokens
+ * share a ticker, and they have to render as two tiles that both say PYTH.
+ */
+export type PoolTileLines = {
+  title: string
+  subtitle: string | null
+  value: string | null
+  tone: 'up' | 'down' | 'muted'
+  layout: 'stack' | 'row'
+}
+
+/** Below this a tile gets the pair and the move, and nothing else. */
+const TILE_SUBTITLE_MIN_H = 74
+const TILE_SUBTITLE_MIN_W = 104
+/** Short and wide: stacking three lines here would clip all three. */
+const TILE_ROW_MAX_H = 52
+
+export function poolTileLines(
+  pool: {
+    name: string
+    dexName: string
+    change24hPct: number | null
+    reserveUsd: number | null
+  },
+  width: number,
+  height: number,
+  formatUsd: (value: number) => string,
+): PoolTileLines {
+  const change = pool.change24hPct
+  const tone = change === null ? 'muted' : change >= 0 ? 'up' : 'down'
+  const value =
+    change === null ? null : `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`
+
+  const layout = height <= TILE_ROW_MAX_H ? 'row' : 'stack'
+  const roomForSubtitle =
+    layout === 'stack' &&
+    height >= TILE_SUBTITLE_MIN_H &&
+    width >= TILE_SUBTITLE_MIN_W
+
+  const reserve = measurableReserveUsd(pool.reserveUsd)
+  const venue = titleCaseVenue(pool.dexName)
+  const subtitle = !roomForSubtitle
+    ? null
+    : reserve !== null
+      ? venue
+        ? `${venue} · ${formatUsd(reserve)}`
+        : formatUsd(reserve)
+      : (venue ?? null)
+
+  return { title: pool.name, subtitle, value, tone, layout }
+}
+
+/**
+ * A tile's identity: the chain and the pool address, never the ticker.
+ *
+ * The whole reason the map keys on this. Two pools for tokens both called PYTH
+ * are two different markets, and a symbol key would collapse them into one
+ * tile whose selection state flickered between them.
+ */
+export function poolTileKey(pool: {
+  network: string
+  address: string
+}): string {
+  return `${pool.network}:${pool.address}`
+}
+
+/**
+ * `uniswap_v3` → `Uniswap V3`, `orca` → `Orca`.
+ *
+ * Provider dex slugs are lowercase and underscore-joined. Version segments
+ * stay uppercase because `Uniswap v3` reads as a typo next to `Orca`.
+ */
+export function titleCaseVenue(dexName: string | null): string | null {
+  if (!dexName) return null
+  const words = dexName
+    .split(/[_\-\s]+/)
+    .filter(Boolean)
+    .map((word) =>
+      /^v\d+$/i.test(word)
+        ? word.toUpperCase()
+        : word.charAt(0).toUpperCase() + word.slice(1),
+    )
+  return words.length > 0 ? words.join(' ') : null
+}
+
+/**
  * Where a price impact sits on the three-step scale the panes colour by.
  *
  * The thresholds are the ones a trader acts on rather than round numbers: up
@@ -215,6 +413,60 @@ export function bucketNetFlow(
     bucket.netUsd = bucket.buyUsd - bucket.sellUsd
   }
   return buckets
+}
+
+/**
+ * Buy and sell notionals over a trailing window of the same swap feed.
+ *
+ * The detail pane's pressure bar. Deliberately derived from the trades the flow
+ * pane already fetched rather than from a provider's own 1h split: the two
+ * panes sit side by side on one board, and a second number for the same hour
+ * that disagreed by a rounding would read as one of them being broken.
+ *
+ * Prints older than the window and malformed notionals are skipped rather than
+ * counted as zero, which is the same rule `bucketNetFlow` follows.
+ */
+export function sumFlowSince(
+  trades: ReadonlyArray<{
+    ts: number
+    side: 'buy' | 'sell'
+    amountUsd: number
+  }>,
+  sinceTs: number,
+): { buyUsd: number; sellUsd: number } {
+  let buyUsd = 0
+  let sellUsd = 0
+  for (const trade of trades) {
+    if (trade.ts < sinceTs) continue
+    if (!Number.isFinite(trade.amountUsd)) continue
+    if (trade.side === 'buy') buyUsd += trade.amountUsd
+    else sellUsd += trade.amountUsd
+  }
+  return { buyUsd, sellUsd }
+}
+
+/** How many chart tokens the swatch palette cycles through. */
+export const SWATCH_TONE_COUNT = 5
+
+/**
+ * A stable colour slot for a pool, 1..5, derived from its address.
+ *
+ * The detail pane's 28px badge. Token logos are the obvious thing to put there
+ * and the wrong one: no provider on this path publishes a logo URL for a pool's
+ * base token, so the pane would be drawing a broken image on every chain but
+ * the two that happen to resolve. A deterministic swatch is honest, never
+ * fails to load, and still gives the pane a fixed visual anchor per pool.
+ *
+ * FNV-1a, because it has to be the same colour on every reload and across
+ * machines; `Math.random` or an insertion index would repaint on refresh.
+ */
+export function swatchIndexFor(seed: string): number {
+  let hash = 0x811c9dc5
+  for (let i = 0; i < seed.length; i++) {
+    hash ^= seed.charCodeAt(i)
+    hash = Math.imul(hash, 0x01000193) >>> 0
+  }
+  return (hash % SWATCH_TONE_COUNT) + 1
 }
 
 /** Largest absolute net in a bucket set, for scaling the bars. */

@@ -215,6 +215,31 @@ export function fundingExtremes(
 }
 
 /**
+ * Both sides of `fundingExtremes` as ONE list, dearest carry first.
+ *
+ * The rail used to render two labelled sections, which spent a third of a
+ * short pane on headings and, with a single venue connected, put a "shorts
+ * paying" heading over one row. Interleaved by |rate| the eye reads it as what
+ * it is: the contracts whose carry is worth a second look, whichever way they
+ * pay. The sign is carried by the icon and the colour on each row.
+ *
+ * `perSide` bounds BOTH the list and everything downstream of it: the rail
+ * fetches a 30-day history per entry, so this is the number that decides how
+ * many REST calls the pane costs.
+ */
+export function rankedExtremes(
+  rows: Array<FundingRow>,
+  perSide: number,
+): Array<FundingExtreme> {
+  const { positive, negative } = fundingExtremes(rows, perSide)
+  return [...positive, ...negative].sort((a, b) => {
+    const gap = Math.abs(b.annualized) - Math.abs(a.annualized)
+    if (gap !== 0) return gap
+    return a.base.localeCompare(b.base)
+  })
+}
+
+/**
  * The cell a single-venue-per-row pane should show for an asset.
  *
  * Basis needs BOTH a mark and an index, and the venues disagree about whether

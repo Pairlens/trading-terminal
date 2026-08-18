@@ -20,6 +20,7 @@ import { BarChart3 } from 'lucide-react'
 import { cn } from '@pairlens/ui/lib/utils'
 
 import {
+  NullGlyph,
   answeringVenues,
   signedPercent,
   useFundingScanner,
@@ -94,7 +95,12 @@ export function OpenInterestPane() {
     >()
     for (const result of oiResults ?? []) {
       for (const entry of result.entries) {
-        const mark = targets.find((tg) => tg.pair === entry.pair)?.mark
+        // Scoped by VENUE as well as pair: two venues both list BTC-USDT-USDT
+        // and their marks differ, so a pair-only lookup prices one venue's
+        // contract count at another venue's mark.
+        const mark = targets.find(
+          (tg) => tg.market === result.market && tg.pair === entry.pair,
+        )?.mark
         byPair.set(`${result.market}:${entry.pair}`, {
           value: openInterestValue({
             ...(entry.value !== undefined ? { value: entry.value } : {}),
@@ -144,6 +150,9 @@ export function OpenInterestPane() {
   }
 
   const max = Math.max(...oiRows.map((r) => r.value), 1)
+  // With one venue answering, the suffix is the same six words down the list
+  // and carries no information. It earns its place the moment the rows mix.
+  const showVenue = new Set(oiRows.map((row) => row.market)).size > 1
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -174,9 +183,11 @@ export function OpenInterestPane() {
             <div className="flex items-baseline justify-between gap-2">
               <span className="truncate font-mono text-xs font-semibold">
                 {row.base}
-                <span className="ml-1.5 font-sans text-[10px] font-normal text-muted-foreground">
-                  {row.venueLabel}
-                </span>
+                {showVenue && (
+                  <span className="ml-1.5 font-sans text-[10px] font-normal text-muted-foreground">
+                    {row.venueLabel}
+                  </span>
+                )}
               </span>
               <span className="shrink-0 font-mono text-xs tabular-nums">
                 {formatCompactUsd(row.value)}
@@ -199,9 +210,11 @@ export function OpenInterestPane() {
                       : 'text-down',
                 )}
               >
-                {row.change24h === null
-                  ? t('funding.na')
-                  : signedPercent(row.change24h)}
+                {row.change24h === null ? (
+                  <NullGlyph />
+                ) : (
+                  signedPercent(row.change24h)
+                )}
               </span>
             </div>
           </button>

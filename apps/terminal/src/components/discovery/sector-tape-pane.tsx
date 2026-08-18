@@ -24,6 +24,11 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@pairlens/ui/components/ui/toggle-group'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
 
 import type { InstrumentCategory } from '@pairlens/shared/instrument-types'
 import type { SectorSummary, SectorWindow } from '@/lib/sector-stats'
@@ -75,10 +80,21 @@ export function SectorTapePane() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="flex items-center gap-2 border-b px-3 py-1.5">
-        <p className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground">
-          {t('sectorTape.subtitle')}
-        </p>
+      {/* Title and window on one line. The subtitle that used to sit here
+          explained the weighting and the breadth bar, which is a caption for
+          a chip the reader has already looked at — it rides the title as a
+          tooltip now and gives the grid back a row of height. */}
+      <div className="flex items-center gap-2 border-b px-3 py-2">
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <h2 className="min-w-0 flex-1 truncate text-[13px] font-semibold" />
+            }
+          >
+            {t('sectorTape.title')}
+          </TooltipTrigger>
+          <TooltipContent>{t('sectorTape.subtitle')}</TooltipContent>
+        </Tooltip>
         <ToggleGroup
           aria-label={t('sectorTape.window')}
           multiple={false}
@@ -105,8 +121,13 @@ export function SectorTapePane() {
         </ToggleGroup>
       </div>
 
+      {/* Three columns, capped. The six curated sectors are meant to sit 3×2
+          and be read as a block; letting auto-fill run to five across at the
+          board's own width turned the tape into one long row of thin chips
+          with an orphan underneath. Below 31rem the cap lifts and the cards
+          fall back to filling whatever the dock gives them. */}
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] gap-2">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-2 @min-[31rem]/pane:grid-cols-3">
           {loading
             ? Array.from({ length: 6 }, (_, i) => (
                 <div
@@ -195,12 +216,18 @@ function SectorChip({
 
       <span className="flex items-center justify-between gap-2">
         <span className="min-w-0 truncate text-[11px] text-muted-foreground">
-          {mover
-            ? t(up ? 'sectorTape.leads' : 'sectorTape.drags', {
-                total: sector.members,
-                symbol: mover.symbol,
-              })
-            : t('sectorTape.assets', { total: sector.members })}
+          {/* Three captions, because three things can be true. A sector with
+              a side names the name carrying it; one whose members split down
+              the middle says so, since picking a leader out of 6-up-5-down
+              would be a coin flip dressed as a finding. */}
+          {sector.split
+            ? t('sectorTape.splitTape', { total: sector.members })
+            : mover
+              ? t(up ? 'sectorTape.leads' : 'sectorTape.drags', {
+                  total: sector.members,
+                  symbol: mover.symbol,
+                })
+              : t('sectorTape.assets', { total: sector.members })}
         </span>
         {geometry && (
           <svg

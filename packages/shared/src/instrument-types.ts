@@ -382,6 +382,16 @@ export type BulkTickerEntry = {
   price: number
   /** 24h change in percent. */
   change24h: number
+  /**
+   * Traded VALUE over the venue's own 24h window, in the quote currency, and
+   * absent when the venue publishes none.
+   *
+   * Value rather than size on purpose: consumers render it with a currency
+   * formatter, so a share count or a base-asset amount in this field prints a
+   * dollar sign in front of a number that is not dollars. A venue that reports
+   * only base volume converts before filling this, or leaves it out.
+   */
+  volume24h?: number
 }
 
 /** Payload of the `market-data:ticker-snapshot` capability — every spot
@@ -921,6 +931,19 @@ export type PoolListingEntry = {
    * `pools` leaves it undefined rather than guessing.
    */
   createdAtMs?: number
+  /**
+   * Buy/sell counts over the last 24h, as the listing reports them. Verified
+   * present on both GeckoTerminal listing endpoints (`/pools` and
+   * `/new_pools`) and on every network sampled.
+   *
+   * Optional rather than required because a listing is a provider contract,
+   * not a GeckoTerminal one: a second provider implementing the `pools` action
+   * without a transaction count should omit the key, and a consumer reading
+   * `?? null` then sizes by something it actually has.
+   */
+  trades24h?: PoolTradeCounts | null
+  /** Fully diluted valuation in USD, where the listing published one. */
+  fdvUsd?: number | null
 }
 
 export type PoolListingResponse = {

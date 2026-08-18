@@ -98,3 +98,44 @@ export function summarizeMarket(coins: Iterable<TopCoin>): MarketPulse {
     breadthCount,
   }
 }
+
+/** How a set of quoted markets split over the day. Flat counts as neither. */
+export type PairBreadth = {
+  advancing: number
+  declining: number
+  /** Markets that carried a usable 24h change — the denominator. */
+  total: number
+}
+
+/** The only field breadth needs, so the helper never imports a hook's types. */
+export type BreadthQuote = { change24h?: number | null }
+
+/**
+ * Breadth over listed PAIRS rather than over the top-coins snapshot.
+ *
+ * The snapshot is a few hundred assets ranked by capitalisation; the bulk
+ * ticker map is every pair the connected venues actually list, which is both
+ * larger and the thing a trader can act on. Counting the venues' own tape also
+ * means the tile agrees with the scanner sitting beside it.
+ *
+ * Flat markets count toward neither side but still toward the total: a tape
+ * where half the pairs did not move is a real state, and hiding those rows
+ * would make a quiet day look one-sided.
+ */
+export function summarizePairBreadth(
+  quotes: Iterable<BreadthQuote>,
+): PairBreadth {
+  let advancing = 0
+  let declining = 0
+  let total = 0
+
+  for (const quote of quotes) {
+    const change = quote.change24h
+    if (!isFiniteNumber(change)) continue
+    total++
+    if (change > 0) advancing++
+    else if (change < 0) declining++
+  }
+
+  return { advancing, declining, total }
+}

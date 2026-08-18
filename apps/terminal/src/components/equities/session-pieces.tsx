@@ -61,6 +61,37 @@ export function phaseLabel(t: TFunction, phase: SessionPhase): string {
 }
 
 /**
+ * The same phase, attributed: 'Alpaca market open' rather than 'Market open'.
+ *
+ * The wide strip has room to say WHOSE market, and it should, because the
+ * clock, the calendar and the half days all came from one broker's answer
+ * rather than from a rule about US hours. The design writes 'US market open';
+ * we write the venue, because the venue is what we actually know — a second
+ * broker in another country would label its own hours correctly with no change
+ * here, which a hardcoded 'US' would not.
+ *
+ * The one-row clock pane keeps the bare `phaseLabel`: there is no room beside
+ * an order ticket for an attribution the pair topbar already carries.
+ */
+export function phaseHeadline(
+  t: TFunction,
+  phase: SessionPhase,
+  venue: string,
+): string {
+  if (!venue) return phaseLabel(t, phase)
+  switch (phase) {
+    case 'rth':
+      return t('session.headlineOpen', { venue })
+    case 'pre':
+      return t('session.headlinePre', { venue })
+    case 'post':
+      return t('session.headlinePost', { venue })
+    case 'closed':
+      return t('session.headlineClosed', { venue })
+  }
+}
+
+/**
  * The remaining time, in the largest two units that still mean something.
  *
  * Days appear only across a weekend or a holiday, seconds only in the last

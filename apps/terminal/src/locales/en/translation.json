@@ -2357,7 +2357,7 @@
     "fundingMatrix": "Funding for every perp on every venue you connected, in one grid you can sort by any column",
     "basisMonitor": "Perp against spot in basis points and annualised, so carry reads as a yield instead of a gap",
     "openInterest": "Open interest per contract with its 24h change, so crowding shows up before price does",
-    "fundingExtremes": "The most positive and most negative funding rates right now, with the venue paying each one",
+    "fundingExtremes": "The dearest and cheapest carry, each rate ranked against that contract's own 30-day funding range",
     "fundingBelt": "The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns",
     "liquidationMap": "A time-by-price heatmap of what the venue actually liquidated, painted behind the contract's candles with your own liquidation prices over it",
     "marginHealth": "Margin ratio, maintenance against equity, liquidation distance, and what an adverse move would do to all three",
@@ -2447,7 +2447,10 @@
     "up": "up",
     "down": "down",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "The crypto Fear and Greed index. 0 is extreme fear, 100 is extreme greed."
+    "fearGreedTooltip": "The crypto Fear and Greed index. 0 is extreme fear, 100 is extreme greed.",
+    "breadthPairs_one": "Breadth · {{count}} pair",
+    "breadthPairs_other": "Breadth · {{count}} pairs",
+    "fearGreedMissing": "Neither the App Server nor the public index answered. The tile fills in the moment one of them does."
   },
   "movers": {
     "emptyTitle": "No market snapshot",
@@ -2490,7 +2493,13 @@
       "onChain": "DEX",
       "trackingSince": "Venue listings tracked since {{date}}. Pools carry their own creation time.",
       "cexOff": "On-chain pools only. Venue listings come from the App Server, which this build is not using."
-    }
+    },
+    "reason": {
+      "reportsTonight": "Reports tonight",
+      "reportedThisMorning": "Reported this morning",
+      "reportsToday": "Reports today"
+    },
+    "tradedValueTooltip": "What the session actually traded in dollars: share volume times the day's volume-weighted price, both as the broker reports them."
   },
   "sectorTape": {
     "emptyTitle": "No sector data",
@@ -2499,7 +2508,9 @@
     "window": "Sector window",
     "leads": "{{total}} assets · {{symbol}} leads",
     "drags": "{{total}} assets · {{symbol}} drags",
-    "assets": "{{total}} assets"
+    "assets": "{{total}} assets",
+    "title": "Sector Tape",
+    "splitTape": "{{total}} assets · split tape"
   },
   "sectorPeers": {
     "emptyTitle": "No sector for this pair",
@@ -2594,7 +2605,10 @@
       "walletMissingTitle": "Connect a wallet",
       "walletMissingDescription": "This panel works with your connected wallet. Link one and its positions, fees and transfers show up here.",
       "walletSealedDescription": "Your wallet key is in the locked vault. Unlock it and this panel can read and sign for that wallet.",
-      "connectAction": "Connect {{venue}}"
+      "connectAction": "Connect {{venue}}",
+      "compactMissingDescription": "Connect once and this pane fills in. The key stays on this device.",
+      "compactSealedDescription": "Your {{venue}} keys are in the locked vault.",
+      "compactConnectAction": "Connect"
     },
     "paneTransition": {
       "switchingTo": "Switching to {{venue}}…",
@@ -4515,7 +4529,31 @@
     "predictionsBrowse": "Open the events board",
     "predictionsInstall": "Install the predictions plugin",
     "futuresEmptyTitle": "Connect a futures venue to browse perpetuals",
-    "futuresEmptyBody": "Contract lists come from each venue's own market table, so they appear once that venue has been reached."
+    "futuresEmptyBody": "Contract lists come from each venue's own market table, so they appear once that venue has been reached.",
+    "sector": {
+      "software": "Software",
+      "semiconductors": "Semiconductors",
+      "internet": "Internet",
+      "hardware": "Hardware",
+      "banks": "Banks",
+      "payments": "Payments",
+      "cryptoEquity": "Crypto",
+      "healthcare": "Healthcare",
+      "energy": "Energy",
+      "retail": "Retail",
+      "staples": "Consumer staples",
+      "media": "Media",
+      "travel": "Travel",
+      "industrials": "Industrials",
+      "autos": "Autos",
+      "etfEquity": "Equity ETF",
+      "etfBonds": "Bond ETF",
+      "etfCommodity": "Commodity ETF"
+    },
+    "searchPairs_one": "Search {{count}} pair",
+    "searchPairs_other": "Search {{count}} pairs",
+    "browseAll_one": "Browse all {{count}} pair",
+    "browseAll_other": "Browse all {{count}} pairs"
   },
   "fearGreed": {
     "title": "Fear & Greed",
@@ -4556,9 +4594,6 @@
   },
   "news": {
     "title": "News",
-    "tickerPlaceholder": "Ticker...",
-    "sortLatest": "Latest",
-    "sortRelevance": "Relevance",
     "unavailable": "News is unavailable",
     "unavailableUpstream": "The news provider is not responding. Nothing can load until it recovers.",
     "unavailableRateLimited": "The news provider's rate limit was reached. It should reset shortly.",
@@ -4590,8 +4625,22 @@
       "technology": "Technology",
       "finance": "Finance",
       "financial_markets": "Financial Markets",
-      "economy_macro": "Economy Macro"
-    }
+      "economy_macro": "Economy Macro",
+      "earnings": "Earnings"
+    },
+    "scope": {
+      "assets": "Your assets",
+      "earnings": "Earnings",
+      "macro": "Macro",
+      "all": "All"
+    },
+    "refresh": "Refresh news",
+    "adjustScope": "Nothing on the wire for this filter. Try another one, or check back in a few minutes.",
+    "noWatchedAssets": "Your watchlist is empty, so there is nothing to scope the wire to. Star a pair, or read Macro instead.",
+    "noAssetNews": "The wire is busy, but none of it is about your watchlist. Macro and All are still moving.",
+    "noStockNews": "Nothing on the wire about the listed names right now. Macro and All are still moving.",
+    "mentionsPairs_one": "mentions {{count}} of your pairs",
+    "mentionsPairs_other": "mentions {{count}} of your pairs"
   },
   "tray": {
     "show": "Show Pairlens",
@@ -5128,12 +5177,12 @@
     "emptyBody": "This build ships no on-chain connectors, so there is no chain to rank pools on."
   },
   "poolMap": {
-    "title": "{{chain}} pools",
+    "title": "{{chain}} · top pools",
     "subtitle": "Ranked by how hard each pool works its own liquidity",
     "sortTurnover": "Turnover",
     "sortVolume": "Volume",
     "sortLiquidity": "Liquidity",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "Open chart",
     "columns": {
       "pool": "Pool",
@@ -5145,10 +5194,18 @@
     },
     "noChainTitle": "Pick a chain",
     "noChainBody": "Choose a chain in the rail and its pools rank here, volume against the liquidity backing it.",
-    "loadingTitle": "Loading pools",
-    "loadingBody": "Fetching this chain's ranked pools.",
     "emptyTitle": "No pools returned",
-    "emptyBody": "The data provider listed nothing for this chain. It retries on the next refresh."
+    "emptyBody": "The data provider listed nothing for this chain. It retries on the next refresh.",
+    "listTitle": "{{chain}} · all pools",
+    "subtitleVolume": "Sized by 24h volume, coloured by 24h move",
+    "subtitleLiquidity": "Sized by liquidity, coloured by 24h move",
+    "subtitleTrades": "Sized by 24h trade count, coloured by 24h move",
+    "subtitleTurnover": "Sized by volume against liquidity, coloured by 24h move",
+    "sortTrades": "Trades",
+    "morePools": "More pools on this chain",
+    "backToMap": "Back to map",
+    "belowFloorTitle": "Nothing deep enough to map",
+    "belowFloorBody": "Nothing this chain returned holds real liquidity with volume in proportion to it, so sizing these pools against each other would rank noise. The full listing is still there."
   },
   "liquidityFlow": {
     "noPoolTitle": "Pick a pool",
@@ -5157,11 +5214,13 @@
     "loadingBody": "Fetching this pool's recent swaps.",
     "emptyTitle": "No swaps yet",
     "emptyBody": "Nothing has traded through this pool recently, so there is no flow to net out.",
-    "barsLabel": "Net taker flow, {{pool}}",
     "netHour": "{{value}} last hour",
     "bucketTooltip": "{{buy}} bought, {{sell}} sold",
     "axisNote": "Buys minus sells per 5 minutes. Liquidity added or pulled by LPs is not in this feed.",
-    "biggestLabel": "Biggest swaps"
+    "biggestLabel": "Biggest swaps",
+    "title": "Flow through {{pool}}",
+    "subtitle": "Buys minus sells, five minutes at a time",
+    "subtitleVenue": "{{venue}} · buys minus sells, five minutes at a time"
   },
   "poolDetail": {
     "emptyTitle": "No pool selected",
@@ -5170,13 +5229,17 @@
     "liquidity": "Liquidity",
     "volume24h": "Volume 24h",
     "turnover": "Vol / liq",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "Trades 24h",
     "feeTier": "Fee tier",
-    "pressureByValue": "Buy and sell pressure, 24h by value",
-    "pressureByCount": "Buy and sell pressure, 24h by trade count",
     "loading": "Loading pool state.",
-    "openChart": "Open chart and swap"
+    "openChart": "Open chart and swap",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "Price impact $10k",
+    "pressure1h": "Buy / sell pressure 1h",
+    "buysValue": "{{value}} buys",
+    "sellsValue": "{{value}} sells",
+    "filledBy": "Gaps filled by {{provider}}"
   },
   "poolStats": {
     "notOnChainTitle": "Not an on-chain pair",
@@ -5914,11 +5977,11 @@
     "resolved": "Resolved"
   },
   "predictionCategories": {
-    "all": "All",
     "noneBody": "This venue does not tag its events by category.",
     "venueHeading": "Venue",
     "desktopOnly": "desktop",
-    "venueError": "error"
+    "venueError": "error",
+    "trending": "Trending"
   },
   "eventBoard": {
     "searchPlaceholder_one": "Search 1 live market",
@@ -5934,15 +5997,20 @@
     },
     "listed": "Listed {{when}}",
     "unchanged": "unchanged",
-    "movedPoints": "{{arrow}} {{points}} pts today",
     "volumeUnknown": "Volume not published",
     "liquidity": "Liq {{value}}",
-    "outcomeCount_one": "1 candidate",
-    "outcomeCount_other": "{{count}} candidates",
+    "outcomeCount_one": "1 outcome",
+    "outcomeCount_other": "{{count}} outcomes",
     "topShare_one": "The leader holds {{percent}}% of the probability mass.",
     "topShare_other": "Top {{count}} hold {{percent}}% of the probability mass.",
     "openFullField_one": "Open the full field (1 more)",
-    "openFullField_other": "Open the full field ({{count}} more)"
+    "openFullField_other": "Open the full field ({{count}} more)",
+    "endsIn": "ends {{when}}",
+    "openInterest": "OI {{value}}",
+    "candidateCount_one": "1 candidate",
+    "candidateCount_other": "{{count}} candidates",
+    "movedPoints_one": "{{arrow}} {{points}} pt today",
+    "movedPoints_other": "{{arrow}} {{points}} pts today"
   },
   "oddsMovers": {
     "subtitle": "Biggest probability shifts, 24h",
@@ -6095,10 +6163,11 @@
     "loading": "Reading funding rates…",
     "na": "n/a",
     "stampUnknown": "Not published",
-    "desktopOnly": "reaches its public API only from the desktop app.",
     "manageConnectors": "Manage connectors",
     "cellHint": "{{pair}} · {{rate}} every {{hours}}h",
-    "cellHintAssumed": "{{pair}} · {{rate}}, assuming a {{hours}}h settlement the venue does not publish"
+    "cellHintAssumed": "{{pair}} · {{rate}}, assuming a {{hours}}h settlement the venue does not publish",
+    "desktopOnlyLine_one": "{{venues}} streams from the desktop app.",
+    "desktopOnlyLine_other": "{{venues}} stream from the desktop app."
   },
   "fundingMatrix": {
     "title": "Funding, annualised",
@@ -6132,12 +6201,14 @@
     "emptyBody": "Open interest arrives with the funding sweep. It shows the contracts your connected venues are quoting."
   },
   "fundingExtremes": {
-    "subtitle": "The dearest and cheapest carry across your connected venues, annualised.",
-    "longsPay": "Longs paying most",
-    "shortsPay": "Shorts paying most",
+    "subtitle": "The dearest and cheapest carry, ranked against each contract's own 30-day range.",
     "perInterval": "{{rate}} every {{hours}}h",
     "emptyTitle": "No rates to rank",
-    "emptyBody": "Once a perpetual venue answers, its richest and cheapest contracts land here."
+    "emptyBody": "Once a perpetual venue answers, its richest and cheapest contracts land here.",
+    "rangeTop": "top {{pct}}% of its 30-day range",
+    "rangeBottom": "bottom {{pct}}% of its 30-day range",
+    "crowdedLong": "crowded long",
+    "shortsPaying": "shorts paying"
   },
   "fundingBelt": {
     "now": "Funding now · {{hours}}h",
@@ -6253,7 +6324,13 @@
     "noSchedule": "No session scheduled",
     "clockOnly": "Open or closed only: no session windows were published.",
     "ticketExtendedNote": "This session takes limit orders only. There is no continuous auction to fill a market order against.",
-    "ticketClosedNote": "The market is closed. A limit order rests until the next session opens."
+    "ticketClosedNote": "The market is closed. A limit order rests until the next session opens.",
+    "gateTitle": "Trading day",
+    "gateBody": "Hours come straight from the {{venue}} calendar.",
+    "headlineOpen": "{{venue}} market open",
+    "headlinePre": "{{venue}} pre-market",
+    "headlinePost": "{{venue}} after-hours",
+    "headlineClosed": "{{venue}} market closed"
   },
   "earningsCalendar": {
     "title": "Earnings",
@@ -6261,17 +6338,11 @@
     "scopes": {
       "today": "Today",
       "week": "This week",
-      "watchlist": "Watchlist"
+      "watchlist": "My watchlist"
     },
     "today": "Today",
     "tomorrow": "Tomorrow",
     "noEstimate": "no estimate",
-    "reportTime": {
-      "bmo": "BMO",
-      "bmoLabel": "Reports before the open",
-      "amc": "AMC",
-      "amcLabel": "Reports after the close"
-    },
     "capped": "Showing the first {{shown}} of {{total}} reports.",
     "emptyTitle": "No earnings feed",
     "emptyBody": "This build has no earnings provider. The schedule comes from the App Server; a broker publishes its own session hours, not who reports this week.",
@@ -6305,10 +6376,21 @@
     },
     "columns": {
       "symbol": "Symbol",
-      "company": "Company",
-      "quarterEnd": "Quarter end",
-      "epsEstimate": "EPS est."
-    }
+      "company": "Company"
+    },
+    "heading": {
+      "today": "Reporting today",
+      "week": "Reporting this week",
+      "watchlist": "Your watchlist reports"
+    },
+    "slots": {
+      "bmo": "Before the bell",
+      "amc": "After the close",
+      "unstated": "Time not stated"
+    },
+    "consensusEps": "Cons. EPS",
+    "quarterTo": "quarter to {{period}}",
+    "periodEnded": "Fiscal quarter ending {{date}}"
   },
   "economicCalendar": {
     "title": "Macro",
@@ -6352,7 +6434,10 @@
       "prior": "Prior",
       "implied": "Implied (Kalshi)",
       "source": "Agency"
-    }
+    },
+    "countdownDh": "in {{days}}d {{hours}}h",
+    "countdownHm": "in {{hours}}h {{minutes}}m",
+    "countdownM": "in {{minutes}}m"
   },
   "level1": {
     "emptyTitle": "No quote yet",

@@ -151,29 +151,34 @@
     "providerBusyTitle": "Lịch báo cáo đang bị giới hạn tần suất",
     "providerErrorBody": "Nhà cung cấp trả về nội dung không dùng được. Tài khoản và connector của bạn không có vấn đề gì.",
     "providerErrorTitle": "Không tải được lịch báo cáo",
-    "reportTime": {
-      "amc": "SAU",
-      "amcLabel": "Công bố sau giờ đóng cửa",
-      "bmo": "TRƯỚC",
-      "bmoLabel": "Công bố trước giờ mở cửa"
-    },
     "scopeLabel": "Khoảng thời gian công bố",
     "scopes": {
       "today": "Hôm nay",
       "week": "Tuần này",
-      "watchlist": "Danh mục theo dõi"
+      "watchlist": "Danh mục theo dõi của tôi"
     },
     "title": "Kết quả kinh doanh",
     "emptyTitle": "Không có nguồn lịch báo cáo",
     "emptyBody": "Bản dựng này không có nhà cung cấp lịch báo cáo. Lịch đến từ App Server; nhà môi giới công bố giờ phiên của chính họ, không phải ai báo cáo tuần này.",
     "columns": {
       "company": "Doanh nghiệp",
-      "quarterEnd": "Kết thúc quý",
-      "symbol": "Mã",
-      "epsEstimate": "EPS dự báo"
+      "symbol": "Mã"
     },
     "today": "Hôm nay",
-    "tomorrow": "Ngày mai"
+    "tomorrow": "Ngày mai",
+    "heading": {
+      "today": "Công bố hôm nay",
+      "week": "Công bố tuần này",
+      "watchlist": "Báo cáo từ danh mục theo dõi"
+    },
+    "slots": {
+      "bmo": "Trước giờ mở cửa",
+      "amc": "Sau giờ đóng cửa",
+      "unstated": "Không nêu thời gian"
+    },
+    "consensusEps": "EPS dự phóng",
+    "quarterTo": "quý kết thúc {{period}}",
+    "periodEnded": "Quý tài chính kết thúc {{date}}"
   },
   "economicCalendar": {
     "allDay": "Cả ngày",
@@ -217,7 +222,10 @@
     "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Số thực tế và số trước lấy từ chính các cơ quan; số hàm ý được suy ra từ giá hợp đồng trên Kalshi. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
     "title": "Vĩ mô",
     "today": "Hôm nay",
-    "tomorrow": "Ngày mai"
+    "tomorrow": "Ngày mai",
+    "countdownDh": "sau {{days}} ngày {{hours}} giờ",
+    "countdownHm": "sau {{hours}} giờ {{minutes}} phút",
+    "countdownM": "sau {{minutes}} phút"
   },
   "eventBoard": {
     "listed": "Niêm yết {{when}}",
@@ -233,15 +241,20 @@
       "biggestMove": "Biến động lớn nhất"
     },
     "unchanged": "không đổi",
-    "movedPoints": "{{arrow}} {{points}} điểm hôm nay",
     "volumeUnknown": "Sàn không công bố khối lượng",
     "liquidity": "Thanh khoản {{value}}",
-    "outcomeCount_one": "1 ứng viên",
-    "outcomeCount_other": "{{count}} ứng viên",
+    "outcomeCount_one": "1 kết quả",
+    "outcomeCount_other": "{{count}} kết quả",
     "topShare_one": "Người dẫn đầu nắm {{percent}} % tổng xác suất.",
     "topShare_other": "Top {{count}} nắm {{percent}} % tổng xác suất.",
     "openFullField_one": "Mở toàn bộ danh sách (thêm 1)",
-    "openFullField_other": "Mở toàn bộ danh sách (thêm {{count}})"
+    "openFullField_other": "Mở toàn bộ danh sách (thêm {{count}})",
+    "endsIn": "kết thúc {{when}}",
+    "openInterest": "OI {{value}}",
+    "candidateCount_one": "1 ứng viên",
+    "candidateCount_other": "{{count}} ứng viên",
+    "movedPoints_one": "{{arrow}} {{points}} điểm hôm nay",
+    "movedPoints_other": "{{arrow}} {{points}} điểm hôm nay"
   },
   "eventHeader": {
     "noPairTitle": "Chưa chọn hợp đồng",
@@ -295,10 +308,11 @@
     "loading": "Đang đọc phí funding…",
     "na": "không có",
     "stampUnknown": "Không công bố",
-    "desktopOnly": "chỉ cho phép truy cập API công khai từ ứng dụng máy tính.",
     "manageConnectors": "Quản lý trình kết nối",
     "cellHint": "{{pair}} · {{rate}} mỗi {{hours}} giờ",
-    "cellHintAssumed": "{{pair}} · {{rate}}, giả định thanh toán mỗi {{hours}} giờ vì sàn không công bố chu kỳ"
+    "cellHintAssumed": "{{pair}} · {{rate}}, giả định thanh toán mỗi {{hours}} giờ vì sàn không công bố chu kỳ",
+    "desktopOnlyLine_one": "{{venues}} truyền dữ liệu từ ứng dụng desktop.",
+    "desktopOnlyLine_other": "{{venues}} truyền dữ liệu từ ứng dụng desktop."
   },
   "fundingBelt": {
     "now": "Funding hiện tại · {{hours}} giờ",
@@ -320,12 +334,14 @@
     "noRateBody": "{{venue}} không trả về phí funding cho hợp đồng này."
   },
   "fundingExtremes": {
-    "subtitle": "Chi phí nắm giữ đắt nhất và rẻ nhất trên các sàn bạn đã kết nối, quy đổi năm.",
-    "longsPay": "Long trả nhiều nhất",
-    "shortsPay": "Short trả nhiều nhất",
+    "subtitle": "Chi phí nắm giữ đắt nhất và rẻ nhất, xếp hạng theo biên độ 30 ngày của chính từng hợp đồng.",
     "perInterval": "{{rate}} mỗi {{hours}} giờ",
     "emptyTitle": "Không có mức phí nào để xếp hạng",
-    "emptyBody": "Ngay khi một sàn vĩnh cửu phản hồi, các hợp đồng đắt nhất và rẻ nhất của sàn sẽ hiện ở đây."
+    "emptyBody": "Ngay khi một sàn vĩnh cửu phản hồi, các hợp đồng đắt nhất và rẻ nhất của sàn sẽ hiện ở đây.",
+    "rangeTop": "thuộc {{pct}}% cao nhất trong biên độ 30 ngày của nó",
+    "rangeBottom": "thuộc {{pct}}% thấp nhất trong biên độ 30 ngày của nó",
+    "crowdedLong": "long quá đông",
+    "shortsPaying": "phe short trả phí"
   },
   "fundingMatrix": {
     "title": "Funding, quy đổi năm",
@@ -451,11 +467,13 @@
     "loadingBody": "Đang lấy các swap gần đây của pool này.",
     "emptyTitle": "Chưa có swap",
     "emptyBody": "Gần đây không có giao dịch nào qua pool này, nên không có dòng tiền để bù trừ.",
-    "barsLabel": "Dòng ròng phía taker, {{pool}}",
     "netHour": "{{value}} trong một giờ qua",
     "bucketTooltip": "mua {{buy}}, bán {{sell}}",
     "axisNote": "Mua trừ bán mỗi 5 phút. Thanh khoản do LP thêm vào hay rút ra không nằm trong luồng này.",
-    "biggestLabel": "Swap lớn nhất"
+    "biggestLabel": "Swap lớn nhất",
+    "title": "Dòng tiền qua {{pool}}",
+    "subtitle": "Mua trừ bán, theo từng năm phút",
+    "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút"
   },
   "lpPanes": {
     "venueFallback": "chuỗi này",
@@ -586,7 +604,10 @@
     "up": "tăng",
     "down": "giảm",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "Chỉ số sợ hãi và tham lam của thị trường crypto. 0 là sợ hãi cực độ, 100 là tham lam cực độ."
+    "fearGreedTooltip": "Chỉ số sợ hãi và tham lam của thị trường crypto. 0 là sợ hãi cực độ, 100 là tham lam cực độ.",
+    "breadthPairs_one": "Độ rộng · {{count}} cặp",
+    "breadthPairs_other": "Độ rộng · {{count}} cặp",
+    "fearGreedMissing": "Cả App Server lẫn chỉ số công khai đều chưa phản hồi. Ô này sẽ hiện ngay khi một trong hai trả lời."
   },
   "movers": {
     "emptyTitle": "Không có dữ liệu thị trường",
@@ -629,7 +650,13 @@
       "volume": "Chưa sàn nào báo khối lượng.",
       "volatility": "Chưa có gì biến động đủ để xếp hạng.",
       "unusual": "Không tài sản nào giao dịch bất thường so với quy mô của nó."
-    }
+    },
+    "reason": {
+      "reportsTonight": "Công bố tối nay",
+      "reportedThisMorning": "Đã công bố sáng nay",
+      "reportsToday": "Công bố hôm nay"
+    },
+    "tradedValueTooltip": "Giá trị thực sự được giao dịch trong phiên tính bằng đô la: khối lượng cổ phiếu nhân với giá bình quân theo khối lượng trong ngày, cả hai đều theo số liệu nhà môi giới báo cáo."
   },
   "oddsMovers": {
     "subtitle": "Xác suất thay đổi mạnh nhất, 24 giờ",
@@ -943,21 +970,25 @@
     "liquidity": "Thanh khoản",
     "volume24h": "Khối lượng 24h",
     "turnover": "KL / TK",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "Giao dịch 24h",
     "feeTier": "Bậc phí",
-    "pressureByValue": "Áp lực mua và bán, 24h theo giá trị",
-    "pressureByCount": "Áp lực mua và bán, 24h theo số giao dịch",
     "loading": "Đang tải trạng thái pool.",
-    "openChart": "Mở biểu đồ và swap"
+    "openChart": "Mở biểu đồ và swap",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "Tác động giá $10k",
+    "pressure1h": "Áp lực mua / bán 1 giờ",
+    "buysValue": "Mua {{value}}",
+    "sellsValue": "Bán {{value}}",
+    "filledBy": "Chỗ trống do {{provider}} bổ sung"
   },
   "poolMap": {
-    "title": "Pool trên {{chain}}",
+    "title": "Pool hàng đầu trên {{chain}}",
     "subtitle": "Xếp theo mức độ mỗi pool khai thác chính thanh khoản của nó",
     "sortTurnover": "Vòng quay",
     "sortVolume": "Khối lượng",
     "sortLiquidity": "Thanh khoản",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "Mở biểu đồ",
     "columns": {
       "pool": "Pool",
@@ -969,10 +1000,18 @@
     },
     "noChainTitle": "Chọn một chuỗi",
     "noChainBody": "Chọn chuỗi ở cột bên, các pool của nó sẽ xếp hạng tại đây: khối lượng so với thanh khoản đứng sau.",
-    "loadingTitle": "Đang tải pool",
-    "loadingBody": "Đang lấy các pool đã xếp hạng của chuỗi này.",
     "emptyTitle": "Không có pool trả về",
-    "emptyBody": "Nhà cung cấp dữ liệu không liệt kê gì cho chuỗi này. Sẽ thử lại ở lần làm mới sau."
+    "emptyBody": "Nhà cung cấp dữ liệu không liệt kê gì cho chuỗi này. Sẽ thử lại ở lần làm mới sau.",
+    "listTitle": "Tất cả pool trên {{chain}}",
+    "subtitleVolume": "Kích thước theo khối lượng 24 giờ, màu theo biến động 24 giờ",
+    "subtitleLiquidity": "Kích thước theo thanh khoản, màu theo biến động 24 giờ",
+    "subtitleTrades": "Kích thước theo số giao dịch 24 giờ, màu theo biến động 24 giờ",
+    "subtitleTurnover": "Kích thước theo khối lượng so với thanh khoản, màu theo biến động 24 giờ",
+    "sortTrades": "Số giao dịch",
+    "morePools": "Thêm pool trên chuỗi này",
+    "backToMap": "Quay lại bản đồ",
+    "belowFloorTitle": "Không pool nào đủ sâu để lên bản đồ",
+    "belowFloorBody": "Không có pool nào chain này trả về vừa có thanh khoản thực vừa có khối lượng tương xứng, nên so kích thước các pool này với nhau chỉ là xếp hạng nhiễu. Danh sách đầy đủ vẫn còn đó."
   },
   "poolStats": {
     "notOnChainTitle": "Không phải cặp on-chain",
@@ -1002,11 +1041,11 @@
     "impactNote": "Được báo giá trực tiếp ở từng quy mô, không mô phỏng từ dự trữ, nên một tuyến chia nhỏ có thể tốt hơn đường cong của chính pool này."
   },
   "predictionCategories": {
-    "all": "Tất cả",
     "noneBody": "Sàn này không gắn danh mục cho các sự kiện của mình.",
     "venueHeading": "Sàn",
     "desktopOnly": "máy tính",
-    "venueError": "lỗi"
+    "venueError": "lỗi",
+    "trending": "Nổi bật"
   },
   "resolvingSoon": {
     "resolves": "Chốt {{when}}",
@@ -1273,7 +1312,9 @@
     "window": "Khung nhóm ngành",
     "leads": "{{total}} tài sản · {{symbol}} dẫn dắt",
     "drags": "{{total}} tài sản · {{symbol}} kéo lùi",
-    "assets": "{{total}} tài sản"
+    "assets": "{{total}} tài sản",
+    "title": "Dải nhóm ngành",
+    "splitTape": "{{total}} tài sản · phân hóa"
   },
   "session": {
     "noVenueTitle": "Chưa kết nối nhà môi giới",
@@ -1302,7 +1343,13 @@
     "noSchedule": "Không có phiên nào được lên lịch",
     "clockOnly": "Chỉ biết mở hay đóng: không có khung giờ phiên nào được công bố.",
     "ticketExtendedNote": "Phiên này chỉ nhận lệnh giới hạn. Không có khớp lệnh liên tục để lệnh thị trường khớp vào.",
-    "ticketClosedNote": "Thị trường đang đóng cửa. Lệnh giới hạn sẽ chờ đến khi phiên kế tiếp mở."
+    "ticketClosedNote": "Thị trường đang đóng cửa. Lệnh giới hạn sẽ chờ đến khi phiên kế tiếp mở.",
+    "gateTitle": "Ngày giao dịch",
+    "gateBody": "Giờ giấc lấy thẳng từ lịch của {{venue}}.",
+    "headlineOpen": "Thị trường {{venue}} mở cửa",
+    "headlinePre": "Trước phiên {{venue}}",
+    "headlinePost": "Sau phiên {{venue}}",
+    "headlineClosed": "Thị trường {{venue}} đóng cửa"
   },
   "settings": {
     "title": "Cài đặt",
@@ -3317,7 +3364,7 @@
     "fundingMatrix": "Funding cho mọi perp trên mọi sàn bạn đã kết nối, trong một lưới bạn có thể sắp xếp theo bất kỳ cột nào",
     "basisMonitor": "Perp so với spot tính theo điểm cơ bản và quy đổi theo năm, để chi phí carry đọc như một khoản lợi suất thay vì một khoảng cách",
     "openInterest": "Open Interest theo từng hợp đồng cùng mức thay đổi 24 giờ, để sự chen chúc lộ ra trước khi giá phản ứng",
-    "fundingExtremes": "Tỷ lệ funding dương cao nhất và âm sâu nhất ngay lúc này, cùng sàn đang trả mỗi mức đó",
+    "fundingExtremes": "Chi phí nắm giữ đắt nhất và rẻ nhất, mỗi mức xếp hạng theo biên độ funding 30 ngày của chính hợp đồng đó",
     "fundingBelt": "Đếm ngược đến lần thu funding tiếp theo, tỷ lệ hiện tại và dự đoán, và khối lượng của bạn phải trả hay được nhận bao nhiêu",
     "liquidationMap": "Bản đồ nhiệt theo thời gian và giá của những gì sàn thực sự đã thanh lý, vẽ phía sau nến của hợp đồng, với giá thanh lý của chính bạn nằm trên",
     "marginHealth": "Tỷ lệ ký quỹ, ký quỹ duy trì so với vốn, khoảng cách tới thanh lý, và một cú đi ngược sẽ tác động thế nào tới cả ba",
@@ -3438,7 +3485,10 @@
       "walletMissingTitle": "Kết nối ví",
       "walletMissingDescription": "Bảng này hoạt động với ví đã kết nối. Liên kết một ví và các vị thế, phí và giao dịch chuyển sẽ hiển thị ở đây.",
       "walletSealedDescription": "Khóa ví của bạn nằm trong kho đã khóa. Mở khóa và bảng này có thể đọc và ký cho ví đó.",
-      "connectAction": "Kết nối {{venue}}"
+      "connectAction": "Kết nối {{venue}}",
+      "compactMissingDescription": "Kết nối một lần và khung này sẽ hiện dữ liệu. Khóa chỉ nằm trên thiết bị này.",
+      "compactSealedDescription": "Khóa {{venue}} của bạn đang nằm trong két đã khóa.",
+      "compactConnectAction": "Kết nối"
     },
     "paneTransition": {
       "switchingTo": "Đang chuyển sang {{venue}}…",
@@ -5359,7 +5409,31 @@
     "predictionsBrowse": "Mở bảng sự kiện",
     "predictionsInstall": "Cài plugin dự đoán",
     "futuresEmptyTitle": "Kết nối một sàn futures để duyệt các hợp đồng vĩnh cửu",
-    "futuresEmptyBody": "Danh sách hợp đồng lấy từ bảng thị trường của từng sàn, nên chỉ xuất hiện khi đã kết nối được sàn đó."
+    "futuresEmptyBody": "Danh sách hợp đồng lấy từ bảng thị trường của từng sàn, nên chỉ xuất hiện khi đã kết nối được sàn đó.",
+    "sector": {
+      "software": "Phần mềm",
+      "semiconductors": "Bán dẫn",
+      "internet": "Internet",
+      "hardware": "Phần cứng",
+      "banks": "Ngân hàng",
+      "payments": "Thanh toán",
+      "cryptoEquity": "Crypto",
+      "healthcare": "Y tế",
+      "energy": "Năng lượng",
+      "retail": "Bán lẻ",
+      "staples": "Hàng tiêu dùng thiết yếu",
+      "media": "Truyền thông",
+      "travel": "Du lịch",
+      "industrials": "Công nghiệp",
+      "autos": "Ô tô",
+      "etfEquity": "ETF cổ phiếu",
+      "etfBonds": "ETF trái phiếu",
+      "etfCommodity": "ETF hàng hóa"
+    },
+    "searchPairs_one": "Tìm trong {{count}} cặp",
+    "searchPairs_other": "Tìm trong {{count}} cặp",
+    "browseAll_one": "Xem tất cả {{count}} cặp",
+    "browseAll_other": "Xem tất cả {{count}} cặp"
   },
   "fearGreed": {
     "title": "Sợ hãi & Tham lam",
@@ -5400,9 +5474,6 @@
   },
   "news": {
     "title": "Tin tức",
-    "tickerPlaceholder": "Mã...",
-    "sortLatest": "Mới nhất",
-    "sortRelevance": "Liên quan",
     "unavailable": "Không có tin tức",
     "unavailableUpstream": "Nhà cung cấp tin tức không phản hồi. Không thể tải cho đến khi khôi phục.",
     "unavailableRateLimited": "Đã đạt giới hạn yêu cầu của nhà cung cấp tin tức. Sẽ sớm được đặt lại.",
@@ -5434,8 +5505,22 @@
       "technology": "Công nghệ",
       "finance": "Tài chính",
       "financial_markets": "Thị trường tài chính",
-      "economy_macro": "Kinh tế vĩ mô"
-    }
+      "economy_macro": "Kinh tế vĩ mô",
+      "earnings": "Kết quả kinh doanh"
+    },
+    "scope": {
+      "assets": "Tài sản của bạn",
+      "earnings": "Kết quả kinh doanh",
+      "macro": "Vĩ mô",
+      "all": "Tất cả"
+    },
+    "refresh": "Làm mới tin tức",
+    "adjustScope": "Không có tin nào cho bộ lọc này. Thử bộ lọc khác, hoặc quay lại sau vài phút.",
+    "noWatchedAssets": "Danh mục theo dõi của bạn đang trống nên không có gì để lọc tin. Đánh dấu sao một cặp, hoặc đọc mục Vĩ mô.",
+    "noAssetNews": "Tin vẫn dồn dập, nhưng không có tin nào về danh mục theo dõi của bạn. Vĩ mô và Tất cả vẫn đang cập nhật.",
+    "noStockNews": "Hiện chưa có tin nào về các mã đang hiển thị. Vĩ mô và Tất cả vẫn đang cập nhật.",
+    "mentionsPairs_one": "nhắc đến {{count}} cặp của bạn",
+    "mentionsPairs_other": "nhắc đến {{count}} cặp của bạn"
   },
   "tray": {
     "show": "Hiện Pairlens",

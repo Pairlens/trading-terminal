@@ -32,16 +32,36 @@ type DexDiscoveryStore = {
   /** Pairlens market id, or null until the rail resolves its first chain. */
   chain: string | null
   selectedPool: SelectedPool | null
+  /**
+   * Whether the selection came from a click rather than from the map seeding
+   * itself. The one bit that keeps auto-selection from fighting the user: once
+   * this is set, nothing but another click or a chain switch moves the pool.
+   */
+  userPicked: boolean
   setChain: (market: string) => void
   selectPool: (pool: SelectedPool | null) => void
+  autoSelectPool: (pool: SelectedPool) => void
 }
 
 export const useDexDiscoveryStore = create<DexDiscoveryStore>((set) => ({
   chain: null,
   selectedPool: null,
+  userPicked: false,
   // Changing chain clears the pool: a pool address is meaningless on another
   // chain, and leaving it would have the detail pane describe a pool the map
-  // beside it is no longer listing.
-  setChain: (market) => set({ chain: market, selectedPool: null }),
-  selectPool: (pool) => set({ selectedPool: pool }),
+  // beside it is no longer listing. The map then seeds the new chain's top
+  // pool, so the board never sits on two empty panes waiting for a click.
+  setChain: (market) =>
+    set({ chain: market, selectedPool: null, userPicked: false }),
+  selectPool: (pool) => set({ selectedPool: pool, userPicked: pool !== null }),
+  /**
+   * The map's own default, applied when the listing lands.
+   *
+   * Guarded here rather than only at the call site because two panes can be
+   * mounted against this store and a discovery board is worth exactly one
+   * default. A user selection is never overwritten: the guard is the whole
+   * contract.
+   */
+  autoSelectPool: (pool) =>
+    set((state) => (state.userPicked ? state : { selectedPool: pool })),
 }))
