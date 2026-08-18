@@ -1,14 +1,8 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// AI Message types
-export type AIMessageScope = { userId: string; market: string; pairKey: string }
-export type AIMessage = {
-  id: string
-  role: 'user' | 'assistant' | 'system'
-  content: string
-  createdAt: number
-  metadata?: Record<string, unknown>
-}
+// Assistant chat history is deliberately absent. Threads are stored on the
+// user's own device (apps/terminal/src/stores/assistant-conversations-store.ts)
+// and there is no server-side shape for them on purpose.
 
 // User config
 export type UserConfig = {

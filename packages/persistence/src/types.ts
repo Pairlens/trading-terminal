@@ -4,8 +4,6 @@
 // (app-server types its REST payloads from the same source). Re-exported here
 // so persistence adapters and their consumers keep a single import surface.
 export type {
-  AIMessageScope,
-  AIMessage,
   UserConfig,
   RiskState,
   SignalStatus,

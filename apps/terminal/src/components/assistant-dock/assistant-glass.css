@@ -239,8 +239,32 @@
     box-shadow: inset 0 0 0 1px var(--ai-edge);
   }
 
+  /* The thread rail down the left of the window. A hairline rather than a
+     filled column: a second surface inside a glass panel reads as a panel
+     inside a panel, and the rail is part of the same sheet of glass. */
+  .ai-rail {
+    box-shadow: inset -1px 0 0 var(--ai-edge-soft);
+  }
+
+  /* One conversation in the rail. Transparent at rest so a long list stays
+     quiet, and the current thread is the only row carrying any weight. */
+  .ai-row {
+    transition:
+      background-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
+  }
+
+  .ai-row:hover {
+    background: var(--ai-inset);
+  }
+
+  .ai-row[aria-current='true'] {
+    background: var(--ai-inset-strong);
+    box-shadow: inset 0 0 0 1px var(--ai-edge-soft);
+  }
+
   /* The user's own turn. A tint rather than a filled bubble: a solid block
-     every other message is a lot of weight in a 440px column, and the tint
+     every other message is a lot of weight in a narrow column, and the tint
      keeps `--foreground` on `--card` so nothing about contrast changes. */
   .ai-bubble-user {
     background: color-mix(in oklab, var(--primary) 15%, transparent);

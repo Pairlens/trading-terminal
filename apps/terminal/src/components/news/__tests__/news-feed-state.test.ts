@@ -16,6 +16,8 @@ import {
 } from '@tanstack/react-query'
 
 import {
+  NEWS_AUTOFILL_MAX_PAGES,
+  NEWS_MIN_FILLED_ROWS,
   NEWS_POLL_INTERVAL_MS,
   NEWS_POLL_MAX_PAGES,
   NewsUnavailableError,
@@ -25,6 +27,7 @@ import {
   newsFeedStalled,
   newsFeedView,
   newsPollInterval,
+  shouldAutofillNewsFeed,
 } from '../news-feed-state'
 import type {
   NewsArticle,
@@ -121,6 +124,52 @@ describe('newsPollInterval', () => {
     // Refetching an infinite query walks every loaded page. Past the cap that
     // is an archive being re-read every two minutes, not a wire.
     expect(newsPollInterval(NEWS_POLL_MAX_PAGES + 1)).toBe(false)
+  })
+})
+
+// ── Filling a column the scope filtered down ────────────────────────
+//
+// The shipped bug: the pane loaded one page, the client-side scope kept four
+// of its fifty stories, and nothing ever asked for page two — except the
+// READER, so the list only grew if you opened an article and closed it again.
+
+describe('shouldAutofillNewsFeed', () => {
+  const state = {
+    hasNextPage: true,
+    isFetching: false,
+    pageCount: 1,
+    rowCount: 4,
+  }
+
+  it('pulls another page while the column is short', () => {
+    expect(shouldAutofillNewsFeed(state)).toBe(true)
+  })
+
+  it('stops as soon as the column is filled', () => {
+    expect(
+      shouldAutofillNewsFeed({ ...state, rowCount: NEWS_MIN_FILLED_ROWS }),
+    ).toBe(false)
+  })
+
+  it('leaves an unfiltered page alone: 50 rows need no help', () => {
+    expect(shouldAutofillNewsFeed({ ...state, rowCount: 50 })).toBe(false)
+  })
+
+  it('never fills deep enough to stand the poll down', () => {
+    // The bound IS the poll's own page cap. A feed that filled past it would
+    // trade live updates for backfill nobody asked for.
+    expect(NEWS_AUTOFILL_MAX_PAGES).toBe(NEWS_POLL_MAX_PAGES)
+    expect(
+      shouldAutofillNewsFeed({ ...state, pageCount: NEWS_AUTOFILL_MAX_PAGES }),
+    ).toBe(false)
+  })
+
+  it('waits for the request in flight instead of stacking pages', () => {
+    expect(shouldAutofillNewsFeed({ ...state, isFetching: true })).toBe(false)
+  })
+
+  it('asks for nothing once the wire is exhausted', () => {
+    expect(shouldAutofillNewsFeed({ ...state, hasNextPage: false })).toBe(false)
   })
 })
 

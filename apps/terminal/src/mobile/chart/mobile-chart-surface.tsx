@@ -21,6 +21,7 @@ import { KeyRound, LockKeyhole, Monitor } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '@pairlens/ui/components/ui/button'
+import { isVenueBoundClass } from '@pairlens/shared/market-ref'
 import { PriceReadout } from '../primitives/price-readout'
 import {
   advanceChartSwitch,
@@ -130,7 +131,7 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
   // the chart config this needs, and the focus context changes on a pair or
   // venue switch where the config object changes on every tool arm, timeframe
   // and drawing edit. Same value either way (see mobile-focus-context.tsx).
-  const { focusedPair, focusedVenue } = useMobileFocus()
+  const { focusedClass, focusedPair, focusedVenue } = useMobileFocus()
   const credentialGate = useMarketCredentialGate(focusedVenue)
   // Directory pin first, venue asset class second — neither reads a stream.
   // It is the gate on the event strip's whole chunk, so a crypto chart never
@@ -193,6 +194,10 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
       {...props}
       credentialState={credentialGate.state}
       desktopOnly={candleData?.desktopOnly ?? false}
+      // A token and an event contract name their own venue, so the empty
+      // state below drops its "Switch venue" CTA: the picker it opens has
+      // exactly this venue in it.
+      venueBound={isVenueBoundClass(focusedClass)}
       hasSnapshot={hasSnapshot}
       noData={candleData?.noData ?? false}
       // Bare chart only. Under a docked panel the readout has compacted into
@@ -231,6 +236,7 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   predictionView,
   showEventStrip,
   showProbability,
+  venueBound,
   venueChanged,
 }: MobileChartSurfaceProps & {
   credentialState: 'ok' | 'sealed' | 'missing'
@@ -243,6 +249,7 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   predictionView: PredictionChartView | null
   showEventStrip: boolean
   showProbability: boolean
+  venueBound: boolean
   venueChanged: boolean
 }) {
   const tapRef = useRef<{ x: number; y: number; t: number } | null>(null)
@@ -304,6 +311,7 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
         <ChartUnavailable
           desktopOnly={desktopOnly}
           onSwitchVenue={onSwitchVenue}
+          venueBound={venueBound}
           venueLabel={venueLabel}
         />
       ) : (
@@ -465,13 +473,20 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
 const ChartUnavailable = memo(function ChartUnavailable({
   desktopOnly,
   onSwitchVenue,
+  venueBound,
   venueLabel,
 }: {
   desktopOnly: boolean
   onSwitchVenue: () => void
+  /** The instrument names its own venue, so there is nowhere else to try. */
+  venueBound: boolean
   venueLabel: string
 }) {
   const { t } = useTranslation()
+  // "Try another one" is advice on a spot pair and a dead end on an event
+  // contract: the other prediction venue has never heard of this id. The CTA
+  // goes with it rather than opening a picker holding a single row.
+  const elsewhere = !venueBound && !desktopOnly
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center">
       <Monitor className="size-8 text-muted-foreground/50" />
@@ -483,11 +498,18 @@ const ChartUnavailable = memo(function ChartUnavailable({
       <p className="text-[12.5px] leading-relaxed text-muted-foreground">
         {desktopOnly
           ? t('desktopCta.wall.description')
-          : t('mobile.shell.noChartDataHint')}
+          : elsewhere
+            ? t('mobile.shell.noChartDataHint')
+            : t('terminal.venueBound', { venue: venueLabel })}
       </p>
-      <Button className="mt-2 h-11 rounded-xl px-5" onClick={onSwitchVenue}>
-        {t('mobile.shell.switchVenue')}
-      </Button>
+      {/* Kalshi behind the browser wall is both things at once, and the CTA
+          still has to go: the picker it opens would hold that one venue. The
+          copy above already names the way through, which is the desktop app. */}
+      {!venueBound && (
+        <Button className="mt-2 h-11 rounded-xl px-5" onClick={onSwitchVenue}>
+          {t('mobile.shell.switchVenue')}
+        </Button>
+      )}
     </div>
   )
 })

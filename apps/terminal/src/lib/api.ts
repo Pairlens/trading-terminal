@@ -191,8 +191,6 @@ export const queryKeys = {
     ['signals', scope] as const,
   pluginStates: () => ['pluginStates'] as const,
   pluginPins: () => ['pluginPins'] as const,
-  aiMessages: (market: string, pairKey: string) =>
-    ['ai-messages', market, pairKey] as const,
   entitlements: () => ['entitlements'] as const,
   billingState: () => ['billing-state'] as const,
   workflows: () => ['workflows'] as const,
@@ -537,56 +535,6 @@ export const api = {
       ? fetchApi<{ ok: boolean }>('/api/plugins/pins', {
           method: 'DELETE',
         })
-      : Promise.resolve({ ok: true }),
-
-  getAiMessages: async (market: string, pairKey: string) => {
-    if (!isDomainSyncEnabled('copilot')) return []
-    try {
-      const rows = await fetchApi<
-        Array<{ id: string; role: string; content: string }>
-      >(
-        `/api/ai-messages?market=${encodeURIComponent(market)}&pairKey=${encodeURIComponent(pairKey)}`,
-      )
-      // Convert App Server format → UIMessage format for useChat
-      return rows.map((r) => ({
-        id: r.id,
-        role: r.role as 'user' | 'assistant',
-        parts: [{ type: 'text' as const, text: r.content }],
-      }))
-    } catch {
-      return []
-    }
-  },
-
-  saveAiMessage: (
-    market: string,
-    pairKey: string,
-    message: { role: string; parts?: Array<{ type: string; text?: string }> },
-  ) =>
-    isDomainSyncEnabled('copilot')
-      ? fetchApi<{ ok: boolean }>('/api/ai-messages', {
-          method: 'POST',
-          body: JSON.stringify({
-            market,
-            pairKey,
-            role: message.role,
-            content:
-              message.parts
-                ?.filter((p) => p.type === 'text' && p.text)
-                .map((p) => p.text)
-                .join('\n') ?? '',
-          }),
-        })
-      : Promise.resolve({ ok: true }),
-
-  // The panel clears itself locally either way; with the domain off, the copy
-  // already in the account is deliberately left alone.
-  clearAiMessages: (market: string, pairKey: string) =>
-    isDomainSyncEnabled('copilot')
-      ? fetchApi<{ ok: boolean }>(
-          `/api/ai-messages?market=${encodeURIComponent(market)}&pairKey=${encodeURIComponent(pairKey)}`,
-          { method: 'DELETE' },
-        )
       : Promise.resolve({ ok: true }),
 
   getEntitlements: () => fetchApi<EntitlementResponse>('/api/entitlements'),

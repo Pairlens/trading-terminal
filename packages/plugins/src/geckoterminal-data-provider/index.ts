@@ -128,9 +128,21 @@ export function createGeckoterminalDataProviderPlugin(
           sort === 'volume'
             ? Math.min(Math.max(Number(p['depth']) || 1, 1), 3)
             : 1
-        const pages: Array<Array<PoolListingEntry>> = []
-        for (let page = 1; page <= depth; page++) {
-          pages.push(await fetchTopPools(network, page, sort))
+        // Page 1 is the answer; pages 2 and 3 are DEPTH, and the difference
+        // matters when the provider starts refusing mid-walk. All-or-nothing
+        // here threw twenty perfectly good pools away because the third page
+        // was rate limited, and the board drew an empty state over a chain it
+        // had the top of. So the first page decides whether this call can
+        // answer at all, and the rest only ever add to it.
+        const pages: Array<Array<PoolListingEntry>> = [
+          await fetchTopPools(network, 1, sort),
+        ]
+        for (let page = 2; page <= depth; page++) {
+          try {
+            pages.push(await fetchTopPools(network, page, sort))
+          } catch {
+            break
+          }
         }
         const pools = mergePoolPages(pages)
         return { network, pools, source: 'geckoterminal' as const }
@@ -154,10 +166,16 @@ export function createGeckoterminalDataProviderPlugin(
         // rail. But if EVERY chain failed this is a provider failure rather
         // than an answer, so it throws and the manager can try DexPaprika,
         // which has a real network endpoint on desktop.
+        // Sampled from the VOLUME ranking, not the trending feed, for two
+        // reasons: a volume aggregate summed over the twenty highest-volume
+        // pools is a better sample than one summed over whatever is trending,
+        // and it is the exact page the pool map asks for on the selected
+        // chain, so the rail and the map collapse into one request there
+        // instead of two (see the in-flight map in pool-listing-client).
         const settled = await Promise.allSettled(
           markets.map(async (id) => {
             const slug = networkForMarket(id)
-            const pools = await fetchTopPools(slug)
+            const pools = await fetchTopPools(slug, 1, 'volume')
             return aggregateChainStats(slug, id, names[id] ?? id, pools)
           }),
         )

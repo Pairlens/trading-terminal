@@ -118,7 +118,8 @@
     "notInstalled": "Konektör kurulu değil",
     "installConnector": "Konektörü kur",
     "emptyTitle": "Gezilecek zincir yok",
-    "emptyBody": "Bu derleme zincir üstü konektör içermiyor, dolayısıyla havuzları sıralanacak bir zincir yok."
+    "emptyBody": "Bu derleme zincir üstü konektör içermiyor, dolayısıyla havuzları sıralanacak bir zincir yok.",
+    "volumesLabel": "Zincir hacimleri"
   },
   "earningsCalendar": {
     "capped": "{{total}} bilançonun ilk {{shown}} tanesi gösteriliyor.",
@@ -507,7 +508,10 @@
     "biggestLabel": "En büyük takaslar",
     "title": "{{pool}} içinden akış",
     "subtitle": "Alımlar eksi satımlar, beşer dakikalık dilimlerle",
-    "subtitleVenue": "{{venue}} · alımlar eksi satımlar, beşer dakikalık dilimlerle"
+    "subtitleVenue": "{{venue}} · alımlar eksi satımlar, beşer dakikalık dilimlerle",
+    "waitingTitle": "Harita bekleniyor",
+    "waitingBody": "Zincirin havuzları hâlâ yükleniyor. Bir havuz seçilince akış burada belirir.",
+    "unavailableTitle": "Şu anda havuzlar alınamıyor"
   },
   "lpPanes": {
     "venueFallback": "bu zincir",
@@ -1015,7 +1019,10 @@
     "pressure1h": "Alım / satım baskısı 1s",
     "buysValue": "{{value}} alım",
     "sellsValue": "{{value}} satım",
-    "filledBy": "Boşluklar {{provider}} ile dolduruldu"
+    "filledBy": "Boşluklar {{provider}} ile dolduruldu",
+    "waitingTitle": "Harita bekleniyor",
+    "waitingBody": "Zincirin havuzları hâlâ yükleniyor. En derini burada kendiliğinden açılacak.",
+    "unavailableTitle": "Şu anda havuzlar alınamıyor"
   },
   "poolMap": {
     "title": "{{chain}} · öne çıkan havuzlar",
@@ -1046,7 +1053,12 @@
     "morePools": "Bu zincirdeki diğer havuzlar",
     "backToMap": "Haritaya dön",
     "belowFloorTitle": "Haritaya koyacak kadar derin havuz yok",
-    "belowFloorBody": "Bu zincirin döndürdüğü havuzların hiçbiri gerçek likiditeyi onunla orantılı hacimle birleştirmiyor; bu havuzları birbirine göre boyutlandırmak gürültüyü sıralamak olurdu. Tam liste hâlâ yerinde."
+    "belowFloorBody": "Bu zincirin döndürdüğü havuzların hiçbiri gerçek likiditeyi onunla orantılı hacimle birleştirmiyor; bu havuzları birbirine göre boyutlandırmak gürültüyü sıralamak olurdu. Tam liste hâlâ yerinde.",
+    "unavailableTitle": "Şu anda havuzlar alınamıyor",
+    "retryingTitle": "Yeniden deneniyor",
+    "retry": "Yeniden dene",
+    "retryingBody": "Sağlayıcı şu anda istekleri reddediyor. Kendiliğinden yeniden deneniyor.",
+    "unavailableBody": "Havuz veri sağlayıcısına ulaşılamadı. Birazdan tekrar deneyin."
   },
   "poolStats": {
     "notOnChainTitle": "Zincir üstü bir parite değil",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "Eklentiler",
           "description": "Hangi eklentileri açtığın, ayarları ve sabitlediğin sağlayıcılar. Ayarlara, bir eklentinin kendi ayarlarına girdiğin API anahtarları da dahildir; örneğin bir yapay zekâ sağlayıcısının anahtarı. Borsa API anahtarları ve cüzdan sırları buna asla dahil değildir, anahtar zincirinde kalır. Sabitlenen sağlayıcılar yalnızca hesabında tutulur; bu kapalıyken uygulamayı kapatana kadar geçerli olurlar."
-        },
-        "copilot": {
-          "title": "Yapay zekâ sohbet geçmişi",
-          "description": "Asistanla tek bir konuşma, terminalin tamamı için.",
-          "caveat": "Bu kapalıyken sohbet geçmişini temizlemek yalnızca bu cihazı temizler. Hesabında kayıtlı konuşmalar durur ve senkronizasyonu tekrar açtığında yeniden görünür."
         },
         "trades": {
           "title": "İşlem günlüğü",
@@ -2324,7 +2331,6 @@
     "title": "Asistan",
     "open": "Asistanı aç",
     "close": "Asistanı küçült",
-    "clear": "Konuşmayı temizle",
     "placeholder": "Ne istersen sor ya da ne oluşturacağımı söyle...",
     "answerPlaceholder": "Yanıtını yaz...",
     "emptyTitle": "Ne üzerinde çalışıyoruz?",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "Reddet",
     "approvalApproved": "Onaylandı",
     "approvalDeclined": "Reddedildi",
-    "resetPosition": "Konumu sıfırla"
+    "resetPosition": "Konumu sıfırla",
+    "conversations": {
+      "new": "Yeni sohbet",
+      "untitled": "Adsız",
+      "history": "Geçmiş",
+      "close": "Kapat",
+      "empty": "Henüz bir şey yok. Bir şey sorun, bu cihazda saklanır.",
+      "localOnly": "Yalnızca bu cihazda saklanır",
+      "delete": "Sohbeti sil",
+      "deleteTitle": "Bu sohbet silinsin mi?",
+      "deleteDescription": "\"{{name}}\" ve içindeki her şey gider. Geri alınamaz.",
+      "cancel": "İptal",
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "previous7Days": "Son 7 gün",
+      "older": "Daha eski"
+    }
   },
   "copilot": {
     "placeholder": "Merceğine sor...",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "Son görüntülenenler",
     "noMarketsFound": "Piyasa bulunamadı",
+    "venueBound": "Bu piyasa yalnızca {{venue}} üzerinde var.",
     "modeLive": "CANLI",
     "modePaper": "KAĞIT"
   },

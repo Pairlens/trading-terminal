@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 8 min read
 ---
 
@@ -69,6 +69,12 @@ under an arrow key already navigating it.
 means chain plus contract address. Two different assets that share a symbol are
 two different rows, which is exactly what you want on-chain, where ticker
 collisions are a deliberate tactic.
+
+So the rows have to be tellable apart, not merely counted separately. Every
+token row carries its chain and a short form of its contract, and selecting one
+pins that exact address before anything else resolves the symbol. Search
+"accounts" and eight rows come back on the same ticker: one token and seven
+copies of it, and the contract is what says which is which.
 
 ## The cloud snapshot
 

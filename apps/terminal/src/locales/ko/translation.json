@@ -118,7 +118,8 @@
     "notInstalled": "커넥터 미설치",
     "installConnector": "커넥터 설치",
     "emptyTitle": "탐색할 체인 없음",
-    "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다."
+    "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다.",
+    "volumesLabel": "체인별 거래량"
   },
   "earningsCalendar": {
     "capped": "{{total}}건 중 처음 {{shown}}건을 보여 줍니다.",
@@ -507,7 +508,10 @@
     "biggestLabel": "최대 스왑",
     "title": "{{pool}} 자금 흐름",
     "subtitle": "매수에서 매도를 뺀 값, 5분 단위",
-    "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위"
+    "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위",
+    "waitingTitle": "맵을 기다리는 중",
+    "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음"
   },
   "lpPanes": {
     "venueFallback": "이 체인",
@@ -1015,7 +1019,10 @@
     "pressure1h": "매수 / 매도 압력 1시간",
     "buysValue": "매수 {{value}}",
     "sellsValue": "매도 {{value}}",
-    "filledBy": "빈 값은 {{provider}} 데이터로 채움"
+    "filledBy": "빈 값은 {{provider}} 데이터로 채움",
+    "waitingTitle": "맵을 기다리는 중",
+    "waitingBody": "체인의 풀을 불러오고 있습니다. 가장 깊은 풀이 여기에 자동으로 열립니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음"
   },
   "poolMap": {
     "title": "{{chain}} · 상위 풀",
@@ -1046,7 +1053,12 @@
     "morePools": "이 체인의 다른 풀",
     "backToMap": "맵으로 돌아가기",
     "belowFloorTitle": "맵에 올릴 만큼 깊은 풀이 없습니다",
-    "belowFloorBody": "이 체인이 반환한 풀 중 실제 유동성과 그에 비례하는 거래량을 갖춘 풀이 없습니다. 이 풀들을 서로 크기 비교하면 노이즈만 정렬하게 됩니다. 전체 목록은 계속 이용할 수 있습니다."
+    "belowFloorBody": "이 체인이 반환한 풀 중 실제 유동성과 그에 비례하는 거래량을 갖춘 풀이 없습니다. 이 풀들을 서로 크기 비교하면 노이즈만 정렬하게 됩니다. 전체 목록은 계속 이용할 수 있습니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음",
+    "retryingTitle": "다시 시도 중",
+    "retry": "다시 시도",
+    "retryingBody": "제공자가 지금 요청을 거부하고 있습니다. 자동으로 다시 시도합니다.",
+    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요."
   },
   "poolStats": {
     "notOnChainTitle": "온체인 페어가 아님",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "플러그인",
           "description": "활성화한 플러그인, 그 설정, 고정한 제공자. 설정에는 AI 제공자 키처럼 플러그인 설정 화면에 입력한 API 키도 포함됩니다. 거래소 API 키와 지갑 비밀키는 절대 포함되지 않으며 키체인에 남습니다. 고정한 제공자는 계정에만 보관되므로, 이 항목이 꺼져 있으면 앱을 종료할 때까지만 유지됩니다."
-        },
-        "copilot": {
-          "title": "AI 대화 기록",
-          "description": "터미널 전체에서 이어지는 어시스턴트와의 대화 하나.",
-          "caveat": "이 항목이 꺼져 있는 동안 채팅 기록 지우기는 이 기기에서만 지워집니다. 계정에 이미 저장된 대화는 남아 있으며 동기화를 다시 켜면 다시 나타납니다."
         },
         "trades": {
           "title": "매매 일지",
@@ -2324,7 +2331,6 @@
     "title": "어시스턴트",
     "open": "어시스턴트 열기",
     "close": "어시스턴트 최소화",
-    "clear": "대화 지우기",
     "placeholder": "무엇이든 물어보거나, 만들 것을 알려 주세요...",
     "answerPlaceholder": "답변을 입력하세요...",
     "emptyTitle": "무엇을 해 볼까요?",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "거절",
     "approvalApproved": "승인함",
     "approvalDeclined": "거절함",
-    "resetPosition": "위치 재설정"
+    "resetPosition": "위치 재설정",
+    "conversations": {
+      "new": "새 대화",
+      "untitled": "제목 없음",
+      "history": "기록",
+      "close": "닫기",
+      "empty": "아직 없습니다. 무언가 물어보면 이 기기에 저장됩니다.",
+      "localOnly": "이 기기에만 저장됩니다",
+      "delete": "대화 삭제",
+      "deleteTitle": "이 대화를 삭제할까요?",
+      "deleteDescription": "\"{{name}}\"과 그 안의 모든 내용이 사라집니다. 되돌릴 수 없습니다.",
+      "cancel": "취소",
+      "today": "오늘",
+      "yesterday": "어제",
+      "previous7Days": "지난 7일",
+      "older": "이전"
+    }
   },
   "copilot": {
     "placeholder": "렌즈에 물어보세요...",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "최근 본 종목",
     "noMarketsFound": "마켓을 찾을 수 없습니다",
+    "venueBound": "이 마켓은 {{venue}}에만 있습니다.",
     "modeLive": "실거래",
     "modePaper": "모의"
   },

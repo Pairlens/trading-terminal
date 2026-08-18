@@ -36,9 +36,12 @@ chart behind never redraws from scratch. Drag a sheet up to expand it, down to
 dismiss it, or just tap the chart.
 
 The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's docked
-orb, because a phone has no room for a floating window over a chart. It is the same conversation underneath: it draws on the live chart under
+orb, because a phone has no room for a floating window over a chart. It is the same assistant underneath: it draws on the live chart under
 the sheet, prepares orders on the same confirm cards, and asks its questions on
-the same tappable option cards.
+the same tappable option cards. **History** in the tab's top row opens the same
+thread list the desktop rail shows, over the panel rather than beside it. Those
+threads are the phone's own: conversations are stored per device and never
+synced, so the ones on your laptop are not here.
 
 That is also why the tabs are not URLs. The address bar stays on
 `/spot/okx/BTC-USDT`, rewritten as you change pair or venue so a refresh or a
@@ -56,7 +59,9 @@ you commit, then brings the right venue with it.
 The **venue chip** opens the venue picker and carries a live connection badge:
 **LIVE** when market data is streaming, an ellipsis while it connects, and
 **OFFLINE** for a venue this device cannot reach. An eye glyph next to it means
-the venue is read-only for you.
+the venue is read-only for you. The picker lists the venues that can serve what
+is on the chart and nothing else. On a token or an event contract, whose venue
+is part of what they are, the chip loses its caret and reads as a label.
 
 The **avatar** opens Settings, which is a screen rather than a tab.
 
@@ -227,7 +232,8 @@ the plugin store.
 Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures,
 and Kraken Futures) serve no CORS headers, so no browser can reach them, phone
 included. They are listed in the venue picker under **Needs the desktop app**
-rather than hidden, so you can see what you are missing. The other fourteen
+rather than hidden, whenever they serve the market you are looking at, so you
+can see what you are missing. The other fourteen
 work, Polymarket plus the Binance, ByBit and OKX futures venues included, so
 [event contracts](/docs/prediction-markets) and
 [perpetual futures](/docs/cex-futures) both trade from a phone.

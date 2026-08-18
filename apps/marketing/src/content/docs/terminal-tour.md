@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 7 min read
 ---
 
@@ -76,6 +76,13 @@ it is streaming from. Click the symbol to switch markets. A connection dot
 shows stream health, and turns to **Reconnecting** if a socket goes quiet, for
 instance after your laptop wakes from sleep.
 
+The venue button beside it lists only the venues that can serve what you are
+looking at: spot exchanges under a spot pair, perpetual venues under a perp,
+your broker under a stock. Tokens and event contracts carry their venue inside
+their own identity, so there the button is a label rather than a menu. A
+Polymarket outcome does not exist on Kalshi, and the same address on another
+chain is a different asset, so there is nothing to switch to.
+
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.
 
@@ -130,6 +137,9 @@ Press <kbd>⌘K</kbd> (<kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows and Linux) to ope
 the omni-search palette. It searches across:
 
 - Pairs, including ones you have never opened
+- Venues. On a pair page picking one moves the chart to that venue, the same
+  switch the header dropdown makes; anywhere else it sets the venue new pairs
+  open on, and says so
 - Pages, workspaces, workflows, and notification rules
 - Panels you can add to the current layout
 - Plugins
@@ -149,10 +159,11 @@ notification fires once rather than once per window.
 ## Signed in or not
 
 Everything above works with no account. Signing in with your email adds
-cross-device sync for workspaces, chart layouts, alerts, workflows, your trade
-journal, and AI conversations. It never adds anything to the credential path:
-exchange keys stay on your device either way, in the OS keychain on desktop or
-the encrypted vault in a browser.
+cross-device sync for workspaces, chart layouts, alerts, workflows, and your
+trade journal. It never adds anything to the credential path: exchange keys stay
+on your device either way, in the OS keychain on desktop or the encrypted vault
+in a browser. Assistant conversations stay put too, on the device that made
+them.
 
 ## Where to next
 

@@ -45,6 +45,7 @@ import {
   NEWS_POLL_INTERVAL_MS,
   NEWS_TOPIC_EARNINGS,
   NEWS_TOPIC_MACRO,
+  NewsFeedEnd,
   NewsFeedStatus,
   NewsRefreshError,
   countWatchedMentions,
@@ -58,6 +59,7 @@ import {
   newsRowTag,
   newsTickerBase,
   nextNewsPageParam,
+  useNewsFeedAutofill,
   useNewsFeedResume,
 } from '@/components/news/news-shared'
 import { useDiscoverySection } from '@/lib/discovery-section-context'
@@ -317,6 +319,17 @@ function NewsFeed({
   const fetchedAt = pages?.[0]?.fetchedAt ?? null
   const view = newsFeedView({ isPending, error, articleCount: articles.length })
 
+  // The scope above filters client-side, so one page of the wire can leave
+  // four rows in a column with room for twenty. Fill it from the wire rather
+  // than from whatever the reader happens to open.
+  useNewsFeedAutofill({
+    hasNextPage,
+    isFetching,
+    pageCount: pages?.length ?? 0,
+    rowCount: articles.length,
+    fetchNextPage,
+  })
+
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <header className="flex items-center justify-between gap-2 border-b px-3.5 py-2">
@@ -399,6 +412,11 @@ function NewsFeed({
               onClick={() => setReaderIndex(i)}
             />
           ))}
+          <NewsFeedEnd
+            hasMore={hasNextPage}
+            isLoadingMore={isFetchingNextPage}
+            onLoadMore={() => void fetchNextPage()}
+          />
         </div>
       )}
 

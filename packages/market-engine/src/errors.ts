@@ -120,7 +120,9 @@ export class ProviderThrottledError extends Error {
     super(
       status === 429
         ? `${provider} is rate limiting requests. Try again shortly.`
-        : `${provider} is temporarily unavailable (HTTP ${status}). Try again shortly.`,
+        : status === OPAQUE_FAILURE_STATUS
+          ? `${provider} did not answer. Retrying shortly.`
+          : `${provider} is temporarily unavailable (HTTP ${status}). Try again shortly.`,
     )
     this.name = 'ProviderThrottledError'
     this.provider = provider
@@ -144,6 +146,48 @@ export function isProviderThrottledError(
 export const THROTTLE_COOLDOWN_MS = 15_000
 /** Cool-off for a 5xx. Shorter: an overloaded edge usually recovers fast. */
 export const TRANSIENT_COOLDOWN_MS = 3_000
+/**
+ * Status stamped on a refusal whose status we were not allowed to read.
+ *
+ * Not a real HTTP status, and that is the point: a browser hands back an
+ * opaque `TypeError` for a response that carried no CORS header, so there is
+ * no number to report. Zero is what `fetch` itself uses for such a response.
+ */
+export const OPAQUE_FAILURE_STATUS = 0
+/** Cool-off for an opaque failure. Between the 5xx and the 429 estimates. */
+export const OPAQUE_COOLDOWN_MS = 8_000
+
+/**
+ * Classify a rejected `fetch` as a transient provider refusal.
+ *
+ * This exists for one specific, load-bearing case. A provider that sends
+ * `Access-Control-Allow-Origin` on its 200s and NOT on its 429s — GeckoTerminal
+ * is exactly this — is unreadable from a page the moment it starts rate
+ * limiting: the browser blocks the response before any code sees a status, and
+ * `fetch` rejects with a bare `TypeError: Failed to fetch`. Downstream that is
+ * indistinguishable from "this chain has no pools", which is how a rate limit
+ * became a confident wrong answer on the whole DEX board.
+ *
+ * So a rejection from a host we KNOW answers 200s with open CORS is treated as
+ * the transient refusal it almost always is. It is a judgement call, not a
+ * reading: an offline machine lands here too, and "did not answer, retrying"
+ * is the right sentence for that as well. Anything that is not a fetch
+ * rejection — a parse error, an abort, an already-classified throttle, a
+ * programming mistake — comes back null and keeps its own identity.
+ */
+export function providerThrottleFromNetworkError(
+  err: unknown,
+  provider: string,
+  coolOffMs: number = OPAQUE_COOLDOWN_MS,
+): ProviderThrottledError | null {
+  // Already classified by whoever threw it, and already registered. Passing it
+  // through here would cool the queue off a second time for the same refusal.
+  if (isProviderThrottledError(err)) return null
+  // An abort is the caller's own decision, never the provider's refusal.
+  if (err instanceof Error && err.name === 'AbortError') return null
+  if (!(err instanceof TypeError)) return null
+  return new ProviderThrottledError(provider, OPAQUE_FAILURE_STATUS, coolOffMs)
+}
 
 /**
  * `Retry-After` in milliseconds. The header is either delta-seconds or an

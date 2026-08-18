@@ -118,7 +118,8 @@
     "notInstalled": "未安装连接器",
     "installConnector": "安装连接器",
     "emptyTitle": "没有可浏览的链",
-    "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。"
+    "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。",
+    "volumesLabel": "链上成交量"
   },
   "earningsCalendar": {
     "capped": "共 {{total}} 份财报，显示前 {{shown}} 份。",
@@ -507,7 +508,10 @@
     "biggestLabel": "最大兑换",
     "title": "流经 {{pool}} 的资金",
     "subtitle": "买入减卖出，每五分钟一格",
-    "subtitleVenue": "{{venue}} · 买入减卖出，每五分钟一格"
+    "subtitleVenue": "{{venue}} · 买入减卖出，每五分钟一格",
+    "waitingTitle": "等待池子图",
+    "waitingBody": "该链的池子仍在加载。选中一个池子后就会显示资金流向。",
+    "unavailableTitle": "暂时无法获取池子"
   },
   "lpPanes": {
     "venueFallback": "这条链",
@@ -1015,7 +1019,10 @@
     "pressure1h": "买 / 卖压力 1 小时",
     "buysValue": "买入 {{value}}",
     "sellsValue": "卖出 {{value}}",
-    "filledBy": "缺口由 {{provider}} 补齐"
+    "filledBy": "缺口由 {{provider}} 补齐",
+    "waitingTitle": "等待池子图",
+    "waitingBody": "该链的池子仍在加载。流动性最深的池子会自动在这里打开。",
+    "unavailableTitle": "暂时无法获取池子"
   },
   "poolMap": {
     "title": "{{chain}} · 头部池子",
@@ -1046,7 +1053,12 @@
     "morePools": "这条链上的更多池子",
     "backToMap": "返回地图",
     "belowFloorTitle": "没有足够深的池子可绘制",
-    "belowFloorBody": "该链返回的池子中，没有一个同时具备真实流动性和与之相称的成交量，按大小相互比较只会给噪音排序。完整列表仍然可用。"
+    "belowFloorBody": "该链返回的池子中，没有一个同时具备真实流动性和与之相称的成交量，按大小相互比较只会给噪音排序。完整列表仍然可用。",
+    "unavailableTitle": "暂时无法获取池子",
+    "retryingTitle": "正在重试",
+    "retry": "重试",
+    "retryingBody": "数据源当前拒绝请求，正在自动重试。",
+    "unavailableBody": "无法连接池子数据源，请稍后再试。"
   },
   "poolStats": {
     "notOnChainTitle": "不是链上交易对",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "插件",
           "description": "你启用了哪些插件、它们的设置以及你固定的服务商。设置也包括你在插件自己的设置里填过的 API 密钥，比如 AI 服务商的密钥。交易所 API 密钥和钱包密钥永远不包含在内，它们留在你的钥匙串里。固定的服务商只保存在账号里，关掉后它们只在应用退出前有效。"
-        },
-        "copilot": {
-          "title": "AI 聊天记录",
-          "description": "与助手的一段对话，整个终端共用。",
-          "caveat": "关闭期间，清除聊天记录只会清除这台设备上的内容。账号里已有的对话会保留，重新开启同步后会再次出现。"
         },
         "trades": {
           "title": "交易日志",
@@ -2324,7 +2331,6 @@
     "title": "助手",
     "open": "打开助手",
     "close": "最小化助手",
-    "clear": "清空对话",
     "placeholder": "问任何问题，或告诉我要构建什么……",
     "answerPlaceholder": "输入你的回答……",
     "emptyTitle": "我们来做点什么？",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "拒绝",
     "approvalApproved": "已批准",
     "approvalDeclined": "已拒绝",
-    "resetPosition": "重置位置"
+    "resetPosition": "重置位置",
+    "conversations": {
+      "new": "新对话",
+      "untitled": "未命名",
+      "history": "历史",
+      "close": "关闭",
+      "empty": "还没有内容。问点什么，它会保存在这台设备上。",
+      "localOnly": "仅保存在这台设备上",
+      "delete": "删除对话",
+      "deleteTitle": "删除这个对话？",
+      "deleteDescription": "“{{name}}”及其中的一切都会消失，无法撤销。",
+      "cancel": "取消",
+      "today": "今天",
+      "yesterday": "昨天",
+      "previous7Days": "过去 7 天",
+      "older": "更早"
+    }
   },
   "copilot": {
     "placeholder": "问问你的透镜……",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "最近查看",
     "noMarketsFound": "未找到市场",
+    "venueBound": "该市场仅存在于 {{venue}}。",
     "modeLive": "实盘",
     "modePaper": "模拟"
   },

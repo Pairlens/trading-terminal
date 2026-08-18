@@ -468,6 +468,44 @@
   }
 }
 
+/* Skeleton shimmer — the placeholder a pane draws where data is still coming.
+
+   A travelling highlight rather than `animate-pulse`: a block that fades in
+   and out reads as "disabled", while a sweep reads as "working", and on a
+   board of a hundred cells the pulse also blinks every cell in lockstep. The
+   sweep runs per element, so a caller can stagger a column of rows with
+   `--shimmer-delay` and get a wave down the pane instead of a strobe.
+
+   Both the block and its highlight are theme tokens, so one class works in
+   every palette and in both light and dark without a second definition. The
+   block is `--muted` at FULL strength: in a light palette the gap between
+   `--muted` and `--card` is only a few points of lightness, and diluting it
+   left a skeleton nobody could see. */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--muted);
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklab, var(--foreground) 9%, transparent) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer-sweep 1.5s var(--ease-soft) infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+}
+@keyframes shimmer-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
 /* Live pulse dot */
 .live-dot {
   animation: live-blink 1.6s ease-in-out infinite;
@@ -487,6 +525,10 @@
   .magic-text,
   .live-dot {
     animation: none;
+  }
+  /* The muted block stays and says the same thing; only the sweep goes. */
+  .shimmer::after {
+    display: none;
   }
   .hover-lift {
     transition: none;

@@ -118,7 +118,8 @@
     "notInstalled": "Aucun connecteur installé",
     "installConnector": "Installer le connecteur",
     "emptyTitle": "Aucune chaîne disponible",
-    "emptyBody": "Cette version ne contient aucun connecteur on-chain, il n'y a donc aucune chaîne dont classer les pools."
+    "emptyBody": "Cette version ne contient aucun connecteur on-chain, il n'y a donc aucune chaîne dont classer les pools.",
+    "volumesLabel": "Volumes par chaîne"
   },
   "earningsCalendar": {
     "capped": "Affichage des {{shown}} premières publications sur {{total}}.",
@@ -507,7 +508,10 @@
     "biggestLabel": "Plus gros swaps",
     "title": "Flux à travers {{pool}}",
     "subtitle": "Achats moins ventes, par tranches de cinq minutes",
-    "subtitleVenue": "{{venue}} · achats moins ventes, par tranches de cinq minutes"
+    "subtitleVenue": "{{venue}} · achats moins ventes, par tranches de cinq minutes",
+    "waitingTitle": "En attente de la carte",
+    "waitingBody": "Les pools de la chaîne chargent encore. Le flux apparaît dès qu’un pool est sélectionné.",
+    "unavailableTitle": "Pools indisponibles pour le moment"
   },
   "lpPanes": {
     "venueFallback": "cette chaîne",
@@ -1015,7 +1019,10 @@
     "pressure1h": "Pression achat / vente 1h",
     "buysValue": "{{value}} achats",
     "sellsValue": "{{value}} ventes",
-    "filledBy": "Lacunes comblées par {{provider}}"
+    "filledBy": "Lacunes comblées par {{provider}}",
+    "waitingTitle": "En attente de la carte",
+    "waitingBody": "Les pools de la chaîne chargent encore. Le plus profond s’ouvre ici tout seul.",
+    "unavailableTitle": "Pools indisponibles pour le moment"
   },
   "poolMap": {
     "title": "{{chain}} · top pools",
@@ -1046,7 +1053,12 @@
     "morePools": "Plus de pools sur cette chaîne",
     "backToMap": "Retour à la carte",
     "belowFloorTitle": "Rien d'assez profond à cartographier",
-    "belowFloorBody": "Rien de ce que cette chaîne a renvoyé ne combine une liquidité réelle avec un volume proportionné. Dimensionner ces pools les uns contre les autres classerait du bruit. La liste complète reste disponible."
+    "belowFloorBody": "Rien de ce que cette chaîne a renvoyé ne combine une liquidité réelle avec un volume proportionné. Dimensionner ces pools les uns contre les autres classerait du bruit. La liste complète reste disponible.",
+    "unavailableTitle": "Pools indisponibles pour le moment",
+    "retryingTitle": "Nouvelle tentative",
+    "retry": "Réessayer",
+    "retryingBody": "Le fournisseur refuse les requêtes en ce moment. Nouvelle tentative automatique.",
+    "unavailableBody": "Le fournisseur de données de pools est injoignable. Réessayez dans un instant."
   },
   "poolStats": {
     "notOnChainTitle": "Paire non on-chain",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "Plugins",
           "description": "Les plugins que vous avez activés, leurs réglages et vos fournisseurs épinglés. Les réglages incluent toute clé API saisie dans les paramètres d'un plugin, par exemple celle d'un fournisseur d'IA. Les clés API d'exchange et les secrets de wallet n'en font jamais partie, ils restent dans votre trousseau. Les fournisseurs épinglés ne sont conservés que dans votre compte : désactivé, ils ne durent que jusqu'à la fermeture de l'application."
-        },
-        "copilot": {
-          "title": "Historique du chat IA",
-          "description": "Une seule conversation avec l'assistant, pour tout le terminal.",
-          "caveat": "Tant que c'est désactivé, effacer l'historique de chat n'efface que cet appareil. Les conversations déjà présentes dans votre compte sont conservées et réapparaîtront quand vous réactiverez la synchronisation."
         },
         "trades": {
           "title": "Journal de trading",
@@ -2324,7 +2331,6 @@
     "title": "Assistant",
     "open": "Ouvrir l’assistant",
     "close": "Réduire l’assistant",
-    "clear": "Effacer la conversation",
     "placeholder": "Posez une question, ou dites-moi quoi créer...",
     "answerPlaceholder": "Saisissez votre réponse...",
     "emptyTitle": "Sur quoi travaille-t-on ?",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "Refuser",
     "approvalApproved": "Approuvé",
     "approvalDeclined": "Refusé",
-    "resetPosition": "Réinitialiser la position"
+    "resetPosition": "Réinitialiser la position",
+    "conversations": {
+      "new": "Nouvelle conversation",
+      "untitled": "Sans titre",
+      "history": "Historique",
+      "close": "Fermer",
+      "empty": "Rien pour l’instant. Posez une question, elle reste sur cet appareil.",
+      "localOnly": "Conservé sur cet appareil uniquement",
+      "delete": "Supprimer la conversation",
+      "deleteTitle": "Supprimer cette conversation ?",
+      "deleteDescription": "« {{name}} » et tout son contenu disparaissent. Action irréversible.",
+      "cancel": "Annuler",
+      "today": "Aujourd’hui",
+      "yesterday": "Hier",
+      "previous7Days": "7 derniers jours",
+      "older": "Plus anciennes"
+    }
   },
   "copilot": {
     "placeholder": "Interrogez votre lens...",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "Vus récemment",
     "noMarketsFound": "Aucun marché trouvé",
+    "venueBound": "Ce marché n'existe que sur {{venue}}.",
     "modeLive": "RÉEL",
     "modePaper": "PAPIER"
   },

@@ -32,6 +32,11 @@ import {
   useFundingScanner,
   useOpenContract,
 } from './funding-scanner'
+import {
+  BasisMonitorSkeleton,
+  SkeletonStatus,
+  useGhostBases,
+} from './funding-skeletons'
 import type { FundingCell } from '@/lib/futures/funding-rows'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { formatChartPrice } from '@/lib/format-price'
@@ -57,8 +62,9 @@ type BasisRow = {
 
 export function BasisMonitorPane() {
   const { t } = useTranslation()
-  const { results, rows, isPending } = useFundingScanner()
+  const { results, rows, topCoins, isPending, isSettling } = useFundingScanner()
   const openContract = useOpenContract()
+  const ghostBases = useGhostBases(topCoins, ROW_LIMIT)
 
   const order = useMemo(
     () => answeringVenues(results).map((r) => r.market),
@@ -80,10 +86,15 @@ export function BasisMonitorPane() {
     return out
   }, [rows, order])
 
-  if (basisRows.length === 0) {
+  // Rows come out of the same sweep the matrix reads, so "none yet" and "none
+  // at all" are a venue apart. Only the second one is an empty state; the
+  // first is this pane with its numbers still out.
+  const loading = basisRows.length === 0 && (isPending || isSettling)
+
+  if (basisRows.length === 0 && !loading) {
     return (
       <PaneEmpty
-        body={isPending ? t('funding.loading') : t('basisMonitor.emptyBody')}
+        body={t('basisMonitor.emptyBody')}
         icon={Scale}
         title={t('basisMonitor.emptyTitle')}
       />
@@ -99,12 +110,22 @@ export function BasisMonitorPane() {
         </span>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-2">
-        <div className="flex flex-col gap-2">
-          {basisRows.map((row) => (
-            <BasisRowView key={row.base} onOpen={openContract} row={row} />
-          ))}
-        </div>
+      <div
+        aria-busy={loading || undefined}
+        className="min-h-0 flex-1 overflow-y-auto px-4 py-2"
+      >
+        {loading ? (
+          <>
+            <SkeletonStatus label={t('funding.loading')} />
+            <BasisMonitorSkeleton bases={ghostBases} rows={ROW_LIMIT} />
+          </>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {basisRows.map((row) => (
+              <BasisRowView key={row.base} onOpen={openContract} row={row} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

@@ -148,7 +148,6 @@ describe('SYNC_DOMAINS catalog', () => {
 
   test('only the domains with no local store are flagged cloudOnly', () => {
     expect(SYNC_DOMAINS.filter((d) => d.cloudOnly).map((d) => d.id)).toEqual([
-      'copilot',
       'trades',
     ])
   })

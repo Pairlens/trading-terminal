@@ -209,6 +209,21 @@ export interface AnalyticsEvents {
    * surface ids (`pane:chart`, `shell`), never a record id. `landed` is false
    * when the target was not on screen, which is the failure worth counting. */
   assistant_highlighted: { target: string; landed: boolean }
+  /** A conversation was started, opened from the rail, or deleted.
+   *
+   * The question the rail exists to answer: does anyone go back? If
+   * `switched` never fires while `created` does, threads are a filing
+   * cabinet nobody opens and the rail is costing 176px for nothing.
+   * `count` is how many the user has, which is the other half of it: a
+   * feature that matters looks different at three threads and at thirty.
+   * Titles and message content are never captured, and cannot be:
+   * conversations are stored on the user's device and nothing here reads
+   * them. */
+  assistant_conversation_action: {
+    action: 'created' | 'switched' | 'deleted'
+    count: number
+    surface: 'dock' | 'mobile'
+  }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated
@@ -308,6 +323,22 @@ export interface AnalyticsEvents {
   preset_applied: { preset: string; workspace: WorkspaceKind }
   /** Which asset-class desk traders actually work from on Discovery. */
   discovery_section_selected: { section: string }
+  /**
+   * The on-chain board could not draw a chain's pools, and why.
+   *
+   * The question this answers is whether the DEX Discovery board is usable in
+   * a browser at all. Its pool data comes from one public free-tier API, and
+   * when that API refuses, every pane on the board goes with it — so "how
+   * often does a reader open this board and get nothing" is not something the
+   * pane can tell us from here. `outcome` separates the provider refusing
+   * (ours to fix, by pacing or by paying) from the provider answering with
+   * pools that nothing on the board could rank (the quality bar's doing).
+   * `chain` is a Pairlens market id, which names our own product surface.
+   */
+  dex_pool_map_empty: {
+    chain: string
+    outcome: 'provider_refused' | 'below_quality_bar' | 'no_pools_listed'
+  }
   workspace_opened: { workspace: WorkspaceKind }
   workspace_created: { workspace_count: number }
   workspace_deleted: { workspace_count: number }

@@ -118,7 +118,8 @@
     "notInstalled": "コネクタ未インストール",
     "installConnector": "コネクタをインストール",
     "emptyTitle": "表示できるチェーンがありません",
-    "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。"
+    "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。",
+    "volumesLabel": "チェーン別出来高"
   },
   "earningsCalendar": {
     "capped": "{{total}} 件のうち最初の {{shown}} 件を表示しています。",
@@ -507,7 +508,10 @@
     "biggestLabel": "最大のスワップ",
     "title": "{{pool}} を通るフロー",
     "subtitle": "買い引く売り、5分刻み",
-    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み"
+    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み",
+    "waitingTitle": "マップを待機中",
+    "waitingBody": "チェーンのプールを読み込んでいます。プールを選ぶとフローが表示されます。",
+    "unavailableTitle": "現在プールを取得できません"
   },
   "lpPanes": {
     "venueFallback": "このチェーン",
@@ -1015,7 +1019,10 @@
     "pressure1h": "買い / 売り圧力 1時間",
     "buysValue": "買い {{value}}",
     "sellsValue": "売り {{value}}",
-    "filledBy": "欠損は {{provider}} が補完"
+    "filledBy": "欠損は {{provider}} が補完",
+    "waitingTitle": "マップを待機中",
+    "waitingBody": "チェーンのプールを読み込んでいます。最も深いプールが自動でここに開きます。",
+    "unavailableTitle": "現在プールを取得できません"
   },
   "poolMap": {
     "title": "{{chain}} · 上位プール",
@@ -1046,7 +1053,12 @@
     "morePools": "このチェーンの他のプール",
     "backToMap": "マップに戻る",
     "belowFloorTitle": "マップに載せる深さがありません",
-    "belowFloorBody": "このチェーンが返したプールには、実際の流動性とそれに見合う出来高を備えたものがありません。これらを互いにサイズ比較してもノイズを並べるだけです。全プールの一覧は引き続き利用できます。"
+    "belowFloorBody": "このチェーンが返したプールには、実際の流動性とそれに見合う出来高を備えたものがありません。これらを互いにサイズ比較してもノイズを並べるだけです。全プールの一覧は引き続き利用できます。",
+    "unavailableTitle": "現在プールを取得できません",
+    "retryingTitle": "再試行中",
+    "retry": "再試行",
+    "retryingBody": "プロバイダーが現在リクエストを拒否しています。自動で再試行します。",
+    "unavailableBody": "プール情報の提供元に接続できませんでした。しばらくしてからお試しください。"
   },
   "poolStats": {
     "notOnChainTitle": "オンチェーンのペアではありません",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "プラグイン",
           "description": "有効にしているプラグイン、その設定、固定したプロバイダー。設定には、AI プロバイダーのキーなど、プラグインの設定画面に入力した API キーも含まれます。取引所の API キーやウォレットの秘密情報は決して含まれず、キーチェーンに残ります。固定したプロバイダーはアカウントにしか残らないため、オフの間はアプリを終了するまでしか保持されません。"
-        },
-        "copilot": {
-          "title": "AI チャット履歴",
-          "description": "ターミナル全体で共有される、アシスタントとの1つの会話。",
-          "caveat": "オフの間にチャット履歴を消去しても、この端末上でしか消えません。アカウントに保存済みの会話は残り、同期を再びオンにすると再表示されます。"
         },
         "trades": {
           "title": "トレードジャーナル",
@@ -2324,7 +2331,6 @@
     "title": "アシスタント",
     "open": "アシスタントを開く",
     "close": "アシスタントを最小化",
-    "clear": "会話をクリア",
     "placeholder": "何でも質問、または作りたいものを伝える...",
     "answerPlaceholder": "回答を入力...",
     "emptyTitle": "何に取り組みましょうか？",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "却下",
     "approvalApproved": "承認しました",
     "approvalDeclined": "却下しました",
-    "resetPosition": "位置をリセット"
+    "resetPosition": "位置をリセット",
+    "conversations": {
+      "new": "新しい会話",
+      "untitled": "無題",
+      "history": "履歴",
+      "close": "閉じる",
+      "empty": "まだ何もありません。質問するとこの端末に保存されます。",
+      "localOnly": "この端末にのみ保存されます",
+      "delete": "会話を削除",
+      "deleteTitle": "この会話を削除しますか？",
+      "deleteDescription": "「{{name}}」とその内容がすべて消えます。元に戻せません。",
+      "cancel": "キャンセル",
+      "today": "今日",
+      "yesterday": "昨日",
+      "previous7Days": "過去7日間",
+      "older": "それ以前"
+    }
   },
   "copilot": {
     "placeholder": "レンズに質問する...",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "最近見た銘柄",
     "noMarketsFound": "該当する市場がありません",
+    "venueBound": "このマーケットは {{venue}} にのみ存在します。",
     "modeLive": "ライブ",
     "modePaper": "ペーパー"
   },

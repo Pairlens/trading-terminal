@@ -118,7 +118,8 @@
     "notInstalled": "未安裝連接器",
     "installConnector": "安裝連接器",
     "emptyTitle": "沒有可瀏覽的鏈",
-    "emptyBody": "此版本未包含鏈上連接器，因此沒有可以排序池子的鏈。"
+    "emptyBody": "此版本未包含鏈上連接器，因此沒有可以排序池子的鏈。",
+    "volumesLabel": "鏈上成交量"
   },
   "earningsCalendar": {
     "capped": "共 {{total}} 份財報，顯示前 {{shown}} 份。",
@@ -507,7 +508,10 @@
     "biggestLabel": "最大兌換",
     "title": "流經 {{pool}} 的資金",
     "subtitle": "買入減賣出，每五分鐘一格",
-    "subtitleVenue": "{{venue}} · 買入減賣出，每五分鐘一格"
+    "subtitleVenue": "{{venue}} · 買入減賣出，每五分鐘一格",
+    "waitingTitle": "等待池子圖",
+    "waitingBody": "該鏈的池子仍在載入。選取池子後就會顯示資金流向。",
+    "unavailableTitle": "暫時無法取得池子"
   },
   "lpPanes": {
     "venueFallback": "這條鏈",
@@ -1015,7 +1019,10 @@
     "pressure1h": "買 / 賣壓力 1 小時",
     "buysValue": "買入 {{value}}",
     "sellsValue": "賣出 {{value}}",
-    "filledBy": "缺口由 {{provider}} 補齊"
+    "filledBy": "缺口由 {{provider}} 補齊",
+    "waitingTitle": "等待池子圖",
+    "waitingBody": "該鏈的池子仍在載入。流動性最深的池子會自動在這裡打開。",
+    "unavailableTitle": "暫時無法取得池子"
   },
   "poolMap": {
     "title": "{{chain}} · 主要池子",
@@ -1046,7 +1053,12 @@
     "morePools": "這條鏈上的更多池子",
     "backToMap": "返回地圖",
     "belowFloorTitle": "沒有夠深的池子可繪製",
-    "belowFloorBody": "這條鏈回傳的池子中，沒有一個同時具備真實流動性和與之相稱的成交量，按大小相互比較只會替雜訊排序。完整清單仍然可用。"
+    "belowFloorBody": "這條鏈回傳的池子中，沒有一個同時具備真實流動性和與之相稱的成交量，按大小相互比較只會替雜訊排序。完整清單仍然可用。",
+    "unavailableTitle": "暫時無法取得池子",
+    "retryingTitle": "正在重試",
+    "retry": "重試",
+    "retryingBody": "資料來源目前拒絕請求，正在自動重試。",
+    "unavailableBody": "無法連線到池子資料來源，請稍後再試。"
   },
   "poolStats": {
     "notOnChainTitle": "不是鏈上交易對",
@@ -1501,11 +1513,6 @@
         "plugins": {
           "title": "外掛",
           "description": "你啟用了哪些外掛、它們的設定以及你釘選的服務商。設定也包括你在外掛自己的設定裡填過的 API 金鑰，例如 AI 服務商的金鑰。交易所 API 金鑰與錢包密鑰永遠不包含在內，它們留在你的鑰匙圈裡。釘選的服務商只儲存在帳號裡，關掉後它們只在應用程式結束前有效。"
-        },
-        "copilot": {
-          "title": "AI 聊天記錄",
-          "description": "與助理的一段對話，整個終端共用。",
-          "caveat": "關閉期間，清除聊天記錄只會清除這台裝置上的內容。帳號裡已有的對話會保留，重新開啟同步後會再次出現。"
         },
         "trades": {
           "title": "交易日誌",
@@ -2324,7 +2331,6 @@
     "title": "助理",
     "open": "開啟助理",
     "close": "縮小助理",
-    "clear": "清除對話",
     "placeholder": "問任何問題，或告訴我要打造什麼…",
     "answerPlaceholder": "輸入你的回答…",
     "emptyTitle": "我們來做什麼？",
@@ -2369,7 +2375,23 @@
     "approvalDecline": "拒絕",
     "approvalApproved": "已核准",
     "approvalDeclined": "已拒絕",
-    "resetPosition": "重設位置"
+    "resetPosition": "重設位置",
+    "conversations": {
+      "new": "新對話",
+      "untitled": "未命名",
+      "history": "紀錄",
+      "close": "關閉",
+      "empty": "還沒有內容。問點什麼，它會保存在這台裝置上。",
+      "localOnly": "僅保存在這台裝置上",
+      "delete": "刪除對話",
+      "deleteTitle": "刪除這個對話？",
+      "deleteDescription": "「{{name}}」及其中的一切都會消失，無法復原。",
+      "cancel": "取消",
+      "today": "今天",
+      "yesterday": "昨天",
+      "previous7Days": "過去 7 天",
+      "older": "更早"
+    }
   },
   "copilot": {
     "placeholder": "詢問你的 AI 透鏡…",
@@ -4298,6 +4320,7 @@
     },
     "recentlyViewed": "最近檢視",
     "noMarketsFound": "未找到市場",
+    "venueBound": "這個市場只存在於 {{venue}}。",
     "modeLive": "實盤",
     "modePaper": "模擬"
   },

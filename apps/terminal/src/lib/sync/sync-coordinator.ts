@@ -338,12 +338,7 @@ export class SyncCoordinator {
 
     for (const id of ids) {
       // Handled above (automation) or nothing local to send (the rest).
-      if (
-        id === 'automation' ||
-        id === 'plugins' ||
-        id === 'copilot' ||
-        id === 'trades'
-      ) {
+      if (id === 'automation' || id === 'plugins' || id === 'trades') {
         continue
       }
       for (const key of localKeysForDomain(id)) {

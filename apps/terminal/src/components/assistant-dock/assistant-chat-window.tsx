@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
  * Floating glass panel for the unified assistant dock. It grows out of the orb
- * that opened it — the caller measures where that is and passes the origin in
- * — and holds a header, a body, an optional notice strip and an optional
- * footer.
+ * that opened it (the caller measures where that is and passes the origin in)
+ * and holds a header, an optional thread rail, a body, an optional notice
+ * strip and an optional footer.
  *
  * It is ALWAYS mounted and only animates between shown and hidden. Unmounting
  * on close would tear down the conversation inside it, and the whole point of
@@ -40,8 +40,14 @@ export type AssistantChatWindowProps = {
   busy?: boolean
   /** Accessible name for the close button, translated. */
   closeLabel?: string
-  /** Right-hand header slot: persona menu, clear button etc. */
+  /** Right-hand header slot: persona menu, delete button etc. */
   headerActions?: ReactNode
+  /**
+   * Optional column down the left of the body: the conversation rail.
+   * Below the header rather than beside it, so the whole title bar stays
+   * one drag handle and the rail never has to publish its own.
+   */
+  sidebar?: ReactNode
   /**
    * The body. It owns its own scrolling: the conversation nests a
    * message list, an error strip and a composer, and a scroller out
@@ -73,6 +79,7 @@ export function AssistantChatWindow({
   busy = false,
   closeLabel,
   headerActions,
+  sidebar,
   children,
   footer,
   notice,
@@ -139,7 +146,10 @@ export function AssistantChatWindow({
         transformOrigin: origin.transformOrigin,
         pointerEvents: open ? 'auto' : 'none',
       }}
-      className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[440px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px]"
+      // Wider than the 440px it shipped at, because the thread rail costs
+      // 176px and the chat column must not pay for it: the message column
+      // is the same width it always was.
+      className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[616px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px]"
     >
       {/* Light on the top edge, masked to nothing at both ends so it reads as
           a highlight and not a progress bar. */}
@@ -199,8 +209,15 @@ export function AssistantChatWindow({
           edge colour; the assistant's edges are its own token. */}
       <div className="pointer-events-none mx-3.5 h-px shrink-0 bg-[var(--ai-edge-soft)]" />
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
-        {children}
+      <div className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
+        {sidebar ? (
+          <div className="ai-rail flex w-44 shrink-0 flex-col overflow-hidden">
+            {sidebar}
+          </div>
+        ) : null}
+        <div className="flex min-w-0 min-h-0 flex-1 flex-col overflow-hidden">
+          {children}
+        </div>
       </div>
 
       {notice ? (

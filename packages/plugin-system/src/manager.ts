@@ -15,6 +15,24 @@ import type {
 // Factory type for creating plugin instances
 export type PluginFactory = (manifest: PluginManifest) => PluginInstance
 
+/**
+ * A provider failure the SAME request would survive: a rate limit, or a
+ * transient refusal.
+ *
+ * Duck-typed on purpose. `ProviderThrottledError` lives in market-engine and
+ * carries `__providerThrottled` precisely so it can be recognised across
+ * bundles without an import; plugin-system deliberately does not depend on
+ * market-engine, and adding that edge to read one boolean would be the wrong
+ * trade.
+ */
+function isRetryableProviderError(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { __providerThrottled?: unknown }).__providerThrottled === true
+  )
+}
+
 const DEFAULT_CONTEXT: PluginContext = {
   pair: '',
   market: '',
@@ -173,18 +191,34 @@ export class PluginManager {
     // Try primary plugin first, then walk the fallback chain on error
     const chain = [resolved.plugin, ...resolved.fallbacks]
 
-    let lastError: unknown
+    let primaryError: unknown
+    let retryable: unknown
     for (const candidate of chain) {
       try {
         return await candidate.execute(executeParams)
       } catch (err) {
-        lastError = err
+        if (primaryError === undefined) primaryError = err
+        if (retryable === undefined && isRetryableProviderError(err)) {
+          retryable = err
+        }
         // Continue to next fallback
       }
     }
 
+    // A throttled provider is rethrown UNWRAPPED, because it is the one
+    // failure a caller can act on: it means "ask again in a moment", not
+    // "this data does not exist". Wrapping it in a plain Error erased the
+    // type, and every consumer that checks for a throttle before publishing a
+    // permanent verdict ("this venue does not carry this pair", "no pools on
+    // this chain") silently stopped seeing one.
+    if (retryable !== undefined) throw retryable
+
+    // The PRIMARY's failure, not the last one walked. The last candidate is
+    // usually the lowest-priority provider, which is the one most likely to
+    // have refused on a technicality ("does not publish 'pools'") while the
+    // real reason sits in the first error.
     throw new Error(
-      `All candidates for capability '${capability}' failed. Last error: ${String(lastError)}`,
+      `All candidates for capability '${capability}' failed. Primary error: ${String(primaryError)}`,
     )
   }
 

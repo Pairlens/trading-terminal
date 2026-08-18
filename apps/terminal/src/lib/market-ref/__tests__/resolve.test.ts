@@ -6,7 +6,11 @@
  */
 import { describe, expect, test } from 'bun:test'
 
-import { resolveMarketRef } from '../resolve'
+import {
+  alternativeVenuesFor,
+  resolveMarketRef,
+  venuesForClass,
+} from '../resolve'
 import { legacySymbolToInstrumentRef } from '../legacy'
 import type { MarketOption } from '@/hooks/use-available-markets'
 
@@ -30,6 +34,8 @@ const ALPACA = market('alpaca', ['stocks'], { credentialedMarketData: true })
 const BASE = market('base', ['dex'])
 const SOLANA = market('solana', ['dex'])
 const COINBASE = market('coinbase', ['crypto-spot'], { desktopOnly: true })
+const KALSHI = market('kalshi', ['prediction'])
+const POLYMARKET = market('polymarket', ['prediction'])
 
 const ALL = [OKX, GATE, ALPACA, BASE, SOLANA]
 
@@ -267,5 +273,76 @@ describe('a USD-quoted equity key inherits its base leg', () => {
 
   test('a non-USD quote leg never consults the base', () => {
     expect(legacySymbolToInstrumentRef('AAPL-USDT', MAP).cls).toBe('spot')
+  })
+})
+
+/**
+ * The venue picker used to list all twenty-two connectors whatever was on the
+ * chart, and so did every "try another venue" empty state under it. Picking
+ * Polymarket while charting BTC-USDT, or Bitget while charting an event
+ * contract, navigated to an address no connector could answer: the panes went
+ * dark with no way back except the URL.
+ */
+describe('a recovery venue is never one from another asset class', () => {
+  test('a spot venue offers the other spot venues', () => {
+    expect(alternativeVenuesFor(OKX, ALL).map((m) => m.value)).toEqual(['gate'])
+  })
+
+  test('an equities venue offers nothing crypto', () => {
+    expect(alternativeVenuesFor(ALPACA, ALL)).toEqual([])
+  })
+
+  test('a venue-bound class offers nothing at all', () => {
+    // Two DEX venues are connected and neither is an alternative: the same
+    // pool address on another chain is a different asset.
+    expect(alternativeVenuesFor(BASE, ALL)).toEqual([])
+    expect(alternativeVenuesFor(KALSHI, [...ALL, KALSHI, POLYMARKET])).toEqual(
+      [],
+    )
+  })
+
+  test('a venue this build cannot reach is never the recovery', () => {
+    expect(
+      alternativeVenuesFor(OKX, [...ALL, COINBASE]).map((m) => m.value),
+    ).toEqual(['gate'])
+  })
+
+  test('an unknown venue resolves to no class, so it suggests nothing', () => {
+    expect(alternativeVenuesFor(undefined, ALL)).toEqual([])
+  })
+})
+
+describe('the venue picker offers only what can serve the chart', () => {
+  const CONNECTED = [...ALL, COINBASE, KALSHI, POLYMARKET]
+
+  test('a spot chart never lists a prediction venue', () => {
+    expect(
+      venuesForClass('spot', 'okx', CONNECTED).map((m) => m.value),
+    ).toEqual(['okx', 'gate', 'coinbase'])
+  })
+
+  // Not even the other prediction venue: Kalshi has never heard of a
+  // Polymarket outcome id, so "same class" is not a tight enough rule here.
+  test('an event contract lists its own venue and nothing else', () => {
+    expect(
+      venuesForClass('prediction', 'polymarket', CONNECTED).map((m) => m.value),
+    ).toEqual(['polymarket'])
+  })
+
+  test('a token lists its own chain and nothing else', () => {
+    expect(
+      venuesForClass('dex', 'base', CONNECTED).map((m) => m.value),
+    ).toEqual(['base'])
+  })
+
+  // Unreachable is not incompatible: those rows stay, carrying their mark.
+  test('a desktop-only venue of the right class is still listed', () => {
+    expect(venuesForClass('spot', 'okx', CONNECTED)).toContain(COINBASE)
+  })
+
+  test('the venue in use is listed even if it declares another class', () => {
+    expect(
+      venuesForClass('stocks', 'okx', CONNECTED).map((m) => m.value),
+    ).toEqual(['okx', 'alpaca'])
   })
 })

@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { PersistenceAdapter } from './adapter'
 import type {
-  AIMessage,
-  AIMessageScope,
   ChartState,
   EncryptedPluginConfig,
   PersistenceTier,
@@ -101,10 +99,6 @@ function writeToStorage(key: string, value: unknown): void {
   } catch {
     // SSR or storage quota exceeded — silently ignore
   }
-}
-
-function aiScopeKey(scope: AIMessageScope): string {
-  return `ai:${scope.userId}:${scope.market}:${scope.pairKey}`
 }
 
 function signalScopeKey(scope: {
@@ -226,32 +220,6 @@ export class LocalPersistenceAdapter implements PersistenceAdapter {
         // Value not structured-cloneable — skip broadcast, local state is fine
       }
     }
-  }
-
-  // ---------------------------------------------------------------------------
-  // AI conversation history
-  // ---------------------------------------------------------------------------
-
-  async getAIMessages(
-    scope: AIMessageScope,
-    limit?: number,
-  ): Promise<Array<AIMessage>> {
-    const key = aiScopeKey(scope)
-    const messages = this.storeGet<Array<AIMessage>>(key) ?? []
-    if (limit !== undefined && limit > 0) {
-      return messages.slice(-limit)
-    }
-    return messages
-  }
-
-  async appendAIMessage(
-    scope: AIMessageScope,
-    message: AIMessage,
-  ): Promise<void> {
-    const key = aiScopeKey(scope)
-    const messages = this.storeGet<Array<AIMessage>>(key) ?? []
-    messages.push(message)
-    this.storeSet(key, messages)
   }
 
   // ---------------------------------------------------------------------------

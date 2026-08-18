@@ -4,15 +4,34 @@ import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import type { TopCoin } from '@pairlens/shared/instrument-types'
-import { appServerUrl } from '@/lib/api'
+import { appServerUrl, resolveUrl } from '@/lib/api'
 import { fetchTopCoinsWithFallback } from '@/lib/public-market-data'
 
-/** One query entry, shared by both hooks below — never two fetches. */
+/**
+ * One query entry, shared by both hooks below — never two fetches.
+ *
+ * Logos are made absolute HERE rather than at each render site. The App Server
+ * answers with a path (`/api/storage/symbol-logos/btc.webp`) and the CoinGecko
+ * fallback with a full URL, so a consumer that forwards the field verbatim to
+ * an `<img>` renders a broken icon against its own origin on one source and
+ * works on the other. Every reader of this snapshot got that wrong; resolving
+ * once at the seam is what makes the field safe to hand straight to an image.
+ */
 function useTopCoinsQuery() {
   return useQuery({
     queryKey: ['top-coins-snapshot'],
-    queryFn: () =>
-      fetchTopCoinsWithFallback((path) => fetch(`${appServerUrl}${path}`)),
+    queryFn: async () => {
+      const snapshot = await fetchTopCoinsWithFallback((path) =>
+        fetch(`${appServerUrl}${path}`),
+      )
+      return {
+        ...snapshot,
+        coins: snapshot.coins.map((coin) => ({
+          ...coin,
+          logoUrl: resolveUrl(coin.logoUrl) ?? null,
+        })),
+      }
+    },
     staleTime: 5 * 60_000,
     gcTime: 30 * 60_000,
     retry: 1,
