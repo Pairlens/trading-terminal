@@ -110,7 +110,7 @@ export function OddsMoversPane() {
               className="flex w-full flex-col gap-1.5 border-b border-border/50 px-3 py-2 text-left transition-colors last:border-0 hover:bg-accent/40"
               key={row.key}
               onClick={() =>
-                select.open({
+                select.select({
                   venue: row.market,
                   event: row.event,
                   market: row.marketSummary,

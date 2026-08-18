@@ -155,8 +155,9 @@ Rows carry live prices and flash on change.
 without a venue, so starring BTC-USDT while charting Binance stars it on OKX
 too. A token is stored by its contract address and chain, which is what stops a
 saved row from quietly becoming a different token: dozens of tokens share a
-ticker, and the one you starred is the one you looked at. A prediction outcome
-keeps the venue that lists it for the same reason.
+ticker, and the one you starred is the one you looked at. A prediction is
+stored as the EVENT, with the venue that lists it: you watch the question, and
+the row prices it with whichever answer is currently leading.
 
 Watchlists sync across your devices when you are signed in and cloud sync is on
 for workspaces. See [settings](/docs/settings#cloud-sync).

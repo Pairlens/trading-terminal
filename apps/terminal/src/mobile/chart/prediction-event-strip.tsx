@@ -68,12 +68,14 @@ const STRIP_TOP_PX = 76
 const STRIP_HEIGHT_PX = 58
 
 export default memo(function PredictionEventStrip() {
-  const { focusedPair, focusedVenue } = useMobileFocus()
-  const context = usePredictionEventContext(focusedPair, focusedVenue)
+  const { focusedInstrument, focusedVenue } = useMobileFocus()
+  const context = usePredictionEventContext(focusedInstrument, focusedVenue)
   const identity = predictionIdentity(context)
   if (!identity) return null
   return <Strip identity={identity} outcome={context.outcome} />
 })
+
+/** Kept so the race-only reading below still has a name for its own case. */
 
 function Strip({
   identity,
@@ -160,9 +162,12 @@ function Strip({
         </div>
       )}
 
-      {/* The field, ranked. Only on a race: on a binary market the ladder
-          would be two rows the strip already prints one of. */}
-      {event && isRace ? (
+      {/* The field, ranked. On EVERY prediction, not only a race: the pair is
+          the question now, so "show me the other answers" is the same request
+          whether there are two of them or a hundred, and on a binary the two
+          rows are exactly the Yes and No a trader wants to price against each
+          other. */}
+      {event && runners.length > 0 ? (
         <button
           aria-label={t('mobile.predictions.rankOutcomes', {
             count: runners.length,
@@ -197,7 +202,12 @@ function ProbabilityReading({
 }) {
   const { t } = useTranslation()
 
-  if (isRace) {
+  // The SELECTED answer wins on every shape of market, race included. The
+  // strip sits over a chart of that answer and beside a ticket that will size
+  // it, so printing the leader's price there instead would name a third thing
+  // neither of them is about. The leader is the fallback for the moment before
+  // the field has resolved a selection.
+  if (isRace && !outcome) {
     const leader = leadingRunner(runners)
     const price = leader ? runnerPrice(leader) : null
     return (

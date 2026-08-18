@@ -958,6 +958,7 @@
       "rank": "#",
       "outcome": "결과",
       "yes": "Yes",
+      "no": "No",
       "change": "24시간",
       "trend": "30일",
       "volume": "거래량",

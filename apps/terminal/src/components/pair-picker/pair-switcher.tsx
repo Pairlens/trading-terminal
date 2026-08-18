@@ -48,7 +48,10 @@ import { entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
-import { lookupPredictionOutcome } from '@/stores/prediction-directory-store'
+import {
+  lookupPredictionEvent,
+  lookupPredictionOutcome,
+} from '@/stores/prediction-directory-store'
 
 const MAX_RECENT = 6
 const MAX_POPULAR = 8
@@ -82,7 +85,8 @@ function classOf(symbol: string, assetClass?: string): string {
   // A prediction key is a venue ticker with dashes in it, so the shape test
   // below would call it crypto. The directory is the only thing that knows,
   // and it knows because the row that opened this pair pinned it.
-  if (lookupPredictionOutcome(symbol)) return 'prediction'
+  if (lookupPredictionEvent(symbol) || lookupPredictionOutcome(symbol))
+    return 'prediction'
   return symbol.includes('-') ? 'crypto' : 'stocks'
 }
 
@@ -96,6 +100,25 @@ function classOf(symbol: string, assetClass?: string): string {
  * bare key it already was.
  */
 function synthesizeEntry(symbol: string): PairEntry {
+  const event = lookupPredictionEvent(symbol)
+  if (event) {
+    return {
+      id: symbol,
+      symbol,
+      name: event.title,
+      base: symbol,
+      quote: '',
+      assetClass: 'prediction',
+      categories: [],
+      rank: Number.MAX_SAFE_INTEGER,
+      predictionMarketId: event.eventId,
+      outcome: event.leader?.label ?? '',
+      market: event.market,
+      eventTitle: event.title,
+      eventId: event.eventId,
+      ...(typeof event.endMs === 'number' ? { endMs: event.endMs } : {}),
+    }
+  }
   const pinned = lookupPredictionOutcome(symbol)
   if (pinned) {
     return {

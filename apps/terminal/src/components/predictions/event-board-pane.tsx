@@ -231,7 +231,7 @@ export function EventBoardPane() {
         onOpenChange={(open) => !open && setFullField(null)}
         onSelect={(event, market, pairKey, label) => {
           if (!fullField) return
-          select.open({
+          select.select({
             venue: fullField.market,
             event,
             market,
@@ -391,7 +391,7 @@ function BinaryCard({
   )
 
   const open = (runner: PredictionRunner) =>
-    select.open({
+    select.select({
       venue: row.market,
       event: row.event,
       market: runner.market,
@@ -399,13 +399,15 @@ function BinaryCard({
       label: runner.yes.label,
     })
 
+  const openEvent = () =>
+    select.openEvent({ venue: row.market, event: row.event })
+
   return (
     <article className="flex flex-col gap-2.5 rounded-xl border p-3 transition-colors hover:border-primary/40">
-      <button
-        className="text-left"
-        onClick={() => lead && open(lead)}
-        type="button"
-      >
+      {/* The question opens the question. Clicking a headline used to open
+          whichever side happened to be leading, which is a side taken on the
+          user's behalf before they have read anything. */}
+      <button className="text-left" onClick={openEvent} type="button">
         <CardHeader meta={metaLine(row, { sort, t })} row={row} />
       </button>
 
@@ -503,7 +505,7 @@ function RaceCard({
   const stats = statLine(row, { t, withLiquidity: false })
 
   const open = (runner: PredictionRunner) =>
-    select.open({
+    select.select({
       venue: row.market,
       event: row.event,
       market: runner.market,
@@ -511,14 +513,13 @@ function RaceCard({
       label: runner.yes.label,
     })
 
+  const openEvent = () =>
+    select.openEvent({ venue: row.market, event: row.event })
+
   return (
     <article className="col-span-full flex flex-col gap-3 rounded-xl border p-3 transition-colors hover:border-primary/40 @[44rem]:flex-row @[44rem]:gap-4">
       <div className="flex flex-col gap-2.5 @[44rem]:w-[34%] @[44rem]:shrink-0">
-        <button
-          className="text-left"
-          onClick={() => preview[0] && open(preview[0])}
-          type="button"
-        >
+        <button className="text-left" onClick={openEvent} type="button">
           <CardHeader
             meta={metaLine(row, {
               extra:

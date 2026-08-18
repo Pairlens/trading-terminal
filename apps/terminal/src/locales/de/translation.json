@@ -958,6 +958,7 @@
       "rank": "#",
       "outcome": "Ergebnis",
       "yes": "Ja",
+      "no": "Nein",
       "change": "24 h",
       "trend": "30 Tage",
       "volume": "Volumen",

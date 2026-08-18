@@ -958,6 +958,7 @@
       "rank": "#",
       "outcome": "结果",
       "yes": "Yes",
+      "no": "No",
       "change": "24 小时",
       "trend": "30 天",
       "volume": "成交额",

@@ -84,6 +84,28 @@ export interface AnalyticsEvents {
   // ── Market exploration ────────────────────────────────────────────
   /** Active market changed. Symbols are public instrument names. */
   pair_opened: { venue: string; asset_class: string; pair: string }
+  /**
+   * Which answer of a prediction event the user pointed the ticket at, and how
+   * they got there.
+   *
+   * The question this change raises and nothing else can answer: a prediction
+   * pair is now the event, opening on its favourite, so does anyone actually
+   * move off that default? If almost nobody does, the field strip and the
+   * ladder's chips are decoration and the board should give their space to the
+   * chart. `rank` is the answer's position in the field by probability, which
+   * separates "flipped to the other side of a binary" from "went shopping in
+   * the tail of a hundred-runner race". No outcome label and no event id: the
+   * question a user is trading is theirs.
+   */
+  prediction_outcome_selected: {
+    venue: string
+    /** Where the click came from: the header strip, the ladder, the ticket. */
+    surface: 'header' | 'ladder' | 'ticket' | 'board'
+    /** 1 is the favourite. Uncapped, because the tail is the finding. */
+    rank: number
+    /** How many answers the event publishes. */
+    field_size: number
+  }
   watchlist_changed: { action: 'added' | 'removed' }
   /** A venue was blocked in the user's region — demand we can't serve. */
   geo_restriction_shown: { venue: string }

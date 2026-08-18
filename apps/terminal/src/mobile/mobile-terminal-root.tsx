@@ -28,9 +28,18 @@ import { Loader2, Unplug } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { MobileFocusProvider } from './mobile-focus-context'
+import { MobilePredictionDesk } from './mobile-prediction-desk'
 import { MobileSurface } from './mobile-surface'
-import { marketRefFromPath, normalizePairKey } from './use-mobile-route-sync'
+import { marketRefFromPath } from './use-mobile-route-sync'
+import {
+  focusInstrument,
+  focusOutcome,
+  focusPrediction,
+  outcomeFromSearch,
+  seedFocus,
+} from './lib/prediction-focus'
 import { getInitialViewportMode } from './use-viewport-mode'
+import type { MobileFocusState } from './lib/prediction-focus'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { ActivePairProvider } from '@/lib/active-pair-context'
@@ -57,15 +66,19 @@ export function MobileTerminalRoot() {
   // travels with the pair: it is half of what decides which venue may serve
   // it, and deriving it later from a side table is what let a crypto pair sit
   // on a stock venue long enough to render.
-  const [focus, setFocus] = useState<{ pair: string; cls: InstrumentClass }>(
-    () => {
-      const routed = marketRefFromPath(location.pathname)
-      if (routed) return { pair: routed.id, cls: routed.cls }
-      const recent = recentPairs[0]
-      if (recent) return { pair: recent.id, cls: recent.cls }
-      return { pair: FALLBACK_PAIR, cls: 'spot' }
-    },
-  )
+  const [focus, setFocus] = useState<MobileFocusState>(() => {
+    const routed = marketRefFromPath(location.pathname)
+    if (routed)
+      return seedFocus(
+        routed.id,
+        routed.cls,
+        outcomeFromSearch(location.search),
+      )
+    const recent = recentPairs[0]
+    if (recent) return seedFocus(recent.id, recent.cls, '')
+    return { instrument: FALLBACK_PAIR, pair: FALLBACK_PAIR, cls: 'spot' }
+  })
+  const focusedInstrument = focus.instrument
   const focusedPair = focus.pair
   const focusedClass = focus.cls
 
@@ -75,12 +88,23 @@ export function MobileTerminalRoot() {
   // guess at it.
   const setFocusedPair = useCallback(
     (pairKey: string, cls?: InstrumentClass) => {
-      setFocus((prev) => {
-        const pair = normalizePairKey(pairKey)
-        const next = cls ?? prev.cls
-        if (prev.pair === pair && prev.cls === next) return prev
-        return { pair, cls: next }
-      })
+      setFocus((prev) => focusInstrument(prev, pairKey, cls))
+    },
+    [],
+  )
+
+  /**
+   * Point the chart, the book and the ticket at another answer of the SAME
+   * question. The instrument does not move, so neither does the address.
+   */
+  const setFocusedOutcome = useCallback((outcomeKey: string) => {
+    setFocus((prev) => focusOutcome(prev, outcomeKey))
+  }, [])
+
+  /** Open a question ON a specific answer, in one commit. */
+  const setFocusedPrediction = useCallback(
+    (eventKey: string, outcomeKey: string) => {
+      setFocus((prev) => focusPrediction(prev, eventKey, outcomeKey))
     },
     [],
   )
@@ -144,13 +168,27 @@ export function MobileTerminalRoot() {
           markets={markets}
           pairKey={focusedPair}
         >
-          <MobileFocusProvider
-            focusedPair={focusedPair}
-            focusedClass={focusedClass}
-            onFocusPair={setFocusedPair}
+          {/* Inside the chart provider, because the venue a prediction event
+              belongs to lives in chart config and nothing above this line can
+              see it. The desk resolves the field and hands back the answer to
+              stream, which is why `focusedPair` starts empty on a prediction
+              and fills a beat later. */}
+          <MobilePredictionDesk
+            eventKey={focusedClass === 'prediction' ? focusedInstrument : ''}
+            onSelectOutcome={setFocusedOutcome}
+            selectedKey={focusedPair}
           >
-            <MobileSurface />
-          </MobileFocusProvider>
+            <MobileFocusProvider
+              focusedClass={focusedClass}
+              focusedInstrument={focusedInstrument}
+              focusedPair={focusedPair}
+              onFocusPair={setFocusedPair}
+              onFocusPrediction={setFocusedPrediction}
+              onSelectOutcome={setFocusedOutcome}
+            >
+              <MobileSurface />
+            </MobileFocusProvider>
+          </MobilePredictionDesk>
         </ChartTerminalProvider>
       </ActiveWalletProvider>
     </ActivePairProvider>

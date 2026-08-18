@@ -1,29 +1,30 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The event behind the pair on screen.
+ * The event behind the pane on screen.
  *
- * The route carries one uppercase string and the directory pin says what it
- * names, but neither carries the SIBLINGS — and every pair-route prediction
- * pane is about siblings: the header's overround sums them, the ladder lists
- * them, the basket stakes several at once. So this re-reads the event from
- * `market-data:events`, keyed on the pinned event heading.
+ * Two paths, and the first one is the normal one. On a prediction board the
+ * route has already resolved the event and every pane reads that one
+ * resolution through the desk context — one request per event, and no chance
+ * of two panes disagreeing about the field because their fetches landed a
+ * minute apart.
  *
- * Scoped to the OWNING venue, unlike the discovery browse which always fans out
- * to every venue. The reason the browse fans out is that its chips are a view
- * over one cache entry; here the question is "what else is inside THIS event on
- * THIS venue", and asking the other venue would pay a desktop-only refusal on
- * every pair switch for an answer that cannot be relevant.
+ * The second path is for a pane that is NOT on a prediction board: dragged
+ * onto a spot workspace, or bound by a pane override to some other question.
+ * There the pane holds a key and nothing else, so it resolves the event
+ * itself — by ID, never by heading. A pinned event names its own id; a pinned
+ * outcome names the event it belongs to; either way the venue is asked for one
+ * specific event rather than searched and hoped at.
  *
  * Every failure mode is a distinct state rather than an empty object, because
  * the panes say different things about each: an unpinned cold link still has a
- * chart, a venue that needs the desktop app is not an error, and an event the
+ * title, a venue that needs the desktop app is not an error, and an event the
  * index cannot find still has a question worth printing.
  */
 import { useMemo } from 'react'
 
 import {
-  usePredictionEvents,
+  usePredictionEventById,
   usePredictionVenues,
 } from './use-prediction-events'
 import type {
@@ -31,74 +32,104 @@ import type {
   PredictionMarketSummary,
   PredictionOutcomeSummary,
 } from '@pairlens/shared/instrument-types'
+import type {
+  PredictionEventState,
+  SelectedOutcome,
+} from '@/lib/predictions/desk-context'
 import type { PredictionRunner } from '@/lib/predictions/race'
-import type { PredictionDirectoryEntry } from '@/stores/prediction-directory-store'
+import type { PredictionOutcomeEntry } from '@/stores/prediction-directory-store'
 
-import { usePredictionOutcome } from '@/stores/prediction-directory-store'
+import { usePredictionDesk } from '@/lib/predictions/desk-context'
+import {
+  usePredictionEventEntry,
+  usePredictionOutcome,
+} from '@/stores/prediction-directory-store'
 import { isRaceEvent, runnersOf } from '@/lib/predictions/race'
 import { normalizePairKey } from '@/lib/pairs'
-import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
 
-/** Events pulled when searching for one specific event by its heading. */
-const LOOKUP_LIMIT = 12
-
-export type PredictionEventState =
-  | 'loading'
-  | 'ready'
-  /** No prediction connector for this venue is active. */
-  | 'no-venue'
-  /** The venue refuses browser origins; the pair may still chart. */
-  | 'desktop-only'
-  /** The venue answered, but this event is not in what it returned. */
-  | 'not-found'
-  | 'error'
+export type { PredictionEventState }
 
 export type PredictionEventContext = {
   state: PredictionEventState
-  /** What the pin says this outcome is, or null on a cold link. */
-  entry: PredictionDirectoryEntry | null
+  /** The pin for the leg being traded, or null when nothing names one. */
+  entry: PredictionOutcomeEntry | null
   venue: string
   venueLabel: string
   event: PredictionEventSummary | null
-  /** The market the active outcome belongs to. */
+  /** The market the selected answer belongs to. */
   market: PredictionMarketSummary | null
   outcome: PredictionOutcomeSummary | null
   runners: Array<PredictionRunner>
   isRace: boolean
-  /** The event heading, the question, or the bare key — in that order. */
+  /** The event heading, the pinned title, or the bare key. In that order. */
   title: string
+  /** The answer the book, the tape and the ticket are pointed at. */
+  selected: SelectedOutcome | null
+  /** Point them at another answer. A no-op outside a prediction board. */
+  selectOutcome: (outcomeKey: string) => void
   /** What the venue said went wrong, verbatim. */
   error: string | null
 }
+
+const NO_OP = () => {}
 
 export function usePredictionEventContext(
   pairKey: string,
   market: string,
 ): PredictionEventContext {
-  const entry = usePredictionOutcome(pairKey)
+  const desk = usePredictionDesk()
+  // The desk answers for the pane only when the pane is looking at the same
+  // thing the board is. A pane override pointing somewhere else resolves on
+  // its own rather than silently rendering the board's event under the
+  // override's key.
+  const deskMatches =
+    desk !== null &&
+    desk.venue === market &&
+    (normalizePairKey(desk.eventKey) === normalizePairKey(pairKey) ||
+      normalizePairKey(desk.selected?.pairKey ?? '') ===
+        normalizePairKey(pairKey))
+
+  const eventPin = usePredictionEventEntry(pairKey)
+  const outcomePin = usePredictionOutcome(pairKey)
+  const selectedPin = usePredictionOutcome(desk?.selected?.pairKey ?? '')
+
   const venues = usePredictionVenues()
   const venue = venues.find((v) => v.market === market) ?? null
 
-  // The heading is the only searchable handle we have: neither venue exposes
-  // "fetch event by id" through `market-data:events`, and the pin recorded the
-  // heading precisely so this lookup would not need one.
-  const query = (entry?.eventTitle ?? '').trim()
-
-  const { data, isLoading, error } = usePredictionEvents({
-    venues: venue ? [venue] : [],
-    query,
-    category: null,
-    limit: LOOKUP_LIMIT,
+  // The id to ask for: this pane's own event when it is one, else the event
+  // the pinned outcome belongs to, else the key itself on the chance it is an
+  // event id nothing has pinned yet (a shared link on a fresh profile).
+  const eventId = eventPin?.eventId ?? outcomePin?.eventId ?? pairKey
+  const lookup = usePredictionEventById({
+    venue,
+    eventId,
+    enabled: !deskMatches && venue !== null && pairKey.trim() !== '',
   })
 
   return useMemo(() => {
+    if (deskMatches && desk) {
+      return {
+        state: desk.state,
+        entry: selectedPin,
+        venue: desk.venue,
+        venueLabel: desk.venueLabel,
+        event: desk.event,
+        market: desk.selected?.market ?? null,
+        outcome: desk.selected?.outcome ?? null,
+        runners: desk.runners,
+        isRace: desk.isRace,
+        title: desk.title,
+        selected: desk.selected,
+        selectOutcome: desk.selectOutcome,
+        error: desk.error,
+      }
+    }
+
     const label = venue?.label ?? market.toUpperCase()
-    const title = entry
-      ? entry.eventTitle?.trim() || predictionQuestionOf(entry)
-      : pairKey
+    const title = eventPin?.title || outcomePin?.eventTitle || pairKey
 
     const base = {
-      entry,
+      entry: outcomePin,
       venue: market,
       venueLabel: label,
       event: null,
@@ -107,82 +138,74 @@ export function usePredictionEventContext(
       runners: [] as Array<PredictionRunner>,
       isRace: false,
       title,
+      selected: null,
+      selectOutcome: NO_OP,
       error: null,
     }
 
     if (!venue) return { ...base, state: 'no-venue' as const }
-
-    const result = data?.[0]
-    if (isLoading && !result) return { ...base, state: 'loading' as const }
-    if (result?.desktopOnly) return { ...base, state: 'desktop-only' as const }
-    if (result?.error) {
-      return { ...base, state: 'error' as const, error: result.error }
-    }
-    if (error) {
+    if (lookup.state !== 'ready' || !lookup.event) {
       return {
         ...base,
-        state: 'error' as const,
-        error: error instanceof Error ? error.message : String(error),
+        state: lookup.state,
+        error: lookup.error,
       }
     }
 
-    const found = findEvent(result?.events ?? [], entry, pairKey)
-    if (!found) return { ...base, state: 'not-found' as const }
+    const event = lookup.event
+    const runners = runnersOf(event)
+    // The key first, then the favourite's own leg: a pane bound to an EVENT
+    // key names no leg at all, and reading nothing there would leave the
+    // header with no probability to print.
+    const first = runners[0]
+    const found =
+      findLeg(runners, pairKey) ??
+      (first
+        ? { runner: first, market: first.market, outcome: first.yes }
+        : null)
 
-    const runners = runnersOf(found.event)
     return {
       ...base,
       state: 'ready' as const,
-      event: found.event,
-      market: found.market,
-      outcome: found.outcome,
+      event,
+      market: found?.market ?? null,
+      outcome: found?.outcome ?? null,
       runners,
-      isRace: isRaceEvent(found.event),
-      title: found.event.title || title,
+      isRace: isRaceEvent(event),
+      title: event.title || title,
     }
-  }, [venue, market, entry, pairKey, data, isLoading, error])
+  }, [
+    deskMatches,
+    desk,
+    selectedPin,
+    venue,
+    market,
+    eventPin,
+    outcomePin,
+    pairKey,
+    lookup.state,
+    lookup.event,
+    lookup.error,
+  ])
 }
 
-type EventMatch = {
-  event: PredictionEventSummary
-  market: PredictionMarketSummary | null
-  outcome: PredictionOutcomeSummary | null
-}
-
-/**
- * The event this pair belongs to, matched by the pin's event id first and by
- * the pair key itself second.
- *
- * The pair-key scan is not a fallback for tidiness: a pin written before the
- * event id existed, or a venue that renamed an event between the pin and the
- * lookup, still resolves because the outcome key is what the connector routes
- * on and it cannot drift.
- */
-function findEvent(
-  events: Array<PredictionEventSummary>,
-  entry: PredictionDirectoryEntry | null,
+/** The leg this key names, walked over the whole field. */
+function findLeg(
+  runners: Array<PredictionRunner>,
   pairKey: string,
-): EventMatch | null {
+): {
+  runner: PredictionRunner
+  market: PredictionMarketSummary
+  outcome: PredictionOutcomeSummary
+} | null {
   const key = normalizePairKey(pairKey)
-
-  for (const event of events) {
-    for (const market of event.markets) {
-      for (const outcome of market.outcomes) {
-        if (normalizePairKey(outcome.pairKey) === key) {
-          return { event, market, outcome }
-        }
+  if (!key) return null
+  for (const runner of runners) {
+    for (const leg of runner.no ? [runner.yes, runner.no] : [runner.yes]) {
+      if (normalizePairKey(leg.pairKey) === key) {
+        return { runner, market: runner.market, outcome: leg }
       }
     }
   }
-
-  if (entry?.eventId) {
-    const event = events.find((e) => e.id === entry.eventId)
-    if (event) {
-      const market =
-        event.markets.find((m) => m.id === entry.predictionMarketId) ?? null
-      return { event, market, outcome: null }
-    }
-  }
-
   return null
 }

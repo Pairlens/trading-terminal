@@ -119,7 +119,8 @@ export function useMarketInstruments(
 export function useInstrumentsBySymbols(symbolList: Array<string>) {
   const symbols = symbolList.join(',')
   const result = useMarketInstruments({ symbols: symbols || undefined })
-  const directory = usePredictionDirectoryStore((s) => s.entries)
+  const events = usePredictionDirectoryStore((s) => s.events)
+  const outcomes = usePredictionDirectoryStore((s) => s.outcomes)
 
   const items = useMemo(() => {
     const served = new Set(result.items.map((i) => i.symbol))
@@ -129,7 +130,35 @@ export function useInstrumentsBySymbols(symbolList: Array<string>) {
     // `items` reference for a list that did not change.
     for (const symbol of symbols ? symbols.split(',') : []) {
       if (served.has(symbol)) continue
-      const pinned = directory[normalizePairKey(symbol)]
+      const key = normalizePairKey(symbol)
+
+      // A watched prediction is an EVENT, so that map answers first. The
+      // outcome map is still read behind it, for a leg that reached a list on
+      // its own: a position row, an alert on one side of a question.
+      const event = events[key]
+      if (event) {
+        extra.push({
+          id: `${event.market}:${symbol}`,
+          kind: 'prediction',
+          market: event.market,
+          symbol,
+          name: event.title,
+          base: symbol,
+          quote: '',
+          assetClass: 'prediction',
+          categories: [],
+          rank: 100_000,
+          featured: false,
+          predictionMarketId: event.eventId,
+          outcome: event.leader?.label ?? '',
+          eventId: event.eventId,
+          eventTitle: event.title,
+          ...(typeof event.endMs === 'number' ? { endMs: event.endMs } : {}),
+        })
+        continue
+      }
+
+      const pinned = outcomes[key]
       if (!pinned) continue
       extra.push({
         id: `${pinned.market}:${symbol}`,
@@ -151,7 +180,7 @@ export function useInstrumentsBySymbols(symbolList: Array<string>) {
       })
     }
     return extra.length > 0 ? [...result.items, ...extra] : result.items
-  }, [result.items, symbols, directory])
+  }, [result.items, symbols, events, outcomes])
 
   return useMemo(() => ({ ...result, items }), [result, items])
 }

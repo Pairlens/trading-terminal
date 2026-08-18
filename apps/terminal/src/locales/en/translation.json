@@ -6143,6 +6143,7 @@
       "rank": "#",
       "outcome": "Outcome",
       "yes": "Yes",
+      "no": "No",
       "change": "24h",
       "trend": "30-day",
       "volume": "Volume",

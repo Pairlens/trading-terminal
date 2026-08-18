@@ -38,6 +38,7 @@ import { useOpenPredictionOutcome } from '../lib/use-open-prediction-outcome'
 import { useMobileFocus } from '../mobile-focus-context'
 import { filterRunners, isCheapTail, rankRunners } from '../lib/outcome-ladder'
 import type { MobileOverlay } from '../mobile-focus-context'
+import type { PredictionOutcomeSummary } from '@pairlens/shared/instrument-types'
 import type { PredictionRunner } from '@/lib/predictions/race'
 import { eventOverround, runnerPrice, runnersOf } from '@/lib/predictions/race'
 import { runnerColorIndex, runnerToken } from '@/lib/predictions/palette'
@@ -84,8 +85,8 @@ export default memo(function OutcomeLadderScreen({
 
   const active = normalizePairKey(focusedPair)
   const select = useCallback(
-    (runner: PredictionRunner) =>
-      openOutcome(venue, event, runner.market, runner.yes),
+    (runner: PredictionRunner, leg: PredictionOutcomeSummary) =>
+      openOutcome(venue, event, runner.market, leg),
     [event, openOutcome, venue],
   )
 
@@ -184,7 +185,7 @@ export default memo(function OutcomeLadderScreen({
       ) : (
         visible.map((runner, index) => (
           <LadderRow
-            active={normalizePairKey(runner.yes.pairKey) === active}
+            activeKey={active}
             colorIndex={runnerColorIndex(runners, runner.yes.pairKey)}
             key={runner.yes.pairKey}
             onSelect={select}
@@ -219,30 +220,34 @@ export default memo(function OutcomeLadderScreen({
 const LadderRow = memo(function LadderRow({
   runner,
   rank,
-  active,
+  activeKey,
   colorIndex,
   onSelect,
 }: {
   runner: PredictionRunner
   rank: number
-  active: boolean
+  /** The leg the shell is on, normalized. Either side of a row can be it. */
+  activeKey: string
   colorIndex: number
-  onSelect: (runner: PredictionRunner) => void
+  onSelect: (runner: PredictionRunner, leg: PredictionOutcomeSummary) => void
 }) {
+  const { t } = useTranslation()
   const price = runnerPrice(runner)
   const change = runner.yes.change24h
+  const noPrice = runner.no
+    ? (runner.no.price ?? runner.no.ask ?? (price === null ? null : 1 - price))
+    : null
+  const yesActive = normalizePairKey(runner.yes.pairKey) === activeKey
+  const noActive =
+    runner.no !== null && normalizePairKey(runner.no.pairKey) === activeKey
 
   return (
-    <button
-      aria-current={active || undefined}
+    <div
       className={cn(
-        'pl-press-row flex min-h-[44px] w-full items-center gap-2.5 px-4 py-2 text-left',
+        'flex min-h-[48px] w-full items-center gap-2 px-4 py-1.5',
         'border-t border-t-[color:var(--pl-hairline)]',
-        active && 'bg-[color:var(--pl-wash)]',
+        (yesActive || noActive) && 'bg-[color:var(--pl-wash)]',
       )}
-      onClick={() => onSelect(runner)}
-      type="button"
-      {...PRESS}
     >
       <span className="w-5 shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">
         {rank}
@@ -252,26 +257,88 @@ const LadderRow = memo(function LadderRow({
         className="size-2.5 shrink-0 rounded-full"
         style={{ background: runnerToken(colorIndex) }}
       />
-      <span className="min-w-0 flex-1 truncate text-[13.5px] font-medium text-foreground">
-        {runner.label}
-      </span>
-      {change !== undefined ? (
-        <span
-          className={cn(
-            'shrink-0 font-mono text-[11px] tabular-nums',
-            change > 0
-              ? 'text-up'
-              : change < 0
-                ? 'text-down'
-                : 'text-muted-foreground',
-          )}
-        >
-          {`${change > 0 ? '+' : change < 0 ? '−' : ''}${formatPredictionPrice(Math.abs(change))}`}
+      <span className="flex min-w-0 flex-1 flex-col gap-[2px]">
+        <span className="truncate text-[13.5px] font-medium text-foreground">
+          {runner.label}
         </span>
-      ) : null}
-      <span className="w-11 shrink-0 text-right font-mono text-[14px] font-semibold tabular-nums text-foreground">
+        {change !== undefined ? (
+          <span
+            className={cn(
+              'font-mono text-[10.5px] leading-none tabular-nums',
+              change > 0
+                ? 'text-up'
+                : change < 0
+                  ? 'text-down'
+                  : 'text-muted-foreground',
+            )}
+          >
+            {`${change > 0 ? '+' : change < 0 ? '−' : ''}${formatPredictionPrice(Math.abs(change))}`}
+          </span>
+        ) : null}
+      </span>
+      {/* Both sides, both tappable. The event is the pair here, so taking No
+          on a runner is as ordinary a move as taking Yes, and a row that only
+          offered the affirmative would put the other half of the market behind
+          a screen the phone does not have room for. */}
+      <SideChip
+        active={yesActive}
+        label={t('outcomeLadder.columns.yes')}
+        onSelect={() => onSelect(runner, runner.yes)}
+        price={price}
+        side="yes"
+      />
+      <SideChip
+        active={noActive}
+        label={t('outcomeLadder.columns.no')}
+        onSelect={() => (runner.no ? onSelect(runner, runner.no) : undefined)}
+        price={runner.no ? noPrice : null}
+        side="no"
+      />
+    </div>
+  )
+})
+
+/**
+ * One side of one runner, priced, at a full 44px tap target.
+ *
+ * Disabled rather than hidden when the venue publishes no complement: the row
+ * keeps its shape down the whole list, and a missing chip would read as a
+ * rendering fault rather than as a market that only quotes one side.
+ */
+function SideChip({
+  label,
+  price,
+  side,
+  active,
+  onSelect,
+}: {
+  label: string
+  price: number | null
+  side: 'yes' | 'no'
+  active: boolean
+  onSelect: () => void
+}) {
+  return (
+    <button
+      aria-current={active || undefined}
+      aria-label={`${label} ${price === null ? '' : formatPredictionPrice(price)}`}
+      className={cn(
+        'pl-press flex h-11 w-[52px] shrink-0 flex-col items-center justify-center gap-[2px] rounded-xl',
+        side === 'yes' ? 'bg-up/15 text-up' : 'bg-down/12 text-down',
+        active && 'ring-1 ring-current',
+        price === null && 'opacity-40',
+      )}
+      disabled={price === null}
+      onClick={onSelect}
+      type="button"
+      {...PRESS}
+    >
+      <span className="text-[9.5px] font-medium uppercase leading-none tracking-[.08em]">
+        {label}
+      </span>
+      <span className="font-mono text-[12.5px] font-semibold leading-none tabular-nums">
         {price === null ? '—' : formatPredictionPrice(price)}
       </span>
     </button>
   )
-})
+}
