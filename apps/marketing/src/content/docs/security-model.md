@@ -92,9 +92,10 @@ and auth is off, cloud panels are hidden, and all persistence is local to the
 machine.
 
 With an App Server, what syncs is workspaces, chart layouts, alerts, workflows,
-the trade journal, and plugin settings. Credentials never do, and neither do
-assistant conversations: chat history is written to the device it was typed on
-and has no server-side shape at all.
+the trade journal, and plugin settings. Assistant conversations can join them,
+but only after you turn that domain on: it is the one switch that ships off, and
+until you flip it chat history is written to the device it was typed on and
+nowhere else. Credentials never sync, under any switch.
 The complete list is what the account data export returns, which is itself a
 useful audit artifact: it is the definition of what is held.
 

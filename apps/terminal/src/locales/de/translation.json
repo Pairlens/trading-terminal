@@ -1514,6 +1514,11 @@
           "title": "Plugins",
           "description": "Welche Plugins du aktiviert hast, ihre Einstellungen und deine Anbieter-Pins. Zu den Einstellungen gehört auch jeder API-Schlüssel, den du in den Einstellungen eines Plugins eingetragen hast, etwa für einen KI-Anbieter. API-Schlüssel von Börsen und Wallet-Secrets sind nie dabei, die bleiben in deinem Schlüsselbund. Anbieter-Pins liegen nur in deinem Konto: abgeschaltet halten sie nur bis zum Beenden der App."
         },
+        "assistant": {
+          "title": "Assistent-Unterhaltungen",
+          "description": "Deine Chat-Verläufe mit dem Assistenten und alles darin.",
+          "caveat": "Standardmäßig aus. Solange das aus ist, bleiben Unterhaltungen auf diesem Gerät und nichts wird hochgeladen."
+        },
         "trades": {
           "title": "Trade-Journal",
           "description": "Trades, die du oder der Assistent ins Journal einträgst."
@@ -2390,7 +2395,13 @@
       "today": "Heute",
       "yesterday": "Gestern",
       "previous7Days": "Letzte 7 Tage",
-      "older": "Älter"
+      "older": "Älter",
+      "synced": "Mit deinem Konto synchronisiert",
+      "syncTitle": "Unterhaltungen synchronisieren?",
+      "syncDescription": "Behalte sie auf diesem Gerät oder nimm sie über dein Konto auf deine anderen Geräte mit.",
+      "syncEnable": "Sync aktivieren",
+      "syncDecline": "Jetzt nicht",
+      "syncChangeLater": "Jederzeit in den Einstellungen unter Cloud-Sync änderbar."
     }
   },
   "copilot": {

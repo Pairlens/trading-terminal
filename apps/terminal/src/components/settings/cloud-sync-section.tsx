@@ -1,6 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import {
+  Bot,
   CandlestickChart,
   CircleCheck,
   Cloud,
@@ -43,6 +44,7 @@ const DOMAIN_ICONS: Record<SyncDomainId, typeof Puzzle> = {
   workspaces: LayoutGrid,
   automation: Workflow,
   plugins: Puzzle,
+  assistant: Bot,
   trades: NotebookPen,
 }
 

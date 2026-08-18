@@ -39,6 +39,22 @@ globalThis.localStorage = {
 
 const { SyncCoordinator } = await import('../sync-coordinator')
 const { SYNC_DOMAIN_IDS } = await import('../sync-domains')
+const { isDomainSyncEnabled, isDomainSyncUndecided } =
+  await import('../sync-preferences')
+const { emitWrite } = await import('../sync-channel')
+
+/**
+ * Back to a profile that has never answered anything.
+ *
+ * Dropping the raw key is not enough on its own: the preferences module
+ * caches the parsed record and only drops that cache when the key moves on
+ * the sync channel, which is exactly what a sibling window changing it looks
+ * like. `cloud-sync` is blocklisted, so the coordinator ignores the event.
+ */
+function forgetSyncChoices(): void {
+  backing.delete('pairlens:cloud-sync')
+  emitWrite('cloud-sync', undefined)
+}
 const { setCloudSyncEnabled, setDomainSyncEnabled } =
   await import('../sync-preferences')
 
@@ -342,5 +358,80 @@ describe('master pause', () => {
     await coordinator.setSession('user-1')
 
     expect(calls).toEqual([])
+  })
+})
+
+// ── Opt-in domains ───────────────────────────────────────────────────
+//
+// `assistant` is the only domain that does not sync until asked, and the
+// rail's banner reads the difference between "not asked" and "said no".
+// Both halves are load-bearing: get the default wrong and transcripts
+// upload themselves, get the tri-state wrong and the banner either never
+// appears or never goes away.
+
+describe('an opt-in domain', () => {
+  test('is off with nothing on record, while the others are on', () => {
+    forgetSyncChoices()
+    expect(isDomainSyncEnabled('assistant')).toBe(false)
+    expect(isDomainSyncEnabled('preferences')).toBe(true)
+    expect(isDomainSyncUndecided('assistant')).toBe(true)
+  })
+
+  test('stops being undecided on either answer, including no', () => {
+    forgetSyncChoices()
+    setDomainSyncEnabled('assistant', false)
+    expect(isDomainSyncUndecided('assistant')).toBe(false)
+    expect(isDomainSyncEnabled('assistant')).toBe(false)
+
+    setDomainSyncEnabled('assistant', true)
+    expect(isDomainSyncUndecided('assistant')).toBe(false)
+    expect(isDomainSyncEnabled('assistant')).toBe(true)
+  })
+
+  test('yields to the master pause like every other domain', () => {
+    setDomainSyncEnabled('assistant', true)
+    setCloudSyncEnabled(false)
+    expect(isDomainSyncEnabled('assistant')).toBe(false)
+    setCloudSyncEnabled(true)
+  })
+
+  test('sends nothing while it is off, and pushes the thread once on', async () => {
+    forgetSyncChoices()
+    backing.set(
+      'pairlens:assistant.conversations',
+      JSON.stringify({
+        version: 1,
+        activeId: 'c-1',
+        items: [
+          {
+            id: 'c-1',
+            title: 'BTC levels',
+            createdAt: 1,
+            updatedAt: 2,
+            messageCount: 1,
+          },
+        ],
+      }),
+    )
+    backing.set(
+      'pairlens:assistant.thread.c-1',
+      JSON.stringify([{ id: 'm1', role: 'user', parts: [] }]),
+    )
+
+    calls = []
+    coordinator.markDirty('assistant.conversations', [])
+    await wait(TIER2_DEBOUNCE_MS + 300)
+    expect(calls.filter((c) => c.url.includes('/assistant/'))).toEqual([])
+
+    setDomainSyncEnabled('assistant', true)
+    await wait(TIER2_DEBOUNCE_MS + 600)
+    const put = calls.find(
+      (c) =>
+        c.method === 'PUT' && c.url.includes('/api/assistant/conversations'),
+    )
+    expect(put).toBeDefined()
+    // Whole messages, not a flattened string: the point of the new shape.
+    expect(put!.body).toContain('"messages"')
+    expect(put!.body).toContain('BTC levels')
   })
 })

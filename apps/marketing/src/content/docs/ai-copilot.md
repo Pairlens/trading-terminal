@@ -5,7 +5,7 @@ group: traders
 order: 4
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 11 min read
+readTime: 12 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -175,20 +175,31 @@ own, on hover. Neither is undoable, which is why both confirm.
 
 ### Where they are stored
 
-**On your device, and nowhere else.** Conversations live in your browser's local
-storage, or in the desktop app's, on the machine you typed them on. They are not
-uploaded, they are not in your Pairlens account, they do not sync between your
-laptop and your phone, and signing out does not take them with it. Clearing your
-browser data does.
+**On your device, unless you say otherwise.** Conversations live in your
+browser's local storage, or in the desktop app's, on the machine you typed them
+on. Nothing is uploaded by default, and that default holds whether or not you
+have an account.
 
-That is a deliberate trade. What you ask the assistant is a fairly complete
-record of what you are thinking about trading, and the safest place for it is
-the machine you are sitting at. Cloud sync covers preferences, layouts, charts,
-automation and the trade journal; chat history is not on the list and there is
-no switch to put it there.
+Signed in, the rail asks you once whether to sync them, with **Turn on sync** and
+**Not now**. Either answer retires the banner, and neither is final: the switch
+lives in Settings → Cloud Sync as **Assistant conversations**, alongside the
+other domains. It is the only one that ships off, because what you ask the
+assistant is a fuller record of what you are thinking about than a chart layout
+is, and uploading that should be a decision you make rather than one you
+discover.
 
-The model still sees your messages, because it has to answer them. Which model
-that is, and who runs it, is your choice on the
+**With sync off**, threads never leave the machine. They do not travel between
+your laptop and your phone, signing out does not take them with it, and clearing
+your browser data deletes them for good.
+
+**With sync on**, your 25 most recent conversations ride to your account and back
+down to your other signed-in devices, whole: the tool activity and cards come
+with them, not just the text. Threads are merged per conversation, newest edit
+winning, and nothing is deleted from a device just because the account has not
+seen it. Very long threads sync with their oldest turns trimmed.
+
+The model sees your messages either way, because it has to answer them. Which
+model that is, and who runs it, is your choice on the
 [Plugins](/docs/plugin-system) page: Pairlens Intelligence, or your own key
 against Groq, OpenAI, Anthropic or OpenRouter.
 

@@ -1514,6 +1514,11 @@
           "title": "Plugin",
           "description": "Những plugin bạn đã bật, cài đặt của chúng và các nhà cung cấp bạn ghim. Cài đặt bao gồm cả khoá API bạn nhập trong phần cài đặt của chính plugin đó, ví dụ khoá của nhà cung cấp AI. Khoá API sàn và bí mật ví không bao giờ nằm trong đó, chúng ở lại trong keychain của bạn. Nhà cung cấp đã ghim chỉ được giữ trong tài khoản, nên khi tắt mục này chúng chỉ tồn tại đến khi bạn đóng ứng dụng."
         },
+        "assistant": {
+          "title": "Cuộc trò chuyện với trợ lý",
+          "description": "Các luồng trò chuyện của bạn với trợ lý và mọi thứ trong đó.",
+          "caveat": "Mặc định tắt. Khi còn tắt, các cuộc trò chuyện được giữ trên thiết bị này và không có gì được tải lên."
+        },
         "trades": {
           "title": "Nhật ký giao dịch",
           "description": "Các giao dịch mà bạn hoặc trợ lý ghi vào nhật ký."
@@ -2390,7 +2395,13 @@
       "today": "Hôm nay",
       "yesterday": "Hôm qua",
       "previous7Days": "7 ngày qua",
-      "older": "Cũ hơn"
+      "older": "Cũ hơn",
+      "synced": "Đã đồng bộ với tài khoản của bạn",
+      "syncTitle": "Đồng bộ các cuộc trò chuyện?",
+      "syncDescription": "Giữ trên thiết bị này, hoặc mang sang các thiết bị khác qua tài khoản của bạn.",
+      "syncEnable": "Bật đồng bộ",
+      "syncDecline": "Để sau",
+      "syncChangeLater": "Đổi bất cứ lúc nào trong Cài đặt, mục Đồng bộ đám mây."
     }
   },
   "copilot": {

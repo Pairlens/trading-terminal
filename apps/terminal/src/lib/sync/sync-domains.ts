@@ -90,6 +90,7 @@ export type SyncDomainId =
   | 'workspaces'
   | 'automation'
   | 'plugins'
+  | 'assistant'
   | 'trades'
 
 export type SyncDomain = {
@@ -111,6 +112,20 @@ export type SyncDomain = {
    * rule as labelKey/descriptionKey.
    */
   caveatKey?: string
+  /**
+   * Whether the domain syncs before the user has said anything about it.
+   * Absent means true, which is every domain that predates this flag: they
+   * shipped syncing and turning them off is the opt-out.
+   *
+   * `false` inverts that. The only domain that takes it is `assistant`,
+   * because a chat transcript is a fuller record of what someone is
+   * thinking than a chart layout is, and uploading one is a decision they
+   * should make rather than discover. It also gives the switch a third
+   * state the others do not have: absent is "not asked yet", which is
+   * exactly when the rail shows its banner. Once they answer, either way,
+   * an explicit boolean lands and the banner is done.
+   */
+  defaultEnabled?: boolean
 }
 
 export const SYNC_DOMAINS: ReadonlyArray<SyncDomain> = [
@@ -140,12 +155,28 @@ export const SYNC_DOMAINS: ReadonlyArray<SyncDomain> = [
     descriptionKey: 'settings.cloudSync.domains.plugins.description',
   },
   {
+    id: 'assistant',
+    labelKey: 'settings.cloudSync.domains.assistant.title',
+    descriptionKey: 'settings.cloudSync.domains.assistant.description',
+    defaultEnabled: false,
+    caveatKey: 'settings.cloudSync.domains.assistant.caveat',
+  },
+  {
     id: 'trades',
     labelKey: 'settings.cloudSync.domains.trades.title',
     descriptionKey: 'settings.cloudSync.domains.trades.description',
     cloudOnly: true,
   },
 ]
+
+/**
+ * Whether `id` syncs with no answer on record. Reading through the catalog
+ * rather than a second list, so a domain cannot be declared opt-in in one
+ * place and treated as opt-out in another.
+ */
+export function syncDomainDefault(id: SyncDomainId): boolean {
+  return SYNC_DOMAINS.find((domain) => domain.id === id)?.defaultEnabled ?? true
+}
 
 export const SYNC_DOMAIN_IDS: ReadonlyArray<SyncDomainId> = SYNC_DOMAINS.map(
   (d) => d.id,
@@ -180,6 +211,14 @@ const WORKSPACE_KEYS = new Set([
   'discovery.sectionOrder',
 ])
 
+/**
+ * What the conversation store publishes when anything about a thread
+ * changes. One key for the whole collection: the payload is assembled from
+ * the index plus each thread at flush time (see the coordinator), the way
+ * notification rules and bindings are.
+ */
+export const ASSISTANT_CONVERSATIONS_KEY = 'assistant.conversations'
+
 const AUTOMATION_KEYS = new Set([
   'workflows',
   'notification-rules',
@@ -211,6 +250,10 @@ export function domainForSyncKey(key: string): SyncDomainId | null {
     return 'workspaces'
   }
   if (AUTOMATION_KEYS.has(key)) return 'automation'
+  // The single aggregate key the conversation store publishes. The
+  // per-thread keys (`assistant.thread.<id>`) deliberately route nowhere:
+  // they are pushed as part of this one bulk payload, never one PUT each.
+  if (key === ASSISTANT_CONVERSATIONS_KEY) return 'assistant'
   if (TIER1_KEYS.has(key) || key.startsWith('pair-picker.assetClass.')) {
     return 'preferences'
   }

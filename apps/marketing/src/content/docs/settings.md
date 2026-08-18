@@ -66,6 +66,7 @@ Then one switch per domain:
 | **Workspaces and layouts**   | Custom workspaces, folders, panel layouts, and workspace variables                                                        |
 | **Workflows and alerts**     | Automation workflows, alert rules, and the pairs they watch                                                               |
 | **Plugins**                  | Which plugins are enabled, their settings, and your provider pins                                                         |
+| **Assistant conversations**  | Your chat threads with the assistant, and everything in them                                                              |
 | **Trade journal**            | Trades you or the assistant log                                                                                           |
 
 Three things about these switches are worth knowing before you flip one.
@@ -76,9 +77,12 @@ stale. Switch it back on and the two sides merge, newest change winning, which
 means something you deleted while it was off can come back if your account still
 has it.
 
-**Assistant conversations are not on the list, and will not be.** They are kept
-on the device you typed them on and never uploaded, so there is nothing to sync
-and no switch for it. See [the assistant](/docs/ai-copilot#where-they-are-stored).
+**Assistant conversations are the one domain that ships off.** Every other
+switch here starts on and turning it off is the opt-out; this one starts off and
+you turn it on. The assistant's own rail asks once, and the switch here is where
+you change your mind. While it is off, threads are kept on the device that made
+them and nothing is uploaded. See
+[the assistant](/docs/ai-copilot#where-they-are-stored).
 
 **One of them has no local store.** The trade journal only ever lives in your
 account, so off there means not recorded anywhere rather than recorded locally.
@@ -333,10 +337,10 @@ again" is permanent.
 
 **Export your data.** Downloads everything held for your account as one JSON
 file: profile, workspaces, chart layouts, trade journal, workflows, alerts,
-plugin settings, and billing history. Two things are not in it because they were
-never on our servers: exchange API keys and wallet secrets, which stay in the OS
-keychain on desktop or the encrypted vault in a browser, and your assistant
-conversations, which are only ever on the device you typed them on.
+plugin settings, billing history, and your assistant conversations if you turned
+their sync on. Exchange API keys and wallet secrets are never in it, because they
+were never on our servers: they stay in the OS keychain on desktop or the
+encrypted vault in a browser.
 
 **Delete account.** Permanently erases your account and everything synced to
 it, and cancels any active Intelligence subscription at the same time. You type

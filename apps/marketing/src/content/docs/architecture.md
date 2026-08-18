@@ -56,7 +56,7 @@ trade against streams from the venue straight to your machine.
 | Python scripts             | Local script store, synced when signed in                     | They run in your local runtime         |
 | Bot ledgers and event logs | Local to the machine running the bot                          | The bot executes here, not on a server |
 | User state and trades      | Local by default, App Server when signed in                   | Remote sync is opt-in                  |
-| Assistant conversations    | Local storage, on that device only                            | Never uploaded, by design              |
+| Assistant conversations    | Local storage; the account too, if you opt in                 | Opt-in, and off until you say so       |
 | Exchange credentials       | OS keychain (desktop), vault-encrypted localStorage (browser) | Must never be persisted server-side    |
 | Auth sessions              | App Server (BetterAuth, bearer tokens)                        | Cross-origin sign-in                   |
 

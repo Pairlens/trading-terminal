@@ -1,12 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// ── Assistant conversations, on this device only ─────────────────────
+// ── Assistant conversations ──────────────────────────────────────────
 //
-// Chat history never leaves the machine it was typed on. It used to ride
-// the App Server under one fixed key, which meant one thread for the
-// whole terminal AND a copy of every question the user ever asked
-// sitting in a database. Both are gone: threads are many, and they live
-// in localStorage next to the indicator scripts.
+// Threads are written here, on this device, always. They ride to the
+// account only if the user turns the `assistant` cloud-sync domain on,
+// which is off until they answer the banner in the rail: a transcript is
+// a fuller record of someone's thinking than a chart layout is, so
+// uploading one is a decision rather than a default.
+//
+// This replaced a single thread stored server-side under one fixed key,
+// which meant one conversation for the whole terminal AND a copy of
+// every question in a database nobody opted into.
 //
 // Two storage tiers, for the same reason the indicator workbench has
 // two. The index is small and read on every boot; the messages are not,
@@ -18,6 +22,8 @@
 import { create } from 'zustand'
 
 import type { UIMessage } from 'ai'
+import { emitWrite, onHydrate } from '@/lib/sync/sync-channel'
+import { ASSISTANT_CONVERSATIONS_KEY } from '@/lib/sync/sync-domains'
 
 const INDEX_KEY = 'pairlens:assistant.conversations'
 const THREAD_PREFIX = 'pairlens:assistant.thread.'
@@ -261,6 +267,16 @@ type AssistantConversationsStore = {
 
   /** Read the index and open the last active thread. Idempotent. */
   load: () => void
+  /**
+   * Re-read everything from storage, discarding the in-memory copy.
+   *
+   * Both hydrate paths land here rather than carrying a payload: a sibling
+   * window has already written localStorage before it broadcasts, and the
+   * sync coordinator writes the merged result before it emits. Trusting the
+   * payload instead would mean two different shapes to handle and one of
+   * them (the sibling's) carries no messages at all.
+   */
+  reload: () => void
   /** Start an empty conversation and make it active. Returns its id. */
   create: () => string
   /** Open an existing conversation, reading its messages if needed. */
@@ -295,6 +311,27 @@ export const useAssistantConversationsStore =
       set({
         conversations: index.items,
         activeId: active,
+        threads: active ? { [active]: readThread(active) } : {},
+        loaded: true,
+      })
+    },
+
+    reload: () => {
+      const index = readIndex()
+      const { activeId: current } = get()
+      // Keep looking at the thread that is open, unless the merge removed
+      // it. Following the stored `activeId` would let another device's
+      // idea of "current" yank this window out of the thread being read.
+      const active =
+        index.items.find((meta) => meta.id === current)?.id ??
+        index.items.find((meta) => meta.id === index.activeId)?.id ??
+        index.items[0]?.id ??
+        null
+      set({
+        conversations: index.items,
+        activeId: active,
+        // Dropped wholesale: any thread the merge touched is stale in
+        // memory, and re-reading one costs a synchronous localStorage hit.
         threads: active ? { [active]: readThread(active) } : {},
         loaded: true,
       })
@@ -432,6 +469,12 @@ function persist(
   activeId: string | null,
 ): void {
   writeIndex({ version: 1, activeId, items })
+  // One aggregate key for the whole collection, never one per thread: the
+  // coordinator assembles the payload from the index plus each thread at
+  // flush time, so fifty threads are one debounced PUT rather than fifty.
+  // It is also the cross-window signal, which is why it fires even with
+  // the domain switched off (the coordinator drops it there).
+  emitWrite(ASSISTANT_CONVERSATIONS_KEY, items)
 }
 
 /**
@@ -445,3 +488,15 @@ export function ensureActiveConversation(): string {
   const { activeId } = useAssistantConversationsStore.getState()
   return activeId ?? useAssistantConversationsStore.getState().create()
 }
+
+// A merged set arrived: either from the sync coordinator, which has already
+// written the index and every thread it changed, or from a sibling window
+// that wrote before it broadcast. Registered at module load so a hydrate
+// that lands before the rail mounts is not missed.
+onHydrate((key) => {
+  if (key !== ASSISTANT_CONVERSATIONS_KEY) return
+  const store = useAssistantConversationsStore.getState()
+  // Nothing has read the index yet, so there is no in-memory copy to
+  // correct; `load` on first mount will pick the merge up anyway.
+  if (store.loaded) store.reload()
+})

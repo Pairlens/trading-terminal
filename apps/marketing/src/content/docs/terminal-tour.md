@@ -160,10 +160,10 @@ notification fires once rather than once per window.
 
 Everything above works with no account. Signing in with your email adds
 cross-device sync for workspaces, chart layouts, alerts, workflows, and your
-trade journal. It never adds anything to the credential path: exchange keys stay
-on your device either way, in the OS keychain on desktop or the encrypted vault
-in a browser. Assistant conversations stay put too, on the device that made
-them.
+trade journal, and offers it for your assistant conversations, which stay on the
+device that made them until you accept. It never adds anything to the credential
+path: exchange keys stay on your device either way, in the OS keychain on desktop
+or the encrypted vault in a browser.
 
 ## Where to next
 

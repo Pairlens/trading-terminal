@@ -1514,6 +1514,11 @@
           "title": "Plugins",
           "description": "Les plugins que vous avez activés, leurs réglages et vos fournisseurs épinglés. Les réglages incluent toute clé API saisie dans les paramètres d'un plugin, par exemple celle d'un fournisseur d'IA. Les clés API d'exchange et les secrets de wallet n'en font jamais partie, ils restent dans votre trousseau. Les fournisseurs épinglés ne sont conservés que dans votre compte : désactivé, ils ne durent que jusqu'à la fermeture de l'application."
         },
+        "assistant": {
+          "title": "Conversations de l’assistant",
+          "description": "Vos fils de discussion avec l’assistant, et tout ce qu’ils contiennent.",
+          "caveat": "Désactivé par défaut. Tant que ça l’est, les conversations restent sur cet appareil et rien n’est envoyé."
+        },
         "trades": {
           "title": "Journal de trading",
           "description": "Les trades que vous ou l'assistant consignez dans le journal."
@@ -2390,7 +2395,13 @@
       "today": "Aujourd’hui",
       "yesterday": "Hier",
       "previous7Days": "7 derniers jours",
-      "older": "Plus anciennes"
+      "older": "Plus anciennes",
+      "synced": "Synchronisées avec votre compte",
+      "syncTitle": "Synchroniser les conversations ?",
+      "syncDescription": "Gardez-les sur cet appareil, ou emportez-les sur les autres via votre compte.",
+      "syncEnable": "Synchroniser",
+      "syncDecline": "Pas maintenant",
+      "syncChangeLater": "Modifiable à tout moment dans Réglages, section Synchronisation cloud."
     }
   },
   "copilot": {

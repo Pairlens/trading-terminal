@@ -23,7 +23,8 @@ important respect: how close to an order they get, and who confirms it.
 One in-app agent, docked in the terminal chrome rather than in a pane and
 mounted above the routed content, so it is the same assistant on a chart, on
 the bots page and in the script workbench. Its threads are kept in the client's
-own storage, on that device, and no transcript ever reaches the App Server.
+own storage, and reach the App Server only for a user who has turned the
+`assistant` sync domain on, which ships off.
 The agentic loop runs client-side over 105 tools: market data, research, chart
 control, portfolio reads, watchlists and alerts, Python scripts and backtests,
 bots, workflows, navigation, and two trading tools. One turn runs up to 28

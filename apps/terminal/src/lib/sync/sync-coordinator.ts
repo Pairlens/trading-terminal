@@ -19,6 +19,7 @@
  */
 
 import {
+  ASSISTANT_CONVERSATIONS_KEY,
   domainForSyncKey,
   isBlocked,
   isTier1,
@@ -170,6 +171,158 @@ function mergeCollections(
   return { merged: [...byId.values()], localAhead }
 }
 
+// ── Assistant conversations ──────────────────────────────────────────
+//
+// The one collection whose items are not already whole in a single key: the
+// index lists the threads and each thread's messages sit under a key of
+// their own, so the payload is assembled here rather than read straight off
+// the bus. The store publishes only the index, which is the signal that
+// something changed, not the thing that gets sent.
+
+const ASSISTANT_INDEX_KEY = 'pairlens:assistant.conversations'
+const ASSISTANT_THREAD_PREFIX = 'pairlens:assistant.thread.'
+
+/**
+ * How many threads ride to the account, newest first. A cap rather than
+ * everything, because this is one PUT: fifty long threads is tens of
+ * megabytes and the older half is not what anyone came back for. The docs
+ * state the number.
+ */
+const SYNC_MAX_CONVERSATIONS = 25
+
+/** Per-thread ceiling. A single runaway thread cannot eat the payload. */
+const SYNC_MAX_THREAD_CHARS = 250_000
+
+/** Whole-payload ceiling, checked as threads are added. */
+const SYNC_MAX_PAYLOAD_CHARS = 4_000_000
+
+type AssistantMeta = {
+  id: string
+  title: string | null
+  createdAt: number
+  updatedAt: number
+  messageCount?: number
+}
+
+type AssistantIndex = { activeId: string | null; items: Array<AssistantMeta> }
+
+function readAssistantIndex(): AssistantIndex {
+  try {
+    const raw = localStorage.getItem(ASSISTANT_INDEX_KEY)
+    if (!raw) return { activeId: null, items: [] }
+    const parsed = JSON.parse(raw) as Partial<AssistantIndex>
+    return {
+      activeId: typeof parsed.activeId === 'string' ? parsed.activeId : null,
+      items: Array.isArray(parsed.items) ? parsed.items : [],
+    }
+  } catch {
+    return { activeId: null, items: [] }
+  }
+}
+
+function readAssistantThread(id: string): Array<unknown> {
+  try {
+    const raw = localStorage.getItem(`${ASSISTANT_THREAD_PREFIX}${id}`)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as unknown
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+/**
+ * Drop whole messages off the FRONT of a thread until it fits. Oldest
+ * first, and never the last one: a thread that syncs as an empty array
+ * would read on the other device as a conversation someone cleared.
+ */
+function trimForSync(messages: Array<unknown>): Array<unknown> {
+  let out = messages
+  while (out.length > 1 && JSON.stringify(out).length > SYNC_MAX_THREAD_CHARS) {
+    out = out.slice(1)
+  }
+  return out
+}
+
+/** The bulk body: the newest threads, whole, inside the size budget. */
+function buildAssistantPayload(): Array<SyncedItem> {
+  const { items } = readAssistantIndex()
+  const newestFirst = [...items].sort((a, b) => b.updatedAt - a.updatedAt)
+  const out: Array<SyncedItem> = []
+  let budget = SYNC_MAX_PAYLOAD_CHARS
+
+  for (const meta of newestFirst.slice(0, SYNC_MAX_CONVERSATIONS)) {
+    if (typeof meta?.id !== 'string') continue
+    const messages = trimForSync(readAssistantThread(meta.id))
+    // An empty thread has nothing to restore and would only occupy a row
+    // on the other device.
+    if (messages.length === 0) continue
+    const conversation = {
+      id: meta.id,
+      title: typeof meta.title === 'string' ? meta.title : null,
+      createdAt: typeof meta.createdAt === 'number' ? meta.createdAt : 0,
+      updatedAt: typeof meta.updatedAt === 'number' ? meta.updatedAt : 0,
+      messages,
+    }
+    const cost = JSON.stringify(conversation).length
+    if (cost > budget) break
+    budget -= cost
+    out.push(conversation)
+  }
+  return out
+}
+
+/**
+ * Write a merged set back to the two local tiers and report the index, so
+ * the caller can decide whether the local side still has more to send.
+ */
+function writeAssistantMerge(merged: Array<SyncedItem>): void {
+  const index = readAssistantIndex()
+  const known = new Map(index.items.map((meta) => [meta.id, meta]))
+
+  for (const row of merged) {
+    if (typeof row?.id !== 'string') continue
+    const messages = Array.isArray(row.messages) ? row.messages : []
+    const existing = known.get(row.id)
+    const updatedAt = typeof row.updatedAt === 'number' ? row.updatedAt : 0
+    // Only rewrite a thread the remote side actually won. Rewriting one
+    // this device is ahead on would undo work that has not been pushed.
+    if (!existing || updatedAt > existing.updatedAt) {
+      try {
+        localStorage.setItem(
+          `${ASSISTANT_THREAD_PREFIX}${row.id}`,
+          JSON.stringify(messages),
+        )
+      } catch {
+        // Out of room locally: keep the index honest by skipping the meta
+        // too, so a row never points at a thread that was not written.
+        continue
+      }
+    }
+    known.set(row.id, {
+      id: row.id,
+      title: typeof row.title === 'string' ? row.title : null,
+      createdAt: typeof row.createdAt === 'number' ? row.createdAt : updatedAt,
+      updatedAt: Math.max(updatedAt, existing?.updatedAt ?? 0),
+      messageCount:
+        existing && existing.updatedAt >= updatedAt
+          ? existing.messageCount
+          : messages.length,
+    })
+  }
+
+  const items = [...known.values()].sort((a, b) => b.updatedAt - a.updatedAt)
+  try {
+    localStorage.setItem(
+      ASSISTANT_INDEX_KEY,
+      JSON.stringify({ version: 1, activeId: index.activeId, items }),
+    )
+  } catch {
+    // The index is what the list reads; if it cannot be written there is
+    // nothing useful left to do here.
+  }
+}
+
 /**
  * The live coordinator, for surfaces that need its status without a prop
  * chain (the Cloud Sync settings section). Null in standalone builds, where
@@ -221,6 +374,11 @@ export class SyncCoordinator {
     // applyRemoteEntries to discard every entry.
     if (this.canHydratePreferences()) await this.pullAndMerge()
     await this.pullStructuredCollections()
+    // Opt-in, so unlike the collections above this one only runs once the
+    // user has actually said yes.
+    if (this.enabledDomains.has('assistant')) {
+      await this.pullAssistantConversations()
+    }
   }
 
   /**
@@ -335,10 +493,21 @@ export class SyncCoordinator {
     }
     if (ids.includes('automation')) await this.pullStructuredCollections()
     if (ids.includes('plugins')) await this.resumePluginStates()
+    // Turning this one on is the whole feature: pull what the account has,
+    // merge, and push whatever this device was holding.
+    if (ids.includes('assistant')) {
+      await this.pullAssistantConversations()
+      this.scheduleTier2Flush(ASSISTANT_CONVERSATIONS_KEY, null)
+    }
 
     for (const id of ids) {
-      // Handled above (automation) or nothing local to send (the rest).
-      if (id === 'automation' || id === 'plugins' || id === 'trades') {
+      // Handled above (automation, assistant) or nothing local to send.
+      if (
+        id === 'automation' ||
+        id === 'plugins' ||
+        id === 'assistant' ||
+        id === 'trades'
+      ) {
         continue
       }
       for (const key of localKeysForDomain(id)) {
@@ -509,6 +678,11 @@ export class SyncCoordinator {
     } else if (key === 'workflows') {
       endpoint = '/api/workflows/bulk'
       body = { workflows: value }
+    } else if (key === ASSISTANT_CONVERSATIONS_KEY) {
+      // `value` is only the index the store published. The messages are
+      // read here, so the payload is whole however the write was triggered.
+      endpoint = '/api/assistant/conversations'
+      body = { conversations: buildAssistantPayload() }
     } else if (
       key === 'notification-rules' ||
       key === 'notification-bindings'
@@ -620,6 +794,37 @@ export class SyncCoordinator {
       if (localAhead) this.scheduleTier2Flush('workflows', merged)
     } catch {
       // Offline / server unavailable — local data remains authoritative
+    }
+  }
+
+  /**
+   * Pull the account's threads and merge them per conversation.
+   *
+   * Nothing is deleted locally: a thread the server has never seen stays,
+   * and one the server has that this device does not is added. That is the
+   * right asymmetry for an opt-in domain, where the common case is a device
+   * turning sync on with threads of its own already in hand.
+   */
+  private async pullAssistantConversations(): Promise<void> {
+    try {
+      const res = await this.fetch('/api/assistant/conversations', {
+        method: 'GET',
+      })
+      // A server that predates this route answers 404. Local threads are
+      // untouched and the switch simply has nothing to talk to yet.
+      if (!res.ok) return
+      const data = (await res.json()) as { conversations?: Array<SyncedItem> }
+      const remote = Array.isArray(data.conversations) ? data.conversations : []
+
+      const { merged, localAhead } = mergeCollections(
+        buildAssistantPayload(),
+        remote,
+      )
+      writeAssistantMerge(merged)
+      emitHydrate(ASSISTANT_CONVERSATIONS_KEY, merged)
+      if (localAhead) this.scheduleTier2Flush(ASSISTANT_CONVERSATIONS_KEY, null)
+    } catch {
+      // Offline / server unavailable — local threads remain authoritative
     }
   }
 
