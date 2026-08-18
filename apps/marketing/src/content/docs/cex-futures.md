@@ -96,9 +96,11 @@ guard, so a perpetual can never be confused with the spot pair that shares its
 name.
 
 The pair picker grows a **Futures** tab beside Crypto and Stocks. Contract
-lists come from each venue's own market table rather than from a catalog, so a
-venue you have not connected yet contributes nothing and the tab says so. On a
-phone the venue filter row gains the same Futures chip.
+lists come from each venue's own market table first, and the
+[cloud snapshot](/docs/market-discovery#the-cloud-snapshot) fills in the
+contracts of venues you have not loaded yet, marked as the weaker claim it is.
+A venue's own table always wins for that venue. On a phone the venue filter
+row gains the same Futures chip.
 
 ## The funding layer
 

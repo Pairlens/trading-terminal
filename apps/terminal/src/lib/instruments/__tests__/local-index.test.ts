@@ -11,6 +11,7 @@
  * production code uses.
  */
 import { beforeAll, describe, expect, test } from 'bun:test'
+import { INSTRUMENTS_INDEX_SCHEMA_VERSION } from '@pairlens/shared/instrument-types'
 import { writeCcxtKv } from '@pairlens/plugins/ccxt-connector'
 import {
   INSTRUMENTS_SNAPSHOT_KV_KEY,
@@ -56,7 +57,7 @@ const CATALOG: Array<Instrument> = [
 ]
 
 const SNAPSHOT: InstrumentsIndexSnapshot = {
-  schemaVersion: 1,
+  schemaVersion: INSTRUMENTS_INDEX_SCHEMA_VERSION,
   builtAt: 1_700_000_000_000,
   ccxtVersion: '4.5.71',
   venues: [
@@ -76,6 +77,15 @@ const SNAPSHOT: InstrumentsIndexSnapshot = {
       base: 'TURBO',
       quote: 'USDT',
       venues: { gate: 'TURBO_USDT' },
+    },
+    // The perp slice (schema v2): a settle-bearing row for a contract whose
+    // venue tables have never been loaded locally.
+    {
+      symbol: 'WIF-USDT-USDT',
+      base: 'WIF',
+      quote: 'USDT',
+      settle: 'USDT',
+      venues: { 'bybit-futures': 'WIFUSDT', 'okx-futures': 'WIF-USDT-SWAP' },
     },
   ],
   tokens: [],
@@ -124,6 +134,17 @@ describe('searchLocalInstruments', () => {
   test('an unmatched query returns empty, not an error', () => {
     expect(searchLocalInstruments('ZZZZZZ').items).toEqual([])
   })
+
+  test('a snapshot perp row indexes as a contract, never as a spot pair', () => {
+    // The settle leg is the discriminator: without it the three-segment key
+    // would rank as a spot pair and the picker's futures tab could not find
+    // it at all.
+    const { items } = searchLocalInstruments('WIF')
+    expect(items[0].symbol).toBe('WIF-USDT-USDT')
+    expect(items[0].assetClass).toBe('crypto-perp')
+    expect(items[0].name).toBe('WIF perpetual')
+    expect(items[0].kind).toBe('cex-pair')
+  })
 })
 
 describe('getSymbolListings', () => {
@@ -136,6 +157,12 @@ describe('getSymbolListings', () => {
 
   test('a pair the index knows nothing about is unknown, not unlisted', () => {
     expect(getSymbolListings('NOPE-USDT')).toBeNull()
+  })
+
+  test('perp snapshot evidence names the futures venues', () => {
+    const listings = getSymbolListings('WIF-USDT-USDT')
+    expect(listings?.local).toEqual([])
+    expect(listings?.snapshot?.sort()).toEqual(['bybit-futures', 'okx-futures'])
   })
 
   test('catalog rows without listing evidence report empty evidence', () => {

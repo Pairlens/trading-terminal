@@ -271,16 +271,26 @@ export type PredictionEventsResponse = {
 // trimMarkets):
 //
 // - `symbol` is dash-canonical `BASE-QUOTE`, uppercase, derived from ccxt's
-//   unified symbol with '/' → '-'. Spot, active markets only in schema v1.
-// - Venue ids are the client's marketIds ('binance', 'okx', ...), and the
-//   per-venue value is the VENUE-NATIVE market id (ccxt `market.id`), so a
-//   row resolves against the client's own tables without symbol parsing.
+//   unified symbol with '/' → '-'. Active markets only: spot rows, plus the
+//   linear-perp rows schema v2 added, which carry `settle` and a
+//   three-segment `BASE-QUOTE-SETTLE` symbol (the settle REPEATS the quote,
+//   matching the client's futures pair keys — the segments cannot collide
+//   with a spot symbol).
+// - Venue ids are the client's marketIds ('binance', 'okx', and
+//   'binance-futures'-style ids on perp rows), and the per-venue value is
+//   the VENUE-NATIVE market id (ccxt `market.id`), so a row resolves against
+//   the client's own tables without symbol parsing.
 // - Region-neutral semantics: a row asserts "venue lists this pair", never
 //   "you can reach it". The client's geo gate stays authoritative, which is
 //   why every payload carries per-venue sweep health.
 // - Snapshot absence is "unknown", never "not listed". Only a venue that
 //   published a live listing may ground a negative claim.
-export const INSTRUMENTS_INDEX_SCHEMA_VERSION = 1
+//
+// v1 → v2 added the perp slice. The version gate is strict equality on both
+// sides, so an old client refuses a v2 snapshot outright (it keeps its
+// client-table perp search) instead of misreading three-segment rows as
+// spot pairs.
+export const INSTRUMENTS_INDEX_SCHEMA_VERSION = 2
 
 export type VenueSweepStatus = 'ok' | 'geo-blocked' | 'error'
 
@@ -294,10 +304,16 @@ export type VenueSweepHealth = {
 }
 
 export type SnapshotPairRow = {
-  /** Dash-canonical 'BASE-QUOTE'. */
+  /** Dash-canonical 'BASE-QUOTE'; 'BASE-QUOTE-SETTLE' when `settle` is set. */
   symbol: string
   base: string
   quote: string
+  /**
+   * Settlement currency, present only on linear-perpetual rows. Absent on
+   * spot rows, never an empty string — its presence is the discriminator the
+   * client keys the perp merge on.
+   */
+  settle?: string
   /** venue marketId → venue-native market id. */
   venues: Record<string, string>
 }

@@ -96,11 +96,12 @@ export function rebuildLocalInstrumentIndex(
   if (building) return building
   building = (async () => {
     try {
-      // Perpetual contracts come only from the futures venues' own cached
-      // market tables: the curated catalog is spot-shaped and the server
-      // snapshot's schema is spot-only, so a perp that is not in a locally
-      // cached futures table is genuinely not searchable yet. Their keys carry
-      // a settle leg, so they can never collide with a spot row.
+      // Perpetual contracts come from two sources: the futures venues' own
+      // cached market tables (authoritative for their venue), and the server
+      // snapshot's perp slice (schema v2, rows carrying `settle`) — which is
+      // what lets search find a contract on a venue whose table has never
+      // been loaded here. Their keys carry a settle leg, so they can never
+      // collide with a spot row. The curated catalog stays spot-shaped.
       const [catalog, venueTables, futuresTables, snapshot] = await Promise.all(
         [
           fetchCatalog(manager),
@@ -178,7 +179,10 @@ function buildIndex(
   }
 
   // Server snapshot first (lower precedence), local tables after so a
-  // venue's own table always overrides the snapshot for that venue.
+  // venue's own table always overrides the snapshot for that venue. A row
+  // carrying `settle` is a linear perp: it gets the same shape the local
+  // futures pass builds, or the picker's futures tab could not filter on it
+  // and a three-segment contract would rank as a spot pair.
   if (snapshot) {
     for (const row of snapshot.pairs) {
       let entry = bySymbol.get(row.symbol)
@@ -189,10 +193,10 @@ function buildIndex(
             kind: 'cex-pair',
             market: '',
             symbol: row.symbol,
-            name: row.base,
+            name: row.settle ? `${row.base} perpetual` : row.base,
             base: row.base,
             quote: row.quote,
-            assetClass: 'crypto',
+            assetClass: row.settle ? 'crypto-perp' : 'crypto',
             categories: [],
             rank: 1_000_000,
             featured: false,
@@ -264,6 +268,9 @@ function buildIndex(
       }
       if (entry.inst.kind !== 'cex-pair') continue
       entry.venues[table.venue] = row.marketId
+      // Same authority rule as the spot pass: the venue's own table wins
+      // over whatever the snapshot claimed for that venue.
+      delete entry.snapshotVenues[table.venue]
     }
   }
 
