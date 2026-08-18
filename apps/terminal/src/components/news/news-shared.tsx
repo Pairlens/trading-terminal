@@ -1,12 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import {
   AlertTriangle,
+  Loader2,
   Minus,
   Newspaper,
   TrendingDown,
@@ -19,6 +20,7 @@ import {
   NewsUnavailableError,
   anchorNewsFeed,
   newsFeedStalled,
+  shouldAutofillNewsFeed,
 } from '@/components/news/news-feed-state'
 import { formatRelativeTime } from '@/lib/format-time'
 import i18n from '@/lib/i18n'
@@ -29,6 +31,8 @@ export { formatRelativeTime }
 // news-feed-state.ts, a leaf module with no React and no i18n so it is
 // testable in bun. Re-exported here so surfaces keep one import.
 export {
+  NEWS_AUTOFILL_MAX_PAGES,
+  NEWS_MIN_FILLED_ROWS,
   NEWS_PAGE_SIZE,
   NEWS_PAGE_TIME_FROM,
   NEWS_POLL_INTERVAL_MS,
@@ -41,6 +45,7 @@ export {
   newsFeedView,
   newsPollInterval,
   nextNewsPageParam,
+  shouldAutofillNewsFeed,
   toNewsTimeParam,
 } from '@/components/news/news-feed-state'
 export type {
@@ -68,6 +73,125 @@ export function useNewsFeedResume(
   useEffect(() => {
     if (enabled && newsFeedStalled({ isPending, fetchStatus })) void refetch()
   }, [enabled, isPending, fetchStatus, refetch])
+}
+
+/**
+ * Let a feed fill its own column.
+ *
+ * A news pane used to load exactly one page and then sit there: with a scope
+ * that filters client-side, that was four rows over an empty pane, and the
+ * only thing that ever asked for page two was the READER — so the list grew
+ * because you opened an article, which is a strange thing for a list to do.
+ * This asks for the next page while the column is short, bounded by
+ * `shouldAutofillNewsFeed` so it can neither outrun the poll nor spin on a
+ * feed that has nothing left to give.
+ */
+export function useNewsFeedAutofill(feed: {
+  hasNextPage: boolean
+  isFetching: boolean
+  pageCount: number
+  rowCount: number
+  fetchNextPage: () => unknown
+}): void {
+  const { hasNextPage, isFetching, pageCount, rowCount, fetchNextPage } = feed
+  useEffect(() => {
+    if (
+      shouldAutofillNewsFeed({ hasNextPage, isFetching, pageCount, rowCount })
+    )
+      void fetchNextPage()
+  }, [hasNextPage, isFetching, pageCount, rowCount, fetchNextPage])
+}
+
+/**
+ * Page older stories in as the reader reaches the end of the list.
+ *
+ * The observer is built ONCE per sentinel element and reads its state through
+ * a ref, which is the part that matters: rebuilding it on every state change
+ * would re-fire against a sentinel that is still on screen, and a filtered
+ * feed would chain page after page without anyone scrolling. Built once, it
+ * only fires on a real crossing — the reader scrolled the sentinel into view.
+ * A column too short to scroll therefore never fires it at all; that case
+ * belongs to `useNewsFeedAutofill` above, and to the footer's own button once
+ * the fill bound is spent.
+ */
+export function useNewsFeedEndSentinel(load: {
+  hasMore: boolean
+  isLoadingMore: boolean
+  onLoadMore: () => void
+}): (el: HTMLElement | null) => void {
+  const stateRef = useRef(load)
+  stateRef.current = load
+  const [sentinel, setSentinel] = useState<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        const state = stateRef.current
+        if (state.hasMore && !state.isLoadingMore) state.onLoadMore()
+      },
+      // Start the request a little before the last row, so the rows land
+      // under the scroll rather than after it.
+      { rootMargin: '300px 0px' },
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [sentinel])
+
+  return useCallback((el: HTMLElement | null) => setSentinel(el), [])
+}
+
+/**
+ * What sits under the last row: the sentinel that pages on scroll, and the
+ * button that pages when there is nothing left to scroll.
+ *
+ * The button is not a fallback for a broken observer — it is the only way out
+ * of a column that a narrow scope keeps shorter than its own viewport, where
+ * no scroll can ever happen. Renders nothing once the wire is exhausted; a
+ * "caught up" line under a scanning column would be chrome, not information.
+ */
+export function NewsFeedEnd({
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
+  className,
+}: {
+  hasMore: boolean
+  isLoadingMore: boolean
+  onLoadMore: () => void
+  className?: string
+}) {
+  const { t } = useTranslation()
+  const sentinelRef = useNewsFeedEndSentinel({
+    hasMore,
+    isLoadingMore,
+    onLoadMore,
+  })
+
+  if (!hasMore) return null
+
+  return (
+    <div
+      ref={sentinelRef}
+      className={cn('flex items-center justify-center px-3.5 py-3', className)}
+    >
+      {isLoadingMore ? (
+        <span className="flex items-center gap-2 text-[11px] text-muted-foreground">
+          <Loader2 className="size-3.5 animate-spin" />
+          {t('news.reader.loadingMore', 'Loading more news...')}
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={onLoadMore}
+          className="rounded-full border border-border px-3 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
+        >
+          {t('news.reader.loadOlder', 'Load older news')}
+        </button>
+      )}
+    </div>
+  )
 }
 
 /**

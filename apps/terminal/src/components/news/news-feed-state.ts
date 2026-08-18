@@ -51,6 +51,52 @@ export function newsPollInterval(pageCount: number): number | false {
 }
 
 /**
+ * Rows a feed column needs before it stops reading as half-empty.
+ *
+ * The wire answers 50 stories a page, which fills any column on its own — but
+ * every scope past "All" is filtered HERE rather than at the provider (see the
+ * discovery pane's `params` note), and a watchlist scope routinely keeps four
+ * of those fifty. That left the pane showing four rows over a screen of empty
+ * space, and paging only started once the reader opened one of them. Twelve is
+ * about a tall pane's worth; short of it, the feed asks for another page
+ * instead of waiting to be clicked.
+ */
+export const NEWS_MIN_FILLED_ROWS = 12
+
+/**
+ * Pages the feed will pull UNPROMPTED to fill its own column.
+ *
+ * Pinned to `NEWS_POLL_MAX_PAGES` on purpose: past that many pages the poll
+ * stands down, so a feed that filled itself deeper would quietly trade its
+ * live updates for backfill nobody asked for. Filling stops exactly where
+ * staying live stops being free; scrolling past it is the reader's own call.
+ */
+export const NEWS_AUTOFILL_MAX_PAGES = NEWS_POLL_MAX_PAGES
+
+/**
+ * Should the feed pull another page on its own?
+ *
+ * Only when a full page came back (`hasNextPage`), nothing is already in
+ * flight, the column is still short, and we are inside the fill bound. Note
+ * what this does NOT do: a scope that keeps 50 of 50 never fires it, and
+ * neither does a short final page, because `hasNextPage` is already false
+ * there. The predicate lives here, with no React and no DOM, so the bound is
+ * pinned by a test rather than by a hook someone has to reason about.
+ */
+export function shouldAutofillNewsFeed(state: {
+  hasNextPage: boolean
+  /** Any fetch in flight, the poll's own refetch included. */
+  isFetching: boolean
+  pageCount: number
+  /** Rows the surface is about to render, AFTER its client-side scope. */
+  rowCount: number
+}): boolean {
+  if (!state.hasNextPage || state.isFetching) return false
+  if (state.pageCount >= NEWS_AUTOFILL_MAX_PAGES) return false
+  return state.rowCount < NEWS_MIN_FILLED_ROWS
+}
+
+/**
  * Far-past lower bound for paged requests — the API only honors `time_to`
  * when `time_from` is also present.
  */
