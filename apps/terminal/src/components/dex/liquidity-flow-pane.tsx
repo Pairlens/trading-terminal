@@ -28,7 +28,11 @@ import type { PoolTrade } from '@pairlens/shared/instrument-types'
 
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
-import { usePoolTrades } from '@/hooks/use-pool-stats'
+import {
+  DISCOVERY_POOL_LISTING,
+  usePoolListing,
+  usePoolTrades,
+} from '@/hooks/use-pool-stats'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
 import {
   bucketNetFlow,
@@ -54,6 +58,11 @@ const WALLET_TAIL = 4
 export function LiquidityFlowPane() {
   const { t } = useTranslation()
   const pool = useDexDiscoveryStore((s) => s.selectedPool)
+  const chain = useDexDiscoveryStore((s) => s.chain)
+
+  // Same listing the map reads, same query key, no extra request. See the pool
+  // detail pane: "pick a pool" is only honest once there are pools to pick.
+  const listing = usePoolListing(chain, !pool, DISCOVERY_POOL_LISTING)
 
   const pairKey = pool ? poolPairKey(pool) : undefined
   const { trades, isLoading } = usePoolTrades(pool?.market, pairKey, {
@@ -81,11 +90,31 @@ export function LiquidityFlowPane() {
   )
 
   if (!pool) {
+    if (listing.isLoading || listing.retrying) {
+      return (
+        <PaneEmpty
+          icon={Waves}
+          title={t('liquidityFlow.waitingTitle')}
+          body={t('liquidityFlow.waitingBody')}
+        />
+      )
+    }
     return (
       <PaneEmpty
         icon={Waves}
-        title={t('liquidityFlow.noPoolTitle')}
-        body={t('liquidityFlow.noPoolBody')}
+        title={
+          listing.error
+            ? t('liquidityFlow.unavailableTitle')
+            : t('liquidityFlow.noPoolTitle')
+        }
+        body={
+          listing.error
+            ? // The pool map's sentence, for the same refusal. See pool-detail.
+              listing.throttled
+              ? listing.error
+              : t('poolMap.unavailableBody')
+            : t('liquidityFlow.noPoolBody')
+        }
       />
     )
   }

@@ -15,10 +15,16 @@
  * minute, and a 429 on the candle path reads downstream as "this venue does not
  * carry this pair".
  *
- * So requests queue here instead. The limiter is a sliding window rather than a
- * fixed delay: a cold start is allowed to spend the whole budget at once (first
- * paint should not be paced to death), and only once the window is full does
- * anything wait, and then only until the oldest request ages out of it.
+ * So requests queue here instead. The limiter is a sliding window with a burst
+ * allowance rather than a fixed delay: the first few requests of a cold start
+ * go straight through (first paint should not be paced to death), the rest of
+ * the same burst are spaced, and once the window is full anything further waits
+ * only until the oldest request ages out of it.
+ *
+ * The spacing is there because the quota is not the only thing metered. Nine
+ * requests in one tick — a Discovery board's six chain aggregates plus three
+ * pages of pools — is well inside 25 a minute and still draws a 429, and a 429
+ * from this provider is invisible to a browser (see `createGeckoFetch`).
  *
  * Two things it is NOT. It is not a retry: a queued request is issued exactly
  * once, and a 429 that still gets through raises `ProviderThrottledError` for
@@ -27,7 +33,10 @@
  * the budget at all.
  */
 import { restFetch } from '@pairlens/market-engine/http'
-import { providerThrottleFromResponse } from '@pairlens/market-engine/errors'
+import {
+  providerThrottleFromNetworkError,
+  providerThrottleFromResponse,
+} from '@pairlens/market-engine/errors'
 import { noteProviderThrottled } from '@pairlens/market-engine/provider-throttle'
 
 /** Provider id in the shared throttle registry, and the label users read. */
@@ -41,6 +50,27 @@ export const GECKOTERMINAL_PROVIDER = 'GeckoTerminal'
 export const RATE_LIMIT_CAPACITY = 25
 /** The window the capacity is measured over. */
 export const RATE_LIMIT_WINDOW_MS = 60_000
+/**
+ * Requests allowed back to back before spacing kicks in.
+ *
+ * The per-minute quota is not the only thing the provider meters. Opening the
+ * DEX Discovery board from cold asks for six chain aggregates and three pages
+ * of the selected chain's pools in the same tick — nine requests, comfortably
+ * inside 25 a minute and still enough to draw a 429, because the edge also
+ * dislikes the burst. Four through, then paced, is what a board opening
+ * actually looks like to the provider.
+ */
+export const RATE_LIMIT_BURST = 3
+/**
+ * Minimum gap between requests once the burst allowance is spent.
+ *
+ * Measured, not guessed: a bare shell loop against the same endpoint draws
+ * 429s at roughly one request a second, well under the documented per-minute
+ * quota. Three straight through and the rest at 600ms puts a cold board's
+ * eight requests inside four seconds, which the panes now spend showing a
+ * loading state rather than an empty one.
+ */
+export const RATE_LIMIT_SPACING_MS = 600
 
 export type RequestLimiter = {
   /**
@@ -63,6 +93,10 @@ export type RequestLimiter = {
 type LimiterOptions = {
   capacity: number
   windowMs: number
+  /** Requests admitted with no spacing before `minSpacingMs` applies. */
+  burst?: number
+  /** Minimum gap between admissions once the burst allowance is spent. */
+  minSpacingMs?: number
   /** Injected for tests: a virtual clock keeps them instant and deterministic. */
   now?: () => number
   delay?: (ms: number) => Promise<void>
@@ -82,11 +116,14 @@ const realDelay = (ms: number): Promise<void> =>
  */
 export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
   const { capacity, windowMs } = options
+  const burst = options.burst ?? capacity
+  const minSpacingMs = options.minSpacingMs ?? 0
   const now = options.now ?? (() => Date.now())
   const delay = options.delay ?? realDelay
 
   /** Issue times inside the current window, oldest first. */
   const issued: Array<number> = []
+  let lastIssued = 0
   let cooldownUntil = 0
   let waiting = 0
   let chain: Promise<void> = Promise.resolve()
@@ -101,8 +138,19 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
         await delay(coolOff)
         continue
       }
+      // Spacing applies only once the burst allowance inside this window is
+      // spent, so a cold board still paints as fast as the provider allows and
+      // only the tail of the same burst waits.
+      if (issued.length >= burst && minSpacingMs > 0) {
+        const gap = minSpacingMs - (t - lastIssued)
+        if (gap > 0) {
+          await delay(gap)
+          continue
+        }
+      }
       if (issued.length < capacity) {
         issued.push(t)
+        lastIssued = t
         return
       }
       // Wait exactly until the oldest request leaves the window. `+ 1` so the
@@ -132,6 +180,7 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
     waiting: () => waiting,
     reset() {
       issued.length = 0
+      lastIssued = 0
       cooldownUntil = 0
     },
   }
@@ -141,6 +190,8 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
 export const geckoLimiter = createRequestLimiter({
   capacity: RATE_LIMIT_CAPACITY,
   windowMs: RATE_LIMIT_WINDOW_MS,
+  burst: RATE_LIMIT_BURST,
+  minSpacingMs: RATE_LIMIT_SPACING_MS,
 })
 
 /**
@@ -158,7 +209,27 @@ export function createGeckoFetch(
 ): (url: string, init?: RequestInit) => Promise<Response> {
   return async (url, init) => {
     await limiter.acquire()
-    const res = await restFetch(url, init)
+    let res: Response
+    try {
+      res = await restFetch(url, init)
+    } catch (err) {
+      // The refusal we are not allowed to read.
+      //
+      // GeckoTerminal sends `Access-Control-Allow-Origin` on its 200s and NOT
+      // on its 429s, so from a page a rate limit is a blocked response and a
+      // bare `TypeError`, with no status to classify. Left alone it walked the
+      // plugin fallback chain and came back as "this chain has no pools" —
+      // a rate limit rendered as a fact about the chain. Treated as the
+      // transient refusal it is, it cools the queue off and retries instead.
+      const opaque = providerThrottleFromNetworkError(
+        err,
+        GECKOTERMINAL_PROVIDER,
+      )
+      if (!opaque) throw err
+      limiter.cooldown(opaque.retryAfterMs)
+      noteProviderThrottled(GECKOTERMINAL_PROVIDER, opaque.retryAfterMs)
+      throw opaque
+    }
     const throttled = providerThrottleFromResponse(res, GECKOTERMINAL_PROVIDER)
     if (throttled) {
       // Hold the queue back, and tell the terminal so it does not read the

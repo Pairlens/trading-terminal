@@ -19,10 +19,10 @@
  * A click selects (feeding the detail and flow panes beside it); a double click
  * opens the pair. Both pin the base token's ADDRESS, never its ticker.
  */
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ArrowLeft, ArrowUpRight, Droplets } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Droplets, RotateCw } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import type { PoolListingEntry } from '@pairlens/shared/instrument-types'
@@ -36,7 +36,7 @@ import {
 } from '@/components/panes/pane-primitives'
 import { TreemapGrid } from '@/components/panes/treemap-grid'
 import { DexPaneHeader, ShareBar } from '@/components/dex/dex-pane-primitives'
-import { usePoolListing } from '@/hooks/use-pool-stats'
+import { DISCOVERY_POOL_LISTING, usePoolListing } from '@/hooks/use-pool-stats'
 import { useDexChains } from '@/hooks/use-dex-chains'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
 import {
@@ -50,6 +50,7 @@ import {
   volumeToTvl,
 } from '@/lib/dex/pool-math'
 import { poolChartTarget } from '@/lib/dex/pool-link'
+import { track } from '@/lib/analytics-events'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 
 /** Rows drawn in the full listing. Deeper than the pane shows without a scroll. */
@@ -86,10 +87,8 @@ export function PoolMapPane() {
   // The volume ranking, three pages deep: on bot-heavy chains the provider's
   // trending page holds almost none of the real top pools, and the quality bar
   // needs a wide enough net to keep a full mosaic after it strips the fakes.
-  const { pools, isLoading, error } = usePoolListing(chain, true, {
-    sort: 'volume',
-    depth: 3,
-  })
+  const { pools, isLoading, error, throttled, retrying, retry } =
+    usePoolListing(chain, true, DISCOVERY_POOL_LISTING)
 
   // A listing with no trade counts anywhere is a provider that does not
   // publish them, and a mode that would draw an empty map is worse than a mode
@@ -220,9 +219,46 @@ export function PoolMapPane() {
   const empty = listView ? rows.length === 0 : tiles.length === 0
   /** The provider answered, and the map's floor is what emptied it. */
   const belowFloor = !listView && empty && pools.length > 0
+  /**
+   * The provider did not answer, and nothing arrived to draw.
+   *
+   * This is the state the board used to have no name for. A rate limit reached
+   * the pane as an empty listing, the map said "the data provider listed
+   * nothing for this chain", and the reader was told a fact about Arbitrum
+   * that was really a fact about our request budget. Three panes then sat idle
+   * behind it, because the map is what seeds the selection they read.
+   */
+  const refused = empty && pools.length === 0 && (error !== null || retrying)
+  /**
+   * What the reader is told about the refusal.
+   *
+   * A throttle writes its own sentence and it is a good one. Everything else
+   * arrives as plumbing — "All candidates for capability 'market-data:
+   * pool-stats' failed. Primary error: HTTP 404" — which is a fine thing to
+   * find in a console and not a thing to put in front of someone looking for
+   * a pool.
+   */
+  const refusalBody = retrying
+    ? t('poolMap.retryingBody')
+    : throttled && error
+      ? error
+      : t('poolMap.unavailableBody')
 
   return (
     <div className="flex h-full flex-col">
+      <EmptyMapReport
+        chain={chain}
+        outcome={
+          !empty || isLoading || retrying
+            ? null
+            : refused
+              ? 'provider_refused'
+              : belowFloor
+                ? 'below_quality_bar'
+                : 'no_pools_listed'
+        }
+      />
+
       <DexPaneHeader
         title={
           listView
@@ -264,25 +300,52 @@ export function PoolMapPane() {
         </div>
       </DexPaneHeader>
 
-      {error ? (
+      {/* A banner ABOVE data the reader can still use. With nothing to draw the
+          refusal is the whole state, and it says so in the middle of the pane
+          instead of as a strip over an empty box that contradicts it. */}
+      {error && !refused ? (
         <div className="px-3 pt-2">
           <PaneErrorBanner venue={chainName} message={error} />
         </div>
       ) : null}
 
-      {isLoading && pools.length === 0 ? (
+      {isLoading && !refused ? (
         <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1 p-1.5">
           {Array.from({ length: 24 }, (_, i) => (
             <div key={i} className="animate-pulse rounded-md bg-muted/60" />
           ))}
         </div>
       ) : empty ? (
-        // Two different nothings. The provider returning no pools for a chain
-        // is one state; a chain whose every pool sits under the map's own
-        // quality floor is another, and telling the reader "no pools returned"
-        // there would blame the provider for a filter we applied. The second
-        // one keeps its way through to the unfiltered listing.
-        belowFloor ? (
+        // Three different nothings. The provider REFUSING is one, and it is the
+        // only one that is about us rather than about the chain. The provider
+        // answering with no pools is the second. A chain whose every pool sits
+        // under the map's own quality floor is the third, and telling the
+        // reader "no pools returned" there would blame the provider for a
+        // filter we applied — that one keeps its way through to the unfiltered
+        // listing.
+        refused ? (
+          <PaneEmpty
+            icon={Droplets}
+            title={
+              retrying
+                ? t('poolMap.retryingTitle')
+                : t('poolMap.unavailableTitle')
+            }
+            body={refusalBody}
+            action={
+              retrying ? null : (
+                <button
+                  type="button"
+                  onClick={retry}
+                  className="mt-3 flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <RotateCw className="size-3" aria-hidden="true" />
+                  {t('poolMap.retry')}
+                </button>
+              )
+            }
+          />
+        ) : belowFloor ? (
           <PaneEmpty
             icon={Droplets}
             title={t('poolMap.belowFloorTitle')}
@@ -353,6 +416,38 @@ export function PoolMapPane() {
       )}
     </div>
   )
+}
+
+/**
+ * Reports an empty map once per chain and outcome, and renders nothing.
+ *
+ * A leaf component rather than an effect in the pane, for the reason the render
+ * profiler pins elsewhere in the terminal: the pane re-renders on every listing
+ * refresh and every mode toggle, and an effect there would have to re-run its
+ * dependency check each time. This subscribes to nothing.
+ */
+function EmptyMapReport({
+  chain,
+  outcome,
+}: {
+  chain: string
+  outcome: 'provider_refused' | 'below_quality_bar' | 'no_pools_listed' | null
+}) {
+  const reported = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (outcome === null) {
+      // A chain that recovered can report again if it empties later.
+      reported.current = null
+      return
+    }
+    const key = `${chain}:${outcome}`
+    if (reported.current === key) return
+    reported.current = key
+    track('dex_pool_map_empty', { chain, outcome })
+  }, [chain, outcome])
+
+  return null
 }
 
 const MODE_LABEL: Record<PoolTileMode, string> = {

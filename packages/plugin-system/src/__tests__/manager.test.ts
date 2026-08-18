@@ -311,6 +311,73 @@ describe('PluginManager', () => {
       ).rejects.toThrow('All candidates for capability')
     })
 
+    it('rethrows a provider throttle unwrapped, from any candidate', async () => {
+      // The failure a caller can act on. A rate limit means "ask again in a
+      // moment", and wrapping it in a plain Error erased the type, so every
+      // consumer that checks for a throttle before publishing a permanent
+      // verdict ("no pools on this chain") stopped seeing one — and rendered
+      // the throttle as a fact about the chain instead.
+      const throttled = new Error('GeckoTerminal is rate limiting requests.')
+      ;(
+        throttled as unknown as { __providerThrottled: boolean }
+      ).__providerThrottled = true
+
+      const mA = makeManifest('plugin-a', 'market-data:discovery', ['*'], 5)
+      const mB = makeManifest('plugin-b', 'market-data:discovery', ['*'], 20)
+
+      await manager.installPlugin(mA, (m) =>
+        makeInstance(m, {
+          execute: async () => {
+            throw throttled
+          },
+        }),
+      )
+      await manager.installPlugin(mB, (m) =>
+        makeInstance(m, {
+          execute: async () => {
+            throw new Error('does not publish this action')
+          },
+        }),
+      )
+      await manager.activatePlugin('plugin-a', {})
+      await manager.activatePlugin('plugin-b', {})
+
+      const err = await manager.execute('market-data:discovery', {}).then(
+        () => null,
+        (e: unknown) => e,
+      )
+      expect(err).toBe(throttled)
+    })
+
+    it('reports the PRIMARY failure, not the last fallback walked', async () => {
+      // The last candidate is the lowest-priority provider, which is the one
+      // most likely to have refused on a technicality while the real reason
+      // sits in the first error.
+      const mA = makeManifest('plugin-a', 'market-data:discovery', ['*'], 5)
+      const mB = makeManifest('plugin-b', 'market-data:discovery', ['*'], 20)
+
+      await manager.installPlugin(mA, (m) =>
+        makeInstance(m, {
+          execute: async () => {
+            throw new Error('the reason worth reading')
+          },
+        }),
+      )
+      await manager.installPlugin(mB, (m) =>
+        makeInstance(m, {
+          execute: async () => {
+            throw new Error('does not publish this action')
+          },
+        }),
+      )
+      await manager.activatePlugin('plugin-a', {})
+      await manager.activatePlugin('plugin-b', {})
+
+      await expect(
+        manager.execute('market-data:discovery', {}),
+      ).rejects.toThrow('the reason worth reading')
+    })
+
     it("does NOT fail over for 'trading:orders' and rethrows the original error", async () => {
       const fallbackExecute = mock(async () => ({ source: 'plugin-b' }))
       const mA = makeManifest('plugin-a', 'trading:orders', ['*'], 5)

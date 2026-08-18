@@ -22,7 +22,7 @@ import { Link2, Plus } from 'lucide-react'
 import { cn } from '@pairlens/ui/lib/utils'
 
 import type { DexChainRow } from '@/hooks/use-dex-chains'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { DexPaneHeader, ShareBar } from '@/components/dex/dex-pane-primitives'
 import { useChainGas, useDexChains } from '@/hooks/use-dex-chains'
 import { useChainStats } from '@/hooks/use-pool-stats'
@@ -45,7 +45,12 @@ export function ChainsPane() {
     [connected],
   )
 
-  const { byMarket, isLoading } = useChainStats(markets, displayNames)
+  const {
+    byMarket,
+    isLoading,
+    error: statsError,
+    throttled,
+  } = useChainStats(markets, displayNames)
   const { gweiByMarket } = useChainGas(rows)
 
   // The board opens on a chain rather than on nothing: the first connected
@@ -91,6 +96,20 @@ export function ChainsPane() {
             : t('dexChains.subtitleSampled')
         }
       />
+
+      {/* Only when the column is entirely blank. A rail that got five chains
+          out of six shows the five and dashes the sixth; a banner over that
+          would be louder than the gap it describes. */}
+      {statsError && byMarket.size === 0 ? (
+        <div className="px-3 pt-2">
+          <PaneErrorBanner
+            venue={t('dexChains.volumesLabel')}
+            // A throttle words itself; anything else is plumbing. Same rule,
+            // and the same sentence, as the three panes beside this rail.
+            message={throttled ? statsError : t('poolMap.unavailableBody')}
+          />
+        </div>
+      ) : null}
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {rows.map((row) => (

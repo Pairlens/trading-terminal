@@ -96,10 +96,24 @@ export function createDexpaprikaDataProviderPlugin(
         )
       }
 
-      // `pools` and `trades` are GeckoTerminal-only for now; answering null
-      // rather than throwing keeps the pane's "no data" honest instead of
-      // reporting a provider failure that did not happen.
-      if (String(p['action'] ?? 'stats') !== 'stats') return null
+      // `pools`, `new-pools` and `trades` are GeckoTerminal-only for now, and
+      // this provider REFUSES them rather than answering null.
+      //
+      // Null here is not "no data", it is an answer, and the plugin manager
+      // treats it as one: the fallback chain only walks on a throw, so a null
+      // returned by the priority-6 fallback becomes the result the primary
+      // failed to produce. That is what emptied the whole DEX Discovery board
+      // in a browser — GeckoTerminal's 429s arrive with no CORS header, so
+      // they surface as an opaque fetch rejection, the manager walked here,
+      // and the pane rendered "the data provider listed nothing for this
+      // chain" over a provider that was simply rate limiting. A throw keeps
+      // the primary's real error, which is the one worth showing.
+      const action = String(p['action'] ?? 'stats')
+      if (action !== 'stats') {
+        throw new Error(
+          `DexPaprika does not publish '${action}'. It serves pool state and chain totals.`,
+        )
+      }
 
       return fetchPoolStats(
         String(p['pair'] ?? context.pair),
