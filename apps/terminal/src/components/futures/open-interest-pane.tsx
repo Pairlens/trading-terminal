@@ -26,6 +26,11 @@ import {
   useFundingScanner,
   useOpenContract,
 } from './funding-scanner'
+import {
+  OpenInterestSkeleton,
+  SkeletonStatus,
+  useGhostBases,
+} from './funding-skeletons'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { formatCompactUsd } from '@/lib/format-price'
 import { openInterestValue } from '@/lib/futures/funding-math'
@@ -46,8 +51,10 @@ type OiRow = {
 
 export function OpenInterestPane() {
   const { t } = useTranslation()
-  const { venues, results, rows, isPending } = useFundingScanner()
+  const { venues, results, rows, topCoins, isPending, isSettling } =
+    useFundingScanner()
   const openContract = useOpenContract()
+  const ghostBases = useGhostBases(topCoins, ROW_LIMIT)
 
   const order = useMemo(
     () => answeringVenues(results).map((r) => r.market),
@@ -86,7 +93,10 @@ export function OpenInterestPane() {
     return map
   }, [targets])
 
-  const { data: oiResults } = useOpenInterest(venues, pairsByMarket)
+  const { data: oiResults, isPending: oiPending } = useOpenInterest(
+    venues,
+    pairsByMarket,
+  )
 
   const oiRows = useMemo((): Array<OiRow> => {
     const byPair = new Map<
@@ -139,10 +149,18 @@ export function OpenInterestPane() {
     (r) => !r.supported && (pairsByMarket[r.market]?.length ?? 0) > 0,
   )
 
-  if (oiRows.length === 0 && unsupported.length === 0) {
+  // Two fetches deep: the funding sweep names the contracts, then open
+  // interest is asked about them one venue at a time. The pane is loading
+  // until BOTH are in, which is why a bare `isPending` used to flash the
+  // empty state in the gap between them.
+  const loading =
+    oiRows.length === 0 &&
+    (isPending || isSettling || (targets.length > 0 && oiPending))
+
+  if (oiRows.length === 0 && unsupported.length === 0 && !loading) {
     return (
       <PaneEmpty
-        body={isPending ? t('funding.loading') : t('openInterest.emptyBody')}
+        body={t('openInterest.emptyBody')}
         icon={BarChart3}
         title={t('openInterest.emptyTitle')}
       />
@@ -163,7 +181,17 @@ export function OpenInterestPane() {
         </span>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div
+        aria-busy={loading || undefined}
+        className="min-h-0 flex-1 overflow-y-auto"
+      >
+        {loading && (
+          <>
+            <SkeletonStatus label={t('funding.loading')} />
+            <OpenInterestSkeleton bases={ghostBases} rows={ROW_LIMIT} />
+          </>
+        )}
+
         {unsupported.map((result) => (
           <div className="px-3.5 pt-2" key={`unsupported:${result.market}`}>
             <PaneErrorBanner
