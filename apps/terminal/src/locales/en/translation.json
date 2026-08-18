@@ -514,6 +514,11 @@
           "title": "Plugins",
           "description": "Which plugins you have enabled, their settings and your provider pins. Settings include any API key you typed into a plugin's own settings, such as an AI provider key. Exchange API keys and wallet secrets are never included, they stay in your keychain. Provider pins are only kept in your account, so with this off they last until you quit the app."
         },
+        "assistant": {
+          "title": "Assistant conversations",
+          "description": "Your chat threads with the assistant, and everything in them.",
+          "caveat": "Off by default. While this is off, conversations are kept on this device and nothing is uploaded."
+        },
         "trades": {
           "title": "Trade journal",
           "description": "Trades you or the assistant log to the journal."
@@ -1337,7 +1342,13 @@
       "today": "Today",
       "yesterday": "Yesterday",
       "previous7Days": "Previous 7 days",
-      "older": "Older"
+      "older": "Older",
+      "synced": "Synced to your account",
+      "syncTitle": "Sync conversations?",
+      "syncDescription": "Keep them on this device, or carry them to your other devices through your account.",
+      "syncEnable": "Turn on sync",
+      "syncDecline": "Not now",
+      "syncChangeLater": "Change this any time in Settings, under Cloud Sync."
     }
   },
   "copilot": {

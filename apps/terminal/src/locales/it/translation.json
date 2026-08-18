@@ -1513,6 +1513,11 @@
           "title": "Plugin",
           "description": "Quali plugin hai attivato, le loro impostazioni e i provider che hai fissato. Le impostazioni includono qualsiasi chiave API inserita nelle impostazioni di un plugin, per esempio quella di un provider di IA. Le chiavi API degli exchange e i segreti dei wallet non sono mai inclusi: restano nel tuo portachiavi. I provider fissati sono conservati solo nel tuo account, quindi con questa opzione disattivata durano fino alla chiusura dell'app."
         },
+        "assistant": {
+          "title": "Conversazioni dell’assistente",
+          "description": "I tuoi thread di chat con l’assistente e tutto quello che contengono.",
+          "caveat": "Disattivato di default. Finché lo è, le conversazioni restano su questo dispositivo e non viene caricato nulla."
+        },
         "trades": {
           "title": "Diario delle operazioni",
           "description": "Le operazioni che tu o l'assistente registrate nel diario."
@@ -2389,7 +2394,13 @@
       "today": "Oggi",
       "yesterday": "Ieri",
       "previous7Days": "Ultimi 7 giorni",
-      "older": "Meno recenti"
+      "older": "Meno recenti",
+      "synced": "Sincronizzate con il tuo account",
+      "syncTitle": "Sincronizzare le conversazioni?",
+      "syncDescription": "Tienile su questo dispositivo, oppure portale sugli altri tramite il tuo account.",
+      "syncEnable": "Sincronizza",
+      "syncDecline": "Non ora",
+      "syncChangeLater": "Modificabile quando vuoi in Impostazioni, sezione Sincronizzazione cloud."
     }
   },
   "copilot": {

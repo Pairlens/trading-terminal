@@ -1513,6 +1513,11 @@
           "title": "Eklentiler",
           "description": "Hangi eklentileri açtığın, ayarları ve sabitlediğin sağlayıcılar. Ayarlara, bir eklentinin kendi ayarlarına girdiğin API anahtarları da dahildir; örneğin bir yapay zekâ sağlayıcısının anahtarı. Borsa API anahtarları ve cüzdan sırları buna asla dahil değildir, anahtar zincirinde kalır. Sabitlenen sağlayıcılar yalnızca hesabında tutulur; bu kapalıyken uygulamayı kapatana kadar geçerli olurlar."
         },
+        "assistant": {
+          "title": "Asistan sohbetleri",
+          "description": "Asistanla sohbet başlıklarınız ve içindeki her şey.",
+          "caveat": "Varsayılan olarak kapalı. Kapalıyken sohbetler bu cihazda kalır ve hiçbir şey yüklenmez."
+        },
         "trades": {
           "title": "İşlem günlüğü",
           "description": "Senin ya da asistanın günlüğe kaydettiği işlemler."
@@ -2389,7 +2394,13 @@
       "today": "Bugün",
       "yesterday": "Dün",
       "previous7Days": "Son 7 gün",
-      "older": "Daha eski"
+      "older": "Daha eski",
+      "synced": "Hesabınızla eşitlendi",
+      "syncTitle": "Sohbetler eşitlensin mi?",
+      "syncDescription": "Bu cihazda tutun ya da hesabınız üzerinden diğer cihazlarınıza taşıyın.",
+      "syncEnable": "Eşitlemeyi aç",
+      "syncDecline": "Şimdi değil",
+      "syncChangeLater": "Ayarlar içindeki Bulut Eşitleme bölümünden istediğiniz zaman değiştirin."
     }
   },
   "copilot": {

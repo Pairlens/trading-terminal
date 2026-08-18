@@ -11,6 +11,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import {
+  ASSISTANT_CONVERSATIONS_KEY,
   SYNC_DOMAINS,
   SYNC_DOMAIN_IDS,
   TIER1_KEYS,
@@ -18,6 +19,7 @@ import {
   isBlocked,
   isSyncDomainId,
   isTier1,
+  syncDomainDefault,
 } from '../sync-domains'
 
 describe('domainForSyncKey', () => {
@@ -150,6 +152,36 @@ describe('SYNC_DOMAINS catalog', () => {
     expect(SYNC_DOMAINS.filter((d) => d.cloudOnly).map((d) => d.id)).toEqual([
       'trades',
     ])
+  })
+
+  test('assistant is the one domain that is off until asked', () => {
+    const optIn = SYNC_DOMAINS.filter((d) => d.defaultEnabled === false).map(
+      (d) => d.id,
+    )
+    expect(optIn).toEqual(['assistant'])
+    expect(syncDomainDefault('assistant')).toBe(false)
+    // Everything that predates the flag keeps syncing without being asked.
+    for (const id of SYNC_DOMAIN_IDS) {
+      if (id === 'assistant') continue
+      expect(syncDomainDefault(id)).toBe(true)
+    }
+  })
+
+  test('an opt-in domain still has to explain itself when off', () => {
+    // The caveat is the only thing that says "off by default" in Settings;
+    // without it the row looks like every other one the user switched off.
+    const assistant = SYNC_DOMAINS.find((d) => d.id === 'assistant')
+    expect(assistant?.caveatKey).toBe(
+      'settings.cloudSync.domains.assistant.caveat',
+    )
+  })
+
+  test('the assistant collection key routes to its own domain', () => {
+    expect(domainForSyncKey(ASSISTANT_CONVERSATIONS_KEY)).toBe('assistant')
+    // Per-thread keys deliberately route nowhere: they ride inside the one
+    // bulk payload, and routing them would mean a PUT per thread.
+    expect(domainForSyncKey('assistant.thread.c-1')).toBe(null)
+    expect(isTier1(ASSISTANT_CONVERSATIONS_KEY)).toBe(false)
   })
 
   test('isSyncDomainId rejects anything not in the catalog', () => {

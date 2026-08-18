@@ -1513,6 +1513,11 @@
           "title": "插件",
           "description": "你启用了哪些插件、它们的设置以及你固定的服务商。设置也包括你在插件自己的设置里填过的 API 密钥，比如 AI 服务商的密钥。交易所 API 密钥和钱包密钥永远不包含在内，它们留在你的钥匙串里。固定的服务商只保存在账号里，关掉后它们只在应用退出前有效。"
         },
+        "assistant": {
+          "title": "助手对话",
+          "description": "你与助手的对话线程，以及其中的一切。",
+          "caveat": "默认关闭。关闭期间，对话保存在这台设备上，不会上传任何内容。"
+        },
         "trades": {
           "title": "交易日志",
           "description": "你或助手记入日志的交易。"
@@ -2389,7 +2394,13 @@
       "today": "今天",
       "yesterday": "昨天",
       "previous7Days": "过去 7 天",
-      "older": "更早"
+      "older": "更早",
+      "synced": "已同步到你的账户",
+      "syncTitle": "要同步对话吗？",
+      "syncDescription": "可以只留在这台设备上，也可以通过账户带到你的其他设备。",
+      "syncEnable": "开启同步",
+      "syncDecline": "暂不",
+      "syncChangeLater": "随时可在设置的云同步中更改。"
     }
   },
   "copilot": {

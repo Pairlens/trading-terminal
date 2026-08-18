@@ -1513,6 +1513,11 @@
           "title": "外掛",
           "description": "你啟用了哪些外掛、它們的設定以及你釘選的服務商。設定也包括你在外掛自己的設定裡填過的 API 金鑰，例如 AI 服務商的金鑰。交易所 API 金鑰與錢包密鑰永遠不包含在內，它們留在你的鑰匙圈裡。釘選的服務商只儲存在帳號裡，關掉後它們只在應用程式結束前有效。"
         },
+        "assistant": {
+          "title": "助手對話",
+          "description": "你與助手的對話串，以及其中的一切。",
+          "caveat": "預設關閉。關閉期間，對話保存在這台裝置上，不會上傳任何內容。"
+        },
         "trades": {
           "title": "交易日誌",
           "description": "你或助理記入日誌的交易。"
@@ -2389,7 +2394,13 @@
       "today": "今天",
       "yesterday": "昨天",
       "previous7Days": "過去 7 天",
-      "older": "更早"
+      "older": "更早",
+      "synced": "已同步到你的帳戶",
+      "syncTitle": "要同步對話嗎？",
+      "syncDescription": "可以只留在這台裝置上，也可以透過帳戶帶到你的其他裝置。",
+      "syncEnable": "開啟同步",
+      "syncDecline": "暫不",
+      "syncChangeLater": "隨時可在設定的雲端同步中更改。"
     }
   },
   "copilot": {

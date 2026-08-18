@@ -1513,6 +1513,11 @@
           "title": "Plugin",
           "description": "Plugin mana yang kamu aktifkan, pengaturannya, dan penyedia yang kamu sematkan. Pengaturan termasuk kunci API apa pun yang kamu isikan di setelan sebuah plugin, misalnya kunci penyedia AI. Kunci API bursa dan rahasia dompet tidak pernah ikut, semuanya tetap di keychain-mu. Penyedia yang disematkan hanya disimpan di akunmu, jadi saat ini dimatikan mereka bertahan sampai aplikasi ditutup."
         },
+        "assistant": {
+          "title": "Percakapan asisten",
+          "description": "Utas obrolan Anda dengan asisten, beserta seluruh isinya.",
+          "caveat": "Mati secara bawaan. Selama mati, percakapan tersimpan di perangkat ini dan tidak ada yang diunggah."
+        },
         "trades": {
           "title": "Jurnal transaksi",
           "description": "Transaksi yang kamu atau asisten catat ke jurnal."
@@ -2389,7 +2394,13 @@
       "today": "Hari ini",
       "yesterday": "Kemarin",
       "previous7Days": "7 hari terakhir",
-      "older": "Lebih lama"
+      "older": "Lebih lama",
+      "synced": "Tersinkron ke akun Anda",
+      "syncTitle": "Sinkronkan percakapan?",
+      "syncDescription": "Simpan di perangkat ini, atau bawa ke perangkat lain lewat akun Anda.",
+      "syncEnable": "Sinkronkan",
+      "syncDecline": "Nanti saja",
+      "syncChangeLater": "Bisa diubah kapan saja di Pengaturan, bagian Sinkronisasi Cloud."
     }
   },
   "copilot": {

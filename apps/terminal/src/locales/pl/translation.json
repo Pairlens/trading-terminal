@@ -1577,6 +1577,11 @@
           "title": "Wtyczki",
           "description": "Które wtyczki masz włączone, ich ustawienia i przypięci dostawcy. Ustawienia obejmują też każdy klucz API wpisany w ustawieniach wtyczki, na przykład dostawcy AI. Klucze API giełd i sekrety portfeli nigdy się tu nie znajdą: zostają w Twoim pęku kluczy. Przypięci dostawcy są zapisywani tylko na koncie, więc przy wyłączonej opcji przetrwają do zamknięcia aplikacji."
         },
+        "assistant": {
+          "title": "Rozmowy z asystentem",
+          "description": "Twoje wątki rozmów z asystentem i wszystko, co w nich jest.",
+          "caveat": "Domyślnie wyłączone. Dopóki jest wyłączone, rozmowy zostają na tym urządzeniu i nic nie jest wysyłane."
+        },
         "trades": {
           "title": "Dziennik transakcji",
           "description": "Transakcje, które Ty lub asystent zapisujecie w dzienniku."
@@ -2463,7 +2468,13 @@
       "today": "Dzisiaj",
       "yesterday": "Wczoraj",
       "previous7Days": "Ostatnie 7 dni",
-      "older": "Starsze"
+      "older": "Starsze",
+      "synced": "Zsynchronizowane z kontem",
+      "syncTitle": "Synchronizować rozmowy?",
+      "syncDescription": "Zostaw je na tym urządzeniu albo zabierz na pozostałe przez swoje konto.",
+      "syncEnable": "Synchronizuj",
+      "syncDecline": "Nie teraz",
+      "syncChangeLater": "Możesz to zmienić w Ustawieniach, w sekcji Synchronizacja w chmurze."
     }
   },
   "copilot": {

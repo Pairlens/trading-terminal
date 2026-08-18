@@ -202,6 +202,15 @@ export interface AnalyticsEvents {
     count: number
     surface: 'dock' | 'mobile'
   }
+  /** The answer to the rail's one-time cloud-sync question.
+   *
+   * The only thing worth measuring about an opt-in: what share of people
+   * who are asked say yes. If it is very high the default is wrong and
+   * conversations should sync out of the box; if it is very low the banner
+   * is costing rail space for nothing. `surface` separates the desktop rail
+   * from the phone's, which ask in different amounts of room. No thread
+   * content, ids or counts ride along. */
+  assistant_sync_choice: { enabled: boolean; surface: 'dock' | 'mobile' }
   /** User pinned a provider plugin for a capability ('auto' = unpinned). */
   ai_provider_selected: { capability: string; plugin_id: string }
   /** A bring-your-own-key AI provider (model or web search) was activated

@@ -13,7 +13,7 @@
 
 import { useLayoutEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MessagesSquare, Plus, Trash2 } from 'lucide-react'
+import { Cloud, MessagesSquare, Plus, Trash2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -27,9 +27,12 @@ import {
 } from '@pairlens/ui/components/ui/alert-dialog'
 import { Button } from '@pairlens/ui/components/ui/button'
 
+import { AssistantSyncBanner } from './assistant-sync-banner'
 import type { AssistantConversationMeta } from '@/stores/assistant-conversations-store'
 import { useAssistantConversationsStore } from '@/stores/assistant-conversations-store'
 import { track } from '@/lib/analytics-events'
+import { useCloudSyncPreferences } from '@/hooks/use-cloud-sync'
+import { syncDomainDefault } from '@/lib/sync/sync-domains'
 
 /** Which mount the rail is rendered from. Reported with every action. */
 export type AssistantRailSurface = 'dock' | 'mobile'
@@ -114,6 +117,10 @@ export function AssistantConversationList({
   const create = useAssistantConversationsStore((state) => state.create)
   const select = useAssistantConversationsStore((state) => state.select)
   const load = useAssistantConversationsStore((state) => state.load)
+  const preferences = useCloudSyncPreferences()
+  const syncing =
+    preferences.enabled &&
+    (preferences.domains.assistant ?? syncDomainDefault('assistant'))
 
   // The rail is mounted by the dock, which sits ABOVE the capability gates:
   // it is on screen for a signed-out user whose threads are all still on
@@ -213,12 +220,22 @@ export function AssistantConversationList({
         </div>
       )}
 
-      {/* The privacy line is the point of the feature, so it says it out
-          loud rather than hiding in a docs page. */}
+      <AssistantSyncBanner surface={surface} />
+
+      {/* Where these threads actually are, said out loud rather than left
+          to a docs page. It tracks the switch, because a line claiming
+          device-only while the account is holding a copy would be the one
+          piece of copy in the app it is worst to get wrong. */}
       <p className="text-muted-foreground/70 flex shrink-0 items-center gap-1.5 px-3 py-2 text-[10px] leading-tight">
-        <MessagesSquare className="size-3 shrink-0" />
+        {syncing ? (
+          <Cloud className="size-3 shrink-0" />
+        ) : (
+          <MessagesSquare className="size-3 shrink-0" />
+        )}
         <span className="min-w-0">
-          {t('assistantDock.conversations.localOnly')}
+          {syncing
+            ? t('assistantDock.conversations.synced')
+            : t('assistantDock.conversations.localOnly')}
         </span>
       </p>
     </div>

@@ -23,9 +23,9 @@ sees exchange credentials and is never in the order path.
 
 **Assistant.** The one AI chat in the terminal, docked at the bottom right or in
 the left nav rail, your choice, and mounted above every page. Its loop runs
-client-side over 105 tools, and its conversations are kept on your device only.
-It can propose trades. It cannot execute them unattended. See
-[the AI assistant](/docs/ai-copilot).
+client-side over 105 tools, and its conversations are kept on your device unless
+you turn their sync on. It can propose trades. It cannot execute them unattended.
+See [the AI assistant](/docs/ai-copilot).
 
 **Bot.** A Python strategy deployed to a market, evaluating on closed candles
 and acting on its own. Not an LLM. See [bots](/docs/bots).

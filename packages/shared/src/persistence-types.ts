@@ -1,8 +1,36 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-// Assistant chat history is deliberately absent. Threads are stored on the
-// user's own device (apps/terminal/src/stores/assistant-conversations-store.ts)
-// and there is no server-side shape for them on purpose.
+// ── Assistant conversations ────────────────────────────────────────────
+//
+// Chat threads live on the user's device by default. This is the shape they
+// take ONLY once someone turns the `assistant` cloud-sync domain on, which
+// is off until they say otherwise; nothing here is written for a user who
+// never opts in.
+//
+// Full fidelity on purpose. The old server rows kept `role` plus a flattened
+// string, so a synced thread came back stripped of its tool calls, research
+// cards and order proposals. `messages` carries whole AI SDK UIMessages,
+// typed here as unknown because @pairlens/shared must not depend on `ai`.
+
+/** One thread, as it crosses the wire. `id`/`updatedAt` drive the merge. */
+export type SyncedConversation = {
+  id: string
+  /** Null while the thread has not been named yet. */
+  title: string | null
+  createdAt: number
+  /**
+   * Last activity. The sync merge is per-conversation last-write-wins on
+   * this field, so it must only move when the thread actually changes.
+   */
+  updatedAt: number
+  /** Whole `UIMessage`s, in order. Opaque to the server. */
+  messages: Array<unknown>
+}
+
+/** GET and PUT /api/assistant/conversations share this body. */
+export type AssistantConversationsPayload = {
+  conversations: Array<SyncedConversation>
+}
 
 // User config
 export type UserConfig = {

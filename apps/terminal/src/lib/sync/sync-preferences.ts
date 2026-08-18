@@ -4,17 +4,23 @@
  * Cloud-sync preferences — the per-device answer to "what may leave this
  * machine?".
  *
- * One master pause plus a switch per {@link SyncDomainId}. Defaults are all-on,
- * which is what every existing install already does, and a corrupt record fails
- * open for the same reason: sync-on is the documented behaviour, so a bad
- * payload must not silently stop backing someone's work up.
+ * One master pause plus a switch per {@link SyncDomainId}. A missing entry
+ * means the domain's own default (see `defaultEnabled` in ./sync-domains):
+ * on for everything that predates opt-in domains, off for `assistant`. A
+ * corrupt record falls back to those same defaults rather than to all-on,
+ * so a bad payload can neither stop backing someone's work up nor start
+ * uploading the one thing they never agreed to upload.
  *
  * The record itself is device-local — it rides the cross-window bus (so every
  * window of the same install agrees) but is blocklisted in the coordinator, so
  * one machine's decision never governs another.
  */
 
-import { SYNC_DOMAIN_IDS, isSyncDomainId } from './sync-domains'
+import {
+  SYNC_DOMAIN_IDS,
+  isSyncDomainId,
+  syncDomainDefault,
+} from './sync-domains'
 import { onHydrate, onWrite } from './sync-channel'
 import type { SyncDomainId } from './sync-domains'
 import { createSyncedSetting } from '@/lib/settings/synced-setting'
@@ -22,7 +28,11 @@ import { createSyncedSetting } from '@/lib/settings/synced-setting'
 export type CloudSyncPreferences = {
   /** Master pause. Off = nothing syncs, whatever the per-domain flags say. */
   enabled: boolean
-  /** Per-domain opt-outs. A missing entry means on. */
+  /**
+   * Per-domain answers. A missing entry means the domain's own default,
+   * so absent is genuinely "not decided" for an opt-in domain and the UI
+   * can tell that apart from a deliberate no.
+   */
   domains: Partial<Record<SyncDomainId, boolean>>
 }
 
@@ -102,7 +112,16 @@ export function isCloudSyncEnabled(): boolean {
 
 export function isDomainSyncEnabled(id: SyncDomainId): boolean {
   const prefs = read()
-  return prefs.enabled && prefs.domains[id] !== false
+  return prefs.enabled && (prefs.domains[id] ?? syncDomainDefault(id))
+}
+
+/**
+ * True while the user has not answered for this domain. Only meaningful
+ * for an opt-in one, and it is what the assistant rail's banner watches:
+ * it asks once, and either answer retires it.
+ */
+export function isDomainSyncUndecided(id: SyncDomainId): boolean {
+  return read().domains[id] === undefined
 }
 
 /** The domains currently allowed to sync — the set the coordinator diffs. */
@@ -111,7 +130,7 @@ export function enabledSyncDomains(): Set<SyncDomainId> {
   const out = new Set<SyncDomainId>()
   if (!prefs.enabled) return out
   for (const id of SYNC_DOMAIN_IDS) {
-    if (prefs.domains[id] !== false) out.add(id)
+    if (prefs.domains[id] ?? syncDomainDefault(id)) out.add(id)
   }
   return out
 }
