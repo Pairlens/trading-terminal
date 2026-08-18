@@ -28,6 +28,7 @@ import {
   fetchNewsPage,
   flattenNewsPages,
   nextNewsPageParam,
+  useNewsFeedResume,
 } from '@/components/news/news-shared'
 import { appServerUrl, authFetch } from '@/lib/api'
 
@@ -40,7 +41,13 @@ export const MOBILE_NEWS_QUERY_KEY = ['news-feed', 'mobile'] as const
 export type MobileNewsFeed = {
   articles: Array<NewsArticle>
   error: unknown
-  isLoading: boolean
+  /**
+   * The feed has never answered — no pages and no error. This is the loading
+   * gate, deliberately NOT TanStack's `isLoading`: a pending query can have
+   * nothing in flight (retry paused in a hidden tab, or a cancelled fetch),
+   * and rendering that as an empty feed was the bug. Pending means loading.
+   */
+  isPending: boolean
   hasMore: boolean
   isLoadingMore: boolean
   loadMore: () => void
@@ -50,7 +57,9 @@ export function useMobileNewsFeed(): MobileNewsFeed {
   const {
     data,
     error,
-    isLoading,
+    isPending,
+    fetchStatus,
+    refetch,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -80,6 +89,11 @@ export function useMobileNewsFeed(): MobileNewsFeed {
     retry: 1,
   })
 
+  // A cancelled fetch reverts to pending+idle with nothing scheduled; kick it
+  // so a pending feed always resolves into an answer. Both consumers share
+  // one query entry, so the duplicate kicks dedupe inside TanStack Query.
+  useNewsFeedResume({ isPending, fetchStatus, refetch })
+
   const pages = data?.pages
   const articles = useMemo(() => flattenNewsPages(pages ?? []), [pages])
 
@@ -87,7 +101,7 @@ export function useMobileNewsFeed(): MobileNewsFeed {
     () => ({
       articles,
       error,
-      isLoading,
+      isPending,
       hasMore: hasNextPage,
       isLoadingMore: isFetchingNextPage,
       loadMore: () => void fetchNextPage(),
@@ -95,7 +109,7 @@ export function useMobileNewsFeed(): MobileNewsFeed {
     [
       articles,
       error,
-      isLoading,
+      isPending,
       hasNextPage,
       isFetchingNextPage,
       fetchNextPage,

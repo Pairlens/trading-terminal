@@ -49,9 +49,11 @@ import {
   formatRelativeTime,
   isCryptoNewsTicker,
   isEquityNewsTicker,
+  newsFeedView,
   newsRowTag,
   newsTickerBase,
   nextNewsPageParam,
+  useNewsFeedResume,
 } from '@/components/news/news-shared'
 import { useDiscoverySection } from '@/lib/discovery-section-context'
 import { useBulkTickerQuotes } from '@/hooks/use-bulk-ticker-quotes'
@@ -248,7 +250,8 @@ function NewsFeed({
 
   const {
     data,
-    isLoading,
+    isPending,
+    fetchStatus,
     isFetching,
     error,
     refetch,
@@ -280,6 +283,10 @@ function NewsFeed({
     retry: 1,
   })
 
+  // A cancelled fetch reverts to pending+idle with nothing scheduled; kick it
+  // so the loading skeletons below always resolve into an answer.
+  useNewsFeedResume({ isPending, fetchStatus, refetch })
+
   const pages = data?.pages
   const feed = useMemo(() => flattenNewsPages(pages ?? []), [pages])
   const articles = useMemo(
@@ -294,6 +301,7 @@ function NewsFeed({
     [feed, scopeTo],
   )
   const fetchedAt = pages?.[0]?.fetchedAt ?? null
+  const view = newsFeedView({ isPending, error, articleCount: articles.length })
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
@@ -344,13 +352,15 @@ function NewsFeed({
         ))}
       </div>
 
-      {isLoading ? (
+      {view === 'loading' ? (
+        // Covers every pending shape, not just an active fetch: a retry that
+        // paused while the tab was hidden is still loading, not an empty feed.
         <div className="min-h-0 flex-1 overflow-hidden">
           {Array.from({ length: 6 }, (_, i) => (
             <ArticleRowSkeleton key={i} />
           ))}
         </div>
-      ) : error || articles.length === 0 ? (
+      ) : view !== 'articles' ? (
         // Three different "nothing here", and they are not the same problem:
         // the scope has nothing to ask for, the scope filtered the wire down
         // to nothing, or the wire itself is quiet.

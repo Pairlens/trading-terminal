@@ -85,7 +85,7 @@ export default memo(function NewsReaderSheet({
   onClose,
 }: NewsReaderSheetProps) {
   const { t } = useTranslation()
-  const { articles, hasMore, isLoading, isLoadingMore, loadMore } =
+  const { articles, hasMore, isPending, isLoadingMore, loadMore } =
     useMobileNewsFeed()
 
   const feedRef = useRef<HTMLDivElement>(null)
@@ -283,7 +283,7 @@ export default memo(function NewsReaderSheet({
             onAction={closeSearch}
             title={t('news.reader.noMatches')}
           />
-        ) : visible.length === 0 && isLoading ? (
+        ) : visible.length === 0 && isPending ? (
           <StatusSlide
             icon={
               <Loader2 className="size-6 animate-spin text-muted-foreground" />
