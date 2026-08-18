@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 7 min read
 ---
 
@@ -75,6 +75,13 @@ Above the grid sits the active pair: its price, 24-hour change, and the venue
 it is streaming from. Click the symbol to switch markets. A connection dot
 shows stream health, and turns to **Reconnecting** if a socket goes quiet, for
 instance after your laptop wakes from sleep.
+
+The venue button beside it lists only the venues that can serve what you are
+looking at: spot exchanges under a spot pair, perpetual venues under a perp,
+your broker under a stock. Tokens and event contracts carry their venue inside
+their own identity, so there the button is a label rather than a menu. A
+Polymarket outcome does not exist on Kalshi, and the same address on another
+chain is a different asset, so there is nothing to switch to.
 
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.

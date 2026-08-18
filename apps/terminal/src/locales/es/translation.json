@@ -4297,6 +4297,7 @@
     },
     "recentlyViewed": "Vistos recientemente",
     "noMarketsFound": "No se encontraron mercados",
+    "venueBound": "Este mercado solo existe en {{venue}}.",
     "modeLive": "EN VIVO",
     "modePaper": "PAPEL"
   },

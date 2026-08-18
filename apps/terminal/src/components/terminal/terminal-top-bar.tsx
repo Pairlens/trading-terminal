@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { Separator } from '@pairlens/ui/components/ui/separator'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
@@ -22,7 +23,7 @@ import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 type TerminalTopBarProps = {
   marketOptions: Array<MarketOption>
   pairKey: string
-  assetClass?: string
+  assetClass?: InstrumentClass
   isWatched: boolean
   onStarClick: () => void
   market: string
@@ -87,10 +88,13 @@ export function TerminalTopBar({
 
       <Separator orientation="vertical" className="mx-1 self-stretch" />
 
-      {/* Market + Wallet — grouped as a trading context pair */}
+      {/* Market + Wallet — grouped as a trading context pair. The picker is
+          scoped to what is being charted: a venue that cannot serve this
+          class is not a choice, it is a dark terminal one click away. */}
       <MarketPicker
         market={market}
         marketOptions={marketOptions}
+        assetClass={assetClass}
         onMarketChange={onMarketChange}
         onMarketHover={onMarketHover}
         aria-label={t('terminal.market')}

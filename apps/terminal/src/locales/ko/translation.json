@@ -4297,6 +4297,7 @@
     },
     "recentlyViewed": "최근 본 종목",
     "noMarketsFound": "마켓을 찾을 수 없습니다",
+    "venueBound": "이 마켓은 {{venue}}에만 있습니다.",
     "modeLive": "실거래",
     "modePaper": "모의"
   },

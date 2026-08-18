@@ -4297,6 +4297,7 @@
     },
     "recentlyViewed": "Xem gần đây",
     "noMarketsFound": "Không tìm thấy thị trường",
+    "venueBound": "Thị trường này chỉ tồn tại trên {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },

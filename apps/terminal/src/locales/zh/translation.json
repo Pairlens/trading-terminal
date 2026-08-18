@@ -4297,6 +4297,7 @@
     },
     "recentlyViewed": "最近查看",
     "noMarketsFound": "未找到市场",
+    "venueBound": "该市场仅存在于 {{venue}}。",
     "modeLive": "实盘",
     "modePaper": "模拟"
   },

@@ -25,6 +25,7 @@
 import {
   isVenueBoundClass,
   marketServesClass,
+  normalizeInstrumentClass,
 } from '@pairlens/shared/market-ref'
 import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
 
@@ -84,6 +85,65 @@ function candidatesFor(
   return markets.filter(
     (m) => !m.desktopOnly && marketServesClass(m.assetClasses, cls),
   )
+}
+
+/**
+ * The venues a picker may OFFER while an instrument of `cls` is on screen.
+ *
+ * Unlike `candidatesFor` this keeps the ones this build cannot reach: the
+ * pickers show them with a "Desktop" mark on purpose, because hiding a third
+ * of the connector list makes the product look smaller than it is. What it
+ * does drop is the other asset classes, which are not a lesser choice but a
+ * dead one — the pair id means nothing to them, and picking one took the
+ * whole surface dark.
+ *
+ * A venue-bound class comes back as the current venue alone. Kalshi and
+ * Polymarket are both prediction venues and neither can answer for the
+ * other's contract, so "same class" is not a tight enough rule there: the
+ * instrument names its venue, and there is nothing to switch to.
+ *
+ * `current` is kept whatever it declares, so the list always contains the row
+ * the checkmark is on.
+ */
+export function venuesForClass(
+  cls: InstrumentRef['cls'],
+  current: string,
+  markets: ReadonlyArray<MarketOption>,
+): Array<MarketOption> {
+  if (isVenueBoundClass(cls)) {
+    return markets.filter((m) => m.value === current)
+  }
+  return markets.filter(
+    (m) => m.value === current || marketServesClass(m.assetClasses, cls),
+  )
+}
+
+/** The class a connected venue serves, or undefined if it names none we know. */
+export function venueClassOf(
+  option: MarketOption | undefined,
+): InstrumentRef['cls'] | undefined {
+  return normalizeInstrumentClass(option?.assetClasses[0])
+}
+
+/**
+ * The venues an empty state may offer INSTEAD of the current one.
+ *
+ * Every "no data here, try one of these" affordance in the terminal was
+ * offering the whole connector list, so a stock with no print suggested
+ * Binance and a Kalshi contract behind the browser wall suggested OKX. Both
+ * land on the same dark screen the user was trying to leave, one click later.
+ *
+ * Empty for a venue-bound class, and that is the honest answer rather than a
+ * missing feature: a Polymarket outcome id means nothing to Kalshi, and a
+ * pool address on another chain is another asset entirely.
+ */
+export function alternativeVenuesFor(
+  current: MarketOption | undefined,
+  markets: ReadonlyArray<MarketOption>,
+): Array<MarketOption> {
+  const cls = venueClassOf(current)
+  if (!cls || isVenueBoundClass(cls)) return []
+  return candidatesFor(cls, markets).filter((m) => m.value !== current?.value)
 }
 
 /**
