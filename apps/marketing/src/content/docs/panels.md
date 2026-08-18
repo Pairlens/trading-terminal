@@ -197,6 +197,14 @@ still there when you want the wire now, and a reader you have open holds its
 place: stories that arrive while you are reading join the list behind it
 instead of shuffling the article under you.
 
+The list fills itself. The wire answers fifty stories at a time, but every
+scope past All is filtered on your side, so a watchlist scope can keep four of
+those fifty. When that leaves the column short, the panel asks the wire for
+another page on its own, up to the same three-page depth the poll can refresh
+in one round. Scroll to the end and it keeps going, and a "Load older news"
+button sits under the last row for the cases where a narrow scope leaves
+nothing to scroll.
+
 If a refresh fails, the headlines stay and a warning marker appears next to the
 timestamp. The full "News unavailable" screen is reserved for a feed with
 nothing to show at all.

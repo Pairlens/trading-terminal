@@ -24,6 +24,7 @@ import {
   ArticleCardSkeleton,
   NEWS_PAGE_TIME_FROM,
   NEWS_POLL_INTERVAL_MS,
+  NewsFeedEnd,
   NewsFeedStatus,
   NewsRefreshError,
   fetchNewsPage,
@@ -32,6 +33,7 @@ import {
   newsFeedView,
   newsPollInterval,
   nextNewsPageParam,
+  useNewsFeedAutofill,
   useNewsFeedResume,
 } from '@/components/news/news-shared'
 
@@ -93,6 +95,16 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
   const fetchedAt = pages?.[0]?.fetchedAt ?? null
   const view = newsFeedView({ isPending, error, articleCount: articles.length })
 
+  // A wide pane fits more cards than a thin wire gives it. Same bound as the
+  // discovery feed: fill the grid, never deep enough to stand the poll down.
+  useNewsFeedAutofill({
+    hasNextPage,
+    isFetching,
+    pageCount: pages?.length ?? 0,
+    rowCount: articles.length,
+    fetchNextPage,
+  })
+
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
@@ -149,6 +161,12 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
               onClick={() => setReaderIndex(i)}
             />
           ))}
+          <NewsFeedEnd
+            className="col-span-full"
+            hasMore={hasNextPage}
+            isLoadingMore={isFetchingNextPage}
+            onLoadMore={() => void fetchNextPage()}
+          />
         </div>
       )}
 
