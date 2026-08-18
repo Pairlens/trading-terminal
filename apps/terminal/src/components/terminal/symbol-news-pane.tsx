@@ -27,7 +27,9 @@ import {
   fetchNewsPage,
   flattenNewsPages,
   formatRelativeTime,
+  newsFeedView,
   nextNewsPageParam,
+  useNewsFeedResume,
 } from '@/components/news/news-shared'
 
 function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
@@ -41,7 +43,8 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
 
   const {
     data,
-    isLoading,
+    isPending,
+    fetchStatus,
     isFetching,
     error,
     refetch,
@@ -71,9 +74,15 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
     retry: 1,
   })
 
+  // A cancelled fetch reverts to pending+idle with nothing scheduled; kick it
+  // so the loading skeletons below always resolve into an answer. Guarded by
+  // the query's own `enabled`, which refetch() would otherwise ignore.
+  useNewsFeedResume({ isPending, fetchStatus, refetch }, !!baseSymbol)
+
   const pages = data?.pages
   const articles = useMemo(() => flattenNewsPages(pages ?? []), [pages])
   const fetchedAt = pages?.[0]?.fetchedAt ?? null
+  const view = newsFeedView({ isPending, error, articleCount: articles.length })
 
   return (
     <div className="flex h-full flex-col">
@@ -106,13 +115,15 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
       </header>
 
       {/* Content */}
-      {isLoading ? (
+      {view === 'loading' ? (
+        // Covers every pending shape, not just an active fetch: a retry that
+        // paused while the tab was hidden is still loading, not an empty feed.
         <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
           {Array.from({ length: 6 }, (_, i) => (
             <ArticleCardSkeleton key={i} />
           ))}
         </div>
-      ) : error || articles.length === 0 ? (
+      ) : view !== 'articles' ? (
         <NewsFeedStatus
           error={error}
           emptyBody={t('news.noRecentFor', { symbol: baseSymbol })}

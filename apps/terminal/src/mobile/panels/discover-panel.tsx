@@ -151,7 +151,7 @@ export default memo(function MobileDiscoverPanel() {
       <SectionHeader title={t('news.title')} />
 
       {news.articles.length === 0 ? (
-        news.isLoading ? (
+        news.isPending ? (
           <div className="space-y-2 px-4 py-3">
             {[0, 1, 2].map((i) => (
               <div
