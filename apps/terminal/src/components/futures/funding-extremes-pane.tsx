@@ -39,6 +39,7 @@ import {
   useFundingScanner,
   useOpenContract,
 } from './funding-scanner'
+import { FundingExtremesSkeleton, SkeletonStatus } from './funding-skeletons'
 import type { TFunction } from 'i18next'
 import type { FundingExtreme } from '@/lib/futures/funding-rows'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
@@ -75,7 +76,7 @@ const MIN_OPEN_INTEREST_USD = 1_000_000
 
 export function FundingExtremesPane() {
   const { t } = useTranslation()
-  const { venues, rows, isPending } = useFundingScanner()
+  const { venues, rows, isPending, isSettling } = useFundingScanner()
   const openContract = useOpenContract()
 
   const candidates = useMemo(() => rankedExtremes(rows, PER_SIDE), [rows])
@@ -156,10 +157,14 @@ export function FundingExtremesPane() {
     [candidates, notional],
   )
 
-  if (listed.length === 0) {
+  // The rail ranks whatever the sweep produced, so an empty list while venues
+  // are still out is a pane mid-fill rather than a pane with nothing to say.
+  const loading = listed.length === 0 && (isPending || isSettling)
+
+  if (listed.length === 0 && !loading) {
     return (
       <PaneEmpty
-        body={isPending ? t('funding.loading') : t('fundingExtremes.emptyBody')}
+        body={t('fundingExtremes.emptyBody')}
         icon={ArrowDownUp}
         title={t('fundingExtremes.emptyTitle')}
       />
@@ -174,7 +179,16 @@ export function FundingExtremesPane() {
         </p>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div
+        aria-busy={loading || undefined}
+        className="min-h-0 flex-1 overflow-y-auto"
+      >
+        {loading && (
+          <>
+            <SkeletonStatus label={t('funding.loading')} />
+            <FundingExtremesSkeleton />
+          </>
+        )}
         {listed.map((entry) => (
           <ExtremeRow
             entry={entry}

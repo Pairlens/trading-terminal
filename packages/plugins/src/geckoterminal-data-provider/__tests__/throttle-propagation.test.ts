@@ -169,13 +169,54 @@ describe('an answer with nothing in it is still an answer', () => {
     expect(await fetchOhlcv('SOL-USDC', '3d', 500, 'solana')).toEqual([])
   })
 
-  it('a non-throttle transport failure still degrades to empty', async () => {
-    // Unchanged behaviour: only a THROTTLE is promoted to an exception. A DNS
-    // failure or an abort keeps the old empty result.
+  it("an aborted request is the caller's own decision, not a refusal", async () => {
+    // The one transport rejection that is NOT the provider's doing: we asked
+    // it to stop. It keeps the old empty result rather than being reported as
+    // the provider refusing.
+    const abort = new Error('The operation was aborted')
+    abort.name = 'AbortError'
     globalThis.fetch = mock(async () => {
-      throw new TypeError('Failed to fetch')
+      throw abort
     }) as unknown as typeof fetch
     expect(await fetchOhlcv('SOL-USDC', '15m', 500, 'solana')).toEqual([])
     expect(await resolvePool('SOL-USDC', 'solana')).toBeNull()
+  })
+})
+
+describe('the refusal we are not allowed to read', () => {
+  /**
+   * The browser case that emptied the whole DEX board.
+   *
+   * GeckoTerminal sends `Access-Control-Allow-Origin` on its 200s and not on
+   * its 429s, so from a page a rate limit never arrives as a status — it
+   * arrives as a blocked response and a bare `TypeError: Failed to fetch`.
+   * Degrading that to an empty answer is what put "the data provider listed
+   * nothing for this chain" over a chain the provider was simply refusing to
+   * talk about, and left the three panes downstream with nothing to select.
+   */
+  it('promotes an opaque fetch rejection to a throttle', async () => {
+    globalThis.fetch = mock(async () => {
+      throw new TypeError('Failed to fetch')
+    }) as unknown as typeof fetch
+
+    const err = await fetchTopPools('solana').then(
+      () => null,
+      (e: unknown) => e,
+    )
+    expect(isProviderThrottledError(err)).toBe(true)
+  })
+
+  it('does not let the pool reads answer during one', async () => {
+    globalThis.fetch = mock(async () => {
+      throw new TypeError('Failed to fetch')
+    }) as unknown as typeof fetch
+
+    await expect(resolvePool('SOL-USDC', 'solana')).rejects.toThrow()
+    // The refusal cooled the shared queue off, which is the point of promoting
+    // it. Skip the wait rather than sit through it: the hold is rate-limiter.ts
+    // behaviour and is covered there.
+    geckoLimiter.reset()
+    clearPoolCache()
+    await expect(fetchOhlcv('SOL-USDC', '15m', 500, 'solana')).rejects.toThrow()
   })
 })

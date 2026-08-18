@@ -53,12 +53,30 @@ export function volumeToTvl(
 export const MIN_MAPPABLE_RESERVE_USD = 10_000
 
 /**
- * The map's wash ceiling, in daily turns of the pool's own liquidity. The
- * deepest real pools on any chain run ten to twenty turns a day; a listing
- * whose volume claims hundreds of turns against a small reserve is a bot
- * painting volume, and sizing tiles by that number hands it the whole map.
+ * The map's wash ceiling, in daily turns of the pool's own liquidity.
+ *
+ * Calibrated at 50 to begin with, on the assumption that a pool turning over
+ * more than fifty times a day had to be a bot painting volume. That holds for
+ * a constant-product pool and is simply wrong for a concentrated one, where
+ * `reserve_in_usd` is the value sitting in the active range rather than the
+ * whole book — a tight range around a stable price services enormous volume on
+ * very little capital, which is the entire point of the design.
+ *
+ * Measured against a live volume ranking rather than argued: Ethereum's top
+ * twenty pools all sit under 6 turns and are unaffected by any ceiling in this
+ * range. Solana's are not — Orca's own SOL/USDC runs 63, and the tokenized
+ * equity pools that carry most of the chain's volume (NVDA, TSLA, HOOD against
+ * SOL) run 150 to 370 on real, deep, actively rebalanced ranges. At 50 the
+ * busiest chain on the board drew exactly one tile, which is not a quality bar
+ * doing its job, it is a quality bar answering a different question than the
+ * one the map asks.
+ *
+ * So the ceiling is where the impossible starts rather than where the unusual
+ * does. What it still catches is the shape it was built for: a listing whose
+ * volume implies thousands of turns against a reserve barely over the floor.
+ * Everything it excludes remains one click away in the full listing.
  */
-export const MAX_MAPPABLE_TURNOVER = 50
+export const MAX_MAPPABLE_TURNOVER = 500
 
 /**
  * Whether a pool earns a place on the map.

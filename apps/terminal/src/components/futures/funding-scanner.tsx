@@ -5,9 +5,15 @@
  *
  * The funding matrix, the basis monitor, the OI leaders and the extremes rail
  * all answer the same question from the same snapshot, and the board puts them
- * on screen together. One hook, so the venue fan-out is one react-query entry
+ * on screen together. One hook, so four panes share one set of cache entries
  * and the row assembly runs once per data change instead of four times per
  * render; the panes differ in what they project out of it.
+ *
+ * The fan-out underneath is one query PER VENUE (see `useFundingRates`), which
+ * is what lets every pane here render progressively: `columns` carries the
+ * venues still out alongside the ones that answered, and `isPending` /
+ * `isSettling` separate "nothing yet" from "filling in". A pane that treats
+ * either as an empty state will flash it on every load.
  *
  * The pieces below are the other half of that: the countdown, the rate
  * formatting and the tint scale are read the same way in three panes, and a
@@ -31,7 +37,10 @@ import {
   useFundingRates,
   useFuturesFundingVenues,
 } from '@/hooks/use-funding-rates'
-import { useTopCoinsSnapshot } from '@/hooks/use-top-coins-snapshot'
+import {
+  useTopCoinsSnapshot,
+  useTopCoinsSnapshotState,
+} from '@/hooks/use-top-coins-snapshot'
 import { buildFundingRows } from '@/lib/futures/funding-rows'
 
 /**
@@ -43,21 +52,21 @@ import { buildFundingRows } from '@/lib/futures/funding-rows'
  */
 const BASE_HINT_COUNT = 25
 
-/**
- * The "still loading" answer, as ONE array.
- *
- * `data ?? []` allocates a fresh empty array on every render, which changes the
- * identity every memo below keys on and rebuilds the whole row set on each
- * paint while the first fetch is in flight.
- */
-const NO_RESULTS: Array<FundingVenueResult> = []
-
 export type FundingScanner = {
   venues: Array<FuturesVenue>
   results: Array<FundingVenueResult>
   rows: Array<FundingRow>
   topCoins: Map<string, TopCoin>
+  /**
+   * The venues a board should draw a column for: the ones that answered, plus
+   * the ones still sweeping. Ordering is the venue order, so a column never
+   * moves sideways as its neighbours land.
+   */
+  columns: Array<FundingVenueResult>
+  /** Nothing has landed yet — the panes draw their skeleton. */
   isPending: boolean
+  /** Some venues answered and others are still out. */
+  isSettling: boolean
   /**
    * Venues this build cannot reach at all, kept apart from the ones that
    * broke.
@@ -76,6 +85,7 @@ export type FundingScanner = {
 export function useFundingScanner(): FundingScanner {
   const venues = useFuturesFundingVenues()
   const topCoins = useTopCoinsSnapshot()
+  const topCoinsState = useTopCoinsSnapshotState()
 
   const bases = useMemo(
     () =>
@@ -86,8 +96,19 @@ export function useFundingScanner(): FundingScanner {
     [topCoins],
   )
 
-  const { data, isPending } = useFundingRates(venues, { bases })
-  const results = data ?? NO_RESULTS
+  const {
+    data: results,
+    isPending,
+    isSettling,
+  } = useFundingRates(venues, {
+    bases,
+    // The hint set is part of the cache key, so sweeping before the ranking
+    // lands would cost every venue a second round trip and repaint a filled
+    // matrix back to skeletons. A ranking that never arrives is not a reason
+    // to wait forever: the venues that can sweep their whole universe do it
+    // without a hint.
+    enabled: topCoinsState !== 'loading',
+  })
 
   const rows = useMemo(() => {
     const rankOf = (base: string) =>
@@ -103,8 +124,19 @@ export function useFundingScanner(): FundingScanner {
     () => results.filter((r) => !r.desktopOnly && r.error !== null),
     [results],
   )
+  const columns = useMemo(() => boardVenues(results), [results])
 
-  return { venues, results, rows, topCoins, isPending, desktopOnly, errors }
+  return {
+    venues,
+    results,
+    rows,
+    topCoins,
+    columns,
+    isPending,
+    isSettling,
+    desktopOnly,
+    errors,
+  }
 }
 
 /** Venues that answered with at least one contract, in a stable order. */
@@ -112,6 +144,20 @@ export function answeringVenues(
   results: Array<FundingVenueResult>,
 ): Array<FundingVenueResult> {
   return results.filter((r) => r.entries.length > 0)
+}
+
+/**
+ * Venues worth a column: answered, or still answering.
+ *
+ * A pending venue earns its header on the board's first paint. The reader sees
+ * WHICH exchanges are being asked while they are being asked, which is the
+ * difference between a board that is loading and a board that looks broken;
+ * the column drops out only if the venue comes back with nothing.
+ */
+export function boardVenues(
+  results: Array<FundingVenueResult>,
+): Array<FundingVenueResult> {
+  return results.filter((r) => r.entries.length > 0 || r.pending)
 }
 
 // ── Pieces ────────────────────────────────────────────────────────────
@@ -220,7 +266,14 @@ export function joinVenueNames(names: Array<string>, language: string): string {
   return names.join(', ')
 }
 
-/** The token mark a scanner row leads with: real logo, or a lettered disc. */
+/**
+ * The token mark a scanner row leads with: real logo, or a lettered disc.
+ *
+ * The disc is also the FALLBACK, not just the placeholder. A logo host that
+ * 404s hands the browser its own broken-image glyph, which is the one graphic
+ * on the pane that says nothing and looks like a bug; catching `error` turns
+ * that into the same lettered disc a coin with no artwork gets.
+ */
 export function AssetMark({
   base,
   logoUrl,
@@ -230,12 +283,15 @@ export function AssetMark({
   logoUrl?: string | null
   className?: string
 }) {
-  if (logoUrl) {
+  const [failed, setFailed] = useState(false)
+
+  if (logoUrl && !failed) {
     return (
       <img
         alt=""
         className={cn('size-5 shrink-0 rounded-full', className)}
         loading="lazy"
+        onError={() => setFailed(true)}
         src={logoUrl}
       />
     )

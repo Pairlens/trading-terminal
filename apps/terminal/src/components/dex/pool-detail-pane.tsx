@@ -28,7 +28,12 @@ import { normalizeInstrumentId } from '@pairlens/shared/market-ref'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { PoolSwatch } from '@/components/dex/dex-pane-primitives'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
-import { usePoolStats, usePoolTrades } from '@/hooks/use-pool-stats'
+import {
+  DISCOVERY_POOL_LISTING,
+  usePoolListing,
+  usePoolStats,
+  usePoolTrades,
+} from '@/hooks/use-pool-stats'
 import { usePriceImpactTiers } from '@/hooks/use-price-impact-tiers'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
 import { dexChain } from '@/lib/dex/chain-catalog'
@@ -52,7 +57,15 @@ const PRESSURE_WINDOW_MS = 60 * 60_000
 export function PoolDetailPane() {
   const { t } = useTranslation()
   const pool = useDexDiscoveryStore((s) => s.selectedPool)
+  const chain = useDexDiscoveryStore((s) => s.chain)
   const pairKey = pool ? poolPairKey(pool) : undefined
+
+  // The map's own listing, read at the identical key so this costs no request:
+  // it is what decides whether "no pool selected" means "pick one" or "the map
+  // beside you has not answered yet". Inviting a pick from a pane that is
+  // still loading, or that the provider refused, is the board telling the
+  // reader to do something it has made impossible.
+  const listing = usePoolListing(chain, !pool, DISCOVERY_POOL_LISTING)
 
   const { stats, isLoading, filledBy } = usePoolStats(pool?.market, pairKey)
 
@@ -80,11 +93,33 @@ export function PoolDetailPane() {
   }, [trades])
 
   if (!pool) {
+    if (listing.isLoading || listing.retrying) {
+      return (
+        <PaneEmpty
+          icon={Info}
+          title={t('poolDetail.waitingTitle')}
+          body={t('poolDetail.waitingBody')}
+        />
+      )
+    }
     return (
       <PaneEmpty
         icon={Info}
-        title={t('poolDetail.emptyTitle')}
-        body={t('poolDetail.emptyBody')}
+        title={
+          listing.error
+            ? t('poolDetail.unavailableTitle')
+            : t('poolDetail.emptyTitle')
+        }
+        body={
+          listing.error
+            ? // Deliberately the pool map's sentence: the two panes are
+              // describing the same refusal, and two wordings for it read as
+              // two different problems.
+              listing.throttled
+              ? listing.error
+              : t('poolMap.unavailableBody')
+            : t('poolDetail.emptyBody')
+        }
       />
     )
   }
