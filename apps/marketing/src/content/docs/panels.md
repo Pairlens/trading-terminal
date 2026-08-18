@@ -185,6 +185,20 @@ bucket, off the same swap feed the tape shows.
 | **Social**        | Social sentiment and community activity for a pair                                                       |
 | **What Moved It** | A prediction's history as a timeline, each row stamped with the move it recorded                         |
 
+Both news panels keep themselves current. Every two minutes the feed asks the
+wire for what has been published since it last looked, and anything new lands
+at the top of the list on its own. The header says how old the stories are
+rather than claiming to be live, since two minutes is two minutes. Polling
+stops while the terminal is in the background and picks up the moment you come
+back, so a window left open overnight costs nothing. The refresh button is
+still there when you want the wire now, and a reader you have open holds its
+place: stories that arrive while you are reading join the list behind it
+instead of shuffling the article under you.
+
+If a refresh fails, the headlines stay and a warning marker appears next to the
+timestamp. The full "News unavailable" screen is reserved for a feed with
+nothing to show at all.
+
 What Moved It always draws the moves, because they come from the probability
 history the chart is already streaming: a date, a signed move in cents, the
 levels it moved between, and the contracts that traded while it did. The

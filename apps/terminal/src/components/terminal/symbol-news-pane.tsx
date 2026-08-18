@@ -23,11 +23,14 @@ import {
   ArticleCard,
   ArticleCardSkeleton,
   NEWS_PAGE_TIME_FROM,
+  NEWS_POLL_INTERVAL_MS,
   NewsFeedStatus,
+  NewsRefreshError,
   fetchNewsPage,
   flattenNewsPages,
   formatRelativeTime,
   newsFeedView,
+  newsPollInterval,
   nextNewsPageParam,
   useNewsFeedResume,
 } from '@/components/news/news-shared'
@@ -68,7 +71,13 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
       return next && next !== lastPageParam ? next : null
     },
     enabled: !!baseSymbol,
-    staleTime: 5 * 60_000,
+    // The symbol's wire keeps itself current while the window is focused, on
+    // the same two-minute beat as the discovery feed. See the note on the
+    // discovery pane's query for why the poll refetches the whole infinite
+    // query and where it stands down.
+    refetchInterval: (query) =>
+      newsPollInterval(query.state.data?.pages.length ?? 1),
+    staleTime: NEWS_POLL_INTERVAL_MS,
     gcTime: 30 * 60_000,
     // A provider outage isn't worth three rounds of backoff before we say so.
     retry: 1,
@@ -95,6 +104,9 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
+          {/* Stories stay on screen when a poll fails; this says the refresh
+              is what broke, and the timestamp beside it says how stale. */}
+          <NewsRefreshError error={error} />
           {fetchedAt && (
             <span className="text-xs text-muted-foreground">
               {t('common.updated', { time: formatRelativeTime(fetchedAt) })}

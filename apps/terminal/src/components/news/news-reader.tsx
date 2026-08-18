@@ -32,6 +32,7 @@ import {
   formatRelativeTime,
   formatTopicLabel,
   sentimentDirection,
+  useNewsFeedAnchor,
 } from '@/components/news/news-shared'
 
 /** How many slides ahead of the current one may trigger a background page fetch. */
@@ -183,12 +184,18 @@ export function NewsReaderDialog({
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(initialIndex)
 
+  // The feed behind this reader polls, and scroll position here IS the index:
+  // a story arriving at the head would shift every slide down by one and swap
+  // the article out from under whoever is reading it. So the reader keeps the
+  // feed it opened with and only takes what paging appends.
+  const anchored = useNewsFeedAnchor(articles)
+
   const trimmed = query.trim().toLowerCase()
   const searching = trimmed.length > 0
 
   const visible = useMemo(() => {
-    if (!searching) return articles
-    return articles.filter(
+    if (!searching) return anchored
+    return anchored.filter(
       (a) =>
         a.title.toLowerCase().includes(trimmed) ||
         a.summary.toLowerCase().includes(trimmed) ||
@@ -197,7 +204,7 @@ export function NewsReaderDialog({
           ts.ticker.toLowerCase().includes(trimmed),
         ),
     )
-  }, [articles, searching, trimmed])
+  }, [anchored, searching, trimmed])
 
   // Slides = articles plus one status sentinel (loading / caught up).
   const lastSlideIndex = visible.length > 0 ? visible.length : 0

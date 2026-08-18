@@ -73,6 +73,7 @@ import {
   formatRelativeTime,
   formatTopicLabel,
   sentimentDirection,
+  useNewsFeedAnchor,
 } from '@/components/news/news-shared'
 
 type NewsReaderSheetProps = {
@@ -94,11 +95,17 @@ export default memo(function NewsReaderSheet({
   const [searchOpen, setSearchOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(overlay.index)
 
+  // The feed polls, so stories land at its head while this is open, and every
+  // one of them would shift `overlay.index` by a slide. The reader holds the
+  // feed it opened with and takes only what paging appends. See
+  // `anchorNewsFeed`.
+  const anchored = useNewsFeedAnchor(articles)
+
   const trimmed = query.trim()
   const searching = trimmed.length > 0
   const visible = useMemo(
-    () => filterNewsArticles(articles, trimmed),
-    [articles, trimmed],
+    () => filterNewsArticles(anchored, trimmed),
+    [anchored, trimmed],
   )
 
   // Keyboard paging only — a swipe is the browser's own scroll and never

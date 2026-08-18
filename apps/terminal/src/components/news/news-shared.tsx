@@ -1,16 +1,23 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Minus, Newspaper, TrendingDown, TrendingUp } from 'lucide-react'
+import {
+  AlertTriangle,
+  Minus,
+  Newspaper,
+  TrendingDown,
+  TrendingUp,
+} from 'lucide-react'
 import type { NewsArticle } from '@pairlens/shared/instrument-types'
 
 import type { NewsFeedFetchStatus } from '@/components/news/news-feed-state'
 import {
   NewsUnavailableError,
+  anchorNewsFeed,
   newsFeedStalled,
 } from '@/components/news/news-feed-state'
 import { formatRelativeTime } from '@/lib/format-time'
@@ -24,11 +31,15 @@ export { formatRelativeTime }
 export {
   NEWS_PAGE_SIZE,
   NEWS_PAGE_TIME_FROM,
+  NEWS_POLL_INTERVAL_MS,
+  NEWS_POLL_MAX_PAGES,
   NewsUnavailableError,
+  anchorNewsFeed,
   fetchNewsPage,
   flattenNewsPages,
   newsFeedStalled,
   newsFeedView,
+  newsPollInterval,
   nextNewsPageParam,
   toNewsTimeParam,
 } from '@/components/news/news-feed-state'
@@ -60,6 +71,61 @@ export function useNewsFeedResume(
 }
 
 /**
+ * Hold a live feed steady for a reader that pages by index.
+ *
+ * The feed polls, so stories arrive at its head while a reader is open, and
+ * every one of them would shift the index the reader is sitting on. This pins
+ * the array to the story that led it when the reader mounted; see
+ * `anchorNewsFeed` for why that is the right cut. Paging still extends it,
+ * because paging appends.
+ */
+export function useNewsFeedAnchor(
+  articles: Array<NewsArticle>,
+): Array<NewsArticle> {
+  // Latched on the first render that has a feed, not on mount: a reader can
+  // out-render its own first page, and anchoring to nothing would leave it
+  // shifting again the moment stories arrived.
+  const anchorRef = useRef<string | undefined>(undefined)
+  if (!anchorRef.current) anchorRef.current = articles[0]?.url
+  return useMemo(() => anchorNewsFeed(articles, anchorRef.current), [articles])
+}
+
+/** Why the feed could not be served, in one localized line. */
+function useUnavailableBody(error: unknown): string | null {
+  const { t } = useTranslation()
+  if (!error) return null
+  const reason = error instanceof NewsUnavailableError ? error.reason : 'error'
+  return reason === 'not_configured'
+    ? t('news.unavailableNotConfigured')
+    : reason === 'rate_limited'
+      ? t('news.unavailableRateLimited')
+      : t('news.unavailableUpstream')
+}
+
+/**
+ * The marker a feed wears when its last refresh failed but its stories stand.
+ *
+ * A polling feed cannot blank itself over one bad request (see `newsFeedView`),
+ * and it also cannot pass old headlines off as current. So the timestamp beside
+ * it keeps saying how old they are, and this says why it stopped moving.
+ */
+export function NewsRefreshError({ error }: { error: unknown }) {
+  const { t } = useTranslation()
+  const body = useUnavailableBody(error)
+  if (!body) return null
+  return (
+    <span
+      className="flex shrink-0 items-center text-muted-foreground"
+      title={`${t('news.unavailable')}: ${body}`}
+      aria-label={`${t('news.unavailable')}: ${body}`}
+      role="status"
+    >
+      <AlertTriangle className="size-3.5" />
+    </span>
+  )
+}
+
+/**
  * The feed's non-article state: provider down, or simply nothing matched.
  * `emptyBody` is the caller's own "nothing matched" line — the browse pane
  * blames the filters, the symbol pane names the symbol.
@@ -72,22 +138,10 @@ export function NewsFeedStatus({
   emptyBody: string
 }) {
   const { t } = useTranslation()
+  const unavailableBody = useUnavailableBody(error)
 
-  const reason =
-    error instanceof NewsUnavailableError
-      ? error.reason
-      : error
-        ? 'error'
-        : null
-
-  const title = reason ? t('news.unavailable') : t('news.noneFound')
-  const body = !reason
-    ? emptyBody
-    : reason === 'not_configured'
-      ? t('news.unavailableNotConfigured')
-      : reason === 'rate_limited'
-        ? t('news.unavailableRateLimited')
-        : t('news.unavailableUpstream')
+  const title = unavailableBody ? t('news.unavailable') : t('news.noneFound')
+  const body = unavailableBody ?? emptyBody
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
