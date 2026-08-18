@@ -44,14 +44,19 @@ export type AccountExportChartState = {
   updatedAt: string
 }
 
-export type AccountExportAiMessage = {
+/**
+ * One assistant thread, whole. Only ever present for an account that
+ * turned the `assistant` cloud-sync domain on: it ships off, so for most
+ * exports this list is empty and the conversations are on the devices
+ * that made them.
+ */
+export type AccountExportConversation = {
   id: string
-  market: string
-  pairKey: string
-  role: string
-  content: string
-  metadata: Record<string, unknown> | null
+  title: string | null
+  /** Whole AI SDK UIMessages, exactly as the client stored them. */
+  messages: Array<unknown>
   createdAt: string
+  updatedAt: string
 }
 
 export type AccountExportTradeJournalEntry = {
@@ -204,7 +209,7 @@ export type AccountExportBundle = {
   } | null
   workspaces: Array<AccountExportWorkspace>
   chartStates: Array<AccountExportChartState>
-  aiMessages: Array<AccountExportAiMessage>
+  assistantConversations: Array<AccountExportConversation>
   tradeJournal: Array<AccountExportTradeJournalEntry>
   workflows: Array<AccountExportWorkflow>
   notificationRules: Array<AccountExportNotificationRule>
