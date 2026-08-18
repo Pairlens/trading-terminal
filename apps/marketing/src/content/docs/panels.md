@@ -6,7 +6,7 @@ parent: workspaces
 order: 1
 eyebrow: For traders
 updated: 18 AUG 2026
-readTime: 10 min read
+readTime: 11 min read
 ---
 
 Panels are contributed by plugins, which is why the catalogue grows when you
@@ -42,6 +42,8 @@ dialog with it. That is the user-level way to drop a whole asset class. See
 | **Company**           | The ticker as a business: next report, valuation, growth, margins, the range and the analyst split                                   |
 | **Insider Activity**  | Form 4 buys and sells for this ticker: date, insider, role, shares, price, value, and a buys-versus-sells summary                    |
 | **Event Header**      | The question, when and how it resolves, and the probability the market is paying right now                                           |
+| **Probability Chart** | Every outcome in the event on one time axis, with a crosshair that reads them all at once                                            |
+| **Event Brief**       | What the contract pays on, in the venue's own words, with the settlement date and what has traded through it                         |
 
 The Liquidity Heatmap is the one people miss. It renders where resting
 liquidity has actually sat over the last few hours, which shows you the levels
@@ -208,8 +210,8 @@ Panels declare what they need to render:
 
 - Nearly every charting panel needs an **active pair**, Level 1, Company,
   Insider Activity, Pool Stats, On-chain Trades, Chain Ladder, Funding Belt,
-  Liquidation Map and Event Header included. So do Route, Outcome Ladder and
-  Sector Peers. Session Clock is the exception: the market is open or closed
+  Liquidation Map, Event Header, Probability Chart and Event Brief included. So
+  do Route, Outcome Ladder and Sector Peers. Session Clock is the exception: the market is open or closed
   whatever pair is on screen, which is exactly why it sits above the ticket
 - Positions, Portfolio, Margin Health and In Flight need an **active wallet**,
   which is one of your connected accounts. Trade Entry, Your Position, Basket

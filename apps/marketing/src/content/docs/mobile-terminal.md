@@ -5,7 +5,7 @@ group: get-started
 order: 5
 eyebrow: Get started
 updated: 18 AUG 2026
-readTime: 10 min read
+readTime: 11 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
@@ -86,6 +86,23 @@ candle, in Free they land where you put them.
 Undo is the chart engine's own history, so it undoes the drawing you just made
 rather than approximating it. Clear asks first.
 
+**An event contract charts as odds, not candles.** The phone opens a prediction
+on the same **Probability Chart** the desktop boards use: every outcome in the
+event on one time axis, a fixed 0 to 100% scale, and a legend under the plot
+that prices each runner and hides its line on a tap. Drag a finger across it and
+a card reads the whole field at that instant, sorted by probability, so a
+crossover is something you watch happen. The spans sit where the drawing toolbar
+would be: 1H, 6H, 1D, 1W, 1M. A field larger than eight runners draws its leaders
+and says how many it is leaving to the ladder.
+
+The chip in the corner switches to **candles**, which brings back the chart
+engine, the interval picker and the drawing toolbar for the one outcome you are
+on. Two things are candles-only, because both convert a price to a position
+through that engine: the drawing toolbar, and the Trade screen's draggable limit
+line. The ticket's numeric limit field works in either view. Whichever you pick
+is remembered across contracts, and the span is the same one your desktop uses.
+See [the Probability Chart](/docs/prediction-markets#the-probability-chart).
+
 **On an event contract the chart gains a strip.** A prediction routing key is a
 venue ticker, so under the price you get the question in full, the date it
 resolves, and what the outcome is being paid. On a race the reading is the
@@ -124,8 +141,9 @@ the desktop ticket's arithmetic, and the presets are the same list, so a stake
 edited on the desk is the stake offered here. See
 [Prediction markets](/docs/prediction-markets).
 
-**A limit price shows on the chart** as a dashed line with a draggable tag.
-Move the line and the field follows, type in the field and the line follows. It
+**A limit price shows on the chart** as a dashed line with a draggable tag, in
+the candle view. Move the line and the field follows, type in the field and the
+line follows. It
 is an order line, not a drawing, so it never turns up on your desktop chart.
 If the level is below the part of the chart the sheet leaves visible, the line
 pins to the bottom edge with a chevron rather than disappearing. On an event

@@ -51,6 +51,8 @@ const PANEL_IDS = [
   'odds-movers',
   'resolving-soon',
   'event-header',
+  'prediction-chart',
+  'event-brief',
   'what-moved-it',
   'outcome-ladder',
   'basket-ticket',
@@ -117,6 +119,8 @@ describe('pairlens-predictions', () => {
     // multi-outcome stake against one account.
     const REQUIRES: Record<string, Array<string>> = {
       'event-header': ['workspace:active-pair'],
+      'prediction-chart': ['workspace:active-pair'],
+      'event-brief': ['workspace:active-pair'],
       'what-moved-it': ['workspace:active-pair'],
       'outcome-ladder': ['workspace:active-pair'],
       'basket-ticket': ['workspace:active-pair', 'workspace:active-wallet'],

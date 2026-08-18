@@ -250,6 +250,16 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.EventHeaderPane,
       })),
     ),
+    'prediction-chart': lazyChunk(() =>
+      import('@/components/predictions/prediction-chart-pane').then((m) => ({
+        default: m.PredictionChartPane,
+      })),
+    ),
+    'event-brief': lazyChunk(() =>
+      import('@/components/predictions/event-brief-pane').then((m) => ({
+        default: m.EventBriefPane,
+      })),
+    ),
     'what-moved-it': lazyChunk(() =>
       import('@/components/predictions/what-moved-it-pane').then((m) => ({
         default: m.WhatMovedItPane,

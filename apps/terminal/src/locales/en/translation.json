@@ -2297,6 +2297,8 @@
     "oddsMovers": "Odds Movers",
     "resolvingSoon": "Resolving Soon",
     "eventHeader": "Event Header",
+    "predictionChart": "Probability Chart",
+    "eventBrief": "Event Brief",
     "whatMovedIt": "What Moved It",
     "outcomeLadder": "Outcome Ladder",
     "basketTicket": "Basket Ticket",
@@ -2367,6 +2369,8 @@
     "oddsMovers": "The contracts whose probability moved most today, with the move stated in points",
     "resolvingSoon": "Contracts closest to settlement, sorted by the clock rather than by volume",
     "eventHeader": "The question, when and how it resolves, and the probability the market is paying right now",
+    "predictionChart": "Every outcome in the event on one time axis, with a crosshair that reads them all at once",
+    "eventBrief": "What this contract pays on, in the venue’s own words, with the settlement date and what has traded through it",
     "whatMovedIt": "Headlines on a timeline, each stamped with the probability move it caused",
     "outcomeLadder": "Every runner in the event priced in cents, sortable and searchable, with a stake button on each row",
     "basketTicket": "Stake several outcomes at once, with the total cost, the stated overround and your worst case before you submit",
@@ -5790,6 +5794,9 @@
     },
     "predictions": {
       "resolvesShort": "Resolves {{date}}",
+      "chartView": "Chart view",
+      "chartViewOdds": "Probability",
+      "chartViewCandles": "Candles",
       "runnerCount_one": "{{count}} outcome",
       "runnerCount_other": "{{count}} outcomes",
       "rankOutcomes_one": "Rank the outcome",
@@ -6061,6 +6068,40 @@
     "basisLast_other": "Summed from {{count}} last prices",
     "basisMissing_one": "1 runner unquoted",
     "basisMissing_other": "{{count}} runners unquoted"
+  },
+  "predictionChart": {
+    "noPairTitle": "No contract selected",
+    "noPairBody": "Open a prediction market to chart every outcome in its event on one axis.",
+    "loading": "Loading the field’s history…",
+    "noHistory": "{{venue}} published no history for this event yet.",
+    "noLine": "no history",
+    "toggleLine": "Show or hide {{name}}",
+    "openOutcome": "Open {{name}}",
+    "capped_one": "1 more runner in the ladder",
+    "capped_other": "{{count}} more runners in the ladder",
+    "strided_one": "1 bucket per point",
+    "strided_other": "{{count}} buckets per point",
+    "tooltipCapped_one": "+1 more runner",
+    "tooltipCapped_other": "+{{count}} more runners",
+    "window": {
+      "hour": "1H",
+      "sixHours": "6H",
+      "day": "1D",
+      "week": "1W",
+      "month": "1M"
+    }
+  },
+  "eventBrief": {
+    "noPairTitle": "No contract selected",
+    "noPairBody": "Open a prediction market to read the criteria that decide its payout.",
+    "publishedBy": "Published by {{venue}}",
+    "criteria": "Resolution criteria",
+    "loading": "Loading the criteria…",
+    "noCriteria": "{{venue}} publishes no resolution criteria for this contract. Check the venue before you stake.",
+    "resolves": "Resolves",
+    "liquidity": "Liquidity",
+    "openInterest": "Open interest",
+    "status": "Status"
   },
   "whatMovedIt": {
     "noPairTitle": "No contract selected",

@@ -1,12 +1,12 @@
 ---
 title: Prediction markets
-description: Trade event contracts on Kalshi and Polymarket from the same terminal, with prices in cents, an event board, an outcome ladder, a basket ticket that states its overround, and positions that settle.
+description: Trade event contracts on Kalshi and Polymarket from the same terminal, with prices in cents, an event board, a probability chart that draws every outcome on one axis, the resolution criteria in the venue's own words, an outcome ladder, a basket ticket that states its overround, and positions that settle.
 group: traders
 parent: trading
 order: 6
 eyebrow: For traders
 updated: 18 AUG 2026
-readTime: 14 min read
+readTime: 17 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -177,9 +177,15 @@ same full event as its own screen, with each question's resolution rules behind
 a disclosure. The section is only there when a prediction connector is installed
 and enabled.
 
-The phone does not lose the event once you are on a chart. A prediction chart
-carries a strip under the price with the question, the resolution date and the
-outcome's probability, and it opens the event again in one tap. A race adds a
+The phone charts a prediction as odds too. The Chart tab opens on the same
+Probability Chart, laid out for 402px: the plot, a legend under it that prices
+each runner and hides its line on a tap, and the spans in the band the drawing
+toolbar leaves. Drag a finger across the plot and a card reads the whole field
+at that instant. A chip in the corner switches to candles, which brings back the
+interval picker, the drawing toolbar and the draggable limit line for the one
+outcome you are on. It does not lose the event either: the chart carries a strip
+under the price with the question, the resolution date and the outcome's
+probability, and it opens the event again in one tap. A race adds a
 ranked ladder of the whole field, with the sum of every Yes price, reachable
 from that strip and from the event screen. The phone's ticket sizes in dollars too,
 with the same presets, the same payout card and the same conversion to whole
@@ -218,44 +224,113 @@ the same question, and you can buy or sell either one. Selling Yes at 53¢ and
 buying No at 47¢ are close cousins, not the same order, and the book will tell
 you which is cheaper.
 
-## The chart is a probability, not a candle
+## The Probability Chart
 
-Outcomes trade sparsely. A contract can go an hour without a print, and drawn as
-candles that hour becomes a row of doji ticks on an index axis that quietly
-skips the time nobody traded. So a prediction outcome opens as a **step line of
-close** on the cents axis, which says the honest thing: the price was 34¢ until
-it was 41¢.
+Prediction markets get their own chart, and it is deliberately smaller than the
+one the rest of the terminal uses. A contract trades between 0 and 1, so there
+is no meaningful wick at four decimal places, a trendline drawn on a
+probability is numerology, and a GPU context per pane is a lot of machinery for
+a line that moves a few times an hour. What the price chart also cannot do is
+the thing an event market most needs: it draws one instrument, and a race is a
+question with a field.
 
-Buckets that never traded carry the last known price forward, so the line is
-continuous and the time axis stays true to the clock. Three limits on that:
+So the prediction boards open on **Probability Chart** instead. It draws every
+outcome it can on one time axis, in the colours the outcome ladder and the
+basket already use for the same runners.
+
+**The legend is the chart.** Every drawn runner gets a chip with its
+probability and its move over the window, and clicking one hides or shows its
+line. Eight colours and a hover is not enough to answer "which one is that",
+so the answer is printed. The chip for the outcome you are on is outlined, and
+its line is drawn heavier; the caret beside any other chip moves the whole page
+to that outcome, which is how you go from spotting a crossover to trading it.
+
+**The crosshair reads the whole field.** Hover anywhere and every visible
+runner is listed at that instant, sorted by probability, with the percentage
+and the price in cents. The order re-sorts as you move, so a crossover is
+something you watch happen rather than infer from two lines that got close.
+
+**The axis is fixed at 0 to 100%.** Never scaled to the field. A race whose leader
+sits at 12% would otherwise fill the pane and read as a certainty, and two
+runners two points apart would look like a chasm. The empty top of the chart is
+part of the reading: nobody here is close to winning.
+
+**Five spans**: 1H, 6H, 1D, 1W, 1M, drawn from the minute, hour and day candles
+both venues serve. The span is remembered across contracts, because it is a
+reading habit rather than a property of any one question.
+
+Two limits, both stated on the chart rather than left to be discovered. A field
+larger than eight runners draws its leaders and the footer says how many are
+not on it, with the outcome ladder as the place they all are; and a span that
+holds more buckets than the pane has points is strided down, with the footer
+naming the stride. The outcome you are on is always drawn, however it is
+priced.
+
+Between prints the line carries the last price forward rather than breaking:
+the price was 34¢ until it was 41¢. A runner that listed halfway through the
+window starts where its data starts, because a flat line reaching back to the
+left edge would claim the market priced a candidate that did not exist yet.
+
+On a binary question the two sides are green and red, the same colours the
+terminal uses for long and short everywhere else, because taking Yes is the
+long side.
+
+### When you want candles anyway
+
+The price chart is still there. Add a **Chart** pane from the Add Pane dialog,
+or drop one into your own workspace, and a prediction outcome renders as a
+**step line of close** on the cents axis with every chart type and the whole
+drawing toolbar available. Buckets that never traded carry the last price
+forward there too, with three limits on the fill:
 
 - **It stops at the last real print.** A quiet market ends where its tape ends
   rather than growing a flat line out to now.
 - **Volume stays at zero** on a carried bucket, so the volume pane leaves it
   empty and a quiet stretch is still visible as one.
 - **Nothing else sees it.** The fill is drawn, not recorded. Signals, the CSV
-  export, alerts, and anything the assistant reads work off the real bars, and a
-  connector will never invent a candle.
+  export, alerts, and anything the assistant reads work off the real bars, and
+  a connector will never invent a candle.
 
-Every chart type stays available, and whichever you pick is remembered for
-prediction charts on their own, so switching to candles here leaves your crypto
-charts alone. See [the chart](/docs/chart-panel) for the rest of the toolbar.
+Whichever chart type you pick there is remembered for prediction charts on
+their own, so switching to candles here leaves your crypto charts alone. See
+[the chart](/docs/chart-panel) for the rest of the toolbar.
 
 ## The event page
 
 Open an outcome and the pair page loads the prediction layout, which leads with
-the question rather than with the chart.
+the question rather than with the chart. The **Race** board is the variant for
+an event with a field rather than two sides: the same chart and header over the
+outcome ladder, with the basket beside it.
 
 **Event Header.** A contract's identity is a sentence, and the route carries
 `KXBTCD-26AUG15-T53`. This is where the sentence goes, with the two facts that
 change what the price means: when it resolves, and what the venue says decides
-it. Neither Kalshi nor Polymarket publishes a link to its rules, so the header
-carries the rules text itself in a popover rather than pointing at a page that
-does not exist. On a binary question it shows one probability large, with the
-day's move and the split between the two sides. On a race the field has no
+it, with the venue's rules text behind a chip. The full criteria live in the
+**Event Brief** below, open rather than behind a hover. On a binary question it
+shows one probability large, with the day's move and the split between the two
+sides. On a race the field has no
 single probability, so the headline number is the sum of every Yes price, with
 the basis it was summed from: over 100% is the vig, under 100% is a field the
 book has not finished quoting.
+
+**Probability Chart.** Every outcome on one axis, directly under the header.
+See [the Probability Chart](#the-probability-chart) above for what it draws and
+what it refuses to draw.
+
+**Event Brief.** What the contract actually pays on, open on the page rather
+than behind a hover. Neither Kalshi nor Polymarket publishes a rules URL, so
+there is nothing to link to and the pane carries the prose itself: the venue's
+resolution criteria verbatim, with the settlement date and countdown, the
+volume, the liquidity and the open interest above it. On a race the criteria
+are per runner, not per event, so a picker at the top of the pane chooses which
+market's rules you are reading and follows the page when you switch outcomes.
+
+This pane exists because it was possible to read a probability, size a stake
+and submit an order without ever seeing the sentence that decides whether you
+win. "BTC above $120,000 on August 15" is four different bets depending on
+whose print at whose cutoff settles it, and the difference is worth more than
+any edge on the chart. The event header still carries the same text behind its
+Resolution rules chip, for a workspace that has no room for the pane.
 
 **What Moved It.** The question's own history as a timeline, each row a date, a
 signed move in cents, the levels it moved between, and the contracts that

@@ -19,34 +19,44 @@ import type {
  * question, and the question, its resolution source and the probability being
  * paid belong above the chart rather than in a tooltip.
  *
+ * The chart is `prediction-chart`, not `chart`. A contract that trades between
+ * 0 and 1 has no meaningful wick, drawings on a probability are numerology,
+ * and the price chart can only ever draw one outcome — which is the wrong
+ * instrument even here, where a binary market has two sides worth seeing
+ * against each other.
+ *
+ * `event-brief` is the other correction. The criteria that decide the payout
+ * used to live behind a chip in the header, one hover deep: a trader could
+ * read a probability, size a stake and submit without ever seeing the sentence
+ * that settles it. It now has a pane on the reading rail, above the event
+ * browser, because the question next door is half the analysis and the rules
+ * for the question in front of you are the other half.
+ *
  * The data strip opens on `what-moved-it`, which stamps each headline with the
  * probability move it caused, and keeps the tape and open contracts behind it.
- * The right column still carries the event browser, because on a prediction
- * market the question next door (the other outcomes, the adjacent strikes) is
- * half the analysis, with open contracts under it.
  */
 export const PREDICTION_TERMINAL_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 62,
+      widthPercent: 58,
       cells: [
         {
           id: 'cell-event-header',
-          heightPercent: 20,
+          heightPercent: 17,
           activeTabIndex: 0,
           panes: [{ id: 'pane-event-header', type: 'event-header' }],
         },
         {
           id: 'cell-chart',
-          heightPercent: 49,
+          heightPercent: 48,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-chart', type: 'chart' }],
+          panes: [{ id: 'pane-chart', type: 'prediction-chart' }],
         },
         {
           id: 'cell-bottom',
-          heightPercent: 31,
+          heightPercent: 35,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-what-moved-it', type: 'what-moved-it' },
@@ -61,17 +71,17 @@ export const PREDICTION_TERMINAL_LAYOUT = {
     },
     {
       id: 'col-market',
-      widthPercent: 18,
+      widthPercent: 19,
       cells: [
         {
           id: 'cell-orderbook',
-          heightPercent: 38,
+          heightPercent: 36,
           activeTabIndex: 0,
           panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
         },
         {
           id: 'cell-trade',
-          heightPercent: 62,
+          heightPercent: 64,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
         },
@@ -79,24 +89,19 @@ export const PREDICTION_TERMINAL_LAYOUT = {
     },
     {
       id: 'col-event',
-      widthPercent: 20,
+      widthPercent: 23,
       cells: [
         {
-          id: 'cell-events',
-          heightPercent: 61,
+          id: 'cell-event-brief',
+          heightPercent: 46,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-events', type: 'events' }],
+          panes: [{ id: 'pane-event-brief', type: 'event-brief' }],
         },
         {
-          id: 'cell-positions',
-          heightPercent: 39,
+          id: 'cell-events',
+          heightPercent: 54,
           activeTabIndex: 0,
-          panes: [
-            {
-              id: 'pane-prediction-positions-2',
-              type: 'prediction-positions',
-            },
-          ],
+          panes: [{ id: 'pane-events', type: 'events' }],
         },
       ],
     },
@@ -105,12 +110,22 @@ export const PREDICTION_TERMINAL_LAYOUT = {
 
 /**
  * Prediction Race — the layout for an event with many runners rather than two.
- * The header carries the runner count and the overround, the chart stacks the
- * shares, and the outcome ladder takes the bottom of the column.
+ * The header carries the runner count and the overround, the chart draws the
+ * whole field, and the outcome ladder takes the bottom of the column.
+ *
+ * The chart is the point of this board. A race asks who is closing on whom,
+ * and a single-series price chart answers a different question entirely: it
+ * shows the favourite's line and leaves the crossover that decided the market
+ * to be inferred from a table. `prediction-chart` puts every drawn runner on
+ * one time axis in the colours the ladder and the basket already use, so the
+ * three panes read as one race.
  *
  * The ladder is the fix for "show 124 more": every runner priced, sortable,
- * searchable, and stakeable from its own row. The basket beside it sums to a
- * stated overround, so sweeping every outcome is visibly not free money.
+ * searchable, and stakeable from its own row, and it is where the chart sends
+ * you for the runners past its own cap. The basket beside it sums to a stated
+ * overround, so sweeping every outcome is visibly not free money. The brief
+ * heads the right rail because a race publishes one settlement rule per runner
+ * and picking the wrong strike is the cheapest way to lose on a correct call.
  */
 export const PREDICTION_RACE_LAYOUT = {
   version: 1,
@@ -121,19 +136,19 @@ export const PREDICTION_RACE_LAYOUT = {
       cells: [
         {
           id: 'cell-event-header',
-          heightPercent: 16,
+          heightPercent: 15,
           activeTabIndex: 0,
           panes: [{ id: 'pane-event-header', type: 'event-header' }],
         },
         {
           id: 'cell-chart',
-          heightPercent: 44,
+          heightPercent: 47,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-chart', type: 'chart' }],
+          panes: [{ id: 'pane-chart', type: 'prediction-chart' }],
         },
         {
           id: 'cell-ladder',
-          heightPercent: 40,
+          heightPercent: 38,
           activeTabIndex: 0,
           panes: [{ id: 'pane-outcome-ladder', type: 'outcome-ladder' }],
         },
@@ -145,13 +160,13 @@ export const PREDICTION_RACE_LAYOUT = {
       cells: [
         {
           id: 'cell-orderbook',
-          heightPercent: 33,
+          heightPercent: 30,
           activeTabIndex: 0,
           panes: [{ id: 'pane-orderbook', type: 'orderbook' }],
         },
         {
           id: 'cell-basket',
-          heightPercent: 67,
+          heightPercent: 70,
           activeTabIndex: 0,
           panes: [{ id: 'pane-basket-ticket', type: 'basket-ticket' }],
         },
@@ -162,14 +177,20 @@ export const PREDICTION_RACE_LAYOUT = {
       widthPercent: 20,
       cells: [
         {
+          id: 'cell-event-brief',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-event-brief', type: 'event-brief' }],
+        },
+        {
           id: 'cell-trades',
-          heightPercent: 71,
+          heightPercent: 36,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trades', type: 'trades' }],
         },
         {
           id: 'cell-positions',
-          heightPercent: 29,
+          heightPercent: 24,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-prediction-positions', type: 'prediction-positions' },
@@ -255,9 +276,9 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'pair',
     routeMenu: true,
     icon: 'Scale',
-    tagline: 'The question first, then the odds.',
+    tagline: 'The question, the rules, then the odds.',
     description:
-      'The default prediction-market layout: the event header over a probability chart, with the headlines that moved it below, the book and a ticket that states max payout and max loss before you stake, and the neighbouring outcomes on the right.',
+      'The default prediction-market layout: the event header over a probability chart built for contracts rather than candles, with the headlines that moved it below, the book and a ticket that states max payout and max loss before you stake, and the resolution criteria over the neighbouring outcomes on the right.',
     facets: {
       traderTypes: ['news-trader', 'swing-trader'],
       assetClasses: ['predictions'],
@@ -296,9 +317,9 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'pair',
     routeMenu: true,
     icon: 'ListOrdered',
-    tagline: 'Every runner priced, and the overround stated.',
+    tagline: 'Every runner on one chart, and the overround stated.',
     description:
-      'For an event with a field rather than two sides: the header with the runner count and the overround, a stacked-shares chart, and a ladder that prices every runner and stakes from the row. The basket sums to the overround, so sweeping the field is visibly not free money.',
+      'For an event with a field rather than two sides: the header with the runner count and the overround, a probability chart that draws every runner on one axis so you can see who is closing on whom, and a ladder that prices the whole field and stakes from the row. The basket sums to the overround, so sweeping the field is visibly not free money.',
     facets: {
       traderTypes: ['news-trader', 'swing-trader'],
       assetClasses: ['predictions'],

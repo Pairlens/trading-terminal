@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 7 min read
 ---
 
@@ -45,7 +45,8 @@ Categories, Event Board, Odds Movers, Resolving Soon), and Web.
 Multi-Price, Venue Ladder, Pair Info, Pair Dossier, Data Log, plus the
 class-specific ones: Funding Belt and Liquidation Map on a perp, Pool Stats,
 On-chain Trades and Chain Ladder on a pool, Session Clock, Level 1, Company and
-Insider Activity on a stock, Event Header on a contract.
+Insider Activity on a stock, Event Header, Probability Chart and Event Brief
+on a contract.
 
 **Trading.** Trade Entry, Positions, Portfolio, Risk, Futures Positions, Margin
 Health, Risk Controls, Prediction Positions, Outcome Ladder, Basket Ticket,
