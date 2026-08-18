@@ -1,0 +1,550 @@
+// Copyright (c) 2026 Juan Ignacio Molina Estrada
+// SPDX-License-Identifier: FSL-1.1-Apache-2.0
+/**
+ * The probability chart. Every answer to the question, over time, on one axis.
+ *
+ * A prediction market is not a price series and the candlestick terminal was
+ * the wrong instrument for it twice over. A contract that trades between 0 and
+ * 1 has no meaningful high/low wick at four decimal places, drawing trendlines
+ * and Fibonacci retracements on a probability is numerology, and a WebGL
+ * context per pane is a lot of machinery for a line that moves a few times an
+ * hour. Worse, the price chart can only ever show ONE outcome — so a race read
+ * as "here is the favourite" when the actual question is who is closing on
+ * whom.
+ *
+ * So this pane is deliberately small: plain recharts over the shared chart
+ * container, no drawing layer, no indicator stack, no GPU. What it spends its
+ * complexity on instead is the thing the price chart cannot do — putting the
+ * whole field on one time axis, in the colours the ladder and the basket
+ * already use for the same runners, with a crosshair that reads every runner
+ * at once so a crossover is visible rather than inferred.
+ *
+ * Two readings the layout is built around. The legend is the chart: it prices
+ * every drawn runner, states its move over the window, and toggles its line,
+ * because with eight lines the question "which one is that" has to be
+ * answerable without a hover. And the cap is stated in the footer — a field of
+ * 128 draws its leaders and says so, rather than implying the other 120 do not
+ * exist.
+ *
+ * The live tick is throttled to a few seconds on purpose. Everything else on a
+ * prediction route (the header's probability, the book, the tape) streams at
+ * full rate; a chart whose window is an hour at its narrowest gains nothing
+ * from re-laying out eight paths sixty times a second, and recharts re-renders
+ * the whole SVG on every data change.
+ */
+import { memo, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from 'recharts'
+import { ChevronRight, TrendingUp } from 'lucide-react'
+
+import { cn } from '@pairlens/ui'
+import { ChartContainer, ChartTooltip } from '@pairlens/ui/components/ui/chart'
+import type { ChartConfig } from '@pairlens/ui/components/ui/chart'
+
+import type { PredictionEventContext } from '@/hooks/use-prediction-event'
+import type {
+  ChartedRunner,
+  PredictionWindowId,
+} from '@/hooks/use-prediction-series'
+import type { SeriesRow } from '@/lib/predictions/series'
+
+import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
+import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import { usePanePair } from '@/lib/layout/pane-context'
+import { usePersistedState } from '@/hooks/use-persisted-state'
+import { usePredictionEventContext } from '@/hooks/use-prediction-event'
+import {
+  DEFAULT_PREDICTION_WINDOW,
+  PREDICTION_WINDOWS,
+  usePredictionSeries,
+} from '@/hooks/use-prediction-series'
+import { LivePriceSampler } from '@/components/predictions/live-price-sampler'
+import { usePredictionSelect } from '@/lib/predictions/navigate'
+import {
+  dayTicks,
+  lastValues,
+  windowChange,
+  withLivePoint,
+} from '@/lib/predictions/series'
+import {
+  formatAxisTime,
+  formatTooltipTime,
+  isDateSpan,
+  spanOf,
+} from '@/lib/predictions/chart-axis'
+import { formatPredictionPrice } from '@/lib/format-price'
+import { track } from '@/lib/analytics-events'
+
+export function PredictionChartPane() {
+  const { t } = useTranslation()
+  const pane = usePanePair()
+  const context = usePredictionEventContext(
+    pane?.pairKey ?? '',
+    pane?.market ?? '',
+  )
+
+  if (!pane) {
+    return (
+      <PaneEmpty
+        body={t('predictionChart.noPairBody')}
+        icon={TrendingUp}
+        title={t('predictionChart.noPairTitle')}
+      />
+    )
+  }
+
+  if (context.state === 'desktop-only') {
+    return (
+      <PaneDesktopOnly
+        descriptionKey="events.desktopOnlyDescription"
+        titleKey="events.desktopOnlyTitle"
+      />
+    )
+  }
+
+  return (
+    <PredictionChartBody
+      context={context}
+      market={pane.market}
+      pairKey={pane.pairKey}
+    />
+  )
+}
+
+function PredictionChartBody({
+  context,
+  market,
+  pairKey,
+}: {
+  context: PredictionEventContext
+  market: string
+  pairKey: string
+}) {
+  const { t } = useTranslation()
+  // Persisted, and deliberately not per-pair: a contract expires, so a span
+  // remembered against one outcome would be remembered for nothing. The span
+  // is a reading habit, and it belongs to the trader.
+  const [windowId, setWindowId] = usePersistedState<PredictionWindowId>(
+    'predictions.chartWindow',
+    DEFAULT_PREDICTION_WINDOW,
+  )
+  const [hidden, setHidden] = useState<ReadonlyArray<string>>([])
+
+  const series = usePredictionSeries(
+    market,
+    context.runners,
+    pairKey,
+    windowId,
+    context.state === 'ready',
+  )
+  const [live, setLive] = useState<number | null>(null)
+
+  const rows = useMemo(
+    () => withLivePoint(series.rows, pairKey, live),
+    [series.rows, pairKey, live],
+  )
+
+  /**
+   * How much clock the chart is actually covering. The tick format keys on
+   * this rather than on the bucket size — see `lib/predictions/chart-axis`.
+   */
+  const span = useMemo(() => spanOf(rows), [rows])
+
+  // Date labels are spaced by day, not by pixel: see `dayTicks`.
+  const ticks = useMemo(
+    () => (isDateSpan(span) ? dayTicks(rows) : undefined),
+    [rows, span],
+  )
+
+  const visible = useMemo(
+    () => series.runners.filter((r) => !hidden.includes(r.pairKey)),
+    [series.runners, hidden],
+  )
+
+  const keys = useMemo(
+    () => series.runners.map((r) => r.pairKey),
+    [series.runners],
+  )
+  const latest = useMemo(() => lastValues(rows, keys), [rows, keys])
+  const change = useMemo(() => windowChange(rows, keys), [rows, keys])
+
+  const drawn = series.runners.length
+  const selectWindow = useCallback(
+    (id: PredictionWindowId) => {
+      setWindowId(id)
+      track('prediction_chart_window_selected', { window: id, runners: drawn })
+    },
+    [setWindowId, drawn],
+  )
+
+  const toggle = useCallback((key: string) => {
+    setHidden((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    )
+  }, [])
+
+  const config = useMemo<ChartConfig>(() => {
+    const out: ChartConfig = {}
+    for (const runner of series.runners) {
+      out[runner.pairKey] = { label: runner.label, color: runner.color }
+    }
+    return out
+  }, [series.runners])
+
+  return (
+    <div className="flex h-full min-h-0 flex-col">
+      {/* Renders nothing. It holds the ticker subscription so the tick stops
+          at a leaf instead of re-running this component and every memo in it
+          sixty times a second. See `LivePriceSampler`. */}
+      <LivePriceSampler onSample={setLive} />
+
+      {context.state === 'error' && context.error && (
+        <div className="px-2 pt-2">
+          <PaneErrorBanner message={context.error} venue={context.venueLabel} />
+        </div>
+      )}
+
+      <Legend
+        change={change}
+        context={context}
+        hidden={hidden}
+        latest={latest}
+        onToggle={toggle}
+        runners={series.runners}
+      />
+
+      <div className="relative min-h-0 flex-1">
+        {series.state === 'ready' ? (
+          <ChartContainer
+            className="aspect-auto size-full [&_.recharts-cartesian-grid_line]:stroke-border/40"
+            config={config}
+          >
+            <LineChart
+              data={rows}
+              margin={{ top: 8, right: 4, bottom: 0, left: 0 }}
+            >
+              <CartesianGrid vertical={false} strokeDasharray="2 4" />
+              {/* Even odds. The one horizontal a probability chart earns: on a
+                  binary contract it is the line the question flips across, and
+                  on a race it is the level a runner becomes the favourite at. */}
+              <ReferenceLine
+                stroke="var(--border)"
+                strokeDasharray="4 4"
+                y={0.5}
+              />
+              <XAxis
+                axisLine={false}
+                dataKey="ts"
+                domain={['dataMin', 'dataMax']}
+                minTickGap={44}
+                scale="time"
+                tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+                tickFormatter={(value: number) => formatAxisTime(value, span)}
+                tickLine={false}
+                ticks={ticks}
+                type="number"
+              />
+              {/* Fixed 0–100%, never auto-scaled to the field. A race whose
+                  leader sits at 12% would otherwise fill the pane and read as
+                  a certainty, and two runners two points apart would look like
+                  a chasm. The empty top of the chart IS the reading: nobody in
+                  this field is close to winning. */}
+              <YAxis
+                axisLine={false}
+                domain={[0, 1]}
+                tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
+                tickFormatter={(value: number) => `${Math.round(value * 100)}%`}
+                tickLine={false}
+                ticks={[0, 0.25, 0.5, 0.75, 1]}
+                width={34}
+              />
+              <ChartTooltip
+                content={<ProbabilityTooltip runners={visible} spanMs={span} />}
+                cursor={{ stroke: 'var(--border)', strokeWidth: 1 }}
+              />
+              {visible.map((runner) => (
+                <Line
+                  key={runner.pairKey}
+                  activeDot={{ r: 3, strokeWidth: 0 }}
+                  // A runner listed mid-window has no earlier price, and
+                  // joining across the hole would draw a probability the
+                  // market never quoted.
+                  connectNulls={false}
+                  dataKey={runner.pairKey}
+                  dot={false}
+                  isAnimationActive={false}
+                  stroke={runner.color}
+                  strokeWidth={runner.active ? 2.25 : 1.4}
+                  type="monotone"
+                />
+              ))}
+            </LineChart>
+          </ChartContainer>
+        ) : (
+          <div className="flex h-full items-center justify-center px-6 text-center">
+            <p className="text-xs text-muted-foreground">
+              {series.state === 'loading' || context.state === 'loading'
+                ? t('predictionChart.loading')
+                : t('predictionChart.noHistory', { venue: context.venueLabel })}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <Footer
+        hiddenRunners={series.hidden}
+        onWindow={selectWindow}
+        stride={series.stride}
+        windowId={windowId}
+      />
+    </div>
+  )
+}
+
+// ── Legend ────────────────────────────────────────────────────────────
+
+/**
+ * Every drawn runner, priced, with its move over the window and a switch.
+ *
+ * Not a recharts legend: it has to carry a number per runner (a colour alone
+ * does not answer "which one is winning"), survive being scrolled at eight
+ * entries in a docked pane, and pivot the route. The chip toggles the line;
+ * the caret opens the outcome, because on a race the chart is where you decide
+ * which contract you actually want the book and the ticket pointed at.
+ */
+const Legend = memo(function Legend({
+  change,
+  context,
+  hidden,
+  latest,
+  onToggle,
+  runners,
+}: {
+  change: Map<string, number>
+  context: PredictionEventContext
+  hidden: ReadonlyArray<string>
+  latest: Map<string, number>
+  onToggle: (key: string) => void
+  runners: Array<ChartedRunner>
+}) {
+  const { t } = useTranslation()
+  const select = usePredictionSelect()
+
+  if (runners.length === 0) return null
+
+  return (
+    <div className="flex flex-wrap gap-1 overflow-y-auto px-2 py-1.5 [scrollbar-width:thin]">
+      {runners.map((runner) => {
+        const off = hidden.includes(runner.pairKey)
+        const price = latest.get(runner.pairKey)
+        const move = change.get(runner.pairKey)
+        const source = context.runners.find(
+          (r) => r.yes.pairKey === runner.pairKey,
+        )
+        return (
+          <div
+            key={runner.pairKey}
+            className={cn(
+              'group flex h-[22px] items-center rounded-md border pl-1.5 text-[11px] transition-colors',
+              runner.active
+                ? 'border-primary/40 bg-primary/5'
+                : 'border-transparent bg-muted/40',
+              off && 'opacity-40',
+            )}
+          >
+            <button
+              aria-pressed={!off}
+              className="flex min-w-0 items-center gap-1.5 pr-1.5"
+              onClick={() => onToggle(runner.pairKey)}
+              title={t('predictionChart.toggleLine', { name: runner.label })}
+              type="button"
+            >
+              <span
+                aria-hidden
+                className="size-1.5 shrink-0 rounded-full"
+                style={{ backgroundColor: runner.color }}
+              />
+              <span className="max-w-[128px] truncate font-medium">
+                {runner.label}
+              </span>
+              {price !== undefined && (
+                <span className="font-mono tabular-nums">
+                  {Math.round(price * 100)}%
+                </span>
+              )}
+              {move !== undefined && Math.abs(move) >= 0.005 && (
+                <span
+                  className={cn(
+                    'font-mono tabular-nums',
+                    move > 0 ? 'text-up' : 'text-down',
+                  )}
+                >
+                  {move > 0 ? '+' : ''}
+                  {(move * 100).toFixed(0)}
+                </span>
+              )}
+              {runner.unavailable && (
+                <span className="text-muted-foreground">
+                  {t('predictionChart.noLine')}
+                </span>
+              )}
+            </button>
+            {source && context.event && !runner.active && (
+              <button
+                aria-label={t('predictionChart.openOutcome', {
+                  name: runner.label,
+                })}
+                className="flex h-full items-center rounded-r-md px-0.5 text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100 focus-visible:opacity-100"
+                onClick={() =>
+                  select.open({
+                    venue: context.venue,
+                    event: context.event!,
+                    market: source.market,
+                    pairKey: source.yes.pairKey,
+                    label: source.yes.label,
+                  })
+                }
+                type="button"
+              >
+                <ChevronRight className="size-3" />
+              </button>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+})
+
+// ── Crosshair ─────────────────────────────────────────────────────────
+
+type TooltipPayload = {
+  dataKey?: string | number
+  value?: number
+  payload?: SeriesRow
+}
+
+/**
+ * Every visible runner at the hovered instant, richest first.
+ *
+ * Re-sorted per point rather than kept in legend order: reading a crossover
+ * off a chart means seeing the order swap as the crosshair passes it, and a
+ * tooltip pinned to a fixed order hides exactly that.
+ */
+function ProbabilityTooltip({
+  active,
+  payload,
+  runners,
+  spanMs,
+}: {
+  active?: boolean
+  payload?: Array<TooltipPayload>
+  runners: Array<ChartedRunner>
+  spanMs: number
+}) {
+  if (!active || !payload?.length) return null
+
+  const ts = payload[0]?.payload?.ts
+  const rows = payload
+    .map((entry) => {
+      const key = String(entry.dataKey ?? '')
+      const runner = runners.find((r) => r.pairKey === key)
+      if (!runner || typeof entry.value !== 'number') return null
+      return { runner, value: entry.value }
+    })
+    .filter(
+      (row): row is { runner: ChartedRunner; value: number } => row !== null,
+    )
+    .sort((a, b) => b.value - a.value)
+
+  if (rows.length === 0) return null
+
+  return (
+    <div className="rounded-lg border bg-popover px-2.5 py-1.5 text-[11px] shadow-md">
+      {typeof ts === 'number' && (
+        <p className="mb-1 font-mono text-[10px] text-muted-foreground">
+          {formatTooltipTime(ts, spanMs)}
+        </p>
+      )}
+      <div className="flex flex-col gap-0.5">
+        {rows.map(({ runner, value }) => (
+          <div key={runner.pairKey} className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="size-1.5 shrink-0 rounded-full"
+              style={{ backgroundColor: runner.color }}
+            />
+            <span className="max-w-[150px] flex-1 truncate">
+              {runner.label}
+            </span>
+            <span className="font-mono tabular-nums">
+              {(value * 100).toFixed(1)}%
+            </span>
+            {/* The probability is the reading; the cents are what it costs.
+                Both, because the chart is used to decide and to price. */}
+            <span className="font-mono tabular-nums text-muted-foreground">
+              {formatPredictionPrice(value)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ── Footer ────────────────────────────────────────────────────────────
+
+/**
+ * The span pills, and what the chart is not showing.
+ *
+ * The cap and the stride are both stated here. A chart that quietly drew every
+ * fourth minute, or quietly dropped 120 runners, would read as complete — and
+ * "the ladder has the rest" is a one-line answer that keeps it honest.
+ */
+function Footer({
+  hiddenRunners,
+  onWindow,
+  stride,
+  windowId,
+}: {
+  hiddenRunners: number
+  onWindow: (id: PredictionWindowId) => void
+  stride: number
+  windowId: PredictionWindowId
+}) {
+  const { t } = useTranslation()
+  return (
+    <div className="flex items-center justify-between gap-2 border-t px-2 py-1">
+      <div className="flex gap-0.5">
+        {PREDICTION_WINDOWS.map((win) => (
+          <button
+            key={win.id}
+            className={cn(
+              'rounded px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
+              win.id === windowId
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+            onClick={() => onWindow(win.id)}
+            type="button"
+          >
+            {t(win.labelKey)}
+          </button>
+        ))}
+      </div>
+      <p className="truncate text-[10px] text-muted-foreground">
+        {hiddenRunners > 0 &&
+          t('predictionChart.capped', { count: hiddenRunners })}
+        {hiddenRunners > 0 && stride > 1 && ' · '}
+        {stride > 1 && t('predictionChart.strided', { count: stride })}
+      </p>
+    </div>
+  )
+}

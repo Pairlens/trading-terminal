@@ -333,6 +333,12 @@ export interface AnalyticsEvents {
    * preview is the right depth or the cards should carry more rows. The count
    * is how many runners the preview hid, never which event. */
   prediction_full_field_opened: { runners_hidden: number }
+  /** A span picked on the probability chart. The chart replaced the price
+   * chart on the prediction boards, so this is how we learn whether a
+   * prediction is read over hours or over weeks — and whether five spans is
+   * four too many. `runners` is how many lines were drawn, which says whether
+   * the multi-outcome view is what people came for; never which event. */
+  prediction_chart_window_selected: { window: string; runners: number }
 
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }
@@ -429,6 +435,14 @@ export interface AnalyticsEvents {
     surface: 'event' | 'ladder'
     source: 'chart_strip' | 'event_screen' | 'trade_ticket' | 'events_board'
   }
+  /**
+   * The phone's Chart tab switched between the probability view and candles.
+   * The odds view is the new default, so this is the one number that says
+   * whether that default was right: a stream of switches to `candles` means
+   * people came to a prediction chart wanting a price chart after all. Never
+   * carries which contract.
+   */
+  mobile_prediction_chart_view: { view: 'odds' | 'candles' }
 }
 
 /**

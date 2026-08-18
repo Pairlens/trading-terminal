@@ -154,6 +154,8 @@ const PANES_NEEDING_PAIR = new Set([
   'funding-belt',
   'liquidation-map',
   'event-header',
+  'prediction-chart',
+  'event-brief',
   'what-moved-it',
   'outcome-ladder',
   'basket-ticket',

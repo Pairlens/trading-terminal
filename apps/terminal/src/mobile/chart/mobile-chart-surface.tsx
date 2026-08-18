@@ -30,10 +30,12 @@ import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { MobileChart } from './mobile-chart'
 import { ChartSwitchIndicator } from './chart-switch-indicator'
 import type { ReactNode, PointerEvent as ReactPointerEvent } from 'react'
+import type { PredictionChartView } from './prediction-view-chip'
 import { lazyChunk } from '@/lib/lazy-chunk'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
 
 /**
@@ -42,6 +44,16 @@ import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
  * the gate below is what makes the split worth having.
  */
 const PredictionEventStrip = lazyChunk(() => import('./prediction-event-strip'))
+
+/**
+ * The probability chart, and the control that switches away from it. Both lazy
+ * behind the same prediction gate as the strip: a chart of BTC-USDT never
+ * downloads recharts or the event-browsing hooks.
+ */
+const MobileProbabilityChart = lazyChunk(
+  () => import('./mobile-probability-chart'),
+)
+const PredictionViewChip = lazyChunk(() => import('./prediction-view-chip'))
 
 export type MobileChartSurfaceProps = {
   /**
@@ -125,6 +137,44 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
   // pays for the event-browsing hooks.
   const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
 
+  /**
+   * Odds by default on a prediction, candles everywhere else.
+   *
+   * Persisted across contracts and sessions rather than reset per pair: a
+   * trader who wants candles on event markets wants them on the next one too,
+   * and a view that reverted under them on every navigation would read as the
+   * switch not having worked.
+   */
+  const [predictionView, setPredictionView] =
+    usePersistedState<PredictionChartView>(
+      'mobile.predictions.chartView',
+      'odds',
+    )
+
+  /**
+   * The odds view needs an EVENT, and a cold link does not carry one.
+   *
+   * `usePredictionEventContext` finds the siblings by searching the venue for
+   * the heading the directory pin recorded, so a contract reached by tapping a
+   * card resolves and one reached by pasting a URL into a fresh browser does
+   * not. The pair key alone still charts, which is exactly what the candle
+   * view is: so when there is no field to draw, the chart falls back to it
+   * rather than parking on an empty plot the user cannot act on.
+   *
+   * Keyed to the market so it re-tries on the next contract, and folded during
+   * render like `switchRef` above so the fallback lands on the same frame the
+   * chart reports it rather than one after.
+   */
+  const [eventless, setEventless] = useState<string | null>(null)
+  const marketKey = `${focusedVenue}:${focusedPair}`
+  const hasField = eventless !== marketKey
+  const showProbability = isPrediction && predictionView === 'odds' && hasField
+
+  const reportEventless = useCallback(
+    (missing: boolean) => setEventless(missing ? marketKey : null),
+    [marketKey],
+  )
+
   // The venue-change bit has to be remembered by something that outlives the
   // indicator: the switch and the cleared snapshot happen in the SAME render,
   // so a component mounted afterwards would compare a venue against itself and
@@ -148,7 +198,14 @@ export function MobileChartSurface(props: MobileChartSurfaceProps) {
       // Bare chart only. Under a docked panel the readout has compacted into
       // the band this would occupy, and the Trade ticket already carries the
       // question over its own fields.
+      onEventless={reportEventless}
+      onPredictionView={setPredictionView}
+      // The switch is hidden, not disabled, when there is no field to draw:
+      // a segmented control whose other half does nothing is worse than no
+      // control, and here the fallback IS the only view available.
+      predictionView={isPrediction && hasField ? predictionView : null}
       showEventStrip={isPrediction && props.band === 'full'}
+      showProbability={showProbability}
       venueChanged={switchRef.current.venueChanged}
     />
   )
@@ -169,14 +226,23 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   desktopOnly,
   noData,
   hasSnapshot,
+  onEventless,
+  onPredictionView,
+  predictionView,
   showEventStrip,
+  showProbability,
   venueChanged,
 }: MobileChartSurfaceProps & {
   credentialState: 'ok' | 'sealed' | 'missing'
   desktopOnly: boolean
   noData: boolean
   hasSnapshot: boolean
+  onEventless: (missing: boolean) => void
+  onPredictionView: (view: PredictionChartView) => void
+  /** Null on anything that is not an event contract — no chip, no choice. */
+  predictionView: PredictionChartView | null
   showEventStrip: boolean
+  showProbability: boolean
   venueChanged: boolean
 }) {
   const tapRef = useRef<{ x: number; y: number; t: number } | null>(null)
@@ -205,13 +271,21 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
   // Ahead of `noData` for the same reason as the desktop pane: with no key
   // nothing was ever subscribed, so "no chart data" would blame the venue.
   const credentialsBlocked = credentialState !== 'ok'
-  const unavailable =
-    credentialsBlocked || desktopOnly || (noData && !hasSnapshot)
+  // The candle-stream verdicts are the CANDLE chart's. The odds view draws
+  // from `market-data:history` across the whole field and never subscribes, so
+  // gating it on the stream hid a perfectly good probability chart behind "no
+  // data for this pair here" on any contract quiet enough to have no candle in
+  // the streamed interval. The credential and desktop-only gates still apply
+  // to both: those block the venue, not the feed.
+  const feedUnavailable = noData && !hasSnapshot && !showProbability
+  const unavailable = credentialsBlocked || desktopOnly || feedUnavailable
   // Same test the desktop pane runs (`phase` in chart-pane.tsx): the buffer is
   // cleared the moment the request changes, so "no snapshot yet" IS "waiting".
   // It is bounded by the states above — a venue that never answers resolves to
-  // `noData` and the empty state takes over from the indicator.
-  const switching = !unavailable && !hasSnapshot
+  // `noData` and the empty state takes over from the indicator. The odds view
+  // is exempt for the reason above: it has its own loading copy and would
+  // otherwise sit dimmed behind a badge waiting on a stream it never reads.
+  const switching = !unavailable && !hasSnapshot && !showProbability
 
   return (
     <div
@@ -248,10 +322,21 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           // overriding it.
           style={{
             opacity: switching ? opacity * SWITCH_DIM : opacity,
-            ...CHART_FRAME,
+            // The odds view runs to the bottom of the band: it has no drawing
+            // toolbar to reserve for, and it spends those 50px on its spans.
+            ...(showProbability ? { bottom: 0 } : CHART_FRAME),
           }}
         >
-          <MobileChart band={band} />
+          {showProbability ? (
+            // Fallback null rather than a spinner: the price readout and the
+            // event strip are already painted over this box, and a spinner
+            // under them would read as the whole chart failing.
+            <Suspense fallback={null}>
+              <MobileProbabilityChart onEventless={onEventless} />
+            </Suspense>
+          ) : (
+            <MobileChart band={band} />
+          )}
         </div>
       )}
 
@@ -274,14 +359,28 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           rather than through props — see mobile-sheet.tsx. */}
       <div className="pointer-events-none absolute inset-x-4 top-2 z-20 flex items-start justify-between gap-3">
         <PriceReadout />
-        {timeframeSlot ? (
+        {/* The corner carries one chip on most markets and two on an event
+            contract. The interval picker is dropped in the odds view and only
+            there: that view has its own spans and no candles to bucket, while
+            the candle view is still a real chart that needs tuning. The view
+            switch is always present, because a control you can only reach from
+            the view you want to leave is a trap. */}
+        {timeframeSlot || predictionView ? (
           <div
-            className="pl-tf-chip pointer-events-auto shrink-0"
+            className="pl-tf-chip pointer-events-auto flex shrink-0 items-start gap-1.5"
             // Faded to nothing at the expanded snap: the chip is what the
             // limit-line tag used to collide with up there.
             data-faded={expanded ? 'true' : undefined}
           >
-            {timeframeSlot}
+            {timeframeSlot && !showProbability ? timeframeSlot : null}
+            {predictionView ? (
+              <Suspense fallback={null}>
+                <PredictionViewChip
+                  onChange={onPredictionView}
+                  view={predictionView}
+                />
+              </Suspense>
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -318,7 +417,12 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           `inset-0`: overlays in this slot measure themselves to convert price
           to pixels, and a slot taller than the chart lets the limit line be
           dragged into a price several screens below the plot. */}
-      {overlay ? (
+      {/* Suppressed in the odds view. The limit line converts price to pixels
+          through the chart engine's own scale, and that engine is unmounted
+          here — a level dragged to "68¢" would be pointing at nothing. The
+          Trade ticket's numeric limit field is untouched, and candles are one
+          tap away in the corner. */}
+      {overlay && !showProbability ? (
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-20"
           style={CHART_FRAME}
@@ -334,7 +438,8 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
           already-visible empty space. Now it rides `--pl-sheet-dock`, which is
           the sheet's own position — the entrance cannot desynchronise from the
           exit because it IS the exit. */}
-      {footer ? (
+      {/* Same reason as the overlay above: there is nothing to draw on. */}
+      {footer && !showProbability ? (
         // `inert` while docked: the strip is hidden by opacity/transform, and
         // an invisible toolbar must not keep nine buttons in the tab order and
         // the accessibility tree under every panel.

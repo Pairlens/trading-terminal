@@ -75,11 +75,15 @@ describe('pairWorkspaceFor', () => {
   })
 
   test('every class default carries a chart and its own trading surfaces', () => {
+    // Predictions chart through `prediction-chart`, not `chart`: a contract
+    // priced 0..1 has no wick worth drawing and the price chart can only ever
+    // show one outcome, which on an event with a field is the wrong question.
     const expectations: Record<InstrumentClass, Array<string>> = {
       spot: ['chart', 'positions', 'orderbook', 'trade-entry'],
       perp: ['chart', 'futures-positions', 'orderbook', 'trade-entry'],
       prediction: [
-        'chart',
+        'prediction-chart',
+        'event-brief',
         'events',
         'prediction-positions',
         'orderbook',

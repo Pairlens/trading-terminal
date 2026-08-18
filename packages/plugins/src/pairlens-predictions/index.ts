@@ -108,6 +108,34 @@ export const pairlensPredictionsManifest: PluginManifest = {
         requires: ['workspace:active-pair'],
       },
       {
+        // Deliberately NOT a variant of the price chart. A probability has no
+        // meaningful wick, drawings on it are numerology, and one WebGL
+        // context per pane is a lot of machinery for a line that moves a few
+        // times an hour. What it does that the price chart cannot is draw the
+        // whole field on one axis.
+        id: 'prediction-chart',
+        label: 'Probability Chart',
+        labelKey: 'panes.predictionChart',
+        descriptionKey: 'paneDescriptions.predictionChart',
+        icon: 'TrendingUp',
+        category: 'charting',
+        minHeight: 180,
+        requires: ['workspace:active-pair'],
+      },
+      {
+        // The resolution criteria are not a tooltip. A trader who can size a
+        // stake without ever seeing the sentence that settles it is one the
+        // desk failed, so the prose gets a pane of its own.
+        id: 'event-brief',
+        label: 'Event Brief',
+        labelKey: 'panes.eventBrief',
+        descriptionKey: 'paneDescriptions.eventBrief',
+        icon: 'ScrollText',
+        category: 'charting',
+        minHeight: 140,
+        requires: ['workspace:active-pair'],
+      },
+      {
         id: 'what-moved-it',
         label: 'What Moved It',
         labelKey: 'panes.whatMovedIt',
