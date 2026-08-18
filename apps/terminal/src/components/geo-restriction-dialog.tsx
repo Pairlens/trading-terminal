@@ -20,7 +20,7 @@ import { useSettingsDialogStore } from '@/stores/settings-dialog-store'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { getCountryLabel, getCountrySetting } from '@/lib/region-settings'
-import { switchActiveMarket } from '@/lib/switch-market'
+import { useSwitchVenue } from '@/hooks/use-switch-venue'
 
 /**
  * App-level dialog shown when the currently selected connector is unavailable
@@ -29,13 +29,16 @@ import { switchActiveMarket } from '@/lib/switch-market'
  * this dialog only renders the result and offers recovery actions.
  *
  * It is gated on the *active* connector (`terminal.market`) so switching away
- * dismisses it automatically, and acts as a cache when switching back.
+ * dismisses it automatically, and acts as a cache when switching back. The gate
+ * stays on that preference; the SWITCH goes through `useSwitchVenue`, because
+ * on a pair page the charted venue is the one in the URL.
  */
 export function GeoRestrictionDialog() {
   const { t } = useTranslation()
   const restriction = useGeoRestrictionStore((s) => s.restriction)
   const clear = useGeoRestrictionStore((s) => s.clear)
   const { markets, defaultMarket } = useAvailableMarkets()
+  const switchVenue = useSwitchVenue()
   const [activeMarket] = usePersistedState<string>(
     'terminal.market',
     defaultMarket,
@@ -63,9 +66,14 @@ export function GeoRestrictionDialog() {
 
   const handleSwitch = () => {
     if (!alternative) return
-    switchActiveMarket(alternative.value)
-    // The market gate will hide the dialog once terminal.market updates, but
-    // clear proactively so it can't flicker on a stale frame.
+    // Through the shared switch, not a bare preference write: on a pair page
+    // the venue lives in the URL, and this dialog exists BECAUSE the venue in
+    // that URL is blocked. Writing only the preference left the blocked tape
+    // charted and the dialog re-arming on the next probe.
+    switchVenue(alternative.value)
+    // The gate reads the preference, which the switch still writes, so this
+    // would hide on its own; clear proactively so it can't flicker on a stale
+    // frame.
     clear()
   }
 

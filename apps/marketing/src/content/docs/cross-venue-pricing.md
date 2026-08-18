@@ -6,7 +6,7 @@ parent: market-data
 order: 4
 eyebrow: For traders
 updated: AUG 2026
-readTime: 4 min read
+readTime: 5 min read
 ---
 
 A single chart cannot answer "where is this cheapest right now". The Multi-Price
@@ -27,7 +27,27 @@ joins at around 16rem and the 24-hour column at 24rem. Everything past the floor
 is a comparison the badges already make qualitatively, so dropping a column
 costs emphasis rather than meaning.
 
-Click any row to chart the pair on that venue.
+## Switching venue from the board
+
+Click any row to move to that venue. Both this panel and the compact
+**Venue Ladder** do it, and what moves depends on which pair the panel is
+showing.
+
+On a pair page the click is a navigation: the address becomes
+`/spot/kraken/BTC-USDT`, the chart re-streams from the new tape, and the book
+and the ticket follow it. That is deliberate: the venue is part of the address,
+so a link you share afterwards opens on the venue you were reading rather than
+on whichever one the reader happens to prefer. The switch replaces the address
+instead of stacking on it, so flicking through five venues on one pair does not
+leave five entries to walk back out of.
+
+On a board where the panel holds its own pair, either as a pane override or
+bound to a workspace variable, the click moves that pair instead. An override
+moves this panel alone; a bound variable moves every panel bound to it, which is
+how a chart beside the board follows along.
+
+Two kinds of row do not move anything, because there is nothing to move to: a
+venue that does not list the pair, and a connector that needs the desktop app.
 
 ## How rows are ranked
 

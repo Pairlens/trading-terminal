@@ -63,6 +63,7 @@ import type {
 } from './omni-search-types'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import { pinSelectedEntry } from '@/components/pair-picker/pair-picker-data'
+import { TokenIdentityBadge } from '@/components/pair-picker/token-identity-badge'
 import { ASSET_CLASS_LABELS } from '@/components/terminal/market-picker'
 import { getWorkspaceIcon } from '@/components/workspace/workspace-icons'
 import { getPaneIcon } from '@/lib/layout/pane-icons'
@@ -217,6 +218,9 @@ export const PairResultItem = memo(function PairResultItem({
       <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
         {pair.name}
       </span>
+      {/* Only tokens draw one, and only tokens need one: it is the chain and
+          contract that separate eight rows reading the same ticker. */}
+      <TokenIdentityBadge entry={pair} />
       {isWatched && (
         <Star className="size-3 shrink-0 fill-amber-400 text-amber-400" />
       )}
