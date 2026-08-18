@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { Candle, Market, SignalPayload, Timeframe } from './types'
 import type {
-  AIMessage,
   RiskState,
   Signal,
   UserConfig,
@@ -92,7 +91,6 @@ export type RtsToClientMessage =
   | WsEnvelope<'userConfig.updated', UserConfig>
   | WsEnvelope<'riskState.updated', RiskState>
   | WsEnvelope<'signal.new', Signal>
-  | WsEnvelope<'aiMessage.new', AIMessage>
   | WsEnvelope<'workspace.updated', WorkspaceLayout>
   | WsEnvelope<'auth.session', { userId: string; email: string }>
   | WsEnvelope<

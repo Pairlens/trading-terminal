@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type {
-  AIMessage,
-  AIMessageScope,
   ChartState,
   EncryptedPluginConfig,
   PersistenceTier,
@@ -22,13 +20,6 @@ import type {
 } from './types'
 
 export interface PersistenceAdapter {
-  // AI conversation history
-  getAIMessages: (
-    scope: AIMessageScope,
-    limit?: number,
-  ) => Promise<Array<AIMessage>>
-  appendAIMessage: (scope: AIMessageScope, message: AIMessage) => Promise<void>
-
   // User configuration
   getUserConfig: (userId: string) => Promise<UserConfig | null>
   updateUserConfig: (

@@ -3,7 +3,6 @@
 import { beforeEach, describe, expect, it } from 'bun:test'
 import { LocalPersistenceAdapter } from '../local-adapter'
 import type {
-  AIMessage,
   ChartState,
   RiskState,
   Signal,
@@ -16,17 +15,6 @@ import type {
 // Helper: create a fresh adapter for each test
 function makeAdapter(): LocalPersistenceAdapter {
   return new LocalPersistenceAdapter()
-}
-
-// Helper: create a minimal AIMessage
-function makeMessage(overrides?: Partial<AIMessage>): AIMessage {
-  return {
-    id: crypto.randomUUID(),
-    role: 'user',
-    content: 'hello world',
-    createdAt: Date.now(),
-    ...overrides,
-  }
 }
 
 // Helper: create a minimal Signal
@@ -47,68 +35,6 @@ function makeSignal(overrides?: Partial<Signal>): Signal {
     ...overrides,
   }
 }
-
-// ---------------------------------------------------------------------------
-// AI Messages
-// ---------------------------------------------------------------------------
-
-describe('LocalPersistenceAdapter — AI messages', () => {
-  let adapter: LocalPersistenceAdapter
-  const scope = { userId: 'user-1', market: 'okx', pairKey: 'BTC-USDT' }
-
-  beforeEach(() => {
-    adapter = makeAdapter()
-  })
-
-  it('returns empty array when no messages exist', async () => {
-    const msgs = await adapter.getAIMessages(scope)
-    expect(msgs).toEqual([])
-  })
-
-  it('appends and retrieves a single message', async () => {
-    const msg = makeMessage({ content: 'first message' })
-    await adapter.appendAIMessage(scope, msg)
-    const result = await adapter.getAIMessages(scope)
-    expect(result).toHaveLength(1)
-    expect(result[0]?.content).toBe('first message')
-  })
-
-  it('appends multiple messages and respects limit', async () => {
-    for (let i = 0; i < 5; i++) {
-      await adapter.appendAIMessage(scope, makeMessage({ content: `msg ${i}` }))
-    }
-
-    const all = await adapter.getAIMessages(scope)
-    expect(all).toHaveLength(5)
-
-    const limited = await adapter.getAIMessages(scope, 2)
-    expect(limited).toHaveLength(2)
-    // limit returns the last N entries
-    expect(limited[1]?.content).toBe('msg 4')
-  })
-
-  it('scopes messages per market and pairKey', async () => {
-    const scopeA = { userId: 'user-1', market: 'okx', pairKey: 'BTC-USDT' }
-    const scopeB = { userId: 'user-1', market: 'okx', pairKey: 'ETH-USDT' }
-
-    await adapter.appendAIMessage(
-      scopeA,
-      makeMessage({ content: 'btc message' }),
-    )
-    await adapter.appendAIMessage(
-      scopeB,
-      makeMessage({ content: 'eth message' }),
-    )
-
-    const btc = await adapter.getAIMessages(scopeA)
-    const eth = await adapter.getAIMessages(scopeB)
-
-    expect(btc).toHaveLength(1)
-    expect(btc[0]?.content).toBe('btc message')
-    expect(eth).toHaveLength(1)
-    expect(eth[0]?.content).toBe('eth message')
-  })
-})
 
 // ---------------------------------------------------------------------------
 // User Config

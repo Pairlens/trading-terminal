@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 7 min read
 ---
 
@@ -149,10 +149,11 @@ notification fires once rather than once per window.
 ## Signed in or not
 
 Everything above works with no account. Signing in with your email adds
-cross-device sync for workspaces, chart layouts, alerts, workflows, your trade
-journal, and AI conversations. It never adds anything to the credential path:
-exchange keys stay on your device either way, in the OS keychain on desktop or
-the encrypted vault in a browser.
+cross-device sync for workspaces, chart layouts, alerts, workflows, and your
+trade journal. It never adds anything to the credential path: exchange keys stay
+on your device either way, in the OS keychain on desktop or the encrypted vault
+in a browser. Assistant conversations stay put too, on the device that made
+them.
 
 ## Where to next
 

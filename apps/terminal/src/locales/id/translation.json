@@ -1501,11 +1501,6 @@
           "title": "Plugin",
           "description": "Plugin mana yang kamu aktifkan, pengaturannya, dan penyedia yang kamu sematkan. Pengaturan termasuk kunci API apa pun yang kamu isikan di setelan sebuah plugin, misalnya kunci penyedia AI. Kunci API bursa dan rahasia dompet tidak pernah ikut, semuanya tetap di keychain-mu. Penyedia yang disematkan hanya disimpan di akunmu, jadi saat ini dimatikan mereka bertahan sampai aplikasi ditutup."
         },
-        "copilot": {
-          "title": "Riwayat obrolan AI",
-          "description": "Satu percakapan dengan asisten, untuk seluruh terminal.",
-          "caveat": "Selama ini mati, menghapus riwayat chat hanya menghapusnya di perangkat ini. Percakapan yang sudah ada di akunmu tetap tersimpan dan akan muncul lagi saat sinkronisasi dinyalakan kembali."
-        },
         "trades": {
           "title": "Jurnal transaksi",
           "description": "Transaksi yang kamu atau asisten catat ke jurnal."
@@ -2323,7 +2318,6 @@
     "title": "Asisten",
     "open": "Buka asisten",
     "close": "Perkecil asisten",
-    "clear": "Hapus percakapan",
     "placeholder": "Tanya apa saja, atau beri tahu saya apa yang mau dibangun...",
     "answerPlaceholder": "Ketik jawaban Anda...",
     "emptyTitle": "Kita kerjakan apa?",
@@ -2368,7 +2362,23 @@
     "approvalDecline": "Tolak",
     "approvalApproved": "Disetujui",
     "approvalDeclined": "Ditolak",
-    "resetPosition": "Reset posisi"
+    "resetPosition": "Reset posisi",
+    "conversations": {
+      "new": "Percakapan baru",
+      "untitled": "Tanpa judul",
+      "history": "Riwayat",
+      "close": "Tutup",
+      "empty": "Belum ada apa-apa. Tanyakan sesuatu dan tersimpan di perangkat ini.",
+      "localOnly": "Disimpan hanya di perangkat ini",
+      "delete": "Hapus percakapan",
+      "deleteTitle": "Hapus percakapan ini?",
+      "deleteDescription": "\"{{name}}\" beserta seluruh isinya hilang. Tidak bisa dibatalkan.",
+      "cancel": "Batal",
+      "today": "Hari ini",
+      "yesterday": "Kemarin",
+      "previous7Days": "7 hari terakhir",
+      "older": "Lebih lama"
+    }
   },
   "copilot": {
     "placeholder": "Tanyakan lens Anda...",

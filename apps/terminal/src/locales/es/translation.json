@@ -1501,11 +1501,6 @@
           "title": "Plugins",
           "description": "Qué plugins tienes activados, su configuración y tus proveedores fijados. La configuración incluye cualquier clave API que hayas escrito en los ajustes de un plugin, por ejemplo la de un proveedor de IA. Las claves API de exchanges y los secretos de wallet nunca se incluyen: se quedan en tu llavero. Los proveedores fijados solo se guardan en tu cuenta, así que con esto desactivado duran hasta que cierres la app."
         },
-        "copilot": {
-          "title": "Historial de chat con la IA",
-          "description": "Una sola conversación con el asistente, para todo el terminal.",
-          "caveat": "Mientras esté desactivado, borrar el historial de chat solo lo borra en este dispositivo. Las conversaciones que ya están en tu cuenta se conservan y reaparecerán cuando vuelvas a activar la sincronización."
-        },
         "trades": {
           "title": "Diario de operaciones",
           "description": "Operaciones que tú o el asistente registráis en el diario."
@@ -2323,7 +2318,6 @@
     "title": "Asistente",
     "open": "Abrir el asistente",
     "close": "Minimizar el asistente",
-    "clear": "Borrar conversación",
     "placeholder": "Pregunta lo que sea, o dime qué crear...",
     "answerPlaceholder": "Escribe tu respuesta...",
     "emptyTitle": "¿En qué trabajamos?",
@@ -2368,7 +2362,23 @@
     "approvalDecline": "Rechazar",
     "approvalApproved": "Aprobada",
     "approvalDeclined": "Rechazada",
-    "resetPosition": "Restablecer posición"
+    "resetPosition": "Restablecer posición",
+    "conversations": {
+      "new": "Nueva conversación",
+      "untitled": "Sin título",
+      "history": "Historial",
+      "close": "Cerrar",
+      "empty": "Todavía nada. Pregunta algo y se guarda en este dispositivo.",
+      "localOnly": "Se guarda solo en este dispositivo",
+      "delete": "Eliminar conversación",
+      "deleteTitle": "¿Eliminar esta conversación?",
+      "deleteDescription": "«{{name}}» y todo su contenido desaparecen. No se puede deshacer.",
+      "cancel": "Cancelar",
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "previous7Days": "Últimos 7 días",
+      "older": "Más antiguas"
+    }
   },
   "copilot": {
     "placeholder": "Pregunta a tu lens...",

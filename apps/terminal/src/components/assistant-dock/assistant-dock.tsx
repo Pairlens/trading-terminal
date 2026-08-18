@@ -15,13 +15,17 @@
 // itself (see AssistantSidebarOrb) and only the window lives here.
 // Either way the user can drag the window wherever they want it.
 //
+// The window carries the thread rail down its left: every conversation
+// the user has had on this device, none of them anywhere else. Deleting
+// one is the only destructive control in the header, and it confirms.
+//
 // Mobile renders none of this. The phone has no room for a floating
 // window and already has an Assistant tab, which mounts the same
-// conversation.
+// conversation and reaches the same rail through its own control.
 
-import { useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Eraser, RotateCcw } from 'lucide-react'
+import { RotateCcw, Trash2 } from 'lucide-react'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -34,9 +38,13 @@ import { AssistantOrbButton } from './assistant-orb-button'
 import { AssistantBottomBar } from './assistant-bottom-bar'
 import { AssistantChatWindow } from './assistant-chat-window'
 import { AssistantConversation } from './assistant-conversation'
+import {
+  AssistantConversationList,
+  AssistantDeleteConversationDialog,
+  useDeleteConversationPrompt,
+} from './assistant-conversation-list'
 import type { Persona } from '@/components/copilot/persona-menu'
 import type { AssistantRunStatus } from '@/lib/assistant-core/run-status'
-import type { AssistantConversationHandle } from './assistant-conversation'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { PersonaMenu } from '@/components/copilot/persona-menu'
@@ -51,6 +59,7 @@ import {
   toggleAssistantFrom,
   useAssistantStore,
 } from '@/stores/assistant-store'
+import { useAssistantConversationsStore } from '@/stores/assistant-conversations-store'
 
 export function AssistantDock() {
   const { t } = useTranslation()
@@ -59,7 +68,13 @@ export function AssistantDock() {
   const setRunStatus = useAssistantStore((state) => state.setRunStatus)
   const [placement] = useAssistantPlacement()
 
-  const controlsRef = useRef<AssistantConversationHandle | null>(null)
+  const deletePrompt = useDeleteConversationPrompt()
+  // Read here rather than through the chat: the rail and this button are
+  // both above the capability gates, and a signed-out user still has
+  // threads on this device to manage.
+  const activeConversationId = useAssistantConversationsStore(
+    (state) => state.activeId,
+  )
   const { label, busy } = useAssistantOrbLabel()
   const shortcut = useKeybindingLabel('general.toggleAssistant')
   // Owned here rather than in the conversation: the control that changes
@@ -104,7 +119,7 @@ export function AssistantDock() {
       >
         {/*
           No `pointer-events-auto` here. The window is hidden, never
-          unmounted, so its 440x660 box stays in the layout while
+          unmounted, so its 616x660 box stays in the layout while
           collapsed: enabling hits on this wrapper parks an invisible
           target over the workspace and eats wheel events aimed at the
           pane underneath (the news column on the Discovery board). The
@@ -149,27 +164,41 @@ export function AssistantDock() {
                   </Tooltip>
                 ) : null}
                 <PersonaMenu persona={persona} onPersonaChange={setPersona} />
+                {/* Was a one-click eraser that emptied the only thread there
+                    was. Now there are many and they are kept, so it deletes
+                    the one on screen and asks first. */}
                 <Tooltip>
                   <TooltipTrigger
                     render={
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        className="text-muted-foreground hover:text-foreground size-7 rounded-full"
-                        aria-label={t('assistantDock.clear')}
-                        onClick={() => controlsRef.current?.clear()}
+                        className="text-muted-foreground hover:text-destructive size-7 rounded-full"
+                        aria-label={t('assistantDock.conversations.delete')}
+                        disabled={!activeConversationId}
+                        onClick={() => {
+                          if (activeConversationId) {
+                            deletePrompt.requestDelete(activeConversationId)
+                          }
+                        }}
                       >
-                        <Eraser className="size-3.5" />
+                        <Trash2 className="size-3.5" />
                       </Button>
                     }
                   />
-                  <TooltipContent>{t('assistantDock.clear')}</TooltipContent>
+                  <TooltipContent>
+                    {t('assistantDock.conversations.delete')}
+                  </TooltipContent>
                 </Tooltip>
               </>
             }
+            sidebar={
+              <AssistantConversationList
+                onRequestDelete={deletePrompt.requestDelete}
+              />
+            }
           >
             <AssistantConversation
-              controlsRef={controlsRef}
               persona={persona}
               onStatusChange={handleStatusChange}
             />
@@ -186,6 +215,15 @@ export function AssistantDock() {
       ) : null}
 
       {placement === 'bottom' ? <AssistantBottomBar {...orbProps} /> : null}
+
+      {/* One dialog for every way of deleting a thread: the header button
+          and any row in the rail. */}
+      <AssistantDeleteConversationDialog
+        open={deletePrompt.pendingId !== null}
+        target={deletePrompt.target}
+        onCancel={deletePrompt.cancel}
+        onConfirm={deletePrompt.confirm}
+      />
     </>
   )
 }

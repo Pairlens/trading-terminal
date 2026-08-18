@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import type { PersistenceAdapter } from './adapter'
 import type {
-  AIMessage,
-  AIMessageScope,
   ChartState,
   EncryptedPluginConfig,
   PersistenceTier,
@@ -183,36 +181,6 @@ export class RemotePersistenceAdapter implements PersistenceAdapter {
       }
     }
     return parts.length > 0 ? `?${parts.join('&')}` : ''
-  }
-
-  // ---------------------------------------------------------------------------
-  // AI conversation history
-  // ---------------------------------------------------------------------------
-
-  async getAIMessages(
-    scope: AIMessageScope,
-    limit?: number,
-  ): Promise<Array<AIMessage>> {
-    const query = this.buildQuery({
-      userId: scope.userId,
-      market: scope.market,
-      pairKey: scope.pairKey,
-      limit,
-    })
-    return this.fetchJson<Array<AIMessage>>(
-      'GET',
-      `/api/persistence/ai-messages${query}`,
-    )
-  }
-
-  async appendAIMessage(
-    scope: AIMessageScope,
-    message: AIMessage,
-  ): Promise<void> {
-    await this.fetchJson<void>('POST', '/api/persistence/ai-messages', {
-      scope,
-      message,
-    })
   }
 
   // ---------------------------------------------------------------------------

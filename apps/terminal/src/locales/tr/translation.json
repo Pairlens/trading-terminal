@@ -1501,11 +1501,6 @@
           "title": "Eklentiler",
           "description": "Hangi eklentileri açtığın, ayarları ve sabitlediğin sağlayıcılar. Ayarlara, bir eklentinin kendi ayarlarına girdiğin API anahtarları da dahildir; örneğin bir yapay zekâ sağlayıcısının anahtarı. Borsa API anahtarları ve cüzdan sırları buna asla dahil değildir, anahtar zincirinde kalır. Sabitlenen sağlayıcılar yalnızca hesabında tutulur; bu kapalıyken uygulamayı kapatana kadar geçerli olurlar."
         },
-        "copilot": {
-          "title": "Yapay zekâ sohbet geçmişi",
-          "description": "Asistanla tek bir konuşma, terminalin tamamı için.",
-          "caveat": "Bu kapalıyken sohbet geçmişini temizlemek yalnızca bu cihazı temizler. Hesabında kayıtlı konuşmalar durur ve senkronizasyonu tekrar açtığında yeniden görünür."
-        },
         "trades": {
           "title": "İşlem günlüğü",
           "description": "Senin ya da asistanın günlüğe kaydettiği işlemler."
@@ -2323,7 +2318,6 @@
     "title": "Asistan",
     "open": "Asistanı aç",
     "close": "Asistanı küçült",
-    "clear": "Konuşmayı temizle",
     "placeholder": "Ne istersen sor ya da ne oluşturacağımı söyle...",
     "answerPlaceholder": "Yanıtını yaz...",
     "emptyTitle": "Ne üzerinde çalışıyoruz?",
@@ -2368,7 +2362,23 @@
     "approvalDecline": "Reddet",
     "approvalApproved": "Onaylandı",
     "approvalDeclined": "Reddedildi",
-    "resetPosition": "Konumu sıfırla"
+    "resetPosition": "Konumu sıfırla",
+    "conversations": {
+      "new": "Yeni sohbet",
+      "untitled": "Adsız",
+      "history": "Geçmiş",
+      "close": "Kapat",
+      "empty": "Henüz bir şey yok. Bir şey sorun, bu cihazda saklanır.",
+      "localOnly": "Yalnızca bu cihazda saklanır",
+      "delete": "Sohbeti sil",
+      "deleteTitle": "Bu sohbet silinsin mi?",
+      "deleteDescription": "\"{{name}}\" ve içindeki her şey gider. Geri alınamaz.",
+      "cancel": "İptal",
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "previous7Days": "Son 7 gün",
+      "older": "Daha eski"
+    }
   },
   "copilot": {
     "placeholder": "Merceğine sor...",

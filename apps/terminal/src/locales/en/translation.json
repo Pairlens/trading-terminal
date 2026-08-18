@@ -514,11 +514,6 @@
           "title": "Plugins",
           "description": "Which plugins you have enabled, their settings and your provider pins. Settings include any API key you typed into a plugin's own settings, such as an AI provider key. Exchange API keys and wallet secrets are never included, they stay in your keychain. Provider pins are only kept in your account, so with this off they last until you quit the app."
         },
-        "copilot": {
-          "title": "AI chat history",
-          "description": "One conversation with the assistant, for the whole terminal.",
-          "caveat": "While this is off, clearing chat history only clears this device. Conversations already in your account are kept and will reappear when you switch syncing back on."
-        },
         "trades": {
           "title": "Trade journal",
           "description": "Trades you or the assistant log to the journal."
@@ -1283,7 +1278,6 @@
     "title": "Assistant",
     "open": "Open the assistant",
     "close": "Minimize the assistant",
-    "clear": "Clear conversation",
     "placeholder": "Ask anything, or tell me what to build...",
     "answerPlaceholder": "Type your answer...",
     "emptyTitle": "What are we working on?",
@@ -1328,7 +1322,23 @@
     "approvalDecline": "Decline",
     "approvalApproved": "Approved",
     "approvalDeclined": "Declined",
-    "resetPosition": "Reset position"
+    "resetPosition": "Reset position",
+    "conversations": {
+      "new": "New conversation",
+      "untitled": "Untitled",
+      "history": "History",
+      "close": "Close",
+      "empty": "Nothing yet. Ask something and it is kept here on this device.",
+      "localOnly": "Kept on this device only",
+      "delete": "Delete conversation",
+      "deleteTitle": "Delete this conversation?",
+      "deleteDescription": "\"{{name}}\" and everything in it goes. This cannot be undone.",
+      "cancel": "Cancel",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "previous7Days": "Previous 7 days",
+      "older": "Older"
+    }
   },
   "copilot": {
     "placeholder": "Ask your lens...",

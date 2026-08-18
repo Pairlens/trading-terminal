@@ -1565,11 +1565,6 @@
           "title": "Wtyczki",
           "description": "Które wtyczki masz włączone, ich ustawienia i przypięci dostawcy. Ustawienia obejmują też każdy klucz API wpisany w ustawieniach wtyczki, na przykład dostawcy AI. Klucze API giełd i sekrety portfeli nigdy się tu nie znajdą: zostają w Twoim pęku kluczy. Przypięci dostawcy są zapisywani tylko na koncie, więc przy wyłączonej opcji przetrwają do zamknięcia aplikacji."
         },
-        "copilot": {
-          "title": "Historia czatu z AI",
-          "description": "Jedna rozmowa z asystentem, dla całego terminala.",
-          "caveat": "Dopóki to jest wyłączone, wyczyszczenie historii czatu czyści tylko to urządzenie. Rozmowy zapisane na Twoim koncie zostają i pojawią się ponownie po włączeniu synchronizacji."
-        },
         "trades": {
           "title": "Dziennik transakcji",
           "description": "Transakcje, które Ty lub asystent zapisujecie w dzienniku."
@@ -2397,7 +2392,6 @@
     "title": "Asystent",
     "open": "Otwórz asystenta",
     "close": "Zminimalizuj asystenta",
-    "clear": "Wyczyść rozmowę",
     "placeholder": "Zapytaj o cokolwiek albo powiedz, co zbudować...",
     "answerPlaceholder": "Wpisz swoją odpowiedź...",
     "emptyTitle": "Nad czym pracujemy?",
@@ -2442,7 +2436,23 @@
     "approvalDecline": "Odrzuć",
     "approvalApproved": "Zatwierdzone",
     "approvalDeclined": "Odrzucone",
-    "resetPosition": "Przywróć pozycję"
+    "resetPosition": "Przywróć pozycję",
+    "conversations": {
+      "new": "Nowa rozmowa",
+      "untitled": "Bez tytułu",
+      "history": "Historia",
+      "close": "Zamknij",
+      "empty": "Na razie pusto. Zapytaj o coś, a zostanie na tym urządzeniu.",
+      "localOnly": "Przechowywane tylko na tym urządzeniu",
+      "delete": "Usuń rozmowę",
+      "deleteTitle": "Usunąć tę rozmowę?",
+      "deleteDescription": "„{{name}}” i cała jej zawartość znikną. Nie da się tego cofnąć.",
+      "cancel": "Anuluj",
+      "today": "Dzisiaj",
+      "yesterday": "Wczoraj",
+      "previous7Days": "Ostatnie 7 dni",
+      "older": "Starsze"
+    }
   },
   "copilot": {
     "placeholder": "Zapytaj swój lens...",

@@ -4,7 +4,7 @@ description: What Pairlens guarantees about credentials, plugin isolation, packa
 group: institutions
 order: 2
 eyebrow: For institutions
-updated: AUG 2026
+updated: 19 AUG 2026
 readTime: 6 min read
 ---
 
@@ -92,7 +92,9 @@ and auth is off, cloud panels are hidden, and all persistence is local to the
 machine.
 
 With an App Server, what syncs is workspaces, chart layouts, alerts, workflows,
-the trade journal, AI conversations, and plugin settings. Credentials never do.
+the trade journal, and plugin settings. Credentials never do, and neither do
+assistant conversations: chat history is written to the device it was typed on
+and has no server-side shape at all.
 The complete list is what the account data export returns, which is itself a
 useful audit artifact: it is the definition of what is held.
 
