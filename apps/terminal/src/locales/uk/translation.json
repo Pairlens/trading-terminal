@@ -4113,6 +4113,14 @@
         "title": "Binance Futures Ринковий конектор",
         "description": "Безстрокові ф’ючерси на Binance Futures: довгі та короткі позиції з плечем, розрахунок у USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Ринковий конектор",
+        "description": "Безстрокові ф’ючерси на ByBit Futures: довгі та короткі позиції з плечем, розрахунок у USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Ринковий конектор",
+        "description": "Безстрокові ф’ючерси на OKX Futures: довгі та короткі позиції з плечем, розрахунок у USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Ринковий конектор",
         "description": "Безстрокові ф’ючерси на KuCoin Futures: довгі та короткі позиції з плечем, розрахунок у USDT"

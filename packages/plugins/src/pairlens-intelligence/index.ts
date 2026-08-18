@@ -84,11 +84,12 @@ export const pairlensIntelligenceManifest: PluginManifest = {
       // an outage. The pane reads this list to know a venue is not tracked
       // without spending a request to find out.
       //
-      // These are DATA venues, not tradable ones. Bybit is here because the
-      // server collects its liquidation stream, which carries every print where
-      // Binance's carries at most one per symbol per second; whether the
-      // terminal can trade a venue is a separate question from whether we hold
-      // its public prints.
+      // This list is what the server COLLECTS, which is independent of what
+      // the terminal can trade: Bybit's entry predates its connector, and the
+      // other tradeable perp venues (OKX, KuCoin, Kraken) are absent because
+      // no collector holds their streams. Bybit is collected because its
+      // stream carries every print where Binance's carries at most one per
+      // symbol per second.
       id: 'market-data:liquidations',
       singleton: false,
       markets: ['binance-futures', 'bybit-futures'],

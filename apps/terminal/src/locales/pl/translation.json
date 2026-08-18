@@ -4113,6 +4113,14 @@
         "title": "Binance Futures Konektor Rynkowy",
         "description": "Kontrakty wieczyste na Binance Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Konektor Rynkowy",
+        "description": "Kontrakty wieczyste na ByBit Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Konektor Rynkowy",
+        "description": "Kontrakty wieczyste na OKX Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Konektor Rynkowy",
         "description": "Kontrakty wieczyste na KuCoin Futures: pozycje długie i krótkie z dźwignią, rozliczane w USDT"

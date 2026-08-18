@@ -135,6 +135,8 @@ describe('listings module graph', () => {
     })
     expect(CCXT_FUTURES_VENUE_IDS.map((v) => v.marketId)).toEqual([
       'binance-futures',
+      'bybit-futures',
+      'okx-futures',
       'kucoin-futures',
       'kraken-futures',
     ])

@@ -3147,6 +3147,14 @@
         "title": "Binance Futures Market Connector",
         "description": "Perpetual futures on Binance Futures: leveraged long and short positions, settled in USDT"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Market Connector",
+        "description": "Perpetual futures on ByBit Futures: leveraged long and short positions, settled in USDT"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Market Connector",
+        "description": "Perpetual futures on OKX Futures: leveraged long and short positions, settled in USDT"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Market Connector",
         "description": "Perpetual futures on KuCoin Futures: leveraged long and short positions, settled in USDT"

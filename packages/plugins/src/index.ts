@@ -106,6 +106,16 @@ export {
   BINANCE_FUTURES_ADAPTER_INFO,
 } from './ccxt-futures-connector/venues/binance-futures.ts'
 export {
+  bybitFuturesMarketConnectorManifest,
+  createBybitFuturesMarketConnectorPlugin,
+  BYBIT_FUTURES_ADAPTER_INFO,
+} from './ccxt-futures-connector/venues/bybit-futures.ts'
+export {
+  okxFuturesMarketConnectorManifest,
+  createOkxFuturesMarketConnectorPlugin,
+  OKX_FUTURES_ADAPTER_INFO,
+} from './ccxt-futures-connector/venues/okx-futures.ts'
+export {
   kucoinFuturesMarketConnectorManifest,
   createKucoinFuturesMarketConnectorPlugin,
   KUCOIN_FUTURES_ADAPTER_INFO,

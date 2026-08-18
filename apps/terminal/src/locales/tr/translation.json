@@ -4027,6 +4027,14 @@
         "title": "Binance Futures Piyasa Bağlayıcısı",
         "description": "Binance Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures Piyasa Bağlayıcısı",
+        "description": "ByBit Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures Piyasa Bağlayıcısı",
+        "description": "OKX Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures Piyasa Bağlayıcısı",
         "description": "KuCoin Futures üzerinde süresiz vadeli işlemler: kaldıraçlı uzun ve kısa pozisyonlar, USDT ile takas"

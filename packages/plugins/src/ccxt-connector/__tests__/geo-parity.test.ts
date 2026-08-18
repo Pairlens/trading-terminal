@@ -57,6 +57,12 @@ import { mexcCcxtVenue } from '../venues/mexc'
 import { okxCcxtVenue } from '../venues/okx'
 import { upbitCcxtVenue } from '../venues/upbit'
 import {
+  bybitFuturesCcxtVenue,
+  bybitFuturesMarketConnectorManifest,
+  createBybitFuturesMarketConnectorPlugin,
+} from '../../ccxt-futures-connector/venues/bybit-futures'
+import { okxFuturesCcxtVenue } from '../../ccxt-futures-connector/venues/okx-futures'
+import {
   bybitMarketConnectorManifest,
   createBybitMarketConnectorPlugin,
   createMexcMarketConnectorPlugin,
@@ -1630,5 +1636,170 @@ describe('refusal ordering and synchrony', () => {
     // Native parity: ByBit blocks the US for ALL capabilities, so the refusal
     // is the app-level `geoCheck` and it fires whether or not a slot exists.
     expect(isGeoRestrictedError(thrown)).toBe(true)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// 5. The futures fleet — the perp venues that reuse this file's resolvers
+// ---------------------------------------------------------------------------
+
+/**
+ * ByBit Futures and OKX Futures import the SAME region modules their spot
+ * siblings do, but through their own venue hooks — separate closures that can
+ * drift independently. So the pin here is PARITY, probe for probe, rather than
+ * a second copy of the routing tables: a change to either side that the other
+ * does not follow is exactly the bug this section exists to catch. (Binance,
+ * KuCoin and Kraken futures route nowhere regionally; their geo posture is
+ * pinned in the futures venue conformance suite.)
+ */
+describe('futures venues: geo parity with their spot siblings', () => {
+  const BYBIT_FUTURES: Harness = {
+    ...BYBIT,
+    name: 'bybit-futures',
+    venue: bybitFuturesCcxtVenue,
+  }
+  const OKX_FUTURES: Harness = {
+    ...OKX,
+    name: 'okx-futures',
+    venue: okxFuturesCcxtVenue,
+  }
+
+  it('bybit-futures: refuses exactly the countries spot ByBit refuses', () => {
+    for (const country of COUNTRIES) {
+      const spot = refusal(bybitCcxtVenue, country, 'market-data:candles')
+      const perp = refusal(
+        bybitFuturesCcxtVenue,
+        country,
+        'market-data:candles',
+      )
+      expect(`${country || '(unset)'}:${perp !== undefined}`).toBe(
+        `${country || '(unset)'}:${spot !== undefined}`,
+      )
+    }
+  })
+
+  it('bybit-futures/US: every capability throws the typed error under its own name', () => {
+    for (const capability of [...MARKET_DATA_CAPS, ...TRADING_CAPS]) {
+      const thrown = refusal(bybitFuturesCcxtVenue, 'US', capability)
+      expect(`${capability}:${isGeoRestrictedError(thrown)}`).toBe(
+        `${capability}:true`,
+      )
+      expect((thrown as Error).name).toBe('GeoRestrictedError')
+      expect((thrown as { __geoRestricted?: boolean }).__geoRestricted).toBe(
+        true,
+      )
+      // Its own name, not the spot sibling's: the region dialog says which
+      // connector refused, and 'ByBit' over a perp chart misdirects.
+      expect((thrown as { exchange?: string }).exchange).toBe('ByBit Futures')
+      expect((thrown as Error).message).toBe(
+        'ByBit Futures is not available in your region (US)',
+      )
+    }
+    expect(
+      isGeoRestrictedError(
+        refusal(bybitFuturesCcxtVenue, 'us', 'market-data:candles'),
+      ),
+    ).toBe(true)
+  })
+
+  it('okx-futures: declares no geoCheck — every entity serves the public swap feed', () => {
+    // Measured 2026-08-18: www, eea and us all publish the identical 435
+    // linear contracts. There is no country with nothing to route to, so the
+    // honest posture is spot OKX's: route, and let the entity's own order-time
+    // answer stand. A geo gate creeping in here would take working charts
+    // offline for every US and EEA profile.
+    expect(okxFuturesCcxtVenue.geoCheck).toBeUndefined()
+    expect(okxFuturesCcxtVenue.tradeGeoCheck).toBeUndefined()
+  })
+
+  for (const country of ['US', 'DE', 'ES', 'GB', 'SG', ''] as const) {
+    it(`okx-futures/${country || '(unset)'}: routes probe-identically to spot OKX`, () => {
+      asHeadless()
+      for (const ctx of [PUBLIC_CTX, AUTHED_CTX, AUTHED_PAPER_CTX]) {
+        expect(route(OKX_FUTURES, country, ctx)).toEqual(
+          route(OKX, country, ctx),
+        )
+      }
+    })
+  }
+
+  it('okx-futures: the hosted-browser CORS split carries over', () => {
+    asHostedBrowser()
+    // Public reads fall back to the CORS-enabled global host; orders never do.
+    expect(route(OKX_FUTURES, 'ES', PUBLIC_CTX)['rest']).toBe(
+      'https://www.okx.com',
+    )
+    expect(route(OKX_FUTURES, 'ES', AUTHED_CTX)['rest']).toBe(
+      'https://eea.okx.com',
+    )
+  })
+
+  it('okx-futures: the account-entity override reaches the demo socket', () => {
+    asHeadless()
+    const probe = route(OKX_FUTURES, 'KR', {
+      ...AUTHED_PAPER_CTX,
+      entity: 'eea',
+    })
+    expect(probe['paperActive']).toBe('true')
+    expect(probe['rest']).toBe('https://eea.okx.com')
+    expect(probe['wsPrivate']).toBe('wss://wseeapap.okx.com:8443/ws/v5/private')
+  })
+
+  for (const country of ['DE', 'SG', 'US', ''] as const) {
+    it(`bybit-futures/${country || '(unset)'}: routes probe-identically to spot ByBit`, () => {
+      asHeadless()
+      for (const ctx of [PUBLIC_CTX, AUTHED_CTX, AUTHED_PAPER_CTX]) {
+        expect(route(BYBIT_FUTURES, country, ctx)).toEqual(
+          route(BYBIT, country, ctx),
+        )
+      }
+    })
+  }
+
+  it('bybit-futures: paper pins the one global testnet, EU slots included', () => {
+    asHeadless()
+    const probe = route(BYBIT_FUTURES, 'DE', AUTHED_PAPER_CTX)
+    expect(probe['paperActive']).toBe('true')
+    expect(probe['tradingRest']).toBe('https://api-testnet.bybit.com')
+  })
+})
+
+describe('futures refusal synchrony', () => {
+  let plugins: Array<PluginInstance> = []
+
+  afterEach(async () => {
+    await Promise.all(plugins.map((plugin) => plugin.destroy?.()))
+    plugins = []
+  })
+
+  it('bybit-futures/US: subscribe throws synchronously through the shared shell', () => {
+    // The futures factory reuses the spot shell, and this is the property that
+    // reuse exists to keep: the region dialog is raised from the catch around
+    // the SYNCHRONOUS subscribe call, so a refusal that arrived as a rejected
+    // promise would land after the chart drew its empty state.
+    asHeadless()
+    const plugin = createBybitFuturesMarketConnectorPlugin(
+      bybitFuturesMarketConnectorManifest,
+    )
+    plugins.push(plugin)
+    let returned: unknown = 'not reached'
+    const thrown = caught(() => {
+      returned = plugin.subscribe?.(
+        {
+          capability: 'market-data:candles',
+          params: { pair: 'BTC-USDT-USDT', timeframe: '15m' },
+          context: {
+            pair: 'BTC-USDT-USDT',
+            market: 'bybit-futures',
+            timeframe: '15m',
+            mode: 'paper' as const,
+            country: 'US',
+          },
+        },
+        () => {},
+      )
+    })
+    expect(isGeoRestrictedError(thrown)).toBe(true)
+    expect(returned).toBe('not reached')
   })
 })

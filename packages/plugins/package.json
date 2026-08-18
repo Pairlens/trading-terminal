@@ -61,6 +61,8 @@
     "./ccxt-futures-connector": "./src/ccxt-futures-connector/index.ts",
     "./ccxt-futures-connector/listings": "./src/ccxt-futures-connector/listings.ts",
     "./ccxt-futures-connector/binance-futures": "./src/ccxt-futures-connector/venues/binance-futures.ts",
+    "./ccxt-futures-connector/bybit-futures": "./src/ccxt-futures-connector/venues/bybit-futures.ts",
+    "./ccxt-futures-connector/okx-futures": "./src/ccxt-futures-connector/venues/okx-futures.ts",
     "./ccxt-futures-connector/kucoin-futures": "./src/ccxt-futures-connector/venues/kucoin-futures.ts",
     "./ccxt-futures-connector/kraken-futures": "./src/ccxt-futures-connector/venues/kraken-futures.ts",
     "./prediction-connector": "./src/prediction-connector/index.ts",

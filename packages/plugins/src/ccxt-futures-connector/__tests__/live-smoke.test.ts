@@ -29,6 +29,8 @@ import {
 } from '../futures-markets'
 import { fromFuturesSymbol, toFuturesSymbol } from '../futures-symbols'
 import { binanceFuturesCcxtVenue } from '../venues/binance-futures'
+import { bybitFuturesCcxtVenue } from '../venues/bybit-futures'
+import { okxFuturesCcxtVenue } from '../venues/okx-futures'
 import { kucoinFuturesCcxtVenue } from '../venues/kucoin-futures'
 import { krakenFuturesCcxtVenue } from '../venues/kraken-futures'
 import type { CcxtFuturesVenueConfig } from '../futures-types'
@@ -45,6 +47,18 @@ const VENUES: Array<{
   {
     label: 'binance-futures',
     venue: binanceFuturesCcxtVenue,
+    pair: 'BTC-USDT-USDT',
+    timeframes: ['1h', '1d'],
+  },
+  {
+    label: 'bybit-futures',
+    venue: bybitFuturesCcxtVenue,
+    pair: 'BTC-USDT-USDT',
+    timeframes: ['1h', '1d'],
+  },
+  {
+    label: 'okx-futures',
+    venue: okxFuturesCcxtVenue,
     pair: 'BTC-USDT-USDT',
     timeframes: ['1h', '1d'],
   },

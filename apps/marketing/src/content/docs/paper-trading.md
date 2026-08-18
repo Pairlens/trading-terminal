@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 4
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 18 AUG 2026
 readTime: 3 min read
 ---
 
@@ -25,8 +25,9 @@ symbol precision, and minimum order sizes are right before real money is
 involved. Alpaca is the easiest place to start: free paper keys in minutes.
 Kalshi has a demo environment too, so
 [event contracts](/docs/prediction-markets) can be rehearsed the same way, and
-so do Binance Futures and Kraken Futures for
-[perpetuals](/docs/cex-futures).
+so do Binance, ByBit, OKX and Kraken futures for
+[perpetuals](/docs/cex-futures): testnets for the first two, OKX demo trading,
+and Kraken's demo futures host.
 
 Not every venue offers a demo environment. Where one exists, Pairlens tells you
 which endpoint the mode uses. On-chain wallets, Polymarket, and KuCoin Futures

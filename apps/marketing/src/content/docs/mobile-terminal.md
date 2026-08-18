@@ -4,7 +4,7 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 10 min read
 ---
 
@@ -197,8 +197,8 @@ the plugin store.
 Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures,
 and Kraken Futures) serve no CORS headers, so no browser can reach them, phone
 included. They are listed in the venue picker under **Needs the desktop app**
-rather than hidden, so you can see what you are missing. The other twelve work,
-Polymarket and Binance Futures included, so
+rather than hidden, so you can see what you are missing. The other fourteen
+work, Polymarket plus the Binance, ByBit and OKX futures venues included, so
 [event contracts](/docs/prediction-markets) and
 [perpetual futures](/docs/cex-futures) both trade from a phone.
 

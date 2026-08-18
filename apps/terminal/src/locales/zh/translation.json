@@ -4027,6 +4027,14 @@
         "title": "Binance Futures 市场连接器",
         "description": "Binance Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"
       },
+      "bybit-futures-market-connector": {
+        "title": "ByBit Futures 市场连接器",
+        "description": "ByBit Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"
+      },
+      "okx-futures-market-connector": {
+        "title": "OKX Futures 市场连接器",
+        "description": "OKX Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"
+      },
       "kucoin-futures-market-connector": {
         "title": "KuCoin Futures 市场连接器",
         "description": "KuCoin Futures 的永续合约：可做多做空的杠杆仓位，以 USDT 结算"

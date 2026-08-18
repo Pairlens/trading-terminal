@@ -33,12 +33,12 @@ export type CoinglassVenue = {
 }
 
 /**
- * The four perpetual venues the terminal has market ids for.
+ * The five perpetual venues the terminal has market ids for.
  *
- * `bybit-futures` is here even though no Bybit perps connector ships yet: the
- * liquidation pane resolves a provider by venue string, and the App Server's
- * own Bybit collector uses the same id. A venue nobody can chart simply never
- * gets asked.
+ * `bybit-futures` predates its connector: the liquidation pane resolves a
+ * provider by venue string, the App Server's own Bybit collector uses the same
+ * id, and the entry was claimed here before the venue became chartable. Now it
+ * is both a collected data source and a tradeable venue.
  *
  * Deliberately NOT wildcarded. `markets: ['*']` would let this plugin win a
  * resolution for a venue Coinglass does not carry, and "no aggregate feed for
@@ -61,10 +61,17 @@ export const COINGLASS_VENUES: ReadonlyArray<CoinglassVenue> = [
     streamCompleteness: 'complete',
   },
   {
+    venue: 'okx-futures',
+    exchange: 'OKX',
+    // OKX publishes a liquidation-orders channel but no completeness
+    // statement. 'sampled' is the answer that cannot overstate the data, and
+    // overstating is the failure that matters here.
+    streamCompleteness: 'sampled',
+  },
+  {
     venue: 'kucoin-futures',
     exchange: 'Kucoin',
-    // No published statement either way. 'sampled' is the answer that cannot
-    // overstate the data, and overstating is the failure that matters here.
+    // No published statement either way. 'sampled' for the same reason as OKX.
     streamCompleteness: 'sampled',
   },
   {

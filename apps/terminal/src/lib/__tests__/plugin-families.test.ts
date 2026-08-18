@@ -171,6 +171,8 @@ describe('isFamilyExcluded', () => {
     withDisabledFamilies('cex-futures', () => {
       for (const id of [
         'binance-futures-market-connector',
+        'bybit-futures-market-connector',
+        'okx-futures-market-connector',
         'kucoin-futures-market-connector',
         'kraken-futures-market-connector',
         'pairlens-cex-futures',

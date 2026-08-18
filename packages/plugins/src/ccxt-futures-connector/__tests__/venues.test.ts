@@ -21,6 +21,16 @@ import {
   binanceFuturesMarketConnectorManifest,
 } from '../venues/binance-futures'
 import {
+  BYBIT_FUTURES_ADAPTER_INFO,
+  bybitFuturesCcxtVenue,
+  bybitFuturesMarketConnectorManifest,
+} from '../venues/bybit-futures'
+import {
+  OKX_FUTURES_ADAPTER_INFO,
+  okxFuturesCcxtVenue,
+  okxFuturesMarketConnectorManifest,
+} from '../venues/okx-futures'
+import {
   KUCOIN_FUTURES_ADAPTER_INFO,
   fetchKucoinFuturesSeedTicker,
   kucoinFuturesCcxtVenue,
@@ -43,6 +53,18 @@ const VENUES = [
     manifest: binanceFuturesMarketConnectorManifest,
     venue: binanceFuturesCcxtVenue,
     info: BINANCE_FUTURES_ADAPTER_INFO,
+  },
+  {
+    label: 'bybit-futures',
+    manifest: bybitFuturesMarketConnectorManifest,
+    venue: bybitFuturesCcxtVenue,
+    info: BYBIT_FUTURES_ADAPTER_INFO,
+  },
+  {
+    label: 'okx-futures',
+    manifest: okxFuturesMarketConnectorManifest,
+    venue: okxFuturesCcxtVenue,
+    info: OKX_FUTURES_ADAPTER_INFO,
   },
   {
     label: 'kucoin-futures',
@@ -142,18 +164,28 @@ for (const { label, manifest, venue, info } of VENUES) {
 }
 
 describe('per-venue platform and credential posture', () => {
-  it('binance-futures is the one browser-capable venue', () => {
-    // fapi.binance.com serves `access-control-allow-origin: *`; the KuCoin and
-    // Kraken futures hosts send no origin header at all.
+  it('marks browser capability exactly where the futures REST serves CORS', () => {
+    // fapi.binance.com serves `access-control-allow-origin: *`, api.bybit.com
+    // reflects the request origin, and OKX rides the spot venue's public
+    // fallback to the CORS-enabled global host; the KuCoin and Kraken futures
+    // hosts send no origin header at all. Measured, not assumed.
     expect(binanceFuturesCcxtVenue.requiresDesktop).toBeUndefined()
+    expect(bybitFuturesCcxtVenue.requiresDesktop).toBeUndefined()
+    expect(okxFuturesCcxtVenue.requiresDesktop).toBeUndefined()
     expect(kucoinFuturesCcxtVenue.requiresDesktop).toBe(true)
     expect(krakenFuturesCcxtVenue.requiresDesktop).toBe(true)
   })
 
-  it('aliases the two venues whose spot key also signs futures, and only those', () => {
+  it('aliases the four venues whose spot key also signs futures, and only those', () => {
     expect(
       binanceFuturesMarketConnectorManifest.metadata?.['credentialAlias'],
     ).toBe('binance')
+    expect(
+      bybitFuturesMarketConnectorManifest.metadata?.['credentialAlias'],
+    ).toBe('bybit')
+    expect(
+      okxFuturesMarketConnectorManifest.metadata?.['credentialAlias'],
+    ).toBe('okx')
     expect(
       kucoinFuturesMarketConnectorManifest.metadata?.['credentialAlias'],
     ).toBe('kucoin')
@@ -161,6 +193,35 @@ describe('per-venue platform and credential posture', () => {
     expect(
       krakenFuturesMarketConnectorManifest.metadata?.['credentialAlias'],
     ).toBeUndefined()
+  })
+
+  it('asks OKX for the passphrase and carries the account-entity override', () => {
+    // The alias hands the SPOT credential to this venue, so every key the spot
+    // venue stores has to be accepted here — the optional `entity` included,
+    // or an EEA account's futures orders would route by the country guess the
+    // override exists to correct.
+    expect(okxFuturesCcxtVenue.credentialKeys.map((k) => k.key)).toEqual([
+      'apiKey',
+      'apiSecret',
+      'passphrase',
+      'entity',
+    ])
+    expect(OKX_FUTURES_ADAPTER_INFO.credentialSchema).toHaveLength(3)
+  })
+
+  it("okx-futures sends cross margin, never the spot venue's tdMode cash", () => {
+    // `cash` is the SPOT trade mode and is invalid on a contract market; a
+    // copy-paste of the spot venue's orderParams would have every perp order
+    // rejected. Cross is ccxt's own contract default, pinned so it stays
+    // chosen rather than inherited.
+    expect(okxFuturesCcxtVenue.orderParams).toEqual({ tdMode: 'cross' })
+  })
+
+  it('bybit-futures skips the second trigger probe — one read returns both books', () => {
+    // v5's `orderFilter` split is spot-only; on linear the realtime read
+    // already includes conditional orders, so the extra probe would be a
+    // duplicate signed request.
+    expect(bybitFuturesCcxtVenue.separateTriggerOrderBook).toBe(false)
   })
 
   it('asks KuCoin for the passphrase its signature needs', () => {
@@ -175,21 +236,36 @@ describe('per-venue platform and credential posture', () => {
   it('defaults KuCoin to live and carries the sentence a paper slot is refused with', () => {
     expect(kucoinFuturesCcxtVenue.defaultMode).toBe('live')
     expect(kucoinFuturesCcxtVenue.noPaperReason).toContain('no sandbox')
-    // Both other venues have a real second environment.
-    expect(binanceFuturesCcxtVenue.defaultMode).toBe('paper')
-    expect(krakenFuturesCcxtVenue.defaultMode).toBe('paper')
-    expect(binanceFuturesCcxtVenue.noPaperReason).toBeUndefined()
-    expect(krakenFuturesCcxtVenue.noPaperReason).toBeUndefined()
+    // Every other venue has a real second environment: Binance and ByBit a
+    // testnet, OKX demo trading, Kraken the demo-futures host.
+    for (const venue of [
+      binanceFuturesCcxtVenue,
+      bybitFuturesCcxtVenue,
+      okxFuturesCcxtVenue,
+      krakenFuturesCcxtVenue,
+    ]) {
+      expect(venue.defaultMode).toBe('paper')
+      expect(venue.noPaperReason).toBeUndefined()
+    }
   })
 
   it('refuses the US where the venue has no derivatives host to route to', () => {
     expect(() => binanceFuturesCcxtVenue.geoCheck?.('US', 'x')).toThrow(
       GeoRestrictedError,
     )
+    expect(() => bybitFuturesCcxtVenue.geoCheck?.('US', 'x')).toThrow(
+      GeoRestrictedError,
+    )
     expect(() => kucoinFuturesCcxtVenue.geoCheck?.('us', 'x')).toThrow(
       GeoRestrictedError,
     )
     expect(() => binanceFuturesCcxtVenue.geoCheck?.('DE', 'x')).not.toThrow()
+    expect(() => bybitFuturesCcxtVenue.geoCheck?.('DE', 'x')).not.toThrow()
+    // OKX is the deliberate exception: every regional entity serves the public
+    // swap feed, so there is no country with nothing to route to — trading
+    // availability is the account's entity's own decision, at order time.
+    expect(okxFuturesCcxtVenue.geoCheck).toBeUndefined()
+    expect(okxFuturesCcxtVenue.tradeGeoCheck).toBeUndefined()
   })
 
   it('points every instance at swap markets — the host defaults to spot', () => {
@@ -326,6 +402,8 @@ describe('kraken-futures candle source', () => {
     // bar. The other two venues stream candles natively and may seed.
     expect(krakenFuturesCcxtVenue.seedTrades).toBeUndefined()
     expect(binanceFuturesCcxtVenue.seedTrades).toBe(true)
+    expect(bybitFuturesCcxtVenue.seedTrades).toBe(true)
+    expect(okxFuturesCcxtVenue.seedTrades).toBe(true)
     expect(kucoinFuturesCcxtVenue.seedTrades).toBe(true)
   })
 })

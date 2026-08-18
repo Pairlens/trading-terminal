@@ -34,7 +34,7 @@ live-trading secrets.
 **Direct venue access.** Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex,
 Kalshi, KuCoin Futures, and Kraken Futures) serve no CORS headers, so a browser
 cannot reach them. On desktop, connector REST calls route through the native
-HTTP plugin, so all 20 venues work without a proxy.
+HTTP plugin, so all 22 venues work without a proxy.
 
 **Multiple windows.** <kbd>⌘N</kbd> duplicates the current view into its own
 window. State stays in sync, and one window is elected leader so notifications
