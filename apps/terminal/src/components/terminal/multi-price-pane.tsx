@@ -48,7 +48,7 @@ import { useVenueQuotes } from '@/hooks/use-venue-quotes'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { findArbEdge, premiumPct, summarizeQuotes } from '@/lib/venue-spread'
 import { formatBookPrice } from '@/lib/format-price'
-import { switchActiveMarket } from '@/lib/switch-market'
+import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-dialog'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 
@@ -85,6 +85,7 @@ function MultiPricePaneInner({
 }) {
   const { t } = useTranslation()
   const { markets } = useAvailableMarkets()
+  const switchVenue = useSwitchVenue()
   const [live, setLive] = useState(true)
   const [sortMode, setSortMode] = usePersistedState<SortMode>(
     'multiPrice.sort',
@@ -328,7 +329,7 @@ function MultiPricePaneInner({
                 summary.pricedCount > 1 && summary.high?.market === quote.market
               }
               reference={summary.low?.price ?? null}
-              onSelect={switchActiveMarket}
+              onSelect={switchVenue}
               onWantDesktop={() => setDownloadOpen(true)}
             />
           ))
@@ -440,25 +441,35 @@ const VenueRow = memo(function VenueRow({
 
   const premium = premiumPct(quote.last, reference)
   const unreachable = quote.status === 'desktop-only'
+  // A venue that does not carry the pair is not somewhere to chart it: the
+  // click would land on an empty chart, which is a worse answer than the row
+  // already gives.
+  const unlisted = quote.status === 'unlisted'
   const handleActivate = useCallback(() => {
     if (unreachable) {
       onWantDesktop()
       return
     }
+    if (unlisted) return
     onSelect(quote.market)
-  }, [unreachable, onWantDesktop, onSelect, quote.market])
+  }, [unreachable, unlisted, onWantDesktop, onSelect, quote.market])
 
   return (
     <button
       type="button"
       onClick={handleActivate}
+      disabled={unlisted}
       title={
         unreachable
           ? t('multiPrice.desktopOnlyRow', { venue: label })
-          : t('multiPrice.switchTo', { venue: label })
+          : unlisted
+            ? t('multiPrice.notListed')
+            : t('multiPrice.switchTo', { venue: label })
       }
       className={cn(
-        'w-full px-2 py-1.5 text-left transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
+        'w-full px-2 py-1.5 text-left transition-colors',
+        !unlisted &&
+          'hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
         VENUE_GRID,
         isCharted &&
           '[background-color:color-mix(in_oklch,var(--primary)_10%,transparent)]',

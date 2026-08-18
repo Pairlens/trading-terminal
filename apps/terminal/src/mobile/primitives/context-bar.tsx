@@ -13,6 +13,7 @@ import { ChevronDown, Eye, UserRound } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
+import { isVenueBoundClass } from '@pairlens/shared/market-ref'
 import { useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
 import { PRESS } from './press'
@@ -110,6 +111,47 @@ function ViewOnlyTag() {
   )
 }
 
+/**
+ * The venue chip's frame, as a button or as a plain label.
+ *
+ * One component rather than two branches around the same forty lines of
+ * content: the geometry (`min-w-fit`, the glass, the 44px hit height) is what
+ * keeps the row degrading correctly, and it has to be identical either way or
+ * the pair chip beside it changes width the moment the class does.
+ */
+function VenueChip({
+  children,
+  interactive,
+  label,
+  onPress,
+}: {
+  children: React.ReactNode
+  interactive: boolean
+  label: string
+  onPress: () => void
+}) {
+  const frame =
+    'pl-glass pointer-events-auto flex h-11 min-w-fit flex-auto items-center justify-between gap-1.5 py-0 pl-[5px] pr-1.5'
+
+  // No aria-label on the static one: the venue name and its state are real
+  // text inside, and a label on a plain element is a promise of interactivity
+  // that a screen reader would then find nothing behind.
+  if (!interactive) return <div className={frame}>{children}</div>
+
+  return (
+    <button
+      aria-label={label}
+      className={cn(frame, 'pl-press')}
+      onClick={onPress}
+      type="button"
+      {...PRESS}
+    >
+      {children}
+      <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
+    </button>
+  )
+}
+
 /** '' when the name yields nothing to initial — the caller draws a person. */
 function initialsFrom(name: string): string {
   return name
@@ -126,7 +168,7 @@ export const ContextBar = memo(function ContextBar({
   onOpenSettings,
 }: ContextBarProps) {
   const { t } = useTranslation()
-  const { focusedPair, focusedVenue } = useMobileFocus()
+  const { focusedPair, focusedClass, focusedVenue } = useMobileFocus()
   const { markets } = useAvailableMarkets()
   const { status } = useMarketData()
   const permission = useVenueTradePermission(focusedVenue)
@@ -142,6 +184,7 @@ export const ContextBar = memo(function ContextBar({
   const isPrediction = useIsPredictionPair(focusedPair, focusedVenue)
   const venue = markets.find((m) => m.value === focusedVenue)
   const venueLabel = venue?.label ?? focusedVenue.toUpperCase()
+  const venueBound = isVenueBoundClass(focusedClass)
   const liveState: VenueLiveState =
     status !== 'connected'
       ? 'connecting'
@@ -221,18 +264,22 @@ export const ContextBar = memo(function ContextBar({
       {/* Venue chip. `min-w-fit` is what makes the row degrade correctly:
           it grows into any slack (the design's flex:1) but refuses to shrink
           below its own content, so the deficit lands on the pair chip instead
-          of squeezing the venue name to "O…". */}
-      <button
-        aria-label={t('mobile.shell.changeVenueA11y', {
+          of squeezing the venue name to "O…".
+
+          A token and an event contract carry their venue inside their own
+          identity, so for those two the chip is a label rather than a way in:
+          the picker behind it could only offer venues that have never heard
+          of this market, and picking one left the whole surface dark. It
+          keeps the glass, loses the caret and the press. */}
+      <VenueChip
+        interactive={!venueBound}
+        label={t('mobile.shell.changeVenueA11y', {
           venue: venueLabel,
           status: readOnly
             ? t('mobile.shell.readOnlyA11y', { status: liveA11y })
             : liveA11y,
         })}
-        className="pl-glass pl-press pointer-events-auto flex h-11 min-w-fit flex-auto items-center justify-between gap-1.5 py-0 pl-[5px] pr-1.5"
-        onClick={onOpenVenuePicker}
-        type="button"
-        {...PRESS}
+        onPress={onOpenVenuePicker}
       >
         <span className="flex items-center gap-1.5">
           <span className="pl-venue-mark shrink-0 text-[10px]">
@@ -263,8 +310,7 @@ export const ContextBar = memo(function ContextBar({
             </span>
           </span>
         </span>
-        <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
-      </button>
+      </VenueChip>
 
       {/* Avatar → Settings (Settings is not a tab).
           Its fill and ring live in `.pl-ctx-avatar` rather than inline: a

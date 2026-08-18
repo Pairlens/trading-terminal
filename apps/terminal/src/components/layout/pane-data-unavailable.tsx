@@ -7,6 +7,7 @@ import { cn } from '@pairlens/ui/lib/utils'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { alternativeVenuesFor } from '@/lib/market-ref/resolve'
 import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 import { usePairAvailabilityStore } from '@/stores/pair-availability-store'
 import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
@@ -61,11 +62,14 @@ export function PaneDataUnavailable({
   const isPrediction =
     pinned !== null || (current?.assetClasses.includes('prediction') ?? false)
 
-  // Skip venues this build cannot reach, or the recovery just moves the wall.
-  // An outcome has no alternatives at all — see the header.
+  // Same class only, and skip venues this build cannot reach, or the recovery
+  // just moves the wall: "AAPL is not on Alpaca, try Binance" was offered, and
+  // it is another dead pane one click away. An outcome has no alternatives at
+  // all — see the header, and `alternativeVenuesFor` says so for every
+  // venue-bound class rather than only for the pinned ones.
   const alternatives =
     onSelectMarket && !isPrediction
-      ? markets.filter((m) => m.value !== market && !m.desktopOnly).slice(0, 4)
+      ? alternativeVenuesFor(current, markets).slice(0, 4)
       : []
 
   // A venue this build cannot reach is a platform statement, not a listing

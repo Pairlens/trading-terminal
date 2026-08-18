@@ -43,7 +43,7 @@ import { usePersistedState } from '@/hooks/use-persisted-state'
 import { usePriceTick } from '@/hooks/use-price-tick'
 import { TickArrow } from '@/components/tick-arrow'
 import { formatBookPrice } from '@/lib/format-price'
-import { switchActiveMarket } from '@/lib/switch-market'
+import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 
@@ -82,6 +82,7 @@ function VenueLadderPaneInner({
 }) {
   const { t } = useTranslation()
   const { markets } = useAvailableMarkets()
+  const switchVenue = useSwitchVenue()
   const [side, setSide] = usePersistedState<LadderSide>(
     'venueLadder.side',
     'buy',
@@ -201,7 +202,7 @@ function VenueLadderPaneInner({
             side={side}
             option={optionByMarket.get(row.market)}
             isCharted={row.market === market}
-            onSelect={switchActiveMarket}
+            onSelect={switchVenue}
           />
         ))}
       </div>
@@ -253,27 +254,34 @@ const VenueLadderRow = memo(function VenueLadderRow({
   // Flash the side being traded — the number this row is ranked on.
   const tick = usePriceTick(side === 'buy' ? row.ask : row.bid)
   const unreachable = row.status === 'desktop-only'
+  // A venue that does not list the pair is not a routing choice: charting it
+  // would answer the click with an empty chart, which is worse than a row
+  // that does not move.
+  const unlisted = row.status === 'unlisted'
   const quoted = row.bid !== null || row.ask !== null
 
   const handleClick = useCallback(() => {
-    if (unreachable) return
+    if (unreachable || unlisted) return
     onSelect(row.market)
-  }, [unreachable, onSelect, row.market])
+  }, [unreachable, unlisted, onSelect, row.market])
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      disabled={unreachable}
+      disabled={unreachable || unlisted}
       title={
         unreachable
           ? t('venueLadder.desktopOnlyRow', { venue: label })
-          : t('venueLadder.switchTo', { venue: label })
+          : unlisted
+            ? t('venueLadder.notListed')
+            : t('venueLadder.switchTo', { venue: label })
       }
       className={cn(
         'w-full px-2.5 py-1 text-left font-mono text-[11px] tabular-nums transition-colors',
         LADDER_GRID,
         !unreachable &&
+          !unlisted &&
           'hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
         row.isBest &&
           '[background-color:color-mix(in_oklch,var(--up)_9%,transparent)]',

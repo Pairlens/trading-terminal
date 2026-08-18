@@ -270,14 +270,27 @@ describe('isRankablePool', () => {
   })
 
   it('drops thin pools even when their volume figure is huge', () => {
-    // The live failure this bar exists for: $227K of liquidity claiming $50M
-    // of daily volume is a bot painting turns, and it took the largest tile.
+    // The live failure this bar exists for: $12K of liquidity claiming $50M of
+    // daily volume is four thousand turns, which no range services.
     expect(
-      isRankablePool({ reserveUsd: 227_300, volume24hUsd: 50_000_000 }),
+      isRankablePool({ reserveUsd: 12_000, volume24hUsd: 50_000_000 }),
     ).toBe(false)
     expect(isRankablePool({ reserveUsd: 9_999, volume24hUsd: 1_000 })).toBe(
       false,
     )
+  })
+
+  it('keeps concentrated-liquidity pools, which turn over in the hundreds', () => {
+    // Measured on Solana's live volume ranking: the tokenized equity pools
+    // carrying most of the chain's volume run 150-370 turns on real ranges.
+    // At the old ceiling of 50 they were all dropped and the map drew one tile.
+    expect(
+      isRankablePool({ reserveUsd: 300_900, volume24hUsd: 109_535_352 }),
+    ).toBe(true)
+    // Orca's SOL/USDC, the chain's flagship pool, at 63 turns.
+    expect(
+      isRankablePool({ reserveUsd: 4_000_000, volume24hUsd: 252_000_000 }),
+    ).toBe(true)
   })
 
   it('drops pools that published no reserve figure at all', () => {
@@ -289,10 +302,10 @@ describe('isRankablePool', () => {
 
   it('holds the ceiling exactly at the stated turnover', () => {
     expect(
-      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 5_000_000 }),
+      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 50_000_000 }),
     ).toBe(true)
     expect(
-      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 5_000_001 }),
+      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 50_000_001 }),
     ).toBe(false)
   })
 })

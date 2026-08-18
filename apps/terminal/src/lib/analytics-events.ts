@@ -301,6 +301,22 @@ export interface AnalyticsEvents {
   preset_applied: { preset: string; workspace: WorkspaceKind }
   /** Which asset-class desk traders actually work from on Discovery. */
   discovery_section_selected: { section: string }
+  /**
+   * The on-chain board could not draw a chain's pools, and why.
+   *
+   * The question this answers is whether the DEX Discovery board is usable in
+   * a browser at all. Its pool data comes from one public free-tier API, and
+   * when that API refuses, every pane on the board goes with it — so "how
+   * often does a reader open this board and get nothing" is not something the
+   * pane can tell us from here. `outcome` separates the provider refusing
+   * (ours to fix, by pacing or by paying) from the provider answering with
+   * pools that nothing on the board could rank (the quality bar's doing).
+   * `chain` is a Pairlens market id, which names our own product surface.
+   */
+  dex_pool_map_empty: {
+    chain: string
+    outcome: 'provider_refused' | 'below_quality_bar' | 'no_pools_listed'
+  }
   workspace_opened: { workspace: WorkspaceKind }
   workspace_created: { workspace_count: number }
   workspace_deleted: { workspace_count: number }

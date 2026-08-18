@@ -18,6 +18,11 @@
  * is surfaced rather than concealed (the context bar's `read-only` tag says
  * the same kind of thing about a venue the user *can* reach).
  *
+ * Venues from another ASSET CLASS are a different matter and are filtered out
+ * entirely. "Desktop only" is a venue you could reach elsewhere; a spot
+ * exchange under an event contract is not a venue at all for this market, and
+ * offering it only bought a dark screen.
+ *
  * Hover pre-connect is meaningless on touch, so the warmup fires on
  * `pointerdown` instead — which is roughly a tap's worth of head start on the
  * socket handshake, and the whole of what hovering bought on the desktop.
@@ -40,6 +45,7 @@ import { haptic } from '@/lib/haptics'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useChartConfig } from '@/lib/chart-terminal-context'
+import { venuesForClass } from '@/lib/market-ref/resolve'
 
 type VenuePickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'venuePicker' }>
@@ -51,7 +57,7 @@ export default memo(function VenuePickerScreen({
   onClose,
 }: VenuePickerScreenProps) {
   const { t } = useTranslation()
-  const { focusedPair, focusedVenue } = useMobileFocus()
+  const { focusedPair, focusedClass, focusedVenue } = useMobileFocus()
   const { setFocusedVenue } = useMobileActions()
   const { markets } = useAvailableMarkets()
   // `availableMarkets` is the adapter list the kind tag is derived from; the
@@ -64,8 +70,13 @@ export default memo(function VenuePickerScreen({
   // one, and the sheet has to come back rather than stay shut behind it.
   const { open, isClosing, requestClose } = useSheetExit(onClose, overlay)
 
-  const available = markets.filter((m) => !m.desktopOnly)
-  const desktopOnly = markets.filter((m) => m.desktopOnly)
+  // Only the venues that can serve what is on the chart, by the same rule the
+  // desktop picker uses. A venue from another asset class is not a narrower
+  // choice, it is a dead one: the pair id means nothing to it, and tapping it
+  // left every pane on the surface with no data and no explanation.
+  const compatible = venuesForClass(focusedClass, focusedVenue, markets)
+  const available = compatible.filter((m) => !m.desktopOnly)
+  const desktopOnly = compatible.filter((m) => m.desktopOnly)
 
   const handleSelect = useCallback(
     (market: string) => {

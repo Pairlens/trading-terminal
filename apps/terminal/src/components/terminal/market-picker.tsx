@@ -24,13 +24,23 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
+import { isVenueBoundClass } from '@pairlens/shared/market-ref'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { AssetClass } from '@pairlens/market-engine'
 import type { MarketOption } from '@/hooks/use-available-markets'
+import { venuesForClass } from '@/lib/market-ref/resolve'
 
 // ---------------------------------------------------------------------------
 // Venue picker — the one place venues are chosen, so every surface gets the
 // same venue marks, search box and asset-class grouping (terminal top bar,
 // indicator workbench preview target, ...).
+//
+// Callers that are already charting something pass `assetClass`, and that
+// turns the list into the venues which can actually serve it. Without it the
+// picker offered all twenty-two: choosing Polymarket while charting BTC-USDT,
+// or Bitget while charting an event contract, navigated to an address no
+// connector could answer and the whole terminal went dark. A venue that
+// cannot serve the instrument is not a choice, so it is not offered.
 // ---------------------------------------------------------------------------
 
 const ASSET_CLASS_ORDER: Array<AssetClass> = [
@@ -71,6 +81,12 @@ type MarketPickerProps = {
   market: string
   marketOptions: Array<MarketOption>
   onMarketChange: (market: string) => void
+  /**
+   * The class being charted. Present, the list is narrowed to the venues that
+   * serve it; absent (the workbench, the bot dialog, the alert editors) the
+   * venue is picked BEFORE an instrument exists, so every venue is offered.
+   */
+  assetClass?: InstrumentClass
   /** Speculative pre-connect when a venue in the dropdown is hovered/focused. */
   onMarketHover?: (market: string) => void
   /** Extra classes for the trigger button (sizing lives with the caller). */
@@ -82,12 +98,50 @@ export function MarketPicker({
   market,
   marketOptions,
   onMarketChange,
+  assetClass,
   onMarketHover,
   className,
   'aria-label': ariaLabel,
 }: MarketPickerProps) {
+  const { t } = useTranslation()
   const activeMarket = marketOptions.find((o) => o.value === market) ??
     marketOptions[0] ?? { value: market, label: market.toUpperCase() }
+
+  const compatible = useMemo(
+    () =>
+      assetClass
+        ? venuesForClass(assetClass, market, marketOptions)
+        : marketOptions,
+    [marketOptions, assetClass, market],
+  )
+
+  // Tokens and event contracts carry their venue as part of their identity: a
+  // Polymarket outcome id means nothing to Kalshi, and the same address on
+  // another chain is another asset. There is no venue to switch to, so the
+  // chip says which one this is and stops there.
+  if (assetClass && isVenueBoundClass(assetClass)) {
+    return (
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <span
+              aria-label={ariaLabel}
+              className={cn(
+                'inline-flex h-7 shrink-0 cursor-default select-none items-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-xs font-medium text-muted-foreground dark:border-input dark:bg-input/30',
+                className,
+              )}
+            />
+          }
+        >
+          <MarketIcon option={activeMarket} />
+          {activeMarket.label}
+        </TooltipTrigger>
+        <TooltipContent>
+          {t('terminal.venueBound', { venue: activeMarket.label })}
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
 
   return (
     <DropdownMenu>
@@ -114,7 +168,8 @@ export function MarketPicker({
       </Tooltip>
       <MarketDropdownContent
         market={market}
-        marketOptions={marketOptions}
+        marketOptions={compatible}
+        grouped={!assetClass}
         onMarketChange={onMarketChange}
         onMarketHover={onMarketHover}
       />
@@ -125,11 +180,14 @@ export function MarketPicker({
 function MarketDropdownContent({
   market,
   marketOptions,
+  grouped,
   onMarketChange,
   onMarketHover,
 }: {
   market: string
   marketOptions: Array<MarketOption>
+  /** Headers earn their room only when more than one class is on offer. */
+  grouped: boolean
   onMarketChange: (market: string) => void
   onMarketHover?: (market: string) => void
 }) {
@@ -185,52 +243,38 @@ function MarketDropdownContent({
       </div>
 
       <DropdownMenuRadioGroup value={market} onValueChange={onMarketChange}>
-        {ASSET_CLASS_ORDER.map((ac) => {
-          const items = groups.get(ac)
-          if (!items?.length) return null
+        {grouped ? (
+          ASSET_CLASS_ORDER.map((ac) => {
+            const items = groups.get(ac)
+            if (!items?.length) return null
 
-          return (
-            <DropdownMenuGroup key={ac}>
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                {ASSET_CLASS_LABELS[ac]}
-              </DropdownMenuLabel>
-              {items.map((option) => (
-                <DropdownMenuRadioItem
-                  key={option.value}
-                  value={option.value}
-                  className="whitespace-nowrap"
-                  // Hovering (or keyboard-focusing) a venue pre-connects its
-                  // market-data streams so the actual switch renders instantly.
-                  onPointerEnter={() => onMarketHover?.(option.value)}
-                  onFocus={() => onMarketHover?.(option.value)}
-                >
-                  {/* w-full + ml-auto below parks every mark on the same right
-                      edge instead of trailing whatever venue name precedes it,
-                      so the marks read as one column. The item's pr-8 keeps
-                      them clear of the absolutely-positioned check. */}
-                  <span className="flex w-full items-center gap-2 font-medium">
-                    <MarketIcon option={option} />
-                    {option.label}
-                    {/* This venue serves no CORS headers and streams no candle
-                        history, so a browser build cannot read it at all. Say
-                        so before the click rather than after. Desktop reaches
-                        every venue, so the mark never appears there. */}
-                    {option.desktopOnly && (
-                      <Badge
-                        variant="outline"
-                        className="ml-auto h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
-                      >
-                        <Monitor />
-                        Desktop
-                      </Badge>
-                    )}
-                  </span>
-                </DropdownMenuRadioItem>
-              ))}
-              <DropdownMenuSeparator />
-            </DropdownMenuGroup>
-          )
-        })}
+            return (
+              <DropdownMenuGroup key={ac}>
+                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                  {ASSET_CLASS_LABELS[ac]}
+                </DropdownMenuLabel>
+                {items.map((option) => (
+                  <MarketRadioItem
+                    key={option.value}
+                    option={option}
+                    onMarketHover={onMarketHover}
+                  />
+                ))}
+                <DropdownMenuSeparator />
+              </DropdownMenuGroup>
+            )
+          })
+        ) : (
+          <DropdownMenuGroup>
+            {filtered.map((option) => (
+              <MarketRadioItem
+                key={option.value}
+                option={option}
+                onMarketHover={onMarketHover}
+              />
+            ))}
+          </DropdownMenuGroup>
+        )}
 
         {filtered.length === 0 && (
           <DropdownMenuItem disabled>
@@ -241,5 +285,46 @@ function MarketDropdownContent({
         )}
       </DropdownMenuRadioGroup>
     </DropdownMenuContent>
+  )
+}
+
+function MarketRadioItem({
+  option,
+  onMarketHover,
+}: {
+  option: MarketOption
+  onMarketHover?: (market: string) => void
+}) {
+  return (
+    <DropdownMenuRadioItem
+      value={option.value}
+      className="whitespace-nowrap"
+      // Hovering (or keyboard-focusing) a venue pre-connects its
+      // market-data streams so the actual switch renders instantly.
+      onPointerEnter={() => onMarketHover?.(option.value)}
+      onFocus={() => onMarketHover?.(option.value)}
+    >
+      {/* w-full + ml-auto below parks every mark on the same right
+          edge instead of trailing whatever venue name precedes it,
+          so the marks read as one column. The item's pr-8 keeps
+          them clear of the absolutely-positioned check. */}
+      <span className="flex w-full items-center gap-2 font-medium">
+        <MarketIcon option={option} />
+        {option.label}
+        {/* This venue serves no CORS headers and streams no candle
+            history, so a browser build cannot read it at all. Say
+            so before the click rather than after. Desktop reaches
+            every venue, so the mark never appears there. */}
+        {option.desktopOnly && (
+          <Badge
+            variant="outline"
+            className="ml-auto h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
+          >
+            <Monitor />
+            Desktop
+          </Badge>
+        )}
+      </span>
+    </DropdownMenuRadioItem>
   )
 }

@@ -53,7 +53,8 @@ Multi-Price answers a question a single chart cannot: where is this pair
 cheapest right now. It quotes the active pair on every venue that lists it and
 sorts by price, so the top row is the answer. The Venue Ladder is the compact
 version of the same idea, sized for a rail above the book, and it leads the
-spot pair default.
+spot pair default. Clicking a row on either one moves to that venue: see
+[cross-venue pricing](/docs/cross-venue-pricing#switching-venue-from-the-board).
 
 Level 1 stands in for an order book on a stock, and says so in the pane. The
 broker's feed carries top of book only, so there is no depth behind the quote

@@ -130,7 +130,8 @@
     "notInstalled": "Brak zainstalowanego konektora",
     "installConnector": "Zainstaluj konektor",
     "emptyTitle": "Brak łańcuchów do przeglądania",
-    "emptyBody": "Ta kompilacja nie zawiera konektorów on-chain, więc nie ma łańcucha, którego pule można uszeregować."
+    "emptyBody": "Ta kompilacja nie zawiera konektorów on-chain, więc nie ma łańcucha, którego pule można uszeregować.",
+    "volumesLabel": "Wolumeny łańcuchów"
   },
   "earningsCalendar": {
     "capped": "Pokazano pierwsze {{shown}} z {{total}} raportów.",
@@ -551,7 +552,10 @@
     "biggestLabel": "Największe swapy",
     "title": "Przepływ przez {{pool}}",
     "subtitle": "Kupno minus sprzedaż, w pięciominutowych odcinkach",
-    "subtitleVenue": "{{venue}} · kupno minus sprzedaż, w pięciominutowych odcinkach"
+    "subtitleVenue": "{{venue}} · kupno minus sprzedaż, w pięciominutowych odcinkach",
+    "waitingTitle": "Czekam na mapę pul",
+    "waitingBody": "Pule tego łańcucha wciąż się ładują. Przepływ pojawi się po wybraniu puli.",
+    "unavailableTitle": "Pule chwilowo niedostępne"
   },
   "lpPanes": {
     "venueFallback": "ten łańcuch",
@@ -1072,7 +1076,10 @@
     "pressure1h": "Presja kupna / sprzedaży 1h",
     "buysValue": "kupiono {{value}}",
     "sellsValue": "sprzedano {{value}}",
-    "filledBy": "Luki uzupełnione przez {{provider}}"
+    "filledBy": "Luki uzupełnione przez {{provider}}",
+    "waitingTitle": "Czekam na mapę pul",
+    "waitingBody": "Pule tego łańcucha wciąż się ładują. Najgłębsza otworzy się tu sama.",
+    "unavailableTitle": "Pule chwilowo niedostępne"
   },
   "poolMap": {
     "title": "{{chain}} · czołowe pule",
@@ -1103,7 +1110,12 @@
     "morePools": "Więcej pul na tym łańcuchu",
     "backToMap": "Wróć do mapy",
     "belowFloorTitle": "Nic dość głębokiego na mapę",
-    "belowFloorBody": "Nic, co zwrócił ten łańcuch, nie łączy prawdziwej płynności z proporcjonalnym wolumenem, więc skalowanie tych pul względem siebie porządkowałoby szum. Pełna lista pozostaje dostępna."
+    "belowFloorBody": "Nic, co zwrócił ten łańcuch, nie łączy prawdziwej płynności z proporcjonalnym wolumenem, więc skalowanie tych pul względem siebie porządkowałoby szum. Pełna lista pozostaje dostępna.",
+    "unavailableTitle": "Pule chwilowo niedostępne",
+    "retryingTitle": "Ponawiam",
+    "retry": "Spróbuj ponownie",
+    "retryingBody": "Dostawca odrzuca teraz żądania. Ponawiamy automatycznie.",
+    "unavailableBody": "Nie udało się połączyć z dostawcą danych o pulach. Spróbuj za chwilę."
   },
   "poolStats": {
     "notOnChainTitle": "To nie jest para on-chain",
@@ -4401,6 +4413,7 @@
     },
     "recentlyViewed": "Ostatnio oglądane",
     "noMarketsFound": "Nie znaleziono rynków",
+    "venueBound": "Ten rynek istnieje tylko na {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },

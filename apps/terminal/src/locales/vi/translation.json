@@ -118,7 +118,8 @@
     "notInstalled": "Chưa cài connector",
     "installConnector": "Cài connector",
     "emptyTitle": "Không có chuỗi nào để xem",
-    "emptyBody": "Bản dựng này không kèm connector on-chain, nên không có chuỗi nào để xếp hạng pool."
+    "emptyBody": "Bản dựng này không kèm connector on-chain, nên không có chuỗi nào để xếp hạng pool.",
+    "volumesLabel": "Khối lượng theo chuỗi"
   },
   "earningsCalendar": {
     "capped": "Đang hiển thị {{shown}} trong {{total}} báo cáo đầu tiên.",
@@ -507,7 +508,10 @@
     "biggestLabel": "Swap lớn nhất",
     "title": "Dòng tiền qua {{pool}}",
     "subtitle": "Mua trừ bán, theo từng năm phút",
-    "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút"
+    "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút",
+    "waitingTitle": "Đang chờ bản đồ pool",
+    "waitingBody": "Các pool của chuỗi vẫn đang tải. Dòng tiền hiện ra ngay khi chọn một pool.",
+    "unavailableTitle": "Hiện chưa lấy được pool"
   },
   "lpPanes": {
     "venueFallback": "chuỗi này",
@@ -1014,7 +1018,10 @@
     "pressure1h": "Áp lực mua / bán 1 giờ",
     "buysValue": "Mua {{value}}",
     "sellsValue": "Bán {{value}}",
-    "filledBy": "Chỗ trống do {{provider}} bổ sung"
+    "filledBy": "Chỗ trống do {{provider}} bổ sung",
+    "waitingTitle": "Đang chờ bản đồ pool",
+    "waitingBody": "Các pool của chuỗi vẫn đang tải. Pool sâu nhất sẽ tự mở ở đây.",
+    "unavailableTitle": "Hiện chưa lấy được pool"
   },
   "poolMap": {
     "title": "Pool hàng đầu trên {{chain}}",
@@ -1045,7 +1052,12 @@
     "morePools": "Thêm pool trên chuỗi này",
     "backToMap": "Quay lại bản đồ",
     "belowFloorTitle": "Không pool nào đủ sâu để lên bản đồ",
-    "belowFloorBody": "Không có pool nào chain này trả về vừa có thanh khoản thực vừa có khối lượng tương xứng, nên so kích thước các pool này với nhau chỉ là xếp hạng nhiễu. Danh sách đầy đủ vẫn còn đó."
+    "belowFloorBody": "Không có pool nào chain này trả về vừa có thanh khoản thực vừa có khối lượng tương xứng, nên so kích thước các pool này với nhau chỉ là xếp hạng nhiễu. Danh sách đầy đủ vẫn còn đó.",
+    "unavailableTitle": "Hiện chưa lấy được pool",
+    "retryingTitle": "Đang thử lại",
+    "retry": "Thử lại",
+    "retryingBody": "Nhà cung cấp đang từ chối yêu cầu. Hệ thống tự thử lại.",
+    "unavailableBody": "Không kết nối được tới nguồn dữ liệu pool. Hãy thử lại sau giây lát."
   },
   "poolStats": {
     "notOnChainTitle": "Không phải cặp on-chain",
@@ -4307,6 +4319,7 @@
     },
     "recentlyViewed": "Xem gần đây",
     "noMarketsFound": "Không tìm thấy thị trường",
+    "venueBound": "Thị trường này chỉ tồn tại trên {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },

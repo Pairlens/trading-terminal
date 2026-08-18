@@ -118,7 +118,8 @@
     "notInstalled": "커넥터 미설치",
     "installConnector": "커넥터 설치",
     "emptyTitle": "탐색할 체인 없음",
-    "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다."
+    "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다.",
+    "volumesLabel": "체인별 거래량"
   },
   "earningsCalendar": {
     "capped": "{{total}}건 중 처음 {{shown}}건을 보여 줍니다.",
@@ -507,7 +508,10 @@
     "biggestLabel": "최대 스왑",
     "title": "{{pool}} 자금 흐름",
     "subtitle": "매수에서 매도를 뺀 값, 5분 단위",
-    "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위"
+    "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위",
+    "waitingTitle": "맵을 기다리는 중",
+    "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음"
   },
   "lpPanes": {
     "venueFallback": "이 체인",
@@ -1014,7 +1018,10 @@
     "pressure1h": "매수 / 매도 압력 1시간",
     "buysValue": "매수 {{value}}",
     "sellsValue": "매도 {{value}}",
-    "filledBy": "빈 값은 {{provider}} 데이터로 채움"
+    "filledBy": "빈 값은 {{provider}} 데이터로 채움",
+    "waitingTitle": "맵을 기다리는 중",
+    "waitingBody": "체인의 풀을 불러오고 있습니다. 가장 깊은 풀이 여기에 자동으로 열립니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음"
   },
   "poolMap": {
     "title": "{{chain}} · 상위 풀",
@@ -1045,7 +1052,12 @@
     "morePools": "이 체인의 다른 풀",
     "backToMap": "맵으로 돌아가기",
     "belowFloorTitle": "맵에 올릴 만큼 깊은 풀이 없습니다",
-    "belowFloorBody": "이 체인이 반환한 풀 중 실제 유동성과 그에 비례하는 거래량을 갖춘 풀이 없습니다. 이 풀들을 서로 크기 비교하면 노이즈만 정렬하게 됩니다. 전체 목록은 계속 이용할 수 있습니다."
+    "belowFloorBody": "이 체인이 반환한 풀 중 실제 유동성과 그에 비례하는 거래량을 갖춘 풀이 없습니다. 이 풀들을 서로 크기 비교하면 노이즈만 정렬하게 됩니다. 전체 목록은 계속 이용할 수 있습니다.",
+    "unavailableTitle": "지금은 풀을 불러올 수 없음",
+    "retryingTitle": "다시 시도 중",
+    "retry": "다시 시도",
+    "retryingBody": "제공자가 지금 요청을 거부하고 있습니다. 자동으로 다시 시도합니다.",
+    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요."
   },
   "poolStats": {
     "notOnChainTitle": "온체인 페어가 아님",
@@ -4307,6 +4319,7 @@
     },
     "recentlyViewed": "최근 본 종목",
     "noMarketsFound": "마켓을 찾을 수 없습니다",
+    "venueBound": "이 마켓은 {{venue}}에만 있습니다.",
     "modeLive": "실거래",
     "modePaper": "모의"
   },

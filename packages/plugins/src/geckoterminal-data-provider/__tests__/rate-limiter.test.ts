@@ -21,7 +21,9 @@ import {
 
 import {
   GECKOTERMINAL_PROVIDER,
+  RATE_LIMIT_BURST,
   RATE_LIMIT_CAPACITY,
+  RATE_LIMIT_SPACING_MS,
   RATE_LIMIT_WINDOW_MS,
   createGeckoFetch,
   createRequestLimiter,
@@ -71,6 +73,54 @@ describe('the budget', () => {
     expect(RATE_LIMIT_WINDOW_MS).toBe(60_000)
     expect(RATE_LIMIT_CAPACITY).toBeLessThan(30)
     expect(RATE_LIMIT_CAPACITY).toBeGreaterThanOrEqual(20)
+  })
+})
+
+describe('the burst allowance', () => {
+  it('paces the tail of a burst without pacing its head', async () => {
+    // The quota is not the only thing the provider meters. A Discovery board
+    // opening cold asks for six chain aggregates and three pages of pools in
+    // one tick — nine requests, well inside 25 a minute, and enough to draw a
+    // 429 that a browser cannot even read (see geckoFetch). The first few go
+    // straight out so the board paints; the rest are spaced.
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 25,
+      windowMs: 60_000,
+      burst: 3,
+      minSpacingMs: 600,
+      now: clock.now,
+      delay: clock.delay,
+    })
+
+    for (let i = 0; i < 3; i += 1) await limiter.acquire()
+    expect(clock.waits).toEqual([])
+
+    await limiter.acquire()
+    await limiter.acquire()
+    expect(clock.waits).toEqual([600, 600])
+  })
+
+  it('does not make a caller that already waited wait again', async () => {
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 25,
+      windowMs: 60_000,
+      burst: 1,
+      minSpacingMs: 500,
+      now: clock.now,
+      delay: clock.delay,
+    })
+
+    await limiter.acquire()
+    clock.advance(900)
+    await limiter.acquire()
+    expect(clock.waits).toEqual([])
+  })
+
+  it('ships a burst small enough to matter and a gap long enough to help', () => {
+    expect(RATE_LIMIT_BURST).toBeLessThan(RATE_LIMIT_CAPACITY)
+    expect(RATE_LIMIT_SPACING_MS).toBeGreaterThanOrEqual(250)
   })
 })
 

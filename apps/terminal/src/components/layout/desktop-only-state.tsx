@@ -15,8 +15,10 @@
  * equivalent branch — they would simply hold their last values and look live.
  * One honest wall beats six panes quietly going stale. See `LayoutShell`.
  *
- * Every browser-capable venue is offered, not a sample: the list IS the
- * recovery, and picking for the user only hides the one they wanted.
+ * Every browser-capable venue OF THE SAME ASSET CLASS is offered, not a
+ * sample: the list IS the recovery, and picking for the user only hides the
+ * one they wanted. Other classes are not a narrower recovery, they are the
+ * same wall with a different name on it.
  */
 import { useState } from 'react'
 import { Monitor } from 'lucide-react'
@@ -35,6 +37,7 @@ import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-di
 import { OS_ICON } from '@/components/feedback/os-icons'
 import { detectOs } from '@/lib/desktop-download'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { alternativeVenuesFor } from '@/lib/market-ref/resolve'
 
 export function DesktopOnlyState({
   market,
@@ -48,10 +51,12 @@ export function DesktopOnlyState({
   const { markets } = useAvailableMarkets()
 
   const current = markets.find((m) => m.value === market)
-  // Offer only venues that actually work here, or the CTA just moves the wall.
-  const alternatives = markets.filter(
-    (m) => m.value !== market && !m.desktopOnly,
-  )
+  // Offer only venues that actually work here AND serve the same asset class,
+  // or the CTA moves the wall instead of removing it: Kalshi behind the
+  // browser wall used to offer OKX, whose answer to an event contract id is
+  // the same blank screen. A venue-bound class gets no list at all, which
+  // leaves the download as the one real way through.
+  const alternatives = alternativeVenuesFor(current, markets)
 
   // The machine's own platform mark, the same three the install page uses —
   // it says WHICH build is one click away, which a generic monitor cannot.

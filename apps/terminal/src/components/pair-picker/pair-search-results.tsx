@@ -16,6 +16,7 @@ import {
   predictionQuestionOf,
 } from '@/components/pair-picker/pair-picker-data'
 import { VenueBadge } from '@/components/pair-picker/venue-badge'
+import { TokenIdentityBadge } from '@/components/pair-picker/token-identity-badge'
 import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useRecentPairs } from '@/lib/recent-tickers'
@@ -153,7 +154,7 @@ export function PairSearchResults({
         <ResultSection label={t('search.recent')}>
           {recentEntries.map((pair) => (
             <PairResultItem
-              key={pair.symbol}
+              key={pair.id}
               pair={pair}
               isWatched={watchedSymbols.has(pair.symbol)}
               onSelect={onSelect}
@@ -166,7 +167,7 @@ export function PairSearchResults({
         <ResultSection label={t('search.watched')}>
           {watchedEntries.map((pair) => (
             <PairResultItem
-              key={pair.symbol}
+              key={pair.id}
               pair={pair}
               isWatched={watchedSymbols.has(pair.symbol)}
               onSelect={onSelect}
@@ -279,6 +280,9 @@ const PairResultItem = memo(function PairResultItem({
       <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
         {pair.name}
       </span>
+      {/* Token rows only. The venue badge is symbol-keyed and has nothing to
+          say about a mint, which is exactly the row that needs saying. */}
+      <TokenIdentityBadge entry={pair} />
       <VenueBadge symbol={pair.symbol} />
       {isWatched && (
         <Star className="ml-auto size-3 fill-amber-400 text-amber-400" />

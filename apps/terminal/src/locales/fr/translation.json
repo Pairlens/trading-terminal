@@ -118,7 +118,8 @@
     "notInstalled": "Aucun connecteur installé",
     "installConnector": "Installer le connecteur",
     "emptyTitle": "Aucune chaîne disponible",
-    "emptyBody": "Cette version ne contient aucun connecteur on-chain, il n'y a donc aucune chaîne dont classer les pools."
+    "emptyBody": "Cette version ne contient aucun connecteur on-chain, il n'y a donc aucune chaîne dont classer les pools.",
+    "volumesLabel": "Volumes par chaîne"
   },
   "earningsCalendar": {
     "capped": "Affichage des {{shown}} premières publications sur {{total}}.",
@@ -507,7 +508,10 @@
     "biggestLabel": "Plus gros swaps",
     "title": "Flux à travers {{pool}}",
     "subtitle": "Achats moins ventes, par tranches de cinq minutes",
-    "subtitleVenue": "{{venue}} · achats moins ventes, par tranches de cinq minutes"
+    "subtitleVenue": "{{venue}} · achats moins ventes, par tranches de cinq minutes",
+    "waitingTitle": "En attente de la carte",
+    "waitingBody": "Les pools de la chaîne chargent encore. Le flux apparaît dès qu’un pool est sélectionné.",
+    "unavailableTitle": "Pools indisponibles pour le moment"
   },
   "lpPanes": {
     "venueFallback": "cette chaîne",
@@ -1014,7 +1018,10 @@
     "pressure1h": "Pression achat / vente 1h",
     "buysValue": "{{value}} achats",
     "sellsValue": "{{value}} ventes",
-    "filledBy": "Lacunes comblées par {{provider}}"
+    "filledBy": "Lacunes comblées par {{provider}}",
+    "waitingTitle": "En attente de la carte",
+    "waitingBody": "Les pools de la chaîne chargent encore. Le plus profond s’ouvre ici tout seul.",
+    "unavailableTitle": "Pools indisponibles pour le moment"
   },
   "poolMap": {
     "title": "{{chain}} · top pools",
@@ -1045,7 +1052,12 @@
     "morePools": "Plus de pools sur cette chaîne",
     "backToMap": "Retour à la carte",
     "belowFloorTitle": "Rien d'assez profond à cartographier",
-    "belowFloorBody": "Rien de ce que cette chaîne a renvoyé ne combine une liquidité réelle avec un volume proportionné. Dimensionner ces pools les uns contre les autres classerait du bruit. La liste complète reste disponible."
+    "belowFloorBody": "Rien de ce que cette chaîne a renvoyé ne combine une liquidité réelle avec un volume proportionné. Dimensionner ces pools les uns contre les autres classerait du bruit. La liste complète reste disponible.",
+    "unavailableTitle": "Pools indisponibles pour le moment",
+    "retryingTitle": "Nouvelle tentative",
+    "retry": "Réessayer",
+    "retryingBody": "Le fournisseur refuse les requêtes en ce moment. Nouvelle tentative automatique.",
+    "unavailableBody": "Le fournisseur de données de pools est injoignable. Réessayez dans un instant."
   },
   "poolStats": {
     "notOnChainTitle": "Paire non on-chain",
@@ -4307,6 +4319,7 @@
     },
     "recentlyViewed": "Vus récemment",
     "noMarketsFound": "Aucun marché trouvé",
+    "venueBound": "Ce marché n'existe que sur {{venue}}.",
     "modeLive": "RÉEL",
     "modePaper": "PAPIER"
   },

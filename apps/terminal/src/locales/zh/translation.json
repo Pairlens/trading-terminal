@@ -118,7 +118,8 @@
     "notInstalled": "未安装连接器",
     "installConnector": "安装连接器",
     "emptyTitle": "没有可浏览的链",
-    "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。"
+    "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。",
+    "volumesLabel": "链上成交量"
   },
   "earningsCalendar": {
     "capped": "共 {{total}} 份财报，显示前 {{shown}} 份。",
@@ -507,7 +508,10 @@
     "biggestLabel": "最大兑换",
     "title": "流经 {{pool}} 的资金",
     "subtitle": "买入减卖出，每五分钟一格",
-    "subtitleVenue": "{{venue}} · 买入减卖出，每五分钟一格"
+    "subtitleVenue": "{{venue}} · 买入减卖出，每五分钟一格",
+    "waitingTitle": "等待池子图",
+    "waitingBody": "该链的池子仍在加载。选中一个池子后就会显示资金流向。",
+    "unavailableTitle": "暂时无法获取池子"
   },
   "lpPanes": {
     "venueFallback": "这条链",
@@ -1014,7 +1018,10 @@
     "pressure1h": "买 / 卖压力 1 小时",
     "buysValue": "买入 {{value}}",
     "sellsValue": "卖出 {{value}}",
-    "filledBy": "缺口由 {{provider}} 补齐"
+    "filledBy": "缺口由 {{provider}} 补齐",
+    "waitingTitle": "等待池子图",
+    "waitingBody": "该链的池子仍在加载。流动性最深的池子会自动在这里打开。",
+    "unavailableTitle": "暂时无法获取池子"
   },
   "poolMap": {
     "title": "{{chain}} · 头部池子",
@@ -1045,7 +1052,12 @@
     "morePools": "这条链上的更多池子",
     "backToMap": "返回地图",
     "belowFloorTitle": "没有足够深的池子可绘制",
-    "belowFloorBody": "该链返回的池子中，没有一个同时具备真实流动性和与之相称的成交量，按大小相互比较只会给噪音排序。完整列表仍然可用。"
+    "belowFloorBody": "该链返回的池子中，没有一个同时具备真实流动性和与之相称的成交量，按大小相互比较只会给噪音排序。完整列表仍然可用。",
+    "unavailableTitle": "暂时无法获取池子",
+    "retryingTitle": "正在重试",
+    "retry": "重试",
+    "retryingBody": "数据源当前拒绝请求，正在自动重试。",
+    "unavailableBody": "无法连接池子数据源，请稍后再试。"
   },
   "poolStats": {
     "notOnChainTitle": "不是链上交易对",
@@ -4307,6 +4319,7 @@
     },
     "recentlyViewed": "最近查看",
     "noMarketsFound": "未找到市场",
+    "venueBound": "该市场仅存在于 {{venue}}。",
     "modeLive": "实盘",
     "modePaper": "模拟"
   },

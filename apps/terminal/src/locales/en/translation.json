@@ -3393,6 +3393,7 @@
     },
     "recentlyViewed": "Recently viewed",
     "noMarketsFound": "No markets found",
+    "venueBound": "This market only exists on {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },
@@ -5196,7 +5197,8 @@
     "notInstalled": "No connector installed",
     "installConnector": "Install connector",
     "emptyTitle": "No chains to browse",
-    "emptyBody": "This build ships no on-chain connectors, so there is no chain to rank pools on."
+    "emptyBody": "This build ships no on-chain connectors, so there is no chain to rank pools on.",
+    "volumesLabel": "Chain volumes"
   },
   "poolMap": {
     "title": "{{chain}} · top pools",
@@ -5227,7 +5229,12 @@
     "morePools": "More pools on this chain",
     "backToMap": "Back to map",
     "belowFloorTitle": "Nothing deep enough to map",
-    "belowFloorBody": "Nothing this chain returned holds real liquidity with volume in proportion to it, so sizing these pools against each other would rank noise. The full listing is still there."
+    "belowFloorBody": "Nothing this chain returned holds real liquidity with volume in proportion to it, so sizing these pools against each other would rank noise. The full listing is still there.",
+    "unavailableTitle": "Pools unavailable right now",
+    "retryingTitle": "Asking again",
+    "retry": "Try again",
+    "retryingBody": "The provider is refusing requests right now. Trying again on its own.",
+    "unavailableBody": "The pool data provider could not be reached. Try again in a moment."
   },
   "liquidityFlow": {
     "noPoolTitle": "Pick a pool",
@@ -5242,7 +5249,10 @@
     "biggestLabel": "Biggest swaps",
     "title": "Flow through {{pool}}",
     "subtitle": "Buys minus sells, five minutes at a time",
-    "subtitleVenue": "{{venue}} · buys minus sells, five minutes at a time"
+    "subtitleVenue": "{{venue}} · buys minus sells, five minutes at a time",
+    "waitingTitle": "Waiting on the map",
+    "waitingBody": "The chain’s pools are still loading. Flow shows up as soon as one is selected.",
+    "unavailableTitle": "Pools unavailable right now"
   },
   "poolDetail": {
     "emptyTitle": "No pool selected",
@@ -5261,7 +5271,10 @@
     "pressure1h": "Buy / sell pressure 1h",
     "buysValue": "{{value}} buys",
     "sellsValue": "{{value}} sells",
-    "filledBy": "Gaps filled by {{provider}}"
+    "filledBy": "Gaps filled by {{provider}}",
+    "waitingTitle": "Waiting on the map",
+    "waitingBody": "The chain’s pools are still loading. The deepest one opens here on its own.",
+    "unavailableTitle": "Pools unavailable right now"
   },
   "poolStats": {
     "notOnChainTitle": "Not an on-chain pair",
