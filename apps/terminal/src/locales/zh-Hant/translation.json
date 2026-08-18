@@ -4309,6 +4309,7 @@
     },
     "recentlyViewed": "最近檢視",
     "noMarketsFound": "未找到市場",
+    "venueBound": "這個市場只存在於 {{venue}}。",
     "modeLive": "實盤",
     "modePaper": "模擬"
   },

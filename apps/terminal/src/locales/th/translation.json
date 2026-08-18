@@ -4309,6 +4309,7 @@
     },
     "recentlyViewed": "ดูล่าสุด",
     "noMarketsFound": "ไม่พบตลาด",
+    "venueBound": "ตลาดนี้มีอยู่บน {{venue}} เท่านั้น",
     "modeLive": "จริง",
     "modePaper": "กระดาษ"
   },

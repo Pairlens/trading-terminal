@@ -4309,6 +4309,7 @@
     },
     "recentlyViewed": "Baru dilihat",
     "noMarketsFound": "Tidak ada pasar ditemukan",
+    "venueBound": "Pasar ini hanya ada di {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },

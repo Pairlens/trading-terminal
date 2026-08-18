@@ -4403,6 +4403,7 @@
     },
     "recentlyViewed": "Нещодавно переглянуті",
     "noMarketsFound": "Ринків не знайдено",
+    "venueBound": "Цей ринок існує лише на {{venue}}.",
     "modeLive": "РЕАЛЬНИЙ",
     "modePaper": "ПАПЕРОВИЙ"
   },

@@ -4403,6 +4403,7 @@
     },
     "recentlyViewed": "Ostatnio oglądane",
     "noMarketsFound": "Nie znaleziono rynków",
+    "venueBound": "Ten rynek istnieje tylko na {{venue}}.",
     "modeLive": "LIVE",
     "modePaper": "PAPER"
   },

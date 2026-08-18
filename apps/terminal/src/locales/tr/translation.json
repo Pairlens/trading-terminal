@@ -4309,6 +4309,7 @@
     },
     "recentlyViewed": "Son görüntülenenler",
     "noMarketsFound": "Piyasa bulunamadı",
+    "venueBound": "Bu piyasa yalnızca {{venue}} üzerinde var.",
     "modeLive": "CANLI",
     "modePaper": "KAĞIT"
   },

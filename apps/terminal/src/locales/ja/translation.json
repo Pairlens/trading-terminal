@@ -4309,6 +4309,7 @@
     },
     "recentlyViewed": "最近見た銘柄",
     "noMarketsFound": "該当する市場がありません",
+    "venueBound": "このマーケットは {{venue}} にのみ存在します。",
     "modeLive": "ライブ",
     "modePaper": "ペーパー"
   },
