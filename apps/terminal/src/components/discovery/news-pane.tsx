@@ -18,8 +18,10 @@
  *
  * It opens no new stream and no new request per chip. The percentages ride
  * maps the board already fetched for the scanner; the asset scopes are applied
- * over the same 5-minute feed the All chip reads, because the provider's own
- * `tickers` parameter is AND rather than OR (see `params` below).
+ * over the same feed the All chip reads, because the provider's own `tickers`
+ * parameter is AND rather than OR (see `params` below). That feed refreshes
+ * itself every two minutes while the window is focused, so stories arrive on
+ * their own and switching chips still costs no request.
  */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -40,9 +42,11 @@ import {
   ArticleRow,
   ArticleRowSkeleton,
   NEWS_PAGE_TIME_FROM,
+  NEWS_POLL_INTERVAL_MS,
   NEWS_TOPIC_EARNINGS,
   NEWS_TOPIC_MACRO,
   NewsFeedStatus,
+  NewsRefreshError,
   countWatchedMentions,
   fetchNewsPage,
   flattenNewsPages,
@@ -50,6 +54,7 @@ import {
   isCryptoNewsTicker,
   isEquityNewsTicker,
   newsFeedView,
+  newsPollInterval,
   newsRowTag,
   newsTickerBase,
   nextNewsPageParam,
@@ -277,7 +282,16 @@ function NewsFeed({
       // A non-advancing cursor would refetch the same page forever.
       return next && next !== lastPageParam ? next : null
     },
-    staleTime: 5 * 60_000,
+    // The wire refreshes itself. Refetching an infinite query walks its pages
+    // in order and recomputes each cursor from the page before it, so stories
+    // that shift the page boundaries leave the feed contiguous rather than
+    // punching a hole in the middle of it — which is why this is a refetch of
+    // the whole query rather than a cheaper poll of its head. The interval
+    // stands down once the feed has been paged past `NEWS_POLL_MAX_PAGES`,
+    // where that walk stops being one request.
+    refetchInterval: (query) =>
+      newsPollInterval(query.state.data?.pages.length ?? 1),
+    staleTime: NEWS_POLL_INTERVAL_MS,
     gcTime: 30 * 60_000,
     // A provider outage isn't worth three rounds of backoff before we say so.
     retry: 1,
@@ -310,9 +324,11 @@ function NewsFeed({
           {t('news.title')}
         </h2>
         <div className="flex shrink-0 items-center gap-1">
-          {/* Not a "Live" dot. The feed is a five-minute poll, and a green
-              pulse over a number that is four minutes old is a lie a trader
-              will eventually act on. */}
+          {/* Not a "Live" dot. The feed polls every two minutes, and a green
+              pulse over a number that is ninety seconds old is a lie a trader
+              will eventually act on. The timestamp says what it means, and the
+              marker beside it says when the polling itself is what broke. */}
+          <NewsRefreshError error={error} />
           {fetchedAt && (
             <span className="text-[11px] text-muted-foreground">
               {t('common.updated', { time: formatRelativeTime(fetchedAt) })}

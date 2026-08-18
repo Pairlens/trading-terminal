@@ -16,12 +16,20 @@ import {
 } from '@tanstack/react-query'
 
 import {
+  NEWS_POLL_INTERVAL_MS,
+  NEWS_POLL_MAX_PAGES,
   NewsUnavailableError,
+  anchorNewsFeed,
   fetchNewsPage,
+  flattenNewsPages,
   newsFeedStalled,
   newsFeedView,
+  newsPollInterval,
 } from '../news-feed-state'
-import type { NewsFeedResponse } from '@pairlens/shared/instrument-types'
+import type {
+  NewsArticle,
+  NewsFeedResponse,
+} from '@pairlens/shared/instrument-types'
 
 // ── The state-to-view mapping ───────────────────────────────────────
 
@@ -44,13 +52,26 @@ describe('newsFeedView', () => {
     ).toBe('unavailable')
   })
 
-  it('keeps the unavailable state even when stale pages are on screen', () => {
-    // A background refetch that fails must not be papered over by old data.
+  it('keeps the stories on screen when a poll fails under them', () => {
+    // The feed polls every two minutes, so a transient 5xx is routine. It used
+    // to replace a feed someone was reading with a full-pane "News
+    // unavailable" that cleared itself two minutes later. The headlines are
+    // still true; the header's marker is what says the refresh failed.
     expect(
       newsFeedView({
         isPending: false,
         error: new NewsUnavailableError('upstream_error'),
         articleCount: 12,
+      }),
+    ).toBe('articles')
+  })
+
+  it('falls back to unavailable when a failed feed has nothing to show', () => {
+    expect(
+      newsFeedView({
+        isPending: false,
+        error: new NewsUnavailableError('rate_limited'),
+        articleCount: 0,
       }),
     ).toBe('unavailable')
   })
@@ -82,6 +103,61 @@ describe('newsFeedStalled', () => {
     expect(newsFeedStalled({ isPending: false, fetchStatus: 'idle' })).toBe(
       false,
     )
+  })
+})
+
+// ── The live poll ───────────────────────────────────────────────────
+
+describe('newsPollInterval', () => {
+  it('polls a feed that has not been paged', () => {
+    expect(newsPollInterval(1)).toBe(NEWS_POLL_INTERVAL_MS)
+  })
+
+  it('keeps polling up to the page cap', () => {
+    expect(newsPollInterval(NEWS_POLL_MAX_PAGES)).toBe(NEWS_POLL_INTERVAL_MS)
+  })
+
+  it('stands down past it, where one poll is no longer one request', () => {
+    // Refetching an infinite query walks every loaded page. Past the cap that
+    // is an archive being re-read every two minutes, not a wire.
+    expect(newsPollInterval(NEWS_POLL_MAX_PAGES + 1)).toBe(false)
+  })
+})
+
+// ── Reader anchoring against a feed that grows at the head ──────────
+
+const article = (url: string): NewsArticle =>
+  ({ url }) as unknown as NewsArticle
+
+describe('anchorNewsFeed', () => {
+  it('drops stories the poll prepended, so a slide index still resolves', () => {
+    const feed = [article('new'), article('a'), article('b')]
+    expect(anchorNewsFeed(feed, 'a')).toEqual([article('a'), article('b')])
+  })
+
+  it('keeps what paging appended', () => {
+    const feed = [article('new'), article('a'), article('b'), article('older')]
+    expect(anchorNewsFeed(feed, 'a')).toEqual([
+      article('a'),
+      article('b'),
+      article('older'),
+    ])
+  })
+
+  it('returns the same array when the anchor still leads', () => {
+    // Identity matters: a new array every poll would re-render every slide.
+    const feed = [article('a'), article('b')]
+    expect(anchorNewsFeed(feed, 'a')).toBe(feed)
+  })
+
+  it('passes the feed through when it has no anchor yet', () => {
+    const feed = [article('a')]
+    expect(anchorNewsFeed(feed, undefined)).toBe(feed)
+  })
+
+  it('passes the feed through when the anchor is gone from it', () => {
+    const feed = [article('a'), article('b')]
+    expect(anchorNewsFeed(feed, 'retracted')).toBe(feed)
   })
 })
 
@@ -260,6 +336,123 @@ describe('news feed query against a 503', () => {
           fetchStatus: reverted.fetchStatus,
         }),
       ).toBe(true)
+    } finally {
+      unsubscribe()
+      client.unmount()
+      client.clear()
+    }
+  })
+})
+
+// ── The wire moves on its own ───────────────────────────────────────
+//
+// What the pane wires up is `refetchInterval`, and the timer behind it cannot
+// fire here: query-core computes `isServer` from `typeof window`, which is
+// undefined under bun, and never schedules the interval. The interval VALUE is
+// pinned by the `newsPollInterval` suite above; these run the refetch that
+// value schedules, because the part worth pinning is what a poll does to a
+// feed someone is already reading. Live behaviour is verified in a browser.
+
+describe('a poll landing on a loaded feed', () => {
+  it('puts the new stories at the top of the feed', async () => {
+    let round = 0
+    const apiFetch = async () => {
+      round += 1
+      const articles =
+        round === 1
+          ? [{ url: 'first', timePublished: '20260818T1000' }]
+          : [
+              { url: 'second', timePublished: '20260818T1002' },
+              { url: 'first', timePublished: '20260818T1000' },
+            ]
+      return new Response(
+        JSON.stringify({ articles, fetchedAt: '2026-08-18T10:02:00.000Z' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      )
+    }
+
+    const client = makeClient()
+    const observer = new InfiniteQueryObserver<NewsFeedResponse, Error>(
+      client,
+      {
+        queryKey: ['news-poll-test'],
+        queryFn: () => fetchNewsPage(apiFetch, 'sort=LATEST'),
+        initialPageParam: null,
+        getNextPageParam: () => null,
+        retry: false,
+      },
+    )
+    const unsubscribe = observer.subscribe(() => {})
+    const urls = () =>
+      flattenNewsPages(observer.getCurrentResult().data?.pages ?? []).map(
+        (item) => item.url,
+      )
+
+    try {
+      await waitFor(() => urls().length === 1)
+      expect(urls()).toEqual(['first'])
+
+      await observer.refetch()
+      expect(urls()).toEqual(['second', 'first'])
+    } finally {
+      unsubscribe()
+      client.unmount()
+      client.clear()
+    }
+  })
+
+  it('leaves the stories up when it fails under them', async () => {
+    // A 5xx two minutes into a good feed used to blank the pane: data stays
+    // and error is set, and the old view mapping read the error first.
+    let round = 0
+    const apiFetch = async () => {
+      round += 1
+      return round === 1
+        ? new Response(
+            JSON.stringify({
+              articles: [{ url: 'first', timePublished: '20260818T1000' }],
+              fetchedAt: '2026-08-18T10:00:00.000Z',
+            }),
+            { status: 200, headers: { 'Content-Type': 'application/json' } },
+          )
+        : new Response(
+            JSON.stringify({
+              error: 'news_unavailable',
+              reason: 'upstream_error',
+              fetchedAt: '2026-08-18T10:02:00.000Z',
+            }),
+            { status: 503, headers: { 'Content-Type': 'application/json' } },
+          )
+    }
+
+    const client = makeClient()
+    const observer = new InfiniteQueryObserver<NewsFeedResponse, Error>(
+      client,
+      {
+        queryKey: ['news-poll-failure-test'],
+        queryFn: () => fetchNewsPage(apiFetch, 'sort=LATEST'),
+        initialPageParam: null,
+        getNextPageParam: () => null,
+        retry: false,
+      },
+    )
+    const unsubscribe = observer.subscribe(() => {})
+
+    try {
+      await waitFor(() => observer.getCurrentResult().data !== undefined)
+      await observer.refetch()
+
+      const result = observer.getCurrentResult()
+      const articles = flattenNewsPages(result.data?.pages ?? [])
+      expect(result.error).toBeInstanceOf(NewsUnavailableError)
+      expect(articles.map((item) => item.url)).toEqual(['first'])
+      expect(
+        newsFeedView({
+          isPending: result.isPending,
+          error: result.error,
+          articleCount: articles.length,
+        }),
+      ).toBe('articles')
     } finally {
       unsubscribe()
       client.unmount()

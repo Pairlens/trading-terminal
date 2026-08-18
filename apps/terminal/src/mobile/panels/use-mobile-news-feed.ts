@@ -11,7 +11,8 @@
  *
  * The paging contract (`time_to` cursor, 50-per-page exhaustion, URL dedupe,
  * the non-advancing-cursor stop) is the desktop's, imported from
- * `news-shared` rather than re-derived. What is NOT reused is
+ * `news-shared` rather than re-derived, and so is the two-minute poll that
+ * keeps the wire moving on its own. What is NOT reused is
  * `usePluginFetch`: it throws outside a pane host, so the transport here is
  * `authFetch` against the App Server — the same URL and the same bearer token
  * the plugin fetch would have used.
@@ -25,8 +26,10 @@ import type {
 } from '@pairlens/shared/instrument-types'
 import {
   NEWS_PAGE_TIME_FROM,
+  NEWS_POLL_INTERVAL_MS,
   fetchNewsPage,
   flattenNewsPages,
+  newsPollInterval,
   nextNewsPageParam,
   useNewsFeedResume,
 } from '@/components/news/news-shared'
@@ -83,7 +86,13 @@ export function useMobileNewsFeed(): MobileNewsFeed {
       // A cursor that stops advancing would refetch the same page forever.
       return next && next !== lastPageParam ? next : null
     },
-    staleTime: 5 * 60_000,
+    // Same two-minute beat as the desktop wire, and the same reason for
+    // refetching the whole query rather than its head (see the discovery
+    // pane's query). The phone gets it for free: both consumers share this one
+    // entry, so the poll runs once whether the reader sheet is open or not.
+    refetchInterval: (query) =>
+      newsPollInterval(query.state.data?.pages.length ?? 1),
+    staleTime: NEWS_POLL_INTERVAL_MS,
     gcTime: 30 * 60_000,
     // A provider outage isn't worth three rounds of backoff before we say so.
     retry: 1,

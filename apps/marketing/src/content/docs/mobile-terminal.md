@@ -150,7 +150,10 @@ for you says that instead, with no button, because there is nothing to fix.
 
 Discover is the browse sheet: Fear and Greed and today's P&L as two cards,
 featured pairs, prediction markets, then the news feed. The two cards and the
-two lists each open out into a full screen, so the sheet stays a summary.
+two lists each open out into a full screen, so the sheet stays a summary. The
+news feed refreshes itself every two minutes while the app is in front, and new
+stories arrive at the top of the list without a pull. Open a story and the
+reader holds its place while the list keeps filling behind it.
 
 **Prediction markets** sit between the featured pairs and the news. A handful
 of live events, each with its artwork, its question, how long until it resolves,

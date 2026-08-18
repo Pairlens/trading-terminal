@@ -19,6 +19,38 @@ import type {
 export const NEWS_PAGE_SIZE = 50
 
 /**
+ * How often a feed that is on screen asks the wire for what has been published
+ * since it last looked.
+ *
+ * The wire is the one surface in the terminal where "static until you touch
+ * it" is a defect: a headline the reader has not seen yet is the whole product
+ * of a news pane. Two minutes is short enough that a story lands while it is
+ * still tradeable and long enough that a full trading day costs a few hundred
+ * requests rather than a few thousand. Polling stops while the window is in
+ * the background (TanStack's `refetchIntervalInBackground` defaults to false),
+ * so a terminal left open overnight is idle, and the refetch-on-focus that is
+ * already configured covers the gap on the way back.
+ */
+export const NEWS_POLL_INTERVAL_MS = 2 * 60_000
+
+/**
+ * Pages deep enough that live updates stop being worth their cost.
+ *
+ * Refetching an infinite query refetches every loaded page in order, which is
+ * what keeps the feed contiguous when new stories shift the page boundaries —
+ * but it also means the poll costs one request per loaded page. One page is
+ * the normal case (50 stories; you only get a second one by reading to the end
+ * of the first inside the reader). Past this many, someone is browsing an
+ * archive rather than watching a wire, and the manual refresh is right there.
+ */
+export const NEWS_POLL_MAX_PAGES = 3
+
+/** The poll interval for a feed that has `pageCount` pages loaded. */
+export function newsPollInterval(pageCount: number): number | false {
+  return pageCount > NEWS_POLL_MAX_PAGES ? false : NEWS_POLL_INTERVAL_MS
+}
+
+/**
  * Far-past lower bound for paged requests — the API only honors `time_to`
  * when `time_from` is also present.
  */
@@ -120,15 +152,23 @@ export type NewsFeedFetchStatus = 'fetching' | 'paused' | 'idle'
 export type NewsFeedView = 'loading' | 'unavailable' | 'empty' | 'articles'
 
 /**
- * Map query state to what the pane shows. One rule matters and it is the bug
- * this function exists to pin down: a query that has never answered is
- * LOADING, whatever its fetchStatus. `isLoading` alone gets this wrong: it is
- * true only while a fetch is actively in flight, and a pending query can have
- * nothing in flight at all. The retry backoff pauses while the tab is hidden
- * (a 503's second attempt parks on the focus gate), and a cancelled fetch
- * reverts to idle. Both used to fall through to "No news found", claiming an
- * empty feed off a feed that never answered. The empty state is reserved for
- * a real answer with nothing in it.
+ * Map query state to what the pane shows. Two rules matter.
+ *
+ * A query that has never answered is LOADING, whatever its fetchStatus.
+ * `isLoading` alone gets this wrong: it is true only while a fetch is actively
+ * in flight, and a pending query can have nothing in flight at all. The retry
+ * backoff pauses while the tab is hidden (a 503's second attempt parks on the
+ * focus gate), and a cancelled fetch reverts to idle. Both used to fall
+ * through to "No news found", claiming an empty feed off a feed that never
+ * answered. The empty state is reserved for a real answer with nothing in it.
+ *
+ * And stories already on screen outrank a failed refresh. This is the one
+ * rule that flipped when the feed started polling: a two-minute poll turns
+ * every transient 5xx into a full-screen "News unavailable" over a feed the
+ * reader was halfway through, and two minutes later it comes back. The
+ * headlines did not stop being true because the last request failed, so they
+ * stay, and the header carries a marker saying the refresh is the part that
+ * broke. `unavailable` is for a feed with nothing else to show.
  */
 export function newsFeedView(state: {
   /** TanStack `isPending`: no data yet and no error yet. */
@@ -138,9 +178,9 @@ export function newsFeedView(state: {
   articleCount: number
 }): NewsFeedView {
   if (state.isPending) return 'loading'
+  if (state.articleCount > 0) return 'articles'
   if (state.error) return 'unavailable'
-  if (state.articleCount === 0) return 'empty'
-  return 'articles'
+  return 'empty'
 }
 
 /**
@@ -155,4 +195,29 @@ export function newsFeedStalled(state: {
   fetchStatus: NewsFeedFetchStatus
 }): boolean {
   return state.isPending && state.fetchStatus === 'idle'
+}
+
+// ── Live-feed anchoring ─────────────────────────────────────────────
+
+/**
+ * The slice of a live feed a reader opened on, from the story it opened at.
+ *
+ * Both readers map scroll position to an index, so the array they page through
+ * has to be stable at the FRONT. A polling feed is not: new stories arrive at
+ * the head, and every one of them shifts the reader's index by one, swapping
+ * the article under someone mid-read. Anchoring to the story that led the feed
+ * when the reader opened drops exactly those prepends and keeps everything
+ * paging adds at the end, which is the growth the reader does want.
+ *
+ * Returns the array unchanged when the anchor still leads it (the common case,
+ * so no new identity and no re-render) or when it has fallen out of the feed
+ * entirely, which only happens if the provider retracts a story.
+ */
+export function anchorNewsFeed(
+  articles: Array<NewsArticle>,
+  anchorUrl: string | undefined,
+): Array<NewsArticle> {
+  if (!anchorUrl) return articles
+  const at = articles.findIndex((article) => article.url === anchorUrl)
+  return at > 0 ? articles.slice(at) : articles
 }
