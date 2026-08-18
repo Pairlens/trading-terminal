@@ -673,7 +673,7 @@ export type EarningsCalendarResponse = {
 }
 
 /**
- * Why fundamentals or the calendar could not be served. Same three reasons the
+ * Why fundamentals or the calendar could not be served. The same reasons the
  * news feed uses, for the same reason: an empty window is a fact about the
  * calendar, and these are facts about the provider, which is a different thing
  * to tell the user.
@@ -682,6 +682,7 @@ export type EquityFundamentalsUnavailableReason =
   | 'not_configured' // this server has no fundamentals provider key
   | 'rate_limited' // the provider is refusing us for now
   | 'upstream_error' // the provider errored, or answered with something unusable
+  | 'pending' // the market data collector has not captured this feed yet
 
 /** Error body served with a 5xx when the fundamentals provider fails us. */
 export type EquityFundamentalsUnavailableResponse = {

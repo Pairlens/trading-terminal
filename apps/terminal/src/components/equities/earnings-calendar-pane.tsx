@@ -607,7 +607,7 @@ function UnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
       />
     )
   }
-  if (reason === 'upstream_error') {
+  if (reason === 'upstream_error' || reason === 'pending') {
     return (
       <PaneEmpty
         body={t('earningsCalendar.providerErrorBody')}
@@ -638,7 +638,7 @@ function IpoUnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
       />
     )
   }
-  if (reason === 'upstream_error') {
+  if (reason === 'upstream_error' || reason === 'pending') {
     return (
       <PaneEmpty
         body={t('earningsCalendar.providerErrorBody')}
