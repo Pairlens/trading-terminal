@@ -334,7 +334,11 @@ function ResultItem({
 function resultKey(result: OmniSearchResult): string {
   switch (result.type) {
     case 'pair':
-      return `pair:${result.pair.symbol}`
+      // The ROW's identity, not its ticker. Eight Solana mints can share
+      // NTDA-USDC, and a symbol key made them one child eight times over:
+      // React logged a duplicate-key error and reserved the right to drop or
+      // duplicate rows. `id` is what cmdk already keys its own values on.
+      return `pair:${result.pair.id}`
     case 'market':
       return `market:${result.marketId}`
     case 'page':

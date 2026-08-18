@@ -78,6 +78,22 @@ export function dexChain(market: string | undefined): DexChain | null {
   return market ? (BY_MARKET.get(market) ?? null) : null
 }
 
+const BY_NETWORK = new Map(DEX_CHAINS.map((c) => [c.geckoNetwork, c]))
+
+/**
+ * A chain by its NETWORK slug rather than its market id.
+ *
+ * Token rows carry the network ('solana', 'base'), which is the same string
+ * as the market on every EVM chain and a different one on Solana, whose
+ * connector is Jupiter. A row that says "solana" and a rail that says
+ * "jupiter" are the same chain, and only this lookup knows it.
+ */
+export function dexChainByNetwork(
+  network: string | undefined,
+): DexChain | null {
+  return network ? (BY_NETWORK.get(network.toLowerCase()) ?? null) : null
+}
+
 /**
  * A transaction's page on the chain's explorer.
  *

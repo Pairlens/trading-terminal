@@ -426,7 +426,7 @@ export default memo(function PairPickerScreen({
               <PairResultRow
                 entry={entry}
                 focused={entry.symbol === focusedPair}
-                key={entry.symbol}
+                key={entry.id}
                 onSelect={handleSelect}
                 routing={routing}
                 watched={watchedSymbols.has(entry.symbol)}
@@ -441,7 +441,7 @@ export default memo(function PairPickerScreen({
               <PairResultRow
                 entry={entry}
                 focused={entry.symbol === focusedPair}
-                key={entry.symbol}
+                key={entry.id}
                 onSelect={handleSelect}
                 routing={routing}
                 watched
