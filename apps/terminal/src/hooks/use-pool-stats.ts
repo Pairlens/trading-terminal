@@ -24,7 +24,10 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
-import { ProviderThrottledError } from '@pairlens/market-engine/errors'
+import {
+  ProviderThrottledError,
+  isProviderThrottledError,
+} from '@pairlens/market-engine/errors'
 import { providerThrottledUntil } from '@pairlens/market-engine/provider-throttle'
 
 import type { PluginInstance } from '@pairlens/plugin-system/types'
@@ -50,6 +53,43 @@ const TRADES_REFRESH_MS = 15_000
 const LISTING_REFRESH_MS = 5 * 60_000
 /** New pools: fresh enough for a discovery tab, cheap on a shared budget. */
 const NEW_POOLS_REFRESH_MS = 2 * 60_000
+
+/**
+ * How many times a throttled read is worth asking again.
+ *
+ * These reads do not retry in general, and that is right for the failure they
+ * usually have: the provider answered and there is nothing there, so asking
+ * again is a wasted request out of a budget four panes are sharing. A throttle
+ * is the opposite failure. It says the same request succeeds later, and with
+ * no retry the pane sat on it for the whole five-minute stale window — which
+ * is what a rate-limited board opening actually looked like: empty, and empty
+ * until you navigated away and came back.
+ */
+const THROTTLE_RETRIES = 2
+
+/** Retry a provider throttle, and only a provider throttle. */
+function retryOnThrottle(failureCount: number, error: unknown): boolean {
+  return isProviderThrottledError(error) && failureCount <= THROTTLE_RETRIES
+}
+
+/**
+ * The provider's own advice where it gave any, and a widening back-off
+ * otherwise. Capped, because a pane that says "retrying" should mean it.
+ */
+function throttleRetryDelay(attempt: number, error: unknown): number {
+  const advised = isProviderThrottledError(error) ? error.retryAfterMs : 0
+  return Math.min(Math.max(advised, 1_500 * 2 ** attempt), 10_000)
+}
+
+/**
+ * The chain listing every DEX Discovery pane reads.
+ *
+ * Exported so the panes cannot drift apart: react-query keys on these values,
+ * so a pane asking for a different depth would open a SECOND listing query for
+ * the same chain and spend the requests twice against a provider that is
+ * already the board's tightest budget.
+ */
+export const DISCOVERY_POOL_LISTING = { sort: 'volume', depth: 3 } as const
 
 export type PoolStatsResult = {
   stats: PoolStats | null
@@ -90,7 +130,8 @@ export function usePoolStats(
     staleTime: STATS_REFRESH_MS,
     refetchInterval: STATS_REFRESH_MS,
     gcTime: 10 * 60_000,
-    retry: false,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
   })
 
   const primary = query.data ?? null
@@ -202,7 +243,8 @@ export function usePoolTrades(
     staleTime: TRADES_REFRESH_MS,
     refetchInterval: TRADES_REFRESH_MS,
     gcTime: 5 * 60_000,
-    retry: false,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
   })
 
   return {
@@ -216,7 +258,19 @@ export function usePoolTrades(
 export type PoolListingResult = {
   pools: PoolListingResponse['pools']
   isLoading: boolean
+  /**
+   * The failure, when there is one — and only ever shown to a reader when
+   * `throttled` says it was written for one. Everything else that reaches here
+   * is plumbing ("All candidates for capability 'market-data:pool-stats'
+   * failed"), which a pane must translate rather than print.
+   */
   error: string | null
+  /** The failure is a provider rate limit, whose own message is readable. */
+  throttled: boolean
+  /** The failure is retryable and another attempt is already scheduled. */
+  retrying: boolean
+  /** Ask again now. Wired to the pane's retry control. */
+  retry: () => void
 }
 
 /** A chain's pools, ranked by the provider's own 24h volume ordering. */
@@ -243,13 +297,23 @@ export function usePoolListing(
     staleTime: LISTING_REFRESH_MS,
     refetchInterval: LISTING_REFRESH_MS,
     gcTime: 30 * 60_000,
-    retry: false,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
   })
 
   return {
     pools: query.data?.pools ?? [],
     isLoading: active && query.isPending,
     error: query.error ? errorText(query.error) : null,
+    throttled: isProviderThrottledError(query.error),
+    // `isFetching` is the wrong test, and the news feed learned this the hard
+    // way (see `newsFeedView` in components/news/news-feed-state.ts): a retry
+    // that is backing off, or parked on the focus gate because the window is
+    // in the background, sits at `fetchStatus: 'paused'` with nothing in
+    // flight. Read through `isFetching` that is indistinguishable from a first
+    // load, and the pane holds a skeleton for as long as the tab stays hidden.
+    retrying: query.failureCount > 0 && query.fetchStatus !== 'idle',
+    retry: () => void query.refetch(),
   }
 }
 
@@ -358,7 +422,8 @@ export function useNewPools(
     enabled: active,
     staleTime: NEW_POOLS_REFRESH_MS,
     gcTime: 30 * 60_000,
-    retry: false,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
   })
 
   return {
@@ -373,6 +438,8 @@ export type ChainStatsResult = {
   byMarket: Map<string, ChainPoolStats>
   isLoading: boolean
   error: string | null
+  /** The failure is a provider rate limit, whose own message is readable. */
+  throttled: boolean
 }
 
 const EMPTY_CHAIN_STATS: Map<string, ChainPoolStats> = new Map()
@@ -410,13 +477,15 @@ export function useChainStats(
     staleTime: LISTING_REFRESH_MS,
     refetchInterval: LISTING_REFRESH_MS,
     gcTime: 30 * 60_000,
-    retry: false,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
   })
 
   return {
     byMarket: query.data ?? EMPTY_CHAIN_STATS,
     isLoading: active && query.isPending,
     error: query.error ? errorText(query.error) : null,
+    throttled: isProviderThrottledError(query.error),
   }
 }
 

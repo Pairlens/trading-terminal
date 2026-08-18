@@ -118,7 +118,8 @@
     "notInstalled": "コネクタ未インストール",
     "installConnector": "コネクタをインストール",
     "emptyTitle": "表示できるチェーンがありません",
-    "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。"
+    "emptyBody": "このビルドにはオンチェーンコネクタが含まれていないため、プールを並べられるチェーンがありません。",
+    "volumesLabel": "チェーン別出来高"
   },
   "earningsCalendar": {
     "capped": "{{total}} 件のうち最初の {{shown}} 件を表示しています。",
@@ -507,7 +508,10 @@
     "biggestLabel": "最大のスワップ",
     "title": "{{pool}} を通るフロー",
     "subtitle": "買い引く売り、5分刻み",
-    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み"
+    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み",
+    "waitingTitle": "マップを待機中",
+    "waitingBody": "チェーンのプールを読み込んでいます。プールを選ぶとフローが表示されます。",
+    "unavailableTitle": "現在プールを取得できません"
   },
   "lpPanes": {
     "venueFallback": "このチェーン",
@@ -1014,7 +1018,10 @@
     "pressure1h": "買い / 売り圧力 1時間",
     "buysValue": "買い {{value}}",
     "sellsValue": "売り {{value}}",
-    "filledBy": "欠損は {{provider}} が補完"
+    "filledBy": "欠損は {{provider}} が補完",
+    "waitingTitle": "マップを待機中",
+    "waitingBody": "チェーンのプールを読み込んでいます。最も深いプールが自動でここに開きます。",
+    "unavailableTitle": "現在プールを取得できません"
   },
   "poolMap": {
     "title": "{{chain}} · 上位プール",
@@ -1045,7 +1052,12 @@
     "morePools": "このチェーンの他のプール",
     "backToMap": "マップに戻る",
     "belowFloorTitle": "マップに載せる深さがありません",
-    "belowFloorBody": "このチェーンが返したプールには、実際の流動性とそれに見合う出来高を備えたものがありません。これらを互いにサイズ比較してもノイズを並べるだけです。全プールの一覧は引き続き利用できます。"
+    "belowFloorBody": "このチェーンが返したプールには、実際の流動性とそれに見合う出来高を備えたものがありません。これらを互いにサイズ比較してもノイズを並べるだけです。全プールの一覧は引き続き利用できます。",
+    "unavailableTitle": "現在プールを取得できません",
+    "retryingTitle": "再試行中",
+    "retry": "再試行",
+    "retryingBody": "プロバイダーが現在リクエストを拒否しています。自動で再試行します。",
+    "unavailableBody": "プール情報の提供元に接続できませんでした。しばらくしてからお試しください。"
   },
   "poolStats": {
     "notOnChainTitle": "オンチェーンのペアではありません",

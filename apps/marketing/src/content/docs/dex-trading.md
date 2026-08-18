@@ -57,9 +57,14 @@ the day's volume and tinted by the day's move, so the biggest money and the
 biggest movement read in one glance. The sizing metric is a toggle, Volume by
 default, then Liquidity, Trades, and Turnover, a day's volume against the
 liquidity backing it, which is the one that separates a pool actually trading
-from a pool merely large. Pools holding less than a dollar of measurable
-liquidity never make the map, because sizing wash-traded dust against real
-pools ranks noise. A footer strip opens the full ranked list. A click selects,
+from a pool merely large. Two rules decide which pools get a tile, and both are
+about what a bot cannot fake cheaply: the pool has to hold at least $10,000 of
+published liquidity, and its claimed volume has to stay inside 500 daily turns
+of that liquidity. The ceiling is set where the impossible starts rather than
+where the unusual does, because a concentrated-liquidity pool services enormous
+volume on a small active range: Solana's busiest tokenized-equity pools run 150
+to 370 turns a day on real capital, and a tighter bar dropped every one of
+them. A footer strip opens the full ranked list, dust included. A click selects,
 a double click opens the pair, and both pin the base token's contract address
 rather than its ticker, because a pool map is exactly where two tokens with the
 same symbol turn up next to each other, sometimes as two tiles at once.
@@ -157,10 +162,19 @@ it.
 **Data-provider rate limits.** On-chain price data comes from public APIs with
 request limits, so a page full of on-chain panels updates less often than a CEX
 chart streaming over a WebSocket. Pairlens paces its own requests to stay inside
-GeckoTerminal's free tier, so opening a board across five chains queues instead
-of tripping the limit. When a provider throttles anyway, the pane says it is
-rate limited and keeps retrying: a limit is never reported as a pair the venue
-does not carry.
+GeckoTerminal's free tier, and paces the burst as well as the minute, because a
+Discovery board opening cold asks about six chains at once. When a provider
+throttles anyway, the pane says the provider is refusing and retries on its own,
+then offers a Try again button when it gives up: a limit is never reported as a
+pair the venue does not carry, or as a chain with no pools.
+
+That last part takes some care in a browser. GeckoTerminal sends a CORS header
+on its successful responses and none on its rate-limited ones, so from a web
+page a 429 is not a status you can read, it is a blocked response and a bare
+network error. Read literally it looks identical to "there is nothing here",
+which is how a rate limit used to empty the whole on-chain board and blame the
+chain for it. Pairlens treats an unreadable refusal from that provider as a
+refusal, so the board waits and retries instead of inventing an answer.
 
 **Providers disagree on what they publish.** GeckoTerminal reports value locked
 as one USD figure and nothing per side. DexPaprika reports both reserves and the

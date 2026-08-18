@@ -118,7 +118,8 @@
     "notInstalled": "Konektor belum dipasang",
     "installConnector": "Pasang konektor",
     "emptyTitle": "Tidak ada chain untuk dijelajahi",
-    "emptyBody": "Build ini tidak menyertakan konektor on-chain, jadi tidak ada chain yang pool-nya bisa diperingkat."
+    "emptyBody": "Build ini tidak menyertakan konektor on-chain, jadi tidak ada chain yang pool-nya bisa diperingkat.",
+    "volumesLabel": "Volume per chain"
   },
   "earningsCalendar": {
     "capped": "Menampilkan {{shown}} dari {{total}} laporan pertama.",
@@ -507,7 +508,10 @@
     "biggestLabel": "Swap terbesar",
     "title": "Arus lewat {{pool}}",
     "subtitle": "Beli dikurangi jual, per lima menit",
-    "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit"
+    "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit",
+    "waitingTitle": "Menunggu peta pool",
+    "waitingBody": "Pool di chain ini masih dimuat. Aliran muncul begitu satu pool dipilih.",
+    "unavailableTitle": "Pool belum bisa diambil"
   },
   "lpPanes": {
     "venueFallback": "chain ini",
@@ -1014,7 +1018,10 @@
     "pressure1h": "Tekanan beli / jual 1 jam",
     "buysValue": "{{value}} dibeli",
     "sellsValue": "{{value}} dijual",
-    "filledBy": "Celah diisi oleh {{provider}}"
+    "filledBy": "Celah diisi oleh {{provider}}",
+    "waitingTitle": "Menunggu peta pool",
+    "waitingBody": "Pool di chain ini masih dimuat. Yang paling dalam akan terbuka di sini sendiri.",
+    "unavailableTitle": "Pool belum bisa diambil"
   },
   "poolMap": {
     "title": "{{chain}} · pool teratas",
@@ -1045,7 +1052,12 @@
     "morePools": "Pool lain di chain ini",
     "backToMap": "Kembali ke peta",
     "belowFloorTitle": "Tidak ada yang cukup dalam untuk dipetakan",
-    "belowFloorBody": "Tidak ada yang dikembalikan chain ini yang memadukan likuiditas nyata dengan volume yang sebanding, jadi mengukur pool ini satu sama lain hanya akan mengurutkan noise. Daftar lengkap tetap tersedia."
+    "belowFloorBody": "Tidak ada yang dikembalikan chain ini yang memadukan likuiditas nyata dengan volume yang sebanding, jadi mengukur pool ini satu sama lain hanya akan mengurutkan noise. Daftar lengkap tetap tersedia.",
+    "unavailableTitle": "Pool belum bisa diambil",
+    "retryingTitle": "Mencoba lagi",
+    "retry": "Coba lagi",
+    "retryingBody": "Penyedia data sedang menolak permintaan. Akan dicoba lagi otomatis.",
+    "unavailableBody": "Penyedia data pool tidak dapat dihubungi. Coba lagi sebentar."
   },
   "poolStats": {
     "notOnChainTitle": "Bukan pasangan on-chain",

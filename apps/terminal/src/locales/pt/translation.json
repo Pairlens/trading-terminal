@@ -118,7 +118,8 @@
     "notInstalled": "Nenhum conector instalado",
     "installConnector": "Instalar conector",
     "emptyTitle": "Nenhuma rede disponível",
-    "emptyBody": "Esta build não traz conectores on-chain, então não há rede cujas pools possam ser ranqueadas."
+    "emptyBody": "Esta build não traz conectores on-chain, então não há rede cujas pools possam ser ranqueadas.",
+    "volumesLabel": "Volumes por rede"
   },
   "earningsCalendar": {
     "capped": "Mostrando os primeiros {{shown}} de {{total}} balanços.",
@@ -507,7 +508,10 @@
     "biggestLabel": "Maiores swaps",
     "title": "Fluxo através de {{pool}}",
     "subtitle": "Compras menos vendas, em blocos de cinco minutos",
-    "subtitleVenue": "{{venue}} · compras menos vendas, em blocos de cinco minutos"
+    "subtitleVenue": "{{venue}} · compras menos vendas, em blocos de cinco minutos",
+    "waitingTitle": "À espera do mapa",
+    "waitingBody": "Os pools da rede ainda estão a carregar. O fluxo aparece assim que um for selecionado.",
+    "unavailableTitle": "Pools indisponíveis agora"
   },
   "lpPanes": {
     "venueFallback": "esta rede",
@@ -1014,7 +1018,10 @@
     "pressure1h": "Pressão compra / venda 1h",
     "buysValue": "{{value}} compras",
     "sellsValue": "{{value}} vendas",
-    "filledBy": "Lacunas preenchidas por {{provider}}"
+    "filledBy": "Lacunas preenchidas por {{provider}}",
+    "waitingTitle": "À espera do mapa",
+    "waitingBody": "Os pools da rede ainda estão a carregar. O mais líquido abre aqui sozinho.",
+    "unavailableTitle": "Pools indisponíveis agora"
   },
   "poolMap": {
     "title": "{{chain}} · principais pools",
@@ -1045,7 +1052,12 @@
     "morePools": "Mais pools nesta rede",
     "backToMap": "Voltar ao mapa",
     "belowFloorTitle": "Nada fundo o bastante para mapear",
-    "belowFloorBody": "Nada do que esta chain retornou combina liquidez real com volume proporcional a ela, então dimensionar esses pools entre si ordenaria ruído. A lista completa continua disponível."
+    "belowFloorBody": "Nada do que esta chain retornou combina liquidez real com volume proporcional a ela, então dimensionar esses pools entre si ordenaria ruído. A lista completa continua disponível.",
+    "unavailableTitle": "Pools indisponíveis agora",
+    "retryingTitle": "A tentar de novo",
+    "retry": "Tentar de novo",
+    "retryingBody": "O fornecedor está a recusar pedidos agora. A tentar de novo sozinho.",
+    "unavailableBody": "Não foi possível contactar o fornecedor de dados de pools. Tente daqui a pouco."
   },
   "poolStats": {
     "notOnChainTitle": "Não é um par on-chain",
