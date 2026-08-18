@@ -161,8 +161,13 @@ export const TOPIC_OPTIONS = [
   'technology',
   'finance',
   'financial_markets',
+  'earnings',
   'economy_macro',
 ] as const
+
+/** The two topics the discovery pane's chips send, named once. */
+export const NEWS_TOPIC_MACRO = 'economy_macro'
+export const NEWS_TOPIC_EARNINGS = 'earnings'
 
 /** Localized topic label; unknown topics fall back to title-cased slug. */
 export function formatTopicLabel(topic: string): string {
@@ -349,6 +354,200 @@ export function ArticleBanner({
       alt=""
       onError={() => setFailed(true)}
     />
+  )
+}
+
+// ── Compact row (the discovery boards' feed) ────────────────────────
+//
+// A sibling of `ArticleCard`, not a replacement: the reader still wants the
+// banner, the summary and the topic badges, because reading is what it is for.
+// A 26%-wide column beside a movers table is for scanning, and the two things
+// a scanner needs from a story are which of the reader's assets it is about
+// and how that asset moved. So the row drops the image and the summary and
+// spends the space it saves on a live price tag.
+
+/**
+ * The plain ticker inside a feed symbol.
+ *
+ * The provider namespaces non-equity symbols ("CRYPTO:BTC", "FOREX:USD"), so
+ * a raw compare against a watchlist of bases misses every crypto mention —
+ * which on the spot board is all of them.
+ */
+export function newsTickerBase(ticker: string): string {
+  const colon = ticker.lastIndexOf(':')
+  return (colon === -1 ? ticker : ticker.slice(colon + 1)).trim().toUpperCase()
+}
+
+/**
+ * A feed symbol with its namespace still attached.
+ *
+ * `base` is what a reader sees and what a price map is keyed by; `raw` is what
+ * says which KIND of asset it is. Both are needed, because tickers collide
+ * across asset classes: CFG is Citizens Financial Group on the wire and
+ * Centrifuge in a crypto snapshot, and joining one to the other puts a token's
+ * percentage next to a bank's earnings headline.
+ */
+export type NewsTickerRef = { raw: string; base: string }
+
+/** True when the provider namespaced this symbol as crypto ("CRYPTO:BTC"). */
+export function isCryptoNewsTicker(raw: string): boolean {
+  return raw.trim().toUpperCase().startsWith('CRYPTO:')
+}
+
+/** True for a bare symbol, which is how the provider spells a listed equity. */
+export function isEquityNewsTicker(raw: string): boolean {
+  return !raw.includes(':')
+}
+
+/** The symbol an article is most about, by the provider's own relevance. */
+export function topNewsTicker(article: NewsArticle): NewsTickerRef | null {
+  let best: NewsArticle['tickerSentiment'][number] | null = null
+  for (const entry of article.tickerSentiment) {
+    // Strictly greater, so a tie keeps the provider's own ordering.
+    if (!best || entry.relevanceScore > best.relevanceScore) best = entry
+  }
+  return best ? { raw: best.ticker, base: newsTickerBase(best.ticker) } : null
+}
+
+/** The row's mono lead: a symbol with its live move, or the best label left. */
+export type ArticleRowTag = {
+  label: string
+  /** 24h move of `label`, when the board is streaming one. */
+  changePct: number | null
+}
+
+/**
+ * What the row leads with.
+ *
+ * A symbol with a live percentage is the whole point, so it wins whenever one
+ * can be joined. Failing that the row still has to say what kind of story it
+ * is: a macro print is labelled MACRO (it moves everything, so no one ticker
+ * would be honest), an unpriced symbol still names itself, and a story about
+ * nothing tradeable falls back to who published it. Never an empty tag.
+ */
+export function newsRowTag(
+  article: NewsArticle,
+  changeFor: (ticker: NewsTickerRef) => number | null | undefined,
+): ArticleRowTag {
+  const ticker = topNewsTicker(article)
+  if (ticker) {
+    const change = changeFor(ticker)
+    if (typeof change === 'number' && Number.isFinite(change)) {
+      return { label: ticker.base, changePct: change }
+    }
+  }
+  if (article.topics.some((topic) => topic.topic === NEWS_TOPIC_MACRO)) {
+    return { label: 'MACRO', changePct: null }
+  }
+  return { label: ticker?.base ?? article.source, changePct: null }
+}
+
+/**
+ * How many of the reader's own symbols this story names.
+ *
+ * Deduped by base, because "CRYPTO:BTC" and "BTC" are one mention of one
+ * asset. The count is what makes a macro headline actionable: "moves 41 of
+ * your pairs" is a reason to stop scrolling, "US CPI prints 0.2%" is not.
+ */
+export function countWatchedMentions(
+  article: NewsArticle,
+  watchedBases: ReadonlySet<string>,
+): number {
+  if (watchedBases.size === 0) return 0
+  const seen = new Set<string>()
+  for (const entry of article.tickerSentiment) {
+    const base = newsTickerBase(entry.ticker)
+    if (watchedBases.has(base)) seen.add(base)
+  }
+  return seen.size
+}
+
+/** Below this a "mentions N of your pairs" line is noise, not a signal. */
+export const MENTIONS_THRESHOLD = 2
+
+const RAIL_CLASSES: Record<SentimentDirection, string> = {
+  bullish: 'bg-up',
+  bearish: 'bg-down',
+  neutral: 'bg-muted-foreground/40',
+}
+
+export function ArticleRowSkeleton() {
+  return (
+    <div className="flex gap-2.5 border-b border-border/50 px-3.5 py-2.5">
+      <span className="w-[3px] shrink-0 rounded-sm bg-muted" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="h-2.5 w-24 animate-pulse rounded bg-muted" />
+        <div className="h-3 w-full animate-pulse rounded bg-muted" />
+        <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * One story, two lines of type and a colored edge.
+ *
+ * The rail is the article's SENTIMENT and the tag is the asset's MOVE, which
+ * are deliberately allowed to disagree: bearish news on a name that is up is
+ * exactly the row worth stopping on, and collapsing both into one color would
+ * hide it.
+ */
+export function ArticleRow({
+  article,
+  tag,
+  mentions = 0,
+  onClick,
+}: {
+  article: NewsArticle
+  tag: ArticleRowTag
+  /** Watchlist symbols this story names; rendered past MENTIONS_THRESHOLD. */
+  mentions?: number
+  onClick: () => void
+}) {
+  const { t } = useTranslation()
+  const direction = sentimentDirection(article.overallSentimentLabel)
+  const change = tag.changePct
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex w-full gap-2.5 border-b border-border/50 px-3.5 py-2.5 text-left transition-colors hover:bg-accent/40"
+    >
+      <span
+        className={cn('w-[3px] shrink-0 rounded-sm', RAIL_CLASSES[direction])}
+        aria-hidden
+      />
+      <span className="min-w-0 flex-1">
+        <span className="mb-0.5 flex items-center gap-1.5">
+          <span
+            className={cn(
+              'truncate font-mono text-[11px] font-semibold tabular-nums',
+              change == null
+                ? 'text-muted-foreground'
+                : change >= 0
+                  ? 'text-up'
+                  : 'text-down',
+            )}
+          >
+            {tag.label}
+            {change != null &&
+              ` ${change >= 0 ? '+' : ''}${change.toFixed(1)}%`}
+          </span>
+          <span className="shrink-0 text-[11px] text-muted-foreground">
+            &middot; {formatRelativeTime(article.timePublished)}
+          </span>
+        </span>
+        <span className="block text-pretty text-[13px] font-medium leading-snug">
+          {article.title}
+        </span>
+        <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+          {article.source}
+          {mentions >= MENTIONS_THRESHOLD &&
+            ` · ${t('news.mentionsPairs', { count: mentions })}`}
+        </span>
+      </span>
+    </button>
   )
 }
 

@@ -207,22 +207,47 @@ export function rankMovers(
 /**
  * The same ranking over a broker's bulk snapshot.
  *
- * A bulk ticker entry is price and 24h change and nothing else — no volume, no
- * capitalisation — so only the two tabs those two fields can serve exist here.
- * The caller hides the rest rather than showing tabs that would always be
+ * Three tabs rather than the crypto six, and the missing three are missing for
+ * a reason rather than for want of code. A bulk ticker entry carries price, the
+ * session change and the traded value; nothing in it is a capitalisation, so
+ * there is no share of float to call unusual, and there is one window rather
+ * than three, so there is nothing to score a volatility ranking against. The
+ * caller hides what is not here instead of showing tabs that would always be
  * empty.
+ *
+ * `volume24h` on the entry is a VALUE in the quote currency, which is what the
+ * column formats. A venue that filled it with a share count would rank a
+ * two-dollar stock above Apple and print a dollar sign in front of it.
  */
-export const EQUITY_MOVER_TABS: ReadonlyArray<MoverTab> = ['gainers', 'losers']
+export const EQUITY_MOVER_TABS: ReadonlyArray<MoverTab> = [
+  'gainers',
+  'losers',
+  'volume',
+]
 
 export function rankEquityMovers(
   entries: ReadonlyArray<BulkTickerEntry>,
   tab: MoverTab,
   limit = 50,
 ): Array<MoverRow> {
+  const priced = entries.filter((e) => isPositive(e.price))
+
+  if (tab === 'volume') {
+    return priced
+      .filter((e) => isPositive(e.volume24h))
+      .sort(
+        (a, b) =>
+          (b.volume24h as number) - (a.volume24h as number) ||
+          a.symbol.localeCompare(b.symbol),
+      )
+      .slice(0, limit)
+      .map(toEquityRow)
+  }
+
   if (tab !== 'gainers' && tab !== 'losers') return []
   const sign = tab === 'gainers' ? 1 : -1
-  return entries
-    .filter((e) => isPositive(e.price) && isFiniteNumber(e.change24h))
+  return priced
+    .filter((e) => isFiniteNumber(e.change24h))
     .filter((e) => sign * e.change24h > 0)
     .sort(
       (a, b) =>
@@ -230,17 +255,21 @@ export function rankEquityMovers(
         a.symbol.localeCompare(b.symbol),
     )
     .slice(0, limit)
-    .map(
-      (e): MoverRow => ({
-        symbol: e.symbol.toUpperCase(),
-        name: null,
-        price: e.price,
-        changePct: e.change24h,
-        volume24h: null,
-        turnoverMultiple: null,
-        logoUrl: null,
-      }),
-    )
+    .map(toEquityRow)
+}
+
+function toEquityRow(entry: BulkTickerEntry): MoverRow {
+  return {
+    symbol: entry.symbol.toUpperCase(),
+    name: null,
+    price: entry.price,
+    changePct: isFiniteNumber(entry.change24h) ? entry.change24h : 0,
+    volume24h: isPositive(entry.volume24h) ? entry.volume24h : null,
+    // No capitalisation in a bulk quote, so no share of float to compare —
+    // see the note on the crypto multiple.
+    turnoverMultiple: null,
+    logoUrl: null,
+  }
 }
 
 /**

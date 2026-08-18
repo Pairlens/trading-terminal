@@ -14,6 +14,14 @@
  * fact and stop, because the chart pane beside them already carries the CTA
  * and four unlock buttons in one workspace is noise, not helpfulness.
  *
+ * `variant` is a different axis, and the discovery boards are why it exists.
+ * A board is five panes and no chart, so three of them drawing the full
+ * centred hero turns an honest state into a wall of the same paragraph, and
+ * the board reads as broken rather than as waiting for a key. `compact` there
+ * is one line, one sentence and one small button laid out as a strip — the
+ * shape of a row, not of an error page. It supersedes the `compact` density
+ * flag when both are passed.
+ *
  * `kind` picks WHICH truth is told. The default body says the venue publishes no
  * public price feed, which is the reason a chart, book or tape needs a key. An
  * account pane's reason is a different one — margin, positions and balances are
@@ -77,6 +85,7 @@ export function PaneCredentialsRequired({
   venueLabel,
   compact = false,
   kind = 'market',
+  variant = 'block',
 }: {
   state: 'sealed' | 'missing'
   /** Venue id, for the `?connect=` deep link the CTA carries. */
@@ -84,6 +93,12 @@ export function PaneCredentialsRequired({
   venueLabel: string
   /** Narrow-pane layout: tighter type, no buttons. */
   compact?: boolean
+  /**
+   * `block` (default): the centred hero every pane shipped with. `compact`: one
+   * line, one sentence and a small inline button, for a discovery board where
+   * several panes share the same gate and no chart carries the CTA for them.
+   */
+  variant?: 'block' | 'compact'
   /**
    * `market` (default): the key is what streams prices. `account`: the key is
    * what reads balances, positions and orders, on a venue whose prices are
@@ -99,6 +114,50 @@ export function PaneCredentialsRequired({
   const sealed = state === 'sealed'
   const Icon = sealed ? LockKeyhole : KeyRound
   const copy = COPY[kind][state]
+
+  if (variant === 'compact') {
+    return (
+      <div className="flex h-full min-h-0 flex-1 items-center gap-2.5 px-3 py-2">
+        <Icon className="size-4 shrink-0 text-muted-foreground/50" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-[12.5px] font-medium text-foreground">
+            {t(copy.title, { venue: venueLabel })}
+          </p>
+          <p className="text-[10.5px] leading-snug text-muted-foreground">
+            {t(
+              sealed
+                ? 'layout.paneCredentials.compactSealedDescription'
+                : 'layout.paneCredentials.compactMissingDescription',
+              { venue: venueLabel },
+            )}
+          </p>
+        </div>
+
+        {sealed ? (
+          <>
+            <Button
+              className="h-7 shrink-0 px-2.5 text-[11px]"
+              onClick={() => setUnlockOpen(true)}
+              size="sm"
+              variant="secondary"
+            >
+              {t('security.vault.sealedBannerAction')}
+            </Button>
+            <VaultUnlockDialog onOpenChange={setUnlockOpen} open={unlockOpen} />
+          </>
+        ) : (
+          <Button
+            className="h-7 shrink-0 px-2.5 text-[11px]"
+            nativeButton={false}
+            render={<Link search={{ connect: market }} to="/accounts" />}
+            size="sm"
+          >
+            {t('layout.paneCredentials.compactConnectAction')}
+          </Button>
+        )}
+      </div>
+    )
+  }
 
   return (
     // `flex-1` for the same reason as PaneDataUnavailable: the parent is a

@@ -1,22 +1,16 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The two honesty rules the calendars share, as functions rather than as JSX
- * conditions.
+ * The honesty rule the calendars share, as a function rather than as a JSX
+ * condition: a calendar cell that is empty must render as empty, because a
+ * column of invented figures is the pane claiming to know something it does
+ * not.
  *
- * Both are about the same thing: a calendar cell that is empty must render as
- * empty. A figure column full of dashes and a badge reading "unknown" are both
- * the pane claiming to know something it does not, and the second one is worse,
- * because the report slot is the single detail a trader positions on.
- *
- * They live here rather than inline so they can be tested without a DOM. The
- * terminal has no component-render harness, and these are the parts of the
- * panes worth pinning.
+ * It lives here rather than inline so it can be tested without a DOM. The
+ * terminal has no component-render harness, and this is the part of the panes
+ * worth pinning.
  */
-import type {
-  EarningsCalendarEntry,
-  EconomicCalendarEntry,
-} from '@pairlens/shared/instrument-types'
+import type { EconomicCalendarEntry } from '@pairlens/shared/instrument-types'
 
 /**
  * Whether a window carries any figure at all, which is what decides if the
@@ -34,28 +28,4 @@ export function hasEconomicFigures(
     (entry) =>
       Boolean(entry.actual) || Boolean(entry.prior) || Boolean(entry.implied),
   )
-}
-
-export type ReportTimeBadge = {
-  /** Translation key for the badge text a desk reads: BMO, AMC. */
-  shortKey: string
-  /** Translation key for the full sentence, used as tooltip and for readers. */
-  labelKey: string
-}
-
-/**
- * The badge for a report slot, or null when no source stated one.
- *
- * Null is the answer for most of the calendar past thirty days and for every
- * foreign private issuer, because neither the provider nor a company's filing
- * history commits to a slot there. Rendering nothing is the point.
- */
-export function reportTimeBadge(
-  reportTime: EarningsCalendarEntry['reportTime'],
-): ReportTimeBadge | null {
-  if (reportTime !== 'bmo' && reportTime !== 'amc') return null
-  return {
-    shortKey: `earningsCalendar.reportTime.${reportTime}`,
-    labelKey: `earningsCalendar.reportTime.${reportTime}Label`,
-  }
 }

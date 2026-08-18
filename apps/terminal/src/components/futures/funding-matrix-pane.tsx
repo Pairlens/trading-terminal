@@ -16,6 +16,13 @@
  * Sorting is by asset ranking by default and only ever by a venue column on an
  * explicit click. Sorting on rate would put whichever illiquid contract printed
  * an outlier at the top of the board on every refresh.
+ *
+ * **The one-venue board is the common board.** Two of the three perp venues
+ * serve REST without CORS headers, so in a browser the matrix is one column
+ * wide and has to look deliberate at that width: the missing venues get a
+ * single muted line instead of an amber banner each, the grid stops stretching
+ * (`gridMaxWidth`), and the Spread column — which needs two quotes to mean
+ * anything — is not rendered at all rather than filled with placeholders.
  */
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +34,9 @@ import { cn } from '@pairlens/ui/lib/utils'
 import {
   AssetMark,
   FundingCountdown,
+  NullGlyph,
   answeringVenues,
+  joinVenueNames,
   ratePercent,
   rateTint,
   signedPercent,
@@ -38,9 +47,45 @@ import type { FundingCell, FundingRow } from '@/lib/futures/funding-rows'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { sortRowsByVenue } from '@/lib/futures/funding-rows'
 
+/**
+ * Spread at which the carry is worth a colour, in points of annualised
+ * funding.
+ *
+ * Six rather than five: a five-point gap is inside the noise of two venues
+ * stamping their rates seconds apart, and half the board lit up amber says
+ * nothing at all.
+ */
+const SPREAD_ALERT_POINTS = 6
+
+/** Widest a venue cell may grow to before the grid stops stretching, in px. */
+const MAX_CELL_PX = 180
+/** Fixed track widths the cap has to account for: asset, spread, gap. */
+const ASSET_COL_PX = 112
+const SPREAD_COL_PX = 74
+const GRID_GAP_PX = 4
+
+/**
+ * A ceiling on the grid so two answering venues do not become two 400px cells.
+ *
+ * With `1fr` tracks and one venue connected the matrix stretched a single
+ * column across the whole pane, which read as a broken table rather than a
+ * short one. Capping the BLOCK rather than each track keeps the cells filling
+ * the space they are given, up to the point where a wider cell stops being a
+ * denser board and starts being a sparser one. Above four venues the pane is
+ * full anyway, so it stretches as before.
+ */
+function gridMaxWidth(venues: number, showSpread: boolean): string | undefined {
+  if (venues >= 4) return undefined
+  const tracks = ASSET_COL_PX + venues * MAX_CELL_PX
+  const spread = showSpread ? SPREAD_COL_PX : 0
+  const gaps = GRID_GAP_PX * (venues + (showSpread ? 1 : 0))
+  return `${tracks + spread + gaps}px`
+}
+
 export function FundingMatrixPane() {
-  const { t } = useTranslation()
-  const { results, rows, topCoins, isPending, failures } = useFundingScanner()
+  const { t, i18n } = useTranslation()
+  const { results, rows, topCoins, isPending, desktopOnly, errors } =
+    useFundingScanner()
   const [sort, setSort] = useState<{
     market: string
     direction: 'asc' | 'desc'
@@ -48,6 +93,10 @@ export function FundingMatrixPane() {
   const openContract = useOpenContract()
 
   const columns = useMemo(() => answeringVenues(results), [results])
+  // A spread needs two quotes. One venue answering leaves a column of
+  // placeholders under a header promising a carry trade, which is worse than
+  // no column at all.
+  const showSpread = columns.length >= 2
   const ordered = useMemo(
     () => (sort ? sortRowsByVenue(rows, sort.market, sort.direction) : rows),
     [rows, sort],
@@ -94,16 +143,24 @@ export function FundingMatrixPane() {
       </header>
 
       <div className="min-h-0 flex-1 overflow-auto px-4 py-3">
-        {failures.length > 0 && (
+        {desktopOnly.length > 0 && (
+          <p className="mb-2.5 text-[11px] leading-relaxed text-muted-foreground">
+            {t('funding.desktopOnlyLine', {
+              count: desktopOnly.length,
+              venues: joinVenueNames(
+                desktopOnly.map((venue) => venue.label),
+                i18n.language,
+              ),
+            })}
+          </p>
+        )}
+
+        {errors.length > 0 && (
           <div className="mb-2 flex flex-col gap-1.5">
-            {failures.map((failure) => (
+            {errors.map((failure) => (
               <PaneErrorBanner
                 key={`err:${failure.market}`}
-                message={
-                  failure.desktopOnly
-                    ? t('funding.desktopOnly')
-                    : (failure.error ?? '')
-                }
+                message={failure.error ?? ''}
                 venue={failure.label}
               />
             ))}
@@ -118,14 +175,15 @@ export function FundingMatrixPane() {
           <div
             className="grid items-center gap-1 text-xs"
             style={{
-              gridTemplateColumns: `minmax(88px, 112px) repeat(${columns.length}, minmax(56px, 1fr)) 74px`,
+              gridTemplateColumns: `minmax(88px, 112px) repeat(${columns.length}, minmax(56px, 1fr))${showSpread ? ' 74px' : ''}`,
+              maxWidth: gridMaxWidth(columns.length, showSpread),
             }}
           >
             <span />
             {columns.map((column) => (
               <button
                 className={cn(
-                  'truncate px-1 py-1 font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground transition-colors hover:text-foreground',
+                  'truncate px-1 py-1 text-center text-[11px] text-muted-foreground transition-colors hover:text-foreground',
                   sort?.market === column.market && 'text-foreground',
                 )}
                 key={column.market}
@@ -144,9 +202,11 @@ export function FundingMatrixPane() {
                 {column.label}
               </button>
             ))}
-            <span className="pr-1 text-right font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground">
-              {t('fundingMatrix.colSpread')}
-            </span>
+            {showSpread && (
+              <span className="pr-1 text-right text-[11px] text-muted-foreground">
+                {t('fundingMatrix.colSpread')}
+              </span>
+            )}
 
             {ordered.map((row) => (
               <MatrixRow
@@ -155,6 +215,7 @@ export function FundingMatrixPane() {
                 logoUrl={topCoins.get(row.base)?.logoUrl ?? null}
                 onOpen={openContract}
                 row={row}
+                showSpread={showSpread}
               />
             ))}
           </div>
@@ -175,11 +236,13 @@ function MatrixRow({
   columns,
   logoUrl,
   onOpen,
+  showSpread,
 }: {
   row: FundingRow
   columns: Array<string>
   logoUrl: string | null
   onOpen: (market: string, pair: string) => void
+  showSpread: boolean
 }) {
   const { t } = useTranslation()
   return (
@@ -197,19 +260,24 @@ function MatrixRow({
           onOpen={onOpen}
         />
       ))}
-      <span
-        className={cn(
-          'pr-1 text-right font-mono text-xs tabular-nums',
-          row.spreadPoints !== null && Math.abs(row.spreadPoints) >= 5
-            ? 'text-[var(--chart-4)]'
-            : 'text-muted-foreground',
-        )}
-        title={t('fundingMatrix.spreadHint')}
-      >
-        {row.spreadPoints === null
-          ? t('funding.na')
-          : t('fundingMatrix.points', { value: row.spreadPoints.toFixed(1) })}
-      </span>
+      {showSpread && (
+        <span
+          className={cn(
+            'pr-1 text-right font-mono text-xs tabular-nums',
+            row.spreadPoints !== null &&
+              Math.abs(row.spreadPoints) >= SPREAD_ALERT_POINTS
+              ? 'text-[var(--chart-4)]'
+              : 'text-muted-foreground',
+          )}
+          title={t('fundingMatrix.spreadHint')}
+        >
+          {row.spreadPoints === null ? (
+            <NullGlyph />
+          ) : (
+            t('fundingMatrix.points', { value: row.spreadPoints.toFixed(1) })
+          )}
+        </span>
+      )}
     </>
   )
 }
@@ -225,8 +293,8 @@ function MatrixCell({
 
   if (!cell || cell.annualized === null) {
     return (
-      <span className="rounded-md bg-muted/60 py-2 text-center font-mono text-xs text-muted-foreground">
-        {t('funding.na')}
+      <span className="rounded-md bg-muted/60 py-2 text-center font-mono text-xs">
+        <NullGlyph />
       </span>
     )
   }

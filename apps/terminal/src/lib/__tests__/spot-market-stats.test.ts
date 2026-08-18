@@ -3,7 +3,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import type { TopCoin } from '@pairlens/shared/instrument-types'
-import { summarizeMarket } from '@/lib/spot-market-stats'
+import { summarizeMarket, summarizePairBreadth } from '@/lib/spot-market-stats'
 
 function coin(partial: Partial<TopCoin> & { symbol: string }): TopCoin {
   return {
@@ -80,5 +80,53 @@ describe('summarizeMarket', () => {
   test('dominance needs a BTC row', () => {
     const pulse = summarizeMarket([coin({ symbol: 'ETH', marketCap: 100 })])
     expect(pulse.btcDominancePct).toBeNull()
+  })
+})
+
+describe('summarizePairBreadth', () => {
+  test('an empty tape claims nothing', () => {
+    expect(summarizePairBreadth([])).toEqual({
+      advancing: 0,
+      declining: 0,
+      total: 0,
+    })
+  })
+
+  test('splits the day and counts flat toward neither side', () => {
+    const breadth = summarizePairBreadth([
+      { change24h: 3.2 },
+      { change24h: 0.01 },
+      { change24h: -1 },
+      { change24h: -4.5 },
+      { change24h: 0 },
+    ])
+    expect(breadth.advancing).toBe(2)
+    expect(breadth.declining).toBe(2)
+    // Flat still counts as a market that reported: a quiet tape is a real
+    // state, and dropping those rows would make it look one-sided.
+    expect(breadth.total).toBe(5)
+  })
+
+  test('a pair with no usable change is not in the denominator', () => {
+    const breadth = summarizePairBreadth([
+      { change24h: 1 },
+      { change24h: null },
+      { change24h: Number.NaN },
+      {},
+    ])
+    expect(breadth.advancing).toBe(1)
+    expect(breadth.declining).toBe(0)
+    expect(breadth.total).toBe(1)
+  })
+
+  test('reads a live quote map directly', () => {
+    // The shape the pulse strip actually passes: the bulk ticker map's values.
+    const quotes = new Map([
+      ['BTC-USDT', { price: 63_000, change24h: 0.4 }],
+      ['ETH-USDT', { price: 1880, change24h: -0.2 }],
+      ['SOL-USDT', { price: 75, change24h: -1.1 }],
+    ])
+    const breadth = summarizePairBreadth(quotes.values())
+    expect(breadth).toEqual({ advancing: 1, declining: 2, total: 3 })
   })
 })

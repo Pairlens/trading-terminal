@@ -9,8 +9,16 @@ import {
   impactBarFraction,
   impactTier,
   impactVsMid,
+  isRankablePool,
   measurableReserveUsd,
+  moveTintAlpha,
   peakAbsNet,
+  poolTileKey,
+  poolTileLines,
+  sumFlowSince,
+  swatchIndexFor,
+  tileSizeFor,
+  titleCaseVenue,
   truncateAddress,
   usdToQuoteUnits,
   volumeToTvl,
@@ -220,5 +228,223 @@ describe('peakAbsNet', () => {
         { ts: 1, buyUsd: 0, sellUsd: 0, netUsd: -400 },
       ]),
     ).toBe(400)
+  })
+})
+
+describe('sumFlowSince', () => {
+  const NOW = 1_800_000_000_000
+  const HOUR = 3_600_000
+
+  it('sums the window and ignores everything before it', () => {
+    const { buyUsd, sellUsd } = sumFlowSince(
+      [
+        { ts: NOW - 10_000, side: 'buy', amountUsd: 400 },
+        { ts: NOW - 20_000, side: 'sell', amountUsd: 150 },
+        { ts: NOW - 2 * HOUR, side: 'buy', amountUsd: 9_000_000 },
+      ],
+      NOW - HOUR,
+    )
+    expect(buyUsd).toBe(400)
+    expect(sellUsd).toBe(150)
+  })
+
+  it('skips a malformed notional rather than counting it as zero', () => {
+    const { buyUsd } = sumFlowSince(
+      [{ ts: NOW, side: 'buy', amountUsd: NaN }],
+      NOW - HOUR,
+    )
+    expect(buyUsd).toBe(0)
+  })
+})
+
+describe('isRankablePool', () => {
+  it('keeps a pool with real liquidity and volume in proportion', () => {
+    // Orca's flagship: $84.2M locked, ~17 turns a day.
+    expect(
+      isRankablePool({ reserveUsd: 84_200_000, volume24hUsd: 1_420_000_000 }),
+    ).toBe(true)
+    // A quiet real pool with no volume figure stays: absence is not a lie.
+    expect(isRankablePool({ reserveUsd: 250_000, volume24hUsd: null })).toBe(
+      true,
+    )
+  })
+
+  it('drops thin pools even when their volume figure is huge', () => {
+    // The live failure this bar exists for: $227K of liquidity claiming $50M
+    // of daily volume is a bot painting turns, and it took the largest tile.
+    expect(
+      isRankablePool({ reserveUsd: 227_300, volume24hUsd: 50_000_000 }),
+    ).toBe(false)
+    expect(isRankablePool({ reserveUsd: 9_999, volume24hUsd: 1_000 })).toBe(
+      false,
+    )
+  })
+
+  it('drops pools that published no reserve figure at all', () => {
+    expect(isRankablePool({ reserveUsd: null, volume24hUsd: 5_000_000 })).toBe(
+      false,
+    )
+    expect(isRankablePool({ reserveUsd: 0, volume24hUsd: 0 })).toBe(false)
+  })
+
+  it('holds the ceiling exactly at the stated turnover', () => {
+    expect(
+      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 5_000_000 }),
+    ).toBe(true)
+    expect(
+      isRankablePool({ reserveUsd: 100_000, volume24hUsd: 5_000_001 }),
+    ).toBe(false)
+  })
+})
+
+describe('tileSizeFor', () => {
+  const pool = {
+    volume24hUsd: 1_420_000_000,
+    reserveUsd: 84_200_000,
+    trades24h: { buys: 200_000, sells: 118_402 },
+  }
+
+  it('measures each mode with its own metric', () => {
+    expect(tileSizeFor(pool, 'volume')).toBe(1_420_000_000)
+    expect(tileSizeFor(pool, 'liquidity')).toBe(84_200_000)
+    expect(tileSizeFor(pool, 'trades')).toBe(318_402)
+    expect(tileSizeFor(pool, 'turnover')).toBeCloseTo(16.86, 2)
+  })
+
+  it('gives no area to what the mode cannot measure', () => {
+    // A zero-area tile is dropped by the caller. The alternative — treating a
+    // missing count as "nothing traded" — would draw a busy pool as absent
+    // from the trades map rather than as unmeasured.
+    expect(tileSizeFor({ ...pool, trades24h: null }, 'trades')).toBe(0)
+    expect(tileSizeFor({ ...pool, volume24hUsd: null }, 'volume')).toBe(0)
+    expect(tileSizeFor({ ...pool, reserveUsd: null }, 'liquidity')).toBe(0)
+    expect(tileSizeFor({ ...pool, reserveUsd: 0.5 }, 'turnover')).toBe(0)
+  })
+})
+
+describe('moveTintAlpha', () => {
+  it('stays inside the design band', () => {
+    expect(moveTintAlpha(0.0001)).toBeGreaterThanOrEqual(8)
+    expect(moveTintAlpha(38)).toBe(34)
+    expect(moveTintAlpha(-38)).toBe(34)
+    expect(moveTintAlpha(1000)).toBe(34)
+  })
+
+  it('rises monotonically with the size of the move, either direction', () => {
+    const ramp = [0.2, 1, 2, 5, 8, 12, 15].map(moveTintAlpha)
+    for (let i = 1; i < ramp.length; i++) {
+      expect(ramp[i]).toBeGreaterThan(ramp[i - 1])
+    }
+    expect(moveTintAlpha(-4.2)).toBeCloseTo(moveTintAlpha(4.2), 10)
+  })
+
+  it('leaves an unpublished move untinted rather than flat-coloured', () => {
+    // A floor tint on a pool with no 24h figure is a claim that it did not
+    // move. The tile draws on plain card instead.
+    expect(moveTintAlpha(null)).toBe(0)
+    expect(moveTintAlpha(NaN)).toBe(0)
+  })
+})
+
+describe('titleCaseVenue', () => {
+  it('turns a provider slug into a venue label', () => {
+    expect(titleCaseVenue('orca')).toBe('Orca')
+    expect(titleCaseVenue('uniswap_v3')).toBe('Uniswap V3')
+    expect(titleCaseVenue('pancakeswap-v2')).toBe('Pancakeswap V2')
+  })
+
+  it('has no label for a listing that named no venue', () => {
+    expect(titleCaseVenue('')).toBeNull()
+    expect(titleCaseVenue(null)).toBeNull()
+  })
+})
+
+describe('poolTileKey', () => {
+  it('keys on the address, so two pools sharing a ticker are two tiles', () => {
+    // The design deliberately shows two PYTH tiles. Keying on the symbol
+    // would collapse them into one whose selection flickered between the two.
+    const a = { network: 'solana', address: 'PoolAAA', name: 'PYTH / USDC' }
+    const b = { network: 'solana', address: 'PoolBBB', name: 'PYTH / USDC' }
+    expect(poolTileKey(a)).not.toBe(poolTileKey(b))
+    expect(poolTileKey(a)).toBe('solana:PoolAAA')
+  })
+
+  it('separates the same address on two networks', () => {
+    expect(poolTileKey({ network: 'base', address: '0xabc' })).not.toBe(
+      poolTileKey({ network: 'eth', address: '0xabc' }),
+    )
+  })
+})
+
+describe('poolTileLines', () => {
+  const usd = (value: number) => `$${Math.round(value / 1e6)}M`
+  const pool = {
+    name: 'SOL / USDC',
+    dexName: 'orca',
+    change24hPct: 2.1,
+    reserveUsd: 84_200_000,
+  }
+
+  it('gives a large tile the venue, the liquidity and the move', () => {
+    const lines = poolTileLines(pool, 320, 180, usd)
+    expect(lines.layout).toBe('stack')
+    expect(lines.title).toBe('SOL / USDC')
+    expect(lines.subtitle).toBe('Orca · $84M')
+    expect(lines.value).toBe('+2.1%')
+    expect(lines.tone).toBe('up')
+  })
+
+  it('drops the subtitle once the tile is too small to carry three lines', () => {
+    const lines = poolTileLines(pool, 90, 64, usd)
+    expect(lines.layout).toBe('stack')
+    expect(lines.subtitle).toBeNull()
+    expect(lines.value).toBe('+2.1%')
+  })
+
+  it('lays a wide short tile out as a row', () => {
+    const lines = poolTileLines(pool, 260, 44, usd)
+    expect(lines.layout).toBe('row')
+    expect(lines.subtitle).toBeNull()
+  })
+
+  it('signs a fall and tones it down', () => {
+    const lines = poolTileLines({ ...pool, change24hPct: -8.4 }, 320, 180, usd)
+    expect(lines.value).toBe('-8.4%')
+    expect(lines.tone).toBe('down')
+  })
+
+  it('says nothing about a move the listing did not publish', () => {
+    const lines = poolTileLines({ ...pool, change24hPct: null }, 320, 180, usd)
+    expect(lines.value).toBeNull()
+    expect(lines.tone).toBe('muted')
+  })
+
+  it('falls back to the venue alone when liquidity is dust', () => {
+    const lines = poolTileLines({ ...pool, reserveUsd: 0.004 }, 320, 180, usd)
+    expect(lines.subtitle).toBe('Orca')
+  })
+})
+
+describe('swatchIndexFor', () => {
+  it('is stable for a pool and lands in the chart palette', () => {
+    const first = swatchIndexFor('7xKqPoolAddress')
+    expect(swatchIndexFor('7xKqPoolAddress')).toBe(first)
+    expect(first).toBeGreaterThanOrEqual(1)
+    expect(first).toBeLessThanOrEqual(5)
+  })
+
+  it('spreads different pools across the palette', () => {
+    const seen = new Set(
+      ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh'].map(
+        swatchIndexFor,
+      ),
+    )
+    expect(seen.size).toBeGreaterThan(1)
+  })
+
+  it('handles an empty seed without leaving the palette', () => {
+    const index = swatchIndexFor('')
+    expect(index).toBeGreaterThanOrEqual(1)
+    expect(index).toBeLessThanOrEqual(5)
   })
 })

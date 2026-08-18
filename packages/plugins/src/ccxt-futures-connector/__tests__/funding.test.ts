@@ -471,4 +471,130 @@ describe('funding history', () => {
       }),
     ).rejects.toThrow(/Binance Futures/)
   })
+
+  it('spends one call on a request that fits in one page', async () => {
+    // The belt asks for the last couple of hundred stamps. Paging that would
+    // buy nothing and cost a second unauthenticated GET per contract.
+    const calls: Array<{ since: number | undefined; limit: number }> = []
+    const provider = new CcxtFundingProvider(VENUE)
+    const exchange = fakeExchange(
+      { fetchFundingRateHistory: true },
+      {
+        fetchFundingRateHistory: async (
+          _symbol?: string,
+          since?: number,
+          limit?: number,
+        ) => {
+          calls.push({ since, limit: limit ?? 0 })
+          return [{ timestamp: 10, fundingRate: 0.0001 }]
+        },
+      },
+    )
+
+    await provider.handle(exchange, {
+      action: 'funding-history',
+      pair: 'BTC-USDT-USDT',
+      limit: 200,
+    })
+    expect(calls).toEqual([{ since: undefined, limit: 200 }])
+  })
+
+  it('pages forward with `since` to cover a month of hourly settlement', async () => {
+    // Kraken settles 720 times in thirty days and serves a few hundred stamps
+    // per request, so the rail's window only exists if the reads are chained.
+    const clock = 1_800_000_000_000
+    const hour = 3_600_000
+    const asked: Array<number | undefined> = []
+    const provider = new CcxtFundingProvider(
+      { ...VENUE, fundingIntervalHours: 1 },
+      () => clock,
+    )
+    const exchange = fakeExchange(
+      { fetchFundingRateHistory: true },
+      {
+        fetchFundingRateHistory: async (
+          _symbol?: string,
+          since?: number,
+          limit?: number,
+        ) => {
+          asked.push(since)
+          const from = since ?? clock - 30 * 24 * hour
+          return Array.from({ length: limit ?? 0 }, (_, i) => ({
+            timestamp: from + i * hour,
+            fundingRate: 0.00001 * i,
+          }))
+        },
+      },
+    )
+
+    const history = (await provider.handle(exchange, {
+      action: 'funding-history',
+      pair: 'BTC-USD-USD',
+      limit: 720,
+    })) as FundingHistoryResponse
+
+    // 300 + 300 + 120 of a third page: three calls, each starting one
+    // millisecond past the newest stamp the last one returned.
+    expect(asked).toHaveLength(3)
+    expect(asked[0]).toBe(clock - 30 * 24 * hour)
+    expect(asked[1]).toBe(asked[0]! + 299 * hour + 1)
+    expect(history.points).toHaveLength(720)
+    // Ascending, deduplicated, and no stamp counted twice at a page seam.
+    const stamps = history.points.map((p) => p.ts)
+    expect(new Set(stamps).size).toBe(720)
+    expect([...stamps].sort((a, b) => a - b)).toEqual(stamps)
+  })
+
+  it('stops early when a venue ignores `since` and repeats a page', async () => {
+    // Without this guard the loop spends its whole page budget re-reading the
+    // same rows and returns a window it never actually covered.
+    let calls = 0
+    const provider = new CcxtFundingProvider(VENUE)
+    const exchange = fakeExchange(
+      { fetchFundingRateHistory: true },
+      {
+        fetchFundingRateHistory: async (
+          _symbol?: string,
+          _since?: number,
+          limit?: number,
+        ) => {
+          calls++
+          return Array.from({ length: limit ?? 0 }, (_, i) => ({
+            timestamp: 1_000 + i,
+            fundingRate: 0.0001,
+          }))
+        },
+      },
+    )
+
+    const history = (await provider.handle(exchange, {
+      action: 'funding-history',
+      pair: 'BTC-USDT-USDT',
+      limit: 720,
+    })) as FundingHistoryResponse
+    expect(calls).toBe(2)
+    expect(history.points).toHaveLength(300)
+  })
+
+  it('keeps the most recent stamps when a venue overshoots the ask', async () => {
+    const provider = new CcxtFundingProvider(VENUE)
+    const exchange = fakeExchange(
+      { fetchFundingRateHistory: true },
+      {
+        fetchFundingRateHistory: async () =>
+          Array.from({ length: 400 }, (_, i) => ({
+            timestamp: 1_000 + i,
+            fundingRate: 0.0001,
+          })),
+      },
+    )
+
+    const history = (await provider.handle(exchange, {
+      action: 'funding-history',
+      pair: 'BTC-USDT-USDT',
+      limit: 100,
+    })) as FundingHistoryResponse
+    expect(history.points).toHaveLength(100)
+    expect(history.points[history.points.length - 1].ts).toBe(1_399)
+  })
 })

@@ -17,9 +17,11 @@
  *
  * It opens nothing for the ranked tabs: rows come from snapshots other panes
  * already fetch, and the trend lines are viewport-gated, so scrolling the table
- * is the only thing that ever costs a request. The one exception is the
- * listings tab, which has no snapshot to read and fetches its own two sources
- * — and only while it is the tab on screen.
+ * is the only thing that ever costs a request. Two things read beyond that. The
+ * listings tab has no snapshot and fetches its own two sources, only while it is
+ * the tab on screen; and the equity rows read today's earnings calendar for
+ * their reason tags, which is the same one-day window the earnings pane asks for
+ * in its default scope, so on the board the two share one request.
  */
 import { memo, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
@@ -57,6 +59,7 @@ import {
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useBulkTickerSnapshots } from '@/hooks/use-bulk-ticker-quotes'
 import { useDiscoverySection } from '@/lib/discovery-section-context'
+import { useEquityReasonTags } from '@/hooks/use-equity-reason-tags'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
@@ -80,13 +83,16 @@ import { poolChartTarget } from '@/lib/dex/pool-link'
 import { useNewListings } from '@/hooks/use-new-listings'
 import { track } from '@/lib/analytics-events'
 
+// Ordered by how often a tab is opened, not by how it was built: the two
+// directional lists lead, then the two that rank size and speed, then the two
+// that are a specific hunt rather than a scan.
 const CRYPTO_TABS: ReadonlyArray<MoverTab> = [
   'gainers',
   'losers',
   'volume',
   'volatility',
-  'unusual',
   'newListings',
+  'unusual',
 ]
 
 const WINDOWS: ReadonlyArray<MoverWindow> = ['1h', '24h', '7d']
@@ -118,6 +124,7 @@ export function MoversPane() {
 // ── Crypto ──────────────────────────────────────────────────────────
 
 function CryptoMovers() {
+  const { t } = useTranslation()
   const coins = useTopCoinsSnapshot()
   const state = useTopCoinsSnapshotState()
   const membership = useSectorMembership()
@@ -150,7 +157,13 @@ function CryptoMovers() {
       market={market}
       assetClass="crypto"
       quote="USDT"
-      categoryOf={(symbol) => membership.categoriesOf.get(symbol)?.[0] ?? null}
+      // Translated here rather than in the row: the equity board's tags are
+      // sentences from a calendar, not catalog categories, so the shared row
+      // takes a finished label and renders it.
+      categoryOf={(symbol) => {
+        const category = membership.categoriesOf.get(symbol)?.[0]
+        return category ? t(`markets.category.${category}`) : null
+      }}
     />
   )
 }
@@ -163,12 +176,15 @@ function CryptoMovers() {
  * A stock has one venue, and that venue serves nothing without the user's own
  * key — so the two states before any row exists are "no broker installed" and
  * "no key yet", and they get different answers because their fixes are
- * different.
+ * different. The key one is a compact prompt rather than the full hero: this
+ * pane sits on a board where the session strip is gated on the same key, and
+ * two centred paragraphs of the same sentence read as a broken workspace.
  */
 function EquityMovers() {
   const { t } = useTranslation()
   const { markets } = useAvailableMarkets()
   const snapshots = useBulkTickerSnapshots()
+  const reasonOf = useEquityReasonTags()
   const [tab, setTab] = usePersistedState<MoverTab>(
     'movers.equityTab',
     'gainers',
@@ -206,6 +222,7 @@ function EquityMovers() {
       <PaneCredentialsRequired
         state={gate.state}
         market={venue.value}
+        variant="compact"
         venueLabel={gate.venueLabel}
       />
     )
@@ -221,7 +238,7 @@ function EquityMovers() {
       loading={entries.length === 0}
       market={venue.value}
       assetClass="stocks"
-      categoryOf={() => null}
+      categoryOf={reasonOf}
     />
   )
 }
@@ -256,12 +273,17 @@ function MoversTable({
   assetClass: string
   /** Quote leg for crypto rows; equities are bare tickers. */
   quote?: string
+  /** A finished label for the row's second slot, already translated. */
   categoryOf: (symbol: string) => string | null
 }) {
   const { t } = useTranslation()
   // Its own sources, its own columns, its own empty state. Everything below
   // that reads a MoverRow is skipped for it.
   const listings = tab === 'newListings'
+  // A stock's tag is a sentence about today ('Reports tonight'), not a
+  // one-word category, so it gets the row's second line instead of a chip
+  // squeezed in beside the ticker.
+  const stacked = assetClass === 'stocks'
 
   return (
     // One panel, always the active tab: the table below is what every tab
@@ -357,7 +379,11 @@ function MoversTable({
               {t('movers.columns.volume')}
             </TooltipTrigger>
             <TooltipContent className="max-w-64">
-              {t('movers.turnoverTooltip')}
+              {t(
+                stacked
+                  ? 'movers.tradedValueTooltip'
+                  : 'movers.turnoverTooltip',
+              )}
             </TooltipContent>
           </Tooltip>
           <span className="hidden text-right @min-[41rem]/pane:inline">
@@ -392,6 +418,7 @@ function MoversTable({
               assetClass={assetClass}
               quote={quote}
               category={categoryOf(row.symbol)}
+              stacked={stacked}
             />
           ))
         )}
@@ -423,6 +450,7 @@ const MoverTableRow = memo(function MoverTableRow({
   assetClass,
   quote,
   category,
+  stacked = false,
 }: {
   row: MoverRow
   rank: number
@@ -431,8 +459,9 @@ const MoverTableRow = memo(function MoverTableRow({
   assetClass: string
   quote?: string
   category: string | null
+  /** Put the label on its own line under the ticker instead of beside it. */
+  stacked?: boolean
 }) {
-  const { t } = useTranslation()
   const tick = usePriceTick(row.price)
   const up = row.changePct >= 0
 
@@ -459,18 +488,35 @@ const MoverTableRow = memo(function MoverTableRow({
           logoUrl={row.logoUrl}
           assetClass={assetClass}
           size="sm"
-          className="size-5 text-[9px]"
+          className="size-[22px] text-[9px]"
         />
-        <span className="truncate whitespace-nowrap font-mono text-[12px] font-semibold">
-          {row.symbol}
-          {quote && (
-            <span className="font-normal text-muted-foreground">-{quote}</span>
-          )}
-        </span>
-        {category && (
-          <span className="hidden shrink-0 rounded-sm bg-secondary px-1.5 py-px text-[10px] font-normal text-muted-foreground @min-[30rem]/pane:inline">
-            {t(`markets.category.${category}`)}
+        {stacked ? (
+          <span className="min-w-0">
+            <span className="block truncate whitespace-nowrap font-mono text-[12px] font-semibold">
+              {row.symbol}
+            </span>
+            {category && (
+              <span className="block truncate text-[10.5px] text-muted-foreground">
+                {category}
+              </span>
+            )}
           </span>
+        ) : (
+          <>
+            <span className="truncate whitespace-nowrap font-mono text-[12px] font-semibold">
+              {row.symbol}
+              {quote && (
+                <span className="font-normal text-muted-foreground">
+                  -{quote}
+                </span>
+              )}
+            </span>
+            {category && (
+              <span className="hidden shrink-0 rounded-sm bg-secondary px-1.5 py-px text-[10px] font-normal text-muted-foreground @min-[30rem]/pane:inline">
+                {category}
+              </span>
+            )}
+          </>
         )}
       </span>
 

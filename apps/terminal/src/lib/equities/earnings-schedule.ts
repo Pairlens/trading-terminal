@@ -9,9 +9,13 @@
  * which is alphabetical by symbol, so a group does not reshuffle when the
  * snapshot refreshes.
  *
- * There is no before-the-bell grouping, and that is a data fact rather than a
- * design choice: the provider publishes a date and no time, so a BMO/AMC
- * column could only be a guess about the one detail a trader would act on.
+ * A day then splits into report slots, which it did not always: the header
+ * here used to say a slot could only ever be a guess, and that stopped being
+ * true when the App Server started serving `reportTime`. It states a slot for
+ * reports inside about thirty days from the provider, and past that from the
+ * company's own Item 2.02 filing habit. What has NOT changed is what happens
+ * without one: those rows group under their own banner and are never folded
+ * into whichever slot looks more likely.
  */
 import type {
   EarningsCalendarEntry,
@@ -59,6 +63,51 @@ export function groupIposByDate(
   entries: Array<IpoCalendarEntry>,
 ): Array<DayGroup<IpoCalendarEntry>> {
   return groupByDate(entries, (entry) => entry.date)
+}
+
+/**
+ * The three slots a day splits into, in reading order.
+ *
+ * Before the bell first, because a day is read forwards: the morning prints
+ * land before the afternoon ones, and a reader scanning a day wants the next
+ * thing to happen at the top. `unstated` is last and is a real bucket rather
+ * than a fold into one of the other two, which is the whole point — the slot is
+ * what a trader positions on, and a row we cannot place must not borrow a
+ * neighbour's certainty.
+ */
+export type EarningsSlot = 'bmo' | 'amc' | 'unstated'
+
+const SLOT_ORDER: ReadonlyArray<EarningsSlot> = ['bmo', 'amc', 'unstated']
+
+export type EarningsSlotGroup = {
+  slot: EarningsSlot
+  entries: Array<EarningsCalendarEntry>
+}
+
+/**
+ * Split one day's rows into slots, empty slots omitted, entry order preserved.
+ *
+ * A day where nobody stated a slot comes back as a single `unstated` group,
+ * which is what lets the pane skip the banner entirely rather than heading a
+ * list with a caveat about every row in it.
+ */
+export function groupEarningsBySlot(
+  entries: ReadonlyArray<EarningsCalendarEntry>,
+): Array<EarningsSlotGroup> {
+  const buckets = new Map<EarningsSlot, Array<EarningsCalendarEntry>>()
+  for (const entry of entries) {
+    const slot: EarningsSlot =
+      entry.reportTime === 'bmo' || entry.reportTime === 'amc'
+        ? entry.reportTime
+        : 'unstated'
+    const bucket = buckets.get(slot)
+    if (bucket) bucket.push(entry)
+    else buckets.set(slot, [entry])
+  }
+  return SLOT_ORDER.filter((slot) => buckets.has(slot)).map((slot) => ({
+    slot,
+    entries: buckets.get(slot) as Array<EarningsCalendarEntry>,
+  }))
 }
 
 /**

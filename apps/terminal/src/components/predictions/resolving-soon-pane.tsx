@@ -3,10 +3,14 @@
 /**
  * What settles next.
  *
- * The one thing a volume-ranked board cannot tell you: 60¢ a month out and 60¢
+ * The one thing a volume-ranked board cannot tell you: 60% a month out and 60%
  * an hour out are different bets, and the second one is nearly decided. Rows
  * are sorted by the clock alone, and anything already settled is dropped
  * rather than shown at "closed" — this pane is about what is still tradeable.
+ *
+ * The right-hand number is the probability, not the price. This is a reading
+ * rail: it answers "where does the market have this, with hours to go", and
+ * the cents belong on the board's own tradeable chips.
  *
  * Reads the same unfiltered events entry as the rest of the board and narrows
  * by the rail's category at render.
@@ -25,7 +29,6 @@ import {
 import { collectResolvingSoon } from '@/lib/predictions/board'
 import { useDiscoveryCategory } from '@/lib/predictions/discovery-filter-store'
 import { usePredictionSelect } from '@/lib/predictions/navigate'
-import { formatPredictionPrice } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
 
 /** Rows the rail has room for before it becomes a second board. */
@@ -33,6 +36,18 @@ const MAX_ROWS = 25
 
 /** Inside this window the countdown is the headline, so it is painted as one. */
 const URGENT_MS = 24 * 3_600_000
+
+/**
+ * The probability, with a tenth only where the whole number would be zero.
+ *
+ * A long-shot resolving tomorrow sits at 0.4%, and rounding a live contract to
+ * "0%" says it is already decided. Everything above a point keeps the round
+ * number, because a column of "47.0%" is harder to scan than "47%".
+ */
+function formatProbability(price: number): string {
+  const percent = price * 100
+  return percent < 1 ? `${percent.toFixed(1)}%` : `${Math.round(percent)}%`
+}
 
 export function ResolvingSoonPane() {
   const { t } = useTranslation()
@@ -106,7 +121,10 @@ export function ResolvingSoonPane() {
               )}
             />
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[11.5px] leading-snug">
+              {/* Two lines, then an ellipsis. A single truncated line cut
+                  "CPI above 3.0% in August" down to the word "CPI", which is
+                  the one part of the question a reader could have guessed. */}
+              <span className="line-clamp-2 text-[11.5px] leading-snug">
                 {row.title}
               </span>
               <span
@@ -121,7 +139,7 @@ export function ResolvingSoonPane() {
               </span>
             </span>
             <span className="shrink-0 font-mono text-xs font-semibold tabular-nums">
-              {row.price === null ? '—' : formatPredictionPrice(row.price)}
+              {row.price === null ? '—' : formatProbability(row.price)}
             </span>
           </button>
         )

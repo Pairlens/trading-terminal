@@ -36,19 +36,34 @@ export function quoteForPair(
 /**
  * `pane` is the desktop scale. `mobile` is the phone's: mono numerals at the
  * design's 14.5/11.5, because every numeric on the mobile terminal is mono and
- * a sans price in a mono list reads as a different kind of number.
+ * a sans price in a mono list reads as a different kind of number. `rail` is
+ * the same cell squeezed for an 18%-wide dock, where the reserved column has
+ * to give back half its width and the price still has to be readable.
  */
-export type PairQuoteVariant = 'pane' | 'mobile'
+export type PairQuoteVariant = 'pane' | 'mobile' | 'rail'
 
 const PRICE_CLASS: Record<PairQuoteVariant, string> = {
   pane: 'tick-cell flex items-center justify-end gap-0.5 text-sm font-medium transition-colors duration-700',
   mobile:
     'tick-cell flex items-center justify-end gap-0.5 font-mono text-[13.5px] font-medium leading-none transition-colors duration-700',
+  rail: 'tick-cell flex items-center justify-end gap-0.5 font-mono text-[11.5px] leading-none transition-colors duration-700',
 }
 
 const CHANGE_CLASS: Record<PairQuoteVariant, string> = {
   pane: 'text-xs',
   mobile: 'mt-0.5 font-mono text-[11px] leading-none',
+  rail: 'mt-0.5 font-mono text-[10px] leading-none',
+}
+
+/**
+ * The reserved column's floor. Wide enough that a chart or a name beside it
+ * always starts at the same x, narrow enough that the rail variant does not
+ * eat the pair it is pricing.
+ */
+const COLUMN_CLASS: Record<PairQuoteVariant, string> = {
+  pane: 'min-w-24',
+  mobile: 'min-w-24',
+  rail: 'min-w-[4.5rem]',
 }
 
 export function PairQuote({
@@ -72,7 +87,13 @@ export function PairQuote({
     // to collapse the slot entirely — either way the chart beside it moved,
     // and a list of charts that each start at a different x reads as broken
     // alignment rather than as data.
-    <div className={cn('min-w-24 text-right tabular-nums', className)}>
+    <div
+      className={cn(
+        'text-right tabular-nums',
+        COLUMN_CLASS[variant],
+        className,
+      )}
+    >
       <p
         className={cn(
           PRICE_CLASS[variant],

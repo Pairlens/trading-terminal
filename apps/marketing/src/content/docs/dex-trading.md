@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 5
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 18 min read
 ---
 
@@ -52,13 +52,17 @@ reachable from the desktop app, and in a browser the same figure can only be
 summed over the pools the provider sampled, so the subtitle switches to say so
 rather than passing a top-20 sum off as a chain's whole day.
 
-**Pool Map** ranks the selected chain's pools by turnover, a day's volume
-against the liquidity backing it, not by volume alone. Volume alone puts the
-deepest pools on top, which is where they always are and says nothing;
-turnover is what separates a pool actually trading from a pool merely large. A
-click selects, a double click opens the pair, and both pin the base token's
-contract address rather than its ticker, because a pool map is exactly where
-two tokens with the same symbol turn up next to each other.
+**Pool Map** draws the selected chain's top pools as a treemap: tiles sized by
+the day's volume and tinted by the day's move, so the biggest money and the
+biggest movement read in one glance. The sizing metric is a toggle, Volume by
+default, then Liquidity, Trades, and Turnover, a day's volume against the
+liquidity backing it, which is the one that separates a pool actually trading
+from a pool merely large. Pools holding less than a dollar of measurable
+liquidity never make the map, because sizing wash-traded dust against real
+pools ranks noise. A footer strip opens the full ranked list. A click selects,
+a double click opens the pair, and both pin the base token's contract address
+rather than its ticker, because a pool map is exactly where two tokens with the
+same symbol turn up next to each other, sometimes as two tiles at once.
 
 **Liquidity Flow** charts net taker flow through the selected pool in
 five-minute buckets, with the biggest single swaps beside it as evidence. The
@@ -68,9 +72,12 @@ crossed the pool, buy notional minus sell notional, which is the number that
 moves price.
 
 **Pool Detail** is the selected pool at a glance, one click from its chart and
-a swap. It shows only what the provider actually published, so turnover
-collapses without a liquidity figure and the fee tier collapses on a venue that
-labels none, rather than filling the space with dashes.
+a swap, and the board selects its busiest pool on open so the pane never sits
+empty. It carries the price impact of a $10k swap from a real aggregator quote
+and an hour of buy against sell pressure summed from the same trades feed the
+flow pane reads. It shows only what the provider actually published, so
+turnover collapses without a liquidity figure and the fee tier collapses on a
+venue that labels none, rather than filling the space with dashes.
 
 ## What replaces the order book
 

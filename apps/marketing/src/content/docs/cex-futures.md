@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 8
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 18 AUG 2026
 readTime: 14 min read
 ---
 
@@ -102,27 +102,40 @@ USD-settled BTC sit side by side with something to compare. Each cell carries
 the venue's own pair key, so clicking it opens exactly the contract that quoted
 the number. Sorting is by asset ranking until you click a venue column, because
 sorting on rate puts whichever illiquid contract printed an outlier at the top
-of the board on every refresh.
+of the board on every refresh. In a browser two of the three venues are
+missing, because their REST APIs carry no CORS headers. The matrix says so in
+one line rather than an alarm per venue, stops stretching its cells across the
+empty space, and drops the Spread column entirely, since a spread needs two
+quotes.
 
-**Basis Monitor.** The perp against the spot it tracks, in basis points and
-annualised, so carry reads as a yield instead of a gap. Both legs come out of
-the same funding payload the matrix uses: the mark is the price the venue funds
-against and the index is its reference spot. One row per asset quoted by one
-venue, because a basis is a property of a contract against its own index and
-averaging across venues would produce a number no venue publishes.
+**Basis Monitor.** The perp against the spot it tracks, in basis points. The
+pane does not annualise that gap: extrapolating a 4 bps discount to the next
+stamp prints -196% a year, which is arithmetically true and reads as broken.
+Measured carry is the funding matrix above it. Both legs come out of the same
+funding payload the matrix uses: the mark is the price the venue funds against
+and the index is its reference spot. One row per asset quoted by one venue,
+because a basis is a property of a contract against its own index and averaging
+across venues would produce a number no venue publishes.
 
 **Open Interest.** How much money is in each contract and which way it moved
 today. Deliberately not a cross-venue sum: Pairlens sees the venues you
 connected, so a total would mean one exchange's worth on a fresh install and
-three on a full one under the same label. Every row names the venue that
-measured it. The list is short because the data is expensive, Binance answers
-one symbol per request and the 24h change is a second request on top, and where
-a venue publishes no history the change column is blank rather than zero.
+three on a full one under the same label. A row names the venue that measured
+it whenever the list mixes venues; with one venue answering the suffix would
+repeat down the whole list. The list is short because the data is expensive,
+Binance answers one symbol per request and the 24h change is a second request
+on top, and where a venue publishes no history the change column is blank
+rather than zero.
 
-**Funding Extremes.** The dearest and cheapest rates right now, annualised, one
-entry per contract per venue. TAO on Binance and TAO on KuCoin are two
-different trades and the gap between them is the trade, so they are never
-collapsed into one row.
+**Funding Extremes.** The dearest and cheapest carry, one entry per contract
+per venue, each rate ranked against that contract's own 30-day settled range.
+A perp that funds at 40% a year every week is not news; one that has just
+tripled its usual rate is, and the subtitle says which end of its month it sits
+in. Contracts with under $1M of open interest are skipped so the rail is not a
+permanent dust list, and a contract whose open interest nobody publishes is
+kept rather than guessed at. TAO on Binance and TAO on KuCoin are two different
+trades and the gap between them is the trade, so they are never collapsed into
+one row.
 
 On the pair page, the **Carry** board puts a **Funding Belt** above the chart:
 the countdown to the next stamp, the current and predicted rate, what the last

@@ -24,6 +24,11 @@
  *   `fetchFundingIntervals` where the venue publishes them (Binance settles a
  *   handful of contracts every four hours instead of eight), and every entry
  *   says which of the two it got with `intervalKnown`.
+ * - **A month of history takes several calls.** Every venue caps one history
+ *   request, and Kraken settles hourly: thirty days is 720 stamps there and 90
+ *   on the eight-hourly venues. A read that does not fit in one call pages
+ *   forward with `since` (see `readHistory`), which is what lets the extremes
+ *   rail rank a live rate inside the contract's own 30-day range.
  * - **Open interest.** KuCoin serves all symbols at once, Binance one per call,
  *   and Kraken publishes no `fetchOpenInterest` at all — but its ticker rows,
  *   which its `fetchFundingRates` already parses, carry `openInterest`. That is
@@ -61,8 +66,21 @@ const HISTORY_TTL_MS = 300_000
 const DEFAULT_RATES_LIMIT = 500
 /** Stamps returned by one history call when the caller names no limit. */
 const DEFAULT_HISTORY_LIMIT = 100
-/** Hard cap on a history read: 7 days of hourly settlement is 168 stamps. */
+/** Stamps ONE call may ask for. Every venue in the fleet honours this much. */
 const MAX_HISTORY_LIMIT = 300
+/**
+ * Stamps a paged history read will return in total.
+ *
+ * Thirty days of HOURLY settlement is 720 stamps, which is Kraken; the eight-
+ * hourly venues need 90 for the same window. The cap is that worst case plus
+ * headroom, so a caller can ask for "a month" without knowing the venue's
+ * clock and never pay for more than a month of it.
+ */
+const MAX_HISTORY_STAMPS = 800
+/** How far back a paged read starts: the window the extremes rail ranks in. */
+const HISTORY_WINDOW_MS = 30 * 24 * 3_600_000
+/** Requests one paged read may make, whatever the venue answers. */
+const MAX_HISTORY_PAGES = 4
 
 /**
  * Symbols asked for at once on a venue that answers one per call.
@@ -459,7 +477,11 @@ export class CcxtFundingProvider {
     exchange: CcxtFuturesExchangeLike,
     request: FundingHistoryRequest,
   ): Promise<FundingHistoryResponse> {
-    const limit = clamp(request.limit, DEFAULT_HISTORY_LIMIT, MAX_HISTORY_LIMIT)
+    const limit = clamp(
+      request.limit,
+      DEFAULT_HISTORY_LIMIT,
+      MAX_HISTORY_STAMPS,
+    )
     const symbol = toFuturesSymbol(request.pair)
     const key = `${symbol}:${limit}`
     const hit = this.history.get(key)
@@ -473,17 +495,11 @@ export class CcxtFundingProvider {
         `${this.venue.displayName} publishes no funding history for ${request.pair}`,
       )
     }
-    const rows = asRows(
-      await exchange.fetchFundingRateHistory(symbol, undefined, limit),
+    const points = await this.readHistory(
+      exchange.fetchFundingRateHistory.bind(exchange),
+      symbol,
+      limit,
     )
-    const points: Array<FundingHistoryPoint> = []
-    for (const row of rows) {
-      const ts = num(row['timestamp'])
-      const rate = num(row['fundingRate'])
-      if (ts === null || rate === null) continue
-      points.push({ ts, rate })
-    }
-    points.sort((a, b) => a.ts - b.ts)
     const overrides = await this.fundingIntervals(exchange)
     const value: FundingHistoryResponse = {
       market: this.venue.marketId,
@@ -495,6 +511,83 @@ export class CcxtFundingProvider {
     this.history.set(key, { at: this.now(), value })
     return value
   }
+
+  /**
+   * Settled stamps, ascending, paged forward when one call cannot cover the
+   * window.
+   *
+   * Every venue caps a single history call, and the caps are nowhere near a
+   * month on an hourly clock: Kraken settles 720 times in thirty days and
+   * serves a few hundred per request. So a request that fits in one call still
+   * makes exactly one — the belt asks for the last 200 stamps and pays for
+   * nothing else — and a request that does not walks forward from the start of
+   * the window with `since`.
+   *
+   * Three things end the walk, and all three are real answers rather than
+   * failures: enough stamps, a short page (the venue has no more), or a page
+   * that added nothing new. That last one is the guard that matters — a venue
+   * which ignores `since` would otherwise return its most recent page forever,
+   * and the loop would spend its whole page budget re-reading it.
+   */
+  private async readHistory(
+    fetchPage: (
+      symbol?: string,
+      since?: number,
+      limit?: number,
+    ) => Promise<unknown>,
+    symbol: string,
+    limit: number,
+  ): Promise<Array<FundingHistoryPoint>> {
+    const perCall = Math.min(limit, MAX_HISTORY_LIMIT)
+    const byStamp = new Map<number, number>()
+
+    if (limit <= MAX_HISTORY_LIMIT) {
+      collectPoints(
+        asRows(await fetchPage(symbol, undefined, perCall)),
+        byStamp,
+      )
+    } else {
+      let since = this.now() - HISTORY_WINDOW_MS
+      for (let page = 0; page < MAX_HISTORY_PAGES; page++) {
+        const rows = asRows(await fetchPage(symbol, since, perCall))
+        const before = byStamp.size
+        const newest = collectPoints(rows, byStamp)
+        if (rows.length < perCall) break
+        if (byStamp.size === before || newest === null) break
+        if (byStamp.size >= limit) break
+        since = newest + 1
+      }
+    }
+
+    const points: Array<FundingHistoryPoint> = []
+    for (const [ts, rate] of byStamp) points.push({ ts, rate })
+    points.sort((a, b) => a.ts - b.ts)
+    // The most recent `limit` stamps: a venue that overshoots the window is
+    // answering a longer history than the caller asked to rank against.
+    return points.length > limit ? points.slice(points.length - limit) : points
+  }
+}
+
+/**
+ * Usable stamps into `into`, keyed by time; returns the newest stamp seen.
+ *
+ * Keyed rather than pushed because a paged read overlaps at the seam: the
+ * venues are inclusive about `since` to varying degrees, and a duplicated
+ * stamp would be counted twice by the percentile the rail computes.
+ */
+function collectPoints(
+  rows: Array<Record<string, unknown>>,
+  into: Map<number, number>,
+): number | null {
+  let newest: number | null = null
+  for (const row of rows) {
+    const ts = num(row['timestamp'])
+    const rate = num(row['fundingRate'])
+    if (ts === null || rate === null) continue
+    into.set(ts, rate)
+    if (newest === null || ts > newest) newest = ts
+  }
+  return newest
 }
 
 // ── Row mapping ──────────────────────────────────────────────────────────

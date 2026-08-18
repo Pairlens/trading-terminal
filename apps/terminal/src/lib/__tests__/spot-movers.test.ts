@@ -171,14 +171,59 @@ describe('rankEquityMovers', () => {
   })
 
   test('refuses the tabs a bulk ticker cannot serve', () => {
-    expect(rankEquityMovers(tape, 'volume')).toEqual([])
+    // No capitalisation in a bulk quote, so no share of float to call unusual;
+    // one window, so nothing to score a volatility ranking against.
     expect(rankEquityMovers(tape, 'unusual')).toEqual([])
+    expect(rankEquityMovers(tape, 'volatility')).toEqual([])
   })
 
   test('carries no volume or turnover it does not have', () => {
     const row = rankEquityMovers(tape, 'gainers')[0]!
     expect(row.volume24h).toBeNull()
     expect(row.turnoverMultiple).toBeNull()
+  })
+
+  const traded = [
+    { symbol: 'WMT', price: 81.24, change24h: 6.2, volume24h: 2_100_000_000 },
+    {
+      symbol: 'NVDA',
+      price: 128.44,
+      change24h: 3.12,
+      volume24h: 9_400_000_000,
+    },
+    { symbol: 'DE', price: 380.1, change24h: -4.9, volume24h: 310_000_000 },
+    // A pre-market row that has not traded yet: absent, not zero.
+    { symbol: 'ARKK', price: 62.1, change24h: 0.4 },
+  ]
+
+  test('ranks by traded value when the venue reports one', () => {
+    expect(rankEquityMovers(traded, 'volume').map((r) => r.symbol)).toEqual([
+      'NVDA',
+      'WMT',
+      'DE',
+    ])
+  })
+
+  test('a row that has not traded is left out rather than ranked at zero', () => {
+    const symbols = rankEquityMovers(traded, 'volume').map((r) => r.symbol)
+    expect(symbols).not.toContain('ARKK')
+  })
+
+  test('the value rides along on every tab, not just its own', () => {
+    const row = rankEquityMovers(traded, 'gainers')[0]!
+    expect(row.symbol).toBe('WMT')
+    expect(row.volume24h).toBe(2_100_000_000)
+  })
+
+  test('ties break on symbol so a refresh never reshuffles', () => {
+    const tied = [
+      { symbol: 'ZM', price: 70, change24h: 1, volume24h: 500 },
+      { symbol: 'ABNB', price: 130, change24h: 1, volume24h: 500 },
+    ]
+    expect(rankEquityMovers(tied, 'volume').map((r) => r.symbol)).toEqual([
+      'ABNB',
+      'ZM',
+    ])
   })
 })
 

@@ -25,6 +25,7 @@ import {
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
+import { Kbd } from '@pairlens/ui/components/ui/kbd'
 import {
   Table,
   TableBody,
@@ -47,7 +48,10 @@ import type {
   PairEntry,
 } from '@/components/pair-picker/pair-picker-data'
 import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
+import type { TopCoin } from '@pairlens/shared/instrument-types'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
+import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
@@ -162,6 +166,45 @@ function PredictionsEmptyAction() {
         : t('markets.predictionsInstall')}
     </Button>
   )
+}
+
+/**
+ * Below this the pane is a rail, not a table.
+ *
+ * 24rem is where the scanner's own header stops fitting: two chip rows, a view
+ * toggle, five table columns. The rail variant is not the table shrunk, it is
+ * a different pane — one search field that hands off to the palette, one
+ * scrollable chip row, two-line rows, and a way out at the bottom.
+ */
+const RAIL_MAX_WIDTH = 384
+
+/**
+ * The pane's own width, measured rather than declared.
+ *
+ * A container query would have to render both trees and hide one, and the
+ * hidden one is a virtualized table over every listed pair. Measuring lets the
+ * pane mount exactly one of them. `useLayoutEffect` takes the first
+ * measurement before paint, so a docked pane never flashes the table.
+ */
+function useIsRail(ref: React.RefObject<HTMLElement | null>): boolean {
+  const [isRail, setIsRail] = useState(false)
+
+  useLayoutEffect(() => {
+    const element = ref.current
+    if (!element) return
+    const measure = () => {
+      const width = element.getBoundingClientRect().width
+      // A pane mid-animation can measure 0; that is not a rail, it is a pane
+      // that has not been laid out yet.
+      if (width > 0) setIsRail(width < RAIL_MAX_WIDTH)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [ref])
+
+  return isRail
 }
 
 export function MarketsPane() {
@@ -334,6 +377,11 @@ export function MarketsPane() {
     scrollMargin: rowsScrollMargin,
   })
 
+  // Docked at 18% of a board, the scanner is a rail rather than a table. The
+  // measurement drives which of the two trees mounts at all.
+  const rootRef = useRef<HTMLDivElement>(null)
+  const isRail = useIsRail(rootRef)
+
   const virtualItems = rowVirtualizer.getVirtualItems()
   // Item starts include scrollMargin; getTotalSize() excludes it. Normalize
   // both spacers back into table-local coordinates.
@@ -347,8 +395,26 @@ export function MarketsPane() {
         ((virtualItems[virtualItems.length - 1]?.end ?? 0) - rowsScrollMargin)
       : 0
 
+  if (isRail) {
+    return (
+      <div ref={rootRef} className="flex h-full flex-col overflow-hidden">
+        <MarketsRail
+          total={total}
+          pairs={sortedPairs}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+          liveQuotes={liveQuotes}
+          coinsBySymbol={coinsBySymbol}
+          resolveMarket={resolveMarket}
+          onNavigate={trackRecent}
+          loading={showLoader}
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className="flex h-full flex-col overflow-hidden">
+    <div ref={rootRef} className="flex h-full flex-col overflow-hidden">
       {/* Header */}
       <header className="space-y-3 border-b px-4 py-3">
         <div className="flex items-center justify-between gap-4">
@@ -693,6 +759,188 @@ export function MarketsPane() {
     </div>
   )
 }
+
+// ── Rail variant ────────────────────────────────────────────────────
+
+/**
+ * The scanner docked in an 18% column.
+ *
+ * Three deliberate differences from the table. The search field does not
+ * search: typing in a 200px input against two thousand instruments is worse
+ * than the palette in every way, so the field is a target that opens the
+ * palette and says which chord does the same thing. The chip row is one line
+ * that scrolls rather than two that wrap, because a rail cannot spend a third
+ * of its height on filters. And the list is capped, with the way past the cap
+ * spelled out in the footer: an infinite scroll inside a rail is a place
+ * people get lost, not a feature.
+ */
+const RAIL_ROW_LIMIT = 100
+
+function MarketsRail({
+  total,
+  pairs,
+  activeCategory,
+  onCategoryChange,
+  liveQuotes,
+  coinsBySymbol,
+  resolveMarket,
+  onNavigate,
+  loading,
+}: {
+  total: number
+  pairs: Array<PairEntry>
+  activeCategory: PairCategory | 'all' | 'watchlists'
+  onCategoryChange: (category: PairCategory | 'all' | 'watchlists') => void
+  liveQuotes: Map<string, BulkQuote>
+  coinsBySymbol: Map<string, TopCoin>
+  resolveMarket: (assetClass?: string) => string
+  onNavigate: (pair: PairEntry) => void
+  loading: boolean
+}) {
+  const { t } = useTranslation()
+  const { open } = useOmniSearch()
+  const searchShortcut = useKeybindingLabel('general.commandPalette')
+
+  const rows = useMemo(() => pairs.slice(0, RAIL_ROW_LIMIT), [pairs])
+
+  return (
+    <>
+      <header className="flex items-baseline justify-between gap-2 border-b px-3 py-2">
+        <h2 className="truncate text-[13px] font-semibold">
+          {t('markets.title')}
+        </h2>
+        <span className="shrink-0 font-mono text-[10.5px] tabular-nums text-muted-foreground">
+          {t('markets.pairCount', { count: total })}
+        </span>
+      </header>
+
+      <div className="flex shrink-0 flex-col gap-1.5 border-b px-2.5 py-2">
+        {/* Dressed as a field, built as a button. There is never a caret in a
+            box that cannot answer, click and Enter both reach the palette, and
+            it is deliberately NOT wired to `onFocus`: the palette returns
+            focus to whatever opened it, so a focus handler here would reopen
+            itself every time the user closed it. */}
+        <button
+          type="button"
+          onClick={open}
+          className="flex h-[26px] items-center gap-1.5 rounded-lg border bg-input px-2 text-left transition-colors hover:border-primary/40"
+        >
+          <Search className="size-3 shrink-0 text-muted-foreground" />
+          <span className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground">
+            {t('markets.searchPairs', { count: total })}
+          </span>
+          {searchShortcut ? (
+            <Kbd className="shrink-0 text-[9.5px]">{searchShortcut}</Kbd>
+          ) : null}
+        </button>
+
+        {/* One line, scrolled. Wrapping these cost the rail two rows of
+            height and still truncated the last chip. */}
+        <div className="-mx-2.5 flex gap-1 overflow-x-auto px-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.id}
+              type="button"
+              aria-pressed={activeCategory === cat.id}
+              onClick={() => onCategoryChange(cat.id)}
+              className={cn(
+                'shrink-0 rounded-md px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
+                activeCategory === cat.id
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border border-border hover:bg-accent/50',
+              )}
+            >
+              {t(`markets.category.${cat.id}`, cat.label)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {loading ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="size-5 animate-spin text-muted-foreground/60" />
+          </div>
+        ) : rows.length === 0 ? (
+          <div className="px-4 py-10 text-center">
+            <p className="text-[13px] font-medium">
+              {t('markets.noPairsFound')}
+            </p>
+            <p className="mt-1 text-[11px] text-muted-foreground">
+              {t('markets.tryDifferent')}{' '}
+              <button
+                className="text-primary underline underline-offset-2"
+                onClick={() => onCategoryChange('all')}
+              >
+                {t('markets.showAll')}
+              </button>
+            </p>
+          </div>
+        ) : (
+          rows.map((pair) => (
+            <PairRailRow
+              key={pair.symbol}
+              pair={pair}
+              quote={quoteForPair(pair, liveQuotes, coinsBySymbol)}
+              market={resolveMarket(pair.assetClass)}
+              onNavigate={onNavigate}
+            />
+          ))
+        )}
+      </div>
+
+      <button
+        type="button"
+        onClick={open}
+        className="flex shrink-0 items-center justify-between gap-2 border-t px-2.5 py-1.5 text-[11px] text-primary transition-colors hover:bg-accent/40"
+      >
+        <span className="truncate">
+          {t('markets.browseAll', { count: total })}
+        </span>
+        <ArrowRight className="size-3 shrink-0" />
+      </button>
+    </>
+  )
+}
+
+const PairRailRow = memo(function PairRailRow({
+  pair,
+  quote,
+  market,
+  onNavigate,
+}: {
+  pair: PairEntry
+  quote: BulkQuote | undefined
+  market: string
+  onNavigate: (pair: PairEntry) => void
+}) {
+  return (
+    <Link
+      className="flex items-center gap-2 border-b border-border/45 px-2.5 py-1.5 transition-colors hover:bg-accent/40"
+      {...chartLinkProps(entryToMarketRef(pair, market))}
+      onClick={() => onNavigate(pair)}
+    >
+      <PairLogo
+        base={pair.base}
+        quote={pair.quote}
+        assetClass={pair.assetClass}
+        size="sm"
+        className="size-[18px] text-[8px]"
+      />
+      <div className="min-w-0 flex-1">
+        <PairSymbol
+          symbol={pair.symbol}
+          assetClass={pair.assetClass}
+          className="block truncate text-[11.5px]"
+        />
+        <p className="truncate text-[10px] text-muted-foreground">
+          {pair.name}
+        </p>
+      </div>
+      <PairQuote quote={quote} variant="rail" className="shrink-0" />
+    </Link>
+  )
+})
 
 const PairTableRow = memo(function PairTableRow({
   pair,

@@ -10,9 +10,13 @@ import {
   clearListingCache,
   fetchNewPools,
   fetchTopPools,
+  mergePoolPages,
 } from './pool-listing-client'
 import { geckoFetch as fetch } from './rate-limiter'
-import type { PoolStatsAction } from '@pairlens/shared/instrument-types'
+import type {
+  PoolListingEntry,
+  PoolStatsAction,
+} from '@pairlens/shared/instrument-types'
 import type {
   PluginExecuteParams,
   PluginInstance,
@@ -114,7 +118,21 @@ export function createGeckoterminalDataProviderPlugin(
       }
 
       if (action === 'pools') {
-        const pools = await fetchTopPools(network)
+        // `sort: 'volume'` walks up to `depth` pages of the volume ranking and
+        // merges them, because on bot-heavy chains the real top pools only
+        // surface once several pages of painted volume are filtered out by the
+        // caller. Each page rides the shared listing cache, so a refresh costs
+        // one request per uncached page, never per render.
+        const sort = p['sort'] === 'volume' ? 'volume' : 'trending'
+        const depth =
+          sort === 'volume'
+            ? Math.min(Math.max(Number(p['depth']) || 1, 1), 3)
+            : 1
+        const pages: Array<Array<PoolListingEntry>> = []
+        for (let page = 1; page <= depth; page++) {
+          pages.push(await fetchTopPools(network, page, sort))
+        }
+        const pools = mergePoolPages(pages)
         return { network, pools, source: 'geckoterminal' as const }
       }
 

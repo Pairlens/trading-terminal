@@ -781,10 +781,22 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
               {displayChange.toFixed(2)}%
             </span>
           )}
-          {market}
+          {/* Which venue quoted this row. Real information, and the first
+              thing to go in an 18% rail: the pair, the price and the day's
+              move are what the rail is FOR, and a venue slug beside them
+              pushes the percentage off its own line. */}
+          <span className="hidden @min-[22rem]/pane:inline">{market}</span>
         </span>
       </div>
-      <Button size="icon-xs" variant="ghost" onClick={handleRemove}>
+      {/* Unstarring is available from every other surface (the row's own
+          chart page, the scanner, the palette), so the rail spends its last
+          pixels on the price instead. */}
+      <Button
+        size="icon-xs"
+        variant="ghost"
+        className="hidden @min-[22rem]/pane:inline-flex"
+        onClick={handleRemove}
+      >
         <Star className="size-3.5 fill-primary text-primary" />
       </Button>
       {/* Decoration only — the whole row is clickable. It yields its pixels

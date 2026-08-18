@@ -4,9 +4,16 @@
  * The questions that changed their mind in the last day.
  *
  * The move is stated the way a prediction market reads it: in POINTS, not in
- * percent. A contract going from 64¢ to 78¢ moved fourteen points; calling
- * that "+21.9%" is arithmetically true and useless, because the thing being
- * measured is a probability and probabilities are compared by subtraction.
+ * percent and not in cents. A contract going from 64 to 78 moved fourteen
+ * points; calling that "+21.9%" is arithmetically true and useless, because
+ * the thing being measured is a probability and probabilities are compared by
+ * subtraction. The cents live on the board's tradeable chips, where a price is
+ * what you pay rather than what the market believes.
+ *
+ * Every row leads with its EVENT. A rail titled from the market printed
+ * "Harry Kane", "December 31" and "↓ 65,000" — three true strings, none of
+ * which names a question — so the market's own label now rides along as a
+ * muted qualifier and only when it adds something.
  *
  * Venues that do not publish a 24h move are excluded and NAMED in the footer.
  * Leaving them in silently would make a venue that publishes nothing look like
@@ -24,10 +31,9 @@ import {
   usePredictionEvents,
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
-import { collectOddsMovers } from '@/lib/predictions/movers'
+import { collectOddsMovers, formatMovePoints } from '@/lib/predictions/movers'
 import { useDiscoveryCategory } from '@/lib/predictions/discovery-filter-store'
 import { usePredictionSelect } from '@/lib/predictions/navigate'
-import { formatPredictionPrice } from '@/lib/format-price'
 
 /** Rows before the rail stops being a summary. */
 const MAX_ROWS = 20
@@ -116,6 +122,12 @@ export function OddsMoversPane() {
             >
               <span className="line-clamp-2 text-[11.5px] leading-snug">
                 {row.title}
+                {row.qualifier && (
+                  <span className="text-muted-foreground">
+                    {' · '}
+                    {row.qualifier}
+                  </span>
+                )}
               </span>
               <span className="flex items-center gap-2">
                 {/* The bar is the CURRENT probability, so the row reads as a
@@ -131,13 +143,11 @@ export function OddsMoversPane() {
                 </span>
                 <span
                   className={cn(
-                    'shrink-0 font-mono text-[10.5px] tabular-nums',
+                    'shrink-0 font-mono text-[11px] tabular-nums',
                     up ? 'text-up' : 'text-down',
                   )}
                 >
-                  {formatPredictionPrice(row.previous)}
-                  {' → '}
-                  {formatPredictionPrice(row.price)}
+                  {formatMovePoints(row.previous, row.price)}
                 </span>
               </span>
             </button>

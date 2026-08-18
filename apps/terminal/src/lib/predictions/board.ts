@@ -244,6 +244,65 @@ export function eventVolume(event: PredictionEventSummary): number | null {
   return seen ? sum : null
 }
 
+/** The event's own liquidity, else the sum of its markets'. */
+export function eventLiquidity(event: PredictionEventSummary): number | null {
+  if (typeof event.liquidity === 'number' && event.liquidity > 0) {
+    return event.liquidity
+  }
+  return sumOfMarkets(event, 'liquidity')
+}
+
+/**
+ * Open interest across the event's markets, or null when none states it.
+ *
+ * Summed rather than read off the event, because the summary type carries no
+ * event-level field: Kalshi publishes it per market (`open_interest`, lifted
+ * out of the venue payload by the connector) and Polymarket publishes it once
+ * per gamma event, which nothing on the wire currently carries. So a Kalshi
+ * card shows the stat and a Polymarket card omits it, which is the honest
+ * state of the data rather than a zero.
+ */
+export function eventOpenInterest(
+  event: PredictionEventSummary,
+): number | null {
+  return sumOfMarkets(event, 'openInterest')
+}
+
+function sumOfMarkets(
+  event: PredictionEventSummary,
+  key: 'liquidity' | 'openInterest',
+): number | null {
+  let sum = 0
+  let seen = false
+  for (const market of event.markets) {
+    const value = market[key]
+    if (typeof value !== 'number' || !Number.isFinite(value)) continue
+    sum += value
+    seen = true
+  }
+  return seen ? sum : null
+}
+
+/**
+ * How many MARKETS the board is holding, across every venue that answered.
+ *
+ * The search box counts these rather than events, because a market is what a
+ * search can find: "Search 30 live markets" over a board whose thirty events
+ * carry eight hundred questions understates the box by more than an order of
+ * magnitude, and the first thing a user types is usually a candidate name that
+ * lives on one of the eight hundred.
+ */
+export function liveMarketCount(
+  results: Array<PredictionVenueResult> | undefined,
+): number {
+  let count = 0
+  for (const venue of results ?? []) {
+    if (venue.error || venue.desktopOnly) continue
+    for (const event of venue.events) count += event.markets.length
+  }
+  return count
+}
+
 export type ResolvingRow = {
   key: string
   market: string

@@ -9,7 +9,7 @@
  */
 import { describe, expect, test } from 'bun:test'
 
-import { collectOddsMovers, eventTopMove } from '../movers'
+import { collectOddsMovers, eventTopMove, formatMovePoints } from '../movers'
 import type { PredictionVenueResult } from '@/hooks/use-prediction-events'
 
 function venue(
@@ -159,6 +159,122 @@ describe('collectOddsMovers', () => {
     expect(rows.map((r) => r.marketSummary.id)).toEqual(['btc'])
   })
 
+  test('leads with the event, because the market alone names nothing', () => {
+    // The shipped rail titled rows from the market and produced "Harry Kane",
+    // "December 31" and "↓ 65,000" — three true strings, none of which is a
+    // question. A binary event takes no qualifier: the heading IS the market.
+    const { rows } = collectOddsMovers(
+      [venue('polymarket', [binary('fed', 0.78, 0.14)])],
+      { category: null, limit: 10 },
+    )
+    expect(rows[0].title).toBe('Will fed?')
+    expect(rows[0].qualifier).toBeNull()
+  })
+
+  test('names the runner on a multi-market event', () => {
+    const race = {
+      id: 'evt-nominee',
+      market: 'polymarket',
+      title: 'Democratic Presidential Nominee 2028',
+      markets: [
+        {
+          id: 'newsom',
+          title: 'Will Gavin Newsom win the 2028 nomination?',
+          shortTitle: 'Gavin Newsom',
+          outcomes: [
+            {
+              pairKey: 'NEWSOM-YES',
+              label: 'Yes',
+              price: 0.164,
+              change24h: -0.021,
+            },
+          ],
+        },
+        {
+          id: 'aoc',
+          title: 'Will AOC win the 2028 nomination?',
+          shortTitle: 'A. Ocasio-Cortez',
+          outcomes: [
+            {
+              pairKey: 'AOC-YES',
+              label: 'Yes',
+              price: 0.201,
+              change24h: 0.014,
+            },
+          ],
+        },
+      ],
+    }
+    const { rows } = collectOddsMovers([venue('polymarket', [race])], {
+      category: null,
+      limit: 10,
+    })
+    expect(rows[0].title).toBe('Democratic Presidential Nominee 2028')
+    expect(rows[0].qualifier).toBe('Gavin Newsom')
+  })
+
+  test('drops a qualifier the event heading already carries', () => {
+    const event = {
+      id: 'evt-btc',
+      market: 'polymarket',
+      title: 'Bitcoin above $70k on Aug 31?',
+      markets: [
+        {
+          id: 'a',
+          title: 'Bitcoin above $70k on Aug 31?',
+          shortTitle: 'Bitcoin above $70k',
+          outcomes: [
+            { pairKey: 'A-YES', label: 'Yes', price: 0.21, change24h: -0.06 },
+          ],
+        },
+        {
+          id: 'b',
+          title: 'Bitcoin above $80k on Aug 31?',
+          shortTitle: 'Above $80k',
+          outcomes: [
+            { pairKey: 'B-YES', label: 'Yes', price: 0.05, change24h: -0.02 },
+          ],
+        },
+      ],
+    }
+    const { rows } = collectOddsMovers([venue('polymarket', [event])], {
+      category: null,
+      limit: 10,
+    })
+    expect(
+      rows.find((r) => r.outcome.pairKey === 'A-YES')?.qualifier,
+    ).toBeNull()
+    expect(rows.find((r) => r.outcome.pairKey === 'B-YES')?.qualifier).toBe(
+      'Above $80k',
+    )
+  })
+
+  test('excludes a contract pegged at either end of the range', () => {
+    // A settled-but-listed contract keeps publishing a 24h move into 100¢, and
+    // those rows owned the top of the rail while being untradeable.
+    const { rows } = collectOddsMovers(
+      [
+        venue('polymarket', [
+          binary('settled-up', 0.998, 0.35),
+          binary('settled-down', 0.002, -0.35),
+          binary('live', 0.44, 0.05),
+        ]),
+      ],
+      { category: null, limit: 10 },
+    )
+    expect(rows.map((r) => r.marketSummary.id)).toEqual(['live'])
+  })
+
+  test('ignores a move smaller than one point', () => {
+    const { rows, venuesWithoutChange } = collectOddsMovers(
+      [venue('polymarket', [binary('drift', 0.5, 0.004)])],
+      { category: null, limit: 10 },
+    )
+    expect(rows).toEqual([])
+    // The venue DID publish a move, so it is not a venue without one.
+    expect(venuesWithoutChange).toEqual([])
+  })
+
   test('refuses a price that is not a probability', () => {
     const broken = binary('weird', 0.5, 0.1)
     broken.markets[0].outcomes[0].price = 1.4
@@ -167,6 +283,21 @@ describe('collectOddsMovers', () => {
       limit: 10,
     })
     expect(rows).toEqual([])
+  })
+})
+
+describe('formatMovePoints', () => {
+  test('reads as two probabilities, not two prices', () => {
+    expect(formatMovePoints(0.64, 0.78)).toBe('64→78')
+    expect(formatMovePoints(0.27, 0.21)).toBe('27→21')
+  })
+
+  test('keeps the tenth on a move small enough to vanish without it', () => {
+    expect(formatMovePoints(0.185, 0.164)).toBe('18.5→16.4')
+  })
+
+  test('drops it on a big one, where it is noise in a 44px slot', () => {
+    expect(formatMovePoints(0.641, 0.782)).toBe('64→78')
   })
 })
 

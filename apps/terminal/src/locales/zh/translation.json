@@ -151,29 +151,34 @@
     "providerBusyTitle": "财报数据被限流",
     "providerErrorBody": "提供方返回了无法使用的内容。与你的账户和连接器无关。",
     "providerErrorTitle": "财报日程未加载",
-    "reportTime": {
-      "amc": "盘后",
-      "amcLabel": "收盘后发布",
-      "bmo": "盘前",
-      "bmoLabel": "开盘前发布"
-    },
     "scopeLabel": "财报时间范围",
     "scopes": {
       "today": "今天",
       "week": "本周",
-      "watchlist": "自选"
+      "watchlist": "我的自选"
     },
     "title": "财报",
     "emptyTitle": "没有财报数据源",
     "emptyBody": "此版本没有财报数据提供方。日程来自 App Server；券商只公布自己的交易时段，不提供本周谁发财报。",
     "columns": {
       "company": "公司",
-      "quarterEnd": "财季截止",
-      "symbol": "代码",
-      "epsEstimate": "预期每股收益"
+      "symbol": "代码"
     },
     "today": "今天",
-    "tomorrow": "明天"
+    "tomorrow": "明天",
+    "heading": {
+      "today": "今日财报",
+      "week": "本周财报",
+      "watchlist": "自选股财报"
+    },
+    "slots": {
+      "bmo": "开盘前",
+      "amc": "收盘后",
+      "unstated": "未注明时间"
+    },
+    "consensusEps": "预期 EPS",
+    "quarterTo": "截至 {{period}} 的季度",
+    "periodEnded": "截至 {{date}} 的财季"
   },
   "economicCalendar": {
     "allDay": "全天",
@@ -217,7 +222,10 @@
     "sourceNote": "汇编自 BLS、BEA、美联储和 Census 的数据发布日程。实际值与前值来自这些机构本身，隐含值由 Kalshi 合约价格推出。时间为美国东部时间，与机构公布的一致。",
     "title": "宏观",
     "today": "今天",
-    "tomorrow": "明天"
+    "tomorrow": "明天",
+    "countdownDh": "{{days}}天{{hours}}小时后",
+    "countdownHm": "{{hours}}小时{{minutes}}分钟后",
+    "countdownM": "{{minutes}}分钟后"
   },
   "eventBoard": {
     "listed": "上架 {{when}}",
@@ -233,15 +241,20 @@
       "biggestMove": "涨跌最大"
     },
     "unchanged": "无变化",
-    "movedPoints": "{{arrow}} 今日 {{points}} 个点",
     "volumeUnknown": "未公布成交额",
     "liquidity": "流动性 {{value}}",
-    "outcomeCount_one": "1 位候选",
-    "outcomeCount_other": "{{count}} 位候选",
+    "outcomeCount_one": "1 个结果",
+    "outcomeCount_other": "{{count}} 个结果",
     "topShare_one": "领先者占据 {{percent}} % 的概率份额。",
     "topShare_other": "前 {{count}} 位占据 {{percent}} % 的概率份额。",
     "openFullField_one": "打开全部候选（还有 1 位）",
-    "openFullField_other": "打开全部候选（还有 {{count}} 位）"
+    "openFullField_other": "打开全部候选（还有 {{count}} 位）",
+    "endsIn": "截止 {{when}}",
+    "openInterest": "持仓量 {{value}}",
+    "candidateCount_one": "1 位候选",
+    "candidateCount_other": "{{count}} 位候选",
+    "movedPoints_one": "{{arrow}} 今日 {{points}} 点",
+    "movedPoints_other": "{{arrow}} 今日 {{points}} 点"
   },
   "eventHeader": {
     "noPairTitle": "尚未选择合约",
@@ -295,10 +308,11 @@
     "loading": "正在读取资金费率…",
     "na": "无",
     "stampUnknown": "未公布",
-    "desktopOnly": "的公开 API 只能从桌面端访问。",
     "manageConnectors": "管理连接器",
     "cellHint": "{{pair}} · 每 {{hours}} 小时 {{rate}}",
-    "cellHintAssumed": "{{pair}} · {{rate}}，交易所未公布周期，按每 {{hours}} 小时结算估算"
+    "cellHintAssumed": "{{pair}} · {{rate}}，交易所未公布周期，按每 {{hours}} 小时结算估算",
+    "desktopOnlyLine_one": "{{venues}} 的行情从桌面应用推送。",
+    "desktopOnlyLine_other": "{{venues}} 的行情从桌面应用推送。"
   },
   "fundingBelt": {
     "now": "当前资金费率 · {{hours}} 小时",
@@ -320,12 +334,14 @@
     "noRateBody": "{{venue}} 未返回该合约的资金费率。"
   },
   "fundingExtremes": {
-    "subtitle": "已连接交易所中最贵和最便宜的持仓成本，均为年化。",
-    "longsPay": "多头支付最多",
-    "shortsPay": "空头支付最多",
+    "subtitle": "最贵和最便宜的持仓成本，按每份合约自身的 30 天区间排序。",
     "perInterval": "每 {{hours}} 小时 {{rate}}",
     "emptyTitle": "没有可排序的费率",
-    "emptyBody": "永续合约交易所一旦响应，其最贵和最便宜的合约就会出现在这里。"
+    "emptyBody": "永续合约交易所一旦响应，其最贵和最便宜的合约就会出现在这里。",
+    "rangeTop": "处于其 30 天区间顶部 {{pct}}%",
+    "rangeBottom": "处于其 30 天区间底部 {{pct}}%",
+    "crowdedLong": "多头拥挤",
+    "shortsPaying": "空头付费"
   },
   "fundingMatrix": {
     "title": "资金费率（年化）",
@@ -451,11 +467,13 @@
     "loadingBody": "正在获取该池子的最近兑换。",
     "emptyTitle": "暂无兑换",
     "emptyBody": "这个池子近期没有成交，因此没有可轧差的资金流。",
-    "barsLabel": "吃单方净流量，{{pool}}",
     "netHour": "最近一小时 {{value}}",
     "bucketTooltip": "买入 {{buy}}，卖出 {{sell}}",
     "axisNote": "每 5 分钟买入减卖出。LP 添加或撤出的流动性不在此数据流中。",
-    "biggestLabel": "最大兑换"
+    "biggestLabel": "最大兑换",
+    "title": "流经 {{pool}} 的资金",
+    "subtitle": "买入减卖出，每五分钟一格",
+    "subtitleVenue": "{{venue}} · 买入减卖出，每五分钟一格"
   },
   "lpPanes": {
     "venueFallback": "这条链",
@@ -586,7 +604,10 @@
     "up": "上涨",
     "down": "下跌",
     "fearGreed": "Fear & Greed",
-    "fearGreedTooltip": "加密市场恐惧与贪婪指数。0 表示极度恐惧，100 表示极度贪婪。"
+    "fearGreedTooltip": "加密市场恐惧与贪婪指数。0 表示极度恐惧，100 表示极度贪婪。",
+    "breadthPairs_one": "涨跌家数 · {{count}} 个交易对",
+    "breadthPairs_other": "涨跌家数 · {{count}} 个交易对",
+    "fearGreedMissing": "App Server 与公开指数都没有响应。任一方恢复后，这个方块会立即填充。"
   },
   "movers": {
     "emptyTitle": "暂无市场数据",
@@ -629,7 +650,13 @@
       "volume": "还没有交易所报出成交额。",
       "volatility": "没有资产波动到足以进入榜单。",
       "unusual": "没有资产相对自身体量出现异常成交。"
-    }
+    },
+    "reason": {
+      "reportsTonight": "今晚发财报",
+      "reportedThisMorning": "今早已发财报",
+      "reportsToday": "今日发财报"
+    },
+    "tradedValueTooltip": "本时段实际成交的美元金额：股数成交量乘以当日成交量加权均价，两者都以券商报告为准。"
   },
   "oddsMovers": {
     "subtitle": "24 小时概率变动最大",
@@ -943,21 +970,25 @@
     "liquidity": "流动性",
     "volume24h": "24小时成交额",
     "turnover": "成交额 / 流动性",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "trades24h": "24小时成交笔数",
     "feeTier": "费率档位",
-    "pressureByValue": "买卖压力，24小时按金额",
-    "pressureByCount": "买卖压力，24小时按成交笔数",
     "loading": "正在加载池子状态。",
-    "openChart": "打开图表并兑换"
+    "openChart": "打开图表并兑换",
+    "venueChain": "{{venue}} · {{chain}}",
+    "priceImpact10k": "价格冲击 $10k",
+    "pressure1h": "买 / 卖压力 1 小时",
+    "buysValue": "买入 {{value}}",
+    "sellsValue": "卖出 {{value}}",
+    "filledBy": "缺口由 {{provider}} 补齐"
   },
   "poolMap": {
-    "title": "{{chain}} 池子",
+    "title": "{{chain}} · 头部池子",
     "subtitle": "按每个池子把自身流动性用得多狠来排序",
     "sortTurnover": "周转率",
     "sortVolume": "成交额",
     "sortLiquidity": "流动性",
-    "turnoverValue": "{{value}}x",
+    "turnoverValue": "{{value}}×",
     "openPair": "打开图表",
     "columns": {
       "pool": "池子",
@@ -969,10 +1000,18 @@
     },
     "noChainTitle": "选择一条链",
     "noChainBody": "在左侧选择一条链，它的池子就会按成交额与背后流动性的比值排在这里。",
-    "loadingTitle": "正在加载池子",
-    "loadingBody": "正在获取该链的排序池子。",
     "emptyTitle": "未返回任何池子",
-    "emptyBody": "数据提供方没有为这条链返回任何内容。下次刷新时会重试。"
+    "emptyBody": "数据提供方没有为这条链返回任何内容。下次刷新时会重试。",
+    "listTitle": "{{chain}} · 全部池子",
+    "subtitleVolume": "大小按 24 小时成交额，颜色按 24 小时涨跌",
+    "subtitleLiquidity": "大小按流动性，颜色按 24 小时涨跌",
+    "subtitleTrades": "大小按 24 小时成交笔数，颜色按 24 小时涨跌",
+    "subtitleTurnover": "大小按成交额与流动性之比，颜色按 24 小时涨跌",
+    "sortTrades": "成交笔数",
+    "morePools": "这条链上的更多池子",
+    "backToMap": "返回地图",
+    "belowFloorTitle": "没有足够深的池子可绘制",
+    "belowFloorBody": "该链返回的池子中，没有一个同时具备真实流动性和与之相称的成交量，按大小相互比较只会给噪音排序。完整列表仍然可用。"
   },
   "poolStats": {
     "notOnChainTitle": "不是链上交易对",
@@ -1002,11 +1041,11 @@
     "impactNote": "每个规模都是实时询价，不是用储备推算，因此拆分路由可能好过这个池子自身的曲线。"
   },
   "predictionCategories": {
-    "all": "全部",
     "noneBody": "该平台没有为事件划分分类。",
     "venueHeading": "平台",
     "desktopOnly": "桌面端",
-    "venueError": "错误"
+    "venueError": "错误",
+    "trending": "热门"
   },
   "resolvingSoon": {
     "resolves": "{{when}} 结算",
@@ -1273,7 +1312,9 @@
     "window": "板块区间",
     "leads": "{{total}} 个资产 · {{symbol}} 领涨",
     "drags": "{{total}} 个资产 · {{symbol}} 拖累",
-    "assets": "{{total}} 个资产"
+    "assets": "{{total}} 个资产",
+    "title": "板块行情带",
+    "splitTape": "{{total}} 个资产 · 涨跌互现"
   },
   "session": {
     "noVenueTitle": "未连接券商",
@@ -1302,7 +1343,13 @@
     "noSchedule": "没有安排交易时段",
     "clockOnly": "只能判断开市或休市：没有公布交易时段区间。",
     "ticketExtendedNote": "此时段只接受限价单。没有连续竞价可以成交市价单。",
-    "ticketClosedNote": "市场已休市。限价单会挂到下一个时段开盘。"
+    "ticketClosedNote": "市场已休市。限价单会挂到下一个时段开盘。",
+    "gateTitle": "交易日",
+    "gateBody": "时段直接来自 {{venue}} 的日历。",
+    "headlineOpen": "{{venue}} 市场开盘",
+    "headlinePre": "{{venue}} 盘前",
+    "headlinePost": "{{venue}} 盘后",
+    "headlineClosed": "{{venue}} 市场休市"
   },
   "settings": {
     "title": "设置",
@@ -3317,7 +3364,7 @@
     "fundingMatrix": "把已连接每个交易所的所有永续合约资金费率汇总成一张表，任意列都能排序",
     "basisMonitor": "永续合约与现货的价差以基点和年化利率呈现，让持仓成本读起来像收益率而不是价差",
     "openInterest": "每个合约的持仓量及 24 小时变化，让资金拥挤先于价格显现",
-    "fundingExtremes": "当前资金费率最高和最低的合约，以及各自所在的交易所",
+    "fundingExtremes": "最贵和最便宜的持仓成本，每个费率都按该合约自身的 30 天资金费率区间排序",
     "fundingBelt": "距离下次资金费结算的倒计时、当前与预测费率，以及你的仓位规模要支付或赚取的金额",
     "liquidationMap": "把交易所真正强平的金额画成时间×价格热力图，衬在合约K线之后，并把你自己的强平价格叠在上面",
     "marginHealth": "保证金率、维持保证金对权益、距离强平的空间，以及一次反向波动会对这三者做什么",
@@ -3438,7 +3485,10 @@
       "walletMissingTitle": "连接钱包",
       "walletMissingDescription": "此面板与已连接的钱包配合使用。连接一个钱包后，其持仓、手续费和转账会显示在这里。",
       "walletSealedDescription": "你的钱包密钥在已锁定的保险库中。解锁后，此面板即可为该钱包读取和签名。",
-      "connectAction": "连接 {{venue}}"
+      "connectAction": "连接 {{venue}}",
+      "compactMissingDescription": "连接一次，这个面板就会填充。密钥只留在这台设备上。",
+      "compactSealedDescription": "你的 {{venue}} 密钥在锁定的保险库里。",
+      "compactConnectAction": "连接"
     },
     "paneTransition": {
       "switchingTo": "正在切换到 {{venue}}…",
@@ -5359,7 +5409,31 @@
     "predictionsBrowse": "打开事件看板",
     "predictionsInstall": "安装预测插件",
     "futuresEmptyTitle": "连接期货交易所后即可浏览永续合约",
-    "futuresEmptyBody": "合约清单来自各交易所自己的市场表，因此在成功连接该交易所后才会出现。"
+    "futuresEmptyBody": "合约清单来自各交易所自己的市场表，因此在成功连接该交易所后才会出现。",
+    "sector": {
+      "software": "软件",
+      "semiconductors": "半导体",
+      "internet": "互联网",
+      "hardware": "硬件",
+      "banks": "银行",
+      "payments": "支付",
+      "cryptoEquity": "加密货币",
+      "healthcare": "医疗保健",
+      "energy": "能源",
+      "retail": "零售",
+      "staples": "必需消费品",
+      "media": "媒体",
+      "travel": "旅游",
+      "industrials": "工业",
+      "autos": "汽车",
+      "etfEquity": "股票 ETF",
+      "etfBonds": "债券 ETF",
+      "etfCommodity": "大宗商品 ETF"
+    },
+    "searchPairs_one": "搜索 {{count}} 个交易对",
+    "searchPairs_other": "搜索 {{count}} 个交易对",
+    "browseAll_one": "浏览全部 {{count}} 个交易对",
+    "browseAll_other": "浏览全部 {{count}} 个交易对"
   },
   "fearGreed": {
     "title": "恐慌与贪婪指数",
@@ -5400,9 +5474,6 @@
   },
   "news": {
     "title": "新闻",
-    "tickerPlaceholder": "代码……",
-    "sortLatest": "最新",
-    "sortRelevance": "相关度",
     "unavailable": "新闻不可用",
     "unavailableUpstream": "新闻提供方无响应。恢复前无法加载任何内容。",
     "unavailableRateLimited": "已达到新闻提供方的请求上限，应该很快重置。",
@@ -5434,8 +5505,22 @@
       "technology": "科技",
       "finance": "金融",
       "financial_markets": "金融市场",
-      "economy_macro": "宏观经济"
-    }
+      "economy_macro": "宏观经济",
+      "earnings": "财报"
+    },
+    "scope": {
+      "assets": "我的资产",
+      "earnings": "财报",
+      "macro": "宏观",
+      "all": "全部"
+    },
+    "refresh": "刷新新闻",
+    "adjustScope": "这个筛选下暂时没有新闻。换一个试试，或几分钟后再来看看。",
+    "noWatchedAssets": "你的自选是空的，新闻没有可对照的范围。加一个自选交易对，或改看宏观。",
+    "noAssetNews": "新闻源很热闹，但都与你的自选无关。宏观和全部仍在更新。",
+    "noStockNews": "目前没有关于这些股票的新闻。宏观和全部仍在更新。",
+    "mentionsPairs_one": "提及你的 {{count}} 个交易对",
+    "mentionsPairs_other": "提及你的 {{count}} 个交易对"
   },
   "tray": {
     "show": "显示 Pairlens",

@@ -4,11 +4,19 @@
  * The selected pool at a glance, one click from its chart.
  *
  * The stat list only shows what the provider published: turnover collapses
- * without a liquidity figure, the buy/sell bar collapses without a flow split,
- * and the fee tier collapses on every venue that does not label one. A grid of
- * dashes would fill the same space and tell the reader nothing about which
- * gaps are the pool's and which are ours.
+ * without a liquidity figure, the trade count collapses on a listing that
+ * carries none, and the fee tier collapses on every venue that does not label
+ * one. A grid of dashes would fill the same space and tell the reader nothing
+ * about which gaps are the pool's and which are ours.
+ *
+ * Two numbers here are computed rather than read, and both are deliberate. The
+ * $10k price impact is a real aggregator quote at that size, not a curve
+ * modelled off reserves. The hour's buy/sell pressure is summed from the SAME
+ * swap feed the flow pane beside it draws — one react-query key, one poll, two
+ * panes — because two numbers for the same hour that disagreed by a rounding
+ * would read as one of the panes being broken.
  */
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import { Info } from 'lucide-react'
@@ -18,24 +26,58 @@ import { Button } from '@pairlens/ui/components/ui/button'
 import { normalizeInstrumentId } from '@pairlens/shared/market-ref'
 
 import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PoolSwatch } from '@/components/dex/dex-pane-primitives'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
-import { usePoolStats } from '@/hooks/use-pool-stats'
+import { usePoolStats, usePoolTrades } from '@/hooks/use-pool-stats'
+import { usePriceImpactTiers } from '@/hooks/use-price-impact-tiers'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
+import { dexChain } from '@/lib/dex/chain-catalog'
 import {
   buyShare,
+  impactTier,
   measurableReserveUsd,
+  sumFlowSince,
+  titleCaseVenue,
   volumeToTvl,
 } from '@/lib/dex/pool-math'
+import { providerLabel } from '@/lib/dex/pool-stats-merge'
 import { poolPairKey } from '@/lib/dex/pool-pair'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
+
+/** The one size this pane quotes. The three-size grid lives on the pool desk. */
+const IMPACT_SIZES = [10_000] as const
+const PRESSURE_WINDOW_MS = 60 * 60_000
 
 export function PoolDetailPane() {
   const { t } = useTranslation()
   const pool = useDexDiscoveryStore((s) => s.selectedPool)
   const pairKey = pool ? poolPairKey(pool) : undefined
 
-  const { stats, isLoading } = usePoolStats(pool?.market, pairKey)
+  const { stats, isLoading, filledBy } = usePoolStats(pool?.market, pairKey)
+
+  // Identical arguments to the flow pane's call, which is the whole point: the
+  // two panes share one react-query entry and this one costs no request.
+  const { trades } = usePoolTrades(pool?.market, pairKey, {
+    enabled: Boolean(pool),
+  })
+
+  const [impact] = usePriceImpactTiers(
+    pool?.market,
+    pairKey,
+    stats,
+    Boolean(pool),
+    IMPACT_SIZES,
+  )
+
+  const pressure = useMemo(() => {
+    const { buyUsd, sellUsd } = sumFlowSince(
+      trades,
+      Date.now() - PRESSURE_WINDOW_MS,
+    )
+    const share = buyShare(buyUsd, sellUsd)
+    return share === null ? null : { buyUsd, sellUsd, share }
+  }, [trades])
 
   if (!pool) {
     return (
@@ -52,22 +94,29 @@ export function PoolDetailPane() {
     stats?.reserveUsd ?? null,
   )
   const reserveUsd = measurableReserveUsd(stats?.reserveUsd ?? null)
-  const buys = buyShare(
-    stats?.buyVolume24hUsd ?? stats?.trades24h?.buys ?? null,
-    stats?.sellVolume24hUsd ?? stats?.trades24h?.sells ?? null,
-  )
   const change = stats?.change24hPct ?? null
+  const venue = titleCaseVenue(pool.dexName)
+  const chainName = dexChain(pool.market)?.displayName ?? null
+  const impactPct = impact?.impact ?? null
+  const tier = impactTier(impactPct)
 
   return (
     <div className="flex h-full flex-col">
-      <div className="shrink-0 border-b border-border px-3 py-2.5">
-        <p className="truncate font-mono text-[13px] font-semibold">
-          {pool.name}
-        </p>
-        <p className="truncate text-[10px] text-muted-foreground">
-          {pool.dexName}
-        </p>
-        <p className="mt-2 font-mono text-xl font-semibold [font-variant-numeric:tabular-nums]">
+      <div className="shrink-0 border-b border-border px-3 py-3">
+        <div className="flex items-center gap-2.5">
+          <PoolSwatch seed={pool.address} />
+          <div className="min-w-0">
+            <p className="truncate font-mono text-[13px] font-semibold">
+              {pool.name}
+            </p>
+            <p className="truncate text-[10.5px] text-muted-foreground">
+              {venue && chainName
+                ? t('poolDetail.venueChain', { venue, chain: chainName })
+                : (venue ?? chainName ?? '')}
+            </p>
+          </div>
+        </div>
+        <p className="mt-2.5 font-mono text-xl font-semibold [font-variant-numeric:tabular-nums]">
           {stats?.priceUsd != null ? formatPrice(stats.priceUsd) : '—'}
         </p>
         {change !== null ? (
@@ -96,7 +145,7 @@ export function PoolDetailPane() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2.5">
-        <dl className="flex flex-col gap-2 text-[11px]">
+        <dl className="flex flex-col gap-2.5 text-[11.5px]">
           <StatLine
             label={t('poolDetail.liquidity')}
             value={reserveUsd !== null ? formatCompactUsd(reserveUsd) : null}
@@ -117,14 +166,27 @@ export function PoolDetailPane() {
                 : null
             }
           />
+          {stats?.trades24h ? (
+            <StatLine
+              label={t('poolDetail.trades24h')}
+              value={(
+                stats.trades24h.buys + stats.trades24h.sells
+              ).toLocaleString()}
+            />
+          ) : null}
           <StatLine
-            label={t('poolDetail.trades24h')}
+            label={t('poolDetail.priceImpact10k')}
             value={
-              stats?.trades24h
-                ? (
-                    stats.trades24h.buys + stats.trades24h.sells
-                  ).toLocaleString()
-                : null
+              impactPct !== null ? `${(impactPct * 100).toFixed(2)}%` : null
+            }
+            tone={
+              tier === 'low'
+                ? 'up'
+                : tier === 'moderate'
+                  ? 'caution'
+                  : tier === 'high'
+                    ? 'down'
+                    : 'plain'
             }
           />
           {stats?.feeTier != null ? (
@@ -135,25 +197,37 @@ export function PoolDetailPane() {
           ) : null}
         </dl>
 
-        {buys !== null ? (
+        {pressure ? (
           <div className="mt-3 border-t border-border pt-2.5">
             <p className="text-[11px] text-muted-foreground">
-              {stats?.buyVolume24hUsd != null
-                ? t('poolDetail.pressureByValue')
-                : t('poolDetail.pressureByCount')}
+              {t('poolDetail.pressure1h')}
             </p>
             <div className="mt-1.5 flex h-2 overflow-hidden rounded-full">
               <span
                 className="bg-up"
-                style={{ width: `${(buys * 100).toFixed(1)}%` }}
+                style={{ width: `${(pressure.share * 100).toFixed(1)}%` }}
               />
               <span className="flex-1 bg-down" />
             </div>
-            <div className="mt-1 flex justify-between text-[10px] text-muted-foreground [font-variant-numeric:tabular-nums]">
-              <span>{`${(buys * 100).toFixed(0)}%`}</span>
-              <span>{`${(100 - buys * 100).toFixed(0)}%`}</span>
+            <div className="mt-1.5 flex justify-between gap-2 text-[10.5px] text-muted-foreground [font-variant-numeric:tabular-nums]">
+              <span className="truncate">
+                {t('poolDetail.buysValue', {
+                  value: formatCompactUsd(pressure.buyUsd),
+                })}
+              </span>
+              <span className="truncate">
+                {t('poolDetail.sellsValue', {
+                  value: formatCompactUsd(pressure.sellUsd),
+                })}
+              </span>
             </div>
           </div>
+        ) : null}
+
+        {filledBy ? (
+          <p className="mt-3 text-[10px] text-muted-foreground">
+            {t('poolDetail.filledBy', { provider: providerLabel(filledBy) })}
+          </p>
         ) : null}
 
         {isLoading && !stats ? (
@@ -188,11 +262,27 @@ export function PoolDetailPane() {
 }
 
 /** A label/value row that renders a dash only for a value we asked for. */
-function StatLine({ label, value }: { label: string; value: string | null }) {
+function StatLine({
+  label,
+  value,
+  tone = 'plain',
+}: {
+  label: string
+  value: string | null
+  tone?: 'plain' | 'up' | 'down' | 'caution'
+}) {
   return (
     <div className="flex items-baseline justify-between gap-2">
       <dt className="truncate text-muted-foreground">{label}</dt>
-      <dd className="shrink-0 font-mono [font-variant-numeric:tabular-nums]">
+      <dd
+        className={cn(
+          'shrink-0 font-mono [font-variant-numeric:tabular-nums]',
+          value === null && 'text-muted-foreground',
+          value !== null && tone === 'up' && 'text-up',
+          value !== null && tone === 'down' && 'text-down',
+          value !== null && tone === 'caution' && 'text-[var(--chart-4)]',
+        )}
+      >
         {value ?? '—'}
       </dd>
     </div>

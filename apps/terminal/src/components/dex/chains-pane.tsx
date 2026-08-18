@@ -23,7 +23,7 @@ import { cn } from '@pairlens/ui/lib/utils'
 
 import type { DexChainRow } from '@/hooks/use-dex-chains'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
-import { ShareBar } from '@/components/dex/dex-pane-primitives'
+import { DexPaneHeader, ShareBar } from '@/components/dex/dex-pane-primitives'
 import { useChainGas, useDexChains } from '@/hooks/use-dex-chains'
 import { useChainStats } from '@/hooks/use-pool-stats'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
@@ -79,14 +79,18 @@ export function ChainsPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="shrink-0 border-b border-border px-3 py-2.5">
-        <h2 className="text-[13px] font-semibold">{t('dexChains.title')}</h2>
-        <p className="mt-0.5 text-[10px] text-muted-foreground">
-          {coverage === 'network'
+      <DexPaneHeader
+        title={t('dexChains.title')}
+        // The design's second line reads "24h volume · net liquidity". There is
+        // no signed 24h liquidity delta on any provider we can reach, at any
+        // grain, so the rail names what it actually summed and keeps absolute
+        // liquidity on the row's third line.
+        subtitle={
+          coverage === 'network'
             ? t('dexChains.subtitleNetwork')
-            : t('dexChains.subtitleSampled')}
-        </p>
-      </header>
+            : t('dexChains.subtitleSampled')
+        }
+      />
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {rows.map((row) => (

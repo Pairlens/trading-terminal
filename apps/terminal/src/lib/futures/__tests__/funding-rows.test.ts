@@ -14,6 +14,7 @@ import {
   buildFundingRows,
   fundingExtremes,
   primaryCell,
+  rankedExtremes,
   sortRowsByVenue,
 } from '../funding-rows'
 import type { FundingVenueResult } from '@/hooks/use-funding-rates'
@@ -182,6 +183,40 @@ describe('fundingExtremes', () => {
     expect(positive).toHaveLength(1)
     expect(negative).toHaveLength(1)
     expect(negative[0].base).toBe('SOL')
+  })
+})
+
+describe('rankedExtremes', () => {
+  const rows = buildFundingRows(
+    [
+      venue('binance-futures', [
+        entry('TAO-USDT-USDT', 0.00057),
+        entry('SOL-USDT-USDT', -0.00121),
+        entry('BTC-USDT-USDT', 0.0001),
+        entry('XRP-USDT-USDT', -0.00002),
+      ]),
+    ],
+    RANK,
+  )
+
+  it('interleaves both signs, furthest from flat first', () => {
+    // The rail is read as "what is worth a second look", and a heading per
+    // sign spends a third of a four-row pane saying what the icon says.
+    expect(rankedExtremes(rows, 4).map((e) => e.base)).toEqual([
+      'SOL',
+      'TAO',
+      'BTC',
+      'XRP',
+    ])
+  })
+
+  it('bounds each side, because every entry costs a history read', () => {
+    const listed = rankedExtremes(rows, 1)
+    expect(listed.map((e) => e.base)).toEqual(['SOL', 'TAO'])
+  })
+
+  it('is empty when nothing annualised', () => {
+    expect(rankedExtremes([], 8)).toEqual([])
   })
 })
 

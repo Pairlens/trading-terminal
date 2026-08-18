@@ -97,6 +97,41 @@ describe('fetchAlpacaBulkTickers — watchlist quotes', () => {
   })
 })
 
+/**
+ * The movers table renders this field with a currency formatter, so a share
+ * count here prints '$41.2M' for a stock that traded 41.2M shares of a $600
+ * name. The daily bar carries the VWAP that turns one into the other.
+ */
+describe('fetchAlpacaBulkTickers — traded value', () => {
+  /** A daily bar with the volume-weighted average price Alpaca publishes. */
+  function withVwap(last: number, prevClose: number, v: number, vw: number) {
+    const base = snapshot(last, prevClose)
+    return { ...base, dailyBar: { ...base.dailyBar, v, vw } }
+  }
+
+  it('reports shares times VWAP, not the share count', async () => {
+    stubFetch({ AAPL: withVwap(305.94, 305.305, 41_200_000, 304.5) })
+    const [row] = await fetchAlpacaBulkTickers(['AAPL'], CREDS)
+    expect(row.volume24h).toBeCloseTo(41_200_000 * 304.5, 0)
+  })
+
+  it('falls back to the last print when the bar carries no VWAP', async () => {
+    stubFetch({ AAPL: snapshot(200, 199) }) // dailyBar.v = 1000, no vw
+    const [row] = await fetchAlpacaBulkTickers(['AAPL'], CREDS)
+    expect(row.volume24h).toBe(1000 * 200)
+  })
+
+  // Pre-market on a thin name: nothing has traded. An absent figure is the
+  // honest answer; a zero would rank it above every stock that did trade.
+  it('omits the field when the session has traded nothing', async () => {
+    const empty = withVwap(200, 199, 0, 0)
+    stubFetch({ AAPL: empty })
+    const [row] = await fetchAlpacaBulkTickers(['AAPL'], CREDS)
+    expect(row.volume24h).toBeUndefined()
+    expect('volume24h' in row).toBe(false)
+  })
+})
+
 describe('fetchAlpacaQuoteBook — order book seed', () => {
   // Regression: the book used to be seeded from a TickerSnapshot, which
   // carries prices but no sizes, so every level rendered as 0.000 and the

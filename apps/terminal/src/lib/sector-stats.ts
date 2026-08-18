@@ -52,8 +52,32 @@ export type SectorSummary = {
   leader: SectorMover | null
   /** Weakest member over the window. */
   laggard: SectorMover | null
+  /**
+   * The sector moved, but its members did not agree: advancing and declining
+   * are within a hair of each other. Naming one of them "leads" would be a
+   * coin flip, so the caption says "split tape" instead.
+   */
+  split: boolean
   /** Four points, oldest first, normalised so the last is 1. */
   trajectory: Array<number>
+}
+
+/**
+ * How close to even a sector has to be before its caption stops naming a
+ * leader. One name in six is the widest gap that still reads as "the sector
+ * did not agree" rather than as a direction: 3 up against 3 down is split, and
+ * so is 7 against 5, but 8 against 4 is a tape with a side.
+ */
+const SPLIT_TOLERANCE = 1 / 6
+
+/**
+ * Did the members disagree? Only a sector with something on both sides can be
+ * split — six advancing and nothing declining is unanimous, not even.
+ */
+export function isSplitTape(advancing: number, declining: number): boolean {
+  const moved = advancing + declining
+  if (moved === 0 || advancing === 0 || declining === 0) return false
+  return Math.abs(advancing - declining) / moved <= SPLIT_TOLERANCE
 }
 
 const isFiniteNumber = (v: unknown): v is number =>
@@ -148,6 +172,7 @@ export function summarizeSectors(
       declining,
       leader,
       laggard,
+      split: isSplitTape(advancing, declining),
       trajectory: [backTo(change7d), backTo(change24h), backTo(change1h), 1],
     })
   }

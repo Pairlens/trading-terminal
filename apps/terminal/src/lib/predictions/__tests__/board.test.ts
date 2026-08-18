@@ -14,8 +14,11 @@ import {
   collectResolvingSoon,
   createdOf,
   endOf,
+  eventLiquidity,
+  eventOpenInterest,
   eventVolume,
   flattenBoardEvents,
+  liveMarketCount,
   sortBoardEvents,
   sortEventSummaries,
 } from '../board'
@@ -368,5 +371,66 @@ describe('collectResolvingSoon', () => {
         now: NOW,
       }),
     ).toEqual([])
+  })
+})
+
+describe('liveMarketCount', () => {
+  test('counts markets, because a market is what a search can find', () => {
+    // The board's search box said "Search 30 live markets" over thirty events
+    // carrying hundreds of questions, and the first thing anyone types is a
+    // candidate name that lives on one of them.
+    const race = evt('nominee', {
+      markets: Array.from({ length: 12 }, (_, i) => ({
+        id: `runner-${i}`,
+        title: `Runner ${i}`,
+        outcomes: [{ pairKey: `R${i}-YES`, label: 'Yes', price: 0.08 }],
+      })),
+    })
+    expect(liveMarketCount([venue([evt('a'), race])])).toBe(13)
+  })
+
+  test('does not count a venue that refused', () => {
+    expect(
+      liveMarketCount([
+        venue([evt('a')]),
+        venue([evt('b')], { market: 'kalshi', desktopOnly: true, events: [] }),
+      ]),
+    ).toBe(1)
+  })
+
+  test('is zero before anything answers', () => {
+    expect(liveMarketCount(undefined)).toBe(0)
+  })
+})
+
+describe('eventLiquidity and eventOpenInterest', () => {
+  test('take the event figure first, then the sum of its markets', () => {
+    expect(eventLiquidity(evt('a', { liquidity: 1_200_000 }))).toBe(1_200_000)
+    const summed = evt('b', {
+      markets: [
+        {
+          id: 'm1',
+          title: 'q',
+          outcomes: [],
+          liquidity: 400,
+          openInterest: 90,
+        },
+        {
+          id: 'm2',
+          title: 'q',
+          outcomes: [],
+          liquidity: 600,
+          openInterest: 10,
+        },
+      ],
+    })
+    expect(eventLiquidity(summed)).toBe(1000)
+    expect(eventOpenInterest(summed)).toBe(100)
+  })
+
+  test('are null when nothing states them, never zero', () => {
+    // Zero is a claim about a market. Absent is a claim about the venue.
+    expect(eventLiquidity(evt('a'))).toBeNull()
+    expect(eventOpenInterest(evt('a'))).toBeNull()
   })
 })

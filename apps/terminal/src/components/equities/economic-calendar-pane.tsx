@@ -19,7 +19,15 @@
  * The figure columns appear only when the window actually carries figures. A
  * deployment whose server cannot fill them gets the schedule alone rather than
  * three columns of dashes, which was the original reason this pane had none.
- * Absent stays blank: no zero, no dash, no placeholder.
+ * Inside a window that does carry them, an absent cell is the '—' glyph the
+ * funding matrix and the movers table already use for the same thing: once a
+ * column exists, a blank cell and a cell that has not printed yet look
+ * identical, and the reader cannot tell a missing figure from a missing row.
+ *
+ * Column order is Actual, Implied, Prior, which is not the order the fields
+ * were added in. A reader scans left to right for what happened and then for
+ * what was expected, and the expectation is the implied number; the prior is
+ * context and sits last, which is also the first column a narrow pane drops.
  *
  * The rest is what a trader plans around: the day, the clock, who publishes,
  * and how hard it usually hits. The impact filter earns its place from the
@@ -44,6 +52,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@pairlens/ui/components/ui/toggle-group'
+import type { TFunction } from 'i18next'
 import type {
   EconomicCalendarEntry,
   EconomicEventImportance,
@@ -53,6 +62,7 @@ import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { useEconomicCalendar } from '@/hooks/use-economic-calendar'
 import { hasEconomicFigures } from '@/lib/equities/calendar-figures'
+import { splitCountdown } from '@/lib/equities/session'
 import {
   ECONOMIC_ZONE,
   economicDayKind,
@@ -104,6 +114,14 @@ export function EconomicCalendarPane() {
     () => nextEconomicRelease(entries, nowMs),
     [entries, nowMs],
   )
+  // How long until the next one prints, computed once for the one row that
+  // shows it rather than per row. Minute resolution, because that is the
+  // cadence the clock above ticks at and a stale second hand reads as broken.
+  const countdown = useMemo(() => {
+    const next = entries.find((entry) => entry.id === nextId)
+    if (!next || next.releaseMs === null) return null
+    return countdownLabel(t, next.releaseMs - nowMs)
+  }, [entries, nextId, nowMs, t])
   const zone = useMemo(() => exchangeZoneLabel(nowMs, ECONOMIC_ZONE), [nowMs])
   const windowStart = data?.start ?? ''
 
@@ -161,15 +179,15 @@ export function EconomicCalendarPane() {
                 <HeadCell align="right" className={FIGURE_COL}>
                   {t('economicCalendar.columns.actual')}
                 </HeadCell>
-                <HeadCell align="right" className={PRIOR_COL}>
-                  {t('economicCalendar.columns.prior')}
-                </HeadCell>
                 <HeadCell
                   align="right"
                   className={IMPLIED_COL}
                   title={t('economicCalendar.impliedHint')}
                 >
                   {t('economicCalendar.columns.implied')}
+                </HeadCell>
+                <HeadCell align="right" className={PRIOR_COL}>
+                  {t('economicCalendar.columns.prior')}
                 </HeadCell>
               </>
             )}
@@ -199,6 +217,7 @@ export function EconomicCalendarPane() {
           <>
             {groups.map((group) => (
               <DayGroup
+                countdown={countdown}
                 date={group.date}
                 entries={group.entries}
                 key={group.date}
@@ -268,12 +287,20 @@ function HeadCell({
   )
 }
 
+/** What an unpublished figure renders as, matching the other boards. */
+const DASH = '—'
+
 /**
- * One figure, or an empty cell.
+ * One figure, or the glyph that says there isn't one.
  *
- * Empty means empty: no dash, no zero, no em-space placeholder. A calendar that
- * renders '0.0%' where it has nothing has told the reader something false about
- * the economy, and '-' reads as a value in a column of numbers.
+ * A zero is still forbidden: rendering '0.0%' where nothing printed tells the
+ * reader something false about the economy. What changed is the empty case. A
+ * blank cell was the right call when the columns themselves were in doubt, and
+ * the wrong one once they are on screen — a reader cannot tell a figure the
+ * agency has not published from a row the pane failed to fill, and every other
+ * board answers that question with '—'. The glyph is a placeholder, never a
+ * value: it is muted, it never carries the strong weight, and nothing sorts or
+ * colours off it.
  */
 function FigureCell({
   className,
@@ -298,9 +325,29 @@ function FigureCell({
         >
           {value}
         </span>
-      ) : null}
+      ) : (
+        <span
+          aria-hidden
+          className="font-mono text-[11px] text-muted-foreground/50"
+        >
+          {DASH}
+        </span>
+      )}
     </td>
   )
+}
+
+/**
+ * 'in 41m' — how long until the next release prints.
+ *
+ * Two units at most, and never seconds: the pane's clock ticks once a minute,
+ * so a second hand here would be wrong for fifty-nine seconds out of sixty.
+ */
+function countdownLabel(t: TFunction, ms: number): string {
+  const { days, hours, minutes } = splitCountdown(ms)
+  if (days > 0) return t('economicCalendar.countdownDh', { days, hours })
+  if (hours > 0) return t('economicCalendar.countdownHm', { hours, minutes })
+  return t('economicCalendar.countdownM', { minutes })
 }
 
 /** Now, to the minute. Nothing in this pane needs finer, and it costs a timer. */
@@ -314,6 +361,7 @@ function useMinuteClock(): number {
 }
 
 function DayGroup({
+  countdown,
   date,
   entries,
   locale,
@@ -321,6 +369,8 @@ function DayGroup({
   showFigures,
   windowStart,
 }: {
+  /** Time to the next release, for whichever day holds it. */
+  countdown: string | null
   date: string
   entries: Array<EconomicCalendarEntry>
   locale: string
@@ -360,6 +410,7 @@ function DayGroup({
         <tbody>
           {entries.map((entry) => (
             <ReleaseRow
+              countdown={entry.id === nextId ? countdown : null}
               entry={entry}
               isNext={entry.id === nextId}
               key={entry.id}
@@ -385,10 +436,13 @@ function importanceBar(importance: EconomicEventImportance): string {
 }
 
 function ReleaseRow({
+  countdown,
   entry,
   isNext,
   showFigures,
 }: {
+  /** Non-null only on the next release: 'in 41m', shown where its actual will land. */
+  countdown: string | null
   entry: EconomicCalendarEntry
   isNext: boolean
   showFigures: boolean
@@ -443,8 +497,19 @@ function ReleaseRow({
       </td>
       {showFigures && (
         <>
-          <FigureCell className={FIGURE_COL} strong value={entry.actual} />
-          <FigureCell className={PRIOR_COL} value={entry.prior} />
+          {/* The countdown stands where the actual will land, on the one row
+              that has not printed yet. Nothing else could go in that cell, and
+              a reader looking for what is next looks at the top of the column
+              of numbers rather than at a badge somewhere else. */}
+          {countdown && !entry.actual ? (
+            <td className={cn(FIGURE_COL, 'py-1.5 pr-3 text-right')}>
+              <span className="whitespace-nowrap text-[11px] text-muted-foreground">
+                {countdown}
+              </span>
+            </td>
+          ) : (
+            <FigureCell className={FIGURE_COL} strong value={entry.actual} />
+          )}
           <FigureCell
             className={IMPLIED_COL}
             title={
@@ -456,6 +521,7 @@ function ReleaseRow({
             }
             value={entry.implied}
           />
+          <FigureCell className={PRIOR_COL} value={entry.prior} />
         </>
       )}
       <td

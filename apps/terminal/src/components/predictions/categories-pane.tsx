@@ -8,6 +8,15 @@
  * board without shrinking the rail that did the narrowing. The chip is a view,
  * never a narrower fetch; see `usePredictionEvents`.
  *
+ * The counts are of the LOADED sample, not of the venue's universe, and that
+ * is the honest reading: the board holds a hundred events per venue and this
+ * rail counts exactly what it holds. A number scraped from somewhere else
+ * would promise rows the board cannot show.
+ *
+ * The top row is "Trending" rather than "All" because that is what it selects:
+ * no category filter, and the board's own default order, which on both venues
+ * is the venue's front page.
+ *
  * The venue block under it is not decoration. Half of what a prediction board
  * can show depends on which venue answered, and "Kalshi needs the desktop app"
  * is the difference between an empty board and a browser limitation.
@@ -17,9 +26,9 @@ import { useTranslation } from 'react-i18next'
 import {
   Bitcoin,
   ChartLine,
+  Flame,
   Globe,
   Landmark,
-  Layers,
   Sparkles,
   Tag,
   Target,
@@ -34,6 +43,7 @@ import {
   usePredictionEvents,
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
+import { track } from '@/lib/analytics-events'
 import { useDiscoveryFilterStore } from '@/lib/predictions/discovery-filter-store'
 
 /** Category name fragment → the icon that reads as it. */
@@ -101,9 +111,12 @@ export function CategoriesPane() {
         <CategoryRow
           active={category === null}
           count={total}
-          icon={Layers}
-          label={t('predictionCategories.all')}
-          onSelect={() => setCategory(null)}
+          icon={Flame}
+          label={t('predictionCategories.trending')}
+          onSelect={() => {
+            track('prediction_category_selected', { category: null })
+            setCategory(null)
+          }}
         />
         {counts.map(([name, count]) => (
           <CategoryRow
@@ -112,7 +125,11 @@ export function CategoriesPane() {
             icon={categoryIcon(name)}
             key={name}
             label={name}
-            onSelect={() => setCategory(category === name ? null : name)}
+            onSelect={() => {
+              const next = category === name ? null : name
+              track('prediction_category_selected', { category: next })
+              setCategory(next)
+            }}
           />
         ))}
         {counts.length === 0 && !isLoading && (

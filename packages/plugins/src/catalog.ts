@@ -117,65 +117,109 @@ const BASE_ASSETS: Array<BaseAsset> = [
 // connectors (Alpaca) can discover them. Ranks start after every crypto
 // quote tier so the mixed "All" view keeps its existing crypto ordering.
 
+/**
+ * What a name does for a living, curated.
+ *
+ * Deliberately NOT a GICS sector: those are licensed, and the eleven of them
+ * put NVIDIA and Adobe in the same bucket, which is useless on a movers row
+ * where the whole job of the label is to say why this ticker sits next to that
+ * one. These are trading-desk groupings instead, and they are stated as
+ * curation rather than derived from a provider, because per-symbol fundamentals
+ * would be one request per row.
+ */
+export type StockSector =
+  | 'software'
+  | 'semiconductors'
+  | 'internet'
+  | 'hardware'
+  | 'banks'
+  | 'payments'
+  | 'cryptoEquity'
+  | 'healthcare'
+  | 'energy'
+  | 'retail'
+  | 'staples'
+  | 'media'
+  | 'travel'
+  | 'industrials'
+  | 'autos'
+  | 'etfEquity'
+  | 'etfBonds'
+  | 'etfCommodity'
+
 type StockAsset = {
   symbol: string
   name: string
+  sector: StockSector
   featured?: boolean
 }
 
 const STOCK_ASSETS: Array<StockAsset> = [
-  { symbol: 'AAPL', name: 'Apple', featured: true },
-  { symbol: 'NVDA', name: 'NVIDIA', featured: true },
-  { symbol: 'MSFT', name: 'Microsoft' },
-  { symbol: 'GOOGL', name: 'Alphabet' },
-  { symbol: 'AMZN', name: 'Amazon' },
-  { symbol: 'META', name: 'Meta Platforms' },
-  { symbol: 'TSLA', name: 'Tesla', featured: true },
-  { symbol: 'AVGO', name: 'Broadcom' },
-  { symbol: 'AMD', name: 'Advanced Micro Devices' },
-  { symbol: 'NFLX', name: 'Netflix' },
-  { symbol: 'ORCL', name: 'Oracle' },
-  { symbol: 'CRM', name: 'Salesforce' },
-  { symbol: 'ADBE', name: 'Adobe' },
-  { symbol: 'INTC', name: 'Intel' },
-  { symbol: 'PLTR', name: 'Palantir' },
-  { symbol: 'JPM', name: 'JPMorgan Chase' },
-  { symbol: 'V', name: 'Visa' },
-  { symbol: 'MA', name: 'Mastercard' },
-  { symbol: 'BAC', name: 'Bank of America' },
-  { symbol: 'GS', name: 'Goldman Sachs' },
-  { symbol: 'COIN', name: 'Coinbase' },
-  { symbol: 'HOOD', name: 'Robinhood' },
-  { symbol: 'MSTR', name: 'Strategy' },
-  { symbol: 'PYPL', name: 'PayPal' },
-  { symbol: 'SOFI', name: 'SoFi Technologies' },
-  { symbol: 'LLY', name: 'Eli Lilly' },
-  { symbol: 'UNH', name: 'UnitedHealth' },
-  { symbol: 'JNJ', name: 'Johnson & Johnson' },
-  { symbol: 'XOM', name: 'Exxon Mobil' },
-  { symbol: 'CVX', name: 'Chevron' },
-  { symbol: 'WMT', name: 'Walmart' },
-  { symbol: 'COST', name: 'Costco' },
-  { symbol: 'PG', name: 'Procter & Gamble' },
-  { symbol: 'KO', name: 'Coca-Cola' },
-  { symbol: 'PEP', name: 'PepsiCo' },
-  { symbol: 'HD', name: 'Home Depot' },
-  { symbol: 'DIS', name: 'Disney' },
-  { symbol: 'UBER', name: 'Uber' },
-  { symbol: 'ABNB', name: 'Airbnb' },
-  { symbol: 'SHOP', name: 'Shopify' },
-  { symbol: 'BA', name: 'Boeing' },
-  { symbol: 'CAT', name: 'Caterpillar' },
-  { symbol: 'GE', name: 'GE Aerospace' },
-  { symbol: 'SPY', name: 'SPDR S&P 500 ETF', featured: true },
-  { symbol: 'QQQ', name: 'Invesco QQQ (Nasdaq-100)' },
-  { symbol: 'VOO', name: 'Vanguard S&P 500 ETF' },
-  { symbol: 'VTI', name: 'Vanguard Total Market ETF' },
-  { symbol: 'IWM', name: 'iShares Russell 2000 ETF' },
-  { symbol: 'DIA', name: 'SPDR Dow Jones ETF' },
-  { symbol: 'GLD', name: 'SPDR Gold Shares' },
-  { symbol: 'TLT', name: 'iShares 20+ Year Treasury ETF' },
-  { symbol: 'ARKK', name: 'ARK Innovation ETF' },
+  { symbol: 'AAPL', name: 'Apple', sector: 'hardware', featured: true },
+  { symbol: 'NVDA', name: 'NVIDIA', sector: 'semiconductors', featured: true },
+  { symbol: 'MSFT', name: 'Microsoft', sector: 'software' },
+  { symbol: 'GOOGL', name: 'Alphabet', sector: 'internet' },
+  { symbol: 'AMZN', name: 'Amazon', sector: 'internet' },
+  { symbol: 'META', name: 'Meta Platforms', sector: 'internet' },
+  { symbol: 'TSLA', name: 'Tesla', sector: 'autos', featured: true },
+  { symbol: 'AVGO', name: 'Broadcom', sector: 'semiconductors' },
+  {
+    symbol: 'AMD',
+    name: 'Advanced Micro Devices',
+    sector: 'semiconductors',
+  },
+  { symbol: 'NFLX', name: 'Netflix', sector: 'media' },
+  { symbol: 'ORCL', name: 'Oracle', sector: 'software' },
+  { symbol: 'CRM', name: 'Salesforce', sector: 'software' },
+  { symbol: 'ADBE', name: 'Adobe', sector: 'software' },
+  { symbol: 'INTC', name: 'Intel', sector: 'semiconductors' },
+  { symbol: 'PLTR', name: 'Palantir', sector: 'software' },
+  { symbol: 'JPM', name: 'JPMorgan Chase', sector: 'banks' },
+  { symbol: 'V', name: 'Visa', sector: 'payments' },
+  { symbol: 'MA', name: 'Mastercard', sector: 'payments' },
+  { symbol: 'BAC', name: 'Bank of America', sector: 'banks' },
+  { symbol: 'GS', name: 'Goldman Sachs', sector: 'banks' },
+  { symbol: 'COIN', name: 'Coinbase', sector: 'cryptoEquity' },
+  { symbol: 'HOOD', name: 'Robinhood', sector: 'payments' },
+  { symbol: 'MSTR', name: 'Strategy', sector: 'cryptoEquity' },
+  { symbol: 'PYPL', name: 'PayPal', sector: 'payments' },
+  { symbol: 'SOFI', name: 'SoFi Technologies', sector: 'banks' },
+  { symbol: 'LLY', name: 'Eli Lilly', sector: 'healthcare' },
+  { symbol: 'UNH', name: 'UnitedHealth', sector: 'healthcare' },
+  { symbol: 'JNJ', name: 'Johnson & Johnson', sector: 'healthcare' },
+  { symbol: 'XOM', name: 'Exxon Mobil', sector: 'energy' },
+  { symbol: 'CVX', name: 'Chevron', sector: 'energy' },
+  { symbol: 'WMT', name: 'Walmart', sector: 'retail' },
+  { symbol: 'COST', name: 'Costco', sector: 'retail' },
+  { symbol: 'PG', name: 'Procter & Gamble', sector: 'staples' },
+  { symbol: 'KO', name: 'Coca-Cola', sector: 'staples' },
+  { symbol: 'PEP', name: 'PepsiCo', sector: 'staples' },
+  { symbol: 'HD', name: 'Home Depot', sector: 'retail' },
+  { symbol: 'DIS', name: 'Disney', sector: 'media' },
+  { symbol: 'UBER', name: 'Uber', sector: 'travel' },
+  { symbol: 'ABNB', name: 'Airbnb', sector: 'travel' },
+  { symbol: 'SHOP', name: 'Shopify', sector: 'software' },
+  { symbol: 'BA', name: 'Boeing', sector: 'industrials' },
+  { symbol: 'CAT', name: 'Caterpillar', sector: 'industrials' },
+  { symbol: 'GE', name: 'GE Aerospace', sector: 'industrials' },
+  {
+    symbol: 'SPY',
+    name: 'SPDR S&P 500 ETF',
+    sector: 'etfEquity',
+    featured: true,
+  },
+  { symbol: 'QQQ', name: 'Invesco QQQ (Nasdaq-100)', sector: 'etfEquity' },
+  { symbol: 'VOO', name: 'Vanguard S&P 500 ETF', sector: 'etfEquity' },
+  { symbol: 'VTI', name: 'Vanguard Total Market ETF', sector: 'etfEquity' },
+  { symbol: 'IWM', name: 'iShares Russell 2000 ETF', sector: 'etfEquity' },
+  { symbol: 'DIA', name: 'SPDR Dow Jones ETF', sector: 'etfEquity' },
+  { symbol: 'GLD', name: 'SPDR Gold Shares', sector: 'etfCommodity' },
+  {
+    symbol: 'TLT',
+    name: 'iShares 20+ Year Treasury ETF',
+    sector: 'etfBonds',
+  },
+  { symbol: 'ARKK', name: 'ARK Innovation ETF', sector: 'etfEquity' },
 ]
 
 // ── Quote currencies ───────────────────────────────────────────────
@@ -255,6 +299,19 @@ function getCatalog(): Array<Instrument> {
  */
 export function stockSymbols(): Array<string> {
   return STOCK_ASSETS.map((s) => s.symbol)
+}
+
+/**
+ * The curated sector of one ticker, or null for anything not in the catalog.
+ *
+ * Read by the terminal's movers rows, which need a one-word reason a stock sits
+ * where it does and cannot spend a fundamentals request per row to get one.
+ * Null is a real answer: a symbol from a broker's own universe that this
+ * catalog never listed gets no label rather than a guessed one.
+ */
+export function stockSector(symbol: string): StockSector | null {
+  const upper = symbol.toUpperCase()
+  return STOCK_ASSETS.find((s) => s.symbol === upper)?.sector ?? null
 }
 
 // ── Query engine (shared by pairlens-core + basic-symbols) ─────────

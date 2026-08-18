@@ -14,6 +14,34 @@
 import { cn } from '@pairlens/ui/lib/utils'
 import type { LucideIcon } from 'lucide-react'
 
+import { swatchIndexFor } from '@/lib/dex/pool-math'
+
+/**
+ * A pool's colour badge.
+ *
+ * Not a token logo, because nothing on the pool-stats path publishes one: the
+ * listing carries an address and a ticker, and an `<img>` pointed at a guessed
+ * URL renders as a broken-image glyph on most chains. A deterministic swatch
+ * always loads, is the same colour for the same pool on every machine, and
+ * still gives the pane the fixed anchor a logo would.
+ */
+export function PoolSwatch({
+  seed,
+  className,
+}: {
+  seed: string
+  className?: string
+}) {
+  const tone = swatchIndexFor(seed)
+  return (
+    <span
+      aria-hidden="true"
+      className={cn('size-7 shrink-0 rounded-full', className)}
+      style={{ background: `var(--chart-${tone})`, opacity: 0.9 }}
+    />
+  )
+}
+
 /** A number and its label. `sub` carries the qualifier under the value. */
 export function StatCell({
   label,

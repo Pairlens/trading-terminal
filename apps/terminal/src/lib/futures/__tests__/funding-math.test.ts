@@ -12,7 +12,6 @@
 import { describe, expect, it } from 'bun:test'
 import {
   HOURS_PER_YEAR,
-  annualizedBasis,
   annualizedFunding,
   annualizedSpreadPoints,
   axisPosition,
@@ -22,6 +21,7 @@ import {
   fundingOverWindow,
   liquidationDistance,
   openInterestValue,
+  percentileOf,
   priceAxisRange,
   projectedMarginRatio,
 } from '../funding-math'
@@ -70,19 +70,33 @@ describe('basis', () => {
   })
 })
 
-describe('annualizedBasis', () => {
-  it('extrapolates the carry to the next stamp', () => {
-    // 10 bps held for 8h, repeated all year.
-    const annual = annualizedBasis(0.001, 8 * 3_600_000)!
-    expect(annual).toBeCloseTo(0.001 * (HOURS_PER_YEAR / 8), 10)
+describe('percentileOf', () => {
+  it('ranks a live rate against the contract own settled history', () => {
+    const history = [0.0001, 0.0002, 0.0003, 0.0004, 0.0005]
+    expect(percentileOf(0.0009, history)).toBe(100)
+    expect(percentileOf(0.00005, history)).toBe(0)
+    expect(percentileOf(0.00035, history)).toBeCloseTo(60, 10)
   })
 
-  it('says nothing in the last minutes before settlement', () => {
-    // The divisor is the time remaining, so this is where the number runs away
-    // to several thousand percent while staying arithmetically true.
-    expect(annualizedBasis(0.001, 60_000)).toBeNull()
-    expect(annualizedBasis(0.001, null)).toBeNull()
-    expect(annualizedBasis(null, 8 * 3_600_000)).toBeNull()
+  it('counts ties as half, so a flat history reads as the middle', () => {
+    // The alternative puts a contract that has funded at exactly one rate for
+    // a month in the 100th percentile of its own range, which would light the
+    // whole rail up as "never been more crowded".
+    expect(percentileOf(0.0002, [0.0002, 0.0002, 0.0002])).toBe(50)
+    expect(percentileOf(0.0003, [0.0002, 0.0002, 0.0002])).toBe(100)
+    expect(percentileOf(0.0001, [0.0002, 0.0002, 0.0002])).toBe(0)
+  })
+
+  it('is null when there is no history to rank against', () => {
+    // A percentile of nothing is not zero, and the rail falls back to the
+    // per-interval phrasing rather than claiming a range it never read.
+    expect(percentileOf(0.0002, [])).toBeNull()
+    expect(percentileOf(0.0002, [Number.NaN])).toBeNull()
+    expect(percentileOf(Number.NaN, [0.0002])).toBeNull()
+  })
+
+  it('ignores unusable stamps inside an otherwise good series', () => {
+    expect(percentileOf(0.0003, [0.0001, Number.NaN, 0.0005])).toBe(50)
   })
 })
 

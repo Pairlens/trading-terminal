@@ -26,8 +26,18 @@ import { usePairlens } from '@/lib/pairlens-provider'
 import { getCountrySetting } from '@/lib/region-settings'
 import { predictionPluginsFor } from '@/lib/venues/venue-plugins'
 
-/** Events fetched per venue per browse. */
-const EVENTS_LIMIT = 30
+/**
+ * Events fetched per venue per browse, in ONE request each.
+ *
+ * A hundred rather than thirty. Both venues serve the whole page in a single
+ * call — gamma's `/events` and Kalshi's event index both take the limit
+ * straight through, and the connector clamps at 200 — so the cost of the wider
+ * board is one larger response every sixty seconds, not more round trips. What
+ * it buys is a category rail with real counts and a search box that can find
+ * something without asking the venue: thirty events was roughly one screen of
+ * cards, and the rail underneath it counted the same thirty.
+ */
+const EVENTS_LIMIT = 100
 
 export type PredictionVenue = {
   plugin: PluginInstance
