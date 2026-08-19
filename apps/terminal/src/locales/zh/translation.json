@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "在 1 个在售市场中搜索",
     "searchPlaceholder_other": "在 {{count}} 个在售市场中搜索",
     "loadingTitle": "正在加载看板",
-    "loadingBody": "正在向各平台询问当前有哪些市场在交易。",
     "sort": {
       "new": "最新",
       "trending": "热门",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "24 小时概率变动最大",
     "loadingTitle": "正在读取看板",
-    "loadingBody": "各平台响应后即会显示变动。",
     "emptyTitle": "没有明显变动",
     "emptyBody": "今天没有合约变动到值得单列一行。",
     "noChangeFrom": "未参与排名：{{venues}} 不公布 24 小时变动。"
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "{{when}} 结算",
     "loadingTitle": "正在读取结算时间",
-    "loadingBody": "各平台响应后即会显示结算日期。",
     "emptyTitle": "近期没有结算",
     "emptyBody": "这里的未结合约都没有公布即将到来的结算日期。"
   },

@@ -159,6 +159,16 @@ tag. Counts are of the loaded board, which is what the rail can honestly
 narrow. The top row is Trending: no category filter, and the venue's own
 front-page order.
 
+While the venues are still answering, all four panes draw their own layout with
+the numbers taken out: ghost cards on the board, ghost rows on both rails, a
+category rail whose names and counts have not landed yet. Nothing moves when
+the events arrive, they just fill in where they already are. Two things stay
+real throughout, because they are known before any venue replies: the venue
+block under the category rail, which is read from the connectors you have
+installed, and the search box and sort chips, which work on whatever has
+landed. A venue that cannot answer at all still says so in a line above the
+board.
+
 ## Sorting the board
 
 The Event Board offers five orderings, and every one of them is derivable from

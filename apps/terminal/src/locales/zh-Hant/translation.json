@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "在 1 個在售市場中搜尋",
     "searchPlaceholder_other": "在 {{count}} 個在售市場中搜尋",
     "loadingTitle": "正在載入看板",
-    "loadingBody": "正在向各平台詢問目前有哪些市場在交易。",
     "sort": {
       "new": "最新",
       "trending": "熱門",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "24 小時機率變動最大",
     "loadingTitle": "正在讀取看板",
-    "loadingBody": "各平台回應後就會顯示變動。",
     "emptyTitle": "沒有明顯變動",
     "emptyBody": "今天沒有合約變動到值得單列一行。",
     "noChangeFrom": "未參與排名：{{venues}} 不公布 24 小時變動。"
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "{{when}} 結算",
     "loadingTitle": "正在讀取結算時間",
-    "loadingBody": "各平台回應後就會顯示結算日期。",
     "emptyTitle": "近期沒有結算",
     "emptyBody": "這裡的未結合約都沒有公布即將到來的結算日期。"
   },

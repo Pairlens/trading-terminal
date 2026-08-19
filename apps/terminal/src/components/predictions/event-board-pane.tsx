@@ -29,11 +29,13 @@ import { Input } from '@pairlens/ui/components/ui/input'
 
 import { EventDialog } from './event-dialog'
 import { EventThumbnail } from './event-pieces'
+import { EventBoardSkeleton } from './prediction-skeletons'
 import type { BoardEvent, BoardSort } from '@/lib/predictions/board'
 import type { PredictionRunner } from '@/lib/predictions/race'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { MONTH_WINDOW } from '@/hooks/use-sparkline'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -139,9 +141,14 @@ export function EventBoardPane() {
           <Input
             className="h-6 rounded-md pl-6 text-[11px]"
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('eventBoard.searchPlaceholder', {
-              count: liveCount,
-            })}
+            // The count is of what the venues have answered with, so before
+            // they answer there is no count to state — "Search 0 live markets"
+            // is a wrong number rather than a placeholder.
+            placeholder={
+              isLoading && liveCount === 0
+                ? t('events.searchPlaceholder')
+                : t('eventBoard.searchPlaceholder', { count: liveCount })
+            }
             value={query}
           />
         </div>
@@ -165,7 +172,10 @@ export function EventBoardPane() {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto py-1">
+      <div
+        aria-busy={isLoading && rows.length === 0}
+        className="min-h-0 flex-1 overflow-y-auto py-1"
+      >
         {blocked.length > 0 && (
           <div className="mb-2.5 flex flex-col gap-1">
             {/* One muted line, not a boxed notice: the venue rail beside this
@@ -184,23 +194,19 @@ export function EventBoardPane() {
           </div>
         )}
 
-        {rows.length === 0 ? (
+        {rows.length === 0 && isLoading ? (
+          // The board's own grid with the questions taken out, so the cards
+          // fill in where they already are instead of the board assembling
+          // itself under the reader.
+          <>
+            <SkeletonStatus label={t('eventBoard.loadingTitle')} />
+            <EventBoardSkeleton />
+          </>
+        ) : rows.length === 0 ? (
           <PaneEmpty
-            body={
-              isLoading
-                ? t('eventBoard.loadingBody')
-                : query
-                  ? t('events.noMatchesBody')
-                  : t('events.emptyBody')
-            }
+            body={query ? t('events.noMatchesBody') : t('events.emptyBody')}
             icon={Vote}
-            title={
-              isLoading
-                ? t('eventBoard.loadingTitle')
-                : query
-                  ? t('events.noMatchesTitle')
-                  : t('events.emptyTitle')
-            }
+            title={query ? t('events.noMatchesTitle') : t('events.emptyTitle')}
           />
         ) : (
           // A container query, not a viewport one: this grid is a pane inside

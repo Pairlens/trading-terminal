@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "실시간 마켓 1개에서 검색",
     "searchPlaceholder_other": "실시간 마켓 {{count}}개에서 검색",
     "loadingTitle": "보드 불러오는 중",
-    "loadingBody": "각 거래소에 지금 무엇이 거래되는지 묻고 있습니다.",
     "sort": {
       "new": "신규",
       "trending": "인기",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "24시간 확률 변동이 큰 순서",
     "loadingTitle": "보드 읽는 중",
-    "loadingBody": "거래소가 응답하면 변동이 표시됩니다.",
     "emptyTitle": "움직인 계약이 없습니다",
     "emptyBody": "오늘 한 줄을 차지할 만큼 움직인 계약이 없습니다.",
     "noChangeFrom": "순위 제외: {{venues}}는 24시간 변동을 공개하지 않습니다."
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "{{when}} 정산",
     "loadingTitle": "일정 읽는 중",
-    "loadingBody": "거래소가 응답하면 정산일이 표시됩니다.",
     "emptyTitle": "곧 정산될 계약이 없습니다",
     "emptyBody": "여기 열려 있는 계약 중 다가오는 정산일을 공개한 것이 없습니다."
   },

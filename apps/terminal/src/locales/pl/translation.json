@@ -238,7 +238,6 @@
     "searchPlaceholder_many": "Szukaj w {{count}} aktywnych rynkach",
     "searchPlaceholder_other": "Szukaj w {{count}} aktywnego rynku",
     "loadingTitle": "Wczytywanie tablicy",
-    "loadingBody": "Pytamy każdą giełdę, czym się teraz handluje.",
     "sort": {
       "new": "Nowe",
       "trending": "Na czasie",
@@ -740,7 +739,6 @@
   "oddsMovers": {
     "subtitle": "Największe zmiany prawdopodobieństwa, 24 h",
     "loadingTitle": "Czytamy tablicę",
-    "loadingBody": "Ruchy pojawią się, gdy giełdy odpowiedzą.",
     "emptyTitle": "Nic się nie ruszyło",
     "emptyBody": "Dziś żaden kontrakt nie ruszył się na tyle, by zająć wiersz.",
     "noChangeFrom": "Bez rankingu: {{venues}} nie publikuje zmiany z 24 h."
@@ -1145,7 +1143,6 @@
   "resolvingSoon": {
     "resolves": "Rozstrzygnięcie {{when}}",
     "loadingTitle": "Czytamy terminy",
-    "loadingBody": "Daty rozstrzygnięcia pojawią się, gdy giełdy odpowiedzą.",
     "emptyTitle": "Nic nie rozstrzyga się wkrótce",
     "emptyBody": "Żaden otwarty kontrakt tutaj nie podaje nadchodzącej daty rozstrzygnięcia."
   },
