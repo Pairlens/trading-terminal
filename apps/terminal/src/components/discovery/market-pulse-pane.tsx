@@ -36,9 +36,15 @@ import { formatCompactUsd } from '@/lib/format-price'
 import { fetchFearGreedWithFallback } from '@/lib/public-market-data'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 
-/** Five across on the board's own width, folding to two on a docked rail. */
+/**
+ * Five across on the board's own width, folding to two on a docked rail.
+ *
+ * Ruled in both directions until the board stopped drawing lines. The gap is
+ * what separates the tiles now: each one already leads with its own label, and
+ * five figures behind a grid of rules was the strip reading as a table.
+ */
 const TILE_GRID =
-  'grid h-full grid-cols-2 @min-[30rem]/pane:grid-cols-3 @min-[44rem]/pane:grid-cols-5'
+  'grid h-full grid-cols-2 gap-x-5 gap-y-1 @min-[30rem]/pane:grid-cols-3 @min-[44rem]/pane:grid-cols-5'
 
 export function MarketPulsePane() {
   const { t } = useTranslation()
@@ -169,7 +175,7 @@ function Tile({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-w-0 flex-col justify-center border-b border-r border-border/50 px-4 py-1.5 last:border-r-0">
+    <div className="flex min-w-0 flex-col justify-center py-1">
       <p className="truncate text-[11px] text-muted-foreground">{label}</p>
       {loading ? (
         <div className="mt-1.5 h-4 w-20 animate-pulse rounded bg-muted" />

@@ -88,12 +88,15 @@ export function RiskControlsPane() {
   const locked = ordersLocked || buyOrdersLocked
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto p-3">
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto">
+      {/* The one well left in this pane. A tripped limit is the state the
+          trader has to see from across the room, and a tint carries it
+          without a second card inside the column's own. */}
       {locked && (
-        <div className="flex items-center justify-between gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-2.5 py-2">
+        <div className="flex items-center justify-between gap-2 rounded-lg bg-destructive/10 px-2.5 py-2">
           <span className="flex min-w-0 items-center gap-2">
             <Lock className="size-3.5 shrink-0 text-destructive" />
-            <span className="truncate text-[11.5px] font-medium text-destructive">
+            <span className="truncate text-[11px] font-medium text-destructive">
               {ordersLocked
                 ? t('settings.risk.lockBanner')
                 : t('settings.risk.lockBannerBuys')}
@@ -140,12 +143,12 @@ export function RiskControlsPane() {
         value={maxPositionSize}
       />
 
-      <div className="flex items-center justify-between gap-2 rounded-lg border border-border px-2.5 py-2">
+      <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <Label className="text-[11.5px] font-medium">
+          <Label className="text-[11px] font-medium">
             {t('riskControls.resetWindow')}
           </Label>
-          <p className="truncate text-[10.5px] text-muted-foreground">
+          <p className="truncate text-[10px] text-muted-foreground">
             {t('riskControls.resetIn', {
               time: formatRemaining(windowStart, resetInterval),
             })}
@@ -160,7 +163,7 @@ export function RiskControlsPane() {
           }
           value={resetInterval}
         >
-          <SelectTrigger className="h-7 w-[104px] shrink-0 text-[11px]">
+          <SelectTrigger className="h-6 w-[104px] shrink-0 text-[11px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -176,23 +179,26 @@ export function RiskControlsPane() {
       {/* The kill switch writes the SAME flag a breach sets, which is what
           makes "unlock" one concept rather than two: a manual halt and a
           tripped limit are cleared by the same button. */}
-      <div
-        className={cn(
-          'flex items-center justify-between gap-2 rounded-lg border px-2.5 py-2',
-          ordersLocked ? 'border-destructive/40' : 'border-border',
-        )}
-      >
+      <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-[11.5px] font-medium">
-            <ShieldAlert className="size-3.5 text-muted-foreground" />
+          <p className="flex items-center gap-1.5 text-[11px] font-medium">
+            {/* The halted state used to be a red border on this box. With the
+                box gone the icon carries it, and the banner above says it in
+                words. */}
+            <ShieldAlert
+              className={cn(
+                'size-3.5',
+                ordersLocked ? 'text-destructive' : 'text-muted-foreground',
+              )}
+            />
             {t('riskControls.killSwitch')}
           </p>
-          <p className="truncate text-[10.5px] text-muted-foreground">
+          <p className="truncate text-[10px] text-muted-foreground">
             {t('riskControls.killSwitchHint')}
           </p>
         </div>
         <Button
-          className="h-7 shrink-0 px-2.5 text-[11px]"
+          className="h-6 shrink-0 px-2.5 text-[11px]"
           onClick={() =>
             ordersLocked ? unlock() : updateConfig({ ordersLocked: true })
           }
@@ -238,14 +244,14 @@ function LimitRow({
   }, [value])
 
   return (
-    <div className="rounded-lg border border-border px-2.5 py-2">
+    <div>
       <div className="flex items-center justify-between gap-2">
-        <Label className="min-w-0 truncate text-[11.5px] font-medium">
+        <Label className="min-w-0 truncate text-[11px] font-medium">
           {label}
         </Label>
         <div className="relative w-[74px] shrink-0">
           <Input
-            className={cn('h-7 text-[11px]', suffix && 'pr-5')}
+            className={cn('h-6 text-[11px]', suffix && 'pr-5')}
             min={0}
             onChange={(event) => {
               const next = event.target.value
@@ -266,8 +272,8 @@ function LimitRow({
           )}
         </div>
       </div>
-      <div className="mt-1.5 flex items-center justify-between gap-2">
-        <span className="truncate text-[10.5px] text-muted-foreground">
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <span className="truncate text-[10px] text-muted-foreground">
           {value > 0
             ? (used ?? t('riskControls.perOrder'))
             : t('riskControls.off')}
@@ -279,7 +285,7 @@ function LimitRow({
           onValueChange={(next) => onAction(next as BreachAction)}
           value={action}
         >
-          <SelectTrigger className="h-6 w-[112px] shrink-0 text-[10.5px]">
+          <SelectTrigger className="h-6 w-[112px] shrink-0 text-[10px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

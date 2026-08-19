@@ -47,6 +47,7 @@ import type { PredictionRunner } from '@/lib/predictions/race'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import {
+  PANE_FOOTNOTE,
   PaneEmpty,
   PaneErrorBanner,
   Th,
@@ -117,7 +118,7 @@ export function OutcomeLadderPane() {
     return (
       <div className="flex h-full flex-col">
         {context.state === 'error' && context.error && (
-          <div className="p-3">
+          <div className="py-2">
             <PaneErrorBanner
               message={context.error}
               venue={context.venueLabel}
@@ -192,11 +193,12 @@ function Ladder({
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex shrink-0 items-center gap-2 border-b px-3 py-2">
+      {/* Controls only: the shell header already names the pane. */}
+      <div className="flex shrink-0 items-center gap-1.5 pb-1.5">
         <div className="relative min-w-0 flex-1">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-1.5 top-1/2 size-3 -translate-y-1/2 text-muted-foreground" />
           <Input
-            className="h-7 rounded-lg pl-7 text-[11.5px]"
+            className="h-6 rounded-md pl-6 text-[11px]"
             onChange={(e) => {
               setQuery(e.target.value)
               setShown(PAGE_SIZE)
@@ -212,7 +214,7 @@ function Ladder({
           value={sort}
         >
           <SelectTrigger
-            className="h-7 w-[132px] rounded-lg text-[11px]"
+            className="h-6 w-[126px] rounded-md text-[11px]"
             size="sm"
           >
             <SelectValue />
@@ -231,10 +233,10 @@ function Ladder({
             )}
           </SelectContent>
         </Select>
-      </header>
+      </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <table className="w-full table-fixed text-xs">
+        <table className="w-full table-fixed text-[11px]">
           <colgroup>
             <col className="w-8" />
             <col />
@@ -244,8 +246,11 @@ function Ladder({
             <col className="w-[76px]" />
             <col className="w-[164px]" />
           </colgroup>
-          <thead className="sticky top-0 z-10 bg-background">
-            <tr className="border-b text-muted-foreground">
+          {/* Paints the column's own card surface, not the page's: a
+              sticky bg-background thead reads as a hole once the pane sits
+              on a --card column. */}
+          <thead className="sticky top-0 z-10 bg-card">
+            <tr className="text-muted-foreground">
               <Th>{t('outcomeLadder.columns.rank')}</Th>
               <Th>{t('outcomeLadder.columns.outcome')}</Th>
               <Th align="right">{t('outcomeLadder.columns.yes')}</Th>
@@ -277,15 +282,15 @@ function Ladder({
         </table>
 
         {visible.length === 0 && (
-          <p className="px-3 py-6 text-center text-[11.5px] text-muted-foreground">
+          <p className="py-6 text-center text-[11.5px] text-muted-foreground">
             {t('outcomeLadder.noMatches')}
           </p>
         )}
       </div>
 
       {hidden.length > 0 && (
-        <div className="flex shrink-0 items-center gap-3 border-t px-3.5 py-1.5">
-          <span className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground">
+        <div className="flex shrink-0 items-center gap-3 pt-1.5">
+          <span className={cn('min-w-0 flex-1 truncate', PANE_FOOTNOTE)}>
             {hiddenIsTail
               ? t('outcomeLadder.tailBelow', {
                   count: hidden.length,
@@ -493,7 +498,7 @@ const LadderRow = memo(function LadderRow({
               be a thing a user does while reaching for a runner. */}
           <button
             aria-label={t('outcomeLadder.addToBasket', { name: runner.label })}
-            className="rounded-md border p-[3px] text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground disabled:opacity-40"
+            className="rounded-md bg-muted/40 p-[3px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
             disabled={!canSelect || !eventKey || price === null}
             onClick={() => {
               if (!canSelect || !eventKey) return

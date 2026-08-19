@@ -80,13 +80,13 @@ export const OutcomeButton = memo(function OutcomeButton({
   return (
     <button
       className={cn(
-        'flex min-w-24 flex-1 items-center justify-between gap-2 rounded-md border px-2 py-1',
-        'text-xs transition-colors',
-        side === 'yes' &&
-          'border-up/30 bg-up/5 text-up hover:border-up/60 hover:bg-up/10',
-        side === 'no' &&
-          'border-down/30 bg-down/5 text-down hover:border-down/60 hover:bg-down/10',
-        side === null && 'hover:border-primary/50 hover:bg-accent/40',
+        'flex min-w-24 flex-1 items-center justify-between gap-2 rounded-md px-2 py-1',
+        'text-[11.5px] transition-colors',
+        // The side's own colour carries the meaning, so the fill does the
+        // whole job and the outline can go.
+        side === 'yes' && 'bg-up/12 text-up hover:bg-up/20',
+        side === 'no' && 'bg-down/12 text-down hover:bg-down/20',
+        side === null && 'bg-muted/40 hover:bg-accent',
         className,
       )}
       onClick={() => onSelect(outcome)}
@@ -152,7 +152,7 @@ export function MarketRow({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <p className="truncate text-xs leading-snug text-muted-foreground">
+        <p className="truncate text-[11.5px] leading-snug text-muted-foreground">
           {label}
         </p>
       )}
@@ -167,14 +167,14 @@ export function MarketRow({
         {hidden > 0 &&
           (onOverflow ? (
             <button
-              className="rounded-md border border-dashed px-2 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
+              className="rounded-md bg-muted/40 px-2 py-1 text-[11.5px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               onClick={onOverflow}
               type="button"
             >
               {t('events.moreOutcomes', { count: hidden })}
             </button>
           ) : (
-            <span className="px-2 py-1 text-xs text-muted-foreground">
+            <span className="px-2 py-1 text-[11.5px] text-muted-foreground">
               {t('events.moreOutcomes', { count: hidden })}
             </span>
           ))}

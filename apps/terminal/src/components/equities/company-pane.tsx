@@ -34,7 +34,11 @@ import type {
 
 import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_TABLE_BODY,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useSymbolLogo } from '@/hooks/use-symbol-logo'
@@ -105,16 +109,16 @@ function CompanyPaneInner({ pairKey }: { pairKey: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center gap-2.5 border-b border-border px-3 py-2.5">
+      <div className="flex shrink-0 items-center gap-2.5 pb-2">
         {logoUrl ? (
-          <img alt="" className="size-7 shrink-0 rounded-full" src={logoUrl} />
+          <img alt="" className="size-6 shrink-0 rounded-full" src={logoUrl} />
         ) : (
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-muted">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted">
             <Building2 className="size-3.5 text-muted-foreground/70" />
           </span>
         )}
         <div className="min-w-0">
-          <p className="flex items-center gap-1.5 text-[13px] font-semibold">
+          <p className="flex items-center gap-1.5 text-[12.5px] font-semibold">
             {ticker}
             {mic && (
               <Badge className="font-mono text-[10px]" variant="outline">
@@ -155,7 +159,7 @@ function CompanyPaneInner({ pairKey }: { pairKey: string }) {
           // hide the only fact there is.
           <div className="flex h-full min-h-0 flex-col">
             {nextEarnings && (
-              <div className="p-3 pb-0">
+              <div className="pt-2">
                 <NextCatalyst currency={null} nextEarnings={nextEarnings} />
               </div>
             )}
@@ -213,11 +217,11 @@ function UnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
 
 function LoadingGrid() {
   return (
-    <div className="space-y-3 p-3">
+    <div className="space-y-3 py-2">
       <Skeleton className="h-9 w-full" />
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton className="h-11" key={i} />
+          <Skeleton className="h-7" key={i} />
         ))}
       </div>
     </div>
@@ -341,7 +345,7 @@ function FundamentalsGrid({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto p-3">
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto py-2">
       {nextEarnings && (
         <NextCatalyst currency={currency} nextEarnings={nextEarnings} />
       )}
@@ -351,7 +355,7 @@ function FundamentalsGrid({
           group.stats.length > 0 && (
             <section key={group.key}>
               <GroupTitle>{group.title}</GroupTitle>
-              <div className="mt-1.5 grid grid-cols-2 gap-2">
+              <div className="mt-1 grid grid-cols-2 gap-x-4 gap-y-2">
                 {group.stats.map((stat) => (
                   <Stat key={stat.label} {...stat} />
                 ))}
@@ -363,13 +367,13 @@ function FundamentalsGrid({
       {hasAnalyst && (
         <section>
           <GroupTitle>{t('company.groups.analyst')}</GroupTitle>
-          <div className="mt-1.5 rounded-lg border border-border px-2.5 py-2">
+          <div className="mt-1">
             {f.analystTargetPrice !== null && (
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[10.5px] text-muted-foreground">
+                <span className="text-[10px] text-muted-foreground">
                   {t('company.targetPrice')}
                 </span>
-                <span className="font-mono text-[15px] font-semibold tabular-nums">
+                <span className={cn('font-semibold', PANE_TABLE_BODY)}>
                   {formatMoneyPrecise(f.analystTargetPrice, currency)}
                 </span>
               </div>
@@ -396,7 +400,7 @@ function FundamentalsGrid({
                     }}
                   />
                 </div>
-                <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[10.5px]">
+                <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 text-[10px]">
                   <span className="text-up">
                     {t('company.analystBuy', { count: consensus.buy })}
                   </span>
@@ -443,10 +447,10 @@ function NextCatalyst({
         : t('company.reportsInDays', { count: days })
 
   return (
-    <section className="flex items-center gap-2.5 rounded-lg border border-border bg-muted/30 px-2.5 py-2">
+    <section className="flex items-center gap-2.5 rounded-lg bg-muted/40 px-2.5 py-2">
       <CalendarClock className="size-4 shrink-0 text-[var(--chart-4)]" />
       <div className="min-w-0 flex-1">
-        <p className="text-[10.5px] text-muted-foreground">
+        <p className="text-[10px] text-muted-foreground">
           {t('company.nextReport')}
         </p>
         <p className="truncate text-xs font-medium">
@@ -458,12 +462,10 @@ function NextCatalyst({
       </div>
       {estimate && (
         <div className="shrink-0 text-right">
-          <p className="text-[10.5px] text-muted-foreground">
+          <p className="text-[10px] text-muted-foreground">
             {t('company.consensusEps')}
           </p>
-          <p className="font-mono text-xs font-semibold tabular-nums">
-            {estimate}
-          </p>
+          <p className={cn('font-semibold', PANE_TABLE_BODY)}>{estimate}</p>
         </div>
       )}
     </section>
@@ -477,21 +479,18 @@ type StatSpec = {
 }
 
 function GroupTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="font-mono text-[10px] font-medium uppercase tracking-[.14em] text-muted-foreground">
-      {children}
-    </p>
-  )
+  return <p className={PANE_COLUMN_HEADER}>{children}</p>
 }
 
 /** Only ever rendered with a value: an absent figure removed its own cell. */
 function Stat({ label, value, tone }: StatSpec) {
   return (
-    <div className="rounded-lg border border-border px-2.5 py-2">
-      <p className="truncate text-[10.5px] text-muted-foreground">{label}</p>
+    <div className="min-w-0">
+      <p className="truncate text-[10px] text-muted-foreground">{label}</p>
       <p
         className={cn(
-          'mt-0.5 font-mono text-[15px] font-semibold tabular-nums',
+          'mt-0.5 font-semibold',
+          PANE_TABLE_BODY,
           tone === 'up' && 'text-up',
           tone === 'down' && 'text-down',
         )}

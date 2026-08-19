@@ -100,7 +100,7 @@ export function RiskPane() {
     : overallStatus(metrics)
 
   return (
-    <div className="flex h-full items-center px-3 py-1.5">
+    <div className="flex h-full items-center py-1.5">
       {/* Risk section */}
       <div className="mr-3 flex items-center gap-1.5">
         <ShieldCheck className={cn('size-3.5', riskStatus.color)} />
@@ -129,7 +129,7 @@ export function RiskPane() {
 
             return (
               <Fragment key={metric.labelKey}>
-                {i > 0 && <div className="mx-3 h-3 w-px bg-border/60" />}
+                {i > 0 && <div className="mx-3 h-3 w-px bg-(--pane-rule)" />}
                 <div className="flex items-center gap-2">
                   <span
                     className={cn(

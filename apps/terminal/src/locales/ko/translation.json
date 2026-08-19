@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "무기한 대 현물",
     "subtitle": "같은 자산을 두 데스크에서 나란히",
     "spot": "현물 {{price}}",
     "spotMissing": "인덱스 없음",
@@ -37,8 +36,6 @@
     "hint": "각 항목은 실제 지정가 주문입니다."
   },
   "chainLadder": {
-    "title": "체인별 {{asset}}",
-    "subtitle": "최고 호가가 아니라 가스를 빼고 실제로 남는 금액 기준 정렬",
     "sizedFor": "{{value}} 기준",
     "best": "최선",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52주 저가 · 고가"
   },
   "dexChains": {
-    "title": "자금이 흐르는 곳",
     "subtitleNetwork": "24시간 거래대금, 체인 전체",
     "subtitleSampled": "체인별 상위 풀의 24시간 거래대금",
     "liquidityValue": "유동성 {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "오늘",
     "tomorrow": "내일",
-    "heading": {
-      "today": "오늘 실적 발표",
-      "week": "이번 주 실적 발표",
-      "watchlist": "관심목록 종목의 실적 발표"
-    },
     "slots": {
       "bmo": "장 시작 전",
       "amc": "장 마감 후",
@@ -222,7 +213,6 @@
       "month": "1개월"
     },
     "sourceNote": "BLS, BEA, 연방준비제도, Census의 발표 일정으로 구성했습니다. 실제와 이전 값은 해당 기관 발표이고, 내재 값은 Kalshi 계약 가격에서 계산합니다. 시간은 기관이 발표하는 대로 미국 동부 시간입니다.",
-    "title": "매크로",
     "today": "오늘",
     "tomorrow": "내일",
     "countdownDh": "{{days}}일 {{hours}}시간 후",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "마지막 갱신 시점",
-    "title": "수수료 적립",
     "subtitle_one": "{{wallet}} · 구간 {{count}}개",
     "subtitle_other": "{{wallet}} · 구간 {{count}}개",
     "claimableLabel": "지금 받을 수 있는 금액",
@@ -385,7 +374,6 @@
     "shortsPaying": "숏이 지불 중"
   },
   "fundingMatrix": {
-    "title": "펀딩, 연율 환산",
     "subtitle": "양수 = 롱이 숏에게 지급",
     "nextPayment": "다음 지급까지",
     "colSpread": "격차",
@@ -398,7 +386,6 @@
     "emptyBody": "펀딩은 공개 데이터라 API 키가 필요 없습니다. 무기한 선물 커넥터를 설치하면 표가 저절로 채워집니다."
   },
   "inFlight": {
-    "title": "전송 중",
     "pendingCount_one": "{{count}}건 대기",
     "pendingCount_other": "{{count}}건 대기",
     "emptyTitle": "전송 중인 자금 없음",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "내부자 거래",
     "summary": "매수 {{buys}}건 · 매도 {{sells}}건",
     "span_one": "{{count}}일",
     "span_other": "{{count}}일",
@@ -512,9 +498,6 @@
     "bucketTooltip": "매수 {{buy}}, 매도 {{sell}}",
     "axisNote": "5분당 매수에서 매도를 뺀 값입니다. LP가 넣거나 뺀 유동성은 이 피드에 포함되지 않습니다.",
     "biggestLabel": "최대 스왑",
-    "title": "{{pool}} 자금 흐름",
-    "subtitle": "매수에서 매도를 뺀 값, 5분 단위",
-    "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위",
     "waitingTitle": "맵을 기다리는 중",
     "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
     "unavailableTitle": "지금은 풀을 불러올 수 없음",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "정산된 금액만입니다. 이 포지션 경계 틱 데이터를 읽지 못해 마지막 갱신 이후 쌓인 수수료가 빠져 있고, 실제 청구액은 더 클 수 있습니다.",
-    "title": "LP 포지션",
     "subtitle_one": "{{wallet}} · 구간 {{count}}개",
     "subtitle_other": "{{wallet}} · 구간 {{count}}개",
     "capped": "{{count}}개 미표시",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "트랜잭션 한 건, 토큰 승인은 필요 없습니다. 입금은 위 금액을 넘지 않습니다.",
     "confirmCollectNoteSolana": "위 프로그램으로 전송됩니다. 수수료는 같은 트랜잭션에서 정산되어 이 지갑으로만 지급됩니다.",
     "rowProgram": "프로그램",
-    "title": "유동성 관리",
     "subtitle_one": "{{wallet}} · 포지션 {{count}}개",
     "subtitle_other": "{{wallet}} · 포지션 {{count}}개",
     "position": "포지션",
@@ -943,7 +924,6 @@
     "emptyBody": "제공자가 반환하는 기간 동안 이 풀에서 체결된 거래가 없습니다."
   },
   "openInterest": {
-    "title": "미결제약정 상위",
     "changeLabel": "24시간 변동",
     "notPublished": "는 API로 미결제약정을 공개하지 않습니다.",
     "emptyTitle": "아직 미결제약정 없음",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "데이터 제공자가 실시간 풀 상태를 반환하지 않았습니다. 위 수치는 체인 목록에 실린 값입니다."
   },
   "poolMap": {
-    "title": "{{chain}} · 상위 풀",
-    "subtitle": "각 풀이 자기 유동성을 얼마나 굴리는지 기준으로 정렬",
     "sortTurnover": "회전율",
     "sortVolume": "거래대금",
     "sortLiquidity": "유동성",
@@ -1053,11 +1031,6 @@
     "noChainBody": "왼쪽에서 체인을 고르면 해당 풀이 거래대금 대비 유동성 기준으로 여기에 정렬됩니다.",
     "emptyTitle": "반환된 풀 없음",
     "emptyBody": "데이터 제공자가 이 체인에 대해 아무것도 반환하지 않았습니다. 다음 갱신에서 다시 시도합니다.",
-    "listTitle": "{{chain}} · 전체 풀",
-    "subtitleVolume": "크기는 24시간 거래대금, 색은 24시간 변동",
-    "subtitleLiquidity": "크기는 유동성, 색은 24시간 변동",
-    "subtitleTrades": "크기는 24시간 체결 횟수, 색은 24시간 변동",
-    "subtitleTurnover": "크기는 거래대금 대비 유동성, 색은 24시간 변동",
     "sortTrades": "체결 횟수",
     "morePools": "이 체인의 다른 풀",
     "backToMap": "맵으로 돌아가기",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "{{chain}}의 지갑 {{wallet}}(으)로 도착합니다.",
     "needsDestinationWallet": "이 전송을 받으려면 {{chain}} 지갑을 연결하세요. 위 가격은 실제 견적이며, 보낼 곳만 없습니다.",
-    "title": "브리지",
     "subtitle": "{{chain}}에서 자산 옮기기",
     "provider": "LI.FI",
     "noConnectorTitle": "브리지 커넥터가 없습니다",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}}개 종목 · {{symbol}} 주도",
     "drags": "{{total}}개 종목 · {{symbol}} 부진",
     "assets": "{{total}}개 종목",
-    "title": "섹터 테이프",
     "splitTape": "{{total}}개 종목 · 혼조"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "{{pane}} 닫기",
+      "move": "{{pane}} 패널 이동",
       "popOutToColumn": "새 컬럼으로 분리",
       "bindPairToVariable": "페어를 변수에 바인딩",
       "bindWalletToVariable": "지갑을 변수에 바인딩",
@@ -5486,7 +5458,6 @@
     "inDays": "{{n}}일 후"
   },
   "markets": {
-    "title": "마켓",
     "pairCount_one": "페어 {{count}}개",
     "pairCount_other": "페어 {{count}}개",
     "viewMode": "보기 모드",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "상위 코인",
     "colCoin": "코인",
     "colPrice": "가격",
     "col24h": "24시간",
@@ -5581,7 +5551,6 @@
     "willAppear": "상위 코인이 여기에 표시됩니다"
   },
   "heatmap": {
-    "title": "시장 히트맵",
     "failed": "히트맵을 불러오지 못했습니다",
     "noData": "데이터가 없습니다",
     "tryLater": "나중에 다시 시도하세요",

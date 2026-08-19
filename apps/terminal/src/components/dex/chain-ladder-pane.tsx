@@ -25,8 +25,13 @@ import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type { SwapRouteQuote } from '@pairlens/market-engine/types'
 
-import { PaneEmpty, Th } from '@/components/panes/pane-primitives'
+import {
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  Th,
+} from '@/components/panes/pane-primitives'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
 import { fetchSwapRoute, useDexConnectors } from '@/hooks/use-swap-route'
 import { useDexChains } from '@/hooks/use-dex-chains'
 import { splitPairKey } from '@/lib/dex/pair-legs'
@@ -159,33 +164,33 @@ function ChainLadderPaneInner({ pairKey }: { pairKey: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-        <div className="min-w-0">
-          <h2 className="truncate text-[13px] font-semibold">
-            {t('chainLadder.title', { asset: legs.base })}
-          </h2>
-          <p className="truncate text-[10px] text-muted-foreground">
-            {t('chainLadder.subtitle')}
-          </p>
-        </div>
-        <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 font-mono text-[10.5px] text-muted-foreground">
-          {t('chainLadder.sizedFor', { value: formatCompactUsd(LADDER_USD) })}
-        </span>
-      </header>
+      {/* The asset and the notional. The reasoning the subtitle used to carry
+          is the footnote's job, and saying it twice on a pane this narrow cost
+          a row the ladder wanted. */}
+      <DexPaneHeader
+        subtitle={
+          <>
+            {legs.base}
+            <span className="ml-2">
+              {t('chainLadder.sizedFor', {
+                value: formatCompactUsd(LADDER_USD),
+              })}
+            </span>
+          </>
+        }
+      />
 
       <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-background text-muted-foreground">
-            <tr className="border-b border-border">
-              <th className="pb-1.5 pl-3 pr-3 text-left font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('chainLadder.columns.chain')}
-              </th>
+          {/* `bg-card`: the header band scrolls over the column's own surface,
+              which is no longer the board background. */}
+          <thead className="sticky top-0 z-10 bg-card">
+            <tr>
+              <Th>{t('chainLadder.columns.chain')}</Th>
               <Th align="right">{t('chainLadder.columns.price')}</Th>
               <Th align="right">{t('chainLadder.columns.impact')}</Th>
               <Th align="right">{t('chainLadder.columns.gas')}</Th>
-              <th className="pb-1.5 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('chainLadder.columns.youReceive')}
-              </th>
+              <Th align="right">{t('chainLadder.columns.youReceive')}</Th>
             </tr>
           </thead>
           <tbody>
@@ -202,7 +207,7 @@ function ChainLadderPaneInner({ pairKey }: { pairKey: string }) {
         </table>
       </div>
 
-      <p className="shrink-0 border-t border-border px-3 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <p className={cn('shrink-0 pt-2 leading-relaxed', PANE_FOOTNOTE)}>
         {t('chainLadder.footnote')}
       </p>
     </div>
@@ -226,16 +231,13 @@ function LadderRowView({
   if (!quote) {
     return (
       <tr className="border-b border-border/40 text-xs opacity-55">
-        <td className="py-1.5 pl-3 pr-3">
+        <td className="py-1.5 pr-3">
           <span className="flex items-center gap-1.5">
             <img src={row.iconUrl} alt="" className="size-4 rounded-full" />
             <span className="truncate">{row.displayName}</span>
           </span>
         </td>
-        <td
-          className="py-1.5 pr-3 text-right text-muted-foreground"
-          colSpan={4}
-        >
+        <td className="py-1.5 text-right text-muted-foreground" colSpan={4}>
           {row.isLoading
             ? ''
             : t('chainLadder.notFound', { asset: baseSymbol })}
@@ -254,7 +256,7 @@ function LadderRowView({
     <tr
       className={cn('border-b border-border/40 text-xs', isBest && 'bg-up/8')}
     >
-      <td className="py-1.5 pl-3 pr-3">
+      <td className="py-1.5 pr-3">
         <span className="flex items-center gap-1.5">
           <img src={row.iconUrl} alt="" className="size-4 rounded-full" />
           <span className="truncate">{row.displayName}</span>
@@ -273,7 +275,7 @@ function LadderRowView({
       <td className="py-1.5 pr-3 text-right font-mono text-muted-foreground [font-variant-numeric:tabular-nums]">
         {row.gasUsd === null ? '—' : formatCompactUsd(row.gasUsd)}
       </td>
-      <td className="py-1.5 pr-3 text-right font-mono [font-variant-numeric:tabular-nums]">
+      <td className="py-1.5 text-right font-mono [font-variant-numeric:tabular-nums]">
         <span className="block">
           {row.netOut === null ? '—' : formatAmount(row.netOut)}
         </span>

@@ -199,8 +199,8 @@ that has gone quiet.
 
 Both news panels keep themselves current. Every two minutes the feed asks the
 wire for what has been published since it last looked, and anything new lands
-at the top of the list on its own. The header says how old the stories are
-rather than claiming to be live, since two minutes is two minutes. Polling
+at the top of the list on its own. The panel's title row says how old the
+stories are rather than claiming to be live, since two minutes is two minutes. Polling
 stops while the terminal is in the background and picks up the moment you come
 back, so a window left open overnight costs nothing. The refresh button is
 still there when you want the wire now, and a reader you have open holds its

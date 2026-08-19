@@ -26,7 +26,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { NewsFeedResponse } from '@pairlens/shared/instrument-types'
 
 import type { ProbabilityMove } from '@/lib/predictions/moves'
-import { PaneEmpty, Th } from '@/components/panes/pane-primitives'
+import { PaneEmpty, PaneFootnote, Th } from '@/components/panes/pane-primitives'
 import { fetchNewsPage } from '@/components/news/news-shared'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
@@ -97,15 +97,18 @@ export function WhatMovedItPane() {
   return (
     <div className="flex h-full flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <table className="w-full table-fixed text-xs">
+        <table className="w-full table-fixed text-[11px]">
           <colgroup>
             <col className="w-[86px]" />
             <col className="w-[78px]" />
             <col />
             <col className="w-[150px]" />
           </colgroup>
-          <thead className="sticky top-0 z-10 bg-background">
-            <tr className="border-b text-muted-foreground">
+          {/* Paints the column's own card surface, not the page's: a
+              sticky bg-background thead reads as a hole once the pane sits
+              on a --card column. */}
+          <thead className="sticky top-0 z-10 bg-card">
+            <tr className="text-muted-foreground">
               <Th>{t('whatMovedIt.columns.when')}</Th>
               <Th>{t('whatMovedIt.columns.move')}</Th>
               <Th>{t('whatMovedIt.columns.what')}</Th>
@@ -128,11 +131,11 @@ export function WhatMovedItPane() {
         </table>
       </div>
 
-      <p className="shrink-0 border-t px-3.5 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <PaneFootnote className="leading-relaxed">
         {ticker
           ? t('whatMovedIt.footerMatched', { ticker })
           : t('whatMovedIt.footerNoTicker')}
-      </p>
+      </PaneFootnote>
     </div>
   )
 }
@@ -149,10 +152,10 @@ function MoveRow({
 
   return (
     <tr className="border-b border-border/40 last:border-0 align-middle">
-      <td className="py-2 pr-3 font-mono text-[11px] tabular-nums text-muted-foreground">
+      <td className="py-1.5 pr-3 font-mono text-[11px] tabular-nums text-muted-foreground">
         {formatMoveDate(move.endTs)}
       </td>
-      <td className="py-2 pr-3">
+      <td className="py-1.5 pr-3">
         <span
           className={cn(
             'inline-flex rounded-md px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums',
@@ -163,10 +166,10 @@ function MoveRow({
           {formatPredictionPrice(Math.abs(move.deltaCents) / 100)}
         </span>
       </td>
-      <td className="min-w-0 py-2 pr-3">
+      <td className="min-w-0 py-1.5 pr-3">
         {article ? (
           <a
-            className="line-clamp-2 text-[12.5px] leading-snug hover:underline"
+            className="line-clamp-2 text-[11.5px] leading-snug hover:underline"
             href={article.url}
             rel="noreferrer noopener"
             target="_blank"
@@ -174,7 +177,7 @@ function MoveRow({
             {article.title}
           </a>
         ) : (
-          <span className="text-[12.5px] leading-snug text-muted-foreground">
+          <span className="text-[11.5px] leading-snug text-muted-foreground">
             {t('whatMovedIt.movedFromTo', {
               from: formatPredictionPrice(move.from),
               to: formatPredictionPrice(move.to),
@@ -182,7 +185,7 @@ function MoveRow({
           </span>
         )}
       </td>
-      <td className="py-2 text-right font-mono text-[11px] tabular-nums text-muted-foreground">
+      <td className="py-1.5 text-right font-mono text-[11px] tabular-nums text-muted-foreground">
         {article ? (
           <span className="font-sans">{article.source}</span>
         ) : move.volume > 0 ? (

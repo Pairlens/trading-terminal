@@ -71,6 +71,7 @@ import type { Instrument } from '@pairlens/shared/instrument-types'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { formatPrice } from '@/lib/format-price'
+import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { entryToInstrumentRef, entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
@@ -243,8 +244,9 @@ export function WatchlistPane() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* Header with list switcher */}
-      <div className="flex items-center gap-1 border-b border-border/60 px-2 py-1.5">
+      {/* The list switcher. The shell header says "Watchlist"; this row says
+          WHICH list, which is data. */}
+      <div className="flex shrink-0 items-center gap-1 pb-1.5">
         {renamingId === activeList.id ? (
           <form
             className="flex min-w-0 flex-1 items-center gap-1"
@@ -255,7 +257,7 @@ export function WatchlistPane() {
           >
             <input
               ref={renameInputRef}
-              className="min-w-0 flex-1 rounded border bg-background px-1.5 py-0.5 text-xs font-semibold outline-none focus:border-primary"
+              className="min-w-0 flex-1 rounded-md bg-muted/40 px-1.5 py-0.5 text-[11px] font-semibold outline-none focus:ring-1 focus:ring-primary"
               value={renameValue}
               onChange={(e) => setRenameValue(e.target.value)}
               onBlur={commitRename}
@@ -274,8 +276,8 @@ export function WatchlistPane() {
                 render={
                   <Button
                     variant="ghost"
-                    size="sm"
-                    className="min-w-0 flex-1 justify-start gap-1 px-1.5 text-xs font-semibold"
+                    size="xs"
+                    className="min-w-0 flex-1 justify-start gap-1 px-1.5 text-[11.5px] font-semibold"
                   />
                 }
               >
@@ -340,7 +342,12 @@ export function WatchlistPane() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="flex shrink-0 items-center gap-1 font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
+            <span
+              className={cn(
+                'flex shrink-0 items-center gap-1',
+                PANE_COLUMN_HEADER,
+              )}
+            >
               <span className="live-dot size-1.5 rounded-full bg-up" />
               {t('connection.live')}
             </span>
@@ -568,14 +575,14 @@ function AddSymbolButton({
         <Plus className="size-3.5" />
       </PopoverTrigger>
       <PopoverContent className="w-72 p-0" align="end">
-        <div className="border-b px-3 py-2">
+        <div className="px-3 pb-1 pt-2">
           <div className="relative">
             <Search className="absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder={t('watchlist.searchPlaceholder')}
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              className="h-7 pl-7 text-xs"
+              className="h-6 pl-7 text-[11px]"
               autoFocus
             />
           </div>
@@ -708,7 +715,7 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       data-watchlist-row
       onKeyDown={handleRowKeyDown}
       className={cn(
-        'group flex cursor-pointer items-center gap-1.5 border-b border-border/60 px-2 py-2 transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
+        'group flex cursor-pointer items-center gap-1.5 border-b border-border/40 px-1.5 py-1.5 transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
         isActive &&
           '[background-color:color-mix(in_oklch,var(--primary)_10%,transparent)]',
       )}

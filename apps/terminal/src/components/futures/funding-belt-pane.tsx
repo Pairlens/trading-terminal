@@ -129,7 +129,7 @@ export function FundingBeltPane() {
   const weekAverage = averageAnnualized(points, own.intervalHours, now)
 
   return (
-    <div className="flex h-full min-h-0 items-stretch overflow-x-auto">
+    <div className="flex h-full min-h-0 items-stretch gap-5 overflow-x-auto">
       <Cell
         label={t('fundingBelt.now', { hours: own.intervalHours })}
         width={148}
@@ -217,7 +217,7 @@ export function FundingBeltPane() {
         </div>
       </Cell>
 
-      <div className="min-w-[220px] flex-1 px-3.5 py-2">
+      <div className="min-w-[220px] flex-1 py-2">
         <p className="text-[10.5px] text-muted-foreground">
           {t('fundingBelt.otherVenues')}
         </p>
@@ -255,7 +255,10 @@ function Cell({
 }) {
   return (
     <div
-      className="flex shrink-0 flex-col justify-center border-r border-border px-3.5"
+      // Separated by air, not by a rule: the vertical hairlines between these
+      // columns were the board's old chrome, and the widths were always what
+      // kept the belt readable.
+      className="flex shrink-0 flex-col justify-center"
       style={{ width }}
     >
       <p className="truncate text-[10.5px] text-muted-foreground">{label}</p>
@@ -276,12 +279,12 @@ function VenueChip({
   return (
     <span
       className={cn(
-        'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border px-2 py-0.5 text-[11px]',
+        'inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md border border-transparent px-2 py-0.5 text-[11px]',
         current
-          ? 'border-transparent bg-muted'
+          ? 'bg-muted'
           : cheapest
             ? 'border-[var(--chart-2)] bg-[color-mix(in_oklch,var(--chart-2)_12%,transparent)]'
-            : 'border-border',
+            : 'bg-muted/40',
       )}
     >
       {cell.venueLabel}

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { RefreshCw } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
-import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
   usePanePair,
@@ -17,6 +16,7 @@ import type {
   NewsFeedResponse,
 } from '@pairlens/shared/instrument-types'
 
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { NewsReaderDialog } from '@/components/news/news-reader'
 import {
@@ -107,42 +107,37 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold">{t('news.title')}</h2>
-          <Badge variant="secondary" className="text-[10px]">
-            {baseSymbol}
-          </Badge>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Stories stay on screen when a poll fails; this says the refresh
-              is what broke, and the timestamp beside it says how stale. */}
-          <NewsRefreshError error={error} />
-          {fetchedAt && (
-            <span className="text-xs text-muted-foreground">
-              {t('common.updated', { time: formatRelativeTime(fetchedAt) })}
-            </span>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-7"
-            onClick={() => refetch()}
-            disabled={isFetching}
-          >
-            <RefreshCw
-              className={cn('size-3.5', isFetching && 'animate-spin')}
-            />
-          </Button>
-        </div>
-      </header>
+      {/* Which symbol's wire this is, and how stale it is, on the pane's own
+          header row. Both were a strip of chrome here before the shell drew
+          one. */}
+      <PaneHeaderMetric>
+        {fetchedAt
+          ? `${baseSymbol} · ${t('common.updated', { time: formatRelativeTime(fetchedAt) })}`
+          : baseSymbol}
+      </PaneHeaderMetric>
+
+      {/* Stories stay on screen when a poll fails, so the marker beside the
+          refresh is what says the refresh itself is what broke. It stays in
+          the pane rather than in the header slot, which a tabbed pane does
+          not draw. */}
+      <div className="flex shrink-0 items-center justify-end gap-2 pb-1.5">
+        <NewsRefreshError error={error} />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-6"
+          onClick={() => refetch()}
+          disabled={isFetching}
+        >
+          <RefreshCw className={cn('size-3.5', isFetching && 'animate-spin')} />
+        </Button>
+      </div>
 
       {/* Content */}
       {view === 'loading' ? (
         // Covers every pending shape, not just an active fetch: a retry that
         // paused while the tab was hidden is still loading, not an empty feed.
-        <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
+        <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto auto-rows-max content-start">
           {Array.from({ length: 6 }, (_, i) => (
             <ArticleCardSkeleton key={i} />
           ))}
@@ -153,7 +148,7 @@ function SymbolNewsPaneInner({ pairKey }: { pairKey: string }) {
           emptyBody={t('news.noRecentFor', { symbol: baseSymbol })}
         />
       ) : (
-        <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto p-4 auto-rows-max content-start">
+        <div className="flex-1 grid grid-cols-1 @lg/pane:grid-cols-2 @4xl/pane:grid-cols-3 gap-3 overflow-y-auto auto-rows-max content-start">
           {articles.map((article: NewsArticle, i: number) => (
             <ArticleCard
               key={article.url}

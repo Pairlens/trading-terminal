@@ -66,7 +66,7 @@ export function SessionPane() {
     // key" without inventing a phase to show. The dot is deliberately neutral:
     // a green one here would claim the market is open.
     return (
-      <div className="flex h-full min-h-0 items-center gap-5 p-3">
+      <div className="flex h-full min-h-0 items-center gap-5 py-2">
         <div className="flex shrink-0 items-center gap-2.5">
           <span className="size-2.5 shrink-0 rounded-full bg-muted-foreground/30" />
           <div className="min-w-0">
@@ -79,7 +79,7 @@ export function SessionPane() {
           </div>
         </div>
 
-        <span className="h-10 w-px shrink-0 bg-border" />
+        <span className="h-8 w-px shrink-0 bg-(--pane-rule)" />
 
         <PaneCredentialsRequired
           market={venue.market}
@@ -114,7 +114,7 @@ export function SessionPane() {
   })).filter((row) => row.quote !== undefined)
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 p-3">
+    <div className="flex h-full min-h-0 flex-col gap-2 py-2">
       {error && <PaneErrorBanner message={error} venue={venueLabel} />}
 
       <div className="flex min-h-0 flex-1 items-center gap-5">
@@ -139,7 +139,7 @@ export function SessionPane() {
           </div>
         </div>
 
-        <span className="h-10 w-px shrink-0 bg-border" />
+        <span className="h-8 w-px shrink-0 bg-(--pane-rule)" />
 
         {/* The day itself */}
         <div className="min-w-0 flex-1">
@@ -175,8 +175,8 @@ export function SessionPane() {
           <div className="flex shrink-0 gap-5">
             {benchmarks.map(({ symbol, quote }) => (
               <div key={symbol}>
-                <p className="text-[11px] text-muted-foreground">{symbol}</p>
-                <p className="mt-0.5 font-mono text-[15px] font-semibold tabular-nums">
+                <p className="text-[10px] text-muted-foreground">{symbol}</p>
+                <p className="mt-0.5 font-mono text-[13px] font-semibold tabular-nums">
                   {formatPrice(quote!.price)}{' '}
                   {/* Percent already, and for a stock it is the move since
                       the previous close — which is the session number. */}

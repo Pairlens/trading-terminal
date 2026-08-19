@@ -25,7 +25,7 @@ export function PageHeader({ children, actions }: PageHeaderProps) {
   const searchShortcut = useKeybindingLabel('general.commandPalette')
 
   return (
-    <header className="flex h-10 shrink-0 items-center gap-2 border-b px-3">
+    <header className="flex h-10 shrink-0 items-center gap-2 border-b border-(--pane-rule) px-3">
       {children}
       <div className="flex-1" />
       {actions && (

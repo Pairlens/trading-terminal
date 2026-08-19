@@ -32,6 +32,7 @@ import {
   useGhostBases,
 } from './funding-skeletons'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { formatCompactUsd } from '@/lib/format-price'
 import { openInterestValue } from '@/lib/futures/funding-math'
 import { primaryCell } from '@/lib/futures/funding-rows'
@@ -174,12 +175,9 @@ export function OpenInterestPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3.5 py-2">
-        <h2 className="text-[13px] font-semibold">{t('openInterest.title')}</h2>
-        <span className="text-[11px] text-muted-foreground">
-          {t('openInterest.changeLabel')}
-        </span>
-      </header>
+      {/* What the right-hand figure on every row is. It sat in this pane's own
+          header strip; the shell's row is where it reads as a column label. */}
+      <PaneHeaderMetric>{t('openInterest.changeLabel')}</PaneHeaderMetric>
 
       <div
         aria-busy={loading || undefined}
@@ -193,7 +191,7 @@ export function OpenInterestPane() {
         )}
 
         {unsupported.map((result) => (
-          <div className="px-3.5 pt-2" key={`unsupported:${result.market}`}>
+          <div className="pt-2" key={`unsupported:${result.market}`}>
             <PaneErrorBanner
               message={t('openInterest.notPublished')}
               venue={result.label}
@@ -203,13 +201,13 @@ export function OpenInterestPane() {
 
         {oiRows.map((row) => (
           <button
-            className="w-full border-b border-border/50 px-3.5 py-2 text-left last:border-0 hover:bg-muted/40"
+            className="w-full border-b border-border/40 px-1.5 py-2 text-left last:border-0 hover:bg-muted/40"
             key={`${row.market}:${row.pair}`}
             onClick={() => openContract(row.market, row.pair)}
             type="button"
           >
             <div className="flex items-baseline justify-between gap-2">
-              <span className="truncate font-mono text-xs font-semibold">
+              <span className="truncate font-mono text-[11px] font-semibold">
                 {row.base}
                 {showVenue && (
                   <span className="ml-1.5 font-sans text-[10px] font-normal text-muted-foreground">
@@ -217,7 +215,7 @@ export function OpenInterestPane() {
                   </span>
                 )}
               </span>
-              <span className="shrink-0 font-mono text-xs tabular-nums">
+              <span className="shrink-0 font-mono text-[11px] tabular-nums">
                 {formatCompactUsd(row.value)}
               </span>
             </div>

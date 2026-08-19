@@ -34,12 +34,7 @@ import {
   usePoolTrades,
 } from '@/hooks/use-pool-stats'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
-import {
-  bucketNetFlow,
-  peakAbsNet,
-  titleCaseVenue,
-  truncateAddress,
-} from '@/lib/dex/pool-math'
+import { bucketNetFlow, peakAbsNet, truncateAddress } from '@/lib/dex/pool-math'
 import { formatCompactUsd } from '@/lib/format-price'
 import { poolPairKey } from '@/lib/dex/pool-pair'
 
@@ -124,31 +119,27 @@ export function LiquidityFlowPane() {
     )
   }
 
-  const venue = titleCaseVenue(pool.dexName)
-
   return (
     <div className="flex h-full flex-col">
+      {/* Which pool, and the hour's signed total. Both belong beside the pane's
+          name rather than in a strip of their own, and the venue that used to
+          sit here is on the detail pane a click away. */}
       <DexPaneHeader
-        title={t('liquidityFlow.title', { pool: pool.name })}
         subtitle={
-          venue
-            ? t('liquidityFlow.subtitleVenue', { venue })
-            : t('liquidityFlow.subtitle')
+          <>
+            {pool.name}
+            {trades.length > 0 ? (
+              <span
+                className={cn('ml-2', netTotal >= 0 ? 'text-up' : 'text-down')}
+              >
+                {t('liquidityFlow.netHour', {
+                  value: `${netTotal >= 0 ? '+' : '-'}${formatCompactUsd(Math.abs(netTotal))}`,
+                })}
+              </span>
+            ) : null}
+          </>
         }
-      >
-        {trades.length > 0 ? (
-          <span
-            className={cn(
-              'shrink-0 font-mono text-[11px] [font-variant-numeric:tabular-nums]',
-              netTotal >= 0 ? 'text-up' : 'text-down',
-            )}
-          >
-            {t('liquidityFlow.netHour', {
-              value: `${netTotal >= 0 ? '+' : '-'}${formatCompactUsd(Math.abs(netTotal))}`,
-            })}
-          </span>
-        ) : null}
-      </DexPaneHeader>
+      />
 
       {trades.length === 0 ? (
         // Three outcomes, three sentences. "No swaps yet" was being shown for
@@ -182,7 +173,7 @@ export function LiquidityFlowPane() {
           }
         />
       ) : (
-        <div className="flex min-h-0 flex-1 gap-4 px-4 py-3">
+        <div className="flex min-h-0 flex-1 gap-4 py-2">
           <div className="flex min-w-0 flex-1 flex-col">
             {/* Bars grow from a shared midline so a sell-heavy bucket reads as
                 below zero rather than as a shorter buy. */}
@@ -240,10 +231,12 @@ export function LiquidityFlowPane() {
             </p>
           </div>
 
-          <div className="w-px shrink-0 self-stretch bg-border" />
+          {/* The board's own hairline, not a border: the chart and the swap
+              list are two datasets and the cut has to be visible. */}
+          <div className="w-px shrink-0 self-stretch bg-(--pane-rule)" />
 
           <div className="flex w-[42%] min-w-0 shrink-0 flex-col gap-2">
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground">
               {t('liquidityFlow.biggestLabel')}
             </p>
             {biggest.map((trade) => (

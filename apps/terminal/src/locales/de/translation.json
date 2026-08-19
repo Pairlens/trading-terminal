@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Perp gegen Spot",
     "subtitle": "Derselbe Wert auf beiden Desks, nebeneinander",
     "spot": "Spot {{price}}",
     "spotMissing": "kein Index",
@@ -37,8 +36,6 @@
     "hint": "Jede Position ist eine echte Limit-Order."
   },
   "chainLadder": {
-    "title": "{{asset}} über Chains hinweg",
-    "subtitle": "Sortiert nach dem, was nach Gas ankommt, nicht nach dem besten Quote",
     "sizedFor": "Berechnet für {{value}}",
     "best": "Beste",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 Wochen Tief · Hoch"
   },
   "dexChains": {
-    "title": "Wo der Fluss ist",
     "subtitleNetwork": "24h-Volumen, chainweit",
     "subtitleSampled": "24h-Volumen der aktivsten Pools je Chain",
     "liquidityValue": "{{value}} Liquidität",
@@ -167,11 +163,6 @@
     },
     "today": "Heute",
     "tomorrow": "Morgen",
-    "heading": {
-      "today": "Berichte heute",
-      "week": "Berichte diese Woche",
-      "watchlist": "Berichte deiner Watchlist"
-    },
     "slots": {
       "bmo": "Vor Handelsbeginn",
       "amc": "Nach Handelsschluss",
@@ -222,7 +213,6 @@
       "month": "Monat"
     },
     "sourceNote": "Zusammengestellt aus den Veröffentlichungsplänen von BLS, BEA, Federal Reserve und Census. Ist- und Vorwerte kommen von den Behörden selbst, der implizite Wert aus den Kontraktpreisen von Kalshi. Zeiten in US-Ostzeit, so wie die Behörden sie veröffentlichen.",
-    "title": "Makro",
     "today": "Heute",
     "tomorrow": "Morgen",
     "countdownDh": "in {{days}} T {{hours}} Std",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "beim letzten Zugriff",
-    "title": "Gebühren",
     "subtitle_one": "{{wallet}} · {{count}} Bereich",
     "subtitle_other": "{{wallet}} · {{count}} Bereiche",
     "claimableLabel": "Jetzt abholbar",
@@ -385,7 +374,6 @@
     "shortsPaying": "Shorts zahlen"
   },
   "fundingMatrix": {
-    "title": "Funding, annualisiert",
     "subtitle": "Positiv = Longs zahlen an Shorts",
     "nextPayment": "Nächste Zahlung in",
     "colSpread": "Spread",
@@ -398,7 +386,6 @@
     "emptyBody": "Funding ist öffentlich, ein API-Schlüssel ist also nicht nötig. Installiere einen Perpetual-Futures-Connector und die Matrix füllt sich von selbst."
   },
   "inFlight": {
-    "title": "Unterwegs",
     "pendingCount_one": "{{count}} ausstehend",
     "pendingCount_other": "{{count}} ausstehend",
     "emptyTitle": "Keine Transfers unterwegs",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Insider-Aktivität",
     "summary": "{{buys}} Käufe · {{sells}} Verkäufe",
     "span_one": "{{count}} Tag",
     "span_other": "{{count}} Tage",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} gekauft, {{sell}} verkauft",
     "axisNote": "Käufe minus Verkäufe je 5 Minuten. Von LPs zugeführte oder abgezogene Liquidität steckt nicht in diesem Feed.",
     "biggestLabel": "Größte Swaps",
-    "title": "Fluss durch {{pool}}",
-    "subtitle": "Käufe minus Verkäufe, in Fünf-Minuten-Schritten",
-    "subtitleVenue": "{{venue}} · Käufe minus Verkäufe, in Fünf-Minuten-Schritten",
     "waitingTitle": "Warte auf die Karte",
     "waitingBody": "Die Pools der Chain laden noch. Der Fluss erscheint, sobald einer ausgewählt ist.",
     "unavailableTitle": "Pools gerade nicht verfügbar",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Nur der abgerechnete Betrag. Die Tick-Daten an den Rändern dieser Position ließen sich nicht lesen, deshalb sind Gebühren seit der letzten Berührung nicht enthalten und der tatsächliche Anspruch kann höher sein.",
-    "title": "LP-Position",
     "subtitle_one": "{{wallet}} · {{count}} Bereich",
     "subtitle_other": "{{wallet}} · {{count}} Bereiche",
     "capped": "{{count}} nicht angezeigt",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Eine Transaktion, ohne Token-Freigaben. Die Einzahlung ist auf die Beträge oben begrenzt.",
     "confirmCollectNoteSolana": "Geht an das Programm oben. Die Gebühren werden in derselben Transaktion abgerechnet und an diese Wallet ausgezahlt, an keine andere.",
     "rowProgram": "Programm",
-    "title": "Liquidität verwalten",
     "subtitle_one": "{{wallet}} · {{count}} Position",
     "subtitle_other": "{{wallet}} · {{count}} Positionen",
     "position": "Position",
@@ -943,7 +924,6 @@
     "emptyBody": "Im Zeitfenster des Anbieters wurde durch diesen Pool nichts gehandelt."
   },
   "openInterest": {
-    "title": "Open-Interest-Spitzenreiter",
     "changeLabel": "24-h-Änderung",
     "notPublished": "veröffentlicht kein Open Interest über seine API.",
     "emptyTitle": "Noch kein Open Interest",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "Der Datenanbieter hat keinen Live-Pool-Status geliefert. Die Zahlen oben stammen aus dem Listing der Chain."
   },
   "poolMap": {
-    "title": "{{chain}} · Top-Pools",
-    "subtitle": "Sortiert danach, wie hart jeder Pool seine eigene Liquidität arbeiten lässt",
     "sortTurnover": "Umschlag",
     "sortVolume": "Volumen",
     "sortLiquidity": "Liquidität",
@@ -1053,11 +1031,6 @@
     "noChainBody": "Wählen Sie links eine Chain, dann erscheinen ihre Pools hier: Volumen gegen die dahinterliegende Liquidität.",
     "emptyTitle": "Keine Pools geliefert",
     "emptyBody": "Der Datenanbieter hat für diese Chain nichts gelistet. Beim nächsten Refresh wird es erneut versucht.",
-    "listTitle": "{{chain}} · alle Pools",
-    "subtitleVolume": "Größe nach 24h-Volumen, Farbe nach 24h-Bewegung",
-    "subtitleLiquidity": "Größe nach Liquidität, Farbe nach 24h-Bewegung",
-    "subtitleTrades": "Größe nach 24h-Trade-Anzahl, Farbe nach 24h-Bewegung",
-    "subtitleTurnover": "Größe nach Volumen zu Liquidität, Farbe nach 24h-Bewegung",
     "sortTrades": "Trades",
     "morePools": "Mehr Pools auf dieser Chain",
     "backToMap": "Zurück zur Karte",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "Kommt auf {{chain}} in deiner Wallet {{wallet}} an.",
     "needsDestinationWallet": "Verbinde eine {{chain}}-Wallet, um diesen Transfer zu empfangen. Der Preis oben ist echt, es fehlt nur das Ziel.",
-    "title": "Bridge",
     "subtitle": "Einen Wert aus {{chain}} bewegen",
     "provider": "LI.FI",
     "noConnectorTitle": "Kein Bridge-Connector installiert",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}} Assets · {{symbol}} führt",
     "drags": "{{total}} Assets · {{symbol}} bremst",
     "assets": "{{total}} Assets",
-    "title": "Sektor-Leiste",
     "splitTape": "{{total}} Assets · uneinheitlich"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "{{pane}} schließen",
+      "move": "Bereich {{pane}} verschieben",
       "popOutToColumn": "In neue Spalte lösen",
       "bindPairToVariable": "Paar an Variable binden",
       "bindWalletToVariable": "Wallet an Variable binden",
@@ -5486,7 +5458,6 @@
     "inDays": "in {{n}} Tg"
   },
   "markets": {
-    "title": "Märkte",
     "pairCount_one": "{{count}} Paar",
     "pairCount_other": "{{count}} Paare",
     "viewMode": "Ansichtsmodus",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "Top Coins",
     "colCoin": "Coin",
     "colPrice": "Preis",
     "col24h": "24 Std.",
@@ -5581,7 +5551,6 @@
     "willAppear": "Top Coins werden hier angezeigt"
   },
   "heatmap": {
-    "title": "Markt-Heatmap",
     "failed": "Heatmap konnte nicht geladen werden",
     "noData": "Keine Daten verfügbar",
     "tryLater": "Später erneut versuchen",

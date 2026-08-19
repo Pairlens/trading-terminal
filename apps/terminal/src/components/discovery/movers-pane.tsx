@@ -72,7 +72,7 @@ import {
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneColumnHeader, PaneEmpty } from '@/components/panes/pane-primitives'
 import { TickArrow } from '@/components/tick-arrow'
 import { entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
@@ -298,10 +298,28 @@ function MoversTable({
       }}
       className="flex h-full flex-col gap-0 overflow-hidden"
     >
-      <div className="flex items-center gap-2 border-b px-3">
-        <TabsList variant="line" className="h-8 min-w-0 overflow-x-auto">
+      {/* The same row the board draws over a stacked cell, down to the class
+          list: these tabs and the shell's tab header are the same control at
+          two depths, and two different type scales for it was the thing that
+          made a board of panes look assembled rather than designed. Keep this
+          in step with `layout/layout-tab-group.tsx`. */}
+      <div className="flex h-5 shrink-0 items-center gap-2">
+        <TabsList
+          variant="line"
+          className="h-5 min-w-0 gap-3 overflow-x-auto rounded-none p-0"
+        >
           {tabs.map((id) => (
-            <TabsTrigger key={id} value={id} className="text-xs">
+            <TabsTrigger
+              key={id}
+              value={id}
+              className={cn(
+                'h-5 min-w-0 flex-none rounded-none border-0 px-0 py-0',
+                'text-[11.5px] leading-none font-normal text-muted-foreground',
+                'data-active:bg-transparent data-active:text-[12.5px] data-active:font-medium data-active:tracking-[-0.005em] data-active:text-foreground',
+                'dark:data-active:border-transparent dark:data-active:bg-transparent',
+                'after:hidden',
+              )}
+            >
               {t(`movers.tabs.${id}`)}
             </TabsTrigger>
           ))}
@@ -326,7 +344,7 @@ function MoversTable({
               <ToggleGroupItem
                 key={id}
                 value={id}
-                className="px-1.5 font-mono text-[10px]"
+                className="h-6 min-w-6 px-1.5 font-mono text-[10px]"
               >
                 {id}
               </ToggleGroupItem>
@@ -337,12 +355,7 @@ function MoversTable({
 
       {/* Column header */}
       {listings ? (
-        <div
-          className={cn(
-            'border-b border-border/50 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-            LISTINGS_GRID,
-          )}
-        >
+        <PaneColumnHeader className={cn('px-1.5 pt-2', LISTINGS_GRID)}>
           <span className="truncate">{t('movers.columns.listed')}</span>
           <span className="truncate">{t('movers.columns.asset')}</span>
           <span className="hidden truncate @min-[24rem]/pane:inline">
@@ -354,14 +367,9 @@ function MoversTable({
           <span className="hidden text-right @min-[41rem]/pane:inline">
             {t('movers.columns.liquidity')}
           </span>
-        </div>
+        </PaneColumnHeader>
       ) : (
-        <div
-          className={cn(
-            'border-b border-border/50 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-            MOVERS_GRID,
-          )}
-        >
+        <PaneColumnHeader className={cn('px-1.5 pt-2', MOVERS_GRID)}>
           <span>#</span>
           <span className="truncate">{t('movers.columns.pair')}</span>
           <span className="truncate">
@@ -389,7 +397,7 @@ function MoversTable({
           <span className="hidden text-right @min-[41rem]/pane:inline">
             {t('movers.columns.trend')}
           </span>
-        </div>
+        </PaneColumnHeader>
       )}
 
       <TabsContent value={tab} className="min-h-0 flex-1 overflow-y-auto">
@@ -404,7 +412,7 @@ function MoversTable({
         ) : loading ? (
           <MoversSkeleton />
         ) : rows.length === 0 ? (
-          <p className="px-3 py-8 text-center text-xs text-muted-foreground">
+          <p className="py-8 text-center text-xs text-muted-foreground">
             {t(`movers.empty.${tab}`)}
           </p>
         ) : (
@@ -429,7 +437,7 @@ function MoversTable({
 
 function MoversSkeleton() {
   return (
-    <div className="space-y-2 px-3 py-2.5">
+    <div className="space-y-2 py-2.5">
       {Array.from({ length: 8 }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
           <div className="size-5 shrink-0 animate-pulse rounded-full bg-muted" />
@@ -474,7 +482,7 @@ const MoverTableRow = memo(function MoverTableRow({
     <Link
       {...chartLinkProps(target)}
       className={cn(
-        'px-3 py-1.5 text-xs transition-colors hover:bg-accent/40',
+        'rounded-[5px] px-1.5 py-1.5 text-xs transition-colors hover:bg-accent/40',
         MOVERS_GRID,
       )}
     >
@@ -662,7 +670,7 @@ function NewListingsFooter({ feed }: { feed: NewListingsFeed }) {
   if (!feed.cexUnavailable && feed.trackingSince === null) return null
 
   return (
-    <p className="px-3 py-2.5 text-[10px] leading-relaxed text-muted-foreground">
+    <p className="py-2.5 text-[10px] leading-relaxed text-muted-foreground">
       {feed.cexUnavailable
         ? t('movers.newListings.cexOff')
         : t('movers.newListings.trackingSince', {
@@ -769,7 +777,7 @@ const NewListingTableRow = memo(function NewListingTableRow({
   )
 
   const className = cn(
-    'px-3 py-1.5 text-xs transition-colors',
+    'rounded-[5px] px-1.5 py-1.5 text-xs transition-colors',
     LISTINGS_GRID,
     target && 'hover:bg-accent/40',
   )

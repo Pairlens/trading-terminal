@@ -387,7 +387,7 @@ function WebPaneNative() {
       {/* Address bar */}
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-1.5 border-b px-2 py-1.5"
+        className="flex shrink-0 items-center gap-1.5 pb-1.5"
       >
         <button
           type="button"
@@ -414,7 +414,7 @@ function WebPaneNative() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder={t('webPane.placeholder')}
-          className="bg-transparent text-xs outline-none placeholder:text-muted-foreground flex-1 min-w-0"
+          className="bg-transparent text-[11px] outline-none placeholder:text-muted-foreground flex-1 min-w-0"
         />
         {hasUrl && (
           <button

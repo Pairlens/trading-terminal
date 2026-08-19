@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Vadesiz ile spot",
     "subtitle": "Aynı varlık iki masada, yan yana",
     "spot": "spot {{price}}",
     "spotMissing": "endeks yok",
@@ -37,8 +36,6 @@
     "hint": "Her bacak gerçek bir limit emridir."
   },
   "chainLadder": {
-    "title": "Zincirler arası {{asset}}",
-    "subtitle": "En iyi koteye göre değil, gazdan sonra elinize geçene göre sıralanır",
     "sizedFor": "{{value}} için hesaplandı",
     "best": "En iyi",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 hafta düşük · yüksek"
   },
   "dexChains": {
-    "title": "Akış nerede",
     "subtitleNetwork": "24s hacim, zincir geneli",
     "subtitleSampled": "Her zincirin en hareketli havuzlarındaki 24s hacim",
     "liquidityValue": "{{value}} likidite",
@@ -167,11 +163,6 @@
     },
     "today": "Bugün",
     "tomorrow": "Yarın",
-    "heading": {
-      "today": "Bugün bilanço açıklayanlar",
-      "week": "Bu hafta bilanço açıklayanlar",
-      "watchlist": "İzleme listenin bilançoları"
-    },
     "slots": {
       "bmo": "Açılıştan önce",
       "amc": "Kapanıştan sonra",
@@ -222,7 +213,6 @@
       "month": "Ay"
     },
     "sourceNote": "BLS, BEA, Federal Reserve ve Census yayın takvimlerinden derlendi. Gerçekleşen ve önceki veriler kurumların kendisinden, zımni değer Kalshi kontrat fiyatlarından geliyor. Saatler, kurumların yayınladığı gibi ABD Doğu saatiyle.",
-    "title": "Makro",
     "today": "Bugün",
     "tomorrow": "Yarın",
     "countdownDh": "{{days}} gün {{hours}} sa sonra",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "son dokunuşta",
-    "title": "Biriken ücretler",
     "subtitle_one": "{{wallet}} · {{count}} aralık",
     "subtitle_other": "{{wallet}} · {{count}} aralık",
     "claimableLabel": "Şimdi alınabilir",
@@ -385,7 +374,6 @@
     "shortsPaying": "short tarafı ödüyor"
   },
   "fundingMatrix": {
-    "title": "Fonlama, yıllıklandırılmış",
     "subtitle": "Pozitif = longlar shortlara öder",
     "nextPayment": "Sonraki ödemeye",
     "colSpread": "Fark",
@@ -398,7 +386,6 @@
     "emptyBody": "Fonlama herkese açık veridir, API anahtarı gerekmez. Bir vadesiz vadeli işlem bağlayıcısı kurun, matris kendiliğinden dolar."
   },
   "inFlight": {
-    "title": "Yolda",
     "pendingCount_one": "{{count}} beklemede",
     "pendingCount_other": "{{count}} beklemede",
     "emptyTitle": "Yolda transfer yok",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "İçeriden işlemler",
     "summary": "{{buys}} alış · {{sells}} satış",
     "span_one": "{{count}} gün",
     "span_other": "{{count}} gün",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} alım, {{sell}} satım",
     "axisNote": "5 dakikada bir alımlar eksi satımlar. LP'lerin eklediği veya çektiği likidite bu akışta yok.",
     "biggestLabel": "En büyük takaslar",
-    "title": "{{pool}} içinden akış",
-    "subtitle": "Alımlar eksi satımlar, beşer dakikalık dilimlerle",
-    "subtitleVenue": "{{venue}} · alımlar eksi satımlar, beşer dakikalık dilimlerle",
     "waitingTitle": "Harita bekleniyor",
     "waitingBody": "Zincirin havuzları hâlâ yükleniyor. Bir havuz seçilince akış burada belirir.",
     "unavailableTitle": "Şu anda havuzlar alınamıyor",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Yalnızca kapatılmış tutar. Bu pozisyonun sınır tick verileri okunamadı, bu yüzden son hareketten bu yana biriken ücretler sayılmıyor ve gerçek alacak daha yüksek olabilir.",
-    "title": "LP pozisyonu",
     "subtitle_one": "{{wallet}} · {{count}} aralık",
     "subtitle_other": "{{wallet}} · {{count}} aralık",
     "capped": "{{count}} gösterilmiyor",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Tek işlem, token onayı yok. Yatırılan miktar yukarıdaki tutarlarla sınırlı.",
     "confirmCollectNoteSolana": "Yukarıdaki programa gider. Ücretler aynı işlemde kapatılıp bu cüzdana ödenir, başka hiçbir yere gitmez.",
     "rowProgram": "Program",
-    "title": "Likiditeyi yönet",
     "subtitle_one": "{{wallet}} · {{count}} pozisyon",
     "subtitle_other": "{{wallet}} · {{count}} pozisyon",
     "position": "Pozisyon",
@@ -943,7 +924,6 @@
     "emptyBody": "Sağlayıcının döndürdüğü pencerede bu havuzdan hiçbir işlem geçmedi."
   },
   "openInterest": {
-    "title": "Açık pozisyon liderleri",
     "changeLabel": "24s değişim",
     "notPublished": "API'sinde açık pozisyon yayınlamıyor.",
     "emptyTitle": "Henüz açık pozisyon yok",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "Veri sağlayıcısı canlı havuz durumunu döndürmedi. Yukarıdaki rakamlar zincir listelemesinin kendi rakamları."
   },
   "poolMap": {
-    "title": "{{chain}} · öne çıkan havuzlar",
-    "subtitle": "Her havuzun kendi likiditesini ne kadar çalıştırdığına göre sıralanır",
     "sortTurnover": "Devir",
     "sortVolume": "Hacim",
     "sortLiquidity": "Likidite",
@@ -1053,11 +1031,6 @@
     "noChainBody": "Yandaki listeden bir zincir seçin, havuzları burada sıralansın: hacim, arkasındaki likiditeye karşı.",
     "emptyTitle": "Havuz dönmedi",
     "emptyBody": "Veri sağlayıcı bu zincir için hiçbir şey listelemedi. Bir sonraki yenilemede tekrar denenecek.",
-    "listTitle": "{{chain}} · tüm havuzlar",
-    "subtitleVolume": "Boyut 24s hacme göre, renk 24s harekete göre",
-    "subtitleLiquidity": "Boyut likiditeye göre, renk 24s harekete göre",
-    "subtitleTrades": "Boyut 24s işlem sayısına göre, renk 24s harekete göre",
-    "subtitleTurnover": "Boyut hacmin likiditeye oranına göre, renk 24s harekete göre",
     "sortTrades": "İşlemler",
     "morePools": "Bu zincirdeki diğer havuzlar",
     "backToMap": "Haritaya dön",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "{{chain}} üzerinde, {{wallet}} cüzdanınıza ulaşır.",
     "needsDestinationWallet": "Bu transferi almak için bir {{chain}} cüzdanı bağlayın. Yukarıdaki fiyat gerçek, sadece gönderilecek bir adres yok.",
-    "title": "Köprü",
     "subtitle": "{{chain}} üzerinden bir varlık taşı",
     "provider": "LI.FI",
     "noConnectorTitle": "Kurulu köprü konnektörü yok",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}} varlık · {{symbol}} önde",
     "drags": "{{total}} varlık · {{symbol}} geride",
     "assets": "{{total}} varlık",
-    "title": "Sektör bandı",
     "splitTape": "{{total}} varlık · karışık seyir"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "{{pane}} kapat",
+      "move": "{{pane}} panelini taşı",
       "popOutToColumn": "Yeni sütuna ayır",
       "bindPairToVariable": "Pariteyi değişkene bağla",
       "bindWalletToVariable": "Cüzdanı değişkene bağla",
@@ -5486,7 +5458,6 @@
     "inDays": "{{n}} gün sonra"
   },
   "markets": {
-    "title": "Piyasalar",
     "pairCount_one": "{{count}} parite",
     "pairCount_other": "{{count}} parite",
     "viewMode": "Görünüm modu",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "En İyi Coinler",
     "colCoin": "Coin",
     "colPrice": "Fiyat",
     "col24h": "24s",
@@ -5581,7 +5551,6 @@
     "willAppear": "En iyi coinler burada görünecek"
   },
   "heatmap": {
-    "title": "Piyasa Isı Haritası",
     "failed": "Isı haritası yüklenemedi",
     "noData": "Veri yok",
     "tryLater": "Daha sonra tekrar dene",

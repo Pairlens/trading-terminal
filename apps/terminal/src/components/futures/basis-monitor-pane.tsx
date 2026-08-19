@@ -39,6 +39,7 @@ import {
 } from './funding-skeletons'
 import type { FundingCell } from '@/lib/futures/funding-rows'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { formatChartPrice } from '@/lib/format-price'
 import { basisBps } from '@/lib/futures/funding-math'
 import { primaryCell } from '@/lib/futures/funding-rows'
@@ -103,16 +104,13 @@ export function BasisMonitorPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-2">
-        <h2 className="text-[13px] font-semibold">{t('basisMonitor.title')}</h2>
-        <span className="hidden text-[11px] text-muted-foreground @sm/pane:inline">
-          {t('basisMonitor.subtitle')}
-        </span>
-      </header>
+      {/* The shell already names the pane; what it cannot say is what the two
+          price columns are, so the old subtitle rides the header slot. */}
+      <PaneHeaderMetric>{t('basisMonitor.subtitle')}</PaneHeaderMetric>
 
       <div
         aria-busy={loading || undefined}
-        className="min-h-0 flex-1 overflow-y-auto px-4 py-2"
+        className="min-h-0 flex-1 overflow-y-auto"
       >
         {loading ? (
           <>
@@ -146,7 +144,7 @@ function BasisRowView({
 
   return (
     <button
-      className="flex w-full items-center gap-3 text-left text-xs"
+      className="flex w-full items-center gap-3 text-left text-[11px]"
       onClick={() => onOpen(cell.market, cell.pair)}
       type="button"
       title={t('basisMonitor.rowHint', {
@@ -173,7 +171,7 @@ function BasisRowView({
       {/* The zero line sits at the middle and the fill grows away from it, so
           a premium and a discount of the same size read as mirror images. */}
       <span className="relative hidden h-1.5 min-w-0 flex-1 rounded-full bg-muted @sm/pane:block">
-        <span className="absolute left-1/2 top-[-3px] h-3 w-px bg-border" />
+        <span className="absolute left-1/2 top-[-3px] h-3 w-px bg-(--pane-rule)" />
         {bps !== null && (
           <span
             className="absolute h-full rounded-full"

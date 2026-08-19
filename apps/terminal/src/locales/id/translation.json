@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Perp lawan spot",
     "subtitle": "Aset yang sama di dua meja, berdampingan",
     "spot": "spot {{price}}",
     "spotMissing": "tanpa indeks",
@@ -37,8 +36,6 @@
     "hint": "Tiap kaki adalah order limit sungguhan."
   },
   "chainLadder": {
-    "title": "{{asset}} di seluruh chain",
-    "subtitle": "Diurutkan dari yang benar-benar sampai setelah gas, bukan dari kutipan terbaik",
     "sizedFor": "Dihitung untuk {{value}}",
     "best": "Terbaik",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 minggu terendah · tertinggi"
   },
   "dexChains": {
-    "title": "Ke mana arus bergerak",
     "subtitleNetwork": "Volume 24j, seluruh chain",
     "subtitleSampled": "Volume 24j dari pool tersibuk tiap chain",
     "liquidityValue": "Likuiditas {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "Hari ini",
     "tomorrow": "Besok",
-    "heading": {
-      "today": "Melapor hari ini",
-      "week": "Melapor minggu ini",
-      "watchlist": "Laporan watchlist kamu"
-    },
     "slots": {
       "bmo": "Sebelum pasar buka",
       "amc": "Setelah pasar tutup",
@@ -222,7 +213,6 @@
       "month": "Sebulan"
     },
     "sourceNote": "Disusun dari jadwal rilis BLS, BEA, Federal Reserve, dan Census. Angka aktual dan sebelumnya berasal dari lembaganya sendiri; angka implisit diturunkan dari harga kontrak Kalshi. Waktu dalam zona Timur AS, sebagaimana lembaga menerbitkannya.",
-    "title": "Makro",
     "today": "Hari ini",
     "tomorrow": "Besok",
     "countdownDh": "dalam {{days}} hr {{hours}} jam",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "saat terakhir disentuh",
-    "title": "Akumulasi fee",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
     "claimableLabel": "Bisa diklaim sekarang",
@@ -385,7 +374,6 @@
     "shortsPaying": "short membayar"
   },
   "fundingMatrix": {
-    "title": "Pendanaan, disetahunkan",
     "subtitle": "Positif = long membayar short",
     "nextPayment": "Pembayaran berikutnya dalam",
     "colSpread": "Selisih",
@@ -398,7 +386,6 @@
     "emptyBody": "Pendanaan adalah data publik, jadi kunci API tidak diperlukan. Pasang konektor futures perpetual dan matriks terisi sendiri."
   },
   "inFlight": {
-    "title": "Dalam perjalanan",
     "pendingCount_one": "{{count}} tertunda",
     "pendingCount_other": "{{count}} tertunda",
     "emptyTitle": "Tidak ada transfer berjalan",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Aktivitas orang dalam",
     "summary": "{{buys}} beli · {{sells}} jual",
     "span_one": "{{count}} hari",
     "span_other": "{{count}} hari",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} dibeli, {{sell}} dijual",
     "axisNote": "Beli dikurangi jual per 5 menit. Likuiditas yang ditambah atau ditarik LP tidak ada di feed ini.",
     "biggestLabel": "Swap terbesar",
-    "title": "Arus lewat {{pool}}",
-    "subtitle": "Beli dikurangi jual, per lima menit",
-    "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit",
     "waitingTitle": "Menunggu peta pool",
     "waitingBody": "Pool di chain ini masih dimuat. Aliran muncul begitu satu pool dipilih.",
     "unavailableTitle": "Pool belum bisa diambil",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Hanya jumlah yang sudah dihitung. Data tick di batas posisi ini tidak bisa dibaca, jadi fee sejak sentuhan terakhir belum ikut dihitung dan klaim sebenarnya bisa lebih besar.",
-    "title": "Posisi LP",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
     "capped": "{{count}} tidak ditampilkan",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Satu transaksi, tanpa approval token. Setoran dibatasi pada jumlah di atas.",
     "confirmCollectNoteSolana": "Dikirim ke program di atas. Fee dihitung dan dibayarkan ke wallet ini dalam transaksi yang sama, bukan ke tempat lain.",
     "rowProgram": "Program",
-    "title": "Kelola likuiditas",
     "subtitle_one": "{{wallet}} · {{count}} posisi",
     "subtitle_other": "{{wallet}} · {{count}} posisi",
     "position": "Posisi",
@@ -943,7 +924,6 @@
     "emptyBody": "Tidak ada yang melewati pool ini dalam rentang waktu yang dikembalikan penyedia."
   },
   "openInterest": {
-    "title": "Open interest terbesar",
     "changeLabel": "Perubahan 24 jam",
     "notPublished": "tidak mempublikasikan open interest lewat API-nya.",
     "emptyTitle": "Belum ada open interest",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "Penyedia data tidak mengembalikan status pool langsung. Angka di atas berasal dari listing chain."
   },
   "poolMap": {
-    "title": "{{chain}} · pool teratas",
-    "subtitle": "Diurutkan dari seberapa keras tiap pool memutar likuiditasnya sendiri",
     "sortTurnover": "Perputaran",
     "sortVolume": "Volume",
     "sortLiquidity": "Likuiditas",
@@ -1053,11 +1031,6 @@
     "noChainBody": "Pilih chain di panel samping, lalu pool-nya diperingkat di sini: volume terhadap likuiditas yang menopangnya.",
     "emptyTitle": "Tidak ada pool yang dikembalikan",
     "emptyBody": "Penyedia data tidak mencantumkan apa pun untuk chain ini. Akan dicoba lagi pada penyegaran berikutnya.",
-    "listTitle": "{{chain}} · semua pool",
-    "subtitleVolume": "Ukuran menurut volume 24 jam, warna menurut pergerakan 24 jam",
-    "subtitleLiquidity": "Ukuran menurut likuiditas, warna menurut pergerakan 24 jam",
-    "subtitleTrades": "Ukuran menurut jumlah transaksi 24 jam, warna menurut pergerakan 24 jam",
-    "subtitleTurnover": "Ukuran menurut volume terhadap likuiditas, warna menurut pergerakan 24 jam",
     "sortTrades": "Transaksi",
     "morePools": "Pool lain di chain ini",
     "backToMap": "Kembali ke peta",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "Mendarat di {{chain}}, ke dompet {{wallet}} milikmu.",
     "needsDestinationWallet": "Hubungkan dompet {{chain}} untuk menerima transfer ini. Harga di atas nyata, hanya belum ada tujuannya.",
-    "title": "Bridge",
     "subtitle": "Pindahkan satu aset dari {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Belum ada konektor bridge",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}} aset · {{symbol}} memimpin",
     "drags": "{{total}} aset · {{symbol}} menahan",
     "assets": "{{total}} aset",
-    "title": "Pita sektor",
     "splitTape": "{{total}} aset · variatif"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "Tutup {{pane}}",
+      "move": "Pindahkan panel {{pane}}",
       "popOutToColumn": "Pindahkan ke kolom baru",
       "bindPairToVariable": "Ikat pair ke variabel",
       "bindWalletToVariable": "Ikat dompet ke variabel",
@@ -5486,7 +5458,6 @@
     "inDays": "dalam {{n}} hr"
   },
   "markets": {
-    "title": "Market",
     "pairCount_one": "{{count}} pair",
     "pairCount_other": "{{count}} pair",
     "viewMode": "Mode tampilan",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "Koin Teratas",
     "colCoin": "Koin",
     "colPrice": "Harga",
     "col24h": "24 jam",
@@ -5581,7 +5551,6 @@
     "willAppear": "Koin teratas akan muncul di sini"
   },
   "heatmap": {
-    "title": "Heatmap Market",
     "failed": "Gagal memuat heatmap",
     "noData": "Tidak ada data tersedia",
     "tryLater": "Coba lagi nanti",

@@ -1409,7 +1409,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
 
   const body = (
     <div className="flex shrink-0 flex-col">
-      <div className="flex flex-col gap-2.5 p-2.5">
+      <div className="flex flex-col gap-2.5 py-2.5">
         {/* Wallet status. The "nothing connected here" case belongs to the
             connect gate below — what's left is a vault that can't be read, and
             an account that exists but hasn't been picked for this pane. */}
@@ -1474,16 +1474,16 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {/* What this ticket is actually betting on. The pair key says
             KXBTCD-26AUG15-T53; the question is the only readable identity. */}
         {isPrediction && (
-          <div className="flex flex-col gap-1.5 rounded-xl border bg-muted/20 px-2.5 py-2">
+          <div className="flex flex-col gap-1.5 rounded-lg bg-muted/40 px-2.5 py-2">
             <p className="text-xs font-medium leading-snug">{question}</p>
             <div className="flex items-center justify-between gap-2">
               {sibling ? (
-                <div className="flex min-w-0 flex-1 gap-1 rounded-xl bg-secondary p-1">
-                  <span className="flex-1 truncate rounded-lg bg-background py-1 text-center text-xs font-semibold">
+                <div className="flex min-w-0 flex-1 gap-1 rounded-lg bg-secondary p-1">
+                  <span className="flex-1 truncate rounded-md bg-background py-1 text-center text-xs font-semibold">
                     {outcomeLabel || t('terminal.trade.thisOutcome')}
                   </span>
                   <button
-                    className="flex-1 truncate rounded-lg py-1 text-center text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                    className="flex-1 truncate rounded-md py-1 text-center text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
                     onClick={handleSwitchOutcome}
                     type="button"
                   >
@@ -1520,11 +1520,11 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {isPrediction && <OutcomeSwitch market={market} pairKey={pairKey} />}
 
         {/* Buy / Sell toggle */}
-        <div className="flex gap-1 rounded-xl bg-secondary p-1">
+        <div className="flex gap-1 rounded-lg bg-muted/40 p-1">
           <button
             type="button"
             className={cn(
-              'flex-1 rounded-lg py-1.5 text-sm font-semibold transition-colors',
+              'flex-1 rounded-md py-1.5 text-sm font-semibold transition-colors',
               side === 'buy'
                 ? 'text-up'
                 : 'bg-transparent text-muted-foreground hover:text-foreground',
@@ -1546,7 +1546,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           <button
             type="button"
             className={cn(
-              'flex-1 rounded-lg py-1.5 text-sm font-semibold transition-colors',
+              'flex-1 rounded-md py-1.5 text-sm font-semibold transition-colors',
               side === 'sell'
                 ? 'text-down'
                 : 'bg-transparent text-muted-foreground hover:text-foreground',
@@ -1576,25 +1576,28 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               setOrderType(v as 'market' | 'limit' | 'workflow')
             }
           >
-            <TabsList className="h-8 w-full rounded-xl bg-secondary">
+            <TabsList className="h-6 w-full rounded-lg bg-muted/40">
               {/* Disabled rather than hidden outside regular hours: the choice
                   exists, the session is what removed it, and a control that
                   vanishes teaches nobody that. */}
               <TabsTrigger
                 value="market"
                 disabled={outsideRegularHours}
-                className="flex-1 rounded-lg text-xs"
+                className="flex-1 rounded-md text-[11px]"
               >
                 {t('terminal.trade.orderTypeMarket')}
               </TabsTrigger>
-              <TabsTrigger value="limit" className="flex-1 rounded-lg text-xs">
+              <TabsTrigger
+                value="limit"
+                className="flex-1 rounded-md text-[11px]"
+              >
                 {t('terminal.trade.orderTypeLimit')}
               </TabsTrigger>
               {!isDex && !isPrediction && (
                 <TabsTrigger
                   value="workflow"
                   disabled={outsideRegularHours}
-                  className="flex-1 rounded-lg text-xs"
+                  className="flex-1 rounded-md text-[11px]"
                 >
                   {t('terminal.trade.workflow')}
                 </TabsTrigger>
@@ -1630,7 +1633,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             ) : (
               <>
                 <select
-                  className="h-8 w-full rounded-lg border border-border bg-background px-2 text-xs"
+                  className="h-6 w-full rounded-lg border border-transparent bg-muted/40 px-2 text-[11px]"
                   value={selectedWorkflowId ?? ''}
                   onChange={(e) =>
                     setSelectedWorkflowId(e.target.value || null)
@@ -1706,7 +1709,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     'flex-1 rounded-md border px-1 py-0.5 font-mono text-[11.5px] tabular-nums transition-colors',
                     leverage === lev
                       ? 'border-primary text-foreground'
-                      : 'border-border text-muted-foreground hover:text-foreground',
+                      : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
                   )}
                   style={
                     leverage === lev
@@ -1764,7 +1767,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               </span>
               <Input
                 aria-label={t('terminal.trade.amount')}
-                className="h-9 rounded-lg pl-6 pr-[104px] font-mono text-[15px] font-semibold tabular-nums"
+                className="h-9 rounded-lg border-transparent bg-muted/40 dark:bg-muted/40 pl-6 pr-[104px] font-mono text-[15px] font-semibold tabular-nums"
                 inputMode="decimal"
                 onChange={(e) => setSize(e.target.value)}
                 placeholder="0"
@@ -1786,7 +1789,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
             <Input
               type="number"
               placeholder="0.00"
-              className="h-8 rounded-lg font-mono text-sm tabular-nums"
+              className="h-8 rounded-lg border-transparent bg-muted/40 font-mono text-sm tabular-nums dark:bg-muted/40"
               value={size}
               onChange={(e) => {
                 setSize(e.target.value)
@@ -1817,7 +1820,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                   'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
                   size === String(p)
                     ? 'border-primary text-foreground'
-                    : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+                    : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
                 )}
                 style={
                   size === String(p)
@@ -1838,7 +1841,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                 'flex-1 rounded-md border px-1 py-1 text-[11.5px] transition-colors',
                 maxCollateral !== '' && size === maxCollateral
                   ? 'border-primary text-foreground'
-                  : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+                  : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
               )}
               disabled={maxCollateral === ''}
               onClick={() => setSize(maxCollateral)}
@@ -1870,7 +1873,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
                     size === String(p)
                       ? 'border-primary text-foreground'
-                      : 'border-border bg-muted/30 text-muted-foreground hover:text-foreground',
+                      : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
                   )}
                   style={
                     size === String(p)
@@ -1927,7 +1930,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     'flex-1 rounded-md border px-1 py-0.5 font-mono text-[11.5px] tabular-nums transition-colors',
                     sellPct === pct
                       ? 'border-down text-down'
-                      : 'border-border text-muted-foreground hover:text-foreground',
+                      : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
                   )}
                   style={
                     sellPct === pct
@@ -1967,7 +1970,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                     'flex-1 rounded-md border px-1 py-0.5 font-mono text-[11.5px] tabular-nums transition-colors',
                     slippageBps === bps
                       ? 'border-primary text-foreground'
-                      : 'border-border text-muted-foreground hover:text-foreground',
+                      : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
                   )}
                   style={
                     slippageBps === bps
@@ -2068,7 +2071,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         {samplingPrice && <TicketPriceSampler onSample={handlePriceSample} />}
 
         {isPerp && (
-          <div className="flex flex-col gap-0.5 font-mono text-[10px] tabular-nums text-muted-foreground">
+          <div className="flex flex-col gap-0.5 rounded-lg bg-muted/40 px-2.5 py-1.5 font-mono text-[10px] tabular-nums text-muted-foreground">
             <div className="flex items-center justify-between">
               <span className="uppercase tracking-[.16em]">
                 {t('terminal.trade.notional')}
@@ -2316,7 +2319,7 @@ function LimitPriceField({
               : reference.toString()
         }
         className={cn(
-          'h-8 rounded-lg font-mono text-sm tabular-nums',
+          'h-8 rounded-lg border-transparent bg-muted/40 font-mono text-sm tabular-nums dark:bg-muted/40',
           invalid && 'border-destructive focus-visible:ring-destructive/40',
         )}
         value={value}

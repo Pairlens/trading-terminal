@@ -5,7 +5,7 @@ group: traders
 order: 8
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 10 min read
+readTime: 11 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -18,12 +18,29 @@ panel. Rather than reconfiguring, you keep both and switch.
 empty-cell placeholder, from omni-search (<kbd>⌘K</kbd>, then **Add to
 layout**), or from the pane menu on an existing panel.
 
-Drag separators to resize. Split a cell horizontally or vertically, replace
-what is in it, or close it. Panels marked as singletons appear once per
-workspace, which is why you cannot end up with two Portfolio panels quietly
-disagreeing.
+Split a cell horizontally or vertically, replace what is in it, or close it.
+Panels marked as singletons appear once per workspace, which is why you cannot
+end up with two Portfolio panels quietly disagreeing.
 
 Rename a workspace, change its icon, or delete it from its context menu.
+
+## Moving a panel
+
+A column is one surface, and the panels stacked inside it are divided by a
+single hairline. That line is also the resize handle: drag it to give one panel
+more room, and drag the gap between two columns to change the split.
+
+Every panel carries a grip at the right end of its title row. It is always
+there, faint, and comes up to full strength the moment your pointer enters the
+panel, so the handle is lit before you reach for it and nothing shifts on the
+way in. Drag the grip, or the panel's title, to pick the panel up. Drop it on
+the middle of another panel to stack the two as tabs, on an edge to split, or
+past the outer edge of a column to start a new one. The grip takes focus from
+the keyboard too.
+
+A close button sits beside the grip and appears with it. **Close Pane** in the
+panel's right-click menu does the same, alongside **Pop Out to Column** and the
+variable bindings below.
 
 ## Discovery is one board per asset class
 

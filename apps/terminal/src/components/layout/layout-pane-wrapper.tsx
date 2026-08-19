@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import {
   Columns3,
@@ -12,8 +12,7 @@ import {
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Button } from '@pairlens/ui/components/ui/button'
+import { cn } from '@pairlens/ui/lib/utils'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -26,6 +25,7 @@ import {
 } from '@pairlens/ui/components/ui/context-menu'
 
 import { LayoutPaneRenderer } from './layout-pane-renderer'
+import { PaneHeaderSlotProvider } from './pane-header-slot'
 import { AiSpotlight } from '@/components/assistant-dock/ai-spotlight'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 import { useLayout } from '@/lib/layout/context'
@@ -39,12 +39,20 @@ type LayoutPaneWrapperProps = {
   paneId: string
   paneType: string
   showHeader: boolean
+  /**
+   * Where this pane's trailing metric should land when the pane draws no
+   * header of its own. A tabbed cell has one header row for several panes, so
+   * it owns the slot and hands it to whichever pane is on top; everything else
+   * passes nothing and the metric simply has nowhere to go.
+   */
+  headerSlot?: HTMLElement | null
 }
 
 export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
   paneId,
   paneType,
   showHeader,
+  headerSlot: inheritedSlot = null,
 }: LayoutPaneWrapperProps) {
   const { t } = useTranslation()
   const { layout, dispatch } = useLayout()
@@ -57,6 +65,12 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
       id: paneId,
       data: { paneId, paneType },
     })
+
+  // The header's trailing slot, handed to the pane below as a portal target.
+  // State rather than a ref because the pane renders in the same pass and has
+  // to be told once the node exists.
+  const [ownSlot, setOwnSlot] = useState<HTMLElement | null>(null)
+  const headerSlot = showHeader ? ownSlot : inheritedSlot
 
   const handleClose = () => dispatch({ type: 'REMOVE_PANE', paneId })
 
@@ -98,78 +112,87 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
   const boundWalletVar = pane?.bindings?.['active-wallet']
   const boundTimeframeVar = pane?.bindings?.['active-timeframe']
 
+  const paneLabel = def ? t(def.labelKey) : paneType
+
   return (
     <div
       ref={setNodeRef}
       // `relative` is the spotlight's anchor: the glow is drawn inside
       // this box precisely because the box clips, so a pane the
       // assistant points at cannot bleed over its neighbours.
-      className="relative flex h-full flex-col overflow-hidden"
+      //
+      // `group/pane` is the hover reveal. The trigger is the WHOLE pane, not
+      // the header and not the grip: a trader's pointer is already inside a
+      // pane reading it, so the handle lights before they think about moving
+      // it. Modelled in CSS rather than as a `hoveredPaneId` on the board
+      // because a React state change here would re-render every pane on the
+      // board each time the pointer crossed a seam.
+      className="group/pane relative flex h-full flex-col overflow-hidden"
       style={{ opacity: isDragging ? 0.3 : 1 }}
-      {...attributes}
     >
       {showHeader && (
         <ContextMenu>
-          <ContextMenuTrigger className="group/header flex h-7 shrink-0 items-center gap-1 border-b bg-muted/30 px-1.5 transition-colors hover:bg-muted/50">
-            {/* The whole title region is the drag handle for a large, intuitive grab target */}
+          <ContextMenuTrigger className="flex h-5 shrink-0 items-center gap-2">
+            {/* Inert text, so it doubles as a wide grab target. The grip is
+                the sign; this is the surface most people will actually
+                grab. */}
             <span
-              ref={setActivatorNodeRef}
-              className="flex min-w-0 flex-1 cursor-grab items-center gap-1 select-none active:cursor-grabbing"
+              className="min-w-0 shrink cursor-grab truncate text-[12.5px] leading-none font-medium tracking-[-0.005em] select-none active:cursor-grabbing"
               {...listeners}
             >
-              <GripVertical className="size-3.5 shrink-0 text-muted-foreground/30 transition-colors group-hover/header:text-muted-foreground/70" />
-              <span className="flex-1 truncate text-xs font-medium text-muted-foreground transition-colors group-hover/header:text-foreground">
-                {def ? t(def.labelKey) : paneType}
-              </span>
+              {paneLabel}
             </span>
             {/* Variable binding badge */}
             {boundVar && (
-              <Badge
-                variant="outline"
-                className="h-4 gap-0.5 px-1 py-0 text-[9px] text-muted-foreground/70"
-              >
+              <PaneHeaderBadge>
                 <Variable className="size-2.5" />
                 {variableLabel(boundVar)}
-              </Badge>
+              </PaneHeaderBadge>
             )}
             {/* Override pair badge */}
             {!boundVar && hasOverride && overridePair && (
-              <Badge
-                variant="secondary"
-                className="h-4 px-1 py-0 text-[9px] font-mono"
-              >
-                {overridePair.pairKey}
-              </Badge>
+              <PaneHeaderBadge mono>{overridePair.pairKey}</PaneHeaderBadge>
             )}
             {boundWalletVar && (
-              <Badge
-                variant="outline"
-                className="h-4 gap-0.5 px-1 py-0 text-[9px] text-muted-foreground/70"
-              >
+              <PaneHeaderBadge>
                 <Variable className="size-2.5" />
                 {variableLabel(boundWalletVar)}
-              </Badge>
+              </PaneHeaderBadge>
             )}
             {boundTimeframeVar && (
-              <Badge
-                variant="outline"
-                className="h-4 gap-0.5 px-1 py-0 text-[9px] text-muted-foreground/70"
-              >
+              <PaneHeaderBadge>
                 <Variable className="size-2.5" />
                 {variableLabel(boundTimeframeVar)}
-              </Badge>
+              </PaneHeaderBadge>
             )}
-            <Button
-              size="icon-xs"
-              variant="ghost"
-              className="size-5 text-muted-foreground/50 hover:text-destructive"
+            <span className="flex-1" />
+            {/* Shrinks far faster than the title: in a narrow column the
+                metric gives up its room first, and a pane never ends up
+                labelled "C..." beside a full sentence of metadata. */}
+            <span
+              ref={setOwnSlot}
+              className="flex min-w-0 shrink-[99] items-center gap-2 overflow-hidden"
+            />
+            {/* Laid out at rest, invisible at rest. Reserving the box is what
+                keeps the trailing metric from twitching as the pointer
+                crosses panes. */}
+            <button
+              type="button"
               onClick={handleClose}
-              aria-label={t('layout.pane.close', {
-                pane: def ? t(def.labelKey) : paneType,
-              })}
+              aria-label={t('layout.pane.close', { pane: paneLabel })}
+              className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] text-muted-foreground opacity-0 transition-opacity duration-[130ms] ease-out group-hover/pane:opacity-100 hover:text-destructive focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden"
             >
-              <X className="size-3" />
-            </Button>
+              <X className="size-3" strokeWidth={2.5} />
+            </button>
+            <span
+              ref={setActivatorNodeRef}
+              aria-label={t('layout.pane.move', { pane: paneLabel })}
+              className="-mr-1 flex size-[18px] shrink-0 cursor-grab items-center justify-center rounded-[5px] text-muted-foreground opacity-[0.28] transition-opacity duration-[130ms] ease-out group-hover/pane:opacity-100 focus-visible:opacity-100 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden active:cursor-grabbing"
+              {...listeners}
+              {...attributes}
+            >
+              <GripVertical className="size-3" strokeWidth={2.5} />
+            </span>
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuItem onClick={handlePopToColumn}>
@@ -230,8 +253,16 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
           </ContextMenuContent>
         </ContextMenu>
       )}
-      <div className="@container/pane flex min-h-0 flex-1 flex-col overflow-hidden">
-        <LayoutPaneRenderer type={paneType} paneId={paneId} />
+      <div
+        className={cn(
+          '@container/pane flex min-h-0 flex-1 flex-col overflow-hidden',
+          // 6px between a pane's name and its data. The only gap in the pane.
+          showHeader && 'mt-1.5',
+        )}
+      >
+        <PaneHeaderSlotProvider value={headerSlot}>
+          <LayoutPaneRenderer type={paneType} paneId={paneId} />
+        </PaneHeaderSlotProvider>
       </div>
       {/* One line here is what makes EVERY pane something the assistant
           can point at, current ones and any a plugin adds later. The id
@@ -240,12 +271,38 @@ export const LayoutPaneWrapper = memo(function LayoutPaneWrapper({
           are one answer to "show me the chart". */}
       <AiSpotlight
         id={`pane:${paneType}`}
-        label={def ? t(def.labelKey) : paneType}
-        description={`The ${def ? t(def.labelKey) : paneType} pane.`}
+        label={paneLabel}
+        description={`The ${paneLabel} pane.`}
       />
     </div>
   )
 })
+
+/**
+ * A binding or override, said as quietly as the header allows.
+ *
+ * Not `<Badge>`: the design-system badge carries its own border and padding
+ * scale, and at 20px of header height a bordered chip is a second box inside
+ * a row that is trying to be a line of text.
+ */
+function PaneHeaderBadge({
+  children,
+  mono,
+}: {
+  children: React.ReactNode
+  mono?: boolean
+}) {
+  return (
+    <span
+      className={cn(
+        'flex shrink-0 items-center gap-0.5 rounded-[4px] bg-muted px-1 text-[9.5px] leading-[14px] text-muted-foreground',
+        mono && 'font-mono tabular-nums',
+      )}
+    >
+      {children}
+    </span>
+  )
+}
 
 /** Submenu listing workspace variables to bind a pane to. Only rendered when hasWorkspaceVars is true. */
 function BindToVariableSubmenu({

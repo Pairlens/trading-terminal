@@ -79,7 +79,7 @@ function RoutePaneInner({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-2.5 py-1.5">
+      <div className="flex shrink-0 items-center justify-between gap-2 pb-1.5">
         <span className="truncate text-[10px] text-muted-foreground">
           {t('swapRoute.probeLabel')}
         </span>
@@ -104,7 +104,7 @@ function RoutePaneInner({
       </div>
 
       {error ? (
-        <div className="px-2.5 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner venue={chain.displayName} message={error} />
         </div>
       ) : null}
@@ -128,7 +128,7 @@ function RoutePaneInner({
           }
         />
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-2.5 py-2">
+        <div className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto py-1.5">
           {legs.map((leg, index) => (
             <RouteLegRow
               key={`${leg.venue}-${index}`}
@@ -141,7 +141,7 @@ function RoutePaneInner({
       )}
 
       {quote ? (
-        <div className="shrink-0 border-t border-border px-2.5 py-1.5">
+        <div className="shrink-0 pt-2">
           <div className="flex items-baseline justify-between gap-2">
             <span className="text-[11px] text-muted-foreground">
               {t('swapRoute.youReceive')}

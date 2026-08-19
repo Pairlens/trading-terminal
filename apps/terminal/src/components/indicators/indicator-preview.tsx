@@ -58,7 +58,8 @@ function PreviewChart({
   run: PreviewRun
   onHoverTsChange?: (ts: number | null) => void
 }) {
-  const theme = usePairlensChartTheme()
+  // The workbench preview is `bg-background`, not a board column.
+  const theme = usePairlensChartTheme('background')
   const chartRef = useRef<FastFinancialChartRef | null>(null)
   const [readyTick, setReadyTick] = useState(0)
 

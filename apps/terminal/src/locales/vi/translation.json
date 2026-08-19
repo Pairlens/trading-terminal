@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Vĩnh cửu và giao ngay",
     "subtitle": "Cùng một tài sản trên hai bàn, đặt cạnh nhau",
     "spot": "giao ngay {{price}}",
     "spotMissing": "không có chỉ số",
@@ -37,8 +36,6 @@
     "hint": "Mỗi chân là một lệnh giới hạn thật."
   },
   "chainLadder": {
-    "title": "{{asset}} trên các chuỗi",
-    "subtitle": "Xếp theo số nhận được sau gas, không theo báo giá tốt nhất",
     "sizedFor": "Tính cho {{value}}",
     "best": "Tốt nhất",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 tuần thấp · cao"
   },
   "dexChains": {
-    "title": "Dòng tiền đang ở đâu",
     "subtitleNetwork": "Khối lượng 24h, toàn chuỗi",
     "subtitleSampled": "Khối lượng 24h của các pool sôi động nhất mỗi chuỗi",
     "liquidityValue": "Thanh khoản {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
-    "heading": {
-      "today": "Công bố hôm nay",
-      "week": "Công bố tuần này",
-      "watchlist": "Báo cáo từ danh mục theo dõi"
-    },
     "slots": {
       "bmo": "Trước giờ mở cửa",
       "amc": "Sau giờ đóng cửa",
@@ -222,7 +213,6 @@
       "month": "1 tháng"
     },
     "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Số thực tế và số trước lấy từ chính các cơ quan; số hàm ý được suy ra từ giá hợp đồng trên Kalshi. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
-    "title": "Vĩ mô",
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
     "countdownDh": "sau {{days}} ngày {{hours}} giờ",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "tại lần chạm gần nhất",
-    "title": "Phí tích lũy",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
     "claimableLabel": "Có thể thu ngay",
@@ -385,7 +374,6 @@
     "shortsPaying": "phe short trả phí"
   },
   "fundingMatrix": {
-    "title": "Funding, quy đổi năm",
     "subtitle": "Dương = long trả cho short",
     "nextPayment": "Lần trả kế tiếp sau",
     "colSpread": "Chênh lệch",
@@ -398,7 +386,6 @@
     "emptyBody": "Funding là dữ liệu công khai nên không cần khóa API. Cài một trình kết nối futures vĩnh cửu là bảng tự đầy."
   },
   "inFlight": {
-    "title": "Đang chuyển",
     "pendingCount_one": "{{count}} đang chờ",
     "pendingCount_other": "{{count}} đang chờ",
     "emptyTitle": "Không có giao dịch nào đang chuyển",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Giao dịch nội bộ",
     "summary": "{{buys}} lệnh mua · {{sells}} lệnh bán",
     "span_one": "{{count}} ngày",
     "span_other": "{{count}} ngày",
@@ -512,9 +498,6 @@
     "bucketTooltip": "mua {{buy}}, bán {{sell}}",
     "axisNote": "Mua trừ bán mỗi 5 phút. Thanh khoản do LP thêm vào hay rút ra không nằm trong luồng này.",
     "biggestLabel": "Swap lớn nhất",
-    "title": "Dòng tiền qua {{pool}}",
-    "subtitle": "Mua trừ bán, theo từng năm phút",
-    "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút",
     "waitingTitle": "Đang chờ bản đồ pool",
     "waitingBody": "Các pool của chuỗi vẫn đang tải. Dòng tiền hiện ra ngay khi chọn một pool.",
     "unavailableTitle": "Hiện chưa lấy được pool",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Chỉ là số đã chốt. Không đọc được dữ liệu tick ở hai biên của vị thế này, nên phí phát sinh từ lần cập nhật cuối chưa được tính và số thực nhận có thể cao hơn.",
-    "title": "Vị thế LP",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
     "capped": "{{count}} chưa hiển thị",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Một giao dịch, không cần approve token. Số tiền nạp bị giới hạn ở các mức trên.",
     "confirmCollectNoteSolana": "Gửi tới chương trình ở trên. Phí được chốt và trả về ví này trong cùng một giao dịch, không đi đâu khác.",
     "rowProgram": "Chương trình",
-    "title": "Quản lý thanh khoản",
     "subtitle_one": "{{wallet}} · {{count}} vị thế",
     "subtitle_other": "{{wallet}} · {{count}} vị thế",
     "position": "Vị thế",
@@ -943,7 +924,6 @@
     "emptyBody": "Trong khoảng thời gian nhà cung cấp trả về, không có giao dịch nào qua pool này."
   },
   "openInterest": {
-    "title": "Dẫn đầu khối lượng mở",
     "changeLabel": "Thay đổi 24 giờ",
     "notPublished": "không công bố khối lượng mở qua API.",
     "emptyTitle": "Chưa có khối lượng mở",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "Nhà cung cấp dữ liệu không trả về trạng thái pool trực tiếp. Các số liệu trên là của bảng niêm yết chuỗi."
   },
   "poolMap": {
-    "title": "Pool hàng đầu trên {{chain}}",
-    "subtitle": "Xếp theo mức độ mỗi pool khai thác chính thanh khoản của nó",
     "sortTurnover": "Vòng quay",
     "sortVolume": "Khối lượng",
     "sortLiquidity": "Thanh khoản",
@@ -1053,11 +1031,6 @@
     "noChainBody": "Chọn chuỗi ở cột bên, các pool của nó sẽ xếp hạng tại đây: khối lượng so với thanh khoản đứng sau.",
     "emptyTitle": "Không có pool trả về",
     "emptyBody": "Nhà cung cấp dữ liệu không liệt kê gì cho chuỗi này. Sẽ thử lại ở lần làm mới sau.",
-    "listTitle": "Tất cả pool trên {{chain}}",
-    "subtitleVolume": "Kích thước theo khối lượng 24 giờ, màu theo biến động 24 giờ",
-    "subtitleLiquidity": "Kích thước theo thanh khoản, màu theo biến động 24 giờ",
-    "subtitleTrades": "Kích thước theo số giao dịch 24 giờ, màu theo biến động 24 giờ",
-    "subtitleTurnover": "Kích thước theo khối lượng so với thanh khoản, màu theo biến động 24 giờ",
     "sortTrades": "Số giao dịch",
     "morePools": "Thêm pool trên chuỗi này",
     "backToMap": "Quay lại bản đồ",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "Sẽ về {{chain}}, vào ví {{wallet}} của bạn.",
     "needsDestinationWallet": "Kết nối một ví {{chain}} để nhận khoản chuyển này. Giá phía trên là thật, chỉ là chưa có nơi để gửi.",
-    "title": "Cầu nối",
     "subtitle": "Chuyển một tài sản ra khỏi {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Chưa cài connector cầu nối",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}} tài sản · {{symbol}} dẫn dắt",
     "drags": "{{total}} tài sản · {{symbol}} kéo lùi",
     "assets": "{{total}} tài sản",
-    "title": "Dải nhóm ngành",
     "splitTape": "{{total}} tài sản · phân hóa"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "Đóng {{pane}}",
+      "move": "Di chuyển bảng {{pane}}",
       "popOutToColumn": "Tách sang cột mới",
       "bindPairToVariable": "Gắn cặp giao dịch với biến",
       "bindWalletToVariable": "Gắn ví với biến",
@@ -5486,7 +5458,6 @@
     "inDays": "sau {{n}} ngày"
   },
   "markets": {
-    "title": "Thị trường",
     "pairCount_one": "{{count}} cặp",
     "pairCount_other": "{{count}} cặp",
     "viewMode": "Chế độ xem",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "Coin hàng đầu",
     "colCoin": "Coin",
     "colPrice": "Giá",
     "col24h": "24h",
@@ -5581,7 +5551,6 @@
     "willAppear": "Coin hàng đầu sẽ hiển thị ở đây"
   },
   "heatmap": {
-    "title": "Bản đồ nhiệt thị trường",
     "failed": "Không thể tải bản đồ nhiệt",
     "noData": "Không có dữ liệu khả dụng",
     "tryLater": "Thử lại sau",

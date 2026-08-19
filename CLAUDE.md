@@ -397,6 +397,43 @@ A script exports `meta = indicator(title=..., pane='overlay'|'sub', inputs=[...]
 - **`assistant` is the one opt-in sync domain.** `SyncDomain.defaultEnabled` is absent (= true) everywhere else and `false` here, which gives the switch a third state: no entry at all means "not asked", and that is the only state the rail's `AssistantSyncBanner` renders in. Either answer writes an explicit boolean and retires the banner for good; Settings → Cloud Sync owns it afterwards. The old lossy path is gone for good (`api.getAiMessages`/`saveAiMessage`/`clearAiMessages`, the `copilot` domain, the adapter's `getAIMessages`/`appendAIMessage`): the replacement is a bulk collection at `GET`/`PUT /api/assistant/conversations` carrying whole messages, typed as `SyncedConversation` in `packages/shared/src/persistence-types.ts` and **mirrored into the App Server repo**. The store publishes ONE aggregate key (`assistant.conversations`); the coordinator assembles index + threads at flush time under size caps (25 threads, 250k chars each, 4 MB total) and merges per conversation with `mergeCollections`, never deleting a local thread the server has not seen.
 - **Unchanged:** the App Server is still only an OpenAI-compatible inference proxy (`/api/ai/v1/chat/completions`), and AI provider plugins (Groq/OpenAI/Anthropic/OpenRouter and the bundled `pairlens-intelligence` fallback) expose `getLanguageModel()`.
 
+### Workspace board chrome
+
+A board is three surfaces and one line. The ground is `--background`
+(`layout-shell.tsx`'s `BOARD`, inset 10px from three edges and none from the top, so the columns
+hang off the bar above them); a column is one `--card` surface, 14px radius, 12px padding
+(`layout-column.tsx`'s `COLUMN_SURFACE`); the third step is wells (`bg-muted/40`, no border) and
+it is reserved for inputs and trade tickets. Panes draw NO card of their own. The only line on
+the board is the hairline between two stacked panes: `--pane-rule`, a 45% mix of `--border`
+declared in `apps/terminal/src/styles.css`, drawn by `RowHandle` (which IS the resize target) or
+by `PaneRule` where there is nothing to resize. Columns are separated by ground showing through,
+never by a rule: a vertical rule beside a horizontal one is what made the old board read as a
+spreadsheet.
+
+Every pane header is drawn by the SHELL, not by the pane (`layout-pane-wrapper.tsx`): a 20px row
+carrying the title at 12.5px/500, a portal slot for one trailing metric (`pane-header-slot.tsx`,
+`<PaneHeaderMetric>`), a close button that is laid out at rest but invisible, and a drag grip at
+28% opacity that rises to 100% when the pointer enters ANYWHERE in the pane. The reveal is CSS
+(`group/pane`), not a `hoveredPaneId` on the board: a state change there would re-render every
+pane each time the pointer crossed a seam. Nothing is inserted or removed on hover, so the header
+never twitches. A tabbed cell uses the same row, with the tabs as the title (`layout-tab-group.tsx`);
+its grip registers `${paneId}:grip` because the tab already claims `paneId` in dnd-kit's registry,
+and every drag handler reads `active.data.current.paneId` rather than the draggable's id.
+
+What that costs a pane author: content carries no horizontal padding (the column's 12px is the
+inset, so rows bleed to the pane edge on purpose), no rule under a column header or above a
+footer, no `bg-background` on a sticky thead (it sits on `--card` now), and no in-pane title
+repeating the pane's own name. The shared voice lives in `components/panes/pane-primitives.tsx`
+(`Th`, `PaneColumnHeader`, `PaneFootnote`, and the `PANE_COLUMN_HEADER` / `PANE_FOOTNOTE` /
+`PANE_TABLE_BODY` class strings).
+
+The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `ChartSurface` and
+resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is
+`oklch()`) instead of the theme's own chart palette, so a WebGL plot never reads as a rectangle
+inset into its column, in any of the 18 themes or either colour mode. Panes take the default
+`'card'`; the workbench preview takes `'background'`; the phone takes `'palette'` and opts out
+entirely, because it paints its shell FROM the chart's colour rather than the other way round.
+
 ### Terminal Routing
 
 TanStack Router with file-based routing in `apps/terminal/src/routes/`. Route tree is auto-generated (`routeTree.gen.ts`). State management via TanStack Query. REST calls via `src/lib/api.ts`. Real-time data via plugin system.

@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "無期限先物と現物",
     "subtitle": "同じ資産を両方のデスクで並べて表示",
     "spot": "現物 {{price}}",
     "spotMissing": "インデックスなし",
@@ -37,8 +36,6 @@
     "hint": "各明細は実際の指値注文です。"
   },
   "chainLadder": {
-    "title": "チェーン横断の {{asset}}",
-    "subtitle": "最良気配ではなく、ガス控除後に手元に残る額で並べ替え",
     "sizedFor": "{{value}} 想定",
     "best": "最良",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52週 安値 · 高値"
   },
   "dexChains": {
-    "title": "資金が流れている場所",
     "subtitleNetwork": "24時間出来高（チェーン全体）",
     "subtitleSampled": "各チェーンの主要プールの24時間出来高",
     "liquidityValue": "流動性 {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "今日",
     "tomorrow": "明日",
-    "heading": {
-      "today": "本日の決算発表",
-      "week": "今週の決算発表",
-      "watchlist": "ウォッチリスト銘柄の決算発表"
-    },
     "slots": {
       "bmo": "寄り付き前",
       "amc": "引け後",
@@ -222,7 +213,6 @@
       "month": "1か月"
     },
     "sourceNote": "BLS、BEA、連邦準備制度、Census の公表スケジュールから作成。結果と前回は各機関の発表そのもの、織り込みは Kalshi の契約価格から算出しています。時刻は各機関の公表どおり米国東部時間です。",
-    "title": "マクロ",
     "today": "今日",
     "tomorrow": "明日",
     "countdownDh": "{{days}}日{{hours}}時間後",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "最終操作時点",
-    "title": "手数料の蓄積",
     "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
     "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
     "claimableLabel": "現在受け取れる額",
@@ -385,7 +374,6 @@
     "shortsPaying": "ショートが支払い"
   },
   "fundingMatrix": {
-    "title": "ファンディング（年率）",
     "subtitle": "プラス = ロングがショートに支払い",
     "nextPayment": "次回支払いまで",
     "colSpread": "差",
@@ -398,7 +386,6 @@
     "emptyBody": "ファンディングは公開データなのでAPIキーは不要です。無期限先物コネクタを入れれば表は自動で埋まります。"
   },
   "inFlight": {
-    "title": "送金中",
     "pendingCount_one": "{{count}} 件処理中",
     "pendingCount_other": "{{count}} 件処理中",
     "emptyTitle": "送金中の資金はありません",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "インサイダー取引",
     "summary": "買い {{buys}} 件 · 売り {{sells}} 件",
     "span_one": "{{count}} 日間",
     "span_other": "{{count}} 日間",
@@ -512,9 +498,6 @@
     "bucketTooltip": "買い {{buy}}、売り {{sell}}",
     "axisNote": "5分ごとの買い引く売り。LPによる流動性の追加や引き出しはこのフィードに含まれません。",
     "biggestLabel": "最大のスワップ",
-    "title": "{{pool}} を通るフロー",
-    "subtitle": "買い引く売り、5分刻み",
-    "subtitleVenue": "{{venue}} · 買い引く売り、5分刻み",
     "waitingTitle": "マップを待機中",
     "waitingBody": "チェーンのプールを読み込んでいます。プールを選ぶとフローが表示されます。",
     "unavailableTitle": "現在プールを取得できません",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "確定済みの金額のみです。このポジションの上下端のティックデータを読めなかったため、最終更新以降の手数料は含まれておらず、実際の請求額はこれより大きい可能性があります。",
-    "title": "LPポジション",
     "subtitle_one": "{{wallet}} · レンジ {{count}} 件",
     "subtitle_other": "{{wallet}} · レンジ {{count}} 件",
     "capped": "{{count}} 件は非表示",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "トランザクションは1件、トークンの承認は不要です。入金は上の金額が上限です。",
     "confirmCollectNoteSolana": "上のプログラムに送信します。手数料は同じトランザクションで確定し、このウォレットにのみ支払われます。",
     "rowProgram": "プログラム",
-    "title": "流動性の管理",
     "subtitle_one": "{{wallet}} · ポジション {{count}} 件",
     "subtitle_other": "{{wallet}} · ポジション {{count}} 件",
     "position": "ポジション",
@@ -943,7 +924,6 @@
     "emptyBody": "プロバイダが返す期間内に、このプールでの約定はありません。"
   },
   "openInterest": {
-    "title": "建玉上位",
     "changeLabel": "24時間変化",
     "notPublished": "はAPIで建玉を公開していません。",
     "emptyTitle": "建玉はまだありません",
@@ -1034,8 +1014,6 @@
     "stateUnavailable": "データプロバイダーがプールのライブ状態を返しませんでした。上の数値はチェーンのリスティングによるものです。"
   },
   "poolMap": {
-    "title": "{{chain}} · 上位プール",
-    "subtitle": "自らの流動性をどれだけ回しているかで並べ替え",
     "sortTurnover": "回転率",
     "sortVolume": "出来高",
     "sortLiquidity": "流動性",
@@ -1053,11 +1031,6 @@
     "noChainBody": "左のレールでチェーンを選ぶと、そのプールが出来高と裏付け流動性の比でここに並びます。",
     "emptyTitle": "プールが返りませんでした",
     "emptyBody": "データプロバイダはこのチェーンについて何も返しませんでした。次回更新時に再試行します。",
-    "listTitle": "{{chain}} · 全プール",
-    "subtitleVolume": "大きさは24時間の出来高、色は24時間の変動",
-    "subtitleLiquidity": "大きさは流動性、色は24時間の変動",
-    "subtitleTrades": "大きさは24時間の取引回数、色は24時間の変動",
-    "subtitleTurnover": "大きさは出来高対流動性、色は24時間の変動",
     "sortTrades": "取引回数",
     "morePools": "このチェーンの他のプール",
     "backToMap": "マップに戻る",
@@ -1128,7 +1101,6 @@
   "routeBridge": {
     "confirmDestination": "{{chain}} のウォレット {{wallet}} に着金します。",
     "needsDestinationWallet": "この送金を受け取るには {{chain}} のウォレットを接続してください。上の価格は実際のものですが、送り先がまだありません。",
-    "title": "ブリッジ",
     "subtitle": "{{chain}} から資産を移動",
     "provider": "LI.FI",
     "noConnectorTitle": "ブリッジコネクタが未インストール",
@@ -1369,7 +1341,6 @@
     "leads": "{{total}} 銘柄 · {{symbol}} が牽引",
     "drags": "{{total}} 銘柄 · {{symbol}} が重し",
     "assets": "{{total}} 銘柄",
-    "title": "セクターテープ",
     "splitTape": "{{total}} 銘柄 · まちまち"
   },
   "session": {
@@ -3589,6 +3560,7 @@
     },
     "pane": {
       "close": "{{pane}} を閉じる",
+      "move": "{{pane}} パネルを移動",
       "popOutToColumn": "新しいカラムに切り離す",
       "bindPairToVariable": "ペアを変数にバインド",
       "bindWalletToVariable": "ウォレットを変数にバインド",
@@ -5486,7 +5458,6 @@
     "inDays": "{{n}}日後"
   },
   "markets": {
-    "title": "マーケット",
     "pairCount_one": "{{count}}ペア",
     "pairCount_other": "{{count}}ペア",
     "viewMode": "表示モード",
@@ -5570,7 +5541,6 @@
     }
   },
   "topCoins": {
-    "title": "トップコイン",
     "colCoin": "コイン",
     "colPrice": "価格",
     "col24h": "24時間",
@@ -5581,7 +5551,6 @@
     "willAppear": "ここにトップコインが表示されます"
   },
   "heatmap": {
-    "title": "マーケットヒートマップ",
     "failed": "ヒートマップの読み込みに失敗しました",
     "noData": "データがありません",
     "tryLater": "後でもう一度お試しください",

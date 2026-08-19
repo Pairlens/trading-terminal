@@ -4,6 +4,9 @@ import { Cell, Pie, PieChart, Tooltip } from 'recharts'
 import { Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@pairlens/ui/lib/utils'
+import { PANE_TABLE_BODY, Th } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { usePaneWallet } from '@/lib/layout/pane-context'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import { formatAmount, formatValue } from '@/lib/format-price'
@@ -37,18 +40,16 @@ export function PortfolioPane() {
 
   return (
     <div className="flex h-full flex-col gap-0 overflow-hidden">
-      {/* Hero total value */}
-      <div className="flex items-start justify-between border-b border-border/60 px-3 py-2.5">
-        <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-            {t('panes.portfolio', 'Portfolio')}
-          </span>
-          {totalValue > 0 && (
-            <span className="font-mono text-2xl font-semibold tracking-tight text-foreground tabular-nums">
-              {formatValue(currencySymbol, totalValue)}
-            </span>
-          )}
-        </div>
+      {/* The total rides in the shell's header row; the donut repeats it in
+          its centre for the tabbed case, where the slot renders nothing. */}
+      {totalValue > 0 && (
+        <PaneHeaderMetric>
+          {formatValue(currencySymbol, totalValue)}
+        </PaneHeaderMetric>
+      )}
+
+      {/* Display currency, the only control this pane owns. */}
+      <div className="flex h-6 shrink-0 items-center justify-end">
         <button
           className="rounded-sm px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           onClick={() => useSettingsDialogStore.getState().open('currency')}
@@ -59,7 +60,7 @@ export function PortfolioPane() {
 
       {/* Allocation bar */}
       {totalValue > 0 && (
-        <div className="px-3 pt-2.5">
+        <div className="pt-1">
           <div className="flex h-2 w-full overflow-hidden rounded-full bg-muted/60">
             {chartData.map((d) => {
               const pct = d.value != null ? (d.value / totalValue) * 100 : 0
@@ -90,7 +91,9 @@ export function PortfolioPane() {
               innerRadius={45}
               outerRadius={70}
               strokeWidth={1}
-              stroke="var(--background)"
+              // The gap between slices is the surface showing through, and
+              // the pane sits on the column's `--card`, not on the board.
+              stroke="var(--card)"
             >
               {chartData.map((entry) => (
                 <Cell key={entry.currency} fill={entry.color} />
@@ -135,22 +138,14 @@ export function PortfolioPane() {
       </div>
 
       {/* Holdings legend table */}
-      <div className="flex-1 overflow-auto px-3 pb-2 pt-2">
-        <table className="w-full text-[11px]">
+      <div className="flex-1 overflow-auto pt-2">
+        <table className={cn('w-full', PANE_TABLE_BODY)}>
           <thead>
-            <tr className="text-muted-foreground">
-              <th className="pb-1.5 pr-3 text-left font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('positions.asset', 'Asset')}
-              </th>
-              <th className="pb-1.5 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('positions.total', 'Total')}
-              </th>
-              <th className="pb-1.5 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {currencySymbol}
-              </th>
-              <th className="pb-1.5 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                %
-              </th>
+            <tr>
+              <Th>{t('positions.asset', 'Asset')}</Th>
+              <Th align="right">{t('positions.total', 'Total')}</Th>
+              <Th align="right">{currencySymbol}</Th>
+              <Th align="right">%</Th>
             </tr>
           </thead>
           <tbody>

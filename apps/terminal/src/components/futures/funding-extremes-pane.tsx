@@ -173,11 +173,12 @@ export function FundingExtremesPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="shrink-0 border-b border-border px-3.5 py-2">
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
-          {t('fundingExtremes.subtitle')}
-        </p>
-      </div>
+      {/* No title to delete: the pane never had one. The line stays because
+          it says what the ranking IS, and a rule under it would only redraw
+          the seam the shell already owns. */}
+      <p className="shrink-0 pb-1.5 text-[10px] leading-relaxed text-muted-foreground">
+        {t('fundingExtremes.subtitle')}
+      </p>
 
       <div
         aria-busy={loading || undefined}
@@ -222,7 +223,7 @@ function ExtremeRow({
 
   return (
     <button
-      className="flex w-full items-center gap-2.5 border-b border-border/50 px-3.5 py-2 text-left last:border-0 hover:bg-muted/40"
+      className="flex w-full items-center gap-2.5 border-b border-border/40 px-1.5 py-2 text-left last:border-0 hover:bg-muted/40"
       onClick={() => onOpen(cell.market, cell.pair)}
       type="button"
     >
@@ -230,7 +231,7 @@ function ExtremeRow({
         className={cn('size-3.5 shrink-0', positive ? 'text-up' : 'text-down')}
       />
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-mono text-xs font-semibold">
+        <span className="block truncate font-mono text-[11px] font-semibold">
           {base} · {cell.venueLabel}
         </span>
         <span className="block truncate text-[10.5px] text-muted-foreground">
@@ -239,7 +240,7 @@ function ExtremeRow({
       </span>
       <span
         className={cn(
-          'shrink-0 font-mono text-xs tabular-nums',
+          'shrink-0 font-mono text-[11px] tabular-nums',
           positive ? 'text-up' : 'text-down',
         )}
       >

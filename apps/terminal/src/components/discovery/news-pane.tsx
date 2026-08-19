@@ -38,6 +38,7 @@ import type {
 
 import type { NewsTickerRef } from '@/components/news/news-shared'
 import { NewsReaderDialog } from '@/components/news/news-reader'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import {
   ArticleRow,
   ArticleRowSkeleton,
@@ -332,37 +333,19 @@ function NewsFeed({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <header className="flex items-center justify-between gap-2 border-b px-3.5 py-2">
-        <h2 className="truncate text-[14px] font-semibold">
-          {t('news.title')}
-        </h2>
-        <div className="flex shrink-0 items-center gap-1">
-          {/* Not a "Live" dot. The feed polls every two minutes, and a green
-              pulse over a number that is ninety seconds old is a lie a trader
-              will eventually act on. The timestamp says what it means, and the
-              marker beside it says when the polling itself is what broke. */}
-          <NewsRefreshError error={error} />
-          {fetchedAt && (
-            <span className="text-[11px] text-muted-foreground">
-              {t('common.updated', { time: formatRelativeTime(fetchedAt) })}
-            </span>
-          )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-6"
-            aria-label={t('news.refresh')}
-            onClick={() => refetch()}
-            disabled={isFetching}
-          >
-            <RefreshCw
-              className={cn('size-3.5', isFetching && 'animate-spin')}
-            />
-          </Button>
-        </div>
-      </header>
+      {/* Not a "Live" dot. The feed polls every two minutes, and a green pulse
+          over a number that is ninety seconds old is a lie a trader will
+          eventually act on. The timestamp says what it means, and it rides the
+          pane's own header row rather than costing the wire a strip of its
+          own. The failure marker stays down here beside the refresh, because
+          the header slot is not drawn at all on a tabbed pane. */}
+      {fetchedAt && (
+        <PaneHeaderMetric>
+          {t('common.updated', { time: formatRelativeTime(fetchedAt) })}
+        </PaneHeaderMetric>
+      )}
 
-      <div className="flex shrink-0 gap-1.5 border-b px-3.5 py-2">
+      <div className="flex shrink-0 items-center gap-1.5 pb-2">
         {chips.map((chip) => (
           <button
             key={chip.id}
@@ -370,15 +353,27 @@ function NewsFeed({
             aria-pressed={scope === chip.id}
             onClick={() => onScopeChange(chip.id)}
             className={cn(
-              'rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-colors',
+              'flex h-5 items-center rounded-full px-2 text-[11px] font-medium transition-colors',
               scope === chip.id
                 ? 'bg-primary text-primary-foreground'
-                : 'border border-border text-foreground hover:bg-accent/50',
+                : 'text-muted-foreground hover:bg-accent/60 hover:text-foreground',
             )}
           >
             {chip.label}
           </button>
         ))}
+        <span className="flex-1" />
+        <NewsRefreshError error={error} />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-6 shrink-0"
+          aria-label={t('news.refresh')}
+          onClick={() => refetch()}
+          disabled={isFetching}
+        >
+          <RefreshCw className={cn('size-3.5', isFetching && 'animate-spin')} />
+        </Button>
       </div>
 
       {view === 'loading' ? (

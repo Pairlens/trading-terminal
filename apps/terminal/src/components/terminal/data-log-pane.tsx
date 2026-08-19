@@ -14,7 +14,7 @@ export function DataLogPane() {
   }
 
   return (
-    <div className="h-full p-2">
+    <div className="h-full py-2">
       <BottomPanelDataLog
         candles={candleData.candles}
         latestCandle={candleData.latestCandle}

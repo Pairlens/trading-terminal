@@ -3,13 +3,12 @@
 import { Fragment, memo } from 'react'
 
 import {
-  ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@pairlens/ui/components/ui/resizable'
-import { Separator } from '@pairlens/ui/components/ui/separator'
 
 import { LayoutCell } from './layout-cell'
+import { PaneRule, RowHandle } from './layout-handles'
 import type {
   DropZone,
   LayoutCell as LayoutCellType,
@@ -63,6 +62,18 @@ function groupCells(
   return groups
 }
 
+/**
+ * The card.
+ *
+ * One column is one surface: `--card` on the board's ground, 14px radius,
+ * 12px of padding closing all four ends. Panes inside it draw no card of
+ * their own, which is what leaves the hairline between two stacked panes as
+ * the only line on the board. `min-w-0` is load-bearing — every child holds
+ * tabular content that would otherwise refuse to shrink.
+ */
+const COLUMN_SURFACE =
+  'flex h-full min-w-0 flex-col overflow-hidden rounded-[14px] bg-card p-3'
+
 export const LayoutColumn = memo(function LayoutColumn({
   column,
   dropZone,
@@ -74,8 +85,10 @@ export const LayoutColumn = memo(function LayoutColumn({
   if (column.cells.length === 1) {
     const cell = column.cells[0]!
     return (
-      <div className="h-full">
-        <LayoutCell cell={cell} dropZone={dropZone} />
+      <div className={COLUMN_SURFACE}>
+        <div className="min-h-0 flex-1">
+          <LayoutCell cell={cell} dropZone={dropZone} />
+        </div>
       </div>
     )
   }
@@ -85,37 +98,40 @@ export const LayoutColumn = memo(function LayoutColumn({
   // Standard resizable layout — no fitContent cells
   if (!hasFitCells) {
     return (
-      <ResizablePanelGroup
-        orientation="vertical"
-        onLayoutChanged={(sizes) => {
-          const heights = column.cells.map(
-            (cell) => sizes[cell.id] ?? cell.heightPercent,
-          )
-          const changed = heights.some(
-            (h, i) => Math.abs(h - column.cells[i]!.heightPercent) > 0.01,
-          )
-          if (changed) {
-            dispatch({
-              type: 'RESIZE_CELLS',
-              columnId: column.id,
-              heights,
-            })
-          }
-        }}
-      >
-        {column.cells.map((cell, i) => (
-          <Fragment key={cell.id}>
-            {i > 0 && <ResizableHandle withHandle />}
-            <ResizablePanel
-              id={cell.id}
-              defaultSize={cell.heightPercent}
-              minSize={5}
-            >
-              <LayoutCell cell={cell} dropZone={dropZone} />
-            </ResizablePanel>
-          </Fragment>
-        ))}
-      </ResizablePanelGroup>
+      <div className={COLUMN_SURFACE}>
+        <ResizablePanelGroup
+          className="min-h-0 flex-1"
+          orientation="vertical"
+          onLayoutChanged={(sizes) => {
+            const heights = column.cells.map(
+              (cell) => sizes[cell.id] ?? cell.heightPercent,
+            )
+            const changed = heights.some(
+              (h, i) => Math.abs(h - column.cells[i]!.heightPercent) > 0.01,
+            )
+            if (changed) {
+              dispatch({
+                type: 'RESIZE_CELLS',
+                columnId: column.id,
+                heights,
+              })
+            }
+          }}
+        >
+          {column.cells.map((cell, i) => (
+            <Fragment key={cell.id}>
+              {i > 0 && <RowHandle />}
+              <ResizablePanel
+                id={cell.id}
+                defaultSize={cell.heightPercent}
+                minSize={5}
+              >
+                <LayoutCell cell={cell} dropZone={dropZone} />
+              </ResizablePanel>
+            </Fragment>
+          ))}
+        </ResizablePanelGroup>
+      </div>
     )
   }
 
@@ -123,12 +139,12 @@ export const LayoutColumn = memo(function LayoutColumn({
   const groups = groupCells(column.cells, defs)
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={COLUMN_SURFACE}>
       {groups.map((group, gi) => {
         if (group.type === 'fit') {
           return (
             <Fragment key={group.cell.id}>
-              {gi > 0 && <Separator />}
+              {gi > 0 && <PaneRule />}
               <div className="shrink-0">
                 <LayoutCell cell={group.cell} dropZone={dropZone} fitContent />
               </div>
@@ -141,7 +157,7 @@ export const LayoutColumn = memo(function LayoutColumn({
           const cell = group.cells[0]!
           return (
             <Fragment key={cell.id}>
-              {gi > 0 && <Separator />}
+              {gi > 0 && <PaneRule />}
               <div className="min-h-0 flex-1">
                 <LayoutCell cell={cell} dropZone={dropZone} />
               </div>
@@ -152,7 +168,7 @@ export const LayoutColumn = memo(function LayoutColumn({
         // Multiple flex cells — resizable
         return (
           <Fragment key={group.cells[0]!.id}>
-            {gi > 0 && <Separator />}
+            {gi > 0 && <PaneRule />}
             <ResizablePanelGroup
               className="min-h-0 flex-1"
               orientation="vertical"
@@ -176,7 +192,7 @@ export const LayoutColumn = memo(function LayoutColumn({
             >
               {group.cells.map((cell, i) => (
                 <Fragment key={cell.id}>
-                  {i > 0 && <ResizableHandle withHandle />}
+                  {i > 0 && <RowHandle />}
                   <ResizablePanel
                     id={cell.id}
                     defaultSize={cell.heightPercent}
