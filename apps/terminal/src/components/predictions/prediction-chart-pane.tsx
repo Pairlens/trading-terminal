@@ -41,7 +41,7 @@
  * from re-laying out eight paths sixty times a second, and recharts re-renders
  * the whole SVG on every data change.
  */
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Area,
@@ -96,6 +96,19 @@ import {
   isPartitionField,
   stackSeries,
 } from '@/lib/predictions/stack'
+import {
+  ACTIVE_BAND_EDGE_WIDTH,
+  ACTIVE_BAND_FILL_BOTTOM,
+  ACTIVE_BAND_FILL_TOP,
+  BAND_EDGE_WIDTH,
+  BAND_FILL_BOTTOM,
+  BAND_FILL_TOP,
+  REST_FILL_AT_CEILING,
+  REST_FILL_AT_FIELD,
+  bandGradientId,
+  paintScope,
+  restGradientId,
+} from '@/lib/predictions/band-paint'
 import {
   DEFAULT_PREDICTION_CHART_VIEW,
   PREDICTION_CHART_VIEWS,
@@ -224,6 +237,9 @@ function PredictionChartBody({
     () => new Map(visible.map((runner) => [runner.pairKey, runner])),
     [visible],
   )
+  // Namespaced, because two prediction charts can be on one workspace and an
+  // SVG gradient id is document-global.
+  const scope = paintScope(useId())
 
   const drawn = series.runners.length
   const selectWindow = useCallback(
@@ -289,6 +305,63 @@ function PredictionChartBody({
               data={bands ? bands.rows : rows}
               margin={{ top: 8, right: 4, bottom: 0, left: 0 }}
             >
+              {/* One gradient per band, mapped to that band's own box. See
+                  `lib/predictions/band-paint`. */}
+              {bands && (
+                <defs>
+                  {bands.order.map((key, index) => {
+                    const runner = byKey.get(key)
+                    if (!runner) return null
+                    return (
+                      <linearGradient
+                        key={key}
+                        id={bandGradientId(scope, index)}
+                        x1="0"
+                        x2="0"
+                        y1="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor={runner.color}
+                          stopOpacity={
+                            runner.active ? ACTIVE_BAND_FILL_TOP : BAND_FILL_TOP
+                          }
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={runner.color}
+                          stopOpacity={
+                            runner.active
+                              ? ACTIVE_BAND_FILL_BOTTOM
+                              : BAND_FILL_BOTTOM
+                          }
+                        />
+                      </linearGradient>
+                    )
+                  })}
+                  <linearGradient
+                    id={restGradientId(scope)}
+                    x1="0"
+                    x2="0"
+                    y1="0"
+                    y2="1"
+                  >
+                    {/* Runs the other way: faint at the ceiling, strongest
+                        where it meets the field. */}
+                    <stop
+                      offset="0%"
+                      stopColor="var(--muted-foreground)"
+                      stopOpacity={REST_FILL_AT_CEILING}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="var(--muted-foreground)"
+                      stopOpacity={REST_FILL_AT_FIELD}
+                    />
+                  </linearGradient>
+                </defs>
+              )}
               <CartesianGrid vertical={false} strokeDasharray="2 4" />
               {/* Even odds. The one horizontal a probability chart earns: on a
                   binary contract it is the line the question flips across, and
@@ -345,7 +418,7 @@ function PredictionChartBody({
                 ? /* Bottom-first, richest at the floor. The band the route is
                      on is outlined heavily so it stays findable in a field of
                      eight fills. */
-                  bands.order.map((key) => {
+                  bands.order.map((key, index) => {
                     const runner = byKey.get(key)
                     if (!runner) return null
                     return (
@@ -353,12 +426,19 @@ function PredictionChartBody({
                         key={key}
                         activeDot={false}
                         dataKey={key}
-                        fill={runner.color}
-                        fillOpacity={runner.active ? 0.92 : 0.78}
+                        fill={`url(#${bandGradientId(scope, index)})`}
+                        fillOpacity={1}
                         isAnimationActive={false}
                         stackId="field"
+                        // An Area strokes only its top curve, which in a stack
+                        // is the divider against the band above it.
                         stroke={runner.color}
-                        strokeWidth={runner.active ? 1.75 : 0.6}
+                        strokeLinejoin="round"
+                        strokeWidth={
+                          runner.active
+                            ? ACTIVE_BAND_EDGE_WIDTH
+                            : BAND_EDGE_WIDTH
+                        }
                         type="monotone"
                       />
                     )
@@ -386,16 +466,17 @@ function PredictionChartBody({
                 <Area
                   activeDot={false}
                   dataKey={REST_KEY}
-                  fill="var(--muted-foreground)"
                   // Recessive, but not invisible: on the phone's pure-black
-                  // plot a lighter grey read as empty space, which is exactly
+                  // plot a fainter grey read as empty space, which is exactly
                   // the wrong reading for the mass the chart is not drawing.
-                  fillOpacity={0.22}
+                  fill={`url(#${restGradientId(scope)})`}
+                  fillOpacity={1}
                   isAnimationActive={false}
                   stackId="field"
-                  stroke="var(--muted-foreground)"
-                  strokeOpacity={0.45}
-                  strokeWidth={0.6}
+                  // No edge: its top curve is the ceiling of the plot, and
+                  // stroking it just draws a border. The boundary that matters
+                  // is the last runner's own edge, already drawn.
+                  stroke="none"
                   type="monotone"
                 />
               )}
