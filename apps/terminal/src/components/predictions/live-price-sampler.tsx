@@ -29,6 +29,7 @@
 import { useEffect, useRef } from 'react'
 
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
+import { liveQuotePrice } from '@/lib/live-price'
 
 /** How often a streaming probability is allowed to redraw the field. */
 export const LIVE_SAMPLE_MS = 4_000
@@ -41,7 +42,11 @@ export function LivePriceSampler({
   onSample: (price: number | null) => void
 }): null {
   const ticker = useOptionalTickerData()
-  const raw = ticker?.lastTradePrice ?? ticker?.midPrice ?? null
+  // Null while the book is half-built, which the caller keeps as "hold what
+  // you have" — `withLivePoint` returns the same rows for a null price, so the
+  // newest bucket keeps its own close instead of taking one side of a book.
+  // See `lib/live-price`.
+  const raw = liveQuotePrice(ticker)
 
   const pending = useRef<number | null>(raw)
   pending.current = raw

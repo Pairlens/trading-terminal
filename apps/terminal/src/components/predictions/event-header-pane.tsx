@@ -41,6 +41,7 @@ import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { usePanePair } from '@/lib/layout/pane-context'
+import { liveQuotePrice } from '@/lib/live-price'
 import { usePredictionEventContext } from '@/hooks/use-prediction-event'
 import { useOptionalTickerData } from '@/lib/chart-terminal-context'
 import { eventOverround } from '@/lib/predictions/race'
@@ -246,7 +247,8 @@ function BinaryReading({ context }: { context: PredictionEventContext }) {
   const { t } = useTranslation()
   const ticker = useOptionalTickerData()
   const indexPrice = context.outcome?.price ?? context.outcome?.ask
-  const live = ticker?.lastTradePrice ?? ticker?.midPrice ?? null
+  // Null while the book is half-built; the index price below is the fallback.
+  const live = liveQuotePrice(ticker)
   const price = live ?? indexPrice ?? null
   const change = context.outcome?.change24h
   const label = context.entry?.outcome || context.outcome?.label || ''

@@ -90,6 +90,7 @@ import {
   useOptionalCandleData,
   useOptionalTickerData,
 } from '@/lib/chart-terminal-context'
+import { liveQuotePrice } from '@/lib/live-price'
 import { useRiskConfigStore } from '@/stores/risk-config-store'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
 import {
@@ -2194,10 +2195,9 @@ const TicketPriceSampler = memo(function TicketPriceSampler({
   const candleData = useOptionalCandleData()
   const latest: TicketPriceSample = {
     last:
-      ticker?.lastTradePrice ??
-      ticker?.midPrice ??
-      candleData?.latestCandle?.close ??
-      null,
+      // The one that matters most: a price read off half a book would prefill
+      // an order ticket. Null falls through to the last close.
+      liveQuotePrice(ticker) ?? candleData?.latestCandle?.close ?? null,
     bid: ticker?.bestBid ?? null,
     ask: ticker?.bestAsk ?? null,
   }
