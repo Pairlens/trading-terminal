@@ -70,7 +70,7 @@ export function AssistantReasoning({
           touchedRef.current = true
           setOpen((value) => !value)
         }}
-        className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-full py-0.5 text-[11px]"
+        className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-[6px] py-0.5 text-[11px]"
       >
         {open ? (
           <ChevronDown className="size-3 shrink-0" />

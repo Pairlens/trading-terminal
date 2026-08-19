@@ -65,7 +65,7 @@ export function PersonaMenu({
           <Button
             variant="ghost"
             size="sm"
-            className="ai-tile text-muted-foreground hover:text-foreground h-7 gap-1 rounded-full px-2.5 text-[11px]"
+            className="ai-tile text-muted-foreground hover:text-foreground h-[26px] gap-1 rounded-[10px] px-2.5 text-[11px]"
           />
         }
       >

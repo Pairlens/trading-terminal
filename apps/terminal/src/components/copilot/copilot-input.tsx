@@ -131,7 +131,7 @@ export function CopilotInput({
     <div className="shrink-0 p-3 pt-1.5">
       <form
         onSubmit={handleSubmit}
-        className="ai-field flex items-end gap-1.5 rounded-[18px] p-1.5"
+        className="ai-field flex items-end gap-1.5 rounded-[10px] p-1.5"
       >
         <Textarea
           ref={inputRef}
@@ -159,7 +159,7 @@ export function CopilotInput({
             variant="ghost"
             onClick={onStop}
             aria-label={t('copilot.stop')}
-            className="text-muted-foreground hover:text-foreground size-8 shrink-0 rounded-full"
+            className="text-muted-foreground hover:text-foreground size-8 shrink-0 rounded-[8px]"
           >
             <Square className="size-3.5 fill-current" />
           </Button>
@@ -170,7 +170,7 @@ export function CopilotInput({
             variant="ghost"
             disabled={queued || !value.trim()}
             aria-label={t('copilot.send')}
-            className="hover-lift text-primary-foreground hover:text-primary-foreground size-8 shrink-0 rounded-full shadow-sm disabled:opacity-30 disabled:shadow-none"
+            className="hover-lift text-primary-foreground hover:text-primary-foreground size-8 shrink-0 rounded-[8px] shadow-sm disabled:opacity-30 disabled:shadow-none"
             style={{
               background:
                 'linear-gradient(120deg, var(--magic-1), var(--magic-3))',

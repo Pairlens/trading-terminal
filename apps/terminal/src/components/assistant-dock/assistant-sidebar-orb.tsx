@@ -138,7 +138,7 @@ export function AssistantSidebarOrb({
                 : 'pointer-events-none absolute top-1/2 left-[calc(100%+0.5rem)] z-50 hidden -translate-y-1/2 group-hover/assistant:block group-focus-within/assistant:block'
             }
           >
-            <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-lg px-2.5 py-1 text-xs">
+            <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-[10px] px-2.5 py-1 text-xs">
               {announceBusy ? (
                 <ShimmeringText text={label} duration={1.6} />
               ) : (

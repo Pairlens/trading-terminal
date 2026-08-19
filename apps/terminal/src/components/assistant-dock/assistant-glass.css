@@ -27,6 +27,17 @@
  *
  * Utilities rather than a <Glass> component: these are pure paint, and a
  * wrapper div around them would fight the flex column it sits in.
+ *
+ * SHAPE is not in this file, but it is part of the same agreement and it is
+ * written down here because this is where anyone touching the panel looks
+ * first. The panel borrows the terminal's radius family rather than keeping
+ * its own: 14px for the panel itself and the collapsed pill it grows out of
+ * (a workspace column's radius), 10px for anything sitting on the glass
+ * (rows, tiles, cards, the composer capsule, chips, bubbles), 8px inside a
+ * tile, and 6px for controls at 24px or under. Round is reserved for things
+ * that are actually round: the orb, status dots, avatars. A pill or a 20px
+ * corner in here is what made the assistant read as a component borrowed
+ * from another product.
  */
 
 @layer components {

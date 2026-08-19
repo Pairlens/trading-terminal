@@ -66,7 +66,7 @@ export function AssistantOrbButton({
       aria-expanded={open}
       aria-label={open ? closeLabel : openLabel}
       onClick={onClick}
-      className="ai-glass-pill hover-lift text-muted-foreground hover:text-foreground aria-expanded:text-foreground hover:bg-[var(--ai-glass)] h-10 gap-2.5 rounded-full py-0 pr-1 pl-3.5 text-xs"
+      className="ai-glass-pill hover-lift text-muted-foreground hover:text-foreground aria-expanded:text-foreground hover:bg-[var(--ai-glass)] h-10 gap-2.5 rounded-[14px] py-0 pr-1 pl-3.5 text-xs"
     >
       <span
         className={

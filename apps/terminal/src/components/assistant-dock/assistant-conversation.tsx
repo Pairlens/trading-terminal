@@ -674,7 +674,7 @@ function AssistantConversationInner({
             <img
               src={dataUrl}
               alt={t('copilot.chartScreenshot')}
-              className="max-h-72 w-auto max-w-full rounded-xl"
+              className="max-h-72 w-auto max-w-full rounded-[10px]"
             />
           )
         }
@@ -784,14 +784,14 @@ function AssistantConversationInner({
           ) : (
             // A failed run used to be a dead end: the prompt was gone and
             // the only way forward was to type it again.
-            <div className="text-destructive border-destructive/30 bg-destructive/5 flex items-center gap-2 rounded-xl border px-3 py-2 text-xs">
+            <div className="text-destructive bg-destructive/10 flex items-center gap-2 rounded-[10px] px-3 py-2 text-xs">
               <span className="min-w-0 flex-1">
                 {t('assistantDock.genericError')}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-destructive hover:text-destructive h-6 shrink-0 gap-1 rounded-full px-2 text-[11px]"
+                className="text-destructive hover:text-destructive h-6 shrink-0 gap-1 rounded-[6px] px-2 text-[11px]"
                 onClick={handleRegenerate}
               >
                 <RefreshCw className="size-3" />
@@ -896,7 +896,7 @@ function AssistantMessageList({
                 })
                 onQuickAction(action)
               }}
-              className="ai-tile group/starter flex items-center gap-2 rounded-xl px-3 py-2 text-left text-xs"
+              className="ai-tile group/starter flex items-center gap-2 rounded-[10px] px-3 py-2 text-left text-xs"
             >
               <Sparkles
                 className="size-3 shrink-0"
@@ -921,7 +921,7 @@ function AssistantMessageList({
             scroller and watches this box for height changes, so putting it
             one level up breaks the follow silently: the observer ends up on
             a flex-sized box that never changes height. */}
-        <div className="flex flex-col gap-3.5 px-3.5 py-3" ref={contentRef}>
+        <div className="flex flex-col gap-3.5 px-3 py-3" ref={contentRef}>
           {messages.map((message) => (
             <CopilotChatMessage
               key={message.id}
@@ -952,7 +952,7 @@ function AssistantMessageList({
           type="button"
           onClick={() => scrollToBottom()}
           data-unseen={hasUnseen ? '' : undefined}
-          className="ai-glass-pill text-muted-foreground hover:text-foreground data-unseen:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-full px-3 text-[11px]"
+          className="ai-glass-pill text-muted-foreground hover:text-foreground data-unseen:text-foreground absolute inset-x-0 bottom-2 mx-auto flex h-7 w-fit items-center gap-1.5 rounded-[10px] px-3 text-[11px]"
         >
           {hasUnseen ? (
             <span
@@ -978,7 +978,7 @@ function QueuedTurn({ text }: { text: string }) {
   const { t } = useTranslation()
   return (
     <div className="flex min-w-0 flex-col items-end gap-1">
-      <div className="ai-bubble-user text-foreground min-w-0 max-w-[86%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] break-words opacity-60">
+      <div className="ai-bubble-user text-foreground min-w-0 max-w-[86%] rounded-[10px] rounded-br-[4px] px-3 py-2 text-[13px] break-words opacity-60">
         <p className="leading-relaxed whitespace-pre-wrap">{text}</p>
       </div>
       <p className="text-muted-foreground flex items-center gap-1 text-[10px]">

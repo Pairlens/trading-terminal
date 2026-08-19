@@ -54,7 +54,7 @@ export function AssistantToolActivity({
   }
 
   return (
-    <div className="ai-tile w-full min-w-0 rounded-xl">
+    <div className="ai-tile w-full min-w-0 rounded-[10px]">
       <button
         type="button"
         aria-expanded={open}
@@ -149,7 +149,7 @@ function ToolRow({
 
   const rowClass = cn(
     'flex w-full min-w-0 items-center gap-1.5 px-2.5 py-1 text-left text-[11px]',
-    nested ? 'rounded-lg' : 'rounded-full',
+    nested ? 'rounded-[8px]' : 'rounded-[10px]',
     isError
       ? 'border-down/40 text-down bg-down/10 border'
       : nested
@@ -197,7 +197,7 @@ function Detail({ label, body }: { label: string; body: string }) {
       <p className="text-muted-foreground mb-0.5 text-[10px] font-medium tracking-wide uppercase">
         {label}
       </p>
-      <pre className="max-h-48 overflow-auto rounded-lg bg-[var(--ai-inset-strong)] p-2 font-mono text-[10px] leading-relaxed">
+      <pre className="max-h-48 overflow-auto rounded-[8px] bg-[var(--ai-inset-strong)] p-2 font-mono text-[10px] leading-relaxed">
         {body}
       </pre>
     </div>
