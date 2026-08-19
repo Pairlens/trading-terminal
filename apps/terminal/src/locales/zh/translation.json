@@ -658,6 +658,8 @@
       "unusual": "异常"
     },
     "window": "排名区间",
+    "clearSector": "显示所有板块",
+    "emptySector": "在此时间范围内，{{sector}} 没有可排名的资产。",
     "columns": {
       "asset": "资产",
       "liquidity": "流动性",

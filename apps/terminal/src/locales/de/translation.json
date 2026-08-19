@@ -658,6 +658,8 @@
       "unusual": "Auffällig"
     },
     "window": "Zeitfenster",
+    "clearSector": "Alle Sektoren anzeigen",
+    "emptySector": "In {{sector}} rangiert in diesem Zeitraum nichts.",
     "columns": {
       "asset": "Asset",
       "liquidity": "Liquidität",

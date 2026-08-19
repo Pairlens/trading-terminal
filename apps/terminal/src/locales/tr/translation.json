@@ -658,6 +658,8 @@
       "unusual": "Sıra dışı"
     },
     "window": "Sıralama aralığı",
+    "clearSector": "Tüm sektörleri göster",
+    "emptySector": "Bu aralıkta {{sector}} içinde sıralanan bir varlık yok.",
     "columns": {
       "asset": "Varlık",
       "liquidity": "Likidite",

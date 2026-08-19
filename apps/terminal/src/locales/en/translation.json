@@ -2493,6 +2493,8 @@
       "newListings": "New listings"
     },
     "window": "Ranking window",
+    "clearSector": "Show every sector",
+    "emptySector": "Nothing in {{sector}} ranks over this window.",
     "columns": {
       "pair": "Pair",
       "change": "{{window}} change",

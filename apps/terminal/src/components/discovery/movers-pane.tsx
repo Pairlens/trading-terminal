@@ -25,7 +25,7 @@
  */
 import { memo, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Sparkles, TrendingUp } from 'lucide-react'
+import { Sparkles, TrendingUp, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -45,7 +45,10 @@ import {
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
 
-import type { BulkTickerEntry } from '@pairlens/shared/instrument-types'
+import type {
+  BulkTickerEntry,
+  InstrumentCategory,
+} from '@pairlens/shared/instrument-types'
 import type { MoverRow, MoverTab, MoverWindow } from '@/lib/spot-movers'
 import type { NewListingsFeed } from '@/hooks/use-new-listings'
 import type { NewListingRow } from '@/lib/new-listings'
@@ -100,6 +103,16 @@ const WINDOWS: ReadonlyArray<MoverWindow> = ['1h', '24h', '7d']
 /** Rows to rank. Past this the tab is a screener, and the scanner is one pane over. */
 const ROW_LIMIT = 50
 
+/**
+ * The sector selection this table shares with the tape and the scanner.
+ *
+ * One key, three panes: the sector tape writes it, the markets scanner reads
+ * it, and so does this table. It is named for the pair picker because that is
+ * where the chip started; keep the string in step with `sector-tape-pane.tsx`
+ * and `markets-pane.tsx`.
+ */
+const SECTOR_CATEGORY_KEY = 'pair-picker.category'
+
 /** What an unpublished figure renders as, matching the other panes. */
 const DASH = '—'
 
@@ -135,11 +148,31 @@ function CryptoMovers() {
     'movers.window',
     '24h',
   )
-
-  const rows = useMemo(
-    () => rankMovers([...coins.values()], tab, window, ROW_LIMIT),
-    [coins, tab, window],
+  // The sector tape's own selection, read rather than owned: clicking DeFi
+  // over there narrows this table to DeFi, which is the whole point of the two
+  // panes sitting in one column. `watchlists` is a scanner-only value and
+  // names no sector, so it reads as no filter here.
+  const [category, setCategory] = usePersistedState<string>(
+    SECTOR_CATEGORY_KEY,
+    'all',
   )
+  const sector =
+    category === 'all' || category === 'watchlists'
+      ? null
+      : (category as InstrumentCategory)
+
+  const rows = useMemo(() => {
+    const all = [...coins.values()]
+    // Narrow BEFORE ranking, not after: ranking first and filtering the top 50
+    // would leave a small sector with three rows on a board that has fifty to
+    // give it.
+    const scoped = sector
+      ? all.filter((coin) =>
+          membership.categoriesOf.get(coin.symbol)?.includes(sector),
+        )
+      : all
+    return rankMovers(scoped, tab, window, ROW_LIMIT)
+  }, [coins, membership, sector, tab, window])
 
   return (
     <MoversTable
@@ -161,9 +194,11 @@ function CryptoMovers() {
       // sentences from a calendar, not catalog categories, so the shared row
       // takes a finished label and renders it.
       categoryOf={(symbol) => {
-        const category = membership.categoriesOf.get(symbol)?.[0]
-        return category ? t(`markets.category.${category}`) : null
+        const first = membership.categoriesOf.get(symbol)?.[0]
+        return first ? t(`markets.category.${first}`) : null
       }}
+      sectorLabel={sector ? t(`markets.category.${sector}`) : null}
+      onClearSector={() => setCategory('all')}
     />
   )
 }
@@ -258,6 +293,8 @@ function MoversTable({
   assetClass,
   quote,
   categoryOf,
+  sectorLabel = null,
+  onClearSector,
 }: {
   tabs: ReadonlyArray<MoverTab>
   tab: MoverTab
@@ -275,6 +312,9 @@ function MoversTable({
   quote?: string
   /** A finished label for the row's second slot, already translated. */
   categoryOf: (symbol: string) => string | null
+  /** The sector these rows are narrowed to, translated. Null means all. */
+  sectorLabel?: string | null
+  onClearSector?: () => void
 }) {
   const { t } = useTranslation()
   // Its own sources, its own columns, its own empty state. Everything below
@@ -325,6 +365,21 @@ function MoversTable({
           ))}
         </TabsList>
         <div className="flex-1" />
+        {/* Where the sector tape's click surfaces. Without it the table is
+            narrowed by a pane the user may have scrolled past, with nothing on
+            it saying so and no way back except finding that pane again. */}
+        {sectorLabel && onClearSector && (
+          <button
+            type="button"
+            onClick={onClearSector}
+            aria-label={t('movers.clearSector')}
+            title={t('movers.clearSector')}
+            className="flex h-6 shrink-0 cursor-pointer items-center gap-1 rounded-md bg-muted/60 pr-1 pl-2 text-[11px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <span className="max-w-24 truncate">{sectorLabel}</span>
+            <X className="size-3" />
+          </button>
+        )}
         {onWindowChange && !listings && (
           <ToggleGroup
             aria-label={t('movers.window')}
@@ -413,7 +468,9 @@ function MoversTable({
           <MoversSkeleton />
         ) : rows.length === 0 ? (
           <p className="py-8 text-center text-xs text-muted-foreground">
-            {t(`movers.empty.${tab}`)}
+            {sectorLabel
+              ? t('movers.emptySector', { sector: sectorLabel })
+              : t(`movers.empty.${tab}`)}
           </p>
         ) : (
           rows.map((row, index) => (

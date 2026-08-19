@@ -60,11 +60,13 @@ and none of the five opens on an A-to-Z list of pairs.
 
 **CEX Spot** opens on what moved and why: a market pulse strip over the movers
 table over the sector tape, the news wire beside them, and your watchlist in
-the right rail. Every pane on this board works with no account connected. The
-full markets scanner is not on it, since the list you want by name is a
-keystroke away in omni-search; add the panel from **Panes**, or open the
-**Markets** board from the workspaces menu, and the sector tape's chips filter
-it to the sector you clicked.
+the right rail. Clicking a sector in the tape narrows the movers table above it
+to that sector rather than navigating away, and a chip on the table says which
+sector it is holding; click the chip to let all of them back in. Every pane on
+this board works with no account connected. The full markets scanner is not on
+it, since the list you want by name is a keystroke away in omni-search: add the
+panel from **Panes**, or open the **Markets** board from the workspaces menu,
+and it follows the same sector selection.
 
 **CEX Futures** scans by cost of carry instead of by price. The funding matrix
 takes the wide column with the basis monitor under it, and open interest sits

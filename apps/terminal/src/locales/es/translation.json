@@ -658,6 +658,8 @@
       "unusual": "Inusual"
     },
     "window": "Ventana del ranking",
+    "clearSector": "Mostrar todos los sectores",
+    "emptySector": "Nada en {{sector}} destaca en esta ventana.",
     "columns": {
       "asset": "Activo",
       "liquidity": "Liquidez",

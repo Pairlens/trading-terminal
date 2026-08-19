@@ -658,6 +658,8 @@
       "unusual": "異常"
     },
     "window": "排名區間",
+    "clearSector": "顯示所有板塊",
+    "emptySector": "在此時間範圍內，{{sector}} 沒有可排名的資產。",
     "columns": {
       "asset": "資產",
       "liquidity": "流動性",

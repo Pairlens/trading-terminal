@@ -658,6 +658,8 @@
       "unusual": "Tidak biasa"
     },
     "window": "Rentang peringkat",
+    "clearSector": "Tampilkan semua sektor",
+    "emptySector": "Tidak ada di {{sector}} yang masuk peringkat pada jendela ini.",
     "columns": {
       "asset": "Aset",
       "liquidity": "Likuiditas",

@@ -708,6 +708,8 @@
       "unusual": "Nietypowe"
     },
     "window": "Okno rankingu",
+    "clearSector": "Pokaż wszystkie sektory",
+    "emptySector": "Nic w sektorze {{sector}} nie plasuje się w tym oknie.",
     "columns": {
       "asset": "Aktywo",
       "liquidity": "Płynność",

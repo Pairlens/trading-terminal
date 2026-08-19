@@ -658,6 +658,8 @@
       "unusual": "이상 거래"
     },
     "window": "집계 구간",
+    "clearSector": "모든 섹터 표시",
+    "emptySector": "이 기간에는 {{sector}}에서 순위에 오른 종목이 없습니다.",
     "columns": {
       "asset": "자산",
       "liquidity": "유동성",

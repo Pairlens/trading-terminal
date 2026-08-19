@@ -658,6 +658,8 @@
       "unusual": "異常値"
     },
     "window": "集計期間",
+    "clearSector": "すべてのセクターを表示",
+    "emptySector": "この期間、{{sector}} には順位に入るものがありません。",
     "columns": {
       "asset": "銘柄",
       "liquidity": "流動性",

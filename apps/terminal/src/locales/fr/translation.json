@@ -658,6 +658,8 @@
       "unusual": "Inhabituel"
     },
     "window": "Fenêtre de classement",
+    "clearSector": "Afficher tous les secteurs",
+    "emptySector": "Rien dans {{sector}} ne se classe sur cette fenêtre.",
     "columns": {
       "asset": "Actif",
       "liquidity": "Liquidité",

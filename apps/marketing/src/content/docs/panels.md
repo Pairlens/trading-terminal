@@ -122,35 +122,35 @@ holding) are called out in their own footnotes rather than estimated. See
 
 ## Discovery
 
-| Panel                 | What it shows                                                                                                   |
-| --------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Markets**           | Every pair your connectors reach. See [discovery](/docs/market-discovery)                                       |
-| **Watchlist**         | Tracked pairs, starting with Top Crypto and Top Equities                                                        |
-| **Recent Tickers**    | Recently viewed pairs with live prices, for quick switching                                                     |
-| **Top Coins**         | Coins ranked by volume, market cap, and price change                                                            |
-| **Heatmap**           | Market performance across sectors at a glance                                                                   |
-| **Fear & Greed**      | The market sentiment gauge                                                                                      |
-| **Market Pulse**      | Five tiles for the whole market: total cap, volume, BTC dominance, per-pair breadth, Fear and Greed             |
-| **Movers**            | The day's gainers and losers with the volume behind each, plus a New listings tab for what just started trading |
-| **Sector Tape**       | Every sector as a chip with its move and a breadth bar, so rotation reads in one glance                         |
-| **Sector Peers**      | How the rest of this pair's sector traded today, with the pair itself pinned on top                             |
-| **Web**               | Any website, embedded as a panel (desktop app only)                                                             |
-| **Funding Matrix**    | Funding for every perp on every venue you connected, annualised, in a grid you can sort by any column           |
-| **Basis Monitor**     | Perp against spot in basis points, measured against the venue's own index                                       |
-| **Open Interest**     | Open interest per contract with its 24h change, each row naming the venue that measured it                      |
-| **Funding Extremes**  | The dearest and cheapest carry, each rate ranked against that contract's own 30-day range                       |
-| **Chains**            | Every chain the terminal knows, with gas, liquidity and a day's volume beside it                                |
-| **Pool Map**          | A treemap of the chain's top pools, sized by volume and tinted by the day's move, with a ranked list behind it  |
-| **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it                 |
-| **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                              |
-| **Session**           | Where the trading day is right now, from the broker's own calendar, holidays and half days included             |
-| **Earnings Calendar** | Who reports today, split before the bell and after the close, with the consensus EPS and an IPO tab             |
-| **Economic Calendar** | Forward US macro releases by the clock, compiled from the agencies' own publication schedules                   |
-| **Events**            | Prediction-market events by category. See [prediction markets](/docs/prediction-markets)                        |
-| **Categories**        | Every event category with a live contract count, so the board narrows in one click                              |
-| **Event Board**       | Live events in two card shapes: binary questions with the probability large, races with every runner priced     |
-| **Odds Movers**       | The events whose probability moved most today, named by their event, with the move stated in points             |
-| **Resolving Soon**    | Contracts closest to settlement, sorted by the clock rather than by volume                                      |
+| Panel                 | What it shows                                                                                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Markets**           | Every pair your connectors reach. See [discovery](/docs/market-discovery)                                                                                    |
+| **Watchlist**         | Tracked pairs, starting with Top Crypto and Top Equities                                                                                                     |
+| **Recent Tickers**    | Recently viewed pairs with live prices, for quick switching                                                                                                  |
+| **Top Coins**         | Coins ranked by volume, market cap, and price change                                                                                                         |
+| **Heatmap**           | Market performance across sectors at a glance                                                                                                                |
+| **Fear & Greed**      | The market sentiment gauge                                                                                                                                   |
+| **Market Pulse**      | Five tiles for the whole market: total cap, volume, BTC dominance, per-pair breadth, Fear and Greed                                                          |
+| **Movers**            | The day's gainers and losers with the volume behind each, plus a New listings tab for what just started trading                                              |
+| **Sector Tape**       | Every sector as a chip with its move and a breadth bar, so rotation reads in one glance; clicking one narrows the movers table and the markets scanner to it |
+| **Sector Peers**      | How the rest of this pair's sector traded today, with the pair itself pinned on top                                                                          |
+| **Web**               | Any website, embedded as a panel (desktop app only)                                                                                                          |
+| **Funding Matrix**    | Funding for every perp on every venue you connected, annualised, in a grid you can sort by any column                                                        |
+| **Basis Monitor**     | Perp against spot in basis points, measured against the venue's own index                                                                                    |
+| **Open Interest**     | Open interest per contract with its 24h change, each row naming the venue that measured it                                                                   |
+| **Funding Extremes**  | The dearest and cheapest carry, each rate ranked against that contract's own 30-day range                                                                    |
+| **Chains**            | Every chain the terminal knows, with gas, liquidity and a day's volume beside it                                                                             |
+| **Pool Map**          | A treemap of the chain's top pools, sized by volume and tinted by the day's move, with a ranked list behind it                                               |
+| **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it                                                              |
+| **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                                                                           |
+| **Session**           | Where the trading day is right now, from the broker's own calendar, holidays and half days included                                                          |
+| **Earnings Calendar** | Who reports today, split before the bell and after the close, with the consensus EPS and an IPO tab                                                          |
+| **Economic Calendar** | Forward US macro releases by the clock, compiled from the agencies' own publication schedules                                                                |
+| **Events**            | Prediction-market events by category. See [prediction markets](/docs/prediction-markets)                                                                     |
+| **Categories**        | Every event category with a live contract count, so the board narrows in one click                                                                           |
+| **Event Board**       | Live events in two card shapes: binary questions with the probability large, races with every runner priced                                                  |
+| **Odds Movers**       | The events whose probability moved most today, named by their event, with the move stated in points                                                          |
+| **Resolving Soon**    | Contracts closest to settlement, sorted by the clock rather than by volume                                                                                   |
 
 Everything from Funding Matrix down arrives with an asset-class family, so a
 terminal with Pairlens DEX uninstalled has no Chains panel to add. These are

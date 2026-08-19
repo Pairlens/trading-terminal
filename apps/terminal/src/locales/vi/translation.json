@@ -658,6 +658,8 @@
       "unusual": "Bất thường"
     },
     "window": "Khung xếp hạng",
+    "clearSector": "Hiển thị tất cả lĩnh vực",
+    "emptySector": "Không có gì trong {{sector}} được xếp hạng trong khoảng thời gian này.",
     "columns": {
       "asset": "Tài sản",
       "liquidity": "Thanh khoản",
