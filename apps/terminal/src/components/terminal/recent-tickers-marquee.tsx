@@ -153,21 +153,20 @@ export function RecentTickersMarquee({ current }: { current: MarketRef }) {
   ))
 
   return (
-    <div className="flex h-9 shrink-0 items-center gap-1 bg-background px-3 pb-1">
+    <div className="flex h-[30px] shrink-0 items-center gap-1 bg-background px-3 pb-1">
       {/* Leading indicator — pinned, never scrolls, marks the strip as the
           recently viewed pairs. Held off the tape by its own padding: the
           rule that used to sit here was the last vertical line in the
           chrome. */}
       <div
-        // `pl-2` puts this 14px glyph on the same vertical axis as the 16px
-        // pair mark in the bar above (the chip insets its mark by 7px, and
-        // the two icons differ by 2px of width), so the leftmost thing on
-        // each of the two rows lines up.
-        className="flex h-full shrink-0 items-center pl-2 pr-2.5 text-muted-foreground"
+        // `pl-[9px]` puts this 12px glyph on the same vertical axis as the
+        // 16px pair mark in the bar above (the chip insets its mark by 7px),
+        // so the leftmost thing on each of the two rows lines up.
+        className="flex h-full shrink-0 items-center pl-[9px] pr-2.5 text-muted-foreground"
         title={t('terminal.recentlyViewed')}
         aria-label={t('terminal.recentlyViewed')}
       >
-        <History className="size-3.5" />
+        <History className="size-3" />
       </div>
       {/* Scrolling viewport — measured for overflow independently of the
           pinned indicator above. overflow-hidden while auto-scrolling; under
@@ -241,14 +240,14 @@ const MarqueeChip = memo(function MarqueeChip({
         // at, next to a bar that spends the accent on exactly one control.
         // What actually says "this one" is the symbol at full strength while
         // its neighbours sit muted; the fill only lifts it off the ground.
-        'group/chip relative flex h-8 shrink-0 items-center rounded-[10px] text-xs transition-colors hover:bg-card/60',
+        'group/chip relative flex h-[22px] shrink-0 items-center rounded-lg text-[11px] transition-colors hover:bg-card/60',
         isActive && 'bg-card hover:bg-card',
       )}
     >
       <button
         type="button"
         onClick={() => onSelect(marketRef)}
-        className="flex h-full cursor-pointer items-center gap-1.5 py-0 pl-3 pr-1.5"
+        className="flex h-full cursor-pointer items-center gap-1.5 py-0 pl-2.5 pr-1"
       >
         {/* Bounded, because one of these can be an event slug. The chips
             refuse to shrink (the track's seamless loop depends on it), so an
@@ -264,7 +263,7 @@ const MarqueeChip = memo(function MarqueeChip({
           )}
         />
         {isPrediction && (
-          <span className="max-w-24 shrink-0 truncate text-[11px] text-muted-foreground">
+          <span className="max-w-24 shrink-0 truncate text-[10px] text-muted-foreground">
             {outcomeLabel}
           </span>
         )}
@@ -292,7 +291,7 @@ const MarqueeChip = memo(function MarqueeChip({
         aria-label={`Remove ${symbol} from recent`}
         title={`Remove ${symbol}`}
         className={cn(
-          'mr-1.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground opacity-0 transition-all hover:bg-accent hover:text-foreground focus-visible:opacity-100 group-hover/chip:opacity-100',
+          'mr-1 flex size-3.5 shrink-0 cursor-pointer items-center justify-center rounded-sm text-muted-foreground opacity-0 transition-all hover:bg-accent hover:text-foreground focus-visible:opacity-100 group-hover/chip:opacity-100',
           isActive && 'opacity-60',
         )}
       >
