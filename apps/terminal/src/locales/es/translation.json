@@ -5605,6 +5605,7 @@
     "adjustScope": "Nada en el teletipo para este filtro. Prueba con otro o vuelve en unos minutos.",
     "noWatchedAssets": "Tu watchlist está vacía, así que no hay nada a lo que acotar el teletipo. Marca un par con una estrella o lee Macro.",
     "noAssetNews": "El teletipo está cargado, pero nada trata de tu watchlist. Macro y Todas siguen moviéndose.",
+    "noCryptoNews": "El teletipo está activo, pero ahora mismo nada trata sobre cripto. Macro sigue en movimiento.",
     "noStockNews": "Ahora mismo no hay nada en el teletipo sobre los valores listados. Macro y Todas siguen moviéndose.",
     "mentionsPairs_one": "menciona {{count}} de tus pares",
     "mentionsPairs_other": "menciona {{count}} de tus pares"

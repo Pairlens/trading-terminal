@@ -5605,6 +5605,7 @@
     "adjustScope": "Rien sur le fil pour ce filtre. Essayez-en un autre ou revenez dans quelques minutes.",
     "noWatchedAssets": "Votre watchlist est vide, il n'y a donc rien pour cadrer le fil. Marquez une paire d'une étoile, ou lisez plutôt Macro.",
     "noAssetNews": "Le fil est chargé, mais rien ne concerne votre watchlist. Macro et Toutes continuent d'avancer.",
+    "noCryptoNews": "Le fil est actif, mais rien ne concerne la crypto pour le moment. Macro bouge toujours.",
     "noStockNews": "Rien sur le fil à propos des valeurs listées pour le moment. Macro et Toutes continuent d'avancer.",
     "mentionsPairs_one": "mentionne {{count}} de vos paires",
     "mentionsPairs_other": "mentionne {{count}} de vos paires"

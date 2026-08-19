@@ -190,12 +190,12 @@ that has gone quiet.
 
 ## News and sentiment
 
-| Panel             | What it shows                                                                                            |
-| ----------------- | -------------------------------------------------------------------------------------------------------- |
-| **News**          | The wire as dense rows, scoped to the board: your assets or macro on crypto, earnings or macro on stocks |
-| **Symbol News**   | News and sentiment filtered to the active pair                                                           |
-| **Social**        | Social sentiment and community activity for a pair                                                       |
-| **What Moved It** | A prediction's history as a timeline, each row stamped with the move it recorded                         |
+| Panel             | What it shows                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **News**          | The wire as dense rows, on the board's own asset class: crypto coverage on a crypto board, listed companies on the equities one |
+| **Symbol News**   | News and sentiment filtered to the active pair                                                                                  |
+| **Social**        | Social sentiment and community activity for a pair                                                                              |
+| **What Moved It** | A prediction's history as a timeline, each row stamped with the move it recorded                                                |
 
 Both news panels keep themselves current. Every two minutes the feed asks the
 wire for what has been published since it last looked, and anything new lands
@@ -206,6 +206,14 @@ back, so a window left open overnight costs nothing. The refresh button is
 still there when you want the wire now, and a reader you have open holds its
 place: stories that arrive while you are reading join the list behind it
 instead of shuffling the article under you.
+
+Each board asks for its own wire. The provider's default feed is US equities
+almost end to end, so a crypto board that only filtered would be filtering a
+page with no crypto on it; the crypto board anchors its request to two crypto
+symbols instead, and the page that comes back carries the rest of the market
+with it. The equities board takes the feed as it comes and holds it to the
+listed universe. Either way the chips inside a board narrow that one page, so
+switching them is instant.
 
 The list fills itself. The wire answers fifty stories at a time, but every
 scope past All is filtered on your side, so a watchlist scope can keep four of

@@ -5711,6 +5711,7 @@
     "adjustScope": "Nic z agencji pod ten filtr. Wypróbuj inny albo zajrzyj za kilka minut.",
     "noWatchedAssets": "Twoja lista jest pusta, więc nie ma czym zawęzić serwisu. Oznacz parę gwiazdką albo czytaj Makro.",
     "noAssetNews": "Agencje nadają, ale nic nie dotyczy Twojej listy. Makro i Wszystkie wciąż się ruszają.",
+    "noCryptoNews": "Serwis nadaje, ale nic nie dotyczy teraz krypto. W Makro nadal się dzieje.",
     "noStockNews": "Na razie nic z agencji o notowanych spółkach. Makro i Wszystkie wciąż się ruszają.",
     "mentionsPairs_one": "wspomina o {{count}} z Twoich par",
     "mentionsPairs_few": "wspomina o {{count}} z Twoich par",

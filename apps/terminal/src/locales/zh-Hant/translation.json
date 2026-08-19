@@ -5605,6 +5605,7 @@
     "adjustScope": "這個篩選下暫時沒有新聞。換一個試試，或幾分鐘後再回來看看。",
     "noWatchedAssets": "你的自選是空的，新聞沒有可對照的範圍。加一個自選交易對，或改看總經。",
     "noAssetNews": "新聞源很熱鬧，但都與你的自選無關。總經和全部仍在更新。",
+    "noCryptoNews": "資訊仍在更新，但目前沒有加密相關內容。總體經濟仍有動態。",
     "noStockNews": "目前沒有關於這些股票的新聞。總經和全部仍在更新。",
     "mentionsPairs_one": "提及你的 {{count}} 個交易對",
     "mentionsPairs_other": "提及你的 {{count}} 個交易對"

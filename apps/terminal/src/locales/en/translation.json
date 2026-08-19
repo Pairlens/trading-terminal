@@ -4697,6 +4697,7 @@
     "adjustScope": "Nothing on the wire for this filter. Try another one, or check back in a few minutes.",
     "noWatchedAssets": "Your watchlist is empty, so there is nothing to scope the wire to. Star a pair, or read Macro instead.",
     "noAssetNews": "The wire is busy, but none of it is about your watchlist. Macro and All are still moving.",
+    "noCryptoNews": "The wire is busy, but none of it is about crypto right now. Macro is still moving.",
     "noStockNews": "Nothing on the wire about the listed names right now. Macro and All are still moving.",
     "mentionsPairs_one": "mentions {{count}} of your pairs",
     "mentionsPairs_other": "mentions {{count}} of your pairs"

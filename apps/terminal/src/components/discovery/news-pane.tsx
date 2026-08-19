@@ -16,12 +16,13 @@
  * feed component, because the difference between them is three parameters and
  * a lookup, not a second pane.
  *
- * It opens no new stream and no new request per chip. The percentages ride
- * maps the board already fetched for the scanner; the asset scopes are applied
- * over the same feed the All chip reads, because the provider's own `tickers`
- * parameter is AND rather than OR (see `params` below). That feed refreshes
- * itself every two minutes while the window is focused, so stories arrive on
- * their own and switching chips still costs no request.
+ * Each board asks for its own wire. The provider's default feed is US equities
+ * almost end to end, so the crypto board anchors its request to two crypto
+ * symbols and the equities board takes the feed as it comes; the chips inside
+ * a board then narrow that one page client-side, so switching them costs no
+ * request. The percentages ride maps the board already fetched for the
+ * scanner. The feed refreshes itself every two minutes while the window is
+ * focused, so stories arrive on their own.
  */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -44,6 +45,7 @@ import {
   ArticleRowSkeleton,
   NEWS_PAGE_TIME_FROM,
   NEWS_POLL_INTERVAL_MS,
+  NEWS_TICKERS_CRYPTO,
   NEWS_TOPIC_EARNINGS,
   NEWS_TOPIC_MACRO,
   NewsFeedEnd,
@@ -114,12 +116,28 @@ function CryptoNews() {
 
   const watchedSet = useMemo(() => new Set(watched), [watched])
 
+  // `all` needs no client-side scope: the request itself is a crypto request
+  // (see NEWS_TICKERS_CRYPTO), so the page that comes back is already the
+  // crypto wire. `assets` narrows that page to what the reader stars, and it
+  // checks the NAMESPACE as well as the base because tickers collide across
+  // asset classes: matching bare `ADA` is how a bank's earnings headline used
+  // to land on a board about Cardano. Macro is deliberately unheld: a CPI
+  // print is not about any one token, and scoping it to a watchlist is how you
+  // get an empty tab.
+  const scopeTo = useMemo(() => {
+    if (scope !== 'assets') return null
+    return (raw: string) =>
+      isCryptoNewsTicker(raw) && watchedSet.has(newsTickerBase(raw))
+  }, [scope, watchedSet])
+
   return (
     <NewsFeed
       chips={chips}
       scope={scope}
       onScopeChange={setScope}
-      scopeTo={scope === 'assets' ? watchedSet : null}
+      scopeTo={scopeTo}
+      // What makes this the crypto board's wire rather than the wire.
+      tickers={scope === 'macro' ? undefined : NEWS_TICKERS_CRYPTO}
       // "Your assets" with an empty watchlist would silently widen to the whole
       // wire, which looks like the filter is broken. Say so instead.
       scopedEmptyBody={
@@ -127,7 +145,11 @@ function CryptoNews() {
           ? t('news.noWatchedAssets')
           : null
       }
-      filteredEmptyBody={t('news.noAssetNews')}
+      // Two different silences: the watchlist scope found nothing, or crypto
+      // itself is quiet on a wire that is mostly listed companies.
+      filteredEmptyBody={t(
+        scope === 'all' ? 'news.noCryptoNews' : 'news.noAssetNews',
+      )}
       changeFor={changeFor}
       watched={watched}
     />
@@ -178,6 +200,12 @@ function EquityNews() {
     [t],
   )
 
+  const scopeTo = useMemo(() => {
+    if (scope === 'macro') return null
+    return (raw: string) =>
+      isEquityNewsTicker(raw) && universe.has(newsTickerBase(raw))
+  }, [scope, universe])
+
   return (
     <NewsFeed
       chips={chips}
@@ -187,7 +215,7 @@ function EquityNews() {
       // stock universe. Macro is deliberately unheld: a CPI print is not
       // "about" any one ticker, and scoping it to fifty of them is how you get
       // a macro tab that returns nothing.
-      scopeTo={scope === 'macro' ? null : universe}
+      scopeTo={scopeTo}
       topics={scope === 'assets' ? NEWS_TOPIC_EARNINGS : undefined}
       filteredEmptyBody={t('news.noStockNews')}
       changeFor={changeFor}
@@ -204,6 +232,7 @@ function NewsFeed({
   onScopeChange,
   scopeTo,
   topics,
+  tickers,
   scopedEmptyBody = null,
   filteredEmptyBody = null,
   changeFor,
@@ -213,10 +242,20 @@ function NewsFeed({
   scope: NewsScope
   onScopeChange: (scope: NewsScope) => void
   /**
-   * Base symbols this scope is about, filtered CLIENT-side. Null means the
-   * whole wire. See the note on `params` for why this is not a query param.
+   * Which feed symbols this scope is about, applied CLIENT-side. Null means the
+   * whole wire. It takes the RAW symbol rather than a set of bases because a
+   * board has to hold the wire to its own asset class, and only the namespace
+   * says which class a symbol belongs to: `CRYPTO:CFG` and `CFG` are Centrifuge
+   * and Citizens Financial Group, and a set of bases cannot tell them apart.
    */
-  scopeTo: ReadonlySet<string> | null
+  scopeTo: ((rawTicker: string) => boolean) | null
+  /**
+   * Symbols sent to the provider, which is a different lever from `scopeTo`:
+   * this one decides which wire arrives, that one narrows the wire once it is
+   * here. Keep it short. The provider rate-limits a long list, and a request
+   * that names fifty symbols is a request no page satisfies.
+   */
+  tickers?: string
   /** Topic slug for the leading chip, when that chip is a topic filter. */
   topics?: string
   /** Why this scope has nothing to ask for, when that is the reason it is empty. */
@@ -233,25 +272,30 @@ function NewsFeed({
   const watchedSet = useMemo(() => new Set(watched), [watched])
 
   /**
-   * Only the topic ever reaches the provider.
+   * What the provider is asked for: a topic, and a short anchor of symbols.
    *
-   * Its `tickers` parameter reads as AND, not OR: ask for BTC and the wire
-   * answers, ask for BTC,ETH and it answers with nothing, because almost no
-   * story is about both. A watchlist-scoped request is therefore a tab that is
-   * permanently empty, and a fifty-symbol one is also rate-limited outright.
-   * So the scope is applied here, over the same unscoped feed the All chip
-   * reads — which also means switching chips is instant and costs no request.
+   * The anchor is what decides which wire arrives. The default feed is US
+   * equities almost end to end, so a crypto board that only filtered would be
+   * filtering a page with no crypto on it; two crypto symbols turn the same
+   * endpoint over to token coverage (measured: fifty of fifty articles
+   * crypto-tagged). It stays SHORT deliberately. A long list narrows toward
+   * stories about every symbol at once and is rate-limited besides, so the
+   * reader's own watchlist is never what gets sent.
+   *
+   * Everything finer than that is applied client-side over the page this
+   * returns, which is also why switching chips inside a board costs no request.
    */
   const params: NewsFeedParams = useMemo(
     () => ({
       sort: 'LATEST',
+      ...(tickers ? { tickers } : {}),
       ...(scope === 'macro'
         ? { topics: NEWS_TOPIC_MACRO }
         : topics
           ? { topics }
           : {}),
     }),
-    [scope, topics],
+    [scope, tickers, topics],
   )
 
   const serializedParams = JSON.stringify(params)
@@ -311,9 +355,7 @@ function NewsFeed({
       scopeTo === null
         ? feed
         : feed.filter((article) =>
-            article.tickerSentiment.some((entry) =>
-              scopeTo.has(newsTickerBase(entry.ticker)),
-            ),
+            article.tickerSentiment.some((entry) => scopeTo(entry.ticker)),
           ),
     [feed, scopeTo],
   )

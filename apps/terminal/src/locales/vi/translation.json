@@ -5605,6 +5605,7 @@
     "adjustScope": "Không có tin nào cho bộ lọc này. Thử bộ lọc khác, hoặc quay lại sau vài phút.",
     "noWatchedAssets": "Danh mục theo dõi của bạn đang trống nên không có gì để lọc tin. Đánh dấu sao một cặp, hoặc đọc mục Vĩ mô.",
     "noAssetNews": "Tin vẫn dồn dập, nhưng không có tin nào về danh mục theo dõi của bạn. Vĩ mô và Tất cả vẫn đang cập nhật.",
+    "noCryptoNews": "Tin tức vẫn về, nhưng hiện không có tin nào về crypto. Vĩ mô vẫn đang chuyển động.",
     "noStockNews": "Hiện chưa có tin nào về các mã đang hiển thị. Vĩ mô và Tất cả vẫn đang cập nhật.",
     "mentionsPairs_one": "nhắc đến {{count}} cặp của bạn",
     "mentionsPairs_other": "nhắc đến {{count}} cặp của bạn"

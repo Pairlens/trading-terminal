@@ -5605,6 +5605,7 @@
     "adjustScope": "Für diesen Filter ist nichts auf dem Ticker. Probiere einen anderen oder schau in ein paar Minuten wieder vorbei.",
     "noWatchedAssets": "Deine Watchlist ist leer, also gibt es nichts, worauf sich der Ticker eingrenzen ließe. Markiere ein Paar mit einem Stern oder lies stattdessen Makro.",
     "noAssetNews": "Auf dem Ticker ist viel los, aber nichts davon betrifft deine Watchlist. Makro und Alle laufen weiter.",
+    "noCryptoNews": "Der Ticker läuft, aber gerade geht es nirgends um Krypto. Makro bewegt sich weiterhin.",
     "noStockNews": "Gerade nichts auf dem Ticker zu den gelisteten Titeln. Makro und Alle laufen weiter.",
     "mentionsPairs_one": "erwähnt {{count}} deiner Paare",
     "mentionsPairs_other": "erwähnt {{count}} deiner Paare"

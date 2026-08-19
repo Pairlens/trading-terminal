@@ -289,6 +289,23 @@ export const TOPIC_OPTIONS = [
 export const NEWS_TOPIC_MACRO = 'economy_macro'
 export const NEWS_TOPIC_EARNINGS = 'earnings'
 
+/**
+ * The two symbols that turn the wire into a crypto wire.
+ *
+ * The provider's default feed is US equities almost end to end: fifty of fifty
+ * on a typical page, which is why the spot board used to open on bank earnings
+ * that happened to name a token. A page with no token on it cannot be filtered
+ * into one, so the crypto board ASKS for crypto instead.
+ *
+ * BTC and ETH rather than the reader's watchlist: a fifty-symbol request is
+ * rate-limited outright, and one built from a watchlist would go quiet the
+ * moment somebody starred only altcoins. These two are what every crypto wire
+ * touches, and the page they return carries the rest of the market with them
+ * (XMR, BNB, LINK, UNI on a sample page), which the watchlist scope then
+ * filters down client-side.
+ */
+export const NEWS_TICKERS_CRYPTO = 'CRYPTO:BTC,CRYPTO:ETH'
+
 /** Localized topic label; unknown topics fall back to title-cased slug. */
 export function formatTopicLabel(topic: string): string {
   const fallback = topic

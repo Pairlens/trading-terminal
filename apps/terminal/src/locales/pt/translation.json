@@ -5605,6 +5605,7 @@
     "adjustScope": "Nada no noticiário para este filtro. Tente outro ou volte em alguns minutos.",
     "noWatchedAssets": "Sua watchlist está vazia, então não há a que restringir o noticiário. Marque um par com estrela ou leia Macro.",
     "noAssetNews": "O noticiário está agitado, mas nada dele é sobre a sua watchlist. Macro e Todas seguem em movimento.",
+    "noCryptoNews": "O fluxo está ativo, mas nada é sobre cripto agora. Macro continua em movimento.",
     "noStockNews": "Nada no noticiário sobre os papéis listados agora. Macro e Todas seguem em movimento.",
     "mentionsPairs_one": "menciona {{count}} dos seus pares",
     "mentionsPairs_other": "menciona {{count}} dos seus pares"

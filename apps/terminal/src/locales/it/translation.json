@@ -5605,6 +5605,7 @@
     "adjustScope": "Niente dalle agenzie per questo filtro. Provane un altro o torna tra qualche minuto.",
     "noWatchedAssets": "La tua watchlist è vuota, quindi non c'è nulla su cui restringere il notiziario. Aggiungi una coppia ai preferiti o leggi Macro.",
     "noAssetNews": "Le agenzie battono, ma nulla riguarda la tua watchlist. Macro e Tutte continuano a muoversi.",
+    "noCryptoNews": "Il flusso è attivo, ma al momento non riguarda le cripto. Macro continua a muoversi.",
     "noStockNews": "Al momento niente dalle agenzie sui titoli quotati. Macro e Tutte continuano a muoversi.",
     "mentionsPairs_one": "menziona {{count}} delle tue coppie",
     "mentionsPairs_other": "menziona {{count}} delle tue coppie"

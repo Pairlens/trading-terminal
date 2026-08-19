@@ -5605,6 +5605,7 @@
     "adjustScope": "Tidak ada kabar untuk filter ini. Coba yang lain, atau periksa lagi beberapa menit lagi.",
     "noWatchedAssets": "Watchlist kamu kosong, jadi tidak ada acuan untuk menyaring kabar. Tandai satu pair, atau baca Makro saja.",
     "noAssetNews": "Kabar terus mengalir, tapi tidak ada yang menyangkut watchlist kamu. Makro dan Semua masih bergerak.",
+    "noCryptoNews": "Kabar terus masuk, tetapi tidak ada yang tentang kripto saat ini. Makro masih bergerak.",
     "noStockNews": "Belum ada kabar tentang saham-saham yang tercantum saat ini. Makro dan Semua masih bergerak.",
     "mentionsPairs_one": "menyebut {{count}} pair kamu",
     "mentionsPairs_other": "menyebut {{count}} pair kamu"

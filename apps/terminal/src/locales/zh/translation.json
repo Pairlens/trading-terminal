@@ -5605,6 +5605,7 @@
     "adjustScope": "这个筛选下暂时没有新闻。换一个试试，或几分钟后再来看看。",
     "noWatchedAssets": "你的自选是空的，新闻没有可对照的范围。加一个自选交易对，或改看宏观。",
     "noAssetNews": "新闻源很热闹，但都与你的自选无关。宏观和全部仍在更新。",
+    "noCryptoNews": "资讯仍在更新，但目前没有加密相关内容。宏观仍有动态。",
     "noStockNews": "目前没有关于这些股票的新闻。宏观和全部仍在更新。",
     "mentionsPairs_one": "提及你的 {{count}} 个交易对",
     "mentionsPairs_other": "提及你的 {{count}} 个交易对"

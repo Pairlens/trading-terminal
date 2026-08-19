@@ -5605,6 +5605,7 @@
     "adjustScope": "Bu filtre için hatta bir şey yok. Başka birini dene ya da birkaç dakika sonra tekrar bak.",
     "noWatchedAssets": "İzleme listen boş, bu yüzden haberleri daraltacak bir şey yok. Bir pariteyi yıldızla ya da Makro'yu oku.",
     "noAssetNews": "Hat yoğun ama hiçbiri izleme listenle ilgili değil. Makro ve Tümü hâlâ akıyor.",
+    "noCryptoNews": "Akış hareketli, ancak şu anda kriptoyla ilgili bir haber yok. Makro hâlâ hareketli.",
     "noStockNews": "Şu an listelenen hisselerle ilgili hatta bir şey yok. Makro ve Tümü hâlâ akıyor.",
     "mentionsPairs_one": "paritelerinden {{count}} tanesine değiniyor",
     "mentionsPairs_other": "paritelerinden {{count}} tanesine değiniyor"
