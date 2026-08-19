@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 5
 eyebrow: For traders
-updated: 18 AUG 2026
-readTime: 18 min read
+updated: 19 AUG 2026
+readTime: 19 min read
 ---
 
 On-chain markets work like any other market in Pairlens. Same chart, same
@@ -84,6 +84,33 @@ flow pane reads. It shows only what the provider actually published, so
 turnover collapses without a liquidity figure and the fee tier collapses on a
 venue that labels none, rather than filling the space with dashes.
 
+## What a pair is called
+
+An on-chain pair is routed by contract address, not by ticker, because the
+address is the token's identity and a ticker is whatever the deployer typed.
+That is what keeps a swap pointed at the PEPE you picked rather than the
+eightieth copy of it, and it is why the URL of a token chart carries forty hex
+characters.
+
+The title above the chart is not that string. Pairlens writes down what a token
+was called at the moment you picked it, on the row you picked it from, and every
+later surface reads it back: the chart header, the recents strip, the watchlist,
+and the size and Buy or Sell labels on the ticket. So the header reads
+`USDT-USDC`, the ticket says Sell USDT, and the address is one hover away in the
+tooltip. Open a token from a link or a bookmark instead and the terminal has
+never seen it, so it shows `0xdac1…1ec7` until the pool read behind the chart
+resolves the ticker, which takes about as long as the first candles.
+
+Both ends of the address are always kept when it is shortened. Tokens from one
+deployer share a prefix, so a leading-only cut makes different contracts look
+identical.
+
+Where a list can hold several chains at once, the chart's own chain rides along
+after the ticker: the watchlist and the recents strip show `WETH-USDC BASE`
+beside `WETH-USDC ARB`, because those are different tokens and nothing else in
+the row says so. The chart header leaves it out, since the asset-class badge
+next to the title already names the chain.
+
 ## What replaces the order book
 
 The on-chain pair layout ships with no order book and no depth curve, and that
@@ -155,9 +182,10 @@ POL in the wallet or the transaction cannot be sent.
 fill and no resting state to cancel for a market swap.
 
 **Token identity matters.** Anyone can mint a token called anything. Pairlens
-pins the addresses of well-known tokens so you get the real one, but a pair you
-searched up yourself deserves a look at its contract address before you trade
-it.
+pins the addresses of well-known tokens so you get the real one, and search rows
+carry the chain and contract of each match so eight identically named results
+can be told apart, but a pair you searched up yourself deserves a look at its
+contract address before you trade it. Hover the pair title for the full one.
 
 **Data-provider rate limits.** On-chain price data comes from public APIs with
 request limits, so a page full of on-chain panels updates less often than a CEX

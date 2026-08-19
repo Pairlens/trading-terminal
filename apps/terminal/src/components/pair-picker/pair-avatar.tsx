@@ -4,8 +4,12 @@ import { useState } from 'react'
 import { Vote } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 
+import { isTokenAddress } from '@pairlens/shared/market-ref'
+
 import type { PredictionOutcomeEntry } from '@/stores/prediction-directory-store'
 import { useSymbolLogo } from '@/hooks/use-symbol-logo'
+import { chainAbbr, tokenTicker } from '@/lib/dex/token-label'
+import { useDisplayTokenByAddress } from '@/stores/token-directory-store'
 import {
   binarySideOf,
   predictionTicker,
@@ -52,6 +56,8 @@ type PairAvatarProps = {
   base: string
   logoUrl?: string | null
   assetClass?: string
+  /** Chain of a token leg, when the caller knows it. Sharpens the pin lookup. */
+  market?: string
   size?: keyof typeof SIZE_CLASSES
   className?: string
 }
@@ -60,12 +66,22 @@ export function PairAvatar({
   base,
   logoUrl: logoUrlProp,
   assetClass,
+  market,
   size = 'md',
   className,
 }: PairAvatarProps) {
-  const resolvedUrl = useSymbolLogo(base, assetClass)
+  // A DEX leg arrives as a contract address, which resolves to no logo and
+  // initials the reader cannot use ("0XD"). The directory knows what the row
+  // that opened this pair called it, and USDT has a logo where its address
+  // does not.
+  const pinned = useDisplayTokenByAddress(
+    isTokenAddress(base) ? base : undefined,
+    market,
+  )
+  const ticker = tokenTicker(base, pinned).label
+  const resolvedUrl = useSymbolLogo(ticker, assetClass)
   const logoUrl = logoUrlProp ?? resolvedUrl
-  const color = AVATAR_COLORS[hashString(base) % AVATAR_COLORS.length]
+  const color = AVATAR_COLORS[hashString(ticker) % AVATAR_COLORS.length]
   const [imgError, setImgError] = useState(false)
 
   const showLogo = logoUrl && !imgError
@@ -82,12 +98,12 @@ export function PairAvatar({
       {showLogo ? (
         <img
           src={logoUrl}
-          alt={base}
+          alt={ticker}
           className="size-full object-cover"
           onError={() => setImgError(true)}
         />
       ) : (
-        base.slice(0, 3)
+        ticker.slice(0, 3)
       )}
     </div>
   )
@@ -102,6 +118,16 @@ type PairSymbolProps = {
    * every row the user has actually seen.
    */
   assetClass?: string
+  /**
+   * The venue this ticker is bound to. Two jobs on a DEX pair, both optional:
+   * it makes the token lookup exact rather than merely unambiguous, and it
+   * appends the chain (`WETH-USDC` `BASE`) so two chains' rows in one list are
+   * told apart. Pass it on any surface that lists more than one chain; leave
+   * it off where the chain is already on screen — the chart header carries a
+   * `DEX · Ethereum` badge, the search rows carry `TokenIdentityBadge`, and
+   * saying it twice costs width this row does not have.
+   */
+  market?: string
 }
 
 /**
@@ -122,7 +148,12 @@ type PairSymbolProps = {
  * selector per row is the price of that, paid against a store that only writes
  * when something is pinned.
  */
-export function PairSymbol({ symbol, className, assetClass }: PairSymbolProps) {
+export function PairSymbol({
+  symbol,
+  className,
+  assetClass,
+  market,
+}: PairSymbolProps) {
   const pinned = usePredictionPin(symbol)
 
   if (pinned && isPredictionEventEntry(pinned)) {
@@ -148,11 +179,30 @@ export function PairSymbol({ symbol, className, assetClass }: PairSymbolProps) {
       </span>
     )
   }
-  return <PlainSymbol symbol={symbol} className={className} />
+  return <PlainSymbol symbol={symbol} className={className} market={market} />
 }
 
-function PlainSymbol({ symbol, className }: PairSymbolProps) {
+/**
+ * `BASE-QUOTE`, where the base may have arrived as a contract address.
+ *
+ * The split stays on the FIRST dash, which is what keeps a perp key reading
+ * `BTC` + `-USDT-USDT`. A DEX key has exactly one dash, so the two rules
+ * agree there and neither arm needs to know about the other.
+ */
+function PlainSymbol({ symbol, className, market }: PairSymbolProps) {
   const idx = symbol.indexOf('-')
+  const rawBase = idx === -1 ? symbol : symbol.slice(0, idx)
+  const quote = idx === -1 ? '' : symbol.slice(idx + 1)
+  // Called for every ticker in the terminal, so the guard is the address test:
+  // a CEX base never reaches the store at all.
+  const pinned = useDisplayTokenByAddress(
+    isTokenAddress(rawBase) ? rawBase : undefined,
+    market,
+  )
+  const { label, isAddress } = tokenTicker(rawBase, pinned)
+  // Only ever set for a token leg, and only when the caller asked for it.
+  const chain = isTokenAddress(rawBase) ? chainAbbr(market) : null
+
   // `truncate` on both arms, `min-w-0` from the caller, and the full key in a
   // `title`: a DEX pair opened from a link carries the raw mint address as its
   // base leg, and an untruncated one ran 480px through the header controls
@@ -160,18 +210,29 @@ function PlainSymbol({ symbol, className }: PairSymbolProps) {
   if (idx === -1)
     return (
       <span className={cn('truncate', className)} title={symbol}>
-        {symbol}
+        {label}
+        {chain ? <ChainSuffix abbr={chain} /> : null}
       </span>
     )
-  const base = symbol.slice(0, idx)
-  const quote = symbol.slice(idx + 1)
   return (
     <span
       className={cn('truncate font-mono font-semibold', className)}
       title={symbol}
     >
-      {base}
+      {/* An unresolved address is still an address: the lighter weight says
+          it is a fallback rather than a ticker somebody chose. */}
+      <span className={cn(isAddress && 'font-normal')}>{label}</span>
       <span className="font-normal text-muted-foreground">-{quote}</span>
+      {chain ? <ChainSuffix abbr={chain} /> : null}
+    </span>
+  )
+}
+
+/** `BASE` — the chain, small and muted, never competing with the ticker. */
+function ChainSuffix({ abbr }: { abbr: string }) {
+  return (
+    <span className="ml-1 font-normal text-[0.8em] text-muted-foreground">
+      {abbr}
     </span>
   )
 }
@@ -213,6 +274,8 @@ type PairLogoProps = {
   base: string
   quote: string
   assetClass?: string
+  /** Chain of a token base leg, when the caller knows it. */
+  market?: string
   size?: keyof typeof SIZE_CLASSES
   className?: string
   /** Prediction rows only: the event's own artwork, when the venue has one. */
@@ -223,6 +286,7 @@ export function PairLogo({
   base,
   quote,
   assetClass,
+  market,
   size = 'md',
   className,
   imageUrl,
@@ -243,7 +307,12 @@ export function PairLogo({
   }
   return (
     <div className={cn('relative inline-flex shrink-0', className)}>
-      <PairAvatar base={base} assetClass={assetClass} size={size} />
+      <PairAvatar
+        base={base}
+        assetClass={assetClass}
+        market={market}
+        size={size}
+      />
       <PairAvatar
         base={quote}
         assetClass={assetClass}

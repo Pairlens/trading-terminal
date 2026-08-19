@@ -16,6 +16,8 @@
  */
 import { create } from 'zustand'
 
+import { registerDisplayToken } from '@/stores/token-directory-store'
+
 export type SelectedPool = {
   /** Pairlens market id of the chain the pool is on. */
   market: string
@@ -53,7 +55,10 @@ export const useDexDiscoveryStore = create<DexDiscoveryStore>((set) => ({
   // pool, so the board never sits on two empty panes waiting for a click.
   setChain: (market) =>
     set({ chain: market, selectedPool: null, userPicked: false }),
-  selectPool: (pool) => set({ selectedPool: pool, userPicked: pool !== null }),
+  selectPool: (pool) => {
+    pinPoolToken(pool)
+    set({ selectedPool: pool, userPicked: pool !== null })
+  },
   /**
    * The map's own default, applied when the listing lands.
    *
@@ -62,6 +67,29 @@ export const useDexDiscoveryStore = create<DexDiscoveryStore>((set) => ({
    * default. A user selection is never overwritten: the guard is the whole
    * contract.
    */
-  autoSelectPool: (pool) =>
-    set((state) => (state.userPicked ? state : { selectedPool: pool })),
+  autoSelectPool: (pool) => {
+    pinPoolToken(pool)
+    set((state) => (state.userPicked ? state : { selectedPool: pool }))
+  },
 }))
+
+/**
+ * Teach the token directory what this pool's base token is called.
+ *
+ * The board is where a long-tail token is usually met, and the chart it opens
+ * routes on `address-QUOTE`: without this the pool row reads `PEPE / WETH` and
+ * the chart it opens is titled `0x6982…1933-WETH`. The pool listing already
+ * carries both halves; nothing but this was writing them down.
+ *
+ * Display-only, which is why the auto-selected pool pins too. The connector's
+ * own `symbol → address` directory is identity — it decides which PEPE a swap
+ * buys — and stays written by an explicit user selection alone.
+ */
+function pinPoolToken(pool: SelectedPool | null): void {
+  if (!pool?.baseAddress || !pool.baseSymbol) return
+  registerDisplayToken({
+    chain: pool.market,
+    address: pool.baseAddress,
+    symbol: pool.baseSymbol,
+  })
+}

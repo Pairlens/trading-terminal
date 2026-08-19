@@ -121,6 +121,7 @@ const RecentTickerRow = memo(function RecentTickerRow({
           base={inst.base}
           quote={inst.quote}
           assetClass={inst.assetClass}
+          market={market}
           size="sm"
         />
       )}
@@ -128,6 +129,7 @@ const RecentTickerRow = memo(function RecentTickerRow({
         <PairSymbol
           symbol={symbol}
           assetClass={inst?.assetClass}
+          market={market}
           className="text-sm"
         />
         {inst && (
