@@ -23,9 +23,11 @@ import type { BookMetric } from '@/hooks/use-orderbook-metric'
 import {
   addCumulative,
   computeAutoTickIndex,
+  computePredictionTickOptions,
   computeTickOptions,
   groupLevels,
 } from '@/components/terminal/orderbook-pane'
+import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { computeMagnitudeReference } from '@/components/terminal/magnitude-intensity'
 import { useOptionalOrderbookData } from '@/lib/chart-terminal-context'
 import { useSwitchTransition } from '@/hooks/use-switch-transition'
@@ -94,6 +96,9 @@ export function useMobileOrderbook(
 ): MobileOrderbook {
   const orderbookData = useOptionalOrderbookData()
   const { focusedPair, focusedVenue: market } = useMobileFocus()
+  // Not a per-tick read: the directory pin and the venue's asset class. A
+  // probability book gets its own tick ladder, same rule as the desktop pane.
+  const predictionPrices = useIsPredictionPair(focusedPair, market)
 
   const { phase, display: book } = useSwitchTransition(
     market,
@@ -115,8 +120,10 @@ export function useMobileOrderbook(
 
   const tickOptions = useMemo(() => {
     if (serverBaseTickSize <= 0) return []
-    return computeTickOptions(serverBaseTickSize, stableBestBid)
-  }, [serverBaseTickSize, stableBestBid])
+    return predictionPrices
+      ? computePredictionTickOptions(serverBaseTickSize)
+      : computeTickOptions(serverBaseTickSize, stableBestBid)
+  }, [serverBaseTickSize, stableBestBid, predictionPrices])
 
   // A new instrument gets a new ladder — drop a manual pick that no longer
   // means anything rather than grouping the new book by the old venue's tick.

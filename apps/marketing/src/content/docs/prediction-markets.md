@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 18 min read
+readTime: 19 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -278,6 +278,18 @@ Each answer has its own book. Yes and No are two separate contracts on the same
 question, and you can buy or sell either one from the same page: pick the
 answer, then pick the side. Selling Yes at 53¢ and buying No at 47¢ are close
 cousins, not the same order, and the book will tell you which is cheaper.
+
+**A one-sided book is normal here.** Nobody offers to sell a contract that has
+already been decided, and nobody bids for one that has already lost, so a leg
+at 99.9¢ shows bids and no asks and a leg at 0.1¢ shows asks and no bids. The
+panel says **No asks** or **No bids** where the missing ladder would be rather
+than leaving half of itself blank. It matters most on the board's opening
+selection, which is the favourite: on an event the news has already settled,
+the favourite is exactly the leg nobody is selling.
+
+The two books are also mirrors of each other, so there is nothing to recover by
+switching legs. A 225-contract Yes ask at 21.7¢ is the same resting order as
+the 225-contract No bid at 78.3¢. When a side is empty, it is empty.
 
 ## The Probability Chart
 

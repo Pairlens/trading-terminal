@@ -4324,6 +4324,16 @@
       "open": "Apertura",
       "close": "Cierre"
     },
+    "orderbook": {
+      "noAsks": "Sin ventas",
+      "noBids": "Sin compras",
+      "noAsksPrediction": "Nadie ofrece vender este resultado.",
+      "noBidsPrediction": "Nadie puja por este resultado.",
+      "noOrders": "Sin órdenes en el libro",
+      "noOrdersBody": "Ahora mismo no hay ninguna orden en ninguno de los dos lados.",
+      "noOutcomeTitle": "Ningún resultado seleccionado",
+      "noOutcomeBody": "Elige una respuesta en la escalera para ver su libro."
+    },
     "sort": {
       "by": "Ordenar por {{column}}",
       "ascending": "Ordenado por {{column}}, ascendente",

@@ -214,17 +214,21 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
           <>
             {/* Asks — worst price at the top, best ask against the spread */}
             <div className="flex flex-1 flex-col justify-end overflow-hidden">
-              {asks.map((row) => (
-                <BookRow
-                  formatPrice={formatPrice}
-                  key={row.price}
-                  amountReference={amountReference}
-                  maxCumulative={maxCumulative}
-                  metric={metric}
-                  row={row}
-                  side="ask"
-                />
-              ))}
+              {asks.length === 0 ? (
+                <SideEmpty prediction={prediction} side="asks" />
+              ) : (
+                asks.map((row) => (
+                  <BookRow
+                    formatPrice={formatPrice}
+                    key={row.price}
+                    amountReference={amountReference}
+                    maxCumulative={maxCumulative}
+                    metric={metric}
+                    row={row}
+                    side="ask"
+                  />
+                ))
+              )}
             </div>
 
             {/* Spread */}
@@ -244,17 +248,21 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
 
             {/* Bids — best bid against the spread */}
             <div className="flex flex-1 flex-col overflow-hidden">
-              {bids.map((row) => (
-                <BookRow
-                  formatPrice={formatPrice}
-                  key={row.price}
-                  amountReference={amountReference}
-                  maxCumulative={maxCumulative}
-                  metric={metric}
-                  row={row}
-                  side="bid"
-                />
-              ))}
+              {bids.length === 0 ? (
+                <SideEmpty prediction={prediction} side="bids" />
+              ) : (
+                bids.map((row) => (
+                  <BookRow
+                    formatPrice={formatPrice}
+                    key={row.price}
+                    amountReference={amountReference}
+                    maxCumulative={maxCumulative}
+                    metric={metric}
+                    row={row}
+                    side="bid"
+                  />
+                ))
+              )}
             </div>
           </>
         )}
@@ -309,6 +317,42 @@ export default function OrderbookScreen({ onClose }: OrderbookScreenProps) {
         </>
       ) : null}
     </FullScreenOverlay>
+  )
+}
+
+/**
+ * The phone's copy of the desktop pane's `BookSideEmpty`, same words from the
+ * same keys.
+ *
+ * A one-sided book is a fault on a spot pair and ordinary on an event
+ * contract: nobody sells a leg that has already won and nobody bids for one
+ * that has already lost. The screen has less room than the pane does, so this
+ * is the same sentence at the phone's type scale rather than a second design.
+ */
+function SideEmpty({
+  side,
+  prediction,
+}: {
+  side: 'bids' | 'asks'
+  prediction: boolean
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-1 px-8 text-center">
+      <span className="font-mono text-[11.5px] uppercase tracking-[.11em] text-muted-foreground">
+        {side === 'asks'
+          ? t('terminal.orderbook.noAsks')
+          : t('terminal.orderbook.noBids')}
+      </span>
+      {prediction && (
+        <span className="text-[12px] leading-snug text-muted-foreground/70">
+          {side === 'asks'
+            ? t('terminal.orderbook.noAsksPrediction')
+            : t('terminal.orderbook.noBidsPrediction')}
+        </span>
+      )}
+    </div>
   )
 }
 

@@ -4324,6 +4324,16 @@
       "open": "시가",
       "close": "종가"
     },
+    "orderbook": {
+      "noAsks": "매도 호가 없음",
+      "noBids": "매수 호가 없음",
+      "noAsksPrediction": "이 결과를 팔겠다는 주문이 없습니다.",
+      "noBidsPrediction": "이 결과를 사겠다는 주문이 없습니다.",
+      "noOrders": "호가창에 주문 없음",
+      "noOrdersBody": "지금은 양쪽 어느 곳에도 대기 주문이 없습니다.",
+      "noOutcomeTitle": "선택된 결과 없음",
+      "noOutcomeBody": "호가창을 보려면 목록에서 답을 고르세요."
+    },
     "sort": {
       "by": "{{column}} 기준 정렬",
       "ascending": "{{column}} 기준 오름차순 정렬됨",

@@ -3397,6 +3397,16 @@
       "open": "Open",
       "close": "Close"
     },
+    "orderbook": {
+      "noAsks": "No asks",
+      "noBids": "No bids",
+      "noAsksPrediction": "Nobody is offering to sell this outcome.",
+      "noBidsPrediction": "Nobody is bidding for this outcome.",
+      "noOrders": "No resting orders",
+      "noOrdersBody": "Neither side of this book has an order on it right now.",
+      "noOutcomeTitle": "No outcome selected",
+      "noOutcomeBody": "Pick an answer in the ladder to see its book."
+    },
     "sort": {
       "by": "Sort by {{column}}",
       "ascending": "Sorted by {{column}}, ascending",

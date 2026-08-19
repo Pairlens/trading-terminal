@@ -4324,6 +4324,16 @@
       "open": "Pembukaan",
       "close": "Penutupan"
     },
+    "orderbook": {
+      "noAsks": "Tidak ada jual",
+      "noBids": "Tidak ada beli",
+      "noAsksPrediction": "Tidak ada yang menawarkan hasil ini untuk dijual.",
+      "noBidsPrediction": "Tidak ada yang menawar hasil ini.",
+      "noOrders": "Tidak ada order di buku",
+      "noOrdersBody": "Saat ini tidak ada order di kedua sisi.",
+      "noOutcomeTitle": "Belum ada hasil dipilih",
+      "noOutcomeBody": "Pilih satu jawaban di tangga untuk melihat bukunya."
+    },
     "sort": {
       "by": "Urutkan menurut {{column}}",
       "ascending": "Diurutkan menurut {{column}}, menaik",

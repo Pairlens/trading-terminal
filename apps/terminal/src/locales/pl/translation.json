@@ -4418,6 +4418,16 @@
       "open": "Otwarcie",
       "close": "Zamknięcie"
     },
+    "orderbook": {
+      "noAsks": "Brak ofert sprzedaży",
+      "noBids": "Brak ofert kupna",
+      "noAsksPrediction": "Nikt nie oferuje sprzedaży tego wyniku.",
+      "noBidsPrediction": "Nikt nie licytuje tego wyniku.",
+      "noOrders": "Brak zleceń w księdze",
+      "noOrdersBody": "W tej chwili po żadnej ze stron nie ma żadnego zlecenia.",
+      "noOutcomeTitle": "Nie wybrano wyniku",
+      "noOutcomeBody": "Wybierz odpowiedź z drabinki, aby zobaczyć jej księgę."
+    },
     "sort": {
       "by": "Sortuj według: {{column}}",
       "ascending": "Posortowano według: {{column}}, rosnąco",

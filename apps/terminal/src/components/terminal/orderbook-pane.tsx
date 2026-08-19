@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useTranslation } from 'react-i18next'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronDown, Loader2 } from 'lucide-react'
+import { BookOpen, ChevronDown, Loader2 } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
@@ -24,7 +24,10 @@ import {
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
+import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
+import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { usePredictionDesk } from '@/lib/predictions/desk-context'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
@@ -85,6 +88,52 @@ export function computeTickOptions(
       if (val >= bestBid) return options.length > 0 ? options : [tickSize]
       options.push(val)
       if (options.length >= 12) break
+    }
+  }
+
+  return options.length > 0 ? options : [tickSize]
+}
+
+/**
+ * Coarsest grouping offered on a contract priced 0..1. Five cents of
+ * probability per row is already a blunt instrument; ten would put a binary
+ * market's entire book in twenty rows.
+ */
+export const MAX_PREDICTION_TICK = 0.05
+
+/**
+ * The tick ladder for an instrument priced 0..1.
+ *
+ * `computeTickOptions` builds its series from the price: it walks decades up
+ * from the venue tick and stops below the best bid. On a probability that
+ * ceiling is 1, so the selector ends up offering 20c and 50c buckets, and
+ * grouping a book that spans one dollar into fifty-cent rows is not a coarser
+ * view of it, it is two rows.
+ *
+ * A probability gets a fixed ladder instead: 1-2-5 from the venue's own tick
+ * up to five cents, and it never consults the price. That last part is what
+ * makes it work on a decided contract, where one side of the book is empty by
+ * nature (Polymarket publishes bids only for a leg at 99.9c and asks only for
+ * one at 0.1c) — a ladder derived from the best bid would disappear on half
+ * the outcomes of any event that has already been settled by the news.
+ */
+export function computePredictionTickOptions(tickSize: number): Array<number> {
+  if (!(tickSize > 0)) return []
+
+  const options: Array<number> = []
+  const steps = [1, 2, 5]
+
+  for (let e = Math.floor(Math.log10(tickSize)); options.length < 12; e++) {
+    for (const s of steps) {
+      // Two significant digits is exact for a 1-2-5 series and strips the
+      // float drift that 5 * 10 ** -3 arrives with.
+      const val = parseFloat((s * 10 ** e).toPrecision(2))
+      if (val < tickSize * 0.99) continue
+      // 1.01 slack so a tick that IS the cap survives its own float error.
+      if (val > MAX_PREDICTION_TICK * 1.01) {
+        return options.length > 0 ? options : [tickSize]
+      }
+      options.push(val)
     }
   }
 
@@ -412,6 +461,9 @@ function OrderbookPaneInner({
   const market = chartConfig?.market ?? ''
   // A probability book reads in cents, same rule as the chart's axis.
   const predictionPrices = useIsPredictionPair(pairKey, market)
+  // Context read, no fetch: null everywhere except a prediction board. See the
+  // empty-pairKey branch below for what it is for.
+  const desk = usePredictionDesk()
   const venue = usePaneVenue(market)
   const unavailable = usePairUnavailable(market, pairKey)
   const credentialGate = useMarketCredentialGate(market)
@@ -461,8 +513,10 @@ function OrderbookPaneInner({
   // Compute tick options from server-provided base tick size
   const tickOptions = useMemo(() => {
     if (!serverBaseTickSize || serverBaseTickSize <= 0) return []
-    return computeTickOptions(serverBaseTickSize, stableBestBid)
-  }, [serverBaseTickSize, stableBestBid])
+    return predictionPrices
+      ? computePredictionTickOptions(serverBaseTickSize)
+      : computeTickOptions(serverBaseTickSize, stableBestBid)
+  }, [serverBaseTickSize, stableBestBid, predictionPrices])
 
   // Reset to Auto when tick options change (new pair / new instrument)
   const prevOptionsRef = useRef<Array<number>>([])
@@ -550,6 +604,11 @@ function OrderbookPaneInner({
     return { value: spreadValue, pct: spreadPct }
   }, [bids, asks])
 
+  // The venue answered and both sides are bare. Distinct from `!book`, which
+  // is "no answer yet", and it has to be said rather than drawn: an empty grid
+  // under a live header is indistinguishable from a dead feed.
+  const emptyBook = bids.length === 0 && asks.length === 0
+
   const handleTickChange = useCallback((index: number | null) => {
     setTickIndex(index)
   }, [])
@@ -583,6 +642,46 @@ function OrderbookPaneInner({
       <div className="flex h-full items-center justify-center text-xs text-destructive px-4 text-center">
         {errorMessage}
       </div>
+    )
+  }
+
+  // A prediction board addresses ONE leg at a time, so until the desk names an
+  // outcome there is no key to subscribe to: `pairKey` is empty, the stream
+  // never opens, and `book` stays null forever. Spinning on that is a lie
+  // about a request nobody made. Kalshi in a browser is the case that made it
+  // visible — the venue refuses browser origins, every other pane on the board
+  // said "needs the desktop app", and the book alone sat on "Loading order
+  // book…" indefinitely. The desk already knows why, so it answers.
+  if (pairKey.length === 0 && desk && desk.state !== 'loading') {
+    if (desk.state === 'desktop-only') {
+      return (
+        <PaneDesktopOnly
+          descriptionKey="layout.paneUnavailable.desktopOnlyDescription"
+          titleKey="layout.paneUnavailable.desktopOnlyTitle"
+        />
+      )
+    }
+    // 'ready' with nothing selected is the one recoverable arm: the field
+    // loaded, so the ladder next door has rows to pick from.
+    if (desk.state === 'ready') {
+      return (
+        <PaneEmpty
+          body={t('terminal.orderbook.noOutcomeBody')}
+          icon={BookOpen}
+          title={t('terminal.orderbook.noOutcomeTitle')}
+        />
+      )
+    }
+    // 'no-venue', 'not-found' and 'error' are all "this venue has no book for
+    // this event", which is exactly what PaneDataUnavailable says — and for a
+    // prediction key it says it with the question and a retry rather than a
+    // nonsensical offer to try another venue.
+    return (
+      <PaneDataUnavailable
+        compact
+        market={desk.venue}
+        pairKey={desk.eventKey}
+      />
     )
   }
 
@@ -623,52 +722,74 @@ function OrderbookPaneInner({
         )}
       </div>
 
-      {/* Asks (reversed: highest at top, lowest near spread) */}
-      <div className="flex flex-1 flex-col justify-end overflow-hidden">
-        {asks.map((row) => (
-          <OrderBookRow
-            key={row.price}
-            row={row}
-            maxCumulative={maxCumulative}
-            amountReference={amountReference}
-            metric={metric}
-            predictionPrices={predictionPrices}
-            side="ask"
-          />
-        ))}
-      </div>
-
-      {/* Spread indicator */}
-      {spread && (
-        <div className="flex items-center justify-center gap-2 border-y border-border px-2 py-1.5">
-          <span className="font-mono text-[10px] uppercase tracking-[.11em] text-muted-foreground">
-            Spread
+      {/* Nothing resting on either side. One sentence beats two blank halves. */}
+      {emptyBook ? (
+        <div className="flex flex-1 flex-col items-center justify-center gap-1 px-4 text-center">
+          <span className="text-xs font-medium text-foreground">
+            {t('terminal.orderbook.noOrders')}
           </span>
-          <span className="font-mono text-[12.5px] font-medium text-foreground">
-            {predictionPrices
-              ? formatPredictionBookPrice(spread.value)
-              : formatBookPrice(spread.value)}
-          </span>
-          <span className="font-mono text-[11px] text-muted-foreground">
-            · {spread.pct.toFixed(3)}%
+          <span className="text-[11px] leading-relaxed text-muted-foreground">
+            {t('terminal.orderbook.noOrdersBody')}
           </span>
         </div>
-      )}
+      ) : (
+        <>
+          {/* Asks (reversed: highest at top, lowest near spread) */}
+          <div className="flex flex-1 flex-col justify-end overflow-hidden">
+            {asks.length === 0 ? (
+              <BookSideEmpty predictionPrices={predictionPrices} side="asks" />
+            ) : (
+              asks.map((row) => (
+                <OrderBookRow
+                  key={row.price}
+                  row={row}
+                  maxCumulative={maxCumulative}
+                  amountReference={amountReference}
+                  metric={metric}
+                  predictionPrices={predictionPrices}
+                  side="ask"
+                />
+              ))
+            )}
+          </div>
 
-      {/* Bids (highest near spread, descending) */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {bids.map((row) => (
-          <OrderBookRow
-            key={row.price}
-            row={row}
-            maxCumulative={maxCumulative}
-            amountReference={amountReference}
-            metric={metric}
-            predictionPrices={predictionPrices}
-            side="bid"
-          />
-        ))}
-      </div>
+          {/* Spread indicator */}
+          {spread && (
+            <div className="flex items-center justify-center gap-2 border-y border-border px-2 py-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-[.11em] text-muted-foreground">
+                Spread
+              </span>
+              <span className="font-mono text-[12.5px] font-medium text-foreground">
+                {predictionPrices
+                  ? formatPredictionBookPrice(spread.value)
+                  : formatBookPrice(spread.value)}
+              </span>
+              <span className="font-mono text-[11px] text-muted-foreground">
+                · {spread.pct.toFixed(3)}%
+              </span>
+            </div>
+          )}
+
+          {/* Bids (highest near spread, descending) */}
+          <div className="flex flex-1 flex-col overflow-hidden">
+            {bids.length === 0 ? (
+              <BookSideEmpty predictionPrices={predictionPrices} side="bids" />
+            ) : (
+              bids.map((row) => (
+                <OrderBookRow
+                  key={row.price}
+                  row={row}
+                  maxCumulative={maxCumulative}
+                  amountReference={amountReference}
+                  metric={metric}
+                  predictionPrices={predictionPrices}
+                  side="bid"
+                />
+              ))
+            )}
+          </div>
+        </>
+      )}
 
       {/* Buy vs Sell pressure bar */}
       <BuySellBar bids={bids} asks={asks} />
@@ -682,6 +803,48 @@ function OrderbookPaneInner({
         </div>
       )}
     </PaneTransition>
+  )
+}
+
+/**
+ * What one bare side of the book says for itself.
+ *
+ * A one-sided book is an error on a spot pair and ordinary on a prediction
+ * one: nobody offers to sell a contract that has already been decided, and
+ * nobody bids for one that has already lost, so Polymarket publishes bids only
+ * at 99.9c and asks only at 0.1c. The second line is therefore prediction-only
+ * — on BTC-USDT a missing side is a fault, and explaining it as market
+ * structure would be wrong.
+ *
+ * There is no complement to fold in, either: Polymarket's Yes and No books are
+ * exact mirrors of each other (a 225-contract Yes ask at 21.7c IS the 225-
+ * contract No bid at 78.3c), so the liquidity is not hiding on the other
+ * ticker. The side really is empty.
+ */
+function BookSideEmpty({
+  side,
+  predictionPrices,
+}: {
+  side: 'bids' | 'asks'
+  predictionPrices: boolean
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-0.5 px-3 text-center">
+      <span className="font-mono text-[10.5px] uppercase tracking-[.11em] text-muted-foreground">
+        {side === 'asks'
+          ? t('terminal.orderbook.noAsks')
+          : t('terminal.orderbook.noBids')}
+      </span>
+      {predictionPrices && (
+        <span className="text-[10.5px] leading-snug text-muted-foreground/70">
+          {side === 'asks'
+            ? t('terminal.orderbook.noAsksPrediction')
+            : t('terminal.orderbook.noBidsPrediction')}
+        </span>
+      )}
+    </div>
   )
 }
 

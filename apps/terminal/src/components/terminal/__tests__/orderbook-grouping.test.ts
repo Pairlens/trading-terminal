@@ -20,8 +20,10 @@ import {
 } from '@/lib/sync/sync-domains'
 import {
   MAX_AUTO_BAND_FRACTION,
+  MAX_PREDICTION_TICK,
   addCumulative,
   computeAutoTickIndex,
+  computePredictionTickOptions,
   computeTickOptions,
 } from '@/components/terminal/orderbook-pane'
 
@@ -128,5 +130,47 @@ describe('the metric preference', () => {
 
   it('is never blocked from sync', () => {
     expect(isBlocked(ORDERBOOK_METRIC_KEY)).toBe(false)
+  })
+})
+
+/**
+ * The ladder a probability gets instead.
+ *
+ * Two properties matter and both were bugs before: the ceiling (the general
+ * ladder offered 20c and 50c buckets on a 0..1 instrument, which is two rows
+ * of book) and the independence from price (a decided contract publishes one
+ * side only, so a ladder derived from the best bid vanished on every leg an
+ * event had already settled).
+ */
+describe('computePredictionTickOptions', () => {
+  it('stops at the prediction cap rather than walking up to the dollar', () => {
+    const options = computePredictionTickOptions(0.001)
+    expect(options).toEqual([0.001, 0.002, 0.005, 0.01, 0.02, 0.05])
+    expect(Math.max(...options)).toBeLessThanOrEqual(MAX_PREDICTION_TICK)
+  })
+
+  it('starts at the venue tick, never below it', () => {
+    expect(computePredictionTickOptions(0.01)).toEqual([0.01, 0.02, 0.05])
+  })
+
+  it('builds clean decimals, not float drift', () => {
+    // 5 * 10 ** -3 is 0.005000000000000001 before the rounding pass.
+    for (const tick of computePredictionTickOptions(0.001)) {
+      expect(Number(tick.toPrecision(2))).toBe(tick)
+    }
+  })
+
+  it('answers without a price, so a one-sided book still gets a selector', () => {
+    // The asks-only book of a 0.1c long shot has no best bid to derive from.
+    expect(computePredictionTickOptions(0.001).length).toBeGreaterThan(0)
+  })
+
+  it('falls back to the venue tick when it is already coarser than the cap', () => {
+    expect(computePredictionTickOptions(0.1)).toEqual([0.1])
+  })
+
+  it('refuses a tick it cannot build a ladder from', () => {
+    expect(computePredictionTickOptions(0)).toEqual([])
+    expect(computePredictionTickOptions(Number.NaN)).toEqual([])
   })
 })

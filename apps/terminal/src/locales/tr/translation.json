@@ -4324,6 +4324,16 @@
       "open": "Açılış",
       "close": "Kapanış"
     },
+    "orderbook": {
+      "noAsks": "Satış yok",
+      "noBids": "Alış yok",
+      "noAsksPrediction": "Bu sonucu satmayı teklif eden yok.",
+      "noBidsPrediction": "Bu sonuca teklif veren yok.",
+      "noOrders": "Defterde emir yok",
+      "noOrdersBody": "Şu anda iki tarafta da bekleyen emir yok.",
+      "noOutcomeTitle": "Sonuç seçilmedi",
+      "noOutcomeBody": "Defterini görmek için listeden bir yanıt seçin."
+    },
     "sort": {
       "by": "{{column}} ölçütüne göre sırala",
       "ascending": "{{column}} ölçütüne göre artan sırada sıralandı",
