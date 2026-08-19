@@ -102,7 +102,7 @@ export function createExaSearchPlugin(
     // Without a key every request fails — refuse to activate so a keyless
     // install never wins ai:web-search resolution
     if (String(cfg['apiKey'] ?? '').trim() === '') {
-      throw new Error('Exa API key required — add it in the plugin settings')
+      throw new Error('Exa API key required: add it in the plugin settings')
     }
     config = cfg
   }

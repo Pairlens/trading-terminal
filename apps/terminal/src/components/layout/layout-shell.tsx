@@ -19,11 +19,11 @@ import {
 } from '@dnd-kit/core'
 import { useTranslation } from 'react-i18next'
 import {
-  ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from '@pairlens/ui/components/ui/resizable'
 import { LayoutColumn } from './layout-column'
+import { ColumnHandle } from './layout-handles'
 import { DesktopOnlyState } from './desktop-only-state'
 import type {
   Announcements,
@@ -44,6 +44,17 @@ import { getPaneIcon } from '@/lib/layout/pane-icons'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
 
 type DragData = { paneId: string; paneType: string }
+
+/**
+ * The ground the columns float on.
+ *
+ * Inset 10px from three edges and none from the top: the columns hang
+ * straight off the bar above them, so the board reads as one continuation of
+ * the chrome rather than a card sitting inside a frame. The ground itself is
+ * `--background` — the same value as the app behind it, which is what makes
+ * the gaps between columns read as air and not as gutters.
+ */
+const BOARD = 'relative flex min-h-0 flex-1 bg-background px-2.5 pb-2.5'
 
 const EDGE_THRESHOLD = 0.25
 
@@ -365,7 +376,7 @@ function LayoutGrid() {
         onDragEnd={handleDragEnd}
         onDragCancel={handleDragCancel}
       >
-        <div className="relative min-h-0 flex-1">
+        <div className={BOARD}>
           <LayoutColumn column={col} dropZone={activeDropZone} />
           {activeDrag && (
             <div
@@ -390,7 +401,7 @@ function LayoutGrid() {
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
     >
-      <div className="relative min-h-0 flex-1">
+      <div className={BOARD}>
         <ResizablePanelGroup
           orientation="horizontal"
           className="h-full"
@@ -407,7 +418,7 @@ function LayoutGrid() {
         >
           {layout.columns.map((col, i) => (
             <Fragment key={col.id}>
-              {i > 0 && <ResizableHandle withHandle />}
+              {i > 0 && <ColumnHandle />}
               <ResizablePanel
                 id={col.id}
                 defaultSize={col.widthPercent}

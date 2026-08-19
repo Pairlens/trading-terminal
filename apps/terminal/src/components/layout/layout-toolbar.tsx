@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +40,10 @@ import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
 import { PanesToolbar, PendingPanePlacementHint } from './panes-toolbar'
 import type { ScreenPresetGroup } from '@/lib/layout/types'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
+import {
+  HEADER_CHIP_PRIMARY,
+  HEADER_GROUP,
+} from '@/components/chrome/header-chrome'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
 import { STORE_ASSET_CLASS_FOR } from '@/lib/workspace-store/catalog'
@@ -155,7 +158,10 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   }
 
   return (
-    <>
+    // Panes and the workspace are one group: both answer "what is on this
+    // board", so they sit together and the bar's own gap holds them off the
+    // search beside them.
+    <div className={HEADER_GROUP}>
       <PanesToolbar />
 
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
@@ -164,10 +170,9 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
             render={
               <DropdownMenuTrigger
                 render={
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="gap-1 text-xs"
+                  <button
+                    type="button"
+                    className={HEADER_CHIP_PRIMARY}
                     aria-label={t('layout.workspaces')}
                   />
                 }
@@ -175,7 +180,12 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
             }
           >
             <Layout className="size-3.5" />
-            {t('layout.workspaces')}
+            {/* The board's own name when it has one. A saved workspace IS the
+                arrangement on screen, so naming it here beats a menu label
+                that says the same word on every board. */}
+            <span className="max-w-40 truncate">
+              {currentWorkspace?.name ?? t('layout.workspaces')}
+            </span>
             <ShortcutHint keys={menuShortcut} />
           </TooltipTrigger>
           <TooltipContent>
@@ -315,6 +325,6 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
       />
 
       <PendingPanePlacementHint />
-    </>
+    </div>
   )
 }

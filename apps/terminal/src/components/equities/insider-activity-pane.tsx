@@ -32,6 +32,7 @@ import { cn } from '@pairlens/ui'
 import type { InsiderTransaction } from '@pairlens/shared/instrument-types'
 
 import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneEmpty, Th } from '@/components/panes/pane-primitives'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
@@ -77,12 +78,12 @@ function InsiderActivityPaneInner({ pairKey }: { pairKey: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-baseline gap-2 border-b border-border px-3 py-2">
-        <h2 className="text-[13px] font-semibold">
-          {t('insiderActivity.title')}
-        </h2>
-        {transactions.length > 0 && (
-          <p className="truncate font-mono text-[10.5px] tabular-nums text-muted-foreground">
+      {/* The counts ride in the shell's own header row: the pane is named
+          'Insider Activity' up there already, and a second title under it was
+          the pane's only piece of chrome. */}
+      {transactions.length > 0 && (
+        <>
+          <PaneHeaderMetric>
             {t('insiderActivity.summary', {
               buys: summary.buys,
               sells: summary.sells,
@@ -93,22 +94,20 @@ function InsiderActivityPaneInner({ pairKey }: { pairKey: string }) {
                 {t('insiderActivity.span', { count: summary.spanDays })}
               </span>
             )}
-          </p>
-        )}
-      </div>
+          </PaneHeaderMetric>
 
-      {transactions.length > 0 && (
-        <table className="w-full shrink-0 px-3 text-xs">
-          <thead>
-            <tr className="border-b border-border/50 text-muted-foreground">
-              <Th>{t('insiderActivity.columns.date')}</Th>
-              <Th>{t('insiderActivity.columns.insider')}</Th>
-              <Th align="right">{t('insiderActivity.columns.shares')}</Th>
-              <Th align="right">{t('insiderActivity.columns.price')}</Th>
-              <Th align="right">{t('insiderActivity.columns.value')}</Th>
-            </tr>
-          </thead>
-        </table>
+          <table className="w-full shrink-0 px-1.5 text-xs">
+            <thead>
+              <tr className="text-muted-foreground">
+                <Th>{t('insiderActivity.columns.date')}</Th>
+                <Th>{t('insiderActivity.columns.insider')}</Th>
+                <Th align="right">{t('insiderActivity.columns.shares')}</Th>
+                <Th align="right">{t('insiderActivity.columns.price')}</Th>
+                <Th align="right">{t('insiderActivity.columns.value')}</Th>
+              </tr>
+            </thead>
+          </table>
+        </>
       )}
 
       <div className="min-h-0 flex-1 overflow-y-auto">
@@ -133,7 +132,7 @@ function InsiderActivityPaneInner({ pairKey }: { pairKey: string }) {
             title={t('insiderActivity.noFilingsTitle', { symbol: ticker })}
           />
         ) : (
-          <table className="w-full text-xs">
+          <table className="w-full px-1.5 text-xs">
             <tbody>
               {transactions.map((tx, i) => (
                 <InsiderRow
@@ -163,7 +162,7 @@ function InsiderRow({ transaction }: { transaction: InsiderTransaction }) {
 
   return (
     <tr className="border-b border-border/40 align-top last:border-0 hover:bg-accent/40">
-      <td className="whitespace-nowrap py-1.5 pl-3 pr-3 font-mono text-[11px] tabular-nums text-muted-foreground">
+      <td className="whitespace-nowrap py-1.5 pr-3 font-mono text-[11px] tabular-nums text-muted-foreground">
         {formatResolutionDate(`${transaction.date}T00:00:00Z`)}
       </td>
       <td className="max-w-[12rem] pr-3">
@@ -193,7 +192,7 @@ function InsiderRow({ transaction }: { transaction: InsiderTransaction }) {
       </td>
       <td
         className={cn(
-          'whitespace-nowrap pr-3 text-right font-mono text-[11.5px] tabular-nums',
+          'whitespace-nowrap text-right font-mono text-[11px] tabular-nums',
           value === null && 'text-muted-foreground/60',
         )}
       >
@@ -242,7 +241,7 @@ function UnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
 
 function LoadingRows() {
   return (
-    <div className="space-y-1.5 p-3">
+    <div className="space-y-1.5 py-2">
       {Array.from({ length: 6 }).map((_, i) => (
         <div className="h-6 animate-pulse rounded bg-muted" key={i} />
       ))}

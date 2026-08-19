@@ -35,6 +35,7 @@ import { usePanePair } from '@pairlens/plugin-sdk'
 import type { LpPositionEntry } from '@/lib/dex/lp-types'
 
 import {
+  PANE_FOOTNOTE,
   PaneEmpty,
   PaneErrorBanner,
   Th,
@@ -109,7 +110,6 @@ function FeeAccrualPaneInner({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <DexPaneHeader
-        title={t('feeAccrual.title')}
         subtitle={t('feeAccrual.subtitle', {
           wallet: shortWalletLabel(owner),
           count: sorted.length,
@@ -117,7 +117,7 @@ function FeeAccrualPaneInner({
       />
 
       {errors.length > 0 ? (
-        <div className="flex shrink-0 flex-col gap-1 px-3 pt-2">
+        <div className="flex shrink-0 flex-col gap-1 pt-2">
           {errors.slice(0, 2).map((error) => (
             <PaneErrorBanner
               key={`${error.chain}:${error.message}`}
@@ -130,7 +130,7 @@ function FeeAccrualPaneInner({
 
       {/* The total, per token. Two lines at most: past that the table below is
           the readable form and a stacked list of ten symbols is not. */}
-      <div className="shrink-0 border-b border-border px-3 py-2.5">
+      <div className="shrink-0 pb-3">
         <p className="text-[10px] text-muted-foreground">
           {t('feeAccrual.claimableLabel')}
         </p>
@@ -157,15 +157,13 @@ function FeeAccrualPaneInner({
 
       <div className="min-h-0 flex-1 overflow-auto">
         <table className="w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-background text-muted-foreground">
-            <tr className="border-b border-border">
-              <th className="pb-1.5 pl-3 pr-3 text-left font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('feeAccrual.columns.position')}
-              </th>
+          {/* `bg-card`: the band that scrolls under the rows has to be the
+              column's own surface, not the board's background. */}
+          <thead className="sticky top-0 z-10 bg-card">
+            <tr>
+              <Th>{t('feeAccrual.columns.position')}</Th>
               <Th align="right">{t('feeAccrual.columns.fee')}</Th>
-              <th className="pb-1.5 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                {t('feeAccrual.columns.claimable')}
-              </th>
+              <Th align="right">{t('feeAccrual.columns.claimable')}</Th>
             </tr>
           </thead>
           <tbody>
@@ -180,7 +178,7 @@ function FeeAccrualPaneInner({
         </table>
       </div>
 
-      <p className="shrink-0 border-t border-border px-3 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <p className={cn('shrink-0 pt-2 leading-relaxed', PANE_FOOTNOTE)}>
         {t('feeAccrual.footnote')}
       </p>
     </div>
@@ -203,7 +201,7 @@ function FeeRow({
 
   return (
     <tr className="border-b border-border/40 text-xs">
-      <td className="py-1.5 pl-3 pr-3">
+      <td className="py-1.5 pr-3">
         <span className="flex items-center gap-1.5">
           <span className="min-w-0 truncate">
             {view.baseSymbol}/{view.quoteSymbol}
@@ -217,7 +215,7 @@ function FeeRow({
       <td className="py-1.5 pr-3 text-right font-mono text-[11px] text-muted-foreground [font-variant-numeric:tabular-nums]">
         {entry.feeTier === null ? '' : `${(entry.feeTier * 100).toFixed(2)}%`}
       </td>
-      <td className="py-1.5 pr-3 text-right font-mono [font-variant-numeric:tabular-nums]">
+      <td className="py-1.5 text-right font-mono [font-variant-numeric:tabular-nums]">
         {view.baseFees === null && view.quoteFees === null ? (
           <span className="text-[10.5px] text-muted-foreground">
             {t('feeAccrual.notRead')}

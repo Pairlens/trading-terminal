@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Cell, Pie, PieChart, Tooltip as RechartsTooltip } from 'recharts'
 import { TrendingUp } from 'lucide-react'
 
-import { Card } from '@pairlens/ui/components/ui/card'
-
 import { EXCHANGE_THEME } from './exchange-theme'
 import { venuePosterSrc } from './venue-art'
 import type { HoldingValue } from '@/hooks/use-portfolio-value'
@@ -50,9 +48,10 @@ export function PortfolioOverview({
 
   // Per-wallet value distribution
   const walletValues = credentials.map((cred, i) => {
-    // Per-wallet holdings filtering — will use usePortfolioValue(cred.id) when available
+    // Per-wallet holdings filtering will use usePortfolioValue(cred.id) when
+    // that is available
     void holdings
-    // For now, all holdings come from the aggregate — show total per wallet
+    // For now, all holdings come from the aggregate: show the total per wallet
     // When per-credential filtering is available, this will use usePortfolioValue(cred.id)
     return {
       id: cred.id,
@@ -66,10 +65,12 @@ export function PortfolioOverview({
   const hasMore = chartData.length > 8
 
   return (
-    <Card className="elevated-panel overflow-hidden rounded-2xl border-border">
+    <div className="overflow-hidden rounded-[14px] bg-card">
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr]">
-        {/* Left: Donut chart + total */}
-        <div className="flex flex-col items-center justify-center border-b border-border/60 p-6 lg:border-b-0 lg:border-r">
+        {/* Left: Donut chart + total. Stacked on a narrow window, which is the
+            one arrangement that earns a rule; side by side they are two
+            regions of one card and the gap does the work. */}
+        <div className="flex flex-col items-center justify-center border-b border-(--pane-rule) p-6 lg:border-b-0">
           <div className="relative">
             <PieChart width={200} height={200}>
               <Pie
@@ -81,7 +82,7 @@ export function PortfolioOverview({
                 innerRadius={60}
                 outerRadius={85}
                 strokeWidth={1.5}
-                stroke="var(--background)"
+                stroke="var(--card)"
               >
                 {chartData.map((entry) => (
                   <Cell key={entry.currency} fill={entry.color} />
@@ -146,7 +147,7 @@ export function PortfolioOverview({
                 return (
                   <div
                     key={w.id}
-                    className="flex items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-[10px]"
+                    className="flex items-center gap-1.5 rounded-full bg-muted/40 px-2 py-0.5 text-[10px]"
                   >
                     {mark ? (
                       <img
@@ -224,11 +225,8 @@ export function PortfolioOverview({
                     ? (d.value / totalValue) * 100
                     : 0
                 return (
-                  <tr
-                    key={d.currency}
-                    className="border-b border-border/40 last:border-0"
-                  >
-                    <td className="py-1.5 pr-3">
+                  <tr key={d.currency}>
+                    <td className="py-2 pr-3">
                       <span className="flex items-center gap-2">
                         <span
                           className="inline-block size-2.5 rounded-full"
@@ -239,15 +237,15 @@ export function PortfolioOverview({
                         </span>
                       </span>
                     </td>
-                    <td className="py-1.5 pr-3 text-right font-mono tabular-nums text-muted-foreground">
+                    <td className="py-2 pr-3 text-right font-mono tabular-nums text-muted-foreground">
                       {formatAmount(d.amount)}
                     </td>
-                    <td className="py-1.5 pr-3 text-right font-mono tabular-nums text-foreground">
+                    <td className="py-2 pr-3 text-right font-mono tabular-nums text-foreground">
                       {d.value != null
                         ? formatValue(currencySymbol, d.value)
                         : '—'}
                     </td>
-                    <td className="py-1.5 text-right">
+                    <td className="py-2 text-right">
                       {pct > 0 ? (
                         <div className="flex items-center justify-end gap-2">
                           <div className="hidden h-1 w-12 overflow-hidden rounded-full bg-muted/60 sm:block">
@@ -279,6 +277,6 @@ export function PortfolioOverview({
           )}
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

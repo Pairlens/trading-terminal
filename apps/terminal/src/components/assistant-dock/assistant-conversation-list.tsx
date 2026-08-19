@@ -29,6 +29,11 @@ import { Button } from '@pairlens/ui/components/ui/button'
 
 import { AssistantSyncBanner } from './assistant-sync-banner'
 import type { AssistantConversationMeta } from '@/stores/assistant-conversations-store'
+import {
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
+} from '@/components/master-detail'
+import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
 import { useAssistantConversationsStore } from '@/stores/assistant-conversations-store'
 import { track } from '@/lib/analytics-events'
 import { useCloudSyncPreferences } from '@/hooks/use-cloud-sync'
@@ -140,29 +145,54 @@ export function AssistantConversationList({
 
   const rowHeight = size === 'md' ? 'py-2.5' : 'py-1.5'
 
+  const startNew = () => {
+    create()
+    track('assistant_conversation_action', {
+      action: 'created',
+      count: conversations.length + 1,
+      surface,
+    })
+    onNavigate?.()
+  }
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <div className="shrink-0 px-2 pt-2 pb-1.5">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 w-full justify-start gap-2 rounded-lg px-2 text-xs"
-          onClick={() => {
-            create()
-            track('assistant_conversation_action', {
-              action: 'created',
-              count: conversations.length + 1,
-              surface,
-            })
-            onNavigate?.()
-          }}
-        >
-          <Plus className="size-3.5 shrink-0" />
-          <span className="truncate">
-            {t('assistantDock.conversations.new')}
+      {/* In the dock the rail is a column beside a body, which is the shape
+          Bots and Indicators already have, so it wears their title row: the
+          name on the left, the one action as an icon on the right. The phone
+          gets the labelled button instead, because there the list IS the
+          screen and a 20px plus is not a touch target. */}
+      {size === 'sm' ? (
+        <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
+          <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
+            {t('assistantDock.conversations.history')}
           </span>
-        </Button>
-      </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:text-foreground size-5 shrink-0 rounded-[6px]"
+            onClick={startNew}
+            aria-label={t('assistantDock.conversations.new')}
+            title={t('assistantDock.conversations.new')}
+          >
+            <Plus className="size-3.5" />
+          </Button>
+        </div>
+      ) : (
+        <div className="shrink-0 px-2 pt-2 pb-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-full justify-start gap-2 rounded-[10px] px-2 text-xs"
+            onClick={startNew}
+          >
+            <Plus className="size-3.5 shrink-0" />
+            <span className="truncate">
+              {t('assistantDock.conversations.new')}
+            </span>
+          </Button>
+        </div>
+      )}
 
       {conversations.length === 0 ? (
         <p className="text-muted-foreground px-3 py-2 text-[11px] leading-relaxed">
@@ -172,7 +202,7 @@ export function AssistantConversationList({
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-2">
           {groups.map((group) => (
             <div key={group.id} className="mb-1">
-              <p className="text-muted-foreground px-2 pt-2 pb-1 text-[10px] font-medium tracking-wide uppercase">
+              <p className={`${PANE_COLUMN_HEADER} px-2 pt-2 pb-1`}>
                 {t(group.labelKey)}
               </p>
               <ul className="flex flex-col gap-0.5">
@@ -194,7 +224,7 @@ export function AssistantConversationList({
                         }
                         onNavigate?.()
                       }}
-                      className={`ai-row text-muted-foreground hover:text-foreground aria-[current]:text-foreground flex w-full items-center gap-2 rounded-lg px-2 ${rowHeight} pr-7 text-left text-xs`}
+                      className={`ai-row text-muted-foreground hover:text-foreground aria-[current]:text-foreground flex w-full items-center gap-2 rounded-[10px] px-2 ${rowHeight} pr-7 text-left text-xs`}
                     >
                       <span className="min-w-0 flex-1 truncate">
                         {conversation.title ??
@@ -208,7 +238,7 @@ export function AssistantConversationList({
                       type="button"
                       aria-label={t('assistantDock.conversations.delete')}
                       onClick={() => onRequestDelete(conversation.id)}
-                      className="text-muted-foreground hover:text-destructive absolute top-1/2 right-1 flex size-6 -translate-y-1/2 items-center justify-center rounded-md opacity-0 transition-opacity group-hover/row:opacity-100 focus-visible:opacity-100"
+                      className="text-muted-foreground hover:text-destructive absolute top-1/2 right-1 flex size-6 -translate-y-1/2 items-center justify-center rounded-[6px] opacity-0 transition-opacity group-hover/row:opacity-100 focus-visible:opacity-100"
                     >
                       <Trash2 className="size-3" />
                     </button>

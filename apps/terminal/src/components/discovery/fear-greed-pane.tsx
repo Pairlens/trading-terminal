@@ -16,6 +16,8 @@ import {
 import { usePluginFetch, usePluginQuery } from '@pairlens/plugin-sdk'
 import type { FearGreedResponse } from '@pairlens/shared/instrument-types'
 
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
+import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchFearGreedWithFallback } from '@/lib/public-market-data'
 
@@ -77,36 +79,24 @@ export function FearGreedPane() {
     )
   }, [historical])
 
+  // Three states, and the header strip each of them used to draw is now the
+  // shell's single 20px row, so each state renders only what it is about.
   if (isLoading) {
     return (
-      <div className="flex h-full flex-col">
-        <header className="flex items-center justify-between border-b px-4 py-2.5">
-          <h2 className="text-sm font-semibold">{t('fearGreed.title')}</h2>
-        </header>
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
-          <div className="size-16 animate-pulse rounded-full bg-muted" />
-          <div className="h-3 w-24 animate-pulse rounded bg-muted" />
-        </div>
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="size-16 animate-pulse rounded-full bg-muted" />
+        <div className="h-3 w-24 animate-pulse rounded bg-muted" />
       </div>
     )
   }
 
   if (error || !latest) {
     return (
-      <div className="flex h-full flex-col">
-        <header className="flex items-center justify-between border-b px-4 py-2.5">
-          <h2 className="text-sm font-semibold">{t('fearGreed.title')}</h2>
-        </header>
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6 text-center">
-          <Gauge className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="text-sm font-medium">
-            {error ? t('fearGreed.failed') : t('fearGreed.noData')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {error ? t('fearGreed.tryLater') : t('fearGreed.willAppear')}
-          </p>
-        </div>
-      </div>
+      <PaneEmpty
+        icon={Gauge}
+        title={error ? t('fearGreed.failed') : t('fearGreed.noData')}
+        body={error ? t('fearGreed.tryLater') : t('fearGreed.willAppear')}
+      />
     )
   }
 
@@ -114,16 +104,13 @@ export function FearGreedPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-center justify-between border-b px-4 py-2.5">
-        <h2 className="text-sm font-semibold">{t('fearGreed.title')}</h2>
-        {fetchedAt && (
-          <span className="text-xs text-muted-foreground">
-            {t('common.updated', { time: formatRelativeTime(fetchedAt) })}
-          </span>
-        )}
-      </header>
+      {fetchedAt && (
+        <PaneHeaderMetric>
+          {t('common.updated', { time: formatRelativeTime(fetchedAt) })}
+        </PaneHeaderMetric>
+      )}
 
-      <div className="px-4 py-3">
+      <div className="pb-3">
         <div className="mb-1.5 flex items-baseline justify-between">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold" style={{ color }}>
@@ -212,7 +199,7 @@ function FearGreedChart({
   }, [])
 
   return (
-    <div ref={containerRef} className="min-h-0 flex-1 px-2 pb-2">
+    <div ref={containerRef} className="min-h-0 flex-1">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData}>
           <defs>

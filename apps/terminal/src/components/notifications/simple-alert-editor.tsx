@@ -145,7 +145,7 @@ export function SimpleAlertEditor({ ruleId }: { ruleId: string }) {
 
         {/* Footer actions. The builder link sits with delete, not with the
             fields — it is the exit, not part of the form. */}
-        <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-border pt-4">
+        <div className="mt-8 flex flex-wrap items-center gap-2 border-t border-(--pane-rule) pt-4">
           <Button
             variant="outline"
             size="sm"
@@ -235,7 +235,8 @@ function PairsRow({
         {bindings.map((binding, index) => (
           <span
             key={binding.id}
-            className="group flex items-center gap-1.5 rounded-md border border-border bg-card px-2 py-1 font-mono text-xs"
+            // A well, not a card: this sits ON the column's card already.
+            className="group flex items-center gap-1.5 rounded-[10px] bg-muted/40 px-2 py-1 font-mono text-xs"
           >
             {binding.pair}
             <span className="text-muted-foreground">{binding.market}</span>

@@ -25,6 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@pairlens/ui/components/ui/sidebar'
+import { RAIL_ITEM } from '@/components/chrome/rail-chrome'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { useAssistantPlacement } from '@/lib/assistant-core/placement'
@@ -96,7 +97,7 @@ export function AssistantSidebarOrb({
         data-assistant-orb=""
         aria-label={open ? closeLabel : openLabel}
         aria-expanded={open}
-        className="size-9 justify-center p-0"
+        className={RAIL_ITEM}
         isActive={open}
         onClick={onClick}
         type="button"
@@ -137,7 +138,7 @@ export function AssistantSidebarOrb({
                 : 'pointer-events-none absolute top-1/2 left-[calc(100%+0.5rem)] z-50 hidden -translate-y-1/2 group-hover/assistant:block group-focus-within/assistant:block'
             }
           >
-            <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-lg px-2.5 py-1 text-xs">
+            <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-[10px] px-2.5 py-1 text-xs">
               {announceBusy ? (
                 <ShimmeringText text={label} duration={1.6} />
               ) : (

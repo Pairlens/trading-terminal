@@ -34,6 +34,10 @@ import {
   sortTrades,
 } from '@/components/terminal/trade-tape-sort'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+} from '@/components/panes/pane-primitives'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
@@ -177,7 +181,7 @@ const TradeRow = memo(
     return (
       <div
         className={cn(
-          'relative h-5 items-center px-2 py-[1px] font-mono text-[11px] leading-[18px]',
+          'relative h-5 items-center py-[1px] font-mono text-[11px] leading-[18px]',
           TAPE_GRID,
         )}
       >
@@ -430,13 +434,8 @@ function TradesPaneInner({
   return (
     <div className="relative flex h-full flex-col overflow-hidden text-xs">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
-        <div
-          className={cn(
-            'flex-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground',
-            TAPE_GRID,
-          )}
-        >
+      <div className="flex items-center justify-between pb-1">
+        <div className={cn('flex-1', PANE_COLUMN_HEADER, TAPE_GRID)}>
           <TapeHeader
             {...headerProps('side', t('positions.side'))}
             labelClassName="sr-only @min-[17rem]/pane:not-sr-only"
@@ -483,9 +482,7 @@ function TradesPaneInner({
       {/* Venue footer — see the order book pane: only shown when this tape
           isn't on the charted venue, and never a stream-health claim. */}
       {venue.isDistinct && (
-        <div className="border-t border-border/50 px-2 py-1 text-[10px] text-muted-foreground">
-          {venue.label}
-        </div>
+        <div className={cn('pt-1.5', PANE_FOOTNOTE)}>{venue.label}</div>
       )}
     </div>
   )

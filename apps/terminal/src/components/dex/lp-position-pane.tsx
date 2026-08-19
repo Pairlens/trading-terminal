@@ -24,7 +24,11 @@ import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type { LpPositionEntry } from '@/lib/dex/lp-types'
 
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
 import {
   LpStatLine,
@@ -116,21 +120,23 @@ function LpPositionPaneInner({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <DexPaneHeader
-        title={t('lpPosition.title')}
-        subtitle={t('lpPosition.subtitle', {
-          wallet: shortWalletLabel(owner),
-          count: sorted.length,
-        })}
-      >
-        {hiddenByCap > 0 ? (
-          <span className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-            {t('lpPosition.capped', { count: hiddenByCap })}
-          </span>
-        ) : null}
-      </DexPaneHeader>
+        subtitle={
+          <>
+            {t('lpPosition.subtitle', {
+              wallet: shortWalletLabel(owner),
+              count: sorted.length,
+            })}
+            {hiddenByCap > 0 ? (
+              <span className="ml-2">
+                {t('lpPosition.capped', { count: hiddenByCap })}
+              </span>
+            ) : null}
+          </>
+        }
+      />
 
       {errors.length > 0 ? (
-        <div className="flex shrink-0 flex-col gap-1 px-3 pt-2">
+        <div className="flex shrink-0 flex-col gap-1 pt-2">
           {errors.slice(0, 2).map((error) => (
             <PaneErrorBanner
               key={`${error.chain}:${error.message}`}
@@ -151,8 +157,8 @@ function LpPositionPaneInner({
           }
         />
         {others.length > 0 ? (
-          <div className="flex flex-col gap-2 px-3 py-2.5">
-            <span className="text-[11px] text-muted-foreground">
+          <div className="flex flex-col gap-2 pt-3">
+            <span className="text-[10px] text-muted-foreground">
               {t('lpPosition.otherPositions')}
             </span>
             {others.map((entry) => (
@@ -165,7 +171,7 @@ function LpPositionPaneInner({
         ) : null}
       </div>
 
-      <p className="shrink-0 border-t border-border px-3 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <p className={cn('shrink-0 pt-2 leading-relaxed', PANE_FOOTNOTE)}>
         {t('lpPosition.footnote')}
       </p>
     </div>
@@ -220,8 +226,11 @@ function PositionDetail({
   const headroom = headroomToUpper(view.priceCurrent, view.priceUpper)
 
   return (
-    <>
-      <div className="flex items-start justify-between gap-2 border-b border-border px-3 py-2.5">
+    // Six sections, no rules between them. They used to be a stack of ruled
+    // strips, which drew five lines down a pane the board frames once; the
+    // rhythm of a label, its rows and a gap does the same separating.
+    <div className="flex flex-col gap-3.5">
+      <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-[13px] font-semibold">
             {view.baseSymbol}/{view.quoteSymbol}
@@ -243,9 +252,9 @@ function PositionDetail({
         <RangeBadge inRange={entry.inRange} />
       </div>
 
-      <div className="border-b border-border px-3 py-2.5">
+      <div>
         <div className="flex items-baseline justify-between gap-3">
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[10px] text-muted-foreground">
             {t('lpPosition.value')}
           </span>
           <span className="font-mono text-[15px] font-semibold [font-variant-numeric:tabular-nums]">
@@ -261,9 +270,9 @@ function PositionDetail({
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-2 border-b border-border px-3 py-2.5">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-[10px] text-muted-foreground">
             {t('lpPosition.range')}
           </span>
           <span className="font-mono text-[10px] text-muted-foreground [font-variant-numeric:tabular-nums]">
@@ -291,8 +300,8 @@ function PositionDetail({
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-2 border-b border-border px-3 py-2.5">
-        <span className="text-[11px] text-muted-foreground">
+      <div className="flex flex-col gap-2">
+        <span className="text-[10px] text-muted-foreground">
           {t('lpPosition.composition')}
         </span>
         {baseShare !== null ? (
@@ -324,8 +333,8 @@ function PositionDetail({
         />
       </div>
 
-      <div className="flex flex-col gap-2 border-b border-border px-3 py-2.5">
-        <span className="text-[11px] text-muted-foreground">
+      <div className="flex flex-col gap-2">
+        <span className="text-[10px] text-muted-foreground">
           {t('lpPosition.uncollected')}
         </span>
         <LpStatLine
@@ -349,7 +358,7 @@ function PositionDetail({
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-1.5 border-b border-border px-3 py-2.5">
+      <div className="flex flex-col gap-1.5">
         <LpStatLine
           label={t('lpPosition.tokenId')}
           value={`#${entry.tokenId}`}
@@ -374,7 +383,7 @@ function PositionDetail({
           </div>
         ) : null}
       </div>
-    </>
+    </div>
   )
 }
 

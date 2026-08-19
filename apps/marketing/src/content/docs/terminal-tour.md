@@ -5,7 +5,7 @@ group: get-started
 order: 3
 eyebrow: Get started
 updated: 19 AUG 2026
-readTime: 7 min read
+readTime: 8 min read
 ---
 
 Pairlens opens on a live chart. Everything else is one click or one keystroke
@@ -13,7 +13,10 @@ away. Here is the map.
 
 ## The left nav
 
-The rail down the left side is how you move between the big surfaces.
+The rail down the left side is how you move between the big surfaces. It is
+painted the same colour as the page beside it, so it has no edge of its own and
+nothing competes with the middle of the window. The section you are on is the
+one entry resting on a soft chip.
 
 | Entry                       | What lives there                                                             |
 | --------------------------- | ---------------------------------------------------------------------------- |
@@ -69,6 +72,20 @@ futures opens on funding and basis, DEX on chains and pools, equities on the
 session and the calendars, predictions on the event board. Full details in
 [panels](/docs/panels), and the layout model in
 [workspaces](/docs/workspaces).
+
+## Every screen is built the same way
+
+Once you can read a workspace you can read the rest of the terminal, because
+they are the same three things. The ground is the darkest surface and nothing
+sits on it directly. Columns are cards floating on that ground, separated by
+the ground showing through. Inside a column, a single hairline divides one
+region from the next, and that hairline is usually a handle you can drag.
+
+Bots, Indicators, Notifications and Workflows are laid out from exactly those
+parts: your list of things is one column, what you are working on is another,
+and the builders add a third for the step palette. Wells, the slightly lighter
+inset blocks, mark the places you type into: an order ticket's fields, a
+template card, a code console.
 
 ## The pair header
 

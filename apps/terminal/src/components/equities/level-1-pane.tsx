@@ -30,7 +30,7 @@ import type { TradingStatus } from '@pairlens/market-engine/types'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PANE_TABLE_BODY, PaneEmpty } from '@/components/panes/pane-primitives'
 import {
   useOptionalCandleData,
   useOptionalChartConfig,
@@ -126,7 +126,7 @@ function Level1PaneInner({ pairKey }: { pairKey: string }) {
       : null
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto p-3">
+    <div className="flex h-full min-h-0 flex-col gap-2.5 overflow-y-auto py-2">
       {/* Only when the venue has spoken; see the module note. */}
       {tickerData?.tradingStatus && (
         <TradingStatusRow status={tickerData.tradingStatus} />
@@ -282,7 +282,8 @@ function QuoteCard({
       </p>
       <p
         className={cn(
-          'mt-0.5 font-mono text-base font-semibold tabular-nums',
+          'mt-0.5 font-semibold',
+          PANE_TABLE_BODY,
           side === 'bid' ? 'text-up' : 'text-down',
         )}
       >
@@ -300,9 +301,9 @@ function Row({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+    <div className="flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
       <span>{label}</span>
-      <span className="truncate font-mono tabular-nums text-foreground">
+      <span className={cn('truncate text-foreground', PANE_TABLE_BODY)}>
         {children}
       </span>
     </div>

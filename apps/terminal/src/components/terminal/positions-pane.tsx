@@ -22,7 +22,13 @@ import {
   TabsList,
   TabsTrigger,
 } from '@pairlens/ui/components/ui/tabs'
+import { cn } from '@pairlens/ui/lib/utils'
 
+import {
+  PANE_COLUMN_HEADER,
+  PANE_TABLE_BODY,
+  Th,
+} from '@/components/panes/pane-primitives'
 import { useMarketData } from '@/lib/market-data-provider'
 import { usePaneWallet } from '@/lib/layout/pane-context'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
@@ -70,28 +76,45 @@ function EmptyState({
   )
 }
 
+/**
+ * The board's own tab voice, copied from `layout-tab-group` so an in-pane tab
+ * strip and a stacked-pane one read as the same row. Minus the drag cursors:
+ * these tabs pick a dataset, they do not move a pane.
+ */
+const TAB_TRIGGER = cn(
+  'h-5 min-w-0 flex-none rounded-none border-0 px-0 py-0',
+  'text-[11.5px] leading-none font-normal text-muted-foreground',
+  'data-active:bg-transparent data-active:text-[12.5px] data-active:font-medium data-active:tracking-[-0.005em] data-active:text-foreground',
+  'dark:data-active:border-transparent dark:data-active:bg-transparent',
+  'after:hidden',
+)
+
 function TableHeader({ children }: { children: React.ReactNode }) {
   return (
     <thead>
-      <tr className="border-b border-border/50 text-muted-foreground">
-        {children}
-      </tr>
+      <tr>{children}</tr>
     </thead>
   )
 }
 
-function Th({
+/**
+ * The shared `Th` with the container query two columns need: status and time
+ * fold away once the pane is narrower than the row they belong to.
+ */
+function ThWide({
   children,
   align = 'left',
-  className,
 }: {
-  children?: React.ReactNode
+  children: React.ReactNode
   align?: 'left' | 'right'
-  className?: string
 }) {
   return (
     <th
-      className={`pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em] last:pr-0 ${align === 'right' ? 'text-right' : 'text-left'} ${className ?? ''}`}
+      className={cn(
+        'hidden pb-1.5 pr-3 last:pr-0 @sm/pane:table-cell',
+        PANE_COLUMN_HEADER,
+        align === 'right' ? 'text-right' : 'text-left',
+      )}
     >
       {children}
     </th>
@@ -315,46 +338,47 @@ export function PositionsPane() {
 
   return (
     <Tabs defaultValue="positions" className="flex h-full flex-col gap-0">
-      <div className="border-b px-2">
-        <TabsList variant="line" className="h-7">
-          <TabsTrigger value="positions" className="text-[11px]">
-            {t('positions.positions')}
-          </TabsTrigger>
-          <TabsTrigger value="orders" className="text-[11px]">
-            {t('positions.orders')}
-            {sortedOrders.length > 0 && (
-              <span className="ml-1 text-[10px] text-muted-foreground">
-                ({sortedOrders.length})
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="fills" className="text-[11px]">
-            {t('positions.fills')}
-            {fills.length > 0 && (
-              <span className="ml-1 text-[10px] text-muted-foreground">
-                ({fills.length})
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="balances" className="text-[11px]">
-            {t('positions.balances', 'Balances')}
-            {holdings.length > 0 && (
-              <span className="ml-1 text-[10px] text-muted-foreground">
-                ({holdings.length})
-              </span>
-            )}
-          </TabsTrigger>
-        </TabsList>
-      </div>
+      <TabsList
+        variant="line"
+        className="h-5 min-w-0 shrink-0 gap-3 rounded-none p-0"
+      >
+        <TabsTrigger value="positions" className={TAB_TRIGGER}>
+          {t('positions.positions')}
+        </TabsTrigger>
+        <TabsTrigger value="orders" className={TAB_TRIGGER}>
+          {t('positions.orders')}
+          {sortedOrders.length > 0 && (
+            <span className="ml-1 text-[10px] text-muted-foreground">
+              ({sortedOrders.length})
+            </span>
+          )}
+        </TabsTrigger>
+        <TabsTrigger value="fills" className={TAB_TRIGGER}>
+          {t('positions.fills')}
+          {fills.length > 0 && (
+            <span className="ml-1 text-[10px] text-muted-foreground">
+              ({fills.length})
+            </span>
+          )}
+        </TabsTrigger>
+        <TabsTrigger value="balances" className={TAB_TRIGGER}>
+          {t('positions.balances', 'Balances')}
+          {holdings.length > 0 && (
+            <span className="ml-1 text-[10px] text-muted-foreground">
+              ({holdings.length})
+            </span>
+          )}
+        </TabsTrigger>
+      </TabsList>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="mt-1.5 min-h-0 flex-1 overflow-hidden">
         {/* Positions tab */}
-        <TabsContent value="positions" className="h-full p-2">
+        <TabsContent value="positions" className="h-full">
           <EmptyState icon={Layers} message={t('positions.spotNoPositions')} />
         </TabsContent>
 
         {/* Orders tab */}
-        <TabsContent value="orders" className="h-full p-2">
+        <TabsContent value="orders" className="h-full">
           <div className="h-full overflow-auto">
             {!hasWallet ? (
               <EmptyState
@@ -367,18 +391,17 @@ export function PositionsPane() {
                 message={t('positions.noOrders')}
               />
             ) : (
-              <table className="w-full text-[11px]">
+              <table className={cn('w-full', PANE_TABLE_BODY)}>
                 <TableHeader>
                   <Th>{t('positions.side')}</Th>
                   <Th>{t('positions.pair')}</Th>
                   <Th>{t('positions.type')}</Th>
                   <Th align="right">{t('positions.price')}</Th>
                   <Th align="right">{t('positions.size')}</Th>
-                  <Th className="hidden @sm/pane:table-cell">
-                    {t('positions.status')}
-                  </Th>
+                  <ThWide>{t('positions.status')}</ThWide>
                   <Th align="right">{t('positions.time')}</Th>
-                  <Th align="right" />
+                  {/* The cancel column: a glyph per row, no name. */}
+                  <th className="pb-1.5" />
                 </TableHeader>
                 <tbody>
                   {sortedOrders.map((order) => {
@@ -445,7 +468,7 @@ export function PositionsPane() {
         </TabsContent>
 
         {/* Fills tab */}
-        <TabsContent value="fills" className="h-full p-2">
+        <TabsContent value="fills" className="h-full">
           <div className="h-full overflow-auto">
             {!hasWallet ? (
               <EmptyState
@@ -455,16 +478,14 @@ export function PositionsPane() {
             ) : fills.length === 0 ? (
               <EmptyState icon={Receipt} message={t('positions.noFills')} />
             ) : (
-              <table className="w-full text-[11px]">
+              <table className={cn('w-full', PANE_TABLE_BODY)}>
                 <TableHeader>
                   <Th>{t('positions.side')}</Th>
                   <Th>{t('positions.pair')}</Th>
                   <Th align="right">{t('positions.price')}</Th>
                   <Th align="right">{t('positions.size')}</Th>
                   <Th align="right">{t('positions.fee')}</Th>
-                  <Th align="right" className="hidden @sm/pane:table-cell">
-                    {t('positions.time')}
-                  </Th>
+                  <ThWide align="right">{t('positions.time')}</ThWide>
                 </TableHeader>
                 <tbody>
                   {fills.map((fill) => (
@@ -499,7 +520,7 @@ export function PositionsPane() {
         </TabsContent>
 
         {/* Balances tab */}
-        <TabsContent value="balances" className="h-full p-2">
+        <TabsContent value="balances" className="h-full">
           <div className="h-full overflow-auto">
             {!hasWallet ? (
               <EmptyState
@@ -515,7 +536,7 @@ export function PositionsPane() {
               <>
                 {totalValue > 0 && (
                   <div className="mb-2 flex flex-col gap-0.5">
-                    <span className="font-mono text-[10px] uppercase tracking-[.16em] text-muted-foreground">
+                    <span className={PANE_COLUMN_HEADER}>
                       {t('positions.total', 'Total')}
                     </span>
                     <span className="font-mono text-lg font-semibold tracking-tight tabular-nums text-foreground">
@@ -528,7 +549,7 @@ export function PositionsPane() {
                     </span>
                   </div>
                 )}
-                <table className="w-full text-[11px]">
+                <table className={cn('w-full', PANE_TABLE_BODY)}>
                   <TableHeader>
                     <Th>{t('positions.asset', 'Asset')}</Th>
                     <Th align="right">{t('positions.total', 'Total')}</Th>

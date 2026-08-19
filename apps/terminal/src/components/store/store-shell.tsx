@@ -1,6 +1,6 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Search, X } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
@@ -9,6 +9,57 @@ import './store.css'
 /** Shared-element morph timing (poster card → product-page visual). */
 export const POSTER_MORPH = {
   layout: { duration: 0.34, ease: [0.22, 1, 0.36, 1] as const },
+}
+
+/**
+ * The store's search field, wearing the top bar's chip.
+ *
+ * Both storefronts put their search on the page header, and both used to put a
+ * bordered 210px `Input` there, the widest and loudest thing on a bar where
+ * every other control is a borderless `--card` chip at 10px (see
+ * `components/chrome/header-chrome.ts`). This is that chip with room to type
+ * in: same height, same radius, same fill, same focus ring, and the magnifier
+ * and the clear button sit inside it rather than beside it.
+ *
+ * A bare `input` rather than the `Input` primitive on purpose: the primitive's
+ * look is carried by `dark:` variants, which survive a merge and would repaint
+ * the field in the mode most of the terminal runs in.
+ */
+export function StoreSearchChip({
+  value,
+  onChange,
+  placeholder,
+  clearLabel,
+}: {
+  value: string
+  onChange: (value: string) => void
+  placeholder: string
+  clearLabel: string
+}) {
+  // `flex` rather than a bare block: an inline input leaves descender space
+  // under it, which pushed the chip an eighth of a pixel below its neighbours.
+  return (
+    <div className="relative flex items-center">
+      <Search className="pointer-events-none absolute left-[9px] top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-[26px] w-[196px] rounded-[10px] border-0 bg-card pl-[29px] pr-[26px] text-xs text-foreground shadow-none outline-hidden transition-colors placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          className="absolute right-[7px] top-1/2 -translate-y-1/2 rounded-[5px] p-0.5 text-muted-foreground transition-colors hover:text-foreground"
+          aria-label={clearLabel}
+        >
+          <X className="size-3" />
+        </button>
+      )}
+    </div>
+  )
 }
 
 /**

@@ -1,11 +1,11 @@
 ---
 title: Workspaces
-description: Build layouts that suit how you trade, bind panels to variables so one workspace serves every pair, and copy ready-made ones from the store.
+description: Build layouts that suit how you trade, bind panels to variables so one workspace serves every pair, copy ready-made ones from the store, or ask the assistant to build one for you.
 group: traders
 order: 8
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 10 min read
+readTime: 11 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -18,12 +18,53 @@ panel. Rather than reconfiguring, you keep both and switch.
 empty-cell placeholder, from omni-search (<kbd>⌘K</kbd>, then **Add to
 layout**), or from the pane menu on an existing panel.
 
-Drag separators to resize. Split a cell horizontally or vertically, replace
-what is in it, or close it. Panels marked as singletons appear once per
-workspace, which is why you cannot end up with two Portfolio panels quietly
-disagreeing.
+Split a cell horizontally or vertically, replace what is in it, or close it.
+Panels marked as singletons appear once per workspace, which is why you cannot
+end up with two Portfolio panels quietly disagreeing.
 
 Rename a workspace, change its icon, or delete it from its context menu.
+
+## Or ask for one
+
+The assistant builds workspaces. It reads the panel catalogue first, so it
+works from the panes you actually have rather than a list it remembers, and
+plugin panes are in that catalogue the moment you install them.
+
+> Build me a perps desk: chart on the left, funding and open interest stacked
+> on the right, liquidation map underneath. Put it in a Perps folder.
+
+It creates the folder, builds the board, wires the panes that follow a pair to
+the workspace's `$pair` variable, seeds that variable with whatever you had on
+screen, and opens it. Then you can keep going in the same breath: "add a tape
+under the book", "call it Funding desk instead", "copy the Scalper's Cockpit
+into that folder too".
+
+It also works the other way round. Rearrange a board by hand and say **save
+this as a workspace**, and what is on screen becomes a saved one, variables
+derived and panes bound. On a board you are already on, **rebuild this** asks
+before it lands: replacing every pane shows you the new geometry on a card
+first. Deleting a workspace asks too.
+
+Full tool list in the
+[assistant tool reference](/docs/copilot-tools#building-workspaces).
+
+## Moving a panel
+
+A column is one surface, and the panels stacked inside it are divided by a
+single hairline. That line is also the resize handle: drag it to give one panel
+more room, and drag the gap between two columns to change the split.
+
+Every panel carries a grip at the right end of its title row. It is always
+there, faint, and comes up to full strength the moment your pointer enters the
+panel, so the handle is lit before you reach for it and nothing shifts on the
+way in. Drag the grip, or the panel's title, to pick the panel up. Drop it on
+the middle of another panel to stack the two as tabs, on an edge to split, or
+past the outer edge of a column to start a new one. The grip takes focus from
+the keyboard too.
+
+A close button sits beside the grip and appears with it. **Close Pane** in the
+panel's right-click menu does the same, alongside **Pop Out to Column** and the
+variable bindings below.
 
 ## Discovery is one board per asset class
 
@@ -39,13 +80,17 @@ is on-chain, green is equities, cyan is event contracts. Pick a tab here and
 the pair you open from it is badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
-and only one of the five is a list of pairs.
+and none of the five opens on an A-to-Z list of pairs.
 
 **CEX Spot** opens on what moved and why: a market pulse strip over the movers
-table and the sector tape, the full markets scanner beside them, and news over
-your watchlist in the right rail. Clicking a sector chip filters the scanner
-next to it rather than navigating away. Every pane on this board works with no
-account connected.
+table over the sector tape, the news wire beside them, and your watchlist in
+the right rail. Clicking a sector in the tape narrows the movers table above it
+to that sector rather than navigating away, and a chip on the table says which
+sector it is holding; click the chip to let all of them back in. Every pane on
+this board works with no account connected. The full markets scanner is not on
+it, since the list you want by name is a keystroke away in omni-search: add the
+panel from **Panes**, or open the **Markets** board from the workspaces menu,
+and it follows the same sector selection.
 
 **CEX Futures** scans by cost of carry instead of by price. The funding matrix
 takes the wide column with the basis monitor under it, and open interest sits
@@ -68,9 +113,9 @@ listed and resolved daily and never sit in a catalog of pairs. A category rail
 narrows the board, and a right rail carries the biggest odds moves over what
 settles soonest.
 
-The markets scanner is on the spot board and on any board you add it to. It
-opens on that tab's asset class and remembers its own filter per tab, so
-widening one board to every market is a decision about that board alone.
+The markets scanner is on whatever board you add it to. It opens on that tab's
+asset class and remembers its own filter per tab, so widening one board to
+every market is a decision about that board alone.
 
 Drag a tab to reorder it, or right-click one and move it left or right. If you
 trade event contracts and nothing else, put Predictions first. The

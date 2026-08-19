@@ -55,7 +55,7 @@ export function SessionClockPane() {
 
   if (!state) {
     return (
-      <div className="flex h-full items-center gap-2 px-3">
+      <div className="flex h-full items-center gap-2">
         {isPending ? (
           <>
             <Loader2 className="size-3.5 animate-spin text-muted-foreground/60" />
@@ -76,7 +76,7 @@ export function SessionClockPane() {
   const countdown = countdownSentence(t, state, nowMs)
 
   return (
-    <div className="flex h-full min-h-0 items-center gap-4 px-3 py-2">
+    <div className="flex h-full min-h-0 items-center gap-4 py-1.5">
       <div className="flex shrink-0 flex-col gap-1">
         <div className="flex items-center gap-1.5">
           <SessionPhaseChip compact phase={state.phase} />
@@ -87,7 +87,7 @@ export function SessionClockPane() {
         </p>
       </div>
 
-      <span className="h-8 w-px shrink-0 bg-border" />
+      <span className="h-4 w-px shrink-0 bg-(--pane-rule)" />
 
       {day ? (
         <>

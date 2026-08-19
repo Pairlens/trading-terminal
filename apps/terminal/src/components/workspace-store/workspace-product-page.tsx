@@ -114,7 +114,7 @@ export function WorkspaceProductPage({
       <StoreAurora className="fixed" />
 
       {/* Sticky sub-bar */}
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/40 bg-card/70 px-5 py-2.5 backdrop-blur-md">
+      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-(--pane-rule) bg-card/70 px-5 py-2.5 backdrop-blur-md">
         <button
           type="button"
           onClick={onBack}
@@ -182,8 +182,8 @@ export function WorkspaceProductPage({
         <motion.div
           layoutId={posterLayoutId ?? undefined}
           transition={POSTER_MORPH}
-          className="mt-7 border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
-          style={{ borderRadius: 17 }}
+          className="mt-7 bg-muted/40 p-4 shadow-lg backdrop-blur-sm"
+          style={{ borderRadius: 14 }}
         >
           <WorkspaceLayoutPreview
             layout={template.layout}
@@ -256,7 +256,7 @@ export function WorkspaceProductPage({
             <SectionEyebrow>
               {t('workspaceStore.detailsHeading', 'Details')}
             </SectionEyebrow>
-            <div className="mt-3 divide-y divide-border/50 rounded-[14px] border border-border/70">
+            <div className="mt-3 divide-y divide-(--pane-rule) overflow-hidden rounded-[14px] bg-muted/40">
               <DetailsRow
                 label={t('workspaceStore.author', 'Author')}
                 value={template.author}

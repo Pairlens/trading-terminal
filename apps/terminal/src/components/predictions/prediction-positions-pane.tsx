@@ -83,7 +83,7 @@ export function PredictionPositionsPane() {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-3">
+    <div className="h-full overflow-y-auto py-1">
       <div className="flex flex-col gap-2">
         {errors.map((result) => (
           <PaneErrorBanner
@@ -94,9 +94,9 @@ export function PredictionPositionsPane() {
         ))}
 
         {rowCount > 0 && (
-          <table className="w-full text-xs">
+          <table className="w-full text-[11px]">
             <thead>
-              <tr className="border-b border-border/50 text-muted-foreground">
+              <tr className="text-muted-foreground">
                 <Th>{t('predictionPositions.colMarket')}</Th>
                 <Th>{t('predictionPositions.colOutcome')}</Th>
                 <Th align="right">{t('predictionPositions.colContracts')}</Th>

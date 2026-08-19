@@ -18,6 +18,7 @@ import { ReactFlowProvider } from '@xyflow/react'
 import { WorkflowSidebar } from './workflow-sidebar'
 import { WorkflowCanvas } from './workflow-canvas'
 import { WorkflowsAssistantSurface } from './workflows-assistant-surface'
+import { PAGE_GROUND } from '@/components/chrome/page-chrome'
 import { useSearchSelection } from '@/hooks/use-search-selection'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
@@ -77,14 +78,14 @@ export function WorkflowBuilder({
   const active = workflows.find((w) => w.id === activeWorkflowId) ?? null
 
   return (
-    <div className="flex h-full min-h-0">
+    // The canvas emits its own columns (the board plus the palette rail), so
+    // it sits directly on the ground rather than inside a wrapper of its own.
+    <div className={PAGE_GROUND}>
       <WorkflowsAssistantSurface workflow={active} count={workflows.length} />
       <WorkflowSidebar />
-      <div className="flex h-full min-w-0 flex-1">
-        <ReactFlowProvider>
-          <WorkflowCanvas />
-        </ReactFlowProvider>
-      </div>
+      <ReactFlowProvider>
+        <WorkflowCanvas />
+      </ReactFlowProvider>
     </div>
   )
 }

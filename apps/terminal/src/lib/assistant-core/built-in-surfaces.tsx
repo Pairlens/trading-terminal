@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 // ── The surfaces the terminal always has ─────────────────────────────
 //
-// Two registrations that need no cooperation from any route or pane:
-// the address the user is at, and the chart they are looking at. Both
-// are derivable from above the routed content, so adding the assistant
-// cost the routes nothing.
+// Three registrations that need no cooperation from any route or pane:
+// the address the user is at, the chart they are looking at, and the
+// workspace tree they can have boards built into. The first two are
+// derivable from above the routed content, so adding the assistant cost
+// the routes nothing; the third is not about the screen at all, which is
+// why it belongs up here rather than on a board.
 //
 // The address is worth more than it used to be. Every page that shows one
 // record at a time now carries that record's id in a search param, so
@@ -31,6 +33,7 @@ import { parseMarketRefPath } from '@pairlens/shared/market-ref'
 
 import { CHART_SERVICE_NAME } from './chart-service'
 import { useAssistantSurface } from './use-assistant-surface'
+import { WorkspaceAuthoringSurface } from './workspace-authoring-surface'
 import type { MarketRef } from '@pairlens/shared/market-ref'
 import type { ChartServiceHandle } from './chart-service'
 import type { AssistantSuggestion, AssistantSurfaceFocus } from './types'
@@ -204,6 +207,7 @@ export function BuiltInAssistantSurfaces() {
     <>
       <RouteSurface />
       <ChartSurface />
+      <WorkspaceAuthoringSurface />
     </>
   )
 }

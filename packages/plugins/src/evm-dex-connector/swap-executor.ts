@@ -185,7 +185,8 @@ export async function executeSwap(opts: {
     if (!/^0x[0-9a-fA-F]+$/.test(calldata)) {
       return {
         success: false,
-        error: 'KyberSwap build returned malformed calldata — refusing to sign',
+        error:
+          'Refusing to sign: the KyberSwap build returned malformed calldata',
       }
     }
     const routerAddress = (buildJson.data?.routerAddress ??
@@ -193,7 +194,7 @@ export async function executeSwap(opts: {
     if (!isAllowedRouter(routerAddress)) {
       return {
         success: false,
-        error: `KyberSwap build returned unknown router ${routerAddress} — refusing to sign`,
+        error: `Refusing to sign: the KyberSwap build returned unknown router ${routerAddress}`,
       }
     }
     const quotedAmountIn = BigInt(route.routeSummary.amountIn)
@@ -203,7 +204,7 @@ export async function executeSwap(opts: {
     ) {
       return {
         success: false,
-        error: 'KyberSwap build changed amountIn — refusing to sign',
+        error: 'Refusing to sign: the KyberSwap build changed amountIn',
       }
     }
     const expectedOut = BigInt(route.routeSummary.amountOut)
@@ -217,7 +218,7 @@ export async function executeSwap(opts: {
         return {
           success: false,
           error:
-            'KyberSwap build output is below the accepted slippage floor — refusing to sign',
+            'Refusing to sign: the KyberSwap build output is below the accepted slippage floor',
         }
       }
     }

@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +27,10 @@ import { isVenueBoundClass } from '@pairlens/shared/market-ref'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { AssetClass } from '@pairlens/market-engine'
 import type { MarketOption } from '@/hooks/use-available-markets'
+import {
+  HEADER_CHIP,
+  HEADER_CHIP_MUTED,
+} from '@/components/chrome/header-chrome'
 import { venuesForClass } from '@/lib/market-ref/resolve'
 
 // ---------------------------------------------------------------------------
@@ -127,7 +130,8 @@ export function MarketPicker({
             <span
               aria-label={ariaLabel}
               className={cn(
-                'inline-flex h-7 shrink-0 cursor-default select-none items-center gap-1 rounded-[min(var(--radius-md),12px)] border border-border bg-background px-2.5 text-xs font-medium text-muted-foreground dark:border-input dark:bg-input/30',
+                HEADER_CHIP_MUTED,
+                'cursor-default select-none',
                 className,
               )}
             />
@@ -150,10 +154,9 @@ export function MarketPicker({
           render={
             <DropdownMenuTrigger
               render={
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className={cn('gap-1 text-xs', className)}
+                <button
+                  type="button"
+                  className={cn(HEADER_CHIP, className)}
                   aria-label={ariaLabel}
                 />
               }
@@ -162,7 +165,7 @@ export function MarketPicker({
         >
           <MarketIcon option={activeMarket} />
           {activeMarket.label}
-          <ChevronDown className="size-3" />
+          <ChevronDown className="size-3 text-muted-foreground/55" />
         </TooltipTrigger>
         <TooltipContent>{activeMarket.label}</TooltipContent>
       </Tooltip>

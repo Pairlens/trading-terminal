@@ -4,11 +4,10 @@ import { Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
-import { Button } from '@pairlens/ui/components/ui/button'
-import { Separator } from '@pairlens/ui/components/ui/separator'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
+import { HEADER_GROUP, HEADER_ICON } from '@/components/chrome/header-chrome'
 import { PageHeader } from '@/components/page-header'
 import { ConnectionIndicator } from '@/components/terminal/connection-indicator'
 import { LatencyIndicator } from '@/components/terminal/latency-indicator'
@@ -77,12 +76,15 @@ export function TerminalTopBar({
         />
       }
     >
-      <PairSwitcher
-        pairKey={pairKey}
-        assetClass={assetClass}
-        onPairHover={onPairHover}
-      />
-      {/* Which kind of market this is, before anything else in the header
+      {/* Three groups, held apart by space rather than by rules: what you are
+          looking at, where you are trading it, and what it costs right now. */}
+      <div className={HEADER_GROUP}>
+        <PairSwitcher
+          pairKey={pairKey}
+          assetClass={assetClass}
+          onPairHover={onPairHover}
+        />
+        {/* Which kind of market this is, before anything else in the header
           claims a number. The class is what decides whether an order settles
           in seconds or at the opening auction, and it used to be readable only
           from the shape of the symbol.
@@ -91,58 +93,59 @@ export function TerminalTopBar({
           and the pair symbol is the only element on it that shrinks: below
           1400px the badge is its class icon in the class colour, and the words
           come back when the window can afford them. */}
-      {assetClass ? (
-        <MarketAssetClassBadge
-          cls={assetClass}
-          market={market}
-          pairKey={pairKey}
-          size="xs"
-          collapsible
-        />
-      ) : null}
-      <Button
-        size="icon-xs"
-        variant="ghost"
-        className="size-6"
-        onClick={onStarClick}
-        aria-label={t('terminal.manageWatchlists')}
-      >
-        <Star
-          className={cn(
-            'size-3.5',
-            isWatched
-              ? 'fill-amber-400 text-amber-400'
-              : 'text-muted-foreground',
-          )}
-        />
-      </Button>
-      <AlertBell pairKey={streamKey} market={market} />
-
-      <Separator orientation="vertical" className="mx-1 self-stretch" />
+        {assetClass ? (
+          <MarketAssetClassBadge
+            cls={assetClass}
+            market={market}
+            pairKey={pairKey}
+            size="xs"
+            collapsible
+          />
+        ) : null}
+        <button
+          type="button"
+          className={HEADER_ICON}
+          onClick={onStarClick}
+          aria-label={t('terminal.manageWatchlists')}
+        >
+          <Star
+            className={cn(
+              'size-3.5',
+              isWatched && 'fill-amber-400 text-amber-400',
+            )}
+          />
+        </button>
+        <AlertBell pairKey={streamKey} market={market} />
+      </div>
 
       {/* Market + Wallet — grouped as a trading context pair. The picker is
           scoped to what is being charted: a venue that cannot serve this
           class is not a choice, it is a dark terminal one click away. */}
-      <MarketPicker
-        market={market}
-        marketOptions={marketOptions}
-        assetClass={assetClass}
-        onMarketChange={onMarketChange}
-        onMarketHover={onMarketHover}
-        aria-label={t('terminal.market')}
-      />
+      <div className={HEADER_GROUP}>
+        <MarketPicker
+          market={market}
+          marketOptions={marketOptions}
+          assetClass={assetClass}
+          onMarketChange={onMarketChange}
+          onMarketHover={onMarketHover}
+          aria-label={t('terminal.market')}
+        />
+        <WalletSelector market={market} />
+      </div>
 
-      <WalletSelector market={market} />
-
-      <LivePriceTicker prediction={predictionPrices} />
-
-      <ConnectionIndicator />
-
-      <LatencyIndicator
-        market={market}
-        pairKey={streamKey}
-        venueLabel={marketOptions.find((m) => m.value === market)?.label}
-      />
+      {/* The one group that gives way. Under 1024px the bar cannot hold the
+          quote, the link light and the latency as well as everything left of
+          them, and the price is the only one of the three that is also on the
+          chart a few pixels below. */}
+      <div className={cn(HEADER_GROUP, 'max-lg:hidden')}>
+        <LivePriceTicker prediction={predictionPrices} />
+        <ConnectionIndicator />
+        <LatencyIndicator
+          market={market}
+          pairKey={streamKey}
+          venueLabel={marketOptions.find((m) => m.value === market)?.label}
+        />
+      </div>
     </PageHeader>
   )
 }
@@ -162,16 +165,15 @@ function LivePriceTicker({ prediction }: { prediction: boolean }) {
   if (bestBid == null || bestAsk == null) return null
 
   return (
-    <>
-      <Separator orientation="vertical" className="mx-1 self-stretch" />
-      <div className="flex items-center gap-1.5 font-mono text-xs">
-        <span className="text-green-400">{format(bestBid)}</span>
-        <span className="text-muted-foreground/50">/</span>
-        <span className="text-red-400">{format(bestAsk)}</span>
-        {spread != null && (
-          <span className="text-muted-foreground/60">({format(spread)})</span>
-        )}
-      </div>
-    </>
+    // `--up` / `--down`, not raw greens and reds: these two colours mean the
+    // same thing everywhere in the terminal and a theme repaints them together.
+    <div className="flex items-center gap-[5px] font-mono text-xs tabular-nums">
+      <span className="text-up">{format(bestBid)}</span>
+      <span className="text-muted-foreground/60">/</span>
+      <span className="text-down">{format(bestAsk)}</span>
+      {spread != null && (
+        <span className="text-muted-foreground">({format(spread)})</span>
+      )}
+    </div>
   )
 }

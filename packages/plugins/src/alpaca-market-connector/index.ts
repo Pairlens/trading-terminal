@@ -63,7 +63,7 @@ export const alpacaMarketConnectorManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'US stocks and ETFs via the Alpaca broker API — real-time market data, paper and live trading',
+    'US stocks and ETFs via the Alpaca broker API: real-time market data, paper and live trading',
   homepage: 'https://pairlens.finance',
   icon: ALPACA_ICON,
   capabilities: [

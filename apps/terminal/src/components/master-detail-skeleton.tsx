@@ -17,6 +17,7 @@ import * as React from 'react'
 import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 import { cn } from '@pairlens/ui/lib/utils'
 
+import { PAGE_COLUMN_FLUSH, PAGE_GROUND } from '@/components/chrome/page-chrome'
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
@@ -80,7 +81,7 @@ export function MasterDetailSkeleton({
 }) {
   return (
     <div
-      className="flex h-full min-h-0"
+      className={PAGE_GROUND}
       role="status"
       aria-busy="true"
       aria-label={label}
@@ -103,7 +104,7 @@ export function MasterDetailSkeleton({
         </div>
       </div>
 
-      <div className="flex h-full min-w-0 flex-1 flex-col">
+      <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
         {body === 'canvas' ? <CanvasBody /> : null}
         {body === 'detail' ? <DetailBody /> : null}
         {body === 'editor' ? <EditorBody /> : null}
@@ -131,7 +132,7 @@ function CanvasBody() {
 /** One step on the canvas: outlined like the real node, so it reads as one. */
 function CanvasNode() {
   return (
-    <div className="flex w-44 flex-col gap-2 rounded-lg border border-border bg-card p-3">
+    <div className="flex w-44 flex-col gap-2 rounded-lg bg-muted/40 p-3">
       <div className="flex items-center gap-2">
         <Skeleton className={cn('size-4 shrink-0 rounded-sm', BAR)} />
         <Skeleton className={cn('h-2.5 w-20', BAR)} />
@@ -145,7 +146,7 @@ function CanvasNode() {
 function DetailBody() {
   return (
     <>
-      <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3">
+      <div className="flex h-10 shrink-0 items-center gap-2 px-3">
         <Skeleton className={cn('size-4 rounded-sm', BAR)} />
         <Skeleton className={cn('h-3 w-36', BAR)} />
         <Skeleton className={cn('ml-auto h-5 w-16 rounded-full', BAR)} />
@@ -155,7 +156,7 @@ function DetailBody() {
           {[0, 1, 2, 3].map((i) => (
             <div
               key={i}
-              className="flex flex-col gap-2 rounded-lg border border-border p-3"
+              className="flex flex-col gap-2 rounded-lg bg-muted/40 p-3"
             >
               <Skeleton className={cn('h-2.5 w-14', BAR)} />
               <Skeleton className={cn('h-4 w-20', BAR)} />
@@ -172,7 +173,7 @@ function DetailBody() {
 function EditorBody() {
   return (
     <>
-      <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3">
+      <div className="flex h-10 shrink-0 items-center gap-2 px-3">
         <Skeleton className={cn('size-4 rounded-sm', BAR)} />
         <Skeleton className={cn('h-3 w-28', BAR)} />
         <Skeleton className={cn('ml-auto h-5 w-24 rounded-md', BAR)} />

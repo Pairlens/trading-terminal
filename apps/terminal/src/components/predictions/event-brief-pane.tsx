@@ -30,7 +30,6 @@ import { useTranslation } from 'react-i18next'
 import { ScrollText } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
-import { Badge } from '@pairlens/ui/components/ui/badge'
 import { ScrollArea } from '@pairlens/ui/components/ui/scroll-area'
 import {
   Select,
@@ -42,9 +41,13 @@ import {
 
 import type { PredictionMarketSummary } from '@pairlens/shared/instrument-types'
 import type { PredictionEventContext } from '@/hooks/use-prediction-event'
-import { EventThumbnail } from '@/components/predictions/event-pieces'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { usePredictionEventContext } from '@/hooks/use-prediction-event'
 import {
@@ -120,41 +123,22 @@ function Brief({ context }: { context: PredictionEventContext }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-start gap-2.5 border-b px-3 py-2.5">
-        <EventThumbnail
-          className="size-9"
-          imageUrl={context.event?.imageUrl ?? selected?.imageUrl}
-        />
-        <div className="min-w-0 flex-1">
-          <h2 className="text-[13px] font-semibold leading-snug">
-            {context.title}
-          </h2>
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
-            {context.event?.category && (
-              <Badge
-                className="h-[17px] px-1.5 text-[10px]"
-                variant="secondary"
-              >
-                {context.event.category}
-              </Badge>
-            )}
-            <span className="text-[10.5px] text-muted-foreground">
-              {t('eventBrief.publishedBy', { venue: context.venueLabel })}
-            </span>
-          </div>
-        </div>
-      </div>
+      {/* Attribution belongs beside the pane's name, not in a heading strip
+          of its own: whose words these are changes what they settle. */}
+      <PaneHeaderMetric>
+        {t('eventBrief.publishedBy', { venue: context.venueLabel })}
+      </PaneHeaderMetric>
 
       <Facts context={context} endMs={endMs} />
 
       {context.state === 'error' && context.error && (
-        <div className="px-3 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner message={context.error} venue={context.venueLabel} />
         </div>
       )}
 
-      <div className="flex items-center justify-between gap-2 px-3 pb-1 pt-2.5">
-        <p className="text-[10px] font-medium uppercase tracking-[.1em] text-muted-foreground">
+      <div className="flex items-center justify-between gap-2 pb-1 pt-2">
+        <p className="text-[10px] text-muted-foreground">
           {t('eventBrief.criteria')}
         </p>
         {documented.length > 1 && (
@@ -186,14 +170,13 @@ function Brief({ context }: { context: PredictionEventContext }) {
       </div>
 
       <ScrollArea className="min-h-0 flex-1">
-        <div className="px-3 pb-3">
+        <div className="pb-2">
           {rules ? (
             <>
-              {/* The market's own question, when the event heading is not it.
-                  On a ladder the event says "Where does CPI land" and the
-                  contract says "above 3.2%", and the criteria below settle the
-                  second one. */}
-              {selected && selected.title !== context.title && (
+              {/* The contract the criteria settle, named. On a ladder the
+                  event asks "Where does CPI land" and this says "above 3.2%",
+                  and the prose below settles the second one. */}
+              {selected && (
                 <p className="mb-1.5 text-[11.5px] font-medium leading-snug">
                   {selected.title}
                 </p>
@@ -250,7 +233,7 @@ function Facts({
   const status = context.market?.status
 
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 px-3 py-2 text-[11px] @sm/pane:grid-cols-3">
+    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 py-2 text-[11px] @sm/pane:grid-cols-3">
       {endMs !== undefined && (
         <Fact
           label={t('eventBrief.resolves')}
@@ -304,9 +287,7 @@ function Fact({
 }) {
   return (
     <div className="min-w-0">
-      <p className="truncate text-[9.5px] uppercase tracking-[.08em] text-muted-foreground">
-        {label}
-      </p>
+      <p className={cn('truncate', PANE_COLUMN_HEADER)}>{label}</p>
       <p className={cn('truncate font-mono tabular-nums', valueClass)}>
         {value}
         {sub && (

@@ -27,13 +27,42 @@
  *
  * Utilities rather than a <Glass> component: these are pure paint, and a
  * wrapper div around them would fight the flex column it sits in.
+ *
+ * SHAPE is not in this file, but it is part of the same agreement and it is
+ * written down here because this is where anyone touching the panel looks
+ * first. The panel borrows the terminal's radius family rather than keeping
+ * its own: 14px for the panel itself and the collapsed pill it grows out of
+ * (a workspace column's radius), 10px for anything sitting on the glass
+ * (rows, tiles, cards, the composer capsule, chips, bubbles), 8px inside a
+ * tile, and 6px for controls at 24px or under. Round is reserved for things
+ * that are actually round: the orb, status dots, avatars. A pill or a 20px
+ * corner in here is what made the assistant read as a component borrowed
+ * from another product.
  */
 
 @layer components {
   :root {
-    /* The slab. Light themes are already at the top of the elevation ladder
-       (paper cannot get brighter), so the step there is carried by the edge
-       and the shadow instead of a lift. */
+    /* The slab, and it is simply what a workspace column is painted with.
+       The panel is a column that lifted off the board, so it is the same
+       surface; what separates it is the edge, the shadow and the frost, not
+       a different colour.
+
+       Dark used to override this with `--card` plus 12% of `--foreground`
+       stirred in, on the reasoning that dark UIs elevate by adding light.
+       That lift was tuned when a pane sat directly on `--background` at
+       L 13.5% and it landed one step above its neighbour. Round 3A moved
+       every pane onto a `--card` column at L 16.8% and the same formula
+       silently became three steps up: L 0.261, which is `--border`, the
+       lightest neutral the theme owns. Measured against real swatches the
+       panel rendered at rgb(37,34,28) beside a column at rgb(17,15,11), and
+       a surface lighter than everything around it is what reads as a grey
+       slab from another product. It renders at rgb(19,23) now.
+
+       `var(--muted)` is the tidier-looking way to say "one step up" and it
+       does not work: cyberpunk-neon and eye-comfort set `--muted` to the SAME
+       value as `--card` in dark, terminal-classic to within 0.01, so on three
+       of eighteen themes it would mean nothing at all. Taking no step is
+       honest in every theme. */
     --ai-surface: var(--card);
 
     /* The frost, applied to the backdrop before the fill goes over it. The
@@ -84,10 +113,6 @@
   }
 
   :root.dark {
-    /* Dark themes elevate by adding light. The lift is what separates the
-       panel from the terminal behind it before the blur is noticed. */
-    --ai-surface: color-mix(in oklab, var(--card) 88%, var(--foreground) 12%);
-
     /* Dark LIFTS. This clamp was below 1 for three passes, and that was the
        thing making the panel read as a hole: over a terminal that is already
        dark, dimming the backdrop puts the panel BELOW its own surroundings,
@@ -99,11 +124,18 @@
        green tape behind the panel has to survive a 72px average, and dimming
        what little is left is how it became grey. */
     --ai-frost: saturate(200%) brightness(1.35);
-    /* Thinner than light, because a lifted backdrop is doing more of the work
-       here than a fill could. Checked over the brightest thing the terminal
-       has, a full order book, with the muted text as the thing to watch: it
-       is the first to go, well before body copy. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 70%, transparent);
+    /* 70% for as long as the surface above was L 0.26. Dropping it to the
+       column's own L 0.168 raised the backdrop's share of the composite in
+       the one place that matters: over a bright pane a darker fill lets more
+       of the structure under it survive, and an order book's rows were
+       starting to resolve through the glass again. Six points thicker buys
+       that back without touching the tone. Thicker is the safe direction, so
+       the fill is the half that is allowed to move.
+
+       Checked over the brightest thing the terminal has, a full order book,
+       with the muted text as the thing to watch: it is the first to go, well
+       before body copy. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 76%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 

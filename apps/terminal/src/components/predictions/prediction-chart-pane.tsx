@@ -277,7 +277,7 @@ function PredictionChartBody({
       <LivePriceSampler onSample={setLive} />
 
       {context.state === 'error' && context.error && (
-        <div className="px-2 pt-2">
+        <div className="pb-1.5">
           <PaneErrorBanner message={context.error} venue={context.venueLabel} />
         </div>
       )}
@@ -530,7 +530,7 @@ const Legend = memo(function Legend({
   if (runners.length === 0) return null
 
   return (
-    <div className="flex flex-wrap gap-1 overflow-y-auto px-2 py-1.5 [scrollbar-width:thin]">
+    <div className="flex flex-wrap gap-1 overflow-y-auto pb-1.5 [scrollbar-width:thin]">
       {runners.map((runner) => {
         const off = hidden.includes(runner.pairKey)
         const price = latest.get(runner.pairKey)
@@ -542,12 +542,21 @@ const Legend = memo(function Legend({
           <div
             key={runner.pairKey}
             className={cn(
-              'group flex h-[22px] items-center rounded-md border pl-1.5 text-[11px] transition-colors',
-              runner.active
-                ? 'border-primary/40 bg-primary/5'
-                : 'border-transparent bg-muted/40',
-              off && 'opacity-40',
+              'group flex h-5 items-center rounded-md pl-1.5 text-[11px] transition-colors',
+              // A switched-off line has no colour on the chart, so its chip
+              // has none either: the fill IS the state, which is why the chip
+              // needs no outline to say it.
+              off && 'bg-muted/40 opacity-40',
             )}
+            style={
+              off
+                ? undefined
+                : {
+                    backgroundColor: `color-mix(in oklab, ${runner.color} ${
+                      runner.active ? 26 : 14
+                    }%, transparent)`,
+                  }
+            }
           >
             <button
               aria-pressed={!off}
@@ -612,7 +621,7 @@ const Legend = memo(function Legend({
       {/* Names the grey band. Not a switch: the remainder is what is left
           after the others, so there is nothing to toggle. */}
       {showRest && (
-        <div className="flex h-[22px] items-center gap-1.5 rounded-md border border-transparent bg-muted/40 px-1.5 text-[11px] text-muted-foreground">
+        <div className="flex h-5 items-center gap-1.5 rounded-md bg-muted/40 px-1.5 text-[11px] text-muted-foreground">
           <span
             aria-hidden
             className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40"
@@ -762,7 +771,7 @@ function Footer({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="flex items-center justify-between gap-2 border-t px-2 py-1">
+    <div className="flex items-center justify-between gap-2 pt-1.5">
       <div className="flex items-center gap-2">
         <div className="flex gap-0.5">
           {PREDICTION_WINDOWS.map((win) => (
@@ -782,7 +791,7 @@ function Footer({
           ))}
         </div>
         {stackable && (
-          <div className="flex gap-0.5 rounded border p-[1px]">
+          <div className="flex gap-0.5 rounded-md bg-muted/40 p-[1px]">
             {PREDICTION_CHART_VIEWS.map((option) => (
               <button
                 key={option.id}

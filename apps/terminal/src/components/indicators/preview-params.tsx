@@ -64,7 +64,10 @@ export function PreviewParamsBar({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-border px-3 py-1.5">
+    // No rule of its own: in the workbench this row sits under the preview
+    // toolbar's hairline and over the plot, and on a bot's settings it sits
+    // inside a well, where a border would draw a line across the fill.
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3 py-1.5">
       <SlidersHorizontal className="size-3.5 shrink-0 text-muted-foreground" />
       {meta.inputs.map((input) => (
         <ParamControl

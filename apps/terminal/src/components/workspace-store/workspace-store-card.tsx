@@ -90,8 +90,8 @@ export function WorkspaceStoreCard({
       <motion.div
         layoutId={layoutId}
         transition={POSTER_MORPH}
-        className="relative h-[172px] overflow-hidden border border-border bg-gradient-to-br from-primary/[0.07] via-card to-card p-3"
-        style={{ borderRadius: 17 }}
+        className="relative h-[172px] overflow-hidden bg-gradient-to-br from-primary/[0.07] via-card to-card p-3"
+        style={{ borderRadius: 14 }}
       >
         <WorkspaceLayoutPreview layout={template.layout} className="h-full" />
         {template.featured && (

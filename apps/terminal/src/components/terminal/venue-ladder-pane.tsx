@@ -51,7 +51,10 @@ import { TickArrow } from '@/components/tick-arrow'
 import { formatBookPrice } from '@/lib/format-price'
 import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 
 /**
  * How often the ladder is allowed to change ORDER. Prices update at the hook's
@@ -167,12 +170,7 @@ function VenueLadderPaneInner({
       {/* Column header, doubling as the side switch: which column is "best"
           depends on whether this is a buy or a sell, and the toggle says so
           in the same place the answer is read. */}
-      <div
-        className={cn(
-          'border-b border-border/50 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-          LADDER_GRID,
-        )}
-      >
+      <div className={cn('px-1.5 pb-1', PANE_COLUMN_HEADER, LADDER_GRID)}>
         <span className="flex min-w-0 items-center gap-1">
           <span className="truncate">{t('venueLadder.columns.venue')}</span>
           <Button
@@ -209,7 +207,6 @@ function VenueLadderPaneInner({
           <VenueLadderRow
             key={row.market}
             row={row}
-            side={side}
             option={optionByMarket.get(row.market)}
             isCharted={row.market === market}
             onSelect={switchVenue}
@@ -222,7 +219,6 @@ function VenueLadderPaneInner({
 
 type VenueLadderRowProps = {
   row: LadderRow
-  side: LadderSide
   option: MarketOption | undefined
   isCharted: boolean
   onSelect: (market: string) => void
@@ -238,7 +234,6 @@ function sameLadderRow(
   b: VenueLadderRowProps,
 ): boolean {
   return (
-    a.side === b.side &&
     a.isCharted === b.isCharted &&
     a.option === b.option &&
     a.onSelect === b.onSelect &&
@@ -255,15 +250,17 @@ function sameLadderRow(
 
 const VenueLadderRow = memo(function VenueLadderRow({
   row,
-  side,
   option,
   isCharted,
   onSelect,
 }: VenueLadderRowProps) {
   const { t } = useTranslation()
   const label = option?.label ?? row.market
-  // Flash the side being traded — the number this row is ranked on.
-  const tick = usePriceTick(side === 'buy' ? row.ask : row.bid)
+  // One tick per column, because both columns move. Ranking reads one side,
+  // but the bid changes on the very same publish as the ask, and a number that
+  // changes without saying so reads as a frozen feed.
+  const bidTick = usePriceTick(row.bid)
+  const askTick = usePriceTick(row.ask)
   const unreachable = row.status === 'desktop-only'
   // A venue that does not list the pair is not a routing choice: charting it
   // would answer the click with an empty chart, which is worse than a row
@@ -289,7 +286,7 @@ const VenueLadderRow = memo(function VenueLadderRow({
             : t('venueLadder.switchTo', { venue: label })
       }
       className={cn(
-        'w-full px-2.5 py-1 text-left font-mono text-[11px] tabular-nums transition-colors',
+        'w-full px-1.5 py-1 text-left font-mono text-[11px] tabular-nums transition-colors',
         LADDER_GRID,
         !unreachable &&
           !unlisted &&
@@ -327,24 +324,24 @@ const VenueLadderRow = memo(function VenueLadderRow({
         <>
           <span
             className={cn(
-              'tick-cell justify-self-end transition-colors duration-700',
+              'tick-cell flex items-center justify-end justify-self-end transition-colors duration-700',
               row.bid === null ? 'text-muted-foreground/40' : 'text-up',
-              side === 'sell' && tick === 'up' && 'tick-up',
-              side === 'sell' && tick === 'down' && 'tick-down',
+              bidTick === 'up' && 'tick-up',
+              bidTick === 'down' && 'tick-down',
             )}
           >
-            {side === 'sell' && <TickArrow direction={tick} />}
+            <TickArrow direction={bidTick} />
             {row.bid === null ? '—' : formatBookPrice(row.bid)}
           </span>
           <span
             className={cn(
-              'tick-cell justify-self-end transition-colors duration-700',
+              'tick-cell flex items-center justify-end justify-self-end transition-colors duration-700',
               row.ask === null ? 'text-muted-foreground/40' : 'text-down',
-              side === 'buy' && tick === 'up' && 'tick-up',
-              side === 'buy' && tick === 'down' && 'tick-down',
+              askTick === 'up' && 'tick-up',
+              askTick === 'down' && 'tick-down',
             )}
           >
-            {side === 'buy' && <TickArrow direction={tick} />}
+            <TickArrow direction={askTick} />
             {row.ask === null ? '—' : formatBookPrice(row.ask)}
           </span>
           <span className="hidden justify-self-end text-muted-foreground @min-[15rem]/pane:inline">

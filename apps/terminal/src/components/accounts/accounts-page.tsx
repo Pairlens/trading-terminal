@@ -24,7 +24,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@pairlens/ui/components/ui/empty'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import { SectionEyebrow, StoreAurora } from '../store/store-shell'
 import { AddCredentialPicker } from './add-credential-picker'
@@ -46,6 +45,8 @@ import { WALLET_SCHEMAS, useWalletsStore } from '@/stores/wallets-store'
 import { isBrokerMarket, useCredentialsStore } from '@/stores/credentials-store'
 import { useConnectWizardState } from '@/hooks/use-connect-wizard-state'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
+import { HEADER_TITLE } from '@/components/chrome/header-chrome'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { PageHeader } from '@/components/page-header'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
 import { VaultUnlockDialog } from '@/components/security/vault-unlock-dialog'
@@ -66,8 +67,10 @@ function EmptyPanel({
   description: string
   action?: React.ReactNode
 }) {
+  // The dashed edge stays: it is the one border on this page that means
+  // something (nothing connected yet) rather than drawing a shape.
   return (
-    <div className="rounded-[17px] border border-dashed border-border/70 bg-card/40 px-6 py-10">
+    <div className="rounded-[14px] border border-dashed border-border/70 bg-card/40 px-6 py-10">
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant="icon">
@@ -120,7 +123,7 @@ function ChainRail({
   if (chains.length === 0) return null
 
   return (
-    <div className="rounded-[17px] border border-border/70 bg-card/50 p-4 backdrop-blur-sm">
+    <div className="rounded-[14px] bg-card p-4">
       <SectionEyebrow className="text-[10px]">
         {t('accounts.addWallet')}
       </SectionEyebrow>
@@ -135,13 +138,14 @@ function ChainRail({
               key={chain}
               type="button"
               onClick={() => onAdd(chain)}
-              className="group flex w-full items-center gap-3 border border-border/70 p-2.5 text-left transition-colors hover:border-primary/30"
+              className="group flex w-full items-center gap-3 rounded-[10px] bg-muted/40 p-2.5 text-left transition-colors hover:bg-muted/70"
+              // Tint only, so the well underneath keeps the row a step below
+              // the card it sits on rather than a bordered chip on it.
               style={{
-                borderRadius: 14,
-                background: `linear-gradient(120deg, color-mix(in oklch, ${brand.tint} 16%, var(--card)) 0%, var(--card) 70%)`,
+                backgroundImage: `linear-gradient(120deg, color-mix(in oklch, ${brand.tint} 20%, transparent) 0%, transparent 70%)`,
               }}
             >
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-[10px] border border-border/40 bg-background/85">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-[8px] bg-card">
                 {poster ? (
                   <img
                     src={poster}
@@ -390,7 +394,7 @@ export function AccountsPage() {
     sealed || readFailed || credentials.length > 0 || cryptoWallets.length > 0
 
   return (
-    <SidebarInset className="h-svh min-h-svh overflow-hidden">
+    <main className={PAGE_FRAME}>
       {/* Compact header */}
       <PageHeader
         actions={
@@ -406,12 +410,14 @@ export function AccountsPage() {
           </div>
         }
       >
-        <Wallet className="size-4" />
-        <h1 className="text-sm font-semibold">{t('accounts.pageTitle')}</h1>
+        <h1 className={HEADER_TITLE}>{t('accounts.pageTitle')}</h1>
       </PageHeader>
 
-      {/* Content */}
-      <section className="relative min-h-0 flex-1 overflow-hidden">
+      {/* Content. The 10px inset is the board's own ground inset, so the
+          scrolling body starts on the same x a board column starts on and
+          moving between the two stops reading as two products. The aurora is
+          absolute, so it still washes the full frame behind it. */}
+      <section className="relative min-h-0 flex-1 overflow-hidden px-2.5 pb-2.5">
         <StoreAurora />
         <div className="relative z-10 h-full overflow-y-auto">
           <div className="mx-auto max-w-[1060px] px-8 pb-16 pt-8">
@@ -544,7 +550,7 @@ export function AccountsPage() {
                     <p className="mt-3.5 max-w-[54ch] text-[14.5px] leading-[1.65] text-muted-foreground">
                       {t(
                         'accounts.hero.subtitle',
-                        'Connect exchanges, brokers, and on-chain wallets with API keys that never leave this device. Pairlens talks to each venue directly — no custody, no middlemen.',
+                        'Connect exchanges, brokers, and on-chain wallets with API keys that never leave this device. Pairlens talks to each venue directly: no custody, no middlemen.',
                       )}
                     </p>
                     {(availableSchemaMarkets.length > 0 ||
@@ -817,6 +823,6 @@ export function AccountsPage() {
           )}
         </AnimatePresence>
       </section>
-    </SidebarInset>
+    </main>
   )
 }

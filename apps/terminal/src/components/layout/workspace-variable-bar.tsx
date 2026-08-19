@@ -56,7 +56,7 @@ export function WorkspaceVariableBar({
   if (variables.length === 0) return null
 
   return (
-    <div className="flex items-center gap-2 border-b bg-muted/20 px-3 py-1.5">
+    <div className="flex items-center gap-2 border-b border-(--pane-rule) px-3 py-1.5">
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
         {variables.map((v) => (
           <VariableControl key={v.name} variable={v} store={store} />

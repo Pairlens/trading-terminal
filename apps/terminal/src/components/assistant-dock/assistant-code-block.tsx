@@ -73,7 +73,7 @@ export function AssistantCodeBlock({
   const isPython = language != null && PYTHON.has(language)
 
   return (
-    <div className="my-2.5 overflow-hidden rounded-xl bg-[var(--ai-inset-strong)]">
+    <div className="my-2.5 overflow-hidden rounded-[10px] bg-[var(--ai-inset-strong)]">
       <div className="flex items-center gap-1 py-1 pr-1 pl-2.5">
         <span className="text-muted-foreground min-w-0 flex-1 truncate font-mono text-[10px] tracking-wide uppercase">
           {language ?? ''}
@@ -82,7 +82,7 @@ export function AssistantCodeBlock({
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-foreground h-6 gap-1 rounded-md px-1.5 text-[10px]"
+            className="text-muted-foreground hover:text-foreground h-6 gap-1 rounded-[6px] px-1.5 text-[10px]"
             onClick={openInWorkbench}
           >
             <SquareFunction className="size-3" />
@@ -92,7 +92,7 @@ export function AssistantCodeBlock({
         <Button
           variant="ghost"
           size="icon-sm"
-          className="text-muted-foreground hover:text-foreground size-6 rounded-md"
+          className="text-muted-foreground hover:text-foreground size-6 rounded-[6px]"
           aria-label={
             copied ? t('copilot.messageCopied') : t('copilot.copyCode')
           }

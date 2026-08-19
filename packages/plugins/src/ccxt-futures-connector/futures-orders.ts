@@ -175,7 +175,7 @@ export function buildCcxtFuturesOrderCall(
   if (order.tgtCcy === 'quote_ccy') {
     return {
       kind: 'reject',
-      error: `${label} sizes perpetuals in contracts — quote-denominated orders are not available on a futures market`,
+      error: `${label} sizes perpetuals in contracts: quote-denominated orders are not available on a futures market`,
     }
   }
 
@@ -203,7 +203,7 @@ export function buildCcxtFuturesOrderCall(
     if (order.type === 'market' && has['createStopMarketOrder'] === false) {
       return {
         kind: 'reject',
-        error: `${label} only accepts trigger orders with a limit price — set one and resubmit`,
+        error: `${label} only accepts trigger orders with a limit price: set one and resubmit`,
       }
     }
     // The explicit TP/SL spelling comes FIRST: a Pairlens trigger always
@@ -533,7 +533,7 @@ export class CcxtFuturesTradingRuntime {
     ) {
       return {
         success: false,
-        error: `${this.opts.venue.displayName} does not support setting leverage from the API — change it on the exchange`,
+        error: `${this.opts.venue.displayName} does not support setting leverage from the API: change it on the exchange`,
       }
     }
     await exchange.setLeverage(leverage, symbol)
@@ -557,7 +557,7 @@ export class CcxtFuturesTradingRuntime {
       success: false,
       error:
         this.opts.venue.noPaperReason ??
-        `${this.opts.venue.displayName} has no paper trading environment — switch this credential to live or paper-trade on another venue`,
+        `${this.opts.venue.displayName} has no paper trading environment: switch this credential to live or paper-trade on another venue`,
     }
   }
 

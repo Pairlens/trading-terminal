@@ -12,7 +12,23 @@
 import { cn } from '@pairlens/ui'
 import type { LucideIcon } from 'lucide-react'
 
-/** A column header: mono, uppercase, tracked out, right-aligned for numbers. */
+/**
+ * A column header: mono, uppercase, tracked out, right-aligned for numbers.
+ *
+ * No rule under it. The board draws exactly one line, between two stacked
+ * panes, and a second one under every table's first row was what made a
+ * column of panes read as a spreadsheet. Separation here is the 6px of air
+ * `pb-1.5` leaves, which is enough at this type size.
+ */
+export const PANE_COLUMN_HEADER =
+  'font-mono text-[9.5px] font-semibold uppercase tracking-[.16em] text-muted-foreground'
+
+/** The quiet line a pane ends on: a total, a caveat, a source. */
+export const PANE_FOOTNOTE = 'font-mono text-[10px] text-muted-foreground'
+
+/** Table body: the board's data voice. */
+export const PANE_TABLE_BODY = 'font-mono text-[11px] tabular-nums'
+
 export function Th({
   children,
   align = 'left',
@@ -23,12 +39,54 @@ export function Th({
   return (
     <th
       className={cn(
-        'pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em] last:pr-0',
+        'pb-1.5 pr-3 last:pr-0',
+        PANE_COLUMN_HEADER,
         align === 'right' ? 'text-right' : 'text-left',
       )}
     >
       {children}
     </th>
+  )
+}
+
+/**
+ * The same column-header voice for a pane whose rows are a grid, not a table.
+ *
+ * Takes the row's own grid classes so a pane keeps one definition of its
+ * column geometry instead of two that drift.
+ */
+export function PaneColumnHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn('shrink-0 pb-1', PANE_COLUMN_HEADER, className)}>
+      {children}
+    </div>
+  )
+}
+
+/** A pane's closing line, separated by air rather than by a rule. */
+export function PaneFootnote({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'flex shrink-0 items-center gap-2 pt-1.5',
+        PANE_FOOTNOTE,
+        className,
+      )}
+    >
+      {children}
+    </div>
   )
 }
 

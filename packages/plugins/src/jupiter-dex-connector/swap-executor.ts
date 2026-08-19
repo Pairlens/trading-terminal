@@ -167,7 +167,7 @@ export async function executeSwap(
     } catch {
       return {
         success: false,
-        error: 'Jupiter returned an unparseable transaction — refusing to sign',
+        error: 'Refusing to sign: Jupiter returned an unparseable transaction',
       }
     }
     const feePayer = unsigned.message.staticAccountKeys[0]
@@ -175,7 +175,7 @@ export async function executeSwap(
       return {
         success: false,
         error:
-          'Jupiter transaction fee payer does not match the wallet — refusing to sign',
+          'Refusing to sign: the Jupiter transaction fee payer does not match the wallet',
       }
     }
 

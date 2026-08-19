@@ -116,10 +116,13 @@ function PairDossierPaneInner({
   }, [category, membership.membersOf, coins])
 
   return (
-    <div className="flex h-full min-h-0 @min-[42rem]/pane:flex-row flex-col overflow-auto">
+    <div className="flex h-full min-h-0 @min-[42rem]/pane:flex-row flex-col gap-4 overflow-auto @min-[42rem]/pane:gap-6">
       {/* Stat grid. Auto-flowing rather than a fixed 4×2 so a narrower pane
-          drops to two columns instead of shredding the numbers. */}
-      <div className="grid min-w-0 flex-1 auto-rows-fr grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] border-b @min-[42rem]/pane:border-b-0 @min-[42rem]/pane:border-r">
+          drops to two columns instead of shredding the numbers. The tiles are
+          held apart by the grid's own gaps: ruling every cell turned six
+          readings into a spreadsheet, which is the one thing this pane is
+          not. */}
+      <div className="grid min-w-0 flex-1 auto-rows-fr grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-x-6 gap-y-1">
         {coin && (
           <Tile label={t('pairDossier.marketCap')}>
             <Value>{formatCompactUsd(coin.marketCap)}</Value>
@@ -187,7 +190,7 @@ function PairDossierPaneInner({
       </div>
 
       {/* Venue column */}
-      <div className="flex w-full shrink-0 flex-col gap-2 px-3 py-2.5 @min-[42rem]/pane:w-[15rem]">
+      <div className="flex w-full shrink-0 flex-col gap-2 py-1 @min-[42rem]/pane:w-[15rem]">
         <Tooltip>
           <TooltipTrigger
             render={<p className="text-[10.5px] text-muted-foreground" />}
@@ -339,7 +342,7 @@ function Tile({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-w-0 flex-col justify-center border-b border-r border-border/50 px-3.5 py-2.5">
+    <div className="flex min-w-0 flex-col justify-center py-1.5">
       <p className="truncate text-[10.5px] text-muted-foreground">{label}</p>
       {children}
     </div>

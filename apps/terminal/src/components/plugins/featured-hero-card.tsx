@@ -73,7 +73,7 @@ export function SpotlightHero({
 
   return (
     <section
-      className="relative h-[472px] w-full overflow-hidden rounded-[22px] border border-border"
+      className="relative h-[472px] w-full overflow-hidden rounded-[22px]"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

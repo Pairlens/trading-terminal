@@ -30,6 +30,7 @@ import {
 import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
+import { HEADER_CHIP } from '@/components/chrome/header-chrome'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import {
   instrumentToPairEntry,
@@ -383,7 +384,14 @@ export function PairSwitcher({
             // `min-w-0` + `max-w`, not `shrink-0`: a prediction title is as
             // long as its question, and a title that refuses to shrink pushes
             // the venue picker, the live badge and the panes menu off the bar.
-            className="-ml-1 flex min-w-0 max-w-[min(28rem,45vw)] items-center gap-1.5 whitespace-nowrap rounded-md px-1 py-0.5 transition-colors hover:bg-accent data-[popup-open]:bg-accent"
+            //
+            // The one 28px chip on the bar: this is the thing the whole
+            // screen is about, so it sits a step above the 26px controls
+            // beside it without needing a second colour to say so.
+            className={cn(
+              HEADER_CHIP,
+              'h-7 max-w-[min(28rem,45vw)] gap-[7px] pr-2 pl-[7px]',
+            )}
             aria-label={t('pairPicker.switchPair')}
           />
         }
@@ -392,14 +400,14 @@ export function PairSwitcher({
           base={pairKey.split('-')[0] ?? ''}
           quote={pairKey.split('-')[1] ?? ''}
           assetClass={triggerClass}
-          size="sm"
+          size="xs"
         />
         <PairSymbol
           symbol={pairKey}
           assetClass={triggerClass}
-          className="min-w-0 text-base tracking-tight"
+          className="min-w-0 text-[13px] font-semibold tracking-[-0.01em]"
         />
-        <ChevronDown className="size-3 shrink-0 text-muted-foreground" />
+        <ChevronDown className="size-3 shrink-0 text-muted-foreground/55" />
       </PopoverTrigger>
 
       <PopoverContent align="start" className="w-80 gap-0 p-0">

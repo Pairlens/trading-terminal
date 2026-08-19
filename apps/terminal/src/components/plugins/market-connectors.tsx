@@ -160,7 +160,7 @@ export function MarketConnectors() {
           return (
             <div
               key={connector.manifest.id}
-              className="flex items-center gap-4 rounded-xl border p-4 transition-colors hover:bg-muted/30"
+              className="flex items-center gap-4 rounded-[14px] bg-card p-4 transition-colors hover:bg-muted/30"
             >
               <PluginIcon
                 src={connector.manifest.icon}
@@ -264,7 +264,7 @@ export function MarketConnectors() {
 function RegistryExchangeCard({ entry }: { entry: RegistryPluginEntry }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col gap-2 rounded-xl border p-4 transition-colors hover:bg-muted/30">
+    <div className="flex flex-col gap-2 rounded-[14px] bg-card p-4 transition-colors hover:bg-muted/30">
       <div className="flex items-center gap-3">
         <PluginIcon
           src={entry.manifest.icon}

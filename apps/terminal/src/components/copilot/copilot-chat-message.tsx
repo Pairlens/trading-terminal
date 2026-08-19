@@ -122,7 +122,7 @@ export function CopilotChatMessage({
               // can't push the row's min-content width past the panel.
               <div
                 key={block.key}
-                className="ai-bubble-user text-foreground min-w-0 max-w-[86%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] break-words"
+                className="ai-bubble-user text-foreground min-w-0 max-w-[86%] rounded-[10px] rounded-br-[4px] px-3 py-2 text-[13px] break-words"
               >
                 <p className="leading-relaxed whitespace-pre-wrap">
                   {block.text}
@@ -150,7 +150,7 @@ export function CopilotChatMessage({
                 key={block.key}
                 src={block.url}
                 alt={block.alt}
-                className="max-h-72 w-auto max-w-full min-w-0 rounded-xl"
+                className="max-h-72 w-auto max-w-full min-w-0 rounded-[10px]"
               />
             )
           case 'node':
@@ -343,7 +343,7 @@ function MessageActions({
   }, [text])
 
   const buttonClass =
-    'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-6 items-center justify-center rounded-md opacity-0 transition-opacity hover:bg-[var(--ai-inset-strong)] focus-visible:opacity-100 focus-visible:ring-[3px] group-hover/message:opacity-100'
+    'text-muted-foreground hover:text-foreground focus-visible:ring-ring flex size-6 items-center justify-center rounded-[6px] opacity-0 transition-opacity hover:bg-[var(--ai-inset-strong)] focus-visible:opacity-100 focus-visible:ring-[3px] group-hover/message:opacity-100'
 
   return (
     <div className="-ml-1 flex items-center gap-0.5">
@@ -436,7 +436,7 @@ function MarkdownContent({ text }: { text: string }) {
           )
         },
         table: ({ children }) => (
-          <div className="my-2.5 overflow-x-auto rounded-lg bg-[var(--ai-inset)] p-px">
+          <div className="my-2.5 overflow-x-auto rounded-[10px] bg-[var(--ai-inset)] p-px">
             <table className="w-full border-collapse text-[11px]">
               {children}
             </table>

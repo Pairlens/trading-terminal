@@ -184,7 +184,7 @@ export function createPredictionConnectorPlugin(
   function assertTimeframe(timeframe: string): Timeframe {
     if (!venue.timeframes.includes(timeframe as Timeframe)) {
       throw new Error(
-        `${venue.displayName} charts ${venue.timeframes.join(', ')} only — '${timeframe}' is not available on this venue`,
+        `${venue.displayName} charts ${venue.timeframes.join(', ')} only: '${timeframe}' is not available on this venue`,
       )
     }
     return timeframe as Timeframe

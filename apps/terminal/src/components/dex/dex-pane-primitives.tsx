@@ -14,6 +14,7 @@
 import { cn } from '@pairlens/ui/lib/utils'
 import type { LucideIcon } from 'lucide-react'
 
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { swatchIndexFor } from '@/lib/dex/pool-math'
 
 /**
@@ -57,7 +58,10 @@ export function StatCell({
   className?: string
 }) {
   return (
-    <div className={cn('min-w-0 px-3 py-2', className)}>
+    // No horizontal padding: the cell sits in a grid that separates its
+    // neighbours with a gap, and the column's own inset already holds it off
+    // the pane edge.
+    <div className={cn('min-w-0 py-1.5', className)}>
       <p className="truncate text-[10px] text-muted-foreground">{label}</p>
       <p className="mt-0.5 truncate font-mono text-[15px] font-semibold [font-variant-numeric:tabular-nums]">
         {value}
@@ -137,7 +141,7 @@ export function PaneAwaitingSource({
         {body}
       </p>
       {reads ? (
-        <p className="mt-3 max-w-xs rounded-md border border-border/70 bg-muted/40 px-2.5 py-1.5 font-mono text-[10px] leading-relaxed text-muted-foreground">
+        <p className="mt-3 max-w-xs rounded-lg bg-muted/40 px-2.5 py-1.5 font-mono text-[10px] leading-relaxed text-muted-foreground">
           {reads}
         </p>
       ) : null}
@@ -145,27 +149,33 @@ export function PaneAwaitingSource({
   )
 }
 
-/** Pane header: a title, an optional qualifier, and room for a control. */
+/**
+ * A DEX pane's qualifier and its controls. No title, and no rule under it.
+ *
+ * The board's own pane header already names the pane, so what is left is the
+ * line that qualified it (the chain, the pool, the wallet), and that goes into
+ * that header's trailing slot rather than costing the pane a row. `subtitle` is
+ * a node rather than a string because several panes put a signed figure or a
+ * count beside the qualifier and colour it.
+ *
+ * `children` is for CONTROLS only. The slot renders nothing on a tabbed or
+ * compact pane, so anything a reader has to click stays here, as a compact row.
+ */
 export function DexPaneHeader({
-  title,
   subtitle,
   children,
 }: {
-  title: string
-  subtitle?: string | null
+  subtitle?: React.ReactNode
   children?: React.ReactNode
 }) {
   return (
-    <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-      <div className="min-w-0">
-        <h2 className="truncate text-[13px] font-semibold">{title}</h2>
-        {subtitle ? (
-          <p className="truncate text-[10px] text-muted-foreground">
-            {subtitle}
-          </p>
-        ) : null}
-      </div>
-      {children}
-    </header>
+    <>
+      {subtitle ? <PaneHeaderMetric>{subtitle}</PaneHeaderMetric> : null}
+      {children ? (
+        <div className="flex shrink-0 items-center justify-end gap-1 pb-1.5">
+          {children}
+        </div>
+      ) : null}
+    </>
   )
 }

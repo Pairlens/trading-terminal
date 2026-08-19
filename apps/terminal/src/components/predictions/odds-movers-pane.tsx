@@ -26,7 +26,8 @@ import { TrendingUp } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneEmpty, PaneFootnote } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -67,11 +68,11 @@ export function OddsMoversPane() {
 
   const footer =
     venuesWithoutChange.length > 0 ? (
-      <p className="border-t px-3 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <PaneFootnote className="leading-relaxed">
         {t('oddsMovers.noChangeFrom', {
           venues: venuesWithoutChange.join(', '),
         })}
-      </p>
+      </PaneFootnote>
     ) : null
 
   if (rows.length === 0) {
@@ -99,15 +100,15 @@ export function OddsMoversPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <p className="shrink-0 border-b px-3 py-2 text-[11px] text-muted-foreground">
-        {t('oddsMovers.subtitle')}
-      </p>
+      {/* What the rail ranks, said once in the pane's own header row rather
+          than as a strip of chrome above the rows. */}
+      <PaneHeaderMetric>{t('oddsMovers.subtitle')}</PaneHeaderMetric>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {rows.map((row) => {
           const up = row.change > 0
           return (
             <button
-              className="flex w-full flex-col gap-1.5 border-b border-border/50 px-3 py-2 text-left transition-colors last:border-0 hover:bg-accent/40"
+              className="flex w-full flex-col gap-1.5 rounded-sm border-b border-border/40 px-1.5 py-1.5 text-left transition-colors last:border-0 hover:bg-accent/40"
               key={row.key}
               onClick={() =>
                 select.select({

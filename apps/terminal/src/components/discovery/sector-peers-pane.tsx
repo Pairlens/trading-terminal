@@ -120,7 +120,10 @@ function SectorPeersPaneInner({
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="border-b px-2.5 py-2">
+      {/* What this list is, not what the pane is called: the sector, how many
+          members it found and which one is pinned on top. No rule under it,
+          the 8px of air is the separation. */}
+      <div className="shrink-0 pb-2">
         <p className="text-[10.5px] leading-relaxed text-muted-foreground">
           {t('sectorPeers.subtitle', {
             sector: t(`markets.category.${category}`),
@@ -182,7 +185,7 @@ function PeerLink({
     <Link
       {...chartLinkProps(target)}
       className={cn(
-        'flex items-center gap-2 border-b border-border/40 px-2.5 py-1.5 transition-colors hover:bg-accent/40',
+        'flex items-center gap-2 border-b border-border/40 px-1.5 py-1.5 transition-colors last:border-b-0 hover:bg-accent/40',
         active &&
           '[background-color:color-mix(in_oklch,var(--primary)_7%,transparent)]',
       )}

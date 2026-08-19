@@ -66,9 +66,9 @@ export function PluginStoreCard({
       <motion.div
         layoutId={layoutId}
         transition={POSTER_MORPH}
-        className="relative flex h-[188px] items-center justify-center overflow-hidden border border-border"
+        className="relative flex h-[188px] items-center justify-center overflow-hidden"
         style={{
-          borderRadius: 17,
+          borderRadius: 14,
           background: `linear-gradient(160deg, color-mix(in oklch, ${brand.tint} 42%, var(--card)), var(--card))`,
         }}
       >

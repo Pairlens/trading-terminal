@@ -47,6 +47,7 @@ import { formatAmount, formatPrice } from '@/lib/format-price'
 import { contractsToBase } from '@/lib/futures/ticket-math'
 import { useMarketData } from '@/lib/market-data-provider'
 import {
+  PANE_TABLE_BODY,
   PaneEmpty,
   PaneErrorBanner,
   Th,
@@ -107,7 +108,7 @@ export function FuturesPositionsPane() {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-3">
+    <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-2">
         {errors.map((result) => (
           <PaneErrorBanner
@@ -118,9 +119,9 @@ export function FuturesPositionsPane() {
         ))}
 
         {rowCount > 0 && (
-          <table className="w-full text-xs">
+          <table className={cn('w-full', PANE_TABLE_BODY)}>
             <thead>
-              <tr className="border-b border-border/50 text-muted-foreground">
+              <tr>
                 <Th>{t('futuresPositions.colContract')}</Th>
                 <Th>{t('futuresPositions.colSide')}</Th>
                 <Th align="right">{t('futuresPositions.colSize')}</Th>
@@ -247,7 +248,7 @@ function Row({
       </td>
       <td className="py-1.5 text-right">
         <button
-          className="rounded-md border border-border px-1.5 py-0.5 text-[10.5px] text-muted-foreground transition-colors hover:text-foreground"
+          className="rounded-[5px] px-1.5 py-0.5 text-[10.5px] text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           onClick={onClose}
           type="button"
         >

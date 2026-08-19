@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Maximize, Minimize } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@pairlens/ui/components/ui/button'
 import {
   Tooltip,
   TooltipContent,
@@ -12,6 +11,7 @@ import {
 } from '@pairlens/ui/components/ui/tooltip'
 
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
+import { HEADER_ICON } from '@/components/chrome/header-chrome'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import {
@@ -64,15 +64,14 @@ export function FullscreenToggleButton() {
     <Tooltip>
       <TooltipTrigger
         render={
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-7 text-muted-foreground"
+          <button
+            type="button"
+            className={HEADER_ICON}
             aria-label={label}
             onClick={() => void toggleFullscreen()}
           >
             <Icon className="size-3.5" />
-          </Button>
+          </button>
         }
       />
       <TooltipContent>

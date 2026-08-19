@@ -57,7 +57,7 @@ const manifestJson =
       name,
       version: '0.1.0',
       author: 'You',
-      description: `${name} — a Pairlens plugin`,
+      description: `${name}, a Pairlens plugin`,
       capabilities: [],
       config: {},
       contributes: {
@@ -229,9 +229,9 @@ plugins directory ("Open folder").
 ## Runtime contract
 
 React, \`@pairlens/plugin-sdk\`, \`@pairlens/ui\` (design system, import from the
-**root**), and \`@pairlens/fast-financial-charts\` are provided by the host at runtime — they are
-marked \`--external\` in the build. Design-system components are styled by the
-host; for ad-hoc CSS ship your own \`styles.css\`.
+**root**), and \`@pairlens/fast-financial-charts\` are provided by the host at
+runtime, so they are marked \`--external\` in the build. Design-system components
+are styled by the host; for ad-hoc CSS ship your own \`styles.css\`.
 `
 
 const gitignore = 'node_modules\ndist\n'

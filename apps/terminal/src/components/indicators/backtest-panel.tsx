@@ -53,7 +53,7 @@ export function BacktestPanel({ result }: BacktestPanelProps) {
 
   if (stats.totalTrades === 0) {
     return (
-      <div className="border-t border-border px-3 py-2">
+      <div className="border-t border-(--pane-rule) px-3 py-2">
         <p className="text-[11px] text-muted-foreground">
           {t('indicatorsPage.backtestEmpty')}
         </p>
@@ -110,7 +110,7 @@ export function BacktestPanel({ result }: BacktestPanelProps) {
   ]
 
   return (
-    <div className="space-y-1.5 border-t border-border px-3 py-2">
+    <div className="space-y-1.5 border-t border-(--pane-rule) px-3 py-2">
       <div className="flex items-center gap-2">
         <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
           {t('indicatorsPage.backtest')}

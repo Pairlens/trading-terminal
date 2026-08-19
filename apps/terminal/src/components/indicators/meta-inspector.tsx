@@ -22,7 +22,7 @@ export function MetaInspector({ meta }: { meta: CustomIndicatorMeta }) {
   const { t } = useTranslation()
 
   return (
-    <div className="space-y-2 border-t border-border px-3 py-2.5">
+    <div className="space-y-2 border-t border-(--pane-rule) px-3 py-2.5">
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="text-xs font-semibold">{meta.title}</span>
         <Badge variant="secondary" className="text-[10px]">

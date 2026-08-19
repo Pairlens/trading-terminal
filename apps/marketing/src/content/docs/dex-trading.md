@@ -192,9 +192,12 @@ request limits, so a page full of on-chain panels updates less often than a CEX
 chart streaming over a WebSocket. Pairlens paces its own requests to stay inside
 GeckoTerminal's free tier, and paces the burst as well as the minute, because a
 Discovery board opening cold asks about six chains at once. When a provider
-throttles anyway, the pane says the provider is refusing and retries on its own,
-then offers a Try again button when it gives up: a limit is never reported as a
-pair the venue does not carry, or as a chain with no pools.
+throttles anyway it holds the queue back for a few seconds, and panes waiting on
+it keep saying they are loading, because that is what they are doing: a hold
+that ends in seconds is a slow pane, not a broken one. Only a hold longer than a
+pane's own refresh is reported as a refusal, with a Try again button where the
+pane has given up. A limit is never reported as a pair the venue does not carry,
+or as a chain with no pools.
 
 That last part takes some care in a browser. GeckoTerminal sends a CORS header
 on its successful responses and none on its rate-limited ones, so from a web

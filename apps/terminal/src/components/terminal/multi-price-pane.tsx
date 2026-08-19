@@ -51,6 +51,7 @@ import { formatBookPrice } from '@/lib/format-price'
 import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-dialog'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
 
 type SortMode = 'price' | 'venue'
 
@@ -157,7 +158,7 @@ function MultiPricePaneInner({
     <div className="relative flex h-full flex-col overflow-hidden text-xs">
       {/* Header: what is being compared, how far apart the venues are, and
           the two controls that change the answer's shape. */}
-      <div className="flex items-center gap-1.5 border-b border-border/50 px-2 py-1">
+      <div className="flex items-center gap-1.5 pb-1">
         <span className="truncate font-mono text-[11px] font-medium">
           {pairKey}
         </span>
@@ -248,7 +249,7 @@ function MultiPricePaneInner({
             render={
               <div
                 className={cn(
-                  'flex items-center gap-1.5 border-b border-border/50 px-2 py-1 font-mono text-[10px] tabular-nums',
+                  'flex items-center gap-1.5 px-1.5 py-1 font-mono text-[10px] tabular-nums',
                   arb.edgePct > 0
                     ? '[background-color:color-mix(in_oklch,var(--up)_10%,transparent)]'
                     : 'text-muted-foreground',
@@ -294,12 +295,7 @@ function MultiPricePaneInner({
       )}
 
       {/* Column header */}
-      <div
-        className={cn(
-          'border-b border-border/50 px-2 py-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground',
-          VENUE_GRID,
-        )}
-      >
+      <div className={cn('px-1.5 pb-1', PANE_COLUMN_HEADER, VENUE_GRID)}>
         <span className="truncate">{t('multiPrice.venue')}</span>
         <span className="text-right">{t('terminal.columns.price')}</span>
         <span className="hidden truncate text-right @min-[16rem]/pane:inline">
@@ -349,7 +345,7 @@ function MultiPricePaneInner({
       <Tooltip>
         <TooltipTrigger
           render={
-            <div className="flex shrink-0 items-center gap-1.5 border-t border-border/50 px-2 py-1 text-[10px] text-muted-foreground" />
+            <div className="flex shrink-0 items-center gap-1.5 pt-1.5 text-[10px] text-muted-foreground" />
           }
         >
           <Info className="size-3 shrink-0" />
@@ -467,7 +463,7 @@ const VenueRow = memo(function VenueRow({
             : t('multiPrice.switchTo', { venue: label })
       }
       className={cn(
-        'w-full px-2 py-1.5 text-left transition-colors',
+        'w-full px-1.5 py-1.5 text-left transition-colors',
         !unlisted &&
           'hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
         VENUE_GRID,

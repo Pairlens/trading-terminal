@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Perpetuo contro spot",
     "subtitle": "Lo stesso asset sui due desk, affiancati",
     "spot": "spot {{price}}",
     "spotMissing": "nessun indice",
@@ -37,8 +36,6 @@
     "hint": "Ogni gamba è un ordine limite reale."
   },
   "chainLadder": {
-    "title": "{{asset}} su tutte le chain",
-    "subtitle": "Ordinato per quanto arriva dopo il gas, non per la quotazione migliore",
     "sizedFor": "Calcolato per {{value}}",
     "best": "Migliore",
     "versusBest": "{{bps}} pb",
@@ -107,7 +104,6 @@
     "week52": "52 settimane min · max"
   },
   "dexChains": {
-    "title": "Dove va il flusso",
     "subtitleNetwork": "Volume 24h, su tutta la chain",
     "subtitleSampled": "Volume 24h dei pool più attivi di ogni chain",
     "liquidityValue": "{{value}} di liquidità",
@@ -167,11 +163,6 @@
     },
     "today": "Oggi",
     "tomorrow": "Domani",
-    "heading": {
-      "today": "Presentano oggi",
-      "week": "Presentano questa settimana",
-      "watchlist": "Le trimestrali della tua watchlist"
-    },
     "slots": {
       "bmo": "Prima dell'apertura",
       "amc": "Dopo la chiusura",
@@ -222,7 +213,6 @@
       "month": "Mese"
     },
     "sourceNote": "Compilato dai calendari di pubblicazione di BLS, BEA, Federal Reserve e Census. Effettivo e precedente vengono dalle agenzie stesse; il valore implicito è ricavato dai prezzi dei contratti Kalshi. Orari nell'Est degli Stati Uniti, come li pubblicano le agenzie.",
-    "title": "Macro",
     "today": "Oggi",
     "tomorrow": "Domani",
     "countdownDh": "tra {{days}} g {{hours}} h",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "all'ultimo movimento",
-    "title": "Commissioni maturate",
     "subtitle_one": "{{wallet}} · {{count}} intervallo",
     "subtitle_other": "{{wallet}} · {{count}} intervalli",
     "claimableLabel": "Riscuotibile ora",
@@ -385,7 +374,6 @@
     "shortsPaying": "gli short pagano"
   },
   "fundingMatrix": {
-    "title": "Finanziamento, annualizzato",
     "subtitle": "Positivo = i long pagano gli short",
     "nextPayment": "Prossimo pagamento tra",
     "colSpread": "Spread",
@@ -398,7 +386,6 @@
     "emptyBody": "Il finanziamento è un dato pubblico, quindi non serve una chiave API. Installa un connettore di futures perpetui e la matrice si riempie da sola."
   },
   "inFlight": {
-    "title": "In transito",
     "pendingCount_one": "{{count}} in attesa",
     "pendingCount_other": "{{count}} in attesa",
     "emptyTitle": "Nessun trasferimento in transito",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Attività degli insider",
     "summary": "{{buys}} acquisti · {{sells}} vendite",
     "span_one": "{{count}} giorno",
     "span_other": "{{count}} giorni",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} comprati, {{sell}} venduti",
     "axisNote": "Acquisti meno vendite ogni 5 minuti. La liquidità aggiunta o ritirata dagli LP non è in questo feed.",
     "biggestLabel": "Swap più grandi",
-    "title": "Flusso attraverso {{pool}}",
-    "subtitle": "Acquisti meno vendite, in blocchi da cinque minuti",
-    "subtitleVenue": "{{venue}} · acquisti meno vendite, in blocchi da cinque minuti",
     "waitingTitle": "In attesa della mappa",
     "waitingBody": "I pool della chain stanno ancora caricando. Il flusso compare appena ne selezioni uno.",
     "unavailableTitle": "Pool non disponibili al momento",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Solo l'importo liquidato. I dati dei tick ai bordi di questa posizione non si sono potuti leggere, quindi le commissioni maturate dall'ultimo movimento non sono conteggiate e l'importo reale può essere più alto.",
-    "title": "Posizione LP",
     "subtitle_one": "{{wallet}} · {{count}} intervallo",
     "subtitle_other": "{{wallet}} · {{count}} intervalli",
     "capped": "{{count}} non mostrate",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Una sola transazione, senza approvazioni di token. Il deposito è limitato agli importi sopra.",
     "confirmCollectNoteSolana": "Va al programma sopra. Le commissioni vengono liquidate e pagate a questo wallet nella stessa transazione, e a nessun altro.",
     "rowProgram": "Programma",
-    "title": "Gestisci liquidità",
     "subtitle_one": "{{wallet}} · {{count}} posizione",
     "subtitle_other": "{{wallet}} · {{count}} posizioni",
     "position": "Posizione",
@@ -677,6 +658,8 @@
       "unusual": "Insolito"
     },
     "window": "Finestra di classifica",
+    "clearSector": "Mostra tutti i settori",
+    "emptySector": "Niente in {{sector}} si posiziona in questa finestra.",
     "columns": {
       "asset": "Asset",
       "liquidity": "Liquidità",
@@ -943,7 +926,6 @@
     "emptyBody": "Su questo pool non è passato nulla nella finestra restituita dal provider."
   },
   "openInterest": {
-    "title": "Leader per open interest",
     "changeLabel": "Variazione 24 h",
     "notPublished": "non pubblica l'open interest tramite la sua API.",
     "emptyTitle": "Ancora nessun open interest",
@@ -1034,8 +1016,6 @@
     "stateUnavailable": "Il provider di dati non ha restituito lo stato live del pool. I valori sopra sono quelli del listing della chain."
   },
   "poolMap": {
-    "title": "{{chain}} · pool principali",
-    "subtitle": "Ordinati per quanto ogni pool fa lavorare la propria liquidità",
     "sortTurnover": "Rotazione",
     "sortVolume": "Volume",
     "sortLiquidity": "Liquidità",
@@ -1053,11 +1033,6 @@
     "noChainBody": "Scegli una chain nella colonna e i suoi pool si ordinano qui, volume contro la liquidità che lo sostiene.",
     "emptyTitle": "Nessun pool restituito",
     "emptyBody": "Il provider di dati non ha elencato nulla per questa chain. Riprova al prossimo aggiornamento.",
-    "listTitle": "{{chain}} · tutti i pool",
-    "subtitleVolume": "Dimensione per volume 24h, colore per variazione 24h",
-    "subtitleLiquidity": "Dimensione per liquidità, colore per variazione 24h",
-    "subtitleTrades": "Dimensione per numero di operazioni 24h, colore per variazione 24h",
-    "subtitleTurnover": "Dimensione per volume su liquidità, colore per variazione 24h",
     "sortTrades": "Operazioni",
     "morePools": "Altri pool su questa chain",
     "backToMap": "Torna alla mappa",
@@ -1128,7 +1103,6 @@
   "routeBridge": {
     "confirmDestination": "Arriva su {{chain}}, nel tuo wallet {{wallet}}.",
     "needsDestinationWallet": "Collega un wallet {{chain}} per ricevere questo trasferimento. Il prezzo qui sopra è reale, manca solo la destinazione.",
-    "title": "Bridge",
     "subtitle": "Sposta un asset da {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Nessun connettore bridge installato",
@@ -1369,7 +1343,6 @@
     "leads": "{{total}} asset · {{symbol}} guida",
     "drags": "{{total}} asset · {{symbol}} frena",
     "assets": "{{total}} asset",
-    "title": "Barra dei settori",
     "splitTape": "{{total}} asset · quadro diviso"
   },
   "session": {
@@ -3589,6 +3562,7 @@
     },
     "pane": {
       "close": "Chiudi {{pane}}",
+      "move": "Sposta il pannello {{pane}}",
       "popOutToColumn": "Sposta in una nuova colonna",
       "bindPairToVariable": "Collega coppia a variabile",
       "bindWalletToVariable": "Collega wallet a variabile",
@@ -5109,25 +5083,17 @@
         "label": "Alert di prezzo",
         "fields": {
           "direction": {
-            "label": "Direzione",
             "options": {
               "above": "Sopra",
               "below": "Sotto"
             }
-          },
-          "price": {
-            "label": "Prezzo"
           }
-        },
-        "handles": {
-          "out": "Attivato"
         }
       },
       "order-executed": {
         "label": "Ordine eseguito",
         "fields": {
           "side": {
-            "label": "Lato",
             "options": {
               "any": "Qualsiasi",
               "buy": "Acquisto",
@@ -5135,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "Stato",
             "options": {
               "any": "Qualsiasi",
               "filled": "Eseguito",
               "partially_filled": "Parzialmente eseguito"
             }
           }
-        },
-        "handles": {
-          "out": "Attivato"
         }
       },
       "signal-generated": {
-        "label": "Segnale generato",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Tipo di segnale (opzionale)",
-            "placeholder": "Qualsiasi tipo"
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Segnale generato"
       },
       "indicator-alert": {
-        "label": "Alert indicatore",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indicatore (opzionale)",
-            "placeholder": "Qualsiasi indicatore"
-          },
-          "condition": {
-            "label": "Condizione (opzionale)",
-            "placeholder": "Qualsiasi condizione"
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Alert indicatore"
       },
       "candle-close": {
-        "label": "Chiusura candela",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Chiusura candela"
       },
       "price-condition": {
-        "label": "Condizione di prezzo",
-        "fields": {
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "above": "Sopra",
-              "below": "Sotto"
-            }
-          },
-          "price": {
-            "label": "Prezzo"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Condizione di prezzo"
       },
       "percent-change": {
-        "label": "Variazione percentuale",
-        "fields": {
-          "percent": {
-            "label": "Percentuale"
-          },
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "up": "Su",
-              "down": "Giù",
-              "either": "Entrambe"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Variazione percentuale"
       },
       "time-window": {
-        "label": "Finestra oraria",
-        "fields": {
-          "startHour": {
-            "label": "Ora di inizio (UTC)"
-          },
-          "endHour": {
-            "label": "Ora di fine (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Finestra oraria"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Notifica di sistema",
-        "fields": {
-          "sound": {
-            "label": "Riproduci suono"
-          }
-        }
+        "label": "Notifica di sistema"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Metodo",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Includi payload dell'evento"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID chat (facoltativo)",
-            "placeholder": "Chat collegata"
-          },
-          "silent": {
-            "label": "Messaggio silenzioso"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Movimento di prezzo",
-        "fields": {
-          "percent": {
-            "label": "Percentuale"
-          },
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "up": "Su",
-              "down": "Giù",
-              "either": "Entrambe"
-            }
-          },
-          "window": {
-            "label": "Entro",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Movimento di prezzo"
       }
     },
     "messages": {
@@ -5486,7 +5287,6 @@
     "inDays": "tra {{n}} g"
   },
   "markets": {
-    "title": "Mercati",
     "pairCount_one": "{{count}} coppia",
     "pairCount_other": "{{count}} coppie",
     "viewMode": "Modalità di visualizzazione",
@@ -5570,7 +5370,6 @@
     }
   },
   "topCoins": {
-    "title": "Top Coin",
     "colCoin": "Coin",
     "colPrice": "Prezzo",
     "col24h": "24h",
@@ -5581,7 +5380,6 @@
     "willAppear": "Le top coin appariranno qui"
   },
   "heatmap": {
-    "title": "Heatmap di mercato",
     "failed": "Impossibile caricare la heatmap",
     "noData": "Nessun dato disponibile",
     "tryLater": "Riprova più tardi",
@@ -5634,6 +5432,7 @@
     "adjustScope": "Niente dalle agenzie per questo filtro. Provane un altro o torna tra qualche minuto.",
     "noWatchedAssets": "La tua watchlist è vuota, quindi non c'è nulla su cui restringere il notiziario. Aggiungi una coppia ai preferiti o leggi Macro.",
     "noAssetNews": "Le agenzie battono, ma nulla riguarda la tua watchlist. Macro e Tutte continuano a muoversi.",
+    "noCryptoNews": "Il flusso è attivo, ma al momento non riguarda le cripto. Macro continua a muoversi.",
     "noStockNews": "Al momento niente dalle agenzie sui titoli quotati. Macro e Tutte continuano a muoversi.",
     "mentionsPairs_one": "menziona {{count}} delle tue coppie",
     "mentionsPairs_other": "menziona {{count}} delle tue coppie"
@@ -5955,11 +5754,6 @@
       "trigger": {
         "title": "Ingresso ordine",
         "badge": "Ingresso"
-      },
-      "configPanel": {
-        "requiresNote": "Richiede: {{requirement}}. I mercati privi di questa funzionalità non possono eseguire workflow che includono questo passaggio.",
-        "on": "Attivo",
-        "off": "Disattivo"
       }
     },
     "execution": {
@@ -5975,165 +5769,31 @@
         "label": "Ingresso ordine"
       },
       "market-order": {
-        "label": "Ordine di mercato",
-        "fields": {
-          "side": {
-            "label": "Direzione",
-            "options": {
-              "inherit": "Uguale al trigger",
-              "opposite": "Opposto al trigger",
-              "buy": "Acquista",
-              "sell": "Vendi"
-            }
-          },
-          "sizeMode": {
-            "label": "Modalità dimensione",
-            "options": {
-              "percent": "% dell'ingresso",
-              "absolute": "Importo fisso"
-            }
-          },
-          "size": {
-            "label": "Dimensione"
-          }
-        }
+        "label": "Ordine di mercato"
       },
       "limit-order": {
         "label": "Ordine limite",
         "compat": "Ordini limite in attesa",
-        "fields": {
-          "side": {
-            "label": "Direzione",
-            "options": {
-              "inherit": "Uguale al trigger",
-              "opposite": "Opposto al trigger",
-              "buy": "Acquista",
-              "sell": "Vendi"
-            }
-          },
-          "sizeMode": {
-            "label": "Modalità dimensione",
-            "options": {
-              "percent": "% dell'ingresso",
-              "absolute": "Importo fisso"
-            }
-          },
-          "size": {
-            "label": "Dimensione"
-          },
-          "priceMode": {
-            "label": "Modalità prezzo",
-            "options": {
-              "absolute": "Prezzo fisso",
-              "offset-percent": "% di scarto",
-              "offset-absolute": "Scarto dal prezzo attuale"
-            }
-          },
-          "priceValue": {
-            "label": "Valore prezzo"
-          }
-        },
         "compatReason": "questa piattaforma non può mantenere ordini limite in attesa (DEX solo swap)"
       },
       "take-profit": {
         "label": "Take profit",
         "compat": "Ordini trigger nativi o ordini limite in attesa",
-        "fields": {
-          "triggerMode": {
-            "label": "Modalità trigger",
-            "options": {
-              "percent": "% di guadagno",
-              "absolute": "Livello di prezzo"
-            }
-          },
-          "triggerValue": {
-            "label": "Valore trigger"
-          },
-          "sizePercent": {
-            "label": "% di chiusura"
-          },
-          "orderType": {
-            "label": "Tipo di ordine",
-            "options": {
-              "market": "Mercato",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Prezzo limite"
-          }
-        },
         "compatReason": "questa piattaforma non supporta né ordini trigger né ordini limite in attesa"
       },
       "stop-loss": {
         "label": "Stop loss",
         "compat": "Ordini trigger nativi",
-        "fields": {
-          "triggerMode": {
-            "label": "Modalità trigger",
-            "options": {
-              "percent": "% di perdita",
-              "absolute": "Livello di prezzo"
-            }
-          },
-          "triggerValue": {
-            "label": "Valore trigger"
-          },
-          "sizePercent": {
-            "label": "% di chiusura"
-          },
-          "orderType": {
-            "label": "Tipo di ordine",
-            "options": {
-              "market": "Mercato",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Prezzo limite"
-          }
-        },
         "compatReason": "questa piattaforma non ha ordini trigger nativi, quindi uno stop loss non può restare in attesa sull'exchange"
       },
       "condition": {
-        "label": "Condizione",
-        "fields": {
-          "conditionType": {
-            "label": "Condizione",
-            "options": {
-              "price-above": "Prezzo sopra",
-              "price-below": "Prezzo sotto",
-              "percent-change": "% di variazione dall'ingresso"
-            }
-          },
-          "value": {
-            "label": "Valore"
-          }
-        }
+        "label": "Condizione"
       },
       "split": {
-        "label": "Split parallelo",
-        "fields": {
-          "branches": {
-            "label": "Rami"
-          }
-        }
+        "label": "Split parallelo"
       },
       "wait": {
-        "label": "Attesa",
-        "fields": {
-          "duration": {
-            "label": "Durata"
-          },
-          "unit": {
-            "label": "Unità",
-            "options": {
-              "seconds": "Secondi",
-              "minutes": "Minuti",
-              "hours": "Ore"
-            }
-          }
-        }
+        "label": "Attesa"
       }
     },
     "templates": {

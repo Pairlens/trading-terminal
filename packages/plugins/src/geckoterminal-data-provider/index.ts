@@ -30,7 +30,7 @@ export const geckoterminalDataProviderManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'DEX market data powered by GeckoTerminal (CoinGecko) — deep history, native 4h candles',
+    'DEX market data powered by GeckoTerminal (CoinGecko): deep history, native 4h candles',
   homepage: 'https://www.geckoterminal.com',
   metadata: { family: 'dex', assetClass: 'dex' },
   // Priority 5 — the PRIMARY wildcard DEX data provider. GeckoTerminal sends

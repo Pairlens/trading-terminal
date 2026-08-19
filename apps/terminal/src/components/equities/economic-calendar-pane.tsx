@@ -65,7 +65,10 @@ import type {
 } from '@pairlens/shared/instrument-types'
 
 import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 import { useEconomicCalendar } from '@/hooks/use-economic-calendar'
 import { hasEconomicFigures } from '@/lib/equities/calendar-figures'
 import { splitCountdown } from '@/lib/equities/session'
@@ -133,55 +136,49 @@ export function EconomicCalendarPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      {/* Wrapping toolbar rather than a squeezed one: two toggle groups and a
-          title do not fit a 20rem pane on one line, and a control row that
-          drops to a second line still reads, while five clipped segments do
-          not. */}
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-2 gap-y-1.5 border-b border-border px-3 py-2">
-        <h2 className="min-w-0 truncate text-[13px] font-semibold">
-          {t('economicCalendar.title')}
-        </h2>
-        <div className="flex shrink-0 items-center gap-1.5">
-          <ToggleGroup
-            aria-label={t('economicCalendar.impactLabel')}
-            multiple={false}
-            onValueChange={(next) => setHighOnly(next[0] === 'high')}
-            size="sm"
-            value={[highOnly ? 'high' : 'all']}
-            variant="outline"
-          >
-            <ToggleGroupItem className="text-[10px]" value="all">
-              {t('economicCalendar.impactAll')}
+      {/* Wrapping toolbar rather than a squeezed one: five segments do not fit
+          a 20rem pane on one line, and a control row that drops to a second
+          line still reads, while five clipped ones do not. */}
+      <div className="flex shrink-0 flex-wrap items-center gap-1.5 py-1.5">
+        <ToggleGroup
+          aria-label={t('economicCalendar.impactLabel')}
+          multiple={false}
+          onValueChange={(next) => setHighOnly(next[0] === 'high')}
+          size="sm"
+          value={[highOnly ? 'high' : 'all']}
+          variant="outline"
+        >
+          <ToggleGroupItem className="h-6 text-[10px]" value="all">
+            {t('economicCalendar.impactAll')}
+          </ToggleGroupItem>
+          <ToggleGroupItem className="h-6 text-[10px]" value="high">
+            {t('economicCalendar.impactHigh')}
+          </ToggleGroupItem>
+        </ToggleGroup>
+        <ToggleGroup
+          aria-label={t('economicCalendar.scopeLabel')}
+          multiple={false}
+          onValueChange={(next) => {
+            const value = next[0]
+            if (SCOPES.includes(value as ScopeId)) setScope(value as ScopeId)
+          }}
+          size="sm"
+          value={[scope]}
+          variant="outline"
+        >
+          {SCOPES.map((id) => (
+            <ToggleGroupItem className="h-6 text-[10px]" key={id} value={id}>
+              {t(`economicCalendar.scopes.${id}`)}
             </ToggleGroupItem>
-            <ToggleGroupItem className="text-[10px]" value="high">
-              {t('economicCalendar.impactHigh')}
-            </ToggleGroupItem>
-          </ToggleGroup>
-          <ToggleGroup
-            aria-label={t('economicCalendar.scopeLabel')}
-            multiple={false}
-            onValueChange={(next) => {
-              const value = next[0]
-              if (SCOPES.includes(value as ScopeId)) setScope(value as ScopeId)
-            }}
-            size="sm"
-            value={[scope]}
-            variant="outline"
-          >
-            {SCOPES.map((id) => (
-              <ToggleGroupItem className="text-[10px]" key={id} value={id}>
-                {t(`economicCalendar.scopes.${id}`)}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        </div>
+          ))}
+        </ToggleGroup>
       </div>
 
       <table className={cn(GRID, 'shrink-0')}>
         <thead>
-          <tr className="border-b border-border/50 text-muted-foreground">
+          <tr className="text-muted-foreground">
             <HeadCell
-              className={cn(TIME_COL, 'pl-3')}
+              className={cn(TIME_COL, 'pl-1.5')}
               title={`${t('economicCalendar.columns.time')} · ${zone}`}
             >
               {t('economicCalendar.columns.time')}
@@ -246,7 +243,7 @@ export function EconomicCalendarPane() {
                 windowStart={windowStart}
               />
             ))}
-            <p className="mt-1 border-t border-border/40 px-3 py-2 text-[10.5px] leading-relaxed text-muted-foreground/80">
+            <p className="mt-2 px-1.5 py-2 text-[10px] leading-relaxed text-muted-foreground/80">
               {t('economicCalendar.sourceNote')}
             </p>
           </>
@@ -317,7 +314,8 @@ function HeadCell({
   return (
     <th
       className={cn(
-        'truncate pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em]',
+        'truncate pb-1.5 pr-3',
+        PANE_COLUMN_HEADER,
         align === 'right' ? 'text-right' : 'text-left',
         className,
       )}
@@ -459,8 +457,9 @@ function DayGroup({
     <section>
       <p
         className={cn(
-          'sticky top-0 z-10 flex items-baseline gap-2 border-b border-border/50 bg-background/95 px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[.14em] backdrop-blur-sm',
-          kind === 'today' ? 'text-[var(--chart-4)]' : 'text-muted-foreground',
+          'sticky top-0 z-10 flex items-baseline gap-2 bg-card/95 px-1.5 py-1 backdrop-blur-sm',
+          PANE_COLUMN_HEADER,
+          kind === 'today' && 'text-[var(--chart-4)]',
         )}
       >
         {label}
@@ -533,7 +532,7 @@ function ReleaseRow({
         isNext && 'bg-[color-mix(in_oklch,var(--primary)_7%,transparent)]',
       )}
     >
-      <td className={cn(TIME_COL, 'truncate py-1.5 pl-3 pr-3')}>
+      <td className={cn(TIME_COL, 'truncate py-1.5 pl-1.5 pr-3')}>
         <span
           className={cn(
             'font-mono text-[11.5px] tabular-nums',
@@ -607,7 +606,7 @@ function ReleaseRow({
           <FigureCell className={PRIOR_COL} value={entry.prior} />
         </>
       )}
-      <td className={cn(SOURCE_COL, 'py-1.5 pr-3 text-right')}>
+      <td className={cn(SOURCE_COL, 'py-1.5 pr-1.5 text-right')}>
         <span className="inline-block max-w-full truncate rounded-md bg-secondary px-1.5 py-0.5 align-middle font-mono text-[9.5px] uppercase tracking-[.06em] text-muted-foreground">
           {entry.source}
         </span>
@@ -661,7 +660,7 @@ function UnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
  */
 function LoadingRows() {
   return (
-    <div className="px-3">
+    <div className="px-1.5">
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           className="flex items-center gap-2 border-b border-border/40 py-2"

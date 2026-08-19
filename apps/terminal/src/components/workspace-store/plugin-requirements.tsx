@@ -91,7 +91,7 @@ function RequirementRow({ plugin }: { plugin: RequiredPlugin }) {
   const StatusIcon = status.Icon
 
   return (
-    <li className="flex items-start gap-3 rounded-md border bg-card px-3 py-2">
+    <li className="flex items-start gap-3 rounded-[10px] bg-muted/40 px-3 py-2">
       <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground">
         <Blocks className="size-4" />
       </div>

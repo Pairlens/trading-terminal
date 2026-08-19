@@ -199,20 +199,45 @@ describe('createRequestLimiter', () => {
     }
   })
 
-  it('a cooldown refuses every caller, and extends rather than shortens', async () => {
-    // Refuses rather than holds. A cool-off is the provider turning us away,
-    // and a caller parked on one is invisible: nothing has been sent, so the
-    // pane above it still believes it is loading. Every read here polls on its
-    // own interval, so the refusal costs nothing but tells the truth.
+  it('waits a cooldown out, and extends rather than shortens it', async () => {
+    // The swap tape's bug, in one assertion. A cool-off from this provider is
+    // eight seconds and the board arms one before the tape's first request is
+    // admitted; refusing it outright turned a short wait into "Swaps
+    // unavailable right now" on a pane that was seconds from its data.
     const clock = virtualClock()
-    const limiter = limiterOn(clock)
+    const limiter = createRequestLimiter({
+      capacity: 3,
+      windowMs: 1_000,
+      maxWaitMs: 15_000,
+      now: clock.now,
+      delay: clock.delay,
+    })
 
     limiter.cooldown(5_000)
     limiter.cooldown(1_000) // shorter: must not cut the first one short
 
+    await limiter.acquire()
+    expect(clock.waits).toEqual([5_000])
+  })
+
+  it('refuses a cooldown that outlasts the ceiling', async () => {
+    // The ceiling is what makes waiting one out safe. A hold longer than the
+    // caller's own next poll is not a wait worth spending, and a pane holding
+    // "Loading swaps" through it would be the older lie.
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 3,
+      windowMs: 1_000,
+      maxWaitMs: 15_000,
+      now: clock.now,
+      delay: clock.delay,
+    })
+
+    limiter.cooldown(20_000)
+
     await expect(limiter.acquire()).rejects.toMatchObject({
       status: 429,
-      retryAfterMs: 5_000,
+      retryAfterMs: 20_000,
     })
     expect(clock.waits).toEqual([])
   })
@@ -326,11 +351,11 @@ describe('geckoFetch', () => {
       expect(isProviderThrottled(GECKOTERMINAL_PROVIDER)).toBe(true)
 
       // And the queue is held back for the provider's own Retry-After, so the
-      // next poll does not walk straight back into the limit. Held back by
-      // being REFUSED, not by being parked: see the cooldown test above.
-      await expect(limiter.acquire()).rejects.toMatchObject({
-        retryAfterMs: 7_000,
-      })
+      // next poll does not walk straight back into the limit. Held by being
+      // made to WAIT the hold out — see the cooldown test above for why that
+      // beats refusing a caller a few seconds from its data.
+      await limiter.acquire()
+      expect(clock.waits).toEqual([7_000])
     } finally {
       stub.restore()
     }
@@ -345,9 +370,8 @@ describe('geckoFetch', () => {
       await expect(
         fetchPaced('https://api.geckoterminal.com/api/v2/x'),
       ).rejects.toThrow(/temporarily unavailable/)
-      await expect(limiter.acquire()).rejects.toMatchObject({
-        retryAfterMs: 3_000,
-      })
+      await limiter.acquire()
+      expect(clock.waits).toEqual([3_000])
     } finally {
       stub.restore()
     }

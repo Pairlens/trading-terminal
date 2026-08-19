@@ -9,10 +9,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@pairlens/ui/components/ui/tooltip'
+import {
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
+} from '../master-detail'
 import type { DragEvent } from 'react'
 
 import type { WorkflowStepTypeDefinition } from '@pairlens/workflow-engine/step-registry'
 
+import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useMarketData } from '@/lib/market-data-provider'
 import { isStandalone } from '@/lib/platform'
 import { stepCompatRequires, stepTypeLabel } from '@/lib/registry-labels'
@@ -118,9 +123,12 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
   )
 
   return (
-    <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
-      <div className="border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+    // Its own column on the ground, the same as the workflow list opposite:
+    // what used to divide it from the canvas was a `border-l`, and what
+    // divides it now is 10px of ground.
+    <div className={`w-56 shrink-0 ${PAGE_COLUMN_FLUSH}`}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('workflows.palette.title')}
         </span>
       </div>

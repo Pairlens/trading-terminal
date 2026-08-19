@@ -68,9 +68,13 @@ export const ASSISTANT_BAR = {
  * Keyed by the union, so a new placement cannot ship without one.
  */
 export const ASSISTANT_WINDOW_ANCHOR: Record<AssistantPlacement, string> = {
-  // The orb is near the top of the rail, so the window hangs just
-  // outside it, top-aligned.
-  sidebar: 'left-[4.25rem] top-4',
+  // Where a board column starts: 70px from the left, which is the 60px rail
+  // plus the board's own 10px inset, and hanging off the bottom of the 44px
+  // top bar the way a column does. The panel floats rather than sits in the
+  // grid, but landing on the same two edges is what makes it read as one of
+  // the terminal's own surfaces instead of a window parked over it. It also
+  // stops the panel covering the pair the user is looking at.
+  sidebar: 'left-[4.375rem] top-11',
   // Clear of the strip: 3rem of bar plus the same 0.5rem breathing room
   // the other two leave.
   bottom: 'right-4 bottom-[3.5rem]',

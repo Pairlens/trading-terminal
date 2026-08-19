@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Perp lawan spot",
     "subtitle": "Aset yang sama di dua meja, berdampingan",
     "spot": "spot {{price}}",
     "spotMissing": "tanpa indeks",
@@ -37,8 +36,6 @@
     "hint": "Tiap kaki adalah order limit sungguhan."
   },
   "chainLadder": {
-    "title": "{{asset}} di seluruh chain",
-    "subtitle": "Diurutkan dari yang benar-benar sampai setelah gas, bukan dari kutipan terbaik",
     "sizedFor": "Dihitung untuk {{value}}",
     "best": "Terbaik",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 minggu terendah · tertinggi"
   },
   "dexChains": {
-    "title": "Ke mana arus bergerak",
     "subtitleNetwork": "Volume 24j, seluruh chain",
     "subtitleSampled": "Volume 24j dari pool tersibuk tiap chain",
     "liquidityValue": "Likuiditas {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "Hari ini",
     "tomorrow": "Besok",
-    "heading": {
-      "today": "Melapor hari ini",
-      "week": "Melapor minggu ini",
-      "watchlist": "Laporan watchlist kamu"
-    },
     "slots": {
       "bmo": "Sebelum pasar buka",
       "amc": "Setelah pasar tutup",
@@ -222,7 +213,6 @@
       "month": "Sebulan"
     },
     "sourceNote": "Disusun dari jadwal rilis BLS, BEA, Federal Reserve, dan Census. Angka aktual dan sebelumnya berasal dari lembaganya sendiri; angka implisit diturunkan dari harga kontrak Kalshi. Waktu dalam zona Timur AS, sebagaimana lembaga menerbitkannya.",
-    "title": "Makro",
     "today": "Hari ini",
     "tomorrow": "Besok",
     "countdownDh": "dalam {{days}} hr {{hours}} jam",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "saat terakhir disentuh",
-    "title": "Akumulasi fee",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
     "claimableLabel": "Bisa diklaim sekarang",
@@ -385,7 +374,6 @@
     "shortsPaying": "short membayar"
   },
   "fundingMatrix": {
-    "title": "Pendanaan, disetahunkan",
     "subtitle": "Positif = long membayar short",
     "nextPayment": "Pembayaran berikutnya dalam",
     "colSpread": "Selisih",
@@ -398,7 +386,6 @@
     "emptyBody": "Pendanaan adalah data publik, jadi kunci API tidak diperlukan. Pasang konektor futures perpetual dan matriks terisi sendiri."
   },
   "inFlight": {
-    "title": "Dalam perjalanan",
     "pendingCount_one": "{{count}} tertunda",
     "pendingCount_other": "{{count}} tertunda",
     "emptyTitle": "Tidak ada transfer berjalan",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Aktivitas orang dalam",
     "summary": "{{buys}} beli · {{sells}} jual",
     "span_one": "{{count}} hari",
     "span_other": "{{count}} hari",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} dibeli, {{sell}} dijual",
     "axisNote": "Beli dikurangi jual per 5 menit. Likuiditas yang ditambah atau ditarik LP tidak ada di feed ini.",
     "biggestLabel": "Swap terbesar",
-    "title": "Arus lewat {{pool}}",
-    "subtitle": "Beli dikurangi jual, per lima menit",
-    "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit",
     "waitingTitle": "Menunggu peta pool",
     "waitingBody": "Pool di chain ini masih dimuat. Aliran muncul begitu satu pool dipilih.",
     "unavailableTitle": "Pool belum bisa diambil",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Hanya jumlah yang sudah dihitung. Data tick di batas posisi ini tidak bisa dibaca, jadi fee sejak sentuhan terakhir belum ikut dihitung dan klaim sebenarnya bisa lebih besar.",
-    "title": "Posisi LP",
     "subtitle_one": "{{wallet}} · {{count}} rentang",
     "subtitle_other": "{{wallet}} · {{count}} rentang",
     "capped": "{{count}} tidak ditampilkan",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Satu transaksi, tanpa approval token. Setoran dibatasi pada jumlah di atas.",
     "confirmCollectNoteSolana": "Dikirim ke program di atas. Fee dihitung dan dibayarkan ke wallet ini dalam transaksi yang sama, bukan ke tempat lain.",
     "rowProgram": "Program",
-    "title": "Kelola likuiditas",
     "subtitle_one": "{{wallet}} · {{count}} posisi",
     "subtitle_other": "{{wallet}} · {{count}} posisi",
     "position": "Posisi",
@@ -677,6 +658,8 @@
       "unusual": "Tidak biasa"
     },
     "window": "Rentang peringkat",
+    "clearSector": "Tampilkan semua sektor",
+    "emptySector": "Tidak ada di {{sector}} yang masuk peringkat pada jendela ini.",
     "columns": {
       "asset": "Aset",
       "liquidity": "Likuiditas",
@@ -943,7 +926,6 @@
     "emptyBody": "Tidak ada yang melewati pool ini dalam rentang waktu yang dikembalikan penyedia."
   },
   "openInterest": {
-    "title": "Open interest terbesar",
     "changeLabel": "Perubahan 24 jam",
     "notPublished": "tidak mempublikasikan open interest lewat API-nya.",
     "emptyTitle": "Belum ada open interest",
@@ -1034,8 +1016,6 @@
     "stateUnavailable": "Penyedia data tidak mengembalikan status pool langsung. Angka di atas berasal dari listing chain."
   },
   "poolMap": {
-    "title": "{{chain}} · pool teratas",
-    "subtitle": "Diurutkan dari seberapa keras tiap pool memutar likuiditasnya sendiri",
     "sortTurnover": "Perputaran",
     "sortVolume": "Volume",
     "sortLiquidity": "Likuiditas",
@@ -1053,11 +1033,6 @@
     "noChainBody": "Pilih chain di panel samping, lalu pool-nya diperingkat di sini: volume terhadap likuiditas yang menopangnya.",
     "emptyTitle": "Tidak ada pool yang dikembalikan",
     "emptyBody": "Penyedia data tidak mencantumkan apa pun untuk chain ini. Akan dicoba lagi pada penyegaran berikutnya.",
-    "listTitle": "{{chain}} · semua pool",
-    "subtitleVolume": "Ukuran menurut volume 24 jam, warna menurut pergerakan 24 jam",
-    "subtitleLiquidity": "Ukuran menurut likuiditas, warna menurut pergerakan 24 jam",
-    "subtitleTrades": "Ukuran menurut jumlah transaksi 24 jam, warna menurut pergerakan 24 jam",
-    "subtitleTurnover": "Ukuran menurut volume terhadap likuiditas, warna menurut pergerakan 24 jam",
     "sortTrades": "Transaksi",
     "morePools": "Pool lain di chain ini",
     "backToMap": "Kembali ke peta",
@@ -1128,7 +1103,6 @@
   "routeBridge": {
     "confirmDestination": "Mendarat di {{chain}}, ke dompet {{wallet}} milikmu.",
     "needsDestinationWallet": "Hubungkan dompet {{chain}} untuk menerima transfer ini. Harga di atas nyata, hanya belum ada tujuannya.",
-    "title": "Bridge",
     "subtitle": "Pindahkan satu aset dari {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Belum ada konektor bridge",
@@ -1369,7 +1343,6 @@
     "leads": "{{total}} aset · {{symbol}} memimpin",
     "drags": "{{total}} aset · {{symbol}} menahan",
     "assets": "{{total}} aset",
-    "title": "Pita sektor",
     "splitTape": "{{total}} aset · variatif"
   },
   "session": {
@@ -3589,6 +3562,7 @@
     },
     "pane": {
       "close": "Tutup {{pane}}",
+      "move": "Pindahkan panel {{pane}}",
       "popOutToColumn": "Pindahkan ke kolom baru",
       "bindPairToVariable": "Ikat pair ke variabel",
       "bindWalletToVariable": "Ikat dompet ke variabel",
@@ -5109,25 +5083,17 @@
         "label": "Alert Harga",
         "fields": {
           "direction": {
-            "label": "Arah",
             "options": {
               "above": "Di atas",
               "below": "Di bawah"
             }
-          },
-          "price": {
-            "label": "Harga"
           }
-        },
-        "handles": {
-          "out": "Terpicu"
         }
       },
       "order-executed": {
         "label": "Order Tereksekusi",
         "fields": {
           "side": {
-            "label": "Sisi",
             "options": {
               "any": "Apa saja",
               "buy": "Beli",
@@ -5135,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "Status",
             "options": {
               "any": "Apa saja",
               "filled": "Terisi",
               "partially_filled": "Terisi Sebagian"
             }
           }
-        },
-        "handles": {
-          "out": "Terpicu"
         }
       },
       "signal-generated": {
-        "label": "Sinyal Terbentuk",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Tipe Sinyal (opsional)",
-            "placeholder": "Tipe apa saja"
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Sinyal Terbentuk"
       },
       "indicator-alert": {
-        "label": "Alert Indikator",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indikator (opsional)",
-            "placeholder": "Indikator apa saja"
-          },
-          "condition": {
-            "label": "Kondisi (opsional)",
-            "placeholder": "Kondisi apa saja"
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Alert Indikator"
       },
       "candle-close": {
-        "label": "Penutupan Candle",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Penutupan Candle"
       },
       "price-condition": {
-        "label": "Kondisi Harga",
-        "fields": {
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "above": "Di atas",
-              "below": "Di bawah"
-            }
-          },
-          "price": {
-            "label": "Harga"
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Kondisi Harga"
       },
       "percent-change": {
-        "label": "Perubahan Persentase",
-        "fields": {
-          "percent": {
-            "label": "Persentase"
-          },
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "up": "Naik",
-              "down": "Turun",
-              "either": "Keduanya"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Perubahan Persentase"
       },
       "time-window": {
-        "label": "Jendela Waktu",
-        "fields": {
-          "startHour": {
-            "label": "Jam Mulai (UTC)"
-          },
-          "endHour": {
-            "label": "Jam Selesai (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Jendela Waktu"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Notifikasi Sistem",
-        "fields": {
-          "sound": {
-            "label": "Putar Suara"
-          }
-        }
+        "label": "Notifikasi Sistem"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Metode",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Sertakan Payload Event"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID obrolan (opsional)",
-            "placeholder": "Obrolan tertaut"
-          },
-          "silent": {
-            "label": "Pesan senyap"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Pergerakan Harga",
-        "fields": {
-          "percent": {
-            "label": "Persentase"
-          },
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "up": "Naik",
-              "down": "Turun",
-              "either": "Keduanya"
-            }
-          },
-          "window": {
-            "label": "Dalam",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Pergerakan Harga"
       }
     },
     "messages": {
@@ -5486,7 +5287,6 @@
     "inDays": "dalam {{n}} hr"
   },
   "markets": {
-    "title": "Market",
     "pairCount_one": "{{count}} pair",
     "pairCount_other": "{{count}} pair",
     "viewMode": "Mode tampilan",
@@ -5570,7 +5370,6 @@
     }
   },
   "topCoins": {
-    "title": "Koin Teratas",
     "colCoin": "Koin",
     "colPrice": "Harga",
     "col24h": "24 jam",
@@ -5581,7 +5380,6 @@
     "willAppear": "Koin teratas akan muncul di sini"
   },
   "heatmap": {
-    "title": "Heatmap Market",
     "failed": "Gagal memuat heatmap",
     "noData": "Tidak ada data tersedia",
     "tryLater": "Coba lagi nanti",
@@ -5634,6 +5432,7 @@
     "adjustScope": "Tidak ada kabar untuk filter ini. Coba yang lain, atau periksa lagi beberapa menit lagi.",
     "noWatchedAssets": "Watchlist kamu kosong, jadi tidak ada acuan untuk menyaring kabar. Tandai satu pair, atau baca Makro saja.",
     "noAssetNews": "Kabar terus mengalir, tapi tidak ada yang menyangkut watchlist kamu. Makro dan Semua masih bergerak.",
+    "noCryptoNews": "Kabar terus masuk, tetapi tidak ada yang tentang kripto saat ini. Makro masih bergerak.",
     "noStockNews": "Belum ada kabar tentang saham-saham yang tercantum saat ini. Makro dan Semua masih bergerak.",
     "mentionsPairs_one": "menyebut {{count}} pair kamu",
     "mentionsPairs_other": "menyebut {{count}} pair kamu"
@@ -5955,11 +5754,6 @@
       "trigger": {
         "title": "Input Order",
         "badge": "Entry"
-      },
-      "configPanel": {
-        "requiresNote": "Butuh: {{requirement}}. Market tanpa kapabilitas ini tidak bisa menjalankan workflow yang berisi langkah ini.",
-        "on": "Aktif",
-        "off": "Nonaktif"
       }
     },
     "execution": {
@@ -5975,165 +5769,31 @@
         "label": "Input Order"
       },
       "market-order": {
-        "label": "Market Order",
-        "fields": {
-          "side": {
-            "label": "Sisi",
-            "options": {
-              "inherit": "Sama seperti trigger",
-              "opposite": "Kebalikan trigger",
-              "buy": "Beli",
-              "sell": "Jual"
-            }
-          },
-          "sizeMode": {
-            "label": "Mode Ukuran",
-            "options": {
-              "percent": "% dari input",
-              "absolute": "Jumlah tetap"
-            }
-          },
-          "size": {
-            "label": "Ukuran"
-          }
-        }
+        "label": "Market Order"
       },
       "limit-order": {
         "label": "Limit Order",
         "compat": "Limit order yang mengendap",
-        "fields": {
-          "side": {
-            "label": "Sisi",
-            "options": {
-              "inherit": "Sama seperti trigger",
-              "opposite": "Kebalikan trigger",
-              "buy": "Beli",
-              "sell": "Jual"
-            }
-          },
-          "sizeMode": {
-            "label": "Mode Ukuran",
-            "options": {
-              "percent": "% dari input",
-              "absolute": "Jumlah tetap"
-            }
-          },
-          "size": {
-            "label": "Ukuran"
-          },
-          "priceMode": {
-            "label": "Mode Harga",
-            "options": {
-              "absolute": "Harga tetap",
-              "offset-percent": "% dari harga saat ini",
-              "offset-absolute": "Selisih dari harga saat ini"
-            }
-          },
-          "priceValue": {
-            "label": "Nilai Harga"
-          }
-        },
         "compatReason": "venue ini tidak bisa mengendapkan limit order (DEX swap-only)"
       },
       "take-profit": {
         "label": "Take Profit",
         "compat": "Trigger order native atau limit order yang mengendap",
-        "fields": {
-          "triggerMode": {
-            "label": "Mode Trigger",
-            "options": {
-              "percent": "% untung",
-              "absolute": "Level harga"
-            }
-          },
-          "triggerValue": {
-            "label": "Nilai Trigger"
-          },
-          "sizePercent": {
-            "label": "Tutup %"
-          },
-          "orderType": {
-            "label": "Tipe Order",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Harga Limit"
-          }
-        },
         "compatReason": "venue ini tidak mendukung trigger order maupun limit order yang mengendap"
       },
       "stop-loss": {
         "label": "Stop Loss",
         "compat": "Trigger order native",
-        "fields": {
-          "triggerMode": {
-            "label": "Mode Trigger",
-            "options": {
-              "percent": "% rugi",
-              "absolute": "Level harga"
-            }
-          },
-          "triggerValue": {
-            "label": "Nilai Trigger"
-          },
-          "sizePercent": {
-            "label": "Tutup %"
-          },
-          "orderType": {
-            "label": "Tipe Order",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Harga Limit"
-          }
-        },
         "compatReason": "venue ini tidak punya trigger order native di exchange, jadi stop loss tidak bisa mengendap di exchange"
       },
       "condition": {
-        "label": "Kondisi",
-        "fields": {
-          "conditionType": {
-            "label": "Kondisi",
-            "options": {
-              "price-above": "Harga di atas",
-              "price-below": "Harga di bawah",
-              "percent-change": "% perubahan dari entry"
-            }
-          },
-          "value": {
-            "label": "Nilai"
-          }
-        }
+        "label": "Kondisi"
       },
       "split": {
-        "label": "Split Paralel",
-        "fields": {
-          "branches": {
-            "label": "Cabang"
-          }
-        }
+        "label": "Split Paralel"
       },
       "wait": {
-        "label": "Tunggu",
-        "fields": {
-          "duration": {
-            "label": "Durasi"
-          },
-          "unit": {
-            "label": "Satuan",
-            "options": {
-              "seconds": "Detik",
-              "minutes": "Menit",
-              "hours": "Jam"
-            }
-          }
-        }
+        "label": "Tunggu"
       }
     },
     "templates": {

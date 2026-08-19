@@ -36,6 +36,7 @@ import type { DexChain } from '@/lib/dex/chain-catalog'
 import type { BridgeQuote } from '@/lib/dex/bridge-types'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
+import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
 import { useLpSourceState } from '@/components/dex/use-lp-source-state'
 import {
   QUOTE_STALE_MS,
@@ -213,31 +214,24 @@ function RouteBridgePaneInner({
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-        <div className="min-w-0">
-          <h2 className="truncate text-[13px] font-semibold">
-            {t('routeBridge.title')}
-          </h2>
-          <p className="truncate text-[10px] text-muted-foreground">
+      {/* Where the money leaves from, and which bridge is quoting it. Both go
+          beside the pane's own name: the pane is a form, and a form should not
+          spend its first row on a heading. */}
+      <DexPaneHeader
+        subtitle={
+          <>
             {t('routeBridge.subtitle', { chain: from.displayName })}
-          </p>
-        </div>
-        {priced ? (
-          <span
-            className={cn(
-              'shrink-0 rounded-md px-2 py-0.5 font-mono text-[10px]',
-              stale
-                ? 'bg-[var(--chart-4)]/15 text-[var(--chart-4)]'
-                : 'bg-muted text-muted-foreground',
-            )}
-          >
-            {stale ? t('routeBridge.expired') : priced.tool}
-          </span>
-        ) : null}
-      </header>
+            {priced ? (
+              <span className={cn('ml-2', stale && 'text-[var(--chart-4)]')}>
+                {stale ? t('routeBridge.expired') : priced.tool}
+              </span>
+            ) : null}
+          </>
+        }
+      />
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-2.5 px-3 py-2.5">
+        <div className="flex flex-col gap-2.5 py-1.5">
           <div className="flex flex-wrap gap-1">
             {assets.map((option) => (
               <button
@@ -272,7 +266,9 @@ function RouteBridgePaneInner({
               asset: asset ?? '',
             })}
             aria-label={t('routeBridge.amountLabel')}
-            className="h-8 font-mono text-xs [font-variant-numeric:tabular-nums]"
+            // A well, not a bordered field: the amount is the one number this
+            // pane asks somebody to type.
+            className="h-8 border-transparent bg-muted/40 font-mono text-xs [font-variant-numeric:tabular-nums] dark:bg-muted/40"
           />
 
           <div>
@@ -323,7 +319,7 @@ function RouteBridgePaneInner({
           ) : null}
 
           {refused ? (
-            <p className="rounded-md border border-border/70 bg-muted/40 px-2.5 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="rounded-lg bg-muted/40 px-2.5 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
               {t(bridgeRefusalKey(refused.reason), {
                 chain:
                   dexChain(refused.market ?? '')?.displayName ??
@@ -335,7 +331,7 @@ function RouteBridgePaneInner({
           ) : null}
 
           {needsDestinationWallet && to ? (
-            <p className="rounded-md border border-border/70 bg-muted/40 px-2.5 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
+            <p className="rounded-lg bg-muted/40 px-2.5 py-1.5 text-[11px] leading-relaxed text-muted-foreground">
               {t('routeBridge.needsDestinationWallet', {
                 chain: to.displayName,
               })}
@@ -343,7 +339,7 @@ function RouteBridgePaneInner({
           ) : null}
 
           {sent ? (
-            <p className="rounded-md border border-up/30 bg-up/10 px-2.5 py-1.5 text-[11px] leading-relaxed">
+            <p className="rounded-lg bg-up/10 px-2.5 py-1.5 text-[11px] leading-relaxed">
               {t('routeBridge.sentBody')}{' '}
               <a
                 href={explorerTxUrl(sent.market, sent.hash) ?? '#'}
@@ -372,7 +368,7 @@ function RouteBridgePaneInner({
         </div>
       </div>
 
-      <footer className="shrink-0 border-t border-border px-3 py-2">
+      <footer className="shrink-0 pt-2">
         {confirming ? (
           <div className="flex flex-col gap-1.5">
             <p className="text-[11px] leading-relaxed">
@@ -475,8 +471,11 @@ function QuoteReadout({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="rounded-md border border-border/70">
-      <div className="flex items-center justify-between gap-2 border-b border-border/70 px-2.5 py-1.5">
+    // A well rather than a bordered card: this is the figure the confirm step
+    // freezes, so it reads as one object, and the board draws the frame around
+    // it already.
+    <div className="flex flex-col gap-1.5 rounded-lg bg-muted/40 px-2.5 py-2">
+      <div className="flex items-center justify-between gap-2">
         <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
           {t('routeBridge.youReceive')}
           <ArrowRight className="size-3" />
@@ -488,7 +487,7 @@ function QuoteReadout({
           {quote.amountOut === null ? '—' : formatAmount(quote.amountOut)}
         </span>
       </div>
-      <dl className="grid grid-cols-2 gap-x-2 gap-y-1 px-2.5 py-1.5 text-[11px]">
+      <dl className="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px]">
         <Row
           label={t('routeBridge.minReceived')}
           value={
@@ -518,7 +517,7 @@ function QuoteReadout({
           }
         />
       </dl>
-      <p className="border-t border-border/70 px-2.5 py-1 text-[10px] text-muted-foreground">
+      <p className="text-[10px] text-muted-foreground">
         {quote.feeIncluded
           ? t('routeBridge.feeIncluded', { tool: quote.tool })
           : t('routeBridge.feeExtra', { tool: quote.tool })}

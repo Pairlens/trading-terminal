@@ -1,11 +1,11 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows, alerts and workspaces, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 13 min read
+readTime: 14 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -67,8 +67,9 @@ The window is clamped so you can never lose it: enough of the header always
 stays on screen to grab again, and if you shrink the terminal or unplug a
 display, a window that would be stranded off screen is pulled back in.
 
-Until you drag it, the window is anchored to the orb's placement: beside the rail
-in sidebar mode, bottom right for the other two. That is why it stays put when
+Until you drag it, the window is anchored to the orb's placement: in sidebar
+mode it hangs off the top bar exactly where a workspace column starts, bottom
+right for the other two. That is why it stays put when
 you resize. Once it has been moved, a reset button appears in the header next to
 the persona menu and puts it back on that anchor.
 
@@ -162,11 +163,11 @@ the window somewhere.
 
 ### Your threads
 
-Down the left of the window is every conversation you have had, newest first,
-grouped by Today, Yesterday, Previous 7 days and Older. **New conversation**
-sits at the top. Clicking a row opens it exactly as you left it: the tool
-activity, the research cards, the order proposals, all of it, because the whole
-message is stored and not just its text.
+Down the left of the window, under **History**, is every conversation you have
+had, newest first, grouped by Today, Yesterday, Previous 7 days and Older. The
+plus beside that title starts a new one. Clicking a row opens it exactly as you
+left it: the tool activity, the research cards, the order proposals, all of it,
+because the whole message is stored and not just its text.
 
 Threads name themselves. The first thing you ask titles the row immediately,
 then the assistant is asked in the background for something shorter and better
@@ -237,6 +238,12 @@ strategies, run backtests through the same engine live bots use, and deploy a
 strategy as a bot.
 
 **Automation.** Build and edit workflows, price alerts and alert flows.
+
+**Workspaces.** Read the whole panel catalogue, then build you a saved
+workspace out of it: from scratch, from a Workspace Store template, or from the
+board you are already looking at. It can file boards in folders, rename and
+refile them, and rebuild the board on screen in one step. See
+[workspaces](/docs/workspaces).
 
 **Research.** Web search, news, top coins, Fear and Greed, asset overviews, and
 `deep_research` for a full sourced report. See

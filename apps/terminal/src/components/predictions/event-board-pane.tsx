@@ -132,11 +132,12 @@ export function EventBoardPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex shrink-0 flex-wrap items-center gap-2.5 border-b px-3.5 py-2.5">
+      {/* Controls only: the shell header already names the pane. */}
+      <div className="flex shrink-0 flex-wrap items-center gap-1.5 pb-1.5">
         <div className="relative min-w-[180px] flex-1">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-1.5 top-1/2 size-3 -translate-y-1/2 text-muted-foreground" />
           <Input
-            className="h-[30px] rounded-lg pl-8 text-xs"
+            className="h-6 rounded-md pl-6 text-[11px]"
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('eventBoard.searchPlaceholder', {
               count: liveCount,
@@ -149,10 +150,10 @@ export function EventBoardPane() {
             <button
               aria-pressed={sort === option}
               className={cn(
-                'rounded-lg px-2.5 py-[5px] text-[11.5px] transition-colors',
+                'h-6 rounded-md px-2 text-[11px] transition-colors',
                 sort === option
                   ? 'bg-primary font-medium text-primary-foreground'
-                  : 'border text-foreground hover:bg-accent',
+                  : 'bg-muted/40 text-muted-foreground hover:bg-accent hover:text-foreground',
               )}
               key={option}
               onClick={() => setSort(option)}
@@ -162,9 +163,9 @@ export function EventBoardPane() {
             </button>
           ))}
         </div>
-      </header>
+      </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3.5 py-3">
+      <div className="min-h-0 flex-1 overflow-y-auto py-1">
         {blocked.length > 0 && (
           <div className="mb-2.5 flex flex-col gap-1">
             {/* One muted line, not a boxed notice: the venue rail beside this
@@ -209,7 +210,10 @@ export function EventBoardPane() {
           // because a binary card at 220px cannot hold a 32px headline and a
           // sparkline side by side.
           <div className="@container">
-            <div className="grid grid-cols-1 content-start gap-2.5 @[34rem]:grid-cols-2">
+            {/* Air between the cards, no box around them: the column is
+                already one card, and each event is anchored by its own
+                headline, bar or swatch rather than by a rule. */}
+            <div className="grid grid-cols-1 content-start gap-x-5 gap-y-4 @[34rem]:grid-cols-2">
               {rows.map((row) => (
                 <EventCard
                   key={row.key}
@@ -403,7 +407,7 @@ function BinaryCard({
     select.openEvent({ venue: row.market, event: row.event })
 
   return (
-    <article className="flex flex-col gap-2.5 rounded-xl border p-3 transition-colors hover:border-primary/40">
+    <article className="flex flex-col gap-2.5">
       {/* The question opens the question. Clicking a headline used to open
           whichever side happened to be leading, which is a side taken on the
           user's behalf before they have read anything. */}
@@ -517,7 +521,7 @@ function RaceCard({
     select.openEvent({ venue: row.market, event: row.event })
 
   return (
-    <article className="col-span-full flex flex-col gap-3 rounded-xl border p-3 transition-colors hover:border-primary/40 @[44rem]:flex-row @[44rem]:gap-4">
+    <article className="col-span-full flex flex-col gap-3 @[44rem]:flex-row @[44rem]:gap-4">
       <div className="flex flex-col gap-2.5 @[44rem]:w-[34%] @[44rem]:shrink-0">
         <button className="text-left" onClick={openEvent} type="button">
           <CardHeader

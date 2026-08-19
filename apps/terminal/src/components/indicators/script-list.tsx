@@ -57,6 +57,7 @@ import {
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
 } from '../master-detail'
 
 import type {
@@ -224,7 +225,7 @@ export function ScriptList({
   return (
     <div className={MASTER_DETAIL_LIST_CLASS}>
       <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
-        <span className="text-xs font-semibold uppercase tracking-wider">
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('indicatorsPage.scripts')}
         </span>
         <DropdownMenu>

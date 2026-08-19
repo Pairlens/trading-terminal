@@ -46,7 +46,7 @@ export function StatusBar() {
   if (items.left.length === 0 && items.right.length === 0) return null
 
   return (
-    <div className="flex h-6 shrink-0 items-center justify-between border-t bg-muted/30 px-2 text-[10px] text-muted-foreground">
+    <div className="flex h-6 shrink-0 items-center justify-between px-3 text-[10px] text-muted-foreground">
       <div className="flex items-center gap-3">
         {items.left.map((r) => (
           <StatusBarItemView key={`${r.pluginId}:${r.item.id}`} resolved={r} />

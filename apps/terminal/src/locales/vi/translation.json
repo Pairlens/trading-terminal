@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Vĩnh cửu và giao ngay",
     "subtitle": "Cùng một tài sản trên hai bàn, đặt cạnh nhau",
     "spot": "giao ngay {{price}}",
     "spotMissing": "không có chỉ số",
@@ -37,8 +36,6 @@
     "hint": "Mỗi chân là một lệnh giới hạn thật."
   },
   "chainLadder": {
-    "title": "{{asset}} trên các chuỗi",
-    "subtitle": "Xếp theo số nhận được sau gas, không theo báo giá tốt nhất",
     "sizedFor": "Tính cho {{value}}",
     "best": "Tốt nhất",
     "versusBest": "{{bps}} bps",
@@ -107,7 +104,6 @@
     "week52": "52 tuần thấp · cao"
   },
   "dexChains": {
-    "title": "Dòng tiền đang ở đâu",
     "subtitleNetwork": "Khối lượng 24h, toàn chuỗi",
     "subtitleSampled": "Khối lượng 24h của các pool sôi động nhất mỗi chuỗi",
     "liquidityValue": "Thanh khoản {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
-    "heading": {
-      "today": "Công bố hôm nay",
-      "week": "Công bố tuần này",
-      "watchlist": "Báo cáo từ danh mục theo dõi"
-    },
     "slots": {
       "bmo": "Trước giờ mở cửa",
       "amc": "Sau giờ đóng cửa",
@@ -222,7 +213,6 @@
       "month": "1 tháng"
     },
     "sourceNote": "Tổng hợp từ lịch công bố của BLS, BEA, Cục Dự trữ Liên bang và Census. Số thực tế và số trước lấy từ chính các cơ quan; số hàm ý được suy ra từ giá hợp đồng trên Kalshi. Giờ theo múi giờ miền Đông Hoa Kỳ, đúng như các cơ quan công bố.",
-    "title": "Vĩ mô",
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
     "countdownDh": "sau {{days}} ngày {{hours}} giờ",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "tại lần chạm gần nhất",
-    "title": "Phí tích lũy",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
     "claimableLabel": "Có thể thu ngay",
@@ -385,7 +374,6 @@
     "shortsPaying": "phe short trả phí"
   },
   "fundingMatrix": {
-    "title": "Funding, quy đổi năm",
     "subtitle": "Dương = long trả cho short",
     "nextPayment": "Lần trả kế tiếp sau",
     "colSpread": "Chênh lệch",
@@ -398,7 +386,6 @@
     "emptyBody": "Funding là dữ liệu công khai nên không cần khóa API. Cài một trình kết nối futures vĩnh cửu là bảng tự đầy."
   },
   "inFlight": {
-    "title": "Đang chuyển",
     "pendingCount_one": "{{count}} đang chờ",
     "pendingCount_other": "{{count}} đang chờ",
     "emptyTitle": "Không có giao dịch nào đang chuyển",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Giao dịch nội bộ",
     "summary": "{{buys}} lệnh mua · {{sells}} lệnh bán",
     "span_one": "{{count}} ngày",
     "span_other": "{{count}} ngày",
@@ -512,9 +498,6 @@
     "bucketTooltip": "mua {{buy}}, bán {{sell}}",
     "axisNote": "Mua trừ bán mỗi 5 phút. Thanh khoản do LP thêm vào hay rút ra không nằm trong luồng này.",
     "biggestLabel": "Swap lớn nhất",
-    "title": "Dòng tiền qua {{pool}}",
-    "subtitle": "Mua trừ bán, theo từng năm phút",
-    "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút",
     "waitingTitle": "Đang chờ bản đồ pool",
     "waitingBody": "Các pool của chuỗi vẫn đang tải. Dòng tiền hiện ra ngay khi chọn một pool.",
     "unavailableTitle": "Hiện chưa lấy được pool",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Chỉ là số đã chốt. Không đọc được dữ liệu tick ở hai biên của vị thế này, nên phí phát sinh từ lần cập nhật cuối chưa được tính và số thực nhận có thể cao hơn.",
-    "title": "Vị thế LP",
     "subtitle_one": "{{wallet}} · {{count}} khoảng",
     "subtitle_other": "{{wallet}} · {{count}} khoảng",
     "capped": "{{count}} chưa hiển thị",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Một giao dịch, không cần approve token. Số tiền nạp bị giới hạn ở các mức trên.",
     "confirmCollectNoteSolana": "Gửi tới chương trình ở trên. Phí được chốt và trả về ví này trong cùng một giao dịch, không đi đâu khác.",
     "rowProgram": "Chương trình",
-    "title": "Quản lý thanh khoản",
     "subtitle_one": "{{wallet}} · {{count}} vị thế",
     "subtitle_other": "{{wallet}} · {{count}} vị thế",
     "position": "Vị thế",
@@ -677,6 +658,8 @@
       "unusual": "Bất thường"
     },
     "window": "Khung xếp hạng",
+    "clearSector": "Hiển thị tất cả lĩnh vực",
+    "emptySector": "Không có gì trong {{sector}} được xếp hạng trong khoảng thời gian này.",
     "columns": {
       "asset": "Tài sản",
       "liquidity": "Thanh khoản",
@@ -943,7 +926,6 @@
     "emptyBody": "Trong khoảng thời gian nhà cung cấp trả về, không có giao dịch nào qua pool này."
   },
   "openInterest": {
-    "title": "Dẫn đầu khối lượng mở",
     "changeLabel": "Thay đổi 24 giờ",
     "notPublished": "không công bố khối lượng mở qua API.",
     "emptyTitle": "Chưa có khối lượng mở",
@@ -1034,8 +1016,6 @@
     "stateUnavailable": "Nhà cung cấp dữ liệu không trả về trạng thái pool trực tiếp. Các số liệu trên là của bảng niêm yết chuỗi."
   },
   "poolMap": {
-    "title": "Pool hàng đầu trên {{chain}}",
-    "subtitle": "Xếp theo mức độ mỗi pool khai thác chính thanh khoản của nó",
     "sortTurnover": "Vòng quay",
     "sortVolume": "Khối lượng",
     "sortLiquidity": "Thanh khoản",
@@ -1053,11 +1033,6 @@
     "noChainBody": "Chọn chuỗi ở cột bên, các pool của nó sẽ xếp hạng tại đây: khối lượng so với thanh khoản đứng sau.",
     "emptyTitle": "Không có pool trả về",
     "emptyBody": "Nhà cung cấp dữ liệu không liệt kê gì cho chuỗi này. Sẽ thử lại ở lần làm mới sau.",
-    "listTitle": "Tất cả pool trên {{chain}}",
-    "subtitleVolume": "Kích thước theo khối lượng 24 giờ, màu theo biến động 24 giờ",
-    "subtitleLiquidity": "Kích thước theo thanh khoản, màu theo biến động 24 giờ",
-    "subtitleTrades": "Kích thước theo số giao dịch 24 giờ, màu theo biến động 24 giờ",
-    "subtitleTurnover": "Kích thước theo khối lượng so với thanh khoản, màu theo biến động 24 giờ",
     "sortTrades": "Số giao dịch",
     "morePools": "Thêm pool trên chuỗi này",
     "backToMap": "Quay lại bản đồ",
@@ -1128,7 +1103,6 @@
   "routeBridge": {
     "confirmDestination": "Sẽ về {{chain}}, vào ví {{wallet}} của bạn.",
     "needsDestinationWallet": "Kết nối một ví {{chain}} để nhận khoản chuyển này. Giá phía trên là thật, chỉ là chưa có nơi để gửi.",
-    "title": "Cầu nối",
     "subtitle": "Chuyển một tài sản ra khỏi {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Chưa cài connector cầu nối",
@@ -1369,7 +1343,6 @@
     "leads": "{{total}} tài sản · {{symbol}} dẫn dắt",
     "drags": "{{total}} tài sản · {{symbol}} kéo lùi",
     "assets": "{{total}} tài sản",
-    "title": "Dải nhóm ngành",
     "splitTape": "{{total}} tài sản · phân hóa"
   },
   "session": {
@@ -3589,6 +3562,7 @@
     },
     "pane": {
       "close": "Đóng {{pane}}",
+      "move": "Di chuyển bảng {{pane}}",
       "popOutToColumn": "Tách sang cột mới",
       "bindPairToVariable": "Gắn cặp giao dịch với biến",
       "bindWalletToVariable": "Gắn ví với biến",
@@ -5109,25 +5083,17 @@
         "label": "Cảnh báo giá",
         "fields": {
           "direction": {
-            "label": "Hướng",
             "options": {
               "above": "Trên",
               "below": "Dưới"
             }
-          },
-          "price": {
-            "label": "Giá"
           }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
         }
       },
       "order-executed": {
         "label": "Lệnh khớp",
         "fields": {
           "side": {
-            "label": "Chiều",
             "options": {
               "any": "Bất kỳ",
               "buy": "Mua",
@@ -5135,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "Trạng thái",
             "options": {
               "any": "Bất kỳ",
               "filled": "Đã khớp",
               "partially_filled": "Khớp một phần"
             }
           }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
         }
       },
       "signal-generated": {
-        "label": "Tín hiệu được tạo",
-        "fields": {
-          "timeframe": {
-            "label": "Khung thời gian",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Loại tín hiệu (tùy chọn)",
-            "placeholder": "Bất kỳ loại nào"
-          }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
-        }
+        "label": "Tín hiệu được tạo"
       },
       "indicator-alert": {
-        "label": "Cảnh báo chỉ báo",
-        "fields": {
-          "timeframe": {
-            "label": "Khung thời gian",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Chỉ báo (tùy chọn)",
-            "placeholder": "Bất kỳ chỉ báo nào"
-          },
-          "condition": {
-            "label": "Điều kiện (tùy chọn)",
-            "placeholder": "Bất kỳ điều kiện nào"
-          }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
-        }
+        "label": "Cảnh báo chỉ báo"
       },
       "candle-close": {
-        "label": "Nến đóng",
-        "fields": {
-          "timeframe": {
-            "label": "Khung thời gian",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
-        }
+        "label": "Nến đóng"
       },
       "price-condition": {
-        "label": "Điều kiện giá",
-        "fields": {
-          "direction": {
-            "label": "Hướng",
-            "options": {
-              "above": "Trên",
-              "below": "Dưới"
-            }
-          },
-          "price": {
-            "label": "Giá"
-          }
-        },
-        "handles": {
-          "pass": "Đạt",
-          "fail": "Không đạt"
-        }
+        "label": "Điều kiện giá"
       },
       "percent-change": {
-        "label": "Thay đổi phần trăm",
-        "fields": {
-          "percent": {
-            "label": "Phần trăm"
-          },
-          "direction": {
-            "label": "Hướng",
-            "options": {
-              "up": "Tăng",
-              "down": "Giảm",
-              "either": "Cả hai"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Đạt",
-          "fail": "Không đạt"
-        }
+        "label": "Thay đổi phần trăm"
       },
       "time-window": {
-        "label": "Khung thời gian",
-        "fields": {
-          "startHour": {
-            "label": "Giờ bắt đầu (UTC)"
-          },
-          "endHour": {
-            "label": "Giờ kết thúc (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Đạt",
-          "fail": "Không đạt"
-        }
+        "label": "Khung thời gian"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Thông báo hệ thống",
-        "fields": {
-          "sound": {
-            "label": "Phát âm thanh"
-          }
-        }
+        "label": "Thông báo hệ thống"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Phương thức",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Bao gồm payload sự kiện"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID trò chuyện (tùy chọn)",
-            "placeholder": "Cuộc trò chuyện đã liên kết"
-          },
-          "silent": {
-            "label": "Tin nhắn im lặng"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Biến động giá",
-        "fields": {
-          "percent": {
-            "label": "Phần trăm"
-          },
-          "direction": {
-            "label": "Hướng",
-            "options": {
-              "up": "Tăng",
-              "down": "Giảm",
-              "either": "Cả hai"
-            }
-          },
-          "window": {
-            "label": "Trong",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Đã kích hoạt"
-        }
+        "label": "Biến động giá"
       }
     },
     "messages": {
@@ -5486,7 +5287,6 @@
     "inDays": "sau {{n}} ngày"
   },
   "markets": {
-    "title": "Thị trường",
     "pairCount_one": "{{count}} cặp",
     "pairCount_other": "{{count}} cặp",
     "viewMode": "Chế độ xem",
@@ -5570,7 +5370,6 @@
     }
   },
   "topCoins": {
-    "title": "Coin hàng đầu",
     "colCoin": "Coin",
     "colPrice": "Giá",
     "col24h": "24h",
@@ -5581,7 +5380,6 @@
     "willAppear": "Coin hàng đầu sẽ hiển thị ở đây"
   },
   "heatmap": {
-    "title": "Bản đồ nhiệt thị trường",
     "failed": "Không thể tải bản đồ nhiệt",
     "noData": "Không có dữ liệu khả dụng",
     "tryLater": "Thử lại sau",
@@ -5634,6 +5432,7 @@
     "adjustScope": "Không có tin nào cho bộ lọc này. Thử bộ lọc khác, hoặc quay lại sau vài phút.",
     "noWatchedAssets": "Danh mục theo dõi của bạn đang trống nên không có gì để lọc tin. Đánh dấu sao một cặp, hoặc đọc mục Vĩ mô.",
     "noAssetNews": "Tin vẫn dồn dập, nhưng không có tin nào về danh mục theo dõi của bạn. Vĩ mô và Tất cả vẫn đang cập nhật.",
+    "noCryptoNews": "Tin tức vẫn về, nhưng hiện không có tin nào về crypto. Vĩ mô vẫn đang chuyển động.",
     "noStockNews": "Hiện chưa có tin nào về các mã đang hiển thị. Vĩ mô và Tất cả vẫn đang cập nhật.",
     "mentionsPairs_one": "nhắc đến {{count}} cặp của bạn",
     "mentionsPairs_other": "nhắc đến {{count}} cặp của bạn"
@@ -5955,11 +5754,6 @@
       "trigger": {
         "title": "Đầu vào lệnh",
         "badge": "Vào lệnh"
-      },
-      "configPanel": {
-        "requiresNote": "Yêu cầu: {{requirement}}. Các thị trường không có khả năng này không thể chạy quy trình chứa bước này.",
-        "on": "Bật",
-        "off": "Tắt"
       }
     },
     "execution": {
@@ -5975,165 +5769,31 @@
         "label": "Đầu vào lệnh"
       },
       "market-order": {
-        "label": "Lệnh thị trường",
-        "fields": {
-          "side": {
-            "label": "Chiều",
-            "options": {
-              "inherit": "Giống trigger",
-              "opposite": "Ngược với trigger",
-              "buy": "Mua",
-              "sell": "Bán"
-            }
-          },
-          "sizeMode": {
-            "label": "Chế độ khối lượng",
-            "options": {
-              "percent": "% của đầu vào",
-              "absolute": "Số lượng cố định"
-            }
-          },
-          "size": {
-            "label": "Khối lượng"
-          }
-        }
+        "label": "Lệnh thị trường"
       },
       "limit-order": {
         "label": "Lệnh giới hạn",
         "compat": "Lệnh giới hạn chờ khớp",
-        "fields": {
-          "side": {
-            "label": "Chiều",
-            "options": {
-              "inherit": "Giống trigger",
-              "opposite": "Ngược với trigger",
-              "buy": "Mua",
-              "sell": "Bán"
-            }
-          },
-          "sizeMode": {
-            "label": "Chế độ khối lượng",
-            "options": {
-              "percent": "% của đầu vào",
-              "absolute": "Số lượng cố định"
-            }
-          },
-          "size": {
-            "label": "Khối lượng"
-          },
-          "priceMode": {
-            "label": "Chế độ giá",
-            "options": {
-              "absolute": "Giá cố định",
-              "offset-percent": "% từ giá hiện tại",
-              "offset-absolute": "Chênh lệch từ giá hiện tại"
-            }
-          },
-          "priceValue": {
-            "label": "Giá trị giá"
-          }
-        },
         "compatReason": "venue này không thể chờ khớp lệnh giới hạn (DEX chỉ swap)"
       },
       "take-profit": {
         "label": "Chốt lời",
         "compat": "Lệnh trigger gốc của sàn hoặc lệnh giới hạn chờ khớp",
-        "fields": {
-          "triggerMode": {
-            "label": "Chế độ trigger",
-            "options": {
-              "percent": "% lãi",
-              "absolute": "Mức giá"
-            }
-          },
-          "triggerValue": {
-            "label": "Giá trị trigger"
-          },
-          "sizePercent": {
-            "label": "Đóng %"
-          },
-          "orderType": {
-            "label": "Loại lệnh",
-            "options": {
-              "market": "Thị trường",
-              "limit": "Giới hạn"
-            }
-          },
-          "limitPrice": {
-            "label": "Giá giới hạn"
-          }
-        },
         "compatReason": "venue này không hỗ trợ lệnh trigger gốc lẫn lệnh giới hạn chờ khớp"
       },
       "stop-loss": {
         "label": "Cắt lỗ",
         "compat": "Lệnh trigger gốc của sàn",
-        "fields": {
-          "triggerMode": {
-            "label": "Chế độ trigger",
-            "options": {
-              "percent": "% lỗ",
-              "absolute": "Mức giá"
-            }
-          },
-          "triggerValue": {
-            "label": "Giá trị trigger"
-          },
-          "sizePercent": {
-            "label": "Đóng %"
-          },
-          "orderType": {
-            "label": "Loại lệnh",
-            "options": {
-              "market": "Thị trường",
-              "limit": "Giới hạn"
-            }
-          },
-          "limitPrice": {
-            "label": "Giá giới hạn"
-          }
-        },
         "compatReason": "venue này không có lệnh trigger gốc trên sàn, nên lệnh cắt lỗ không thể chờ khớp trên sàn"
       },
       "condition": {
-        "label": "Điều kiện",
-        "fields": {
-          "conditionType": {
-            "label": "Điều kiện",
-            "options": {
-              "price-above": "Giá trên",
-              "price-below": "Giá dưới",
-              "percent-change": "% thay đổi từ giá vào lệnh"
-            }
-          },
-          "value": {
-            "label": "Giá trị"
-          }
-        }
+        "label": "Điều kiện"
       },
       "split": {
-        "label": "Tách song song",
-        "fields": {
-          "branches": {
-            "label": "Nhánh"
-          }
-        }
+        "label": "Tách song song"
       },
       "wait": {
-        "label": "Chờ",
-        "fields": {
-          "duration": {
-            "label": "Thời lượng"
-          },
-          "unit": {
-            "label": "Đơn vị",
-            "options": {
-              "seconds": "Giây",
-              "minutes": "Phút",
-              "hours": "Giờ"
-            }
-          }
-        }
+        "label": "Chờ"
       }
     },
     "templates": {

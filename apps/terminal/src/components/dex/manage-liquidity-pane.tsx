@@ -58,7 +58,12 @@ import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import type { LpPositionEntry, LpWriteAction } from '@/lib/dex/lp-types'
 import type { DepositShape } from '@/lib/dex/lp-manage-math'
 
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
 import { RangeBadge } from '@/components/dex/lp-pane-primitives'
 import {
@@ -187,7 +192,6 @@ function ManageLiquidityPaneInner({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <DexPaneHeader
-        title={t('manageLiquidity.title')}
         subtitle={t('manageLiquidity.subtitle', {
           wallet: shortWalletLabel(wallet.address),
           count: writable.length,
@@ -195,7 +199,7 @@ function ManageLiquidityPaneInner({
       />
 
       {errors.length > 0 ? (
-        <div className="flex shrink-0 flex-col gap-1 px-3 pt-2">
+        <div className="flex shrink-0 flex-col gap-1 pt-2">
           {errors.slice(0, 2).map((error) => (
             <PaneErrorBanner
               key={`${error.chain}:${error.message}`}
@@ -206,7 +210,7 @@ function ManageLiquidityPaneInner({
         </div>
       ) : null}
 
-      <div className="min-h-0 flex-1 overflow-auto">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-auto">
         <PositionPicker
           entries={writable}
           selected={selected}
@@ -227,7 +231,7 @@ function ManageLiquidityPaneInner({
         />
       </div>
 
-      <p className="shrink-0 border-t border-border px-3 py-1.5 text-[10px] leading-relaxed text-muted-foreground">
+      <p className={cn('shrink-0 pt-2 leading-relaxed', PANE_FOOTNOTE)}>
         {t('manageLiquidity.footnote')}
       </p>
     </div>
@@ -264,8 +268,8 @@ function PositionPicker({
   }, [entries])
 
   return (
-    <div className="flex flex-col gap-1.5 border-b border-border px-3 py-2.5">
-      <span className="text-[11px] text-muted-foreground">
+    <div className="flex shrink-0 flex-col gap-1.5">
+      <span className="text-[10px] text-muted-foreground">
         {t('manageLiquidity.position')}
       </span>
       <Select
@@ -274,7 +278,7 @@ function PositionPicker({
         onValueChange={(value) => onSelect(String(value))}
         disabled={disabled}
       >
-        <SelectTrigger className="h-8 w-full text-[11.5px]">
+        <SelectTrigger className="h-7 w-full text-[11.5px]">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -429,25 +433,28 @@ function ManageActions({
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="border-b border-border px-3 py-2">
-        <Tabs
-          value={section}
-          onValueChange={(value) => setSection(value as Section)}
+    <div className="flex flex-col gap-3">
+      <Tabs
+        value={section}
+        onValueChange={(value) => setSection(value as Section)}
+      >
+        {/* The height override has to carry the list's own orientation
+            modifier, or the component's 8-unit default outranks it. */}
+        <TabsList
+          variant="line"
+          className="w-full group-data-horizontal/tabs:h-6"
         >
-          <TabsList variant="line" className="w-full">
-            <TabsTrigger value="collect" className="text-[11.5px]">
-              {t('manageLiquidity.tabCollect')}
-            </TabsTrigger>
-            <TabsTrigger value="remove" className="text-[11.5px]">
-              {t('manageLiquidity.tabRemove')}
-            </TabsTrigger>
-            <TabsTrigger value="add" className="text-[11.5px]">
-              {t('manageLiquidity.tabAdd')}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
+          <TabsTrigger value="collect" className="text-[11.5px]">
+            {t('manageLiquidity.tabCollect')}
+          </TabsTrigger>
+          <TabsTrigger value="remove" className="text-[11.5px]">
+            {t('manageLiquidity.tabRemove')}
+          </TabsTrigger>
+          <TabsTrigger value="add" className="text-[11.5px]">
+            {t('manageLiquidity.tabAdd')}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {section === 'collect' ? (
         <CollectSection entry={entry} />
@@ -498,9 +505,9 @@ function ManageActions({
           it is the same ladder the swap ticket offers. Collect has no
           minimums, so it is the one action that ignores the value. */}
       {section === 'collect' ? null : (
-        <div className="flex flex-col gap-1.5 border-b border-border px-3 py-2.5">
+        <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[.16em] text-muted-foreground">
+            <span className={PANE_COLUMN_HEADER}>
               {t('manageLiquidity.slippage')}
             </span>
             <span className="font-mono text-[10px] text-muted-foreground [font-variant-numeric:tabular-nums]">
@@ -535,7 +542,7 @@ function ManageActions({
         </div>
       )}
 
-      <div className="px-3 py-2.5">
+      <div className="pb-1">
         <Button
           className="h-8 w-full text-[12px]"
           disabled={!canSubmit}
@@ -567,8 +574,8 @@ function CollectSection({ entry }: { entry: LpPositionEntry }) {
   const { t } = useTranslation()
   const unread = entry.fees0 === null && entry.fees1 === null
   return (
-    <div className="flex flex-col gap-2 border-b border-border px-3 py-2.5">
-      <span className="text-[11px] text-muted-foreground">
+    <div className="flex flex-col gap-2">
+      <span className="text-[10px] text-muted-foreground">
         {t('manageLiquidity.claimable')}
       </span>
       <AmountLine
@@ -605,9 +612,9 @@ function RemoveSection({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col gap-2.5 border-b border-border px-3 py-2.5">
+    <div className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] text-muted-foreground">
+        <span className="text-[10px] text-muted-foreground">
           {t('manageLiquidity.removeAmount')}
         </span>
         <span className="font-mono text-[13px] font-semibold [font-variant-numeric:tabular-nums]">
@@ -648,7 +655,7 @@ function RemoveSection({
           onPct(clampRemovePercent(Array.isArray(value) ? value[0] : value))
         }
       />
-      <span className="text-[11px] text-muted-foreground">
+      <span className="text-[10px] text-muted-foreground">
         {t('manageLiquidity.youReceive')}
       </span>
       <AmountLine symbol={entry.token0.symbol} value={preview.amount0} />
@@ -699,7 +706,7 @@ function AddSection({
           ?.available ?? null)
 
   return (
-    <div className="flex flex-col gap-2 border-b border-border px-3 py-2.5">
+    <div className="flex flex-col gap-2">
       <AmountField
         symbol={entry.token0.symbol}
         value={amount0}
@@ -756,9 +763,11 @@ function AmountField({
           </span>
         )}
       </div>
+      {/* A well rather than a bordered field: this is a number somebody has to
+          hit, and the board draws no other boxes for it to sit inside. */}
       <Input
         aria-label={symbol}
-        className="h-8 rounded-lg font-mono text-[13px] tabular-nums"
+        className="h-8 rounded-lg border-transparent bg-muted/40 font-mono text-[13px] tabular-nums dark:bg-muted/40"
         disabled={disabled}
         inputMode="decimal"
         onChange={(event) => onChange(event.target.value)}
@@ -845,11 +854,13 @@ function ConfirmCard({
         : t('manageLiquidity.tabAdd')
 
   return (
-    <div className="flex flex-col gap-2 px-3 py-2.5">
+    <div className="flex flex-col gap-2 py-1">
       <span className="text-[11px] font-medium">
         {t('manageLiquidity.confirmTitle')}
       </span>
-      <div className="flex flex-col gap-1.5 rounded-lg border border-border bg-muted/30 px-2.5 py-2">
+      {/* The one boxed thing left in the pane, and it earns it: these are the
+          transaction's own fields, and they have to read as one object. */}
+      <div className="flex flex-col gap-1.5 rounded-lg bg-muted/40 px-2.5 py-2">
         <ConfirmRow
           label={t('manageLiquidity.rowAction')}
           value={actionLabel}

@@ -192,7 +192,7 @@ export function buildPredictionOrderCall(
     if (price <= 0 || price >= 1) {
       return {
         kind: 'reject',
-        error: `A ${venue.displayName} limit price is a probability between 0 and 1 — '${order.price}' cannot rest`,
+        error: `A ${venue.displayName} limit price is a probability between 0 and 1: '${order.price}' cannot rest`,
       }
     }
     return {
@@ -207,7 +207,7 @@ export function buildPredictionOrderCall(
   if (venue.marketOrders === 'none') {
     return {
       kind: 'reject',
-      error: `${venue.displayName} is a limit-only book — set a limit price between 0 and 1 and resubmit`,
+      error: `${venue.displayName} is a limit-only book: set a limit price between 0 and 1 and resubmit`,
     }
   }
 
@@ -457,7 +457,7 @@ export class PredictionTradingRuntime {
     if (mode !== 'paper' || host.paperActive) return null
     return {
       success: false,
-      error: `${this.opts.venue.displayName} has no paper trading environment for this credential — switch it to live, or paper-trade on a venue that has one`,
+      error: `${this.opts.venue.displayName} has no paper trading environment for this credential: switch it to live, or paper-trade on a venue that has one`,
     }
   }
 
@@ -495,7 +495,7 @@ export class PredictionTradingRuntime {
       const secret = await slot.secretRef()
       if (!secret) {
         throw new Error(
-          'This wallet is locked — unlock it to place or read orders',
+          'This wallet is locked: unlock it to place or read orders',
         )
       }
       fields['privateKey'] = secret

@@ -61,7 +61,13 @@ import {
   useGhostBases,
 } from './funding-skeletons'
 import type { FundingCell, FundingRow } from '@/lib/futures/funding-rows'
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { sortRowsByVenue } from '@/lib/futures/funding-rows'
 
 /**
@@ -163,29 +169,23 @@ export function FundingMatrixPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-2.5">
-        <div className="min-w-0">
-          <h2 className="text-[13px] font-semibold">
-            {t('fundingMatrix.title')}
-          </h2>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">
-            {t('fundingMatrix.subtitle')}
-          </p>
-        </div>
-        <span className="hidden shrink-0 items-center gap-1.5 rounded-md border border-border px-2 py-1 text-[11px] @sm/pane:inline-flex">
-          <Timer className="size-3 text-muted-foreground" />
-          {t('fundingMatrix.nextPayment')}
+      {/* The clock is the one number that belongs beside the pane's name, so it
+          rides the shell's header instead of a strip of this pane's own. */}
+      <PaneHeaderMetric>
+        <span className="flex min-w-0 items-center gap-1">
+          <Timer className="size-3 shrink-0" />
+          <span className="truncate">{t('fundingMatrix.nextPayment')}</span>
           {/* The stamp comes out of the rates themselves, so before they land
-              the honest answer is not "not published" — it is "not yet". */}
+              the honest answer is not "not published", it is "not yet". */}
           {ghosting && (isPending || isSettling) ? (
-            <Shimmer className="h-3 w-14 rounded-sm" />
+            <Shimmer className="h-3 w-10 rounded-sm" />
           ) : (
             <FundingCountdown toMs={nextStamp} />
           )}
         </span>
-      </header>
+      </PaneHeaderMetric>
 
-      <div className="min-h-0 flex-1 overflow-auto px-4 py-3">
+      <div className="min-h-0 flex-1 overflow-auto">
         {desktopOnly.length > 0 && (
           <p className="mb-2.5 text-[11px] leading-relaxed text-muted-foreground">
             {t('funding.desktopOnlyLine', {
@@ -217,7 +217,7 @@ export function FundingMatrixPane() {
         ) : (
           <div
             aria-busy={ghosting || undefined}
-            className="grid items-center gap-1 text-xs"
+            className="grid items-center gap-1 text-[11px]"
             style={{
               gridTemplateColumns: `minmax(88px, 112px) repeat(${columns.length}, minmax(56px, 1fr))${showSpread ? ' 74px' : ''}`,
               maxWidth: gridMaxWidth(columns.length, showSpread),
@@ -242,7 +242,7 @@ export function FundingMatrixPane() {
               />
             ))}
             {showSpread && (
-              <span className="pr-1 text-right text-[11px] text-muted-foreground">
+              <span className={cn('pb-1 pr-1 text-right', PANE_COLUMN_HEADER)}>
                 {t('fundingMatrix.colSpread')}
               </span>
             )}
@@ -279,9 +279,13 @@ export function FundingMatrixPane() {
           </div>
         )}
 
-        <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
-          {t('fundingMatrix.note')}
-        </p>
+        {/* The sign convention used to sit under the pane's own title. With
+            that title gone it belongs with the other caveat, not in the
+            header slot, where the countdown earns the room. */}
+        <div className={cn('mt-3 flex flex-col gap-1', PANE_FOOTNOTE)}>
+          <p className="leading-relaxed">{t('fundingMatrix.subtitle')}</p>
+          <p className="leading-relaxed">{t('fundingMatrix.note')}</p>
+        </div>
       </div>
     </div>
   )
@@ -312,10 +316,11 @@ function VenueHeader({
   return (
     <button
       className={cn(
-        'group flex flex-col items-center gap-1 px-1 py-1 text-[11px] transition-colors',
+        'group flex flex-col items-center gap-1 px-1 pb-1 transition-colors',
+        PANE_COLUMN_HEADER,
         pending
           ? 'cursor-default text-muted-foreground/70'
-          : 'text-muted-foreground hover:text-foreground',
+          : 'hover:text-foreground',
         sorted && !pending && 'text-foreground',
       )}
       disabled={pending}
@@ -357,7 +362,7 @@ function GhostRow({
       <GhostAsset base={base} index={index} logoUrl={logoUrl} />
       {Array.from({ length: columns }, (_, column) => (
         <Shimmer
-          className="h-8 w-full rounded-md"
+          className="h-8 w-full rounded-xs"
           delayIndex={index + column}
           key={column}
         />
@@ -394,7 +399,7 @@ function MatrixRow({
     <>
       <div className="flex min-w-0 items-center gap-2 py-1.5">
         <AssetMark base={row.base} logoUrl={logoUrl} />
-        <span className="truncate font-mono text-xs font-semibold">
+        <span className="truncate font-mono text-[11px] font-semibold">
           {row.base}
         </span>
       </div>
@@ -410,7 +415,7 @@ function MatrixRow({
       {showSpread && (
         <span
           className={cn(
-            'pr-1 text-right font-mono text-xs tabular-nums',
+            'pr-1 text-right font-mono text-[11px] tabular-nums',
             row.spreadPoints !== null &&
               Math.abs(row.spreadPoints) >= SPREAD_ALERT_POINTS
               ? 'text-[var(--chart-4)]'
@@ -444,12 +449,12 @@ function MatrixCell({
   const { t } = useTranslation()
 
   if (pending && !cell) {
-    return <Shimmer className="h-8 w-full rounded-md" still={still} />
+    return <Shimmer className="h-8 w-full rounded-xs" still={still} />
   }
 
   if (!cell || cell.annualized === null) {
     return (
-      <span className="rounded-md bg-muted/60 py-2 text-center font-mono text-xs">
+      <span className="rounded-xs bg-muted/60 py-2 text-center font-mono text-[11px]">
         <NullGlyph />
       </span>
     )
@@ -459,7 +464,9 @@ function MatrixCell({
   return (
     <button
       className={cn(
-        'rounded-md py-2 text-center font-mono text-xs tabular-nums transition-opacity hover:opacity-80',
+        // Barely rounded, never a pill: at `rounded-md` a column of tinted
+        // cells read as a stack of buttons instead of a heat map.
+        'rounded-xs py-2 text-center font-mono text-[11px] tabular-nums transition-opacity hover:opacity-80',
         positive ? 'text-up' : 'text-down',
       )}
       onClick={() => onOpen(cell.market, cell.pair)}

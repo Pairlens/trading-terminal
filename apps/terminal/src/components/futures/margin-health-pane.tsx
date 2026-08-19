@@ -23,7 +23,11 @@ import type { NormalizedPosition } from '@pairlens/market-engine/types'
 
 import type { FuturesAccountPositions } from '@/hooks/use-futures-positions'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_TABLE_BODY,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import { formatCompactUsd } from '@/lib/format-price'
 import {
   liquidationDistance,
@@ -96,7 +100,7 @@ export function MarginHealthPane() {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 overflow-y-auto p-3">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-y-auto">
       {results.map((result) => (
         <AccountSection
           balances={balances}
@@ -139,9 +143,9 @@ function AccountSection({
 
   if (result.positions.length === 0) {
     return (
-      <section className="rounded-lg border border-border p-3">
+      <section className="flex flex-col gap-1">
         {multiple && <AccountLabel result={result} />}
-        <p className="text-xs text-muted-foreground">
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
           {t('marginHealth.flatBody')}
         </p>
       </section>
@@ -155,7 +159,7 @@ function AccountSection({
 
       <div>
         <div className="flex items-baseline justify-between">
-          <span className="text-[11.5px] text-muted-foreground">
+          <span className="text-[10px] text-muted-foreground">
             {t('marginHealth.marginRatio')}
           </span>
           <span
@@ -179,7 +183,9 @@ function AccountSection({
         >
           {ratio !== null && (
             <span
-              className="absolute -top-[3px] h-3.5 w-[3px] rounded-sm bg-foreground shadow-[0_0_0_1px_var(--background)]"
+              // The ring is the surface behind the marker, and the pane sits
+              // on the column's `--card`, never on the board's background.
+              className="absolute -top-[3px] h-3.5 w-[3px] rounded-sm bg-foreground shadow-[0_0_0_1px_var(--card)]"
               style={{ left: `${Math.min(ratio, 1) * 100}%` }}
             />
           )}
@@ -191,9 +197,9 @@ function AccountSection({
         </div>
       </div>
 
-      {/* Three across since ADL left: a 2-column grid would strand the last
-          cell half-width and read as a missing fourth stat. */}
-      <div className="grid grid-cols-3 gap-2">
+      {/* Rows rather than tiles: three bordered boxes were a second card
+          inside the column's own, and at pane width the labels wrapped. */}
+      <div className="flex flex-col gap-1">
         <Stat
           label={t('marginHealth.equity')}
           value={
@@ -223,7 +229,7 @@ function AccountSection({
         health.maintenance !== null &&
         health.notional > 0 && (
           <div className="flex flex-col gap-1.5">
-            <p className="text-[10.5px] text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground">
               {t('marginHealth.stressLabel')}
             </p>
             {STRESS_MOVES.map((move) => {
@@ -276,7 +282,7 @@ function AccountSection({
 
 function AccountLabel({ result }: { result: FuturesAccountPositions }) {
   return (
-    <p className="truncate text-[11px] font-medium text-muted-foreground">
+    <p className="truncate text-[10px] font-medium text-muted-foreground">
       {result.account.venueLabel} · {result.account.accountLabel}
     </p>
   )
@@ -293,17 +299,20 @@ function Stat({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="rounded-lg border border-border px-2.5 py-2">
-      <p className="truncate text-[10.5px] text-muted-foreground">{label}</p>
-      <p
+    <div className="flex items-baseline justify-between gap-2">
+      <span className="truncate text-[10px] text-muted-foreground">
+        {label}
+      </span>
+      <span
         className={cn(
-          'mt-0.5 font-mono text-sm font-semibold tabular-nums',
+          'shrink-0 font-semibold',
+          PANE_TABLE_BODY,
           tone === 'caution' && value !== null && 'text-[var(--chart-4)]',
           value === null && 'text-muted-foreground',
         )}
       >
         {value ?? t('funding.na')}
-      </p>
+      </span>
     </div>
   )
 }
