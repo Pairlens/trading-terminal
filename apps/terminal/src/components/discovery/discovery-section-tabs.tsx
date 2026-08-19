@@ -19,6 +19,11 @@
  * Drag reordering carries a click-suppression ref: without it, releasing a drag
  * on the tab you started from also switches sections, which reads as the board
  * flickering for no reason.
+ *
+ * Each tab wears its class's own colour, from the same table the pair badge in
+ * the trade header reads (`lib/asset-class/visuals.ts`). That is the whole
+ * point of the table: the violet you select here is the violet you land on
+ * over there, so the association is learned once rather than per screen.
  */
 import { useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,37 +40,22 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import {
-  Bitcoin,
-  ChevronLeft,
-  ChevronRight,
-  Flame,
-  Layers,
-  LayoutGrid,
-  TrendingUp,
-  Vote,
-} from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@pairlens/ui/components/ui/context-menu'
+import { cn } from '@pairlens/ui'
 import type { DragEndEvent } from '@dnd-kit/core'
-import type { LucideIcon } from 'lucide-react'
 
 import type {
   DiscoverySection,
   DiscoverySectionId,
 } from '@/lib/layout/workspaces/discovery-sections'
-
-const SECTION_ICONS: Record<string, LucideIcon> = {
-  Bitcoin,
-  Layers,
-  Flame,
-  TrendingUp,
-  Vote,
-}
+import { iconByName } from '@/lib/asset-class/icons'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
 
 /**
  * Segmented treatment: muted until active, a filled pill when it is.
@@ -75,12 +65,23 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
  * hung below the tab box is clipped away and the tab you are on looks exactly
  * like the four you are not. A pill paints inside the box, so it survives.
  *
- * The active text colour has to be qualified with `dark:` as well: a bare
- * `data-active:text-foreground` loses to `dark:text-muted-foreground` in the
- * cascade, which left every tab the identical grey in the default theme.
+ * The active state is applied in JS rather than through `data-active:` here,
+ * because the fill and the text now come from the section's own asset-class
+ * tokens. The old variant form had a cascade trap worth remembering: a bare
+ * `data-active:text-foreground` loses to `dark:text-muted-foreground`, which
+ * left every tab the identical grey in the default theme.
  */
 const TAB_CLASS =
-  'group/section-tab relative inline-flex h-full shrink-0 cursor-grab items-center gap-1.5 rounded-md px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing text-foreground/60 hover:bg-muted/60 hover:text-foreground dark:text-muted-foreground dark:hover:bg-muted/30 dark:hover:text-foreground data-active:bg-muted data-active:text-foreground data-active:hover:bg-muted dark:data-active:text-foreground dark:data-active:hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50'
+  'group/section-tab relative inline-flex h-full shrink-0 cursor-grab items-center gap-1.5 rounded-md border border-transparent px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing hover:bg-muted/60 dark:hover:bg-muted/30 focus-visible:ring-[3px] focus-visible:ring-ring/50'
+
+/**
+ * Text colour is per-state and never both at once. A `dark:` variant carries
+ * more specificity than a plain utility, so leaving `dark:text-muted-foreground`
+ * in the base string would beat the active tab's own asset-class colour in
+ * exactly the mode most of the terminal runs in.
+ */
+const TAB_IDLE_CLASS =
+  'text-foreground/60 hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground'
 
 type DiscoverySectionTabsProps = {
   sections: Array<DiscoverySection>
@@ -181,7 +182,9 @@ function SortableSectionTab({
     transform,
     transition,
   } = useSortable({ id: section.id })
-  const Icon = SECTION_ICONS[section.icon] ?? LayoutGrid
+  const Icon = iconByName(section.icon)
+  // A section id IS an InstrumentClass, which is why this needs no mapping.
+  const visual = assetClassVisual(section.id)
 
   return (
     <ContextMenu>
@@ -205,7 +208,15 @@ function SortableSectionTab({
           data-section-tab={section.id}
           aria-pressed={active}
           data-active={active ? '' : undefined}
-          className={TAB_CLASS}
+          className={cn(
+            TAB_CLASS,
+            // The tint is only ever a hint at rest — an unselected strip of
+            // five filled pills would read as five things happening at once.
+            // The icon carries the colour, the selected tab carries the fill.
+            active
+              ? [visual.activeBg, visual.border, visual.text]
+              : TAB_IDLE_CLASS,
+          )}
           style={{
             transform: CSS.Transform.toString(transform),
             transition,
@@ -226,7 +237,13 @@ function SortableSectionTab({
           }}
           aria-keyshortcuts="Alt+ArrowLeft Alt+ArrowRight"
         >
-          <Icon className="size-3.5 shrink-0" />
+          <Icon
+            className={cn(
+              'size-3.5 shrink-0 transition-opacity',
+              visual.text,
+              !active && 'opacity-60 group-hover/section-tab:opacity-100',
+            )}
+          />
           {t(section.labelKey)}
         </button>
       </ContextMenuTrigger>

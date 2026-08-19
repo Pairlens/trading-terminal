@@ -3647,6 +3647,20 @@
       "moveRight": "Chuyển sang phải"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "CỔ PHIẾU",
+    "prediction": "SỰ KIỆN",
+    "binary": "Nhị phân",
+    "multiOutcome": "Nhiều kết quả",
+    "spotDescription": "Bạn mua chính tài sản đó trên sàn. Thứ bạn mua là của bạn và thanh toán ngay khi khớp lệnh.",
+    "perpDescription": "Hợp đồng đòn bẩy theo giá, không có ngày đáo hạn. Bên mua và bên bán trả funding cho nhau để giữ giá sát spot.",
+    "dexDescription": "Một lệnh hoán đổi với pool thanh khoản, ký bằng chính ví của bạn. Chuỗi nơi nó diễn ra cũng là một phần của thứ bạn giao dịch.",
+    "stocksDescription": "Cổ phiếu qua công ty môi giới, theo lịch của chính sàn. Áp dụng giờ giao dịch, tạm ngừng và quy tắc thanh toán.",
+    "predictionDescription": "Hợp đồng về câu trả lời cho một câu hỏi. Trả 1 $ nếu đúng và không gì cả nếu sai."
+  },
   "pluginStore": {
     "registryOffline": "Registry plugin ngoại tuyến. Chỉ hiển thị các plugin đã cài đặt.",
     "activated": "Đã kích hoạt",

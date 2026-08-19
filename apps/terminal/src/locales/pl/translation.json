@@ -3735,6 +3735,20 @@
       "moveRight": "Przesuń w prawo"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "AKCJA",
+    "prediction": "WYDARZENIE",
+    "binary": "Binarny",
+    "multiOutcome": "Wiele wyników",
+    "spotDescription": "Kupujesz sam aktyw na giełdzie. To, co kupisz, jest twoje i rozlicza się w chwili realizacji.",
+    "perpDescription": "Lewarowany kontrakt na cenę, bez daty wygaśnięcia. Długie i krótkie pozycje płacą sobie funding, by trzymał się blisko spotu.",
+    "dexDescription": "Swap na puli płynności, podpisany twoim własnym portfelem. Sieć, w której się odbywa, jest częścią tego, czym handlujesz.",
+    "stocksDescription": "Akcje przez brokera, według kalendarza samej giełdy. Obowiązują godziny, zawieszenia i zasady rozliczeń.",
+    "predictionDescription": "Kontrakt na odpowiedź na pytanie. Płaci 1 $, jeśli odpowiedź jest trafna, i nic, jeśli nie."
+  },
   "pluginStore": {
     "registryOffline": "Rejestr wtyczek jest offline. Wyświetlane są tylko zainstalowane wtyczki.",
     "activated": "Aktywowano",

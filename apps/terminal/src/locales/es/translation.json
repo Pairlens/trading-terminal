@@ -3647,6 +3647,20 @@
       "moveRight": "Mover a la derecha"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "ACCIÓN",
+    "prediction": "EVENTO",
+    "binary": "Binario",
+    "multiOutcome": "Múltiple",
+    "spotDescription": "Compras el activo en un exchange. Lo que compras es tuyo y se liquida en cuanto se ejecuta.",
+    "perpDescription": "Un contrato apalancado sobre el precio, sin fecha de vencimiento. Largos y cortos se pagan financiación para mantenerlo cerca del spot.",
+    "dexDescription": "Un swap contra un pool de liquidez, firmado por tu propia wallet. La cadena en la que ocurre es parte de lo que estás negociando.",
+    "stocksDescription": "Acciones a través de un bróker, con el calendario de la bolsa. Aplican horarios, suspensiones y reglas de liquidación.",
+    "predictionDescription": "Un contrato sobre la respuesta a una pregunta. Paga 1 $ si la respuesta es correcta y nada si no lo es."
+  },
   "pluginStore": {
     "registryOffline": "El registro de plugins está sin conexión. Mostrando solo plugins instalados.",
     "activated": "Activado",

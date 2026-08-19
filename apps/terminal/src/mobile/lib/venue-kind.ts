@@ -14,8 +14,25 @@
  * hook here would drag `useMarketData` into a list row that has it in scope.
  */
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
 export type VenueKind = 'cex' | 'dex' | 'equities' | 'prediction' | 'futures'
+
+/**
+ * The instrument class a kind trades, which is what the phone paints it with.
+ *
+ * A fourth spelling of the same axis, and the last one: the two vocabularies
+ * are genuinely about different things (a kind is a property of a VENUE, a
+ * class is a property of an INSTRUMENT) and this is the one place they meet,
+ * so the colour a filter chip wears matches the badge on the pair it finds.
+ */
+export const VENUE_KIND_CLASS: Record<VenueKind, InstrumentClass> = {
+  cex: 'spot',
+  dex: 'dex',
+  equities: 'stocks',
+  prediction: 'prediction',
+  futures: 'perp',
+}
 
 /** i18n key per kind. Static keys — the catalog audit cannot follow a template. */
 export const VENUE_KIND_KEY: Record<VenueKind, string> = {

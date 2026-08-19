@@ -2715,6 +2715,20 @@
       "moveRight": "Move right"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "STOCK",
+    "prediction": "EVENT",
+    "binary": "Binary",
+    "multiOutcome": "Multi-outcome",
+    "spotDescription": "Buy the asset itself on an exchange. What you buy is yours, and it settles the moment it fills.",
+    "perpDescription": "A leveraged contract on the price, with no expiry date. Longs and shorts pay each other funding to keep it near spot.",
+    "dexDescription": "A swap against a liquidity pool, signed by your own wallet. The chain it happens on is part of what you are trading.",
+    "stocksDescription": "Shares through a broker, on the exchange’s own calendar. Hours, halts and settlement rules apply.",
+    "predictionDescription": "A contract on the answer to a question. It pays $1 if the answer is right and nothing if it is not."
+  },
   "pluginStore": {
     "registryOffline": "Plugin registry is offline. Showing installed plugins only.",
     "activated": "Activated",

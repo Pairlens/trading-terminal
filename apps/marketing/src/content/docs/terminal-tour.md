@@ -62,8 +62,9 @@ Beyond that default, each class carries its own named boards in the
 <kbd>⌘⇧L</kbd> menu, Research on spot, Carry and Risk on perps, Liquidity and
 Cross-Chain on-chain, Company on stocks, Race on predictions.
 
-On Discovery those layouts are the tabs beside the title, and you can drag them
-into the order you work in. Only one of the five boards is a list of pairs:
+On Discovery those layouts are the tabs beside the title, each in its asset
+class's own colour, and you can drag them into the order you work in. Only one
+of the five boards is a list of pairs:
 futures opens on funding and basis, DEX on chains and pools, equities on the
 session and the calendars, predictions on the event board. Full details in
 [panels](/docs/panels), and the layout model in
@@ -75,6 +76,20 @@ Above the grid sits the active pair: its price, 24-hour change, and the venue
 it is streaming from. Click the symbol to switch markets. A connection dot
 shows stream health, and turns to **Reconnecting** if a socket goes quiet, for
 instance after your laptop wakes from sleep.
+
+Right beside the symbol is a coloured badge naming what you are actually
+trading: **SPOT**, **PERP**, **DEX**, **STOCK** or **EVENT**. The five classes
+settle differently and an order means a different thing on each, so the badge
+says which rather than leaving it encoded in the shape of the ticker. Three of
+them add the detail that changes the answer: a pool names its chain (DEX ·
+Solana), a stock names the session when it is outside regular hours (STOCK ·
+Pre-market), an event says whether it is a two-sided question or a field (EVENT
+· Multi-outcome). Hover it for a one-line explanation of the class.
+
+Each class keeps its colour everywhere it appears: the Discovery tabs, the
+markets scanner chips and the pair-picker filters on the phone all use the same
+five. On a narrow window the badge collapses to its icon so the ticker keeps
+its characters.
 
 The venue button beside it lists only the venues that can serve what you are
 looking at: spot exchanges under a spot pair, perpetual venues under a perp,

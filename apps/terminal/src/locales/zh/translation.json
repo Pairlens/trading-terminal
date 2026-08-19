@@ -3647,6 +3647,20 @@
       "moveRight": "右移"
     }
   },
+  "assetClass": {
+    "spot": "现货",
+    "perp": "永续",
+    "dex": "DEX",
+    "stocks": "股票",
+    "prediction": "事件",
+    "binary": "二元",
+    "multiOutcome": "多结果",
+    "spotDescription": "在交易所买入资产本身。买到的就是你的，成交即结算。",
+    "perpDescription": "对价格的杠杆合约，没有到期日。多空之间支付资金费率，使其贴近现货。",
+    "dexDescription": "与流动性池进行的兑换，由你自己的钱包签名。发生在哪条链上，也是你所交易的一部分。",
+    "stocksDescription": "通过券商买卖股票，遵循交易所自己的日历。适用交易时段、停牌和结算规则。",
+    "predictionDescription": "对某个问题答案的合约。答对支付 1 美元，答错则一无所得。"
+  },
   "pluginStore": {
     "registryOffline": "插件注册表离线。仅显示已安装的插件。",
     "activated": "已启用",

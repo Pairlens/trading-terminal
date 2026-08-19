@@ -15,6 +15,7 @@ import { LatencyIndicator } from '@/components/terminal/latency-indicator'
 import { MarketPicker } from '@/components/terminal/market-picker'
 import { WalletSelector } from '@/components/terminal/wallet-selector'
 import { AlertBell } from '@/components/notifications/alert-bell'
+import { MarketAssetClassBadge } from '@/components/asset-class/market-asset-class-badge'
 import { PairSwitcher } from '@/components/pair-picker/pair-switcher'
 import { formatPredictionPrice, formatPrice } from '@/lib/format-price'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
@@ -81,6 +82,24 @@ export function TerminalTopBar({
         assetClass={assetClass}
         onPairHover={onPairHover}
       />
+      {/* Which kind of market this is, before anything else in the header
+          claims a number. The class is what decides whether an order settles
+          in seconds or at the opening auction, and it used to be readable only
+          from the shape of the symbol.
+
+          Compact and collapsible, because this row is exactly full at 1280px
+          and the pair symbol is the only element on it that shrinks: below
+          1400px the badge is its class icon in the class colour, and the words
+          come back when the window can afford them. */}
+      {assetClass ? (
+        <MarketAssetClassBadge
+          cls={assetClass}
+          market={market}
+          pairKey={pairKey}
+          size="xs"
+          collapsible
+        />
+      ) : null}
       <Button
         size="icon-xs"
         variant="ghost"

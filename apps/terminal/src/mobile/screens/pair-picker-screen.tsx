@@ -33,7 +33,11 @@ import { cn } from '@pairlens/ui'
 import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 import { useMobileActions, useMobileFocus } from '../mobile-focus-context'
 import { useVenueTradePermission } from '../lib/venue-permission'
-import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
+import {
+  VENUE_KIND_CLASS,
+  VENUE_KIND_KEY,
+  venueKindOf,
+} from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
 import {
   MobileSheet,
@@ -70,6 +74,7 @@ import { useInstrumentSearch } from '@/hooks/use-instrument-search'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { entryToInstrumentRef, entryToMarketRef } from '@/lib/market-ref/entry'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
 
 type PairPickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'pairPicker' }>
@@ -353,23 +358,35 @@ export default memo(function PairPickerScreen({
             </button>
           </div>
 
+          {/* Selected chips wear their asset class's own colour, the same one
+              the Discovery tabs and the pair badge use on the desktop. `all`
+              has no class and keeps the plain inverted pill. */}
           <div className="mt-2.5 flex gap-1.5">
-            {FILTERS.map((option) => (
-              <button
-                className={cn(
-                  'pl-press flex h-7 items-center rounded-full px-3 text-[12.5px] font-medium',
-                  option.id === filter
-                    ? 'bg-foreground text-background'
-                    : 'pl-field text-muted-foreground',
-                )}
-                key={option.id}
-                onClick={() => setFilter(option.id)}
-                type="button"
-                {...PRESS}
-              >
-                {t(option.labelKey)}
-              </button>
-            ))}
+            {FILTERS.map((option) => {
+              const visual =
+                option.id === 'all'
+                  ? null
+                  : assetClassVisual(VENUE_KIND_CLASS[option.id])
+              const selected = option.id === filter
+              return (
+                <button
+                  className={cn(
+                    'pl-press flex h-7 items-center rounded-full border border-transparent px-3 text-[12.5px] font-medium',
+                    selected
+                      ? visual
+                        ? [visual.activeBg, visual.border, visual.text]
+                        : 'bg-foreground text-background'
+                      : 'pl-field text-muted-foreground',
+                  )}
+                  key={option.id}
+                  onClick={() => setFilter(option.id)}
+                  type="button"
+                  {...PRESS}
+                >
+                  {t(option.labelKey)}
+                </button>
+              )
+            })}
           </div>
         </div>
       }

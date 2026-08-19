@@ -4,7 +4,7 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 10 min read
 ---
 
@@ -31,6 +31,12 @@ Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
 **CEX Futures**, **DEX**, **Equities**, **Predictions**. Each tab is a full
 workspace of its own. Rearrange the futures board and the spot board has not
 moved, and each one remembers its own arrangement between sessions.
+
+Every class has one fixed colour, and it is the same colour the badge beside
+the pair symbol wears on the trade page (see
+[terminal tour](/docs/terminal-tour)). Amber is spot, violet is perps, magenta
+is on-chain, green is equities, cyan is event contracts. Pick a tab here and
+the pair you open from it is badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
 and only one of the five is a list of pairs.
