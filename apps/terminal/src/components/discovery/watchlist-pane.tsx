@@ -71,7 +71,6 @@ import type { Instrument } from '@pairlens/shared/instrument-types'
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { formatPrice } from '@/lib/format-price'
-import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { entryToInstrumentRef, entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
@@ -342,15 +341,6 @@ export function WatchlistPane() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span
-              className={cn(
-                'flex shrink-0 items-center gap-1',
-                PANE_COLUMN_HEADER,
-              )}
-            >
-              <span className="live-dot size-1.5 rounded-full bg-up" />
-              {t('connection.live')}
-            </span>
             <AddSymbolButton
               listId={activeList.id}
               listSymbols={activeList.symbols}

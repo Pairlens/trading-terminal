@@ -1019,7 +1019,7 @@ export function IndicatorWorkbench({
                   {/* Preview target controls — wraps rather than clipping
                       Re-run when the pane is narrow. Same py-1.5 + h-7 recipe
                       as the editor's file tabs, so both rows line up. */}
-                  <div className="flex flex-wrap items-center gap-1.5 border-b border-(--pane-rule) px-3 py-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5 border-y border-(--pane-rule) px-3 py-1.5">
                     <MarketPicker
                       market={market}
                       marketOptions={marketOptions}

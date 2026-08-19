@@ -79,7 +79,7 @@ export function FileTabs({
   return (
     // py-1.5 around h-7 items is the same recipe as the preview toolbar on the
     // other side of the split, so the two header rows line up exactly.
-    <div className="flex items-center gap-0.5 overflow-x-auto border-b border-(--pane-rule) px-1.5 py-1.5">
+    <div className="flex items-center gap-0.5 overflow-x-auto border-y border-(--pane-rule) px-1.5 py-1.5">
       {files.map((file) => {
         const active = file.path === activePath
         const isEntry = file.path === ENTRY_FILE
