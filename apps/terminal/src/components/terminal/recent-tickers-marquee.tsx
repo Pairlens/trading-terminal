@@ -153,14 +153,14 @@ export function RecentTickersMarquee({ current }: { current: MarketRef }) {
   ))
 
   return (
-    <div className="flex h-9 shrink-0 items-center gap-1 bg-background px-3 pt-1">
+    <div className="flex h-9 shrink-0 items-center gap-1 bg-background px-3 pb-1">
       {/* Leading indicator — pinned, never scrolls, marks the strip as the
           recently viewed pairs. Held off the tape by its own padding: the
           rule that used to sit here was the last vertical line in the
           chrome. */}
       <div
         // `pl-2` puts this 14px glyph on the same vertical axis as the 16px
-        // pair mark in the bar below (the chip insets its mark by 7px, and
+        // pair mark in the bar above (the chip insets its mark by 7px, and
         // the two icons differ by 2px of width), so the leftmost thing on
         // each of the two rows lines up.
         className="flex h-full shrink-0 items-center pl-2 pr-2.5 text-muted-foreground"

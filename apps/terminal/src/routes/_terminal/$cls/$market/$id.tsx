@@ -446,8 +446,9 @@ function ChartTerminalBody({
 
   return (
     <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
-      {marqueeEnabled && <RecentTickersMarquee current={marketRef} />}
-
+      {/* The bar first, the recents under it. Every screen in the terminal
+          opens with the same 44px row, so moving between Discovery and a
+          trade page never shifts the controls down by a strip of tickers. */}
       <TerminalTopBar
         marketOptions={markets}
         pairKey={marketRef.id}
@@ -462,6 +463,8 @@ function ChartTerminalBody({
         workspacesOpen={workspacesOpen}
         onWorkspacesOpenChange={setWorkspacesOpen}
       />
+
+      {marqueeEnabled && <RecentTickersMarquee current={marketRef} />}
 
       <LayoutShell />
     </SidebarInset>
