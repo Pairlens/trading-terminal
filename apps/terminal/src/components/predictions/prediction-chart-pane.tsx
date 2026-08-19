@@ -98,13 +98,10 @@ import {
 } from '@/lib/predictions/stack'
 import {
   ACTIVE_BAND_EDGE_WIDTH,
-  ACTIVE_BAND_FILL_BOTTOM,
-  ACTIVE_BAND_FILL_TOP,
+  ACTIVE_BAND_STOPS,
   BAND_EDGE_WIDTH,
-  BAND_FILL_BOTTOM,
-  BAND_FILL_TOP,
-  REST_FILL_AT_CEILING,
-  REST_FILL_AT_FIELD,
+  BAND_STOPS,
+  REST_STOPS,
   bandGradientId,
   paintScope,
   restGradientId,
@@ -321,22 +318,16 @@ function PredictionChartBody({
                         y1="0"
                         y2="1"
                       >
-                        <stop
-                          offset="0%"
-                          stopColor={runner.color}
-                          stopOpacity={
-                            runner.active ? ACTIVE_BAND_FILL_TOP : BAND_FILL_TOP
-                          }
-                        />
-                        <stop
-                          offset="100%"
-                          stopColor={runner.color}
-                          stopOpacity={
-                            runner.active
-                              ? ACTIVE_BAND_FILL_BOTTOM
-                              : BAND_FILL_BOTTOM
-                          }
-                        />
+                        {(runner.active ? ACTIVE_BAND_STOPS : BAND_STOPS).map(
+                          (band) => (
+                            <stop
+                              key={band.offset}
+                              offset={band.offset}
+                              stopColor={runner.color}
+                              stopOpacity={band.opacity}
+                            />
+                          ),
+                        )}
                       </linearGradient>
                     )
                   })}
@@ -347,18 +338,16 @@ function PredictionChartBody({
                     y1="0"
                     y2="1"
                   >
-                    {/* Runs the other way: faint at the ceiling, strongest
+                    {/* Runs the other way: gone at the ceiling, strongest
                         where it meets the field. */}
-                    <stop
-                      offset="0%"
-                      stopColor="var(--muted-foreground)"
-                      stopOpacity={REST_FILL_AT_CEILING}
-                    />
-                    <stop
-                      offset="100%"
-                      stopColor="var(--muted-foreground)"
-                      stopOpacity={REST_FILL_AT_FIELD}
-                    />
+                    {REST_STOPS.map((band) => (
+                      <stop
+                        key={band.offset}
+                        offset={band.offset}
+                        stopColor="var(--muted-foreground)"
+                        stopOpacity={band.opacity}
+                      />
+                    ))}
                   </linearGradient>
                 </defs>
               )}
