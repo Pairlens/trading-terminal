@@ -95,9 +95,27 @@
   }
 
   :root.dark {
-    /* Dark themes elevate by adding light. The lift is what separates the
-       panel from the terminal behind it before the blur is noticed. */
-    --ai-surface: color-mix(in oklab, var(--card) 88%, var(--foreground) 12%);
+    /* Dark themes elevate by adding light: one step above `--card`, which is
+       what a workspace column is painted with.
+
+       The lift was 12% and it was tuned when a pane sat on `--background` at
+       L 13.5% and this was one step above its neighbour. The board redesign
+       moved every pane onto a `--card` column at L 16.8% and the same mix
+       silently became three steps up: L 0.261, which is `--border`, the
+       lightest neutral the theme owns. Nothing else in the terminal is that
+       pale, and a surface lighter than everything around it is what read as
+       a grey slab from another product. 4% puts it back at L 0.199, level
+       with `--muted`, one honest step over the column it floats on.
+
+       It stays a mix off `--card` rather than becoming `var(--muted)`, which
+       is the tidier-looking version of the same idea. The bundled themes do
+       not agree that `--muted` is an elevation step: cyberpunk-neon and
+       eye-comfort set it to the SAME value as `--card` in dark, and
+       terminal-classic to within 0.01. On those three the panel would land
+       exactly on the column value and read as a hole punched in the board,
+       which is the one failure this variable exists to prevent. A fixed
+       small lift off `--card` is the only form that holds for all eighteen. */
+    --ai-surface: color-mix(in oklab, var(--card) 96%, var(--foreground) 4%);
 
     /* Dark LIFTS. This clamp was below 1 for three passes, and that was the
        thing making the panel read as a hole: over a terminal that is already
@@ -110,11 +128,18 @@
        green tape behind the panel has to survive a 72px average, and dimming
        what little is left is how it became grey. */
     --ai-frost: saturate(200%) brightness(1.35);
-    /* Thinner than light, because a lifted backdrop is doing more of the work
-       here than a fill could. Checked over the brightest thing the terminal
-       has, a full order book, with the muted text as the thing to watch: it
-       is the first to go, well before body copy. */
-    --ai-glass: color-mix(in oklab, var(--ai-surface) 70%, transparent);
+    /* 70% for as long as the surface above was L 0.26. Bringing that down to
+       0.199 raised the backdrop's share of the composite in the one place it
+       matters: over a bright pane a darker fill lets more of the structure
+       under it survive, and an order book's rows were starting to resolve
+       through the glass again. Six points thicker buys that back without
+       touching the tone. Thicker is the safe direction here, which is why
+       the fill is allowed to move and the surface is not.
+
+       Checked over the brightest thing the terminal has, a full order book,
+       with the muted text as the thing to watch: it is the first to go, well
+       before body copy. */
+    --ai-glass: color-mix(in oklab, var(--ai-surface) 76%, transparent);
     --ai-inset: color-mix(in oklab, var(--foreground) 5%, transparent);
     --ai-inset-strong: color-mix(in oklab, var(--foreground) 9%, transparent);
 
