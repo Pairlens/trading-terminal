@@ -5109,25 +5109,17 @@
         "label": "價格提醒",
         "fields": {
           "direction": {
-            "label": "方向",
             "options": {
               "above": "高於",
               "below": "低於"
             }
-          },
-          "price": {
-            "label": "價格"
           }
-        },
-        "handles": {
-          "out": "已觸發"
         }
       },
       "order-executed": {
         "label": "訂單成交",
         "fields": {
           "side": {
-            "label": "方向",
             "options": {
               "any": "任意",
               "buy": "買進",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "狀態",
             "options": {
               "any": "任意",
               "filled": "已成交",
               "partially_filled": "部分成交"
             }
           }
-        },
-        "handles": {
-          "out": "已觸發"
         }
       },
       "signal-generated": {
-        "label": "訊號產生",
-        "fields": {
-          "timeframe": {
-            "label": "時間週期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "訊號類型（選填）",
-            "placeholder": "任意類型"
-          }
-        },
-        "handles": {
-          "out": "已觸發"
-        }
+        "label": "訊號產生"
       },
       "indicator-alert": {
-        "label": "指標提醒",
-        "fields": {
-          "timeframe": {
-            "label": "時間週期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "指標（選填）",
-            "placeholder": "任意指標"
-          },
-          "condition": {
-            "label": "條件（選填）",
-            "placeholder": "任意條件"
-          }
-        },
-        "handles": {
-          "out": "已觸發"
-        }
+        "label": "指標提醒"
       },
       "candle-close": {
-        "label": "K 線收盤",
-        "fields": {
-          "timeframe": {
-            "label": "時間週期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "已觸發"
-        }
+        "label": "K 線收盤"
       },
       "price-condition": {
-        "label": "價格條件",
-        "fields": {
-          "direction": {
-            "label": "方向",
-            "options": {
-              "above": "高於",
-              "below": "低於"
-            }
-          },
-          "price": {
-            "label": "價格"
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "價格條件"
       },
       "percent-change": {
-        "label": "百分比變化",
-        "fields": {
-          "percent": {
-            "label": "百分比"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上漲",
-              "down": "下跌",
-              "either": "任一"
-            }
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "百分比變化"
       },
       "time-window": {
-        "label": "時間視窗",
-        "fields": {
-          "startHour": {
-            "label": "開始小時（UTC）"
-          },
-          "endHour": {
-            "label": "結束小時（UTC）"
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "時間視窗"
       },
       "local-toast": {
         "label": "應用程式內提示"
       },
       "os-notification": {
-        "label": "系統通知",
-        "fields": {
-          "sound": {
-            "label": "播放聲音"
-          }
-        }
+        "label": "系統通知"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "方法",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "包含事件負載"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "聊天 ID（選填）",
-            "placeholder": "已連結的聊天"
-          },
-          "silent": {
-            "label": "靜音訊息"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "價格波動",
-        "fields": {
-          "percent": {
-            "label": "百分比"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上漲",
-              "down": "下跌",
-              "either": "任一"
-            }
-          },
-          "window": {
-            "label": "時間區間",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "已觸發"
-        }
+        "label": "價格波動"
       }
     },
     "messages": {
@@ -5955,11 +5782,6 @@
       "trigger": {
         "title": "委託輸入",
         "badge": "進場"
-      },
-      "configPanel": {
-        "requiresNote": "需要：{{requirement}}。不支援此能力的市場無法執行包含此步驟的工作流程。",
-        "on": "開",
-        "off": "關"
       }
     },
     "execution": {
@@ -5975,165 +5797,31 @@
         "label": "委託輸入"
       },
       "market-order": {
-        "label": "市價單",
-        "fields": {
-          "side": {
-            "label": "方向",
-            "options": {
-              "inherit": "與觸發相同",
-              "opposite": "與觸發相反",
-              "buy": "買進",
-              "sell": "賣出"
-            }
-          },
-          "sizeMode": {
-            "label": "數量方式",
-            "options": {
-              "percent": "% 輸入量",
-              "absolute": "固定數量"
-            }
-          },
-          "size": {
-            "label": "數量"
-          }
-        }
+        "label": "市價單"
       },
       "limit-order": {
         "label": "限價單",
         "compat": "限價掛單",
-        "fields": {
-          "side": {
-            "label": "方向",
-            "options": {
-              "inherit": "與觸發相同",
-              "opposite": "與觸發相反",
-              "buy": "買進",
-              "sell": "賣出"
-            }
-          },
-          "sizeMode": {
-            "label": "數量方式",
-            "options": {
-              "percent": "% 輸入量",
-              "absolute": "固定數量"
-            }
-          },
-          "size": {
-            "label": "數量"
-          },
-          "priceMode": {
-            "label": "價格方式",
-            "options": {
-              "absolute": "固定價格",
-              "offset-percent": "距現價 %",
-              "offset-absolute": "距現價偏移"
-            }
-          },
-          "priceValue": {
-            "label": "價格值"
-          }
-        },
         "compatReason": "此交易所無法掛限價單（僅支援兌換的 DEX）"
       },
       "take-profit": {
         "label": "停利",
         "compat": "原生觸發單或限價掛單",
-        "fields": {
-          "triggerMode": {
-            "label": "觸發方式",
-            "options": {
-              "percent": "獲利 %",
-              "absolute": "價格水準"
-            }
-          },
-          "triggerValue": {
-            "label": "觸發值"
-          },
-          "sizePercent": {
-            "label": "平倉 %"
-          },
-          "orderType": {
-            "label": "委託類型",
-            "options": {
-              "market": "市價",
-              "limit": "限價"
-            }
-          },
-          "limitPrice": {
-            "label": "限價"
-          }
-        },
         "compatReason": "此交易所既不支援觸發單，也不支援掛限價單"
       },
       "stop-loss": {
         "label": "停損",
         "compat": "原生觸發單",
-        "fields": {
-          "triggerMode": {
-            "label": "觸發方式",
-            "options": {
-              "percent": "虧損 %",
-              "absolute": "價格水準"
-            }
-          },
-          "triggerValue": {
-            "label": "觸發值"
-          },
-          "sizePercent": {
-            "label": "平倉 %"
-          },
-          "orderType": {
-            "label": "委託類型",
-            "options": {
-              "market": "市價",
-              "limit": "限價"
-            }
-          },
-          "limitPrice": {
-            "label": "限價"
-          }
-        },
         "compatReason": "此交易所沒有原生觸發單，停損無法掛在交易所端"
       },
       "condition": {
-        "label": "條件",
-        "fields": {
-          "conditionType": {
-            "label": "條件",
-            "options": {
-              "price-above": "價格高於",
-              "price-below": "價格低於",
-              "percent-change": "較進場價變化 %"
-            }
-          },
-          "value": {
-            "label": "數值"
-          }
-        }
+        "label": "條件"
       },
       "split": {
-        "label": "並行拆分",
-        "fields": {
-          "branches": {
-            "label": "分支數"
-          }
-        }
+        "label": "並行拆分"
       },
       "wait": {
-        "label": "等待",
-        "fields": {
-          "duration": {
-            "label": "時長"
-          },
-          "unit": {
-            "label": "單位",
-            "options": {
-              "seconds": "秒",
-              "minutes": "分鐘",
-              "hours": "小時"
-            }
-          }
-        }
+        "label": "等待"
       }
     },
     "templates": {

@@ -5209,25 +5209,17 @@
         "label": "Alert cenowy",
         "fields": {
           "direction": {
-            "label": "Kierunek",
             "options": {
               "above": "Powyżej",
               "below": "Poniżej"
             }
-          },
-          "price": {
-            "label": "Cena"
           }
-        },
-        "handles": {
-          "out": "Wyzwolono"
         }
       },
       "order-executed": {
         "label": "Zlecenie zrealizowane",
         "fields": {
           "side": {
-            "label": "Strona",
             "options": {
               "any": "Dowolna",
               "buy": "Kupno",
@@ -5235,211 +5227,46 @@
             }
           },
           "status": {
-            "label": "Status",
             "options": {
               "any": "Dowolny",
               "filled": "Zrealizowane",
               "partially_filled": "Częściowo zrealizowane"
             }
           }
-        },
-        "handles": {
-          "out": "Wyzwolono"
         }
       },
       "signal-generated": {
-        "label": "Wygenerowano sygnał",
-        "fields": {
-          "timeframe": {
-            "label": "Interwał",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Typ sygnału (opcjonalnie)",
-            "placeholder": "Dowolny typ"
-          }
-        },
-        "handles": {
-          "out": "Wyzwolono"
-        }
+        "label": "Wygenerowano sygnał"
       },
       "indicator-alert": {
-        "label": "Alert wskaźnika",
-        "fields": {
-          "timeframe": {
-            "label": "Interwał",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Wskaźnik (opcjonalnie)",
-            "placeholder": "Dowolny wskaźnik"
-          },
-          "condition": {
-            "label": "Warunek (opcjonalnie)",
-            "placeholder": "Dowolny warunek"
-          }
-        },
-        "handles": {
-          "out": "Wyzwolono"
-        }
+        "label": "Alert wskaźnika"
       },
       "candle-close": {
-        "label": "Zamknięcie świecy",
-        "fields": {
-          "timeframe": {
-            "label": "Interwał",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Wyzwolono"
-        }
+        "label": "Zamknięcie świecy"
       },
       "price-condition": {
-        "label": "Warunek cenowy",
-        "fields": {
-          "direction": {
-            "label": "Kierunek",
-            "options": {
-              "above": "Powyżej",
-              "below": "Poniżej"
-            }
-          },
-          "price": {
-            "label": "Cena"
-          }
-        },
-        "handles": {
-          "pass": "Przechodzi",
-          "fail": "Nie przechodzi"
-        }
+        "label": "Warunek cenowy"
       },
       "percent-change": {
-        "label": "Zmiana procentowa",
-        "fields": {
-          "percent": {
-            "label": "Procent"
-          },
-          "direction": {
-            "label": "Kierunek",
-            "options": {
-              "up": "Wzrost",
-              "down": "Spadek",
-              "either": "Dowolny"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Przechodzi",
-          "fail": "Nie przechodzi"
-        }
+        "label": "Zmiana procentowa"
       },
       "time-window": {
-        "label": "Okno czasowe",
-        "fields": {
-          "startHour": {
-            "label": "Godzina początkowa (UTC)"
-          },
-          "endHour": {
-            "label": "Godzina końcowa (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Przechodzi",
-          "fail": "Nie przechodzi"
-        }
+        "label": "Okno czasowe"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Powiadomienie systemowe",
-        "fields": {
-          "sound": {
-            "label": "Odtwórz dźwięk"
-          }
-        }
+        "label": "Powiadomienie systemowe"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Metoda",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Dołącz payload zdarzenia"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID czatu (opcjonalne)",
-            "placeholder": "Powiązany czat"
-          },
-          "silent": {
-            "label": "Cicha wiadomość"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Ruch ceny",
-        "fields": {
-          "percent": {
-            "label": "Procent"
-          },
-          "direction": {
-            "label": "Kierunek",
-            "options": {
-              "up": "Wzrost",
-              "down": "Spadek",
-              "either": "Dowolny"
-            }
-          },
-          "window": {
-            "label": "W ciągu",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Wyzwolono"
-        }
+        "label": "Ruch ceny"
       }
     },
     "messages": {
@@ -6065,11 +5892,6 @@
       "trigger": {
         "title": "Wejście zlecenia",
         "badge": "Wejście"
-      },
-      "configPanel": {
-        "requiresNote": "Wymaga: {{requirement}}. Rynki bez tej funkcji nie mogą uruchamiać workflowów zawierających ten krok.",
-        "on": "Wł.",
-        "off": "Wył."
       }
     },
     "execution": {
@@ -6085,165 +5907,31 @@
         "label": "Wejście zlecenia"
       },
       "market-order": {
-        "label": "Zlecenie rynkowe",
-        "fields": {
-          "side": {
-            "label": "Strona",
-            "options": {
-              "inherit": "Tak jak wyzwalacz",
-              "opposite": "Przeciwnie do wyzwalacza",
-              "buy": "Kup",
-              "sell": "Sprzedaj"
-            }
-          },
-          "sizeMode": {
-            "label": "Tryb wielkości",
-            "options": {
-              "percent": "% wejścia",
-              "absolute": "Stała kwota"
-            }
-          },
-          "size": {
-            "label": "Wielkość"
-          }
-        }
+        "label": "Zlecenie rynkowe"
       },
       "limit-order": {
         "label": "Zlecenie limit",
         "compat": "Oczekujące zlecenia limit",
-        "fields": {
-          "side": {
-            "label": "Strona",
-            "options": {
-              "inherit": "Tak jak wyzwalacz",
-              "opposite": "Przeciwnie do wyzwalacza",
-              "buy": "Kup",
-              "sell": "Sprzedaj"
-            }
-          },
-          "sizeMode": {
-            "label": "Tryb wielkości",
-            "options": {
-              "percent": "% wejścia",
-              "absolute": "Stała kwota"
-            }
-          },
-          "size": {
-            "label": "Wielkość"
-          },
-          "priceMode": {
-            "label": "Tryb ceny",
-            "options": {
-              "absolute": "Stała cena",
-              "offset-percent": "% odchylenia",
-              "offset-absolute": "Odchylenie od bieżącej ceny"
-            }
-          },
-          "priceValue": {
-            "label": "Wartość ceny"
-          }
-        },
         "compatReason": "ta giełda nie może utrzymywać oczekujących zleceń limit (DEX tylko swap)"
       },
       "take-profit": {
         "label": "Take profit",
         "compat": "Natywne zlecenia wyzwalające lub oczekujące zlecenia limit",
-        "fields": {
-          "triggerMode": {
-            "label": "Tryb wyzwalacza",
-            "options": {
-              "percent": "% zysku",
-              "absolute": "Poziom ceny"
-            }
-          },
-          "triggerValue": {
-            "label": "Wartość wyzwalacza"
-          },
-          "sizePercent": {
-            "label": "% zamknięcia"
-          },
-          "orderType": {
-            "label": "Typ zlecenia",
-            "options": {
-              "market": "Rynkowe",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Cena limit"
-          }
-        },
         "compatReason": "ta giełda nie obsługuje ani zleceń wyzwalających, ani oczekujących zleceń limit"
       },
       "stop-loss": {
         "label": "Stop loss",
         "compat": "Natywne zlecenia wyzwalające",
-        "fields": {
-          "triggerMode": {
-            "label": "Tryb wyzwalacza",
-            "options": {
-              "percent": "% straty",
-              "absolute": "Poziom ceny"
-            }
-          },
-          "triggerValue": {
-            "label": "Wartość wyzwalacza"
-          },
-          "sizePercent": {
-            "label": "% zamknięcia"
-          },
-          "orderType": {
-            "label": "Typ zlecenia",
-            "options": {
-              "market": "Rynkowe",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Cena limit"
-          }
-        },
         "compatReason": "ta giełda nie ma natywnych zleceń wyzwalających, więc stop loss nie może czekać na giełdzie"
       },
       "condition": {
-        "label": "Warunek",
-        "fields": {
-          "conditionType": {
-            "label": "Warunek",
-            "options": {
-              "price-above": "Cena powyżej",
-              "price-below": "Cena poniżej",
-              "percent-change": "% zmiany od wejścia"
-            }
-          },
-          "value": {
-            "label": "Wartość"
-          }
-        }
+        "label": "Warunek"
       },
       "split": {
-        "label": "Podział równoległy",
-        "fields": {
-          "branches": {
-            "label": "Gałęzie"
-          }
-        }
+        "label": "Podział równoległy"
       },
       "wait": {
-        "label": "Czekaj",
-        "fields": {
-          "duration": {
-            "label": "Czas trwania"
-          },
-          "unit": {
-            "label": "Jednostka",
-            "options": {
-              "seconds": "Sekundy",
-              "minutes": "Minuty",
-              "hours": "Godziny"
-            }
-          }
-        }
+        "label": "Czekaj"
       }
     },
     "templates": {

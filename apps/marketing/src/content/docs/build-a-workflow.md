@@ -5,13 +5,14 @@ group: traders
 parent: automation
 order: 1
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 19 AUG 2026
 readTime: 6 min read
 ---
 
 A workflow is a graph of steps on a canvas. Open **Workflows** in the left nav,
-drag steps from the palette, and connect them. Each step has a config panel on
-the right.
+drag steps from the palette, and connect them. Every step carries its own
+controls on the card, so a size, a price or a wait duration is set right there
+on the graph.
 
 The point of a workflow is the bracket order: one action that places an entry
 and arms its exits, so you are never sitting in a position you meant to protect

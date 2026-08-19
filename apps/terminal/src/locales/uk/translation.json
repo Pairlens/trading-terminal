@@ -5209,25 +5209,17 @@
         "label": "Ціновий алерт",
         "fields": {
           "direction": {
-            "label": "Напрямок",
             "options": {
               "above": "Вище",
               "below": "Нижче"
             }
-          },
-          "price": {
-            "label": "Ціна"
           }
-        },
-        "handles": {
-          "out": "Спрацювало"
         }
       },
       "order-executed": {
         "label": "Ордер виконано",
         "fields": {
           "side": {
-            "label": "Сторона",
             "options": {
               "any": "Будь-яка",
               "buy": "Купівля",
@@ -5235,211 +5227,46 @@
             }
           },
           "status": {
-            "label": "Статус",
             "options": {
               "any": "Будь-який",
               "filled": "Виконано",
               "partially_filled": "Частково виконано"
             }
           }
-        },
-        "handles": {
-          "out": "Спрацювало"
         }
       },
       "signal-generated": {
-        "label": "Сигнал згенеровано",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Тип сигналу (необов'язково)",
-            "placeholder": "Будь-який тип"
-          }
-        },
-        "handles": {
-          "out": "Спрацювало"
-        }
+        "label": "Сигнал згенеровано"
       },
       "indicator-alert": {
-        "label": "Алерт індикатора",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Індикатор (необов'язково)",
-            "placeholder": "Будь-який індикатор"
-          },
-          "condition": {
-            "label": "Умова (необов'язково)",
-            "placeholder": "Будь-яка умова"
-          }
-        },
-        "handles": {
-          "out": "Спрацювало"
-        }
+        "label": "Алерт індикатора"
       },
       "candle-close": {
-        "label": "Закриття свічки",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Спрацювало"
-        }
+        "label": "Закриття свічки"
       },
       "price-condition": {
-        "label": "Цінова умова",
-        "fields": {
-          "direction": {
-            "label": "Напрямок",
-            "options": {
-              "above": "Вище",
-              "below": "Нижче"
-            }
-          },
-          "price": {
-            "label": "Ціна"
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Цінова умова"
       },
       "percent-change": {
-        "label": "Відсоткова зміна",
-        "fields": {
-          "percent": {
-            "label": "Відсоток"
-          },
-          "direction": {
-            "label": "Напрямок",
-            "options": {
-              "up": "Зростання",
-              "down": "Падіння",
-              "either": "Будь-який"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Відсоткова зміна"
       },
       "time-window": {
-        "label": "Часове вікно",
-        "fields": {
-          "startHour": {
-            "label": "Година початку (UTC)"
-          },
-          "endHour": {
-            "label": "Година завершення (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Часове вікно"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Системне сповіщення",
-        "fields": {
-          "sound": {
-            "label": "Відтворювати звук"
-          }
-        }
+        "label": "Системне сповіщення"
       },
       "webhook": {
-        "label": "Вебхук",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Метод",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Передавати дані події"
-          }
-        }
+        "label": "Вебхук"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID чату (необов'язково)",
-            "placeholder": "Прив'язаний чат"
-          },
-          "silent": {
-            "label": "Без звуку"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Рух ціни",
-        "fields": {
-          "percent": {
-            "label": "Відсоток"
-          },
-          "direction": {
-            "label": "Напрямок",
-            "options": {
-              "up": "Зростання",
-              "down": "Падіння",
-              "either": "Будь-який"
-            }
-          },
-          "window": {
-            "label": "За",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Спрацювало"
-        }
+        "label": "Рух ціни"
       }
     },
     "messages": {
@@ -6065,11 +5892,6 @@
       "trigger": {
         "title": "Вхід ордера",
         "badge": "Вхід"
-      },
-      "configPanel": {
-        "requiresNote": "Потрібно: {{requirement}}. Ринки без цієї можливості не можуть виконувати робочі процеси з цим кроком.",
-        "on": "Увімк",
-        "off": "Вимк"
       }
     },
     "execution": {
@@ -6085,165 +5907,31 @@
         "label": "Вхід ордера"
       },
       "market-order": {
-        "label": "Ринковий ордер",
-        "fields": {
-          "side": {
-            "label": "Сторона",
-            "options": {
-              "inherit": "Як при вході",
-              "opposite": "Протилежна входу",
-              "buy": "Купити",
-              "sell": "Продати"
-            }
-          },
-          "sizeMode": {
-            "label": "Режим розміру",
-            "options": {
-              "percent": "% від входу",
-              "absolute": "Фіксована сума"
-            }
-          },
-          "size": {
-            "label": "Розмір"
-          }
-        }
+        "label": "Ринковий ордер"
       },
       "limit-order": {
         "label": "Лімітний ордер",
         "compat": "Відкладені лімітні ордери",
-        "fields": {
-          "side": {
-            "label": "Сторона",
-            "options": {
-              "inherit": "Як при вході",
-              "opposite": "Протилежна входу",
-              "buy": "Купити",
-              "sell": "Продати"
-            }
-          },
-          "sizeMode": {
-            "label": "Режим розміру",
-            "options": {
-              "percent": "% від входу",
-              "absolute": "Фіксована сума"
-            }
-          },
-          "size": {
-            "label": "Розмір"
-          },
-          "priceMode": {
-            "label": "Режим ціни",
-            "options": {
-              "absolute": "Фіксована ціна",
-              "offset-percent": "% від поточної",
-              "offset-absolute": "Зміщення від поточної"
-            }
-          },
-          "priceValue": {
-            "label": "Значення ціни"
-          }
-        },
         "compatReason": "цей майданчик не може виставляти відкладені лімітні ордери (DEX лише зі свопами)"
       },
       "take-profit": {
         "label": "Тейк-профіт",
         "compat": "Нативні тригерні ордери або відкладені лімітні ордери",
-        "fields": {
-          "triggerMode": {
-            "label": "Режим тригера",
-            "options": {
-              "percent": "% прибутку",
-              "absolute": "Рівень ціни"
-            }
-          },
-          "triggerValue": {
-            "label": "Значення тригера"
-          },
-          "sizePercent": {
-            "label": "Закрити %"
-          },
-          "orderType": {
-            "label": "Тип ордера",
-            "options": {
-              "market": "Ринковий",
-              "limit": "Лімітний"
-            }
-          },
-          "limitPrice": {
-            "label": "Лімітна ціна"
-          }
-        },
         "compatReason": "цей майданчик не підтримує ні тригерні ордери, ні відкладені лімітні ордери"
       },
       "stop-loss": {
         "label": "Стоп-лосс",
         "compat": "Нативні тригерні ордери",
-        "fields": {
-          "triggerMode": {
-            "label": "Режим тригера",
-            "options": {
-              "percent": "% збитку",
-              "absolute": "Рівень ціни"
-            }
-          },
-          "triggerValue": {
-            "label": "Значення тригера"
-          },
-          "sizePercent": {
-            "label": "Закрити %"
-          },
-          "orderType": {
-            "label": "Тип ордера",
-            "options": {
-              "market": "Ринковий",
-              "limit": "Лімітний"
-            }
-          },
-          "limitPrice": {
-            "label": "Лімітна ціна"
-          }
-        },
         "compatReason": "у цього майданчика немає нативних тригерних ордерів, тому стоп-лосс не може лежати на біржі"
       },
       "condition": {
-        "label": "Умова",
-        "fields": {
-          "conditionType": {
-            "label": "Умова",
-            "options": {
-              "price-above": "Ціна вище",
-              "price-below": "Ціна нижче",
-              "percent-change": "% зміни від входу"
-            }
-          },
-          "value": {
-            "label": "Значення"
-          }
-        }
+        "label": "Умова"
       },
       "split": {
-        "label": "Паралельне розділення",
-        "fields": {
-          "branches": {
-            "label": "Гілки"
-          }
-        }
+        "label": "Паралельне розділення"
       },
       "wait": {
-        "label": "Пауза",
-        "fields": {
-          "duration": {
-            "label": "Тривалість"
-          },
-          "unit": {
-            "label": "Одиниця",
-            "options": {
-              "seconds": "Секунди",
-              "minutes": "Хвилини",
-              "hours": "Години"
-            }
-          }
-        }
+        "label": "Пауза"
       }
     },
     "templates": {

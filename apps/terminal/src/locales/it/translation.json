@@ -5109,25 +5109,17 @@
         "label": "Alert di prezzo",
         "fields": {
           "direction": {
-            "label": "Direzione",
             "options": {
               "above": "Sopra",
               "below": "Sotto"
             }
-          },
-          "price": {
-            "label": "Prezzo"
           }
-        },
-        "handles": {
-          "out": "Attivato"
         }
       },
       "order-executed": {
         "label": "Ordine eseguito",
         "fields": {
           "side": {
-            "label": "Lato",
             "options": {
               "any": "Qualsiasi",
               "buy": "Acquisto",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "Stato",
             "options": {
               "any": "Qualsiasi",
               "filled": "Eseguito",
               "partially_filled": "Parzialmente eseguito"
             }
           }
-        },
-        "handles": {
-          "out": "Attivato"
         }
       },
       "signal-generated": {
-        "label": "Segnale generato",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Tipo di segnale (opzionale)",
-            "placeholder": "Qualsiasi tipo"
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Segnale generato"
       },
       "indicator-alert": {
-        "label": "Alert indicatore",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indicatore (opzionale)",
-            "placeholder": "Qualsiasi indicatore"
-          },
-          "condition": {
-            "label": "Condizione (opzionale)",
-            "placeholder": "Qualsiasi condizione"
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Alert indicatore"
       },
       "candle-close": {
-        "label": "Chiusura candela",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Chiusura candela"
       },
       "price-condition": {
-        "label": "Condizione di prezzo",
-        "fields": {
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "above": "Sopra",
-              "below": "Sotto"
-            }
-          },
-          "price": {
-            "label": "Prezzo"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Condizione di prezzo"
       },
       "percent-change": {
-        "label": "Variazione percentuale",
-        "fields": {
-          "percent": {
-            "label": "Percentuale"
-          },
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "up": "Su",
-              "down": "Giù",
-              "either": "Entrambe"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Variazione percentuale"
       },
       "time-window": {
-        "label": "Finestra oraria",
-        "fields": {
-          "startHour": {
-            "label": "Ora di inizio (UTC)"
-          },
-          "endHour": {
-            "label": "Ora di fine (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Non passa"
-        }
+        "label": "Finestra oraria"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Notifica di sistema",
-        "fields": {
-          "sound": {
-            "label": "Riproduci suono"
-          }
-        }
+        "label": "Notifica di sistema"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Metodo",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Includi payload dell'evento"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID chat (facoltativo)",
-            "placeholder": "Chat collegata"
-          },
-          "silent": {
-            "label": "Messaggio silenzioso"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Movimento di prezzo",
-        "fields": {
-          "percent": {
-            "label": "Percentuale"
-          },
-          "direction": {
-            "label": "Direzione",
-            "options": {
-              "up": "Su",
-              "down": "Giù",
-              "either": "Entrambe"
-            }
-          },
-          "window": {
-            "label": "Entro",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Attivato"
-        }
+        "label": "Movimento di prezzo"
       }
     },
     "messages": {
@@ -5955,11 +5782,6 @@
       "trigger": {
         "title": "Ingresso ordine",
         "badge": "Ingresso"
-      },
-      "configPanel": {
-        "requiresNote": "Richiede: {{requirement}}. I mercati privi di questa funzionalità non possono eseguire workflow che includono questo passaggio.",
-        "on": "Attivo",
-        "off": "Disattivo"
       }
     },
     "execution": {
@@ -5975,165 +5797,31 @@
         "label": "Ingresso ordine"
       },
       "market-order": {
-        "label": "Ordine di mercato",
-        "fields": {
-          "side": {
-            "label": "Direzione",
-            "options": {
-              "inherit": "Uguale al trigger",
-              "opposite": "Opposto al trigger",
-              "buy": "Acquista",
-              "sell": "Vendi"
-            }
-          },
-          "sizeMode": {
-            "label": "Modalità dimensione",
-            "options": {
-              "percent": "% dell'ingresso",
-              "absolute": "Importo fisso"
-            }
-          },
-          "size": {
-            "label": "Dimensione"
-          }
-        }
+        "label": "Ordine di mercato"
       },
       "limit-order": {
         "label": "Ordine limite",
         "compat": "Ordini limite in attesa",
-        "fields": {
-          "side": {
-            "label": "Direzione",
-            "options": {
-              "inherit": "Uguale al trigger",
-              "opposite": "Opposto al trigger",
-              "buy": "Acquista",
-              "sell": "Vendi"
-            }
-          },
-          "sizeMode": {
-            "label": "Modalità dimensione",
-            "options": {
-              "percent": "% dell'ingresso",
-              "absolute": "Importo fisso"
-            }
-          },
-          "size": {
-            "label": "Dimensione"
-          },
-          "priceMode": {
-            "label": "Modalità prezzo",
-            "options": {
-              "absolute": "Prezzo fisso",
-              "offset-percent": "% di scarto",
-              "offset-absolute": "Scarto dal prezzo attuale"
-            }
-          },
-          "priceValue": {
-            "label": "Valore prezzo"
-          }
-        },
         "compatReason": "questa piattaforma non può mantenere ordini limite in attesa (DEX solo swap)"
       },
       "take-profit": {
         "label": "Take profit",
         "compat": "Ordini trigger nativi o ordini limite in attesa",
-        "fields": {
-          "triggerMode": {
-            "label": "Modalità trigger",
-            "options": {
-              "percent": "% di guadagno",
-              "absolute": "Livello di prezzo"
-            }
-          },
-          "triggerValue": {
-            "label": "Valore trigger"
-          },
-          "sizePercent": {
-            "label": "% di chiusura"
-          },
-          "orderType": {
-            "label": "Tipo di ordine",
-            "options": {
-              "market": "Mercato",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Prezzo limite"
-          }
-        },
         "compatReason": "questa piattaforma non supporta né ordini trigger né ordini limite in attesa"
       },
       "stop-loss": {
         "label": "Stop loss",
         "compat": "Ordini trigger nativi",
-        "fields": {
-          "triggerMode": {
-            "label": "Modalità trigger",
-            "options": {
-              "percent": "% di perdita",
-              "absolute": "Livello di prezzo"
-            }
-          },
-          "triggerValue": {
-            "label": "Valore trigger"
-          },
-          "sizePercent": {
-            "label": "% di chiusura"
-          },
-          "orderType": {
-            "label": "Tipo di ordine",
-            "options": {
-              "market": "Mercato",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Prezzo limite"
-          }
-        },
         "compatReason": "questa piattaforma non ha ordini trigger nativi, quindi uno stop loss non può restare in attesa sull'exchange"
       },
       "condition": {
-        "label": "Condizione",
-        "fields": {
-          "conditionType": {
-            "label": "Condizione",
-            "options": {
-              "price-above": "Prezzo sopra",
-              "price-below": "Prezzo sotto",
-              "percent-change": "% di variazione dall'ingresso"
-            }
-          },
-          "value": {
-            "label": "Valore"
-          }
-        }
+        "label": "Condizione"
       },
       "split": {
-        "label": "Split parallelo",
-        "fields": {
-          "branches": {
-            "label": "Rami"
-          }
-        }
+        "label": "Split parallelo"
       },
       "wait": {
-        "label": "Attesa",
-        "fields": {
-          "duration": {
-            "label": "Durata"
-          },
-          "unit": {
-            "label": "Unità",
-            "options": {
-              "seconds": "Secondi",
-              "minutes": "Minuti",
-              "hours": "Ore"
-            }
-          }
-        }
+        "label": "Attesa"
       }
     },
     "templates": {

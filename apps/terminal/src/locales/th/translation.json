@@ -5109,25 +5109,17 @@
         "label": "แจ้งเตือนราคา",
         "fields": {
           "direction": {
-            "label": "ทิศทาง",
             "options": {
               "above": "สูงกว่า",
               "below": "ต่ำกว่า"
             }
-          },
-          "price": {
-            "label": "ราคา"
           }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
         }
       },
       "order-executed": {
         "label": "ออเดอร์ดำเนินการแล้ว",
         "fields": {
           "side": {
-            "label": "ฝั่ง",
             "options": {
               "any": "ใดก็ได้",
               "buy": "ซื้อ",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "สถานะ",
             "options": {
               "any": "ใดก็ได้",
               "filled": "จับคู่แล้ว",
               "partially_filled": "จับคู่บางส่วนแล้ว"
             }
           }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
         }
       },
       "signal-generated": {
-        "label": "เกิดสัญญาณ",
-        "fields": {
-          "timeframe": {
-            "label": "ไทม์เฟรม",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "ประเภทสัญญาณ (ไม่บังคับ)",
-            "placeholder": "ประเภทใดก็ได้"
-          }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
-        }
+        "label": "เกิดสัญญาณ"
       },
       "indicator-alert": {
-        "label": "แจ้งเตือนอินดิเคเตอร์",
-        "fields": {
-          "timeframe": {
-            "label": "ไทม์เฟรม",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "อินดิเคเตอร์ (ไม่บังคับ)",
-            "placeholder": "อินดิเคเตอร์ใดก็ได้"
-          },
-          "condition": {
-            "label": "เงื่อนไข (ไม่บังคับ)",
-            "placeholder": "เงื่อนไขใดก็ได้"
-          }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
-        }
+        "label": "แจ้งเตือนอินดิเคเตอร์"
       },
       "candle-close": {
-        "label": "แท่งเทียนปิด",
-        "fields": {
-          "timeframe": {
-            "label": "ไทม์เฟรม",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
-        }
+        "label": "แท่งเทียนปิด"
       },
       "price-condition": {
-        "label": "เงื่อนไขราคา",
-        "fields": {
-          "direction": {
-            "label": "ทิศทาง",
-            "options": {
-              "above": "สูงกว่า",
-              "below": "ต่ำกว่า"
-            }
-          },
-          "price": {
-            "label": "ราคา"
-          }
-        },
-        "handles": {
-          "pass": "ผ่าน",
-          "fail": "ไม่ผ่าน"
-        }
+        "label": "เงื่อนไขราคา"
       },
       "percent-change": {
-        "label": "การเปลี่ยนแปลงเปอร์เซ็นต์",
-        "fields": {
-          "percent": {
-            "label": "เปอร์เซ็นต์"
-          },
-          "direction": {
-            "label": "ทิศทาง",
-            "options": {
-              "up": "ขึ้น",
-              "down": "ลง",
-              "either": "ทั้งสองทาง"
-            }
-          }
-        },
-        "handles": {
-          "pass": "ผ่าน",
-          "fail": "ไม่ผ่าน"
-        }
+        "label": "การเปลี่ยนแปลงเปอร์เซ็นต์"
       },
       "time-window": {
-        "label": "ช่วงเวลา",
-        "fields": {
-          "startHour": {
-            "label": "ชั่วโมงเริ่มต้น (UTC)"
-          },
-          "endHour": {
-            "label": "ชั่วโมงสิ้นสุด (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "ผ่าน",
-          "fail": "ไม่ผ่าน"
-        }
+        "label": "ช่วงเวลา"
       },
       "local-toast": {
         "label": "ทูสต์"
       },
       "os-notification": {
-        "label": "การแจ้งเตือนของระบบ",
-        "fields": {
-          "sound": {
-            "label": "เล่นเสียง"
-          }
-        }
+        "label": "การแจ้งเตือนของระบบ"
       },
       "webhook": {
-        "label": "เว็บฮุก",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "เมธอด",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "รวมเพย์โหลดของอีเวนต์"
-          }
-        }
+        "label": "เว็บฮุก"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID แชท (ไม่บังคับ)",
-            "placeholder": "แชทที่เชื่อมไว้"
-          },
-          "silent": {
-            "label": "ส่งแบบเงียบ"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "การเคลื่อนไหวของราคา",
-        "fields": {
-          "percent": {
-            "label": "เปอร์เซ็นต์"
-          },
-          "direction": {
-            "label": "ทิศทาง",
-            "options": {
-              "up": "ขึ้น",
-              "down": "ลง",
-              "either": "ทั้งสองทาง"
-            }
-          },
-          "window": {
-            "label": "ภายใน",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "ทำงานแล้ว"
-        }
+        "label": "การเคลื่อนไหวของราคา"
       }
     },
     "messages": {
@@ -5955,11 +5782,6 @@
       "trigger": {
         "title": "จุดเริ่มออเดอร์",
         "badge": "เข้าออเดอร์"
-      },
-      "configPanel": {
-        "requiresNote": "ต้องการ: {{requirement}} ตลาดที่ไม่มีความสามารถนี้จะรันเวิร์กโฟลว์ที่มีขั้นตอนนี้ไม่ได้",
-        "on": "เปิด",
-        "off": "ปิด"
       }
     },
     "execution": {
@@ -5975,165 +5797,31 @@
         "label": "จุดเริ่มออเดอร์"
       },
       "market-order": {
-        "label": "มาร์เก็ตออเดอร์",
-        "fields": {
-          "side": {
-            "label": "ฝั่ง",
-            "options": {
-              "inherit": "เหมือนตัวกระตุ้น",
-              "opposite": "ตรงข้ามตัวกระตุ้น",
-              "buy": "ซื้อ",
-              "sell": "ขาย"
-            }
-          },
-          "sizeMode": {
-            "label": "โหมดขนาด",
-            "options": {
-              "percent": "% ของอินพุต",
-              "absolute": "จำนวนคงที่"
-            }
-          },
-          "size": {
-            "label": "ขนาด"
-          }
-        }
+        "label": "มาร์เก็ตออเดอร์"
       },
       "limit-order": {
         "label": "ลิมิตออเดอร์",
         "compat": "ลิมิตออเดอร์แบบค้างรอ",
-        "fields": {
-          "side": {
-            "label": "ฝั่ง",
-            "options": {
-              "inherit": "เหมือนตัวกระตุ้น",
-              "opposite": "ตรงข้ามตัวกระตุ้น",
-              "buy": "ซื้อ",
-              "sell": "ขาย"
-            }
-          },
-          "sizeMode": {
-            "label": "โหมดขนาด",
-            "options": {
-              "percent": "% ของอินพุต",
-              "absolute": "จำนวนคงที่"
-            }
-          },
-          "size": {
-            "label": "ขนาด"
-          },
-          "priceMode": {
-            "label": "โหมดราคา",
-            "options": {
-              "absolute": "ราคาคงที่",
-              "offset-percent": "% จากราคาปัจจุบัน",
-              "offset-absolute": "ส่วนต่างจากราคาปัจจุบัน"
-            }
-          },
-          "priceValue": {
-            "label": "ค่าราคา"
-          }
-        },
         "compatReason": "กระดานนี้วางลิมิตออเดอร์ค้างไว้ไม่ได้ (DEX แบบสวอปอย่างเดียว)"
       },
       "take-profit": {
         "label": "ทำกำไร",
         "compat": "ทริกเกอร์ออเดอร์แบบเนทีฟ หรือลิมิตออเดอร์แบบค้างรอ",
-        "fields": {
-          "triggerMode": {
-            "label": "โหมดตัวกระตุ้น",
-            "options": {
-              "percent": "กำไร %",
-              "absolute": "ระดับราคา"
-            }
-          },
-          "triggerValue": {
-            "label": "ค่าตัวกระตุ้น"
-          },
-          "sizePercent": {
-            "label": "ปิด %"
-          },
-          "orderType": {
-            "label": "ประเภทออเดอร์",
-            "options": {
-              "market": "มาร์เก็ต",
-              "limit": "ลิมิต"
-            }
-          },
-          "limitPrice": {
-            "label": "ราคาลิมิต"
-          }
-        },
         "compatReason": "กระดานนี้ไม่รองรับทั้งทริกเกอร์ออเดอร์และลิมิตออเดอร์แบบค้างรอ"
       },
       "stop-loss": {
         "label": "ตัดขาดทุน",
         "compat": "ทริกเกอร์ออเดอร์แบบเนทีฟ",
-        "fields": {
-          "triggerMode": {
-            "label": "โหมดตัวกระตุ้น",
-            "options": {
-              "percent": "ขาดทุน %",
-              "absolute": "ระดับราคา"
-            }
-          },
-          "triggerValue": {
-            "label": "ค่าตัวกระตุ้น"
-          },
-          "sizePercent": {
-            "label": "ปิด %"
-          },
-          "orderType": {
-            "label": "ประเภทออเดอร์",
-            "options": {
-              "market": "มาร์เก็ต",
-              "limit": "ลิมิต"
-            }
-          },
-          "limitPrice": {
-            "label": "ราคาลิมิต"
-          }
-        },
         "compatReason": "กระดานนี้ไม่มีทริกเกอร์ออเดอร์แบบเนทีฟของตลาด จึงวางคำสั่งตัดขาดทุนค้างไว้บนตลาดไม่ได้"
       },
       "condition": {
-        "label": "เงื่อนไข",
-        "fields": {
-          "conditionType": {
-            "label": "เงื่อนไข",
-            "options": {
-              "price-above": "ราคาสูงกว่า",
-              "price-below": "ราคาต่ำกว่า",
-              "percent-change": "% การเปลี่ยนแปลงจากราคาเข้า"
-            }
-          },
-          "value": {
-            "label": "ค่า"
-          }
-        }
+        "label": "เงื่อนไข"
       },
       "split": {
-        "label": "แยกแบบขนาน",
-        "fields": {
-          "branches": {
-            "label": "จำนวนแขนง"
-          }
-        }
+        "label": "แยกแบบขนาน"
       },
       "wait": {
-        "label": "รอ",
-        "fields": {
-          "duration": {
-            "label": "ระยะเวลา"
-          },
-          "unit": {
-            "label": "หน่วย",
-            "options": {
-              "seconds": "วิ",
-              "minutes": "นาที",
-              "hours": "ชม."
-            }
-          }
-        }
+        "label": "รอ"
       }
     },
     "templates": {

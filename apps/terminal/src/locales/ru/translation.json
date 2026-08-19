@@ -5209,25 +5209,17 @@
         "label": "Ценовой алерт",
         "fields": {
           "direction": {
-            "label": "Направление",
             "options": {
               "above": "Выше",
               "below": "Ниже"
             }
-          },
-          "price": {
-            "label": "Цена"
           }
-        },
-        "handles": {
-          "out": "Сработало"
         }
       },
       "order-executed": {
         "label": "Ордер исполнен",
         "fields": {
           "side": {
-            "label": "Сторона",
             "options": {
               "any": "Любая",
               "buy": "Покупка",
@@ -5235,211 +5227,46 @@
             }
           },
           "status": {
-            "label": "Статус",
             "options": {
               "any": "Любой",
               "filled": "Исполнен",
               "partially_filled": "Частично исполнен"
             }
           }
-        },
-        "handles": {
-          "out": "Сработало"
         }
       },
       "signal-generated": {
-        "label": "Сигнал сгенерирован",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Тип сигнала (опционально)",
-            "placeholder": "Любой тип"
-          }
-        },
-        "handles": {
-          "out": "Сработало"
-        }
+        "label": "Сигнал сгенерирован"
       },
       "indicator-alert": {
-        "label": "Алерт индикатора",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Индикатор (опционально)",
-            "placeholder": "Любой индикатор"
-          },
-          "condition": {
-            "label": "Условие (опционально)",
-            "placeholder": "Любое условие"
-          }
-        },
-        "handles": {
-          "out": "Сработало"
-        }
+        "label": "Алерт индикатора"
       },
       "candle-close": {
-        "label": "Закрытие свечи",
-        "fields": {
-          "timeframe": {
-            "label": "Таймфрейм",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Сработало"
-        }
+        "label": "Закрытие свечи"
       },
       "price-condition": {
-        "label": "Ценовое условие",
-        "fields": {
-          "direction": {
-            "label": "Направление",
-            "options": {
-              "above": "Выше",
-              "below": "Ниже"
-            }
-          },
-          "price": {
-            "label": "Цена"
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Ценовое условие"
       },
       "percent-change": {
-        "label": "Процентное изменение",
-        "fields": {
-          "percent": {
-            "label": "Процент"
-          },
-          "direction": {
-            "label": "Направление",
-            "options": {
-              "up": "Рост",
-              "down": "Падение",
-              "either": "Любое"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Процентное изменение"
       },
       "time-window": {
-        "label": "Временное окно",
-        "fields": {
-          "startHour": {
-            "label": "Час начала (UTC)"
-          },
-          "endHour": {
-            "label": "Час окончания (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Пройдено",
-          "fail": "Не пройдено"
-        }
+        "label": "Временное окно"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Системное уведомление",
-        "fields": {
-          "sound": {
-            "label": "Воспроизводить звук"
-          }
-        }
+        "label": "Системное уведомление"
       },
       "webhook": {
-        "label": "Вебхук",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Метод",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Передавать данные события"
-          }
-        }
+        "label": "Вебхук"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID чата (необязательно)",
-            "placeholder": "Привязанный чат"
-          },
-          "silent": {
-            "label": "Без звука"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Движение цены",
-        "fields": {
-          "percent": {
-            "label": "Процент"
-          },
-          "direction": {
-            "label": "Направление",
-            "options": {
-              "up": "Рост",
-              "down": "Падение",
-              "either": "Любое"
-            }
-          },
-          "window": {
-            "label": "За",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Сработало"
-        }
+        "label": "Движение цены"
       }
     },
     "messages": {
@@ -6065,11 +5892,6 @@
       "trigger": {
         "title": "Вход ордера",
         "badge": "Вход"
-      },
-      "configPanel": {
-        "requiresNote": "Требуется: {{requirement}}. Рынки без этой возможности не могут выполнять воркфлоу с этим шагом.",
-        "on": "Вкл",
-        "off": "Выкл"
       }
     },
     "execution": {
@@ -6085,165 +5907,31 @@
         "label": "Вход ордера"
       },
       "market-order": {
-        "label": "Рыночный ордер",
-        "fields": {
-          "side": {
-            "label": "Сторона",
-            "options": {
-              "inherit": "Как при входе",
-              "opposite": "Противоположная входу",
-              "buy": "Купить",
-              "sell": "Продать"
-            }
-          },
-          "sizeMode": {
-            "label": "Режим размера",
-            "options": {
-              "percent": "% от входа",
-              "absolute": "Фиксированная сумма"
-            }
-          },
-          "size": {
-            "label": "Размер"
-          }
-        }
+        "label": "Рыночный ордер"
       },
       "limit-order": {
         "label": "Лимитный ордер",
         "compat": "Отложенные лимитные ордера",
-        "fields": {
-          "side": {
-            "label": "Сторона",
-            "options": {
-              "inherit": "Как при входе",
-              "opposite": "Противоположная входу",
-              "buy": "Купить",
-              "sell": "Продать"
-            }
-          },
-          "sizeMode": {
-            "label": "Режим размера",
-            "options": {
-              "percent": "% от входа",
-              "absolute": "Фиксированная сумма"
-            }
-          },
-          "size": {
-            "label": "Размер"
-          },
-          "priceMode": {
-            "label": "Режим цены",
-            "options": {
-              "absolute": "Фиксированная цена",
-              "offset-percent": "% от текущей",
-              "offset-absolute": "Смещение от текущей"
-            }
-          },
-          "priceValue": {
-            "label": "Значение цены"
-          }
-        },
         "compatReason": "эта площадка не может выставлять отложенные лимитные ордера (DEX только со свопами)"
       },
       "take-profit": {
         "label": "Тейк-профит",
         "compat": "Нативные триггерные ордера или отложенные лимитные ордера",
-        "fields": {
-          "triggerMode": {
-            "label": "Режим триггера",
-            "options": {
-              "percent": "% прибыли",
-              "absolute": "Уровень цены"
-            }
-          },
-          "triggerValue": {
-            "label": "Значение триггера"
-          },
-          "sizePercent": {
-            "label": "Закрыть %"
-          },
-          "orderType": {
-            "label": "Тип ордера",
-            "options": {
-              "market": "Рыночный",
-              "limit": "Лимитный"
-            }
-          },
-          "limitPrice": {
-            "label": "Лимитная цена"
-          }
-        },
         "compatReason": "эта площадка не поддерживает ни триггерные ордера, ни отложенные лимитные ордера"
       },
       "stop-loss": {
         "label": "Стоп-лосс",
         "compat": "Нативные триггерные ордера",
-        "fields": {
-          "triggerMode": {
-            "label": "Режим триггера",
-            "options": {
-              "percent": "% убытка",
-              "absolute": "Уровень цены"
-            }
-          },
-          "triggerValue": {
-            "label": "Значение триггера"
-          },
-          "sizePercent": {
-            "label": "Закрыть %"
-          },
-          "orderType": {
-            "label": "Тип ордера",
-            "options": {
-              "market": "Рыночный",
-              "limit": "Лимитный"
-            }
-          },
-          "limitPrice": {
-            "label": "Лимитная цена"
-          }
-        },
         "compatReason": "у этой площадки нет нативных триггерных ордеров, поэтому стоп-лосс не может храниться на бирже"
       },
       "condition": {
-        "label": "Условие",
-        "fields": {
-          "conditionType": {
-            "label": "Условие",
-            "options": {
-              "price-above": "Цена выше",
-              "price-below": "Цена ниже",
-              "percent-change": "% изменения от входа"
-            }
-          },
-          "value": {
-            "label": "Значение"
-          }
-        }
+        "label": "Условие"
       },
       "split": {
-        "label": "Параллельное разделение",
-        "fields": {
-          "branches": {
-            "label": "Ветки"
-          }
-        }
+        "label": "Параллельное разделение"
       },
       "wait": {
-        "label": "Пауза",
-        "fields": {
-          "duration": {
-            "label": "Длительность"
-          },
-          "unit": {
-            "label": "Единица",
-            "options": {
-              "seconds": "Секунды",
-              "minutes": "Минуты",
-              "hours": "Часы"
-            }
-          }
-        }
+        "label": "Пауза"
       }
     },
     "templates": {
