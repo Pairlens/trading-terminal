@@ -13,9 +13,12 @@
  * "+4.2%" from one asset dragging eleven flat ones are different markets, and
  * the bar is the only place that difference shows.
  *
- * Clicking a row filters the markets scanner beside it to that sector rather
- * than navigating: the scanner and the tape share the same persisted category,
- * so the click lands on the board the user is already looking at.
+ * Clicking a row filters the markets scanner to that sector rather than
+ * navigating: the scanner and the tape share the same persisted category, so
+ * the click lands on the board the user is already looking at. The default
+ * spot board no longer carries that scanner, so there the click records the
+ * sector and waits for one: adding the panel, or opening the Markets board,
+ * picks the selection straight up.
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'

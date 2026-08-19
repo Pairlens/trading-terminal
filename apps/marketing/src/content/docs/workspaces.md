@@ -56,13 +56,15 @@ is on-chain, green is equities, cyan is event contracts. Pick a tab here and
 the pair you open from it is badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
-and only one of the five is a list of pairs.
+and none of the five opens on an A-to-Z list of pairs.
 
 **CEX Spot** opens on what moved and why: a market pulse strip over the movers
-table and the sector tape, the full markets scanner beside them, and news over
-your watchlist in the right rail. Clicking a sector chip filters the scanner
-next to it rather than navigating away. Every pane on this board works with no
-account connected.
+table over the sector tape, the news wire beside them, and your watchlist in
+the right rail. Every pane on this board works with no account connected. The
+full markets scanner is not on it, since the list you want by name is a
+keystroke away in omni-search; add the panel from **Panes**, or open the
+**Markets** board from the workspaces menu, and the sector tape's chips filter
+it to the sector you clicked.
 
 **CEX Futures** scans by cost of carry instead of by price. The funding matrix
 takes the wide column with the basis monitor under it, and open interest sits
@@ -85,9 +87,9 @@ listed and resolved daily and never sit in a catalog of pairs. A category rail
 narrows the board, and a right rail carries the biggest odds moves over what
 settles soonest.
 
-The markets scanner is on the spot board and on any board you add it to. It
-opens on that tab's asset class and remembers its own filter per tab, so
-widening one board to every market is a decision about that board alone.
+The markets scanner is on whatever board you add it to. It opens on that tab's
+asset class and remembers its own filter per tab, so widening one board to
+every market is a decision about that board alone.
 
 Drag a tab to reorder it, or right-click one and move it left or right. If you
 trade event contracts and nothing else, put Predictions first. The
