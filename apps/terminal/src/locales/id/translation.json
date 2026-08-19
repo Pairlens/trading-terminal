@@ -2360,6 +2360,7 @@
     "goToPlugins": "Buka Plugin Store",
     "suggest": {
       "chart": "Analisis chart {{pair}}",
+      "predictionEvent": "Analisis acara ini",
       "discovery": "Carikan sesuatu untuk saya tradingkan",
       "workflows": "Buat sebuah workflow",
       "notifications": "Siapkan sebuah alert",

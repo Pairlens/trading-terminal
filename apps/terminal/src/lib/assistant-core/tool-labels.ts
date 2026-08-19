@@ -17,6 +17,9 @@ import { AUTOMATION_TOOL_LABELS } from '@/lib/assistant/automation-tool-labels'
 
 const TERMINAL_TOOL_LABELS = {
   navigate_to: ['open', 'the page'],
+  open_instrument: ['open', 'the instrument'],
+  get_prediction_event: ['read', 'the event'],
+  search_prediction_events: ['search', 'prediction markets'],
   get_screen: ['read', 'the screen'],
   highlight_ui: ['highlight', 'it on screen'],
   deep_research: ['run', 'deep research'],

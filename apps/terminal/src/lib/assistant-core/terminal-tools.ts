@@ -11,6 +11,12 @@ import { tool } from 'ai'
 import { z } from 'zod'
 
 import { computeSignals } from '@pairlens/strategy-engine'
+import {
+  INSTRUMENT_CLASSES,
+  marketRefToPath,
+  normalizeInstrumentClass,
+  normalizeInstrumentId,
+} from '@pairlens/shared/market-ref'
 import type { Candle } from '@pairlens/shared/types'
 
 import type { AssistantDeps } from './tool-deps'
@@ -52,7 +58,7 @@ const PAGE_LIST = TERMINAL_PAGE_IDS.map((id) => {
 export function buildNavigationTools(deps: AssistantDeps) {
   return {
     navigate_to: tool({
-      description: `Take the user to a page of the terminal, optionally opening one specific thing on it. Use this when acting somewhere else is clearer than describing it, or when the user asks to go somewhere. Available pages: ${PAGE_LIST}. To change the charted instrument instead, use switch_pair or switch_market.`,
+      description: `Take the user to a page of the terminal, optionally opening one specific thing on it. Use this when acting somewhere else is clearer than describing it, or when the user asks to go somewhere. Available pages: ${PAGE_LIST}. To put an instrument on screen instead, use open_instrument (any asset class) or switch_pair (a crypto pair on the current board).`,
       inputSchema: z.object({
         page: z
           .enum(TERMINAL_PAGE_IDS as [TerminalPageId, ...Array<TerminalPageId>])
@@ -82,6 +88,73 @@ export function buildNavigationTools(deps: AssistantDeps) {
           navigatedTo: path,
           openedTarget: opened,
           note: 'The user is now on this page, and the terminal frame is glowing to show it changed. Actions that page offers become available on your next turn, as do its highlight targets.',
+        }
+      },
+    }),
+
+    open_instrument: tool({
+      description:
+        'Put ANY instrument on screen, on any asset class: a spot pair, a perpetual contract, an on-chain token, a US equity, or a prediction-market event. The address of an instrument is its class, its venue and its id together, so all three are required. That is what makes this work where switch_pair (crypto pairs, resolved by symbol shape) cannot. Ids come from search_instruments, search_prediction_events or get_prediction_event.',
+      inputSchema: z.object({
+        assetClass: z
+          .enum(INSTRUMENT_CLASSES as unknown as [string, ...Array<string>])
+          .describe(
+            'spot (crypto spot), perp (perpetual futures), dex (on-chain token), stocks (US equities), prediction (event contracts)',
+          ),
+        venue: z
+          .string()
+          .describe(
+            'Venue market id: okx, binance, alpaca, polymarket, kalshi, base, binance-futures…',
+          ),
+        id: z
+          .string()
+          .describe(
+            'The instrument id in its class\u2019s own grammar: BTC-USDT (spot), BTC-USDT-USDT (perp), 0xabc…-USD (dex), AAPL (stocks), the event id (prediction).',
+          ),
+        outcome: z
+          .string()
+          .optional()
+          .describe(
+            'Prediction events only: the outcome pairKey to point the book, the tape and the ticket at. Omit to open the favourite.',
+          ),
+      }),
+      execute: ({ assetClass, venue, id, outcome }) => {
+        const cls = normalizeInstrumentClass(assetClass)
+        const market = venue.trim().toLowerCase()
+        if (!cls || market === '' || id.trim() === '') {
+          return {
+            error:
+              'An instrument address needs a known class, a venue and an id.',
+            classes: INSTRUMENT_CLASSES,
+          }
+        }
+        const path = marketRefToPath({
+          cls,
+          market,
+          id: normalizeInstrumentId(cls, id),
+        })
+        // The leg rides as a search param rather than a path segment: it is a
+        // selection inside the event, not part of its identity, and every
+        // other class ignores it.
+        const to =
+          cls === 'prediction' && outcome?.trim()
+            ? `${path}?o=${encodeURIComponent(outcome.trim())}`
+            : path
+        deps.navigate(to)
+        requestPendingSpotlight(SHELL_SPOTLIGHT_ID)
+        // Our own class id, never the instrument: which asset classes the
+        // assistant actually opens is the question, and an id here would be
+        // a symbol the user is trading.
+        track('assistant_navigated', {
+          page: `instrument:${cls}`,
+          with_target: true,
+        })
+        return {
+          navigatedTo: to,
+          assetClass: cls,
+          venue: market,
+          instrument: id,
+          note: 'The instrument is on screen. Its board mounts on your next turn, and so do the tools and context that come with it. Read get_screen then if you need what it is showing.',
         }
       },
     }),

@@ -120,6 +120,48 @@ function fetchOrderbookSnapshot(
   })
 }
 
+/**
+ * Subscribe, capture the venue's opening replay of the tape, unsubscribe.
+ *
+ * The FIRST frame after a subscribe is the venue's own backlog rather than a
+ * single live print, which is the whole reason this is worth a tool: one
+ * subscribe buys the recent tape, and waiting for live prints would make a
+ * quiet market indistinguishable from a venue with no feed.
+ */
+function fetchTradesSnapshot(
+  deps: CopilotToolDeps,
+  market: string,
+  pair: string,
+  timeoutMs = 4000,
+): Promise<Array<Record<string, unknown>> | null> {
+  const md = deps.getMarketData()
+  const subscribe = md?.subscribeTrades
+  if (!md || !subscribe) return Promise.resolve(null)
+  return new Promise((resolve) => {
+    let done = false
+    let unsub: (() => void) | null = null
+    const finish = (value: Array<Record<string, unknown>> | null) => {
+      if (done) return
+      done = true
+      clearTimeout(timer)
+      setTimeout(() => unsub?.(), 0)
+      resolve(value)
+    }
+    const timer = setTimeout(() => finish(null), timeoutMs)
+    try {
+      unsub = subscribe(market, pair, (data) => {
+        const frame = data as
+          | { trades?: Array<Record<string, unknown>> }
+          | Array<Record<string, unknown>>
+        const trades = Array.isArray(frame) ? frame : (frame?.trades ?? [])
+        if (trades.length > 0) finish(trades)
+      })
+    } catch {
+      finish(null)
+    }
+  })
+}
+
 export function buildMarketTools(deps: CopilotToolDeps) {
   return {
     get_market_snapshot: tool({
@@ -278,6 +320,59 @@ export function buildMarketTools(deps: CopilotToolDeps) {
           imbalance: totalVol > 0 ? (bidVol - askVol) / totalVol : 0,
           bids,
           asks,
+        }
+      },
+    }),
+
+    get_recent_trades: tool({
+      description:
+        'The live tape: recent public trades for a pair, with size, side and time, plus the buy/sell split across the window. Reads what actually printed, which candles cannot tell you: whether a move was one block or a thousand small fills. Not every venue publishes a trade feed.',
+      inputSchema: z.object({
+        market: z.string().optional(),
+        pair: z.string().optional(),
+        limit: z.number().int().min(5).max(200).optional().default(50),
+      }),
+      execute: async (args) => {
+        const target = resolveTarget(deps, { ...args, timeframe: undefined })
+        const trades = await fetchTradesSnapshot(
+          deps,
+          target.market,
+          target.pair,
+        )
+        if (!trades || trades.length === 0) {
+          return {
+            target,
+            available: false,
+            message:
+              'No trade feed for this market, or nothing has printed yet. Some venues publish no public tape.',
+          }
+        }
+        const limit = args.limit ?? 50
+        const newest = [...trades]
+          .sort((a, b) => Number(b.ts ?? 0) - Number(a.ts ?? 0))
+          .slice(0, limit)
+
+        let buyVolume = 0
+        let sellVolume = 0
+        for (const trade of newest) {
+          const size = Number(trade.size ?? trade.amount ?? 0)
+          if (!Number.isFinite(size)) continue
+          if (trade.side === 'sell') sellVolume += size
+          else buyVolume += size
+        }
+        const total = buyVolume + sellVolume
+
+        return {
+          target,
+          available: true,
+          count: newest.length,
+          buyVolume,
+          sellVolume,
+          // Positive means buyers lifted more than sellers hit, on the side
+          // the venue reports. Coinbase reports the MAKER side, so on that
+          // venue the sign reads inverted against every other tape.
+          takerImbalance: total > 0 ? (buyVolume - sellVolume) / total : 0,
+          trades: newest,
         }
       },
     }),

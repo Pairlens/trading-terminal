@@ -2360,6 +2360,7 @@
     "goToPlugins": "Mở Plugin Store",
     "suggest": {
       "chart": "Phân tích biểu đồ {{pair}}",
+      "predictionEvent": "Phân tích sự kiện này",
       "discovery": "Tìm cho tôi thứ gì đó để giao dịch",
       "workflows": "Xây một quy trình",
       "notifications": "Thiết lập một cảnh báo",

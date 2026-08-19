@@ -58,6 +58,17 @@ export function buildTradingTools(deps: CopilotToolDeps) {
           market: args.market,
           pair: args.pair,
         })
+        // Nothing named the instrument and nothing on screen claims one, so
+        // this target is the resolver's own fallback. Everywhere else that
+        // costs a wrong read; here it would put an order for a market nobody
+        // mentioned on a confirmation card, one click from live.
+        if (target.assumed) {
+          return {
+            status: 'invalid',
+            error:
+              'No pair was given and nothing on screen names one, so there is no instrument to prepare an order for. Name the pair explicitly.',
+          }
+        }
         if (args.type === 'limit' && !args.price) {
           return {
             status: 'invalid',
@@ -104,6 +115,13 @@ export function buildTradingTools(deps: CopilotToolDeps) {
           market: args.market,
           pair: args.pair,
         })
+        if (target.assumed) {
+          return {
+            status: 'invalid',
+            error:
+              'No pair was given and nothing on screen names one. Read get_open_orders and cancel by its pair.',
+          }
+        }
         return {
           status: 'awaiting_confirmation',
           cancel: {

@@ -15,6 +15,7 @@
 
 import { buildNavigationTools, buildResearchTools } from './terminal-tools'
 import { buildDataTools } from './data-tools'
+import { buildPredictionTools } from './prediction-tools'
 import { buildSurfaceTools } from './surface-tools'
 import { toAutomationDeps, toCopilotDeps, toScriptDeps } from './tool-deps'
 import type { AssistantDeps } from './tool-deps'
@@ -83,6 +84,10 @@ export function buildAssistantToolSet(deps: AssistantDeps): ToolSet {
     // listings, liquidations, funding, pool state, bridge quotes. Not
     // surface-bound, so unlike the chart tools they are always offered.
     ...buildDataTools(deps),
+    // Prediction markets. Their prices live on the EVENT rather than on a
+    // pair, so no amount of candles or order books could reach them: an
+    // outcome ladder is the only place a probability is published.
+    ...buildPredictionTools(deps),
     // Surface-published actions last: a pane that publishes a name the
     // core set already uses is deliberately allowed to specialise it.
     ...buildSurfaceTools(deps.registry),

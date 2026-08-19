@@ -1120,7 +1120,7 @@ describe('the data tool set', () => {
     expect(missing).toEqual([])
   })
 
-  test('declares the ten reads round 2 had no sentence for', () => {
+  test('declares the reads that had no sentence for them', () => {
     const { deps } = stubDeps()
     expect(Object.keys(buildDataTools(deps)).sort()).toEqual([
       'get_bridge_quote',
@@ -1131,6 +1131,9 @@ describe('the data tool set', () => {
       'get_insider_activity',
       'get_ipo_calendar',
       'get_liquidation_clusters',
+      // Equities had every calendar and no answer to "is it open right
+      // now", which is the first thing any of them depends on.
+      'get_market_session',
       'get_new_listings',
       'get_pool_stats',
     ])

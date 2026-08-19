@@ -2360,6 +2360,7 @@
     "goToPlugins": "เปิด Plugin Store",
     "suggest": {
       "chart": "วิเคราะห์กราฟของ {{pair}}",
+      "predictionEvent": "วิเคราะห์เหตุการณ์นี้",
       "discovery": "หาอะไรให้ฉันเทรดหน่อย",
       "workflows": "สร้างเวิร์กโฟลว์",
       "notifications": "ตั้งการแจ้งเตือน",
