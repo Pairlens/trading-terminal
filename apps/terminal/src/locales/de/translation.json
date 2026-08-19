@@ -187,10 +187,11 @@
     "emptyBody": "Der Veröffentlichungsplan kommt vom App Server. Dieser Build läuft eigenständig, es gibt also nichts, woraus er sich zusammenstellen ließe.",
     "columns": {
       "actual": "Ist",
-      "implied": "Implizit (Kalshi)",
+      "implied": "Implizit",
+      "impliedSource": "Kalshi",
       "prior": "Vorher",
       "source": "Behörde",
-      "time": "Zeit ({{zone}})",
+      "time": "Zeit",
       "event": "Veröffentlichung"
     },
     "impact": {

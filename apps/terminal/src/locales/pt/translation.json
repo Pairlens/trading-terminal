@@ -187,10 +187,11 @@
     "emptyBody": "O calendário de divulgações vem do App Server. Esta build roda de forma autônoma, então não há de onde compilá-lo.",
     "columns": {
       "actual": "Real",
-      "implied": "Implícito (Kalshi)",
+      "implied": "Implícito",
+      "impliedSource": "Kalshi",
       "prior": "Anterior",
       "source": "Órgão",
-      "time": "Hora ({{zone}})",
+      "time": "Hora",
       "event": "Divulgação"
     },
     "impact": {

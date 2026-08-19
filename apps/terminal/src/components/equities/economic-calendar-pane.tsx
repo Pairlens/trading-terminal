@@ -32,12 +32,18 @@
  * The rest is what a trader plans around: the day, the clock, who publishes,
  * and how hard it usually hits. The impact filter earns its place from the
  * data, not the design: two thirds of a federal calendar is county employment
- * tables that nobody repositions on.
+ * tables that nobody repositions on. Impact also reaches the type: a high
+ * impact release carries weight on its title, because a 6px colour chip is
+ * not something the eye finds while scrolling a month of rows.
  *
  * Times are Eastern, labelled as Eastern, because '08:30 ET' is how every
  * headline quotes CPI. The reader's own clock rides in the row's tooltip
  * rather than replacing it, and the ONE thing that must not happen is a bare
- * '08:30' with no city attached.
+ * '08:30' with no city attached. The zone rides the header as a subdued suffix
+ * rather than a parenthetical inside the label, which is what used to break
+ * 'TIME (EDT)' over two lines in a column sized for '08:30'. Implied names its
+ * venue the same way, and drops the venue rather than wrapping when the pane
+ * is too narrow to carry both words.
  *
  * Some rows carry no clock, and that is the feed rather than a gap: FOMC
  * minutes and the Census indicators are published as a date. Those say so
@@ -127,11 +133,15 @@ export function EconomicCalendarPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-        <h2 className="text-[13px] font-semibold">
+      {/* Wrapping toolbar rather than a squeezed one: two toggle groups and a
+          title do not fit a 20rem pane on one line, and a control row that
+          drops to a second line still reads, while five clipped segments do
+          not. */}
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-2 gap-y-1.5 border-b border-border px-3 py-2">
+        <h2 className="min-w-0 truncate text-[13px] font-semibold">
           {t('economicCalendar.title')}
         </h2>
-        <div className="flex items-center gap-1.5">
+        <div className="flex shrink-0 items-center gap-1.5">
           <ToggleGroup
             aria-label={t('economicCalendar.impactLabel')}
             multiple={false}
@@ -167,11 +177,15 @@ export function EconomicCalendarPane() {
         </div>
       </div>
 
-      <table className="w-full shrink-0 px-3 text-xs">
+      <table className={cn(GRID, 'shrink-0')}>
         <thead>
           <tr className="border-b border-border/50 text-muted-foreground">
-            <HeadCell className={TIME_COL}>
-              {t('economicCalendar.columns.time', { zone })}
+            <HeadCell
+              className={cn(TIME_COL, 'pl-3')}
+              title={`${t('economicCalendar.columns.time')} · ${zone}`}
+            >
+              {t('economicCalendar.columns.time')}
+              <SubLabel>{zone}</SubLabel>
             </HeadCell>
             <HeadCell>{t('economicCalendar.columns.event')}</HeadCell>
             {hasFigures && (
@@ -185,6 +199,11 @@ export function EconomicCalendarPane() {
                   title={t('economicCalendar.impliedHint')}
                 >
                   {t('economicCalendar.columns.implied')}
+                  {/* The venue is the half a narrow pane can do without: the
+                      cell tooltip and the note under the rows both name it. */}
+                  <SubLabel className="hidden @[34rem]/pane:inline">
+                    {t('economicCalendar.columns.impliedSource')}
+                  </SubLabel>
                 </HeadCell>
                 <HeadCell align="right" className={PRIOR_COL}>
                   {t('economicCalendar.columns.prior')}
@@ -227,7 +246,7 @@ export function EconomicCalendarPane() {
                 windowStart={windowStart}
               />
             ))}
-            <p className="px-3 py-2 text-[10.5px] leading-relaxed text-muted-foreground/80">
+            <p className="mt-1 border-t border-border/40 px-3 py-2 text-[10.5px] leading-relaxed text-muted-foreground/80">
               {t('economicCalendar.sourceNote')}
             </p>
           </>
@@ -238,29 +257,51 @@ export function EconomicCalendarPane() {
 }
 
 /**
- * Column widths, shared by the header table and every day's body table.
+ * The one geometry the header table and every day's body table are laid out
+ * with.
  *
- * The header is its own <table> so it can stay put while the days scroll, which
- * means the two tables size independently: every column except the flexible
- * release title has to state the same width on both sides or the labels drift
- * off the values they name.
+ * `table-fixed` is what makes the columns a property of the PANE rather than
+ * of whatever happens to be in a given day. Under auto layout each day sizes
+ * itself: a Thursday holding 'Quarterly Selected Services Revenue' and a
+ * Friday holding 'PPI' disagree about where the figures start, the header
+ * (its own table, so it can stay put while the days scroll) disagrees with
+ * both, and the labels drift off the values they name. Fixed layout reads the
+ * widths below off the first row and every table lands on the same grid.
+ *
+ * The corollary is that nothing can push a column wider any more, so both the
+ * heads and the release titles truncate instead, each with the full text in a
+ * tooltip.
+ */
+const GRID = 'w-full table-fixed text-xs'
+
+/**
+ * Column widths.
  *
  * The narrow-pane behaviour is deliberate rather than a media-query afterthought.
  * A pane in a dense grid can be 20rem wide, and six columns do not fit in that,
  * so the figures drop in order of how much a reader needs them: the actual print
  * survives longest, the prior goes first. `@container/pane` is declared by the
  * pane wrapper, so this reacts to the PANE's width, not the window's.
+ *
+ * Implied is the one that also grows: it is the only head carrying two words,
+ * and it earns the room for the venue name only where there is room.
  */
-const TIME_COL = 'w-[4.5rem]'
-const FIGURE_COL = 'w-[3.75rem]'
-const PRIOR_COL = 'hidden w-[3.75rem] @[30rem]/pane:table-cell'
-const IMPLIED_COL = 'hidden w-[5.25rem] @[24rem]/pane:table-cell'
-const SOURCE_COL = 'w-[4.25rem]'
+const TIME_COL = 'w-[4.75rem]'
+const FIGURE_COL = 'w-[4.5rem]'
+const PRIOR_COL = 'hidden w-[4.25rem] @[32rem]/pane:table-cell'
+const IMPLIED_COL =
+  'hidden w-[5.5rem] @[28rem]/pane:table-cell @[34rem]/pane:w-[7.25rem]'
+const SOURCE_COL = 'w-[4.5rem]'
 
 /**
  * A header cell that can carry a width and a hint. The shared `Th` primitive
- * takes neither, and both are load-bearing here: the width keeps the two tables
+ * takes neither, and both are load-bearing here: the width keeps the tables
  * aligned, and the hint is where "implied is not consensus" gets said.
+ *
+ * It truncates rather than wraps. A head is a label, and a label that grows a
+ * second line pushes every column's values down a row and makes the pane look
+ * broken; 'GERÇEKLEŞEN' clipped to fit still reads, and the tooltip holds the
+ * whole of it.
  */
 function HeadCell({
   align = 'left',
@@ -276,7 +317,7 @@ function HeadCell({
   return (
     <th
       className={cn(
-        'pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em] last:pr-0',
+        'truncate pb-1.5 pr-3 font-mono text-[10px] font-medium uppercase tracking-[.14em]',
         align === 'right' ? 'text-right' : 'text-left',
         className,
       )}
@@ -284,6 +325,32 @@ function HeadCell({
     >
       {children}
     </th>
+  )
+}
+
+/**
+ * The quieter half of a head: the zone on Time, the venue on Implied.
+ *
+ * Same line, less weight. These are qualifiers on the column rather than part
+ * of its name, and the tracked-out uppercase they used to sit inside was what
+ * made them cost a second line.
+ */
+function SubLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <span
+      className={cn(
+        'ml-1 font-normal normal-case tracking-normal text-muted-foreground/70',
+        className,
+      )}
+    >
+      {children}
+    </span>
   )
 }
 
@@ -314,7 +381,7 @@ function FigureCell({
   value?: string
 }) {
   return (
-    <td className={cn(className, 'py-1.5 pr-3 text-right')}>
+    <td className={cn(className, 'truncate py-1.5 pr-3 text-right')}>
       {value ? (
         <span
           className={cn(
@@ -406,7 +473,7 @@ function DayGroup({
           {entries.length}
         </span>
       </p>
-      <table className="w-full text-xs">
+      <table className={GRID}>
         <tbody>
           {entries.map((entry) => (
             <ReleaseRow
@@ -457,15 +524,16 @@ function ReleaseRow({
     entry.releaseMs === null
       ? undefined
       : new Date(entry.releaseMs).toLocaleString()
+  const impact = t(`economicCalendar.impact.${entry.importance}`)
 
   return (
     <tr
       className={cn(
-        'border-b border-border/40 last:border-0 hover:bg-accent/40',
+        'border-b border-border/40 transition-colors last:border-0 hover:bg-accent/40',
         isNext && 'bg-[color-mix(in_oklch,var(--primary)_7%,transparent)]',
       )}
     >
-      <td className={cn(TIME_COL, 'py-1.5 pl-3 pr-3')}>
+      <td className={cn(TIME_COL, 'truncate py-1.5 pl-3 pr-3')}>
         <span
           className={cn(
             'font-mono text-[11.5px] tabular-nums',
@@ -482,17 +550,27 @@ function ReleaseRow({
       </td>
       <td className="py-1.5 pr-3">
         <span className="flex items-center gap-2">
+          {/* Hoverable as well as coloured: three tiers of chip mean nothing
+              to a reader who has not been told what they are, and the pane
+              has no room for a legend. */}
           <span
             aria-hidden
             className={cn(
               'h-3.5 w-1.5 shrink-0 rounded-sm',
               importanceBar(entry.importance),
             )}
+            title={impact}
           />
-          <span className="min-w-0 truncate text-[12px]">{entry.title}</span>
-          <span className="sr-only">
-            {t(`economicCalendar.impact.${entry.importance}`)}
+          <span
+            className={cn(
+              'min-w-0 truncate text-[12px]',
+              entry.importance === 'high' && 'font-medium',
+            )}
+            title={entry.title}
+          >
+            {entry.title}
           </span>
+          <span className="sr-only">{impact}</span>
         </span>
       </td>
       {showFigures && (
@@ -500,10 +578,15 @@ function ReleaseRow({
           {/* The countdown stands where the actual will land, on the one row
               that has not printed yet. Nothing else could go in that cell, and
               a reader looking for what is next looks at the top of the column
-              of numbers rather than at a badge somewhere else. */}
+              of numbers rather than at a badge somewhere else. It carries the
+              row's own accent, so the highlighted row, its clock and its
+              countdown all say "next" in one colour. */}
           {countdown && !entry.actual ? (
-            <td className={cn(FIGURE_COL, 'py-1.5 pr-3 text-right')}>
-              <span className="whitespace-nowrap text-[11px] text-muted-foreground">
+            <td
+              className={cn(FIGURE_COL, 'truncate py-1.5 pr-3 text-right')}
+              title={countdown}
+            >
+              <span className="font-mono text-[11px] font-medium tabular-nums text-primary">
                 {countdown}
               </span>
             </td>
@@ -524,10 +607,8 @@ function ReleaseRow({
           <FigureCell className={PRIOR_COL} value={entry.prior} />
         </>
       )}
-      <td
-        className={cn(SOURCE_COL, 'whitespace-nowrap py-1.5 pr-3 text-right')}
-      >
-        <span className="rounded-md bg-secondary px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[.06em] text-muted-foreground">
+      <td className={cn(SOURCE_COL, 'py-1.5 pr-3 text-right')}>
+        <span className="inline-block max-w-full truncate rounded-md bg-secondary px-1.5 py-0.5 align-middle font-mono text-[9.5px] uppercase tracking-[.06em] text-muted-foreground">
           {entry.source}
         </span>
       </td>
@@ -570,11 +651,43 @@ function UnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
   )
 }
 
+/**
+ * The shape of the thing that is coming, not a stack of grey bars.
+ *
+ * A skeleton row is a clock, a title and an agency chip on the same grid the
+ * rows land on, so the pane does not visibly re-lay itself the moment the
+ * window arrives. The sweep is staggered down the list rather than pulsed in
+ * lockstep, which is the shared `.shimmer` contract.
+ */
 function LoadingRows() {
   return (
-    <div className="space-y-1.5 p-3">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <div className="h-6 animate-pulse rounded bg-muted" key={i} />
+    <div className="px-3">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          className="flex items-center gap-2 border-b border-border/40 py-2"
+          key={i}
+        >
+          <span
+            aria-hidden
+            className="shimmer h-2.5 w-9 shrink-0 rounded-sm"
+            style={{ '--shimmer-delay': `${i * 60}ms` } as React.CSSProperties}
+          />
+          <span
+            aria-hidden
+            className="shimmer h-2.5 rounded-sm"
+            style={
+              {
+                '--shimmer-delay': `${i * 60}ms`,
+                width: `${52 + ((i * 13) % 34)}%`,
+              } as React.CSSProperties
+            }
+          />
+          <span
+            aria-hidden
+            className="shimmer ml-auto h-3 w-10 shrink-0 rounded-md"
+            style={{ '--shimmer-delay': `${i * 60}ms` } as React.CSSProperties}
+          />
+        </div>
       ))}
     </div>
   )
