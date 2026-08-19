@@ -21,6 +21,7 @@ function quote(
     volume24h: null,
     ts: 1,
     fromSnapshot: false,
+    bookPending: false,
   }
 }
 
@@ -43,6 +44,33 @@ describe('spreadBps', () => {
 })
 
 describe('buildVenueLadder', () => {
+  test('carries the top-of-book chase through to the row', () => {
+    // The row draws a skeleton only while this is true, which is what stopped
+    // ByBit pulsing forever on a ticker channel that quotes no book.
+    const [chasing, settled] = buildVenueLadder(
+      [
+        { ...quote('bybit', null, null), bookPending: true },
+        { ...quote('upbit', null, null), bookPending: false },
+      ],
+      'buy',
+    )
+    expect(chasing?.bookPending).toBe(true)
+    expect(settled?.bookPending).toBe(false)
+  })
+
+  test('a venue quoted off its order book ranks like any other', () => {
+    // ByBit's bid/ask reach the quote from the depth stream rather than the
+    // ticker; nothing downstream may treat that as a lesser quote.
+    const rows = buildVenueLadder(
+      [quote('okx', 100.0, 100.4), quote('bybit', 100.05, 100.1)],
+      'buy',
+    )
+    expect(rows[0]?.market).toBe('bybit')
+    expect(rows[0]?.isBest).toBe(true)
+    expect(rows[0]?.ranked).toBe(true)
+    expect(rows[0]?.spreadBps).not.toBeNull()
+  })
+
   test('the cheapest ask leads the buy side and carries the badge', () => {
     const rows = buildVenueLadder(
       [

@@ -12,8 +12,14 @@
  * multiplexed on `ticker:<venue>:<pair>` by the market-data provider. So the
  * ladder, the multi-price pane and the dossier on one board share one ticker
  * per venue rather than three, and adding this pane to a workspace that
- * already quotes venues costs nothing at all. It never opens a BOOK: the
- * depth pane below it is the only thing on the rail that does.
+ * already quotes venues costs nothing at all.
+ *
+ * It is the one consumer that asks for `topOfBook`, because it is the one that
+ * RANKS on bid and ask. ByBit, MEXC and Upbit quote no book on their ticker
+ * channel at all, so without it those three sat blank here while the header
+ * two panes over showed the very same venue's spread off the depth stream.
+ * The option opens a book only for a venue proven to tick without quoting
+ * one, which for the charted venue is a stream the terminal already holds.
  *
  * Render discipline: quotes publish on a 400ms cadence, rows are memoized on
  * their own venue's numbers, and the ORDER is recomputed on a slow interval
@@ -101,7 +107,11 @@ function VenueLadderPaneInner({
     )
   }, [markets, market])
 
-  const quotes = useVenueQuotes({ pairKey, markets: comparable })
+  const quotes = useVenueQuotes({
+    pairKey,
+    markets: comparable,
+    topOfBook: true,
+  })
 
   const optionByMarket = useMemo(() => {
     const map = new Map<string, MarketOption>()
@@ -237,6 +247,7 @@ function sameLadderRow(
     a.row.ask === b.row.ask &&
     a.row.spreadBps === b.row.spreadBps &&
     a.row.status === b.row.status &&
+    a.row.bookPending === b.row.bookPending &&
     a.row.ranked === b.row.ranked &&
     a.row.isBest === b.row.isBest
   )
@@ -344,6 +355,11 @@ const VenueLadderRow = memo(function VenueLadderRow({
         // One sentence across the three numeric columns, exactly where the
         // numbers would have been: the reason there is no price is the answer
         // this row has, and a row of dashes is not an answer.
+        //
+        // The skeleton is for rows that are still arriving, and ONLY those. A
+        // venue that trades here but publishes no top of book used to pulse
+        // for as long as the pane stayed open, promising a number that was
+        // never coming; `bookPending` is what separates the two now.
         <span className="col-span-2 justify-self-end truncate font-sans text-[11px] font-normal text-muted-foreground @min-[15rem]/pane:col-span-3">
           {unreachable ? (
             <span className="inline-flex items-center gap-1">
@@ -354,8 +370,10 @@ const VenueLadderRow = memo(function VenueLadderRow({
             t('venueLadder.notListed')
           ) : row.status === 'no-data' ? (
             t('venueLadder.noBook')
-          ) : (
+          ) : row.status === 'pending' || row.bookPending ? (
             <span className="inline-block h-3 w-16 animate-pulse rounded bg-muted align-middle" />
+          ) : (
+            t('venueLadder.noTopOfBook')
           )}
         </span>
       )}

@@ -166,6 +166,23 @@ export const binanceCcxtVenue: CcxtVenueConfig = {
     // memoized stream. Measured clean: book live in 1-2.5 s across
     // switches, no 1008s. The per-switch TLS handshakes this costs are the
     // lesser evil; do not re-add a low streamLimits cap.
+    //
+    // The batched ticker rides `<id>@ticker`, NOT ccxt's default
+    // `<id>@miniTicker`. miniTicker carries close/open/high/low/volume and no
+    // top of book, so with `batchTickers` on, Binance quoted a bid and ask
+    // exactly ONCE — on the REST seed — and every socket frame after it came
+    // back 0. That is invisible on the chart header (which reads the depth
+    // stream) and fatal to anything ranking venues on their spread. Same
+    // 1000 ms cadence, a slightly larger frame, and `b`/`a` in it, which
+    // ccxt's `parseWsTicker` already reads. It also settles an upstream
+    // inconsistency: ccxt's own `unWatchTickers` defaults to 'ticker' while
+    // `watchTickers` defaults to 'miniTicker', so the unsubscribe named a
+    // stream the subscribe never opened.
+    //
+    // Nested under `options`, like every other ccxt option: the outer bag is
+    // spread onto the CONSTRUCTOR, where a `watchTickers` key would replace
+    // the method of that name rather than configure it.
+    options: { watchTickers: { name: 'ticker' } },
   },
   // Default sharding has one visible cost: a 15-pair watchlist is 15 ticker
   // hashes, so a fresh page load dials 15 sockets and the chips fill in one

@@ -2138,7 +2138,8 @@
     "switchTo": "Dieses Paar auf {{venue}} charten",
     "desktopOnly": "Desktop",
     "notListed": "Paar nicht gelistet",
-    "noBook": "noch keine Kurse"
+    "noBook": "noch keine Kurse",
+    "noTopOfBook": "kein Buch notiert"
   },
   "whatMovedIt": {
     "noPairTitle": "Kein Kontrakt ausgewählt",

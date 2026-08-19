@@ -2138,7 +2138,8 @@
     "switchTo": "Graficar este par en {{venue}}",
     "desktopOnly": "Escritorio",
     "notListed": "par no listado",
-    "noBook": "aún sin cotizaciones"
+    "noBook": "aún sin cotizaciones",
+    "noTopOfBook": "sin libro cotizado"
   },
   "whatMovedIt": {
     "noPairTitle": "Ningún contrato seleccionado",

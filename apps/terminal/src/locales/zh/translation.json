@@ -2138,7 +2138,8 @@
     "switchTo": "在 {{venue}} 查看该交易对图表",
     "desktopOnly": "桌面版",
     "notListed": "未上架该交易对",
-    "noBook": "暂无报价"
+    "noBook": "暂无报价",
+    "noTopOfBook": "未提供盘口"
   },
   "whatMovedIt": {
     "noPairTitle": "尚未选择合约",

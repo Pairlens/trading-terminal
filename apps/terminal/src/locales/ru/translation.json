@@ -2206,7 +2206,8 @@
     "switchTo": "Открыть график пары на {{venue}}",
     "desktopOnly": "Десктоп",
     "notListed": "пара не торгуется",
-    "noBook": "котировок пока нет"
+    "noBook": "котировок пока нет",
+    "noTopOfBook": "стакан не публикуется"
   },
   "whatMovedIt": {
     "noPairTitle": "Контракт не выбран",

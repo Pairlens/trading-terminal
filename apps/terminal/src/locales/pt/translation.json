@@ -2138,7 +2138,8 @@
     "switchTo": "Abrir o gráfico deste par na {{venue}}",
     "desktopOnly": "Desktop",
     "notListed": "par não listado",
-    "noBook": "ainda sem cotações"
+    "noBook": "ainda sem cotações",
+    "noTopOfBook": "sem livro cotado"
   },
   "whatMovedIt": {
     "noPairTitle": "Nenhum contrato selecionado",

@@ -2206,7 +2206,8 @@
     "switchTo": "Pokaż wykres tej pary na {{venue}}",
     "desktopOnly": "Desktop",
     "notListed": "para nienotowana",
-    "noBook": "brak kwotowań"
+    "noBook": "brak kwotowań",
+    "noTopOfBook": "brak arkusza"
   },
   "whatMovedIt": {
     "noPairTitle": "Nie wybrano kontraktu",

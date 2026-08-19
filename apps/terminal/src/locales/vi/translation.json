@@ -2138,7 +2138,8 @@
     "switchTo": "Xem biểu đồ cặp này trên {{venue}}",
     "desktopOnly": "Máy tính",
     "notListed": "cặp chưa niêm yết",
-    "noBook": "chưa có báo giá"
+    "noBook": "chưa có báo giá",
+    "noTopOfBook": "không niêm yết sổ lệnh"
   },
   "whatMovedIt": {
     "noPairTitle": "Chưa chọn hợp đồng",

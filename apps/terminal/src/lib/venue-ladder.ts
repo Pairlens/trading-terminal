@@ -15,7 +15,11 @@
  *    still renders, because a real number from ninety seconds ago is worth
  *    seeing, but crowning it points at a fill that may not exist;
  *  - a venue with no real book — several data providers fabricate bid/ask by
- *    nudging `last`, which `hasRealBook` recognises by its exact shape;
+ *    nudging `last`, which `hasRealBook` recognises by its exact shape. This
+ *    is about fabricated quotes, not about where a real one came from: for
+ *    the venues that publish no top of book on their ticker channel, the
+ *    quote arrives from the venue's own order book (see `useVenueQuotes`'s
+ *    `topOfBook`) and ranks like any other;
  *  - a locked or crossed book, which `hasRealBook` also refuses.
  *
  * Ranking needs at least two qualifying venues. "Best of one" is not a
@@ -34,6 +38,8 @@ export type LadderRow = {
   /** Top-of-book spread in basis points; null without a real two-sided book. */
   spreadBps: number | null
   status: VenueQuoteStatus
+  /** Top of book is still being chased — see `VenueQuote.bookPending`. */
+  bookPending: boolean
   /** Took part in the ranking — a live, real, two-sided book. */
   ranked: boolean
   /** Best price on the active side, among at least two ranked venues. */
@@ -95,6 +101,7 @@ export function buildVenueLadder(
       ask: quote.ask,
       spreadBps: ranked ? spreadBps(quote.bid, quote.ask) : null,
       status: quote.status,
+      bookPending: quote.bookPending,
       ranked,
       isBest: false,
     }
