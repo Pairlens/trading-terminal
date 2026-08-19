@@ -187,10 +187,11 @@
     "emptyBody": "El calendario de publicaciones viene del App Server. Esta versión funciona de forma autónoma, así que no hay nada con lo que compilarlo.",
     "columns": {
       "actual": "Real",
-      "implied": "Implícito (Kalshi)",
+      "implied": "Implícito",
+      "impliedSource": "Kalshi",
       "prior": "Anterior",
       "source": "Organismo",
-      "time": "Hora ({{zone}})",
+      "time": "Hora",
       "event": "Publicación"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "Abrir la Tienda de Plugins",
     "suggest": {
       "chart": "Analiza el gráfico de {{pair}}",
+      "predictionEvent": "Analizar este evento",
       "discovery": "Búscame algo para operar",
       "workflows": "Crea un flujo de trabajo",
       "notifications": "Configura una alerta",

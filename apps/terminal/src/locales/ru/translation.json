@@ -199,10 +199,11 @@
     "emptyBody": "График публикаций приходит с App Server. Эта сборка работает автономно, поэтому собирать его не из чего.",
     "columns": {
       "actual": "Факт",
-      "implied": "Ожидание (Kalshi)",
+      "implied": "Ожидание",
+      "impliedSource": "Kalshi",
       "prior": "Пред.",
       "source": "Ведомство",
-      "time": "Время ({{zone}})",
+      "time": "Время",
       "event": "Публикация"
     },
     "impact": {
@@ -2436,6 +2437,7 @@
     "goToPlugins": "Открыть Магазин плагинов",
     "suggest": {
       "chart": "Проанализируй график {{pair}}",
+      "predictionEvent": "Разобрать это событие",
       "discovery": "Найди, чем поторговать",
       "workflows": "Собери воркфлоу",
       "notifications": "Настрой оповещение",

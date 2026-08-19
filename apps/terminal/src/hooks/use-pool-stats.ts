@@ -21,7 +21,7 @@
  * `usePoolStats` is the one exception to the single-answer rule above, and it
  * has to be: see the reserve supplement below.
  */
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import {
@@ -42,8 +42,10 @@ import type {
 
 import type { PoolStatsMerge } from '@/lib/dex/pool-stats-merge'
 import { mergePoolStats, needsReserves } from '@/lib/dex/pool-stats-merge'
+import { learnedTokenPin } from '@/lib/dex/token-label'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { getCountrySetting } from '@/lib/region-settings'
+import { registerDisplayToken } from '@/stores/token-directory-store'
 
 /** Pool state moves with the price; a minute is well inside the budget. */
 const STATS_REFRESH_MS = 60_000
@@ -213,6 +215,8 @@ export function usePoolStats(
     [primary, supplement.data],
   )
 
+  useLearnedTokenLabel(market, pairKey, merged.stats)
+
   return {
     stats: merged.stats,
     isLoading: active && query.isPending,
@@ -228,6 +232,25 @@ export function usePoolStats(
     filledBy: merged.filledBy,
     filled: merged.filled,
   }
+}
+
+/**
+ * Teach the token directory what the pool that just resolved is called, so a
+ * pair reached by link stops rendering as a bare address. The rule, and the
+ * orientation guard that makes it safe, live in `learnedTokenPin`.
+ */
+function useLearnedTokenLabel(
+  market: string | undefined,
+  pairKey: string | undefined,
+  stats: PoolStats | null,
+): void {
+  const baseSymbol = stats?.baseSymbol ?? null
+  const quoteSymbol = stats?.quoteSymbol ?? null
+
+  useEffect(() => {
+    const pin = learnedTokenPin(market, pairKey, { baseSymbol, quoteSymbol })
+    if (pin) registerDisplayToken(pin)
+  }, [market, pairKey, baseSymbol, quoteSymbol])
 }
 
 export type PoolTradesResult = {

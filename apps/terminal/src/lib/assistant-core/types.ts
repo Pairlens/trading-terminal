@@ -55,6 +55,27 @@ export type AssistantSuggestion = {
   values?: Record<string, string | number>
 }
 
+/**
+ * The instrument a surface is about.
+ *
+ * Separate from the context block because it is read by a different
+ * consumer for a different reason: the context block is prose the model
+ * reads, this is what the market tools DEFAULT THEIR ARGUMENTS TO when
+ * the user names no instrument. A surface that publishes one is saying
+ * "if they say 'the price' with nothing else, they mean this".
+ *
+ * Ranked like everything else, so the leading surface decides. That is
+ * what lets a prediction desk point the tools at the leg on screen
+ * while the address underneath it still names the event.
+ */
+export type AssistantSurfaceFocus = {
+  /** Venue market id, e.g. `polymarket`, `okx`. */
+  market?: string
+  /** The key a subscription and an order address. */
+  pair?: string
+  timeframe?: string
+}
+
 /** What a surface contributes to the assistant's view of the screen. */
 export type AssistantSurfaceContext = {
   /** One line of prose: "Chart pane showing BTC-USDT on okx, 1h". */
@@ -76,6 +97,12 @@ export type AssistantSurfaceRegistration = {
   getPriority?: () => number
   /** What the user is looking at here. Return null to contribute nothing. */
   getContext?: () => AssistantSurfaceContext | null
+  /**
+   * The instrument the market tools should default to while this
+   * surface leads. Return null to leave the default to whatever ranks
+   * below — most surfaces are not about one instrument.
+   */
+  getFocus?: () => AssistantSurfaceFocus | null
   /** The orb's idle prompt while this surface leads. */
   getSuggestion?: () => AssistantSuggestion | null
   /** Tools this surface can run. Read live so the set can change. */

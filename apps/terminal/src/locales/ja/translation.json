@@ -187,10 +187,11 @@
     "emptyBody": "発表予定は App Server から取得します。このビルドはスタンドアロンで動作しているため、集計する元がありません。",
     "columns": {
       "actual": "結果",
-      "implied": "織り込み (Kalshi)",
+      "implied": "織り込み",
+      "impliedSource": "Kalshi",
       "prior": "前回",
       "source": "機関",
-      "time": "時刻 ({{zone}})",
+      "time": "時刻",
       "event": "発表"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "プラグインストアを開く",
     "suggest": {
       "chart": "{{pair}} のチャートを分析して",
+      "predictionEvent": "このイベントを分析",
       "discovery": "取引できそうな銘柄を探して",
       "workflows": "ワークフローを作って",
       "notifications": "アラートを設定して",

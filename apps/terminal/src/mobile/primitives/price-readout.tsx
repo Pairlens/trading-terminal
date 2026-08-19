@@ -44,6 +44,7 @@ import {
 import { usePriceTick } from '@/hooks/use-price-tick'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
 import { formatBookPrice, formatPredictionPrice } from '@/lib/format-price'
+import { liveQuotePrice } from '@/lib/live-price'
 
 export type PriceReadoutProps = {
   className?: string
@@ -109,8 +110,9 @@ export const PriceReadout = memo(function PriceReadout({
 
   const candles = candleData?.candles ?? []
   const price =
-    ticker?.lastTradePrice ??
-    ticker?.midPrice ??
+    // Null while the book is half-built, so the headline holds the last close
+    // rather than printing one side of a book. See `lib/live-price`.
+    liveQuotePrice(ticker) ??
     candleData?.latestCandle?.close ??
     candles[candles.length - 1]?.close ??
     null

@@ -187,10 +187,11 @@
     "emptyBody": "Der Veröffentlichungsplan kommt vom App Server. Dieser Build läuft eigenständig, es gibt also nichts, woraus er sich zusammenstellen ließe.",
     "columns": {
       "actual": "Ist",
-      "implied": "Implizit (Kalshi)",
+      "implied": "Implizit",
+      "impliedSource": "Kalshi",
       "prior": "Vorher",
       "source": "Behörde",
-      "time": "Zeit ({{zone}})",
+      "time": "Zeit",
       "event": "Veröffentlichung"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "Plugin Store öffnen",
     "suggest": {
       "chart": "Analysiere den Chart von {{pair}}",
+      "predictionEvent": "Dieses Ereignis lesen",
       "discovery": "Finde mir etwas zum Handeln",
       "workflows": "Baue einen Workflow",
       "notifications": "Richte einen Alert ein",

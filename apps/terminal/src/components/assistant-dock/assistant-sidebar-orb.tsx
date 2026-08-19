@@ -9,7 +9,12 @@
 //
 // That last case is the point of the whole component. Docked here the
 // orb is easy to forget, so a run in progress has to announce itself
-// without being asked.
+// without being asked, at least until the window is open. Open, the
+// window is the thing doing the reporting.
+//
+// Open, this orb also detaches: it opens into a ring and quiets down,
+// so the rail reads as the socket the assistant came out of rather than
+// a second copy of the one in the panel header.
 
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, motion } from 'motion/react'
@@ -79,6 +84,12 @@ export function AssistantSidebarOrb({
 }: AssistantSidebarOrbProps) {
   const { t } = useTranslation()
 
+  // A run only announces itself out here while the window is away. Open, the
+  // window is anchored right beside this rail and already carries the status,
+  // so an unprompted flyout would be the same sentence twice, one of them
+  // under the panel.
+  const announceBusy = busy && !open
+
   return (
     <SidebarMenuItem className="group/assistant relative">
       <SidebarMenuButton
@@ -96,7 +107,10 @@ export function AssistantSidebarOrb({
           <AiOrb
             size="20px"
             animationDuration={15}
-            state={busy ? 'thinking' : 'idle'}
+            // Open means the AI is in the window, not in the rail: the orb
+            // hollows out and quiets down rather than mirroring the one in
+            // the panel header.
+            state={open ? 'detached' : busy ? 'thinking' : 'idle'}
           />
         </span>
         <span className="sr-only">{t('assistantDock.title')}</span>
@@ -118,13 +132,17 @@ export function AssistantSidebarOrb({
             exit={{ opacity: 0, x: -4 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className={
-              busy
+              announceBusy
                 ? 'pointer-events-none absolute top-1/2 left-[calc(100%+0.5rem)] z-50 -translate-y-1/2'
                 : 'pointer-events-none absolute top-1/2 left-[calc(100%+0.5rem)] z-50 hidden -translate-y-1/2 group-hover/assistant:block group-focus-within/assistant:block'
             }
           >
             <span className="ai-glass-pill text-muted-foreground block max-w-[26ch] truncate rounded-lg px-2.5 py-1 text-xs">
-              {busy ? <ShimmeringText text={label} duration={1.6} /> : label}
+              {announceBusy ? (
+                <ShimmeringText text={label} duration={1.6} />
+              ) : (
+                label
+              )}
             </span>
           </motion.div>
         ) : null}

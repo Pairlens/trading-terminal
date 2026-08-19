@@ -187,10 +187,11 @@
     "emptyBody": "發布時程來自 App Server。此版本以獨立模式執行，沒有可彙整的來源。",
     "columns": {
       "actual": "實際",
-      "implied": "隱含 (Kalshi)",
+      "implied": "隱含",
+      "impliedSource": "Kalshi",
       "prior": "前值",
       "source": "機構",
-      "time": "時間（{{zone}}）",
+      "time": "時間",
       "event": "發布"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "開啟外掛商店",
     "suggest": {
       "chart": "分析 {{pair}} 的圖表",
+      "predictionEvent": "分析此事件",
       "discovery": "幫我找點可以交易的標的",
       "workflows": "建立一個工作流程",
       "notifications": "設定一個提醒",

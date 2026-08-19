@@ -187,10 +187,11 @@
     "emptyBody": "Yayın takvimi App Server'dan gelir. Bu yapı bağımsız çalışıyor, dolayısıyla derlenecek bir kaynak yok.",
     "columns": {
       "actual": "Gerçekleşen",
-      "implied": "Zımni (Kalshi)",
+      "implied": "Zımni",
+      "impliedSource": "Kalshi",
       "prior": "Önceki",
       "source": "Kurum",
-      "time": "Saat ({{zone}})",
+      "time": "Saat",
       "event": "Yayın"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "Eklenti Mağazası'nı aç",
     "suggest": {
       "chart": "{{pair}} grafiğini analiz et",
+      "predictionEvent": "Bu olayı incele",
       "discovery": "Bana işlem yapacak bir şey bul",
       "workflows": "Bir iş akışı kur",
       "notifications": "Bir uyarı ayarla",

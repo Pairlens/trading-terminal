@@ -66,6 +66,7 @@ export const COPILOT_TOOL_LABELS = {
   get_candles: ['read', 'candles'],
   get_ticker: ['read', 'the ticker'],
   get_signals: ['compute', 'strategy signals'],
+  get_recent_trades: ['read', 'the tape'],
   get_orderbook: ['read', 'the order book'],
   get_multi_timeframe: ['check', 'multi-timeframe confluence'],
   compare_pairs: ['compare', 'pairs'],

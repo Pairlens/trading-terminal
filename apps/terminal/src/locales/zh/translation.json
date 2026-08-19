@@ -187,10 +187,11 @@
     "emptyBody": "发布日程来自 App Server。此版本以独立模式运行，没有可汇编的来源。",
     "columns": {
       "actual": "实际",
-      "implied": "隐含 (Kalshi)",
+      "implied": "隐含",
+      "impliedSource": "Kalshi",
       "prior": "前值",
       "source": "机构",
-      "time": "时间（{{zone}}）",
+      "time": "时间",
       "event": "发布"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "打开插件商店",
     "suggest": {
       "chart": "分析 {{pair}} 的图表",
+      "predictionEvent": "分析此事件",
       "discovery": "帮我找点可交易的标的",
       "workflows": "搭建一个工作流",
       "notifications": "设置一个提醒",

@@ -17,6 +17,7 @@ import type {
   AssistantAction,
   AssistantSuggestion,
   AssistantSurfaceContext,
+  AssistantSurfaceFocus,
   AssistantSurfaceRegistration,
 } from './types'
 
@@ -149,6 +150,32 @@ export class AssistantSurfaceRegistry {
       }
       const match = actions.find((action) => action.name === name)
       if (match) return match
+    }
+    return null
+  }
+
+  /**
+   * What "this pair" means right now: the leading surface that claims an
+   * instrument.
+   *
+   * The market tools default their arguments to this, so the ranking is
+   * doing real work — on a prediction board the desk sits above the
+   * address, and the desk names the leg with a book rather than the
+   * event, which has none. A focus naming neither venue nor pair is
+   * skipped rather than returned, so a half-built surface cannot blank
+   * out the address underneath it.
+   */
+  getFocus(): AssistantSurfaceFocus | null {
+    for (const { registration } of this.ranked()) {
+      try {
+        const focus = registration.getFocus?.()
+        if (focus && (focus.market || focus.pair)) return focus
+      } catch (error) {
+        console.warn(
+          `[assistant] surface '${registration.id}' failed to name its instrument`,
+          error,
+        )
+      }
     }
     return null
   }

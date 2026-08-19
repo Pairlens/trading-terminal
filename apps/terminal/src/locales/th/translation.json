@@ -187,10 +187,11 @@
     "emptyBody": "กำหนดการประกาศมาจาก App Server บิลด์นี้ทำงานแบบสแตนด์อโลน จึงไม่มีแหล่งให้รวบรวม",
     "columns": {
       "actual": "ผลจริง",
-      "implied": "ที่ตลาดคาด (Kalshi)",
+      "implied": "ที่ตลาดคาด",
+      "impliedSource": "Kalshi",
       "prior": "ครั้งก่อน",
       "source": "หน่วยงาน",
-      "time": "เวลา ({{zone}})",
+      "time": "เวลา",
       "event": "การประกาศ"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "เปิด Plugin Store",
     "suggest": {
       "chart": "วิเคราะห์กราฟของ {{pair}}",
+      "predictionEvent": "วิเคราะห์เหตุการณ์นี้",
       "discovery": "หาอะไรให้ฉันเทรดหน่อย",
       "workflows": "สร้างเวิร์กโฟลว์",
       "notifications": "ตั้งการแจ้งเตือน",

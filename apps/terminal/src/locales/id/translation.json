@@ -187,10 +187,11 @@
     "emptyBody": "Jadwal rilis berasal dari App Server. Build ini berjalan mandiri, jadi tidak ada sumber untuk menyusunnya.",
     "columns": {
       "actual": "Aktual",
-      "implied": "Implisit (Kalshi)",
+      "implied": "Implisit",
+      "impliedSource": "Kalshi",
       "prior": "Sebelumnya",
       "source": "Lembaga",
-      "time": "Waktu ({{zone}})",
+      "time": "Waktu",
       "event": "Rilis"
     },
     "impact": {
@@ -2362,6 +2363,7 @@
     "goToPlugins": "Buka Plugin Store",
     "suggest": {
       "chart": "Analisis chart {{pair}}",
+      "predictionEvent": "Analisis acara ini",
       "discovery": "Carikan sesuatu untuk saya tradingkan",
       "workflows": "Buat sebuah workflow",
       "notifications": "Siapkan sebuah alert",
