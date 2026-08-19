@@ -22,9 +22,18 @@
  * Two readings the layout is built around. The legend is the chart: it prices
  * every drawn runner, states its move over the window, and toggles its line,
  * because with eight lines the question "which one is that" has to be
- * answerable without a hover. And the cap is stated in the footer — a field of
+ * answerable without a hover. And the cap is stated in the footer: a field of
  * 128 draws its leaders and says so, rather than implying the other 120 do not
  * exist.
+ *
+ * Two views, because a fixed 0-100% axis has one bad failure mode and races
+ * hit it constantly. When the favourite is at 22%, eight lines share the
+ * bottom fifth of the pane and second against third is a two-pixel gap. So a
+ * race can also be drawn as bands laid end to end, which fills the axis by
+ * construction and turns that comparison into two heights. The bands stack RAW
+ * probabilities under a grey remainder rather than normalizing to 100%, and
+ * only a field that is genuinely a partition may be stacked at all: see
+ * `lib/predictions/stack`.
  *
  * The live tick is throttled to a few seconds on purpose. Everything else on a
  * prediction route (the header's probability, the book, the tape) streams at
@@ -35,9 +44,10 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -54,7 +64,9 @@ import type {
   PredictionWindowId,
 } from '@/hooks/use-prediction-series'
 import type { SeriesRow } from '@/lib/predictions/series'
+import type { StackRow } from '@/lib/predictions/stack'
 
+import type { PredictionChartView } from '@/lib/predictions/chart-view'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
 import { usePanePair } from '@/lib/layout/pane-context'
@@ -79,6 +91,16 @@ import {
   isDateSpan,
   spanOf,
 } from '@/lib/predictions/chart-axis'
+import {
+  REST_KEY,
+  isPartitionField,
+  stackSeries,
+} from '@/lib/predictions/stack'
+import {
+  DEFAULT_PREDICTION_CHART_VIEW,
+  PREDICTION_CHART_VIEWS,
+  PREDICTION_CHART_VIEW_KEY,
+} from '@/lib/predictions/chart-view'
 import { formatPredictionPrice } from '@/lib/format-price'
 import { track } from '@/lib/analytics-events'
 
@@ -135,6 +157,10 @@ function PredictionChartBody({
     'predictions.chartWindow',
     DEFAULT_PREDICTION_WINDOW,
   )
+  const [view, setView] = usePersistedState<PredictionChartView>(
+    PREDICTION_CHART_VIEW_KEY,
+    DEFAULT_PREDICTION_CHART_VIEW,
+  )
   const [hidden, setHidden] = useState<ReadonlyArray<string>>([])
 
   const series = usePredictionSeries(
@@ -175,6 +201,30 @@ function PredictionChartBody({
   const latest = useMemo(() => lastValues(rows, keys), [rows, keys])
   const change = useMemo(() => windowChange(rows, keys), [rows, keys])
 
+  /**
+   * Whether bands are even meaningful here. A nested strike ladder sums to
+   * several dollars and a binary is one boundary, so the toggle is offered
+   * against the field rather than always: see `isPartitionField`.
+   */
+  const stackable = useMemo(
+    () => isPartitionField(context.runners),
+    [context.runners],
+  )
+  const stacked = view === 'stacked' && stackable
+
+  const visibleKeys = useMemo(() => visible.map((r) => r.pairKey), [visible])
+  // Built from the VISIBLE runners: hiding one in the legend has to hand its
+  // mass back to the rest band, or the stack would still be reserving room
+  // for a line that is not drawn.
+  const bands = useMemo(
+    () => (stacked ? stackSeries(rows, visibleKeys) : null),
+    [stacked, rows, visibleKeys],
+  )
+  const byKey = useMemo(
+    () => new Map(visible.map((runner) => [runner.pairKey, runner])),
+    [visible],
+  )
+
   const drawn = series.runners.length
   const selectWindow = useCallback(
     (id: PredictionWindowId) => {
@@ -182,6 +232,14 @@ function PredictionChartBody({
       track('prediction_chart_window_selected', { window: id, runners: drawn })
     },
     [setWindowId, drawn],
+  )
+
+  const selectView = useCallback(
+    (id: PredictionChartView) => {
+      setView(id)
+      track('prediction_chart_view_selected', { view: id, runners: drawn })
+    },
+    [setView, drawn],
   )
 
   const toggle = useCallback((key: string) => {
@@ -218,6 +276,7 @@ function PredictionChartBody({
         latest={latest}
         onToggle={toggle}
         runners={series.runners}
+        showRest={Boolean(bands?.hasRest)}
       />
 
       <div className="relative min-h-0 flex-1">
@@ -226,19 +285,23 @@ function PredictionChartBody({
             className="aspect-auto size-full [&_.recharts-cartesian-grid_line]:stroke-border/40"
             config={config}
           >
-            <LineChart
-              data={rows}
+            <ComposedChart
+              data={bands ? bands.rows : rows}
               margin={{ top: 8, right: 4, bottom: 0, left: 0 }}
             >
               <CartesianGrid vertical={false} strokeDasharray="2 4" />
               {/* Even odds. The one horizontal a probability chart earns: on a
                   binary contract it is the line the question flips across, and
-                  on a race it is the level a runner becomes the favourite at. */}
-              <ReferenceLine
-                stroke="var(--border)"
-                strokeDasharray="4 4"
-                y={0.5}
-              />
+                  on a race it is the level a runner becomes the favourite at.
+                  Dropped in the stacked view, where 50% is the boundary of
+                  whichever bands happen to sit below it and means nothing. */}
+              {!bands && (
+                <ReferenceLine
+                  stroke="var(--border)"
+                  strokeDasharray="4 4"
+                  y={0.5}
+                />
+              )}
               <XAxis
                 axisLine={false}
                 dataKey="ts"
@@ -251,14 +314,16 @@ function PredictionChartBody({
                 ticks={ticks}
                 type="number"
               />
-              {/* Fixed 0–100%, never auto-scaled to the field. A race whose
+              {/* Fixed 0-100%, never auto-scaled to the field. A race whose
                   leader sits at 12% would otherwise fill the pane and read as
                   a certainty, and two runners two points apart would look like
-                  a chasm. The empty top of the chart IS the reading: nobody in
-                  this field is close to winning. */}
+                  a chasm. In the line view the empty top of the chart IS the
+                  reading: nobody in this field is close to winning. The
+                  stacked view fills that space honestly instead, and only
+                  lifts the ceiling when the book prices above a dollar. */}
               <YAxis
                 axisLine={false}
-                domain={[0, 1]}
+                domain={[0, bands ? bands.max : 1]}
                 tick={{ fontSize: 10, fill: 'var(--muted-foreground)' }}
                 tickFormatter={(value: number) => `${Math.round(value * 100)}%`}
                 tickLine={false}
@@ -266,26 +331,75 @@ function PredictionChartBody({
                 width={34}
               />
               <ChartTooltip
-                content={<ProbabilityTooltip runners={visible} spanMs={span} />}
+                content={
+                  <ProbabilityTooltip
+                    gaps={bands?.gaps}
+                    runners={visible}
+                    showRest={Boolean(bands?.hasRest)}
+                    spanMs={span}
+                  />
+                }
                 cursor={{ stroke: 'var(--border)', strokeWidth: 1 }}
               />
-              {visible.map((runner) => (
-                <Line
-                  key={runner.pairKey}
-                  activeDot={{ r: 3, strokeWidth: 0 }}
-                  // A runner listed mid-window has no earlier price, and
-                  // joining across the hole would draw a probability the
-                  // market never quoted.
-                  connectNulls={false}
-                  dataKey={runner.pairKey}
-                  dot={false}
+              {bands
+                ? /* Bottom-first, richest at the floor. The band the route is
+                     on is outlined heavily so it stays findable in a field of
+                     eight fills. */
+                  bands.order.map((key) => {
+                    const runner = byKey.get(key)
+                    if (!runner) return null
+                    return (
+                      <Area
+                        key={key}
+                        activeDot={false}
+                        dataKey={key}
+                        fill={runner.color}
+                        fillOpacity={runner.active ? 0.92 : 0.78}
+                        isAnimationActive={false}
+                        stackId="field"
+                        stroke={runner.color}
+                        strokeWidth={runner.active ? 1.75 : 0.6}
+                        type="monotone"
+                      />
+                    )
+                  })
+                : visible.map((runner) => (
+                    <Line
+                      key={runner.pairKey}
+                      activeDot={{ r: 3, strokeWidth: 0 }}
+                      // A runner listed mid-window has no earlier price, and
+                      // joining across the hole would draw a probability the
+                      // market never quoted.
+                      connectNulls={false}
+                      dataKey={runner.pairKey}
+                      dot={false}
+                      isAnimationActive={false}
+                      stroke={runner.color}
+                      strokeWidth={runner.active ? 2.25 : 1.4}
+                      type="monotone"
+                    />
+                  ))}
+              {/* Everything the chart is not drawing, drawn. Declared last so
+                  it caps the stack, and kept grey and unlabelled in the plot
+                  because it is a residue rather than a runner. */}
+              {bands?.hasRest && (
+                <Area
+                  activeDot={false}
+                  dataKey={REST_KEY}
+                  fill="var(--muted-foreground)"
+                  // Recessive, but not invisible: on the phone's pure-black
+                  // plot a lighter grey read as empty space, which is exactly
+                  // the wrong reading for the mass the chart is not drawing.
+                  fillOpacity={0.22}
                   isAnimationActive={false}
-                  stroke={runner.color}
-                  strokeWidth={runner.active ? 2.25 : 1.4}
+                  stackId="field"
+                  stroke="var(--muted-foreground)"
+                  strokeOpacity={0.45}
+                  strokeWidth={0.6}
                   type="monotone"
                 />
-              ))}
-            </LineChart>
+              )}
+            </ComposedChart>
           </ChartContainer>
         ) : (
           <div className="flex h-full items-center justify-center px-6 text-center">
@@ -300,8 +414,11 @@ function PredictionChartBody({
 
       <Footer
         hiddenRunners={series.hidden}
+        onView={selectView}
         onWindow={selectWindow}
+        stackable={stackable}
         stride={series.stride}
+        view={view}
         windowId={windowId}
       />
     </div>
@@ -326,6 +443,7 @@ const Legend = memo(function Legend({
   latest,
   onToggle,
   runners,
+  showRest,
 }: {
   change: Map<string, number>
   context: PredictionEventContext
@@ -333,6 +451,8 @@ const Legend = memo(function Legend({
   latest: Map<string, number>
   onToggle: (key: string) => void
   runners: Array<ChartedRunner>
+  /** The stacked view is drawing a remainder band that needs naming. */
+  showRest: boolean
 }) {
   const { t } = useTranslation()
   const select = usePredictionSelect()
@@ -419,17 +539,24 @@ const Legend = memo(function Legend({
           </div>
         )
       })}
+      {/* Names the grey band. Not a switch: the remainder is what is left
+          after the others, so there is nothing to toggle. */}
+      {showRest && (
+        <div className="flex h-[22px] items-center gap-1.5 rounded-md border border-transparent bg-muted/40 px-1.5 text-[11px] text-muted-foreground">
+          <span
+            aria-hidden
+            className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40"
+          />
+          <span className="truncate">{t('predictionChart.restBand')}</span>
+        </div>
+      )}
     </div>
   )
 })
 
 // ── Crosshair ─────────────────────────────────────────────────────────
 
-type TooltipPayload = {
-  dataKey?: string | number
-  value?: number
-  payload?: SeriesRow
-}
+type TooltipPayload = { payload?: SeriesRow | StackRow }
 
 /**
  * Every visible runner at the hovered instant, richest first.
@@ -437,32 +564,52 @@ type TooltipPayload = {
  * Re-sorted per point rather than kept in legend order: reading a crossover
  * off a chart means seeing the order swap as the crosshair passes it, and a
  * tooltip pinned to a fixed order hides exactly that.
+ *
+ * Read off the hovered ROW rather than off recharts' payload entries, because
+ * the two views disagree about what an entry is: a stacked band carries a
+ * zero for a runner the venue never quoted, which the payload cannot tell
+ * apart from a genuine zero. The row plus `gaps` can, so a runner with no
+ * history stays out of the readout in both views instead of being read out at
+ * 0%.
  */
 function ProbabilityTooltip({
   active,
+  gaps,
   payload,
   runners,
+  showRest,
   spanMs,
 }: {
   active?: boolean
+  /** ts → runners with no quote there. Absent in the line view. */
+  gaps?: Map<number, Set<string>>
   payload?: Array<TooltipPayload>
   runners: Array<ChartedRunner>
+  showRest?: boolean
   spanMs: number
 }) {
+  const { t } = useTranslation()
   if (!active || !payload?.length) return null
 
-  const ts = payload[0]?.payload?.ts
-  const rows = payload
-    .map((entry) => {
-      const key = String(entry.dataKey ?? '')
-      const runner = runners.find((r) => r.pairKey === key)
-      if (!runner || typeof entry.value !== 'number') return null
-      return { runner, value: entry.value }
+  const row = payload[0]?.payload
+  if (!row) return null
+  const ts = row.ts
+  const missing = gaps?.get(ts)
+
+  const rows = runners
+    .map((runner) => {
+      if (missing?.has(runner.pairKey)) return null
+      const value = row[runner.pairKey]
+      if (typeof value !== 'number' || !Number.isFinite(value)) return null
+      return { runner, value }
     })
     .filter(
-      (row): row is { runner: ChartedRunner; value: number } => row !== null,
+      (entry): entry is { runner: ChartedRunner; value: number } =>
+        entry !== null,
     )
     .sort((a, b) => b.value - a.value)
+
+  const rest = showRest ? row[REST_KEY] : undefined
 
   if (rows.length === 0) return null
 
@@ -494,6 +641,20 @@ function ProbabilityTooltip({
             </span>
           </div>
         ))}
+        {typeof rest === 'number' && rest > 0.005 && (
+          <div className="flex items-center gap-2 border-t pt-0.5 text-muted-foreground">
+            <span
+              aria-hidden
+              className="size-1.5 shrink-0 rounded-full bg-muted-foreground/40"
+            />
+            <span className="max-w-[150px] flex-1 truncate">
+              {t('predictionChart.restBand')}
+            </span>
+            <span className="font-mono tabular-nums">
+              {(rest * 100).toFixed(1)}%
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -502,42 +663,74 @@ function ProbabilityTooltip({
 // ── Footer ────────────────────────────────────────────────────────────
 
 /**
- * The span pills, and what the chart is not showing.
+ * The span pills, the view switch, and what the chart is not showing.
  *
  * The cap and the stride are both stated here. A chart that quietly drew every
- * fourth minute, or quietly dropped 120 runners, would read as complete — and
+ * fourth minute, or quietly dropped 120 runners, would read as complete, and
  * "the ladder has the rest" is a one-line answer that keeps it honest.
+ *
+ * The view switch is hidden rather than disabled on a field that cannot be
+ * stacked. A greyed control invites the question "why not", and the answer
+ * ("these answers are not mutually exclusive") is not one a footer can give.
  */
 function Footer({
   hiddenRunners,
+  onView,
   onWindow,
+  stackable,
   stride,
+  view,
   windowId,
 }: {
   hiddenRunners: number
+  onView: (id: PredictionChartView) => void
   onWindow: (id: PredictionWindowId) => void
+  stackable: boolean
   stride: number
+  view: PredictionChartView
   windowId: PredictionWindowId
 }) {
   const { t } = useTranslation()
   return (
     <div className="flex items-center justify-between gap-2 border-t px-2 py-1">
-      <div className="flex gap-0.5">
-        {PREDICTION_WINDOWS.map((win) => (
-          <button
-            key={win.id}
-            className={cn(
-              'rounded px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
-              win.id === windowId
-                ? 'bg-primary/10 text-primary'
-                : 'text-muted-foreground hover:text-foreground',
-            )}
-            onClick={() => onWindow(win.id)}
-            type="button"
-          >
-            {t(win.labelKey)}
-          </button>
-        ))}
+      <div className="flex items-center gap-2">
+        <div className="flex gap-0.5">
+          {PREDICTION_WINDOWS.map((win) => (
+            <button
+              key={win.id}
+              className={cn(
+                'rounded px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
+                win.id === windowId
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+              onClick={() => onWindow(win.id)}
+              type="button"
+            >
+              {t(win.labelKey)}
+            </button>
+          ))}
+        </div>
+        {stackable && (
+          <div className="flex gap-0.5 rounded border p-[1px]">
+            {PREDICTION_CHART_VIEWS.map((option) => (
+              <button
+                key={option.id}
+                aria-pressed={option.id === view}
+                className={cn(
+                  'rounded-[3px] px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
+                  option.id === view
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:text-foreground',
+                )}
+                onClick={() => onView(option.id)}
+                type="button"
+              >
+                {t(option.labelKey)}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <p className="truncate text-[10px] text-muted-foreground">
         {hiddenRunners > 0 &&

@@ -298,6 +298,11 @@
     "strided_other": "{{count}} khoảng mỗi điểm",
     "tooltipCapped_one": "+1 lựa chọn nữa",
     "tooltipCapped_other": "+{{count}} lựa chọn nữa",
+    "restBand": "Các lựa chọn còn lại",
+    "view": {
+      "lines": "Đường",
+      "stacked": "Xếp chồng"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

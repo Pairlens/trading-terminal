@@ -94,12 +94,19 @@ rather than approximating it. Clear asks first.
 
 **An event contract charts as odds, not candles.** The phone opens a prediction
 on the same **Probability Chart** the desktop boards use: every outcome in the
-event on one time axis, a fixed 0 to 100% scale, and a legend under the plot
-that prices each runner and hides its line on a tap. Drag a finger across it and
-a card reads the whole field at that instant, sorted by probability, so a
-crossover is something you watch happen. The spans sit where the drawing toolbar
-would be: 1H, 6H, 1D, 1W, 1M. A field larger than eight runners draws its leaders
-and says how many it is leaving to the ladder.
+event on one time axis, and a legend under the plot that prices each runner and
+hides its line on a tap. Drag a finger across it and a card reads the whole
+field at that instant, sorted by probability, so a crossover is something you
+watch happen. The spans sit where the drawing toolbar would be: 1H, 6H, 1D, 1W,
+1M. A field larger than eight runners draws its leaders and says how many it is
+leaving to the ladder.
+
+Beside the spans is the same lines-or-bands switch the desktop has, and it
+matters more here. Eight lines under a 22% favourite are cramped on a laptop;
+on a phone they are one thick smear. Stacked bands fill the axis instead, so
+each runner is a thickness rather than a hairline, with the grey rest of the
+field on top for everything the chart is not drawing. It is the default where
+the field is a partition, and your choice follows you back to the laptop.
 
 The chip in the corner switches to **candles**, which brings back the chart
 engine, the interval picker and the drawing toolbar for the one outcome you are

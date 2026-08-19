@@ -401,6 +401,14 @@ export interface AnalyticsEvents {
    * four too many. `runners` is how many lines were drawn, which says whether
    * the multi-outcome view is what people came for; never which event. */
   prediction_chart_window_selected: { window: string; runners: number }
+  /** Lines or stacked bands. The stacked view exists because a fixed 0-100%
+   * axis crushes a race into the bottom of the pane, and it ships as the
+   * default — so this is the one signal that says whether that default was
+   * right, or whether people switch straight back. Only offered on a field
+   * that is a partition, so a low count here also measures how many events
+   * are stackable at all. `runners` is how many were drawn, never which
+   * event. */
+  prediction_chart_view_selected: { view: string; runners: number }
 
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }

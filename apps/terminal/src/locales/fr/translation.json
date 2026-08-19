@@ -298,6 +298,11 @@
     "strided_other": "{{count}} intervalles par point",
     "tooltipCapped_one": "+1 autre participant",
     "tooltipCapped_other": "+{{count}} autres participants",
+    "restBand": "Reste du peloton",
+    "view": {
+      "lines": "Lignes",
+      "stacked": "Empilé"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

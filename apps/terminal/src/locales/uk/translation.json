@@ -334,6 +334,11 @@
     "tooltipCapped_few": "ще {{count}} учасники",
     "tooltipCapped_many": "ще {{count}} учасників",
     "tooltipCapped_other": "ще {{count}} учасника",
+    "restBand": "Інші результати",
+    "view": {
+      "lines": "Лінії",
+      "stacked": "З накопиченням"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

@@ -298,6 +298,11 @@
     "strided_other": "{{count}} intervalli per punto",
     "tooltipCapped_one": "+1 altro concorrente",
     "tooltipCapped_other": "+altri {{count}} concorrenti",
+    "restBand": "Resto del campo",
+    "view": {
+      "lines": "Linee",
+      "stacked": "Impilato"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

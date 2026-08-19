@@ -334,6 +334,11 @@
     "tooltipCapped_few": "ещё {{count}} участника",
     "tooltipCapped_many": "ещё {{count}} участников",
     "tooltipCapped_other": "ещё {{count}} участника",
+    "restBand": "Остальные исходы",
+    "view": {
+      "lines": "Линии",
+      "stacked": "С накоплением"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

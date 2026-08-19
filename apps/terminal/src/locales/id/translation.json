@@ -298,6 +298,11 @@
     "strided_other": "{{count}} interval per titik",
     "tooltipCapped_one": "+1 kandidat lagi",
     "tooltipCapped_other": "+{{count}} kandidat lagi",
+    "restBand": "Sisa kandidat",
+    "view": {
+      "lines": "Garis",
+      "stacked": "Bertumpuk"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",
