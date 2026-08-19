@@ -585,6 +585,15 @@
   initial-value: 0deg;
 }
 
+/* How far the hollow reaches, as a share of the orb's radius. 0% is a solid
+   ball. Registered so it interpolates: the mask below is written in terms of
+   it, which is what lets the ball open into a ring instead of cutting to one. */
+@property --orb-hollow {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
 .ai-orb {
   display: grid;
   grid-template-areas: 'stack';
@@ -608,9 +617,21 @@
   --orb-c1-clear: oklch(from var(--orb-c1-local) l c h / 0);
   --orb-c2-clear: oklch(from var(--orb-c2-local) l c h / 0);
   --orb-c3-clear: oklch(from var(--orb-c3-local) l c h / 0);
+  /* The hollow. Both stops are driven by --orb-hollow, so at 0% they collapse
+     onto each other at the centre and the mask is a no-op: a solid ball with
+     no second layer to reason about. The feather is a share of the hollow
+     rather than a fixed width, which keeps the inner edge soft at 20px and at
+     192px alike. */
+  mask-image: radial-gradient(
+    closest-side,
+    transparent var(--orb-hollow),
+    black calc(var(--orb-hollow) * 1.32)
+  );
   transition:
     box-shadow 600ms ease,
-    filter 600ms ease;
+    filter 600ms ease,
+    opacity 420ms ease,
+    --orb-hollow 620ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .ai-orb--thinking {
@@ -618,6 +639,18 @@
     0 0 12px 2px oklch(0.7 0.13 250 / 0.45),
     0 0 4px 1px oklch(0.74 0.15 288 / 0.35);
   filter: brightness(1.2);
+}
+
+/* Detached: the assistant's panel is open, so the AI is no longer in this
+   button. The ball opens into a ring and steps back — dimmer, less saturated,
+   turning at a fraction of the speed (the rate change is the component's, see
+   ai-orb.tsx). What is left reads as the socket the orb came out of, which is
+   also where it folds back into when the panel closes. */
+.ai-orb--detached {
+  --orb-hollow: 47%;
+  opacity: 0.62;
+  filter: saturate(0.72);
+  box-shadow: none;
 }
 
 .ai-orb::before,
@@ -732,6 +765,14 @@
 @media (prefers-reduced-motion: reduce) {
   .ai-orb::before {
     animation: none;
+  }
+  /* The fade still carries the state change; the morph is the part that moves,
+     so it lands instantly instead. */
+  .ai-orb {
+    transition:
+      box-shadow 600ms ease,
+      filter 600ms ease,
+      opacity 420ms ease;
   }
 }
 

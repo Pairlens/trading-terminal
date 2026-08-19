@@ -21,8 +21,15 @@ export type AiOrbProps = {
   }
   /** Animation cycle duration in seconds */
   animationDuration?: number
-  /** Visual state: idle (calm) or thinking (fast + glow) */
-  state?: 'idle' | 'thinking'
+  /**
+   * Visual state:
+   * - `idle` — a calm ball, turning once every `animationDuration`.
+   * - `thinking` — the same ball, five times faster, with a glow.
+   * - `detached` — the AI is somewhere else on screen (its panel is open),
+   *   so the ball opens into a ring, dims, and slows almost to a stop. The
+   *   socket it left behind, not a second copy of it.
+   */
+  state?: 'idle' | 'thinking' | 'detached'
 }
 
 function computeParams(sizeValue: number) {
@@ -61,7 +68,16 @@ function computeParams(sizeValue: number) {
 
 const IDLE_RATE = 1
 const THINKING_RATE = 5
+// Not zero. A frozen ring reads as a broken orb; a barely-turning one reads
+// as the same living thing, waiting somewhere else.
+const DETACHED_RATE = 0.22
 const TRANSITION_MS = 600
+
+const PLAYBACK_RATE = {
+  idle: IDLE_RATE,
+  thinking: THINKING_RATE,
+  detached: DETACHED_RATE,
+} as const
 
 // WebKit proper (Safari, Tauri's WKWebView) — not Chromium, whose UA also
 // claims AppleWebKit. WebKit needs the .ai-orb--webkit substitute styling:
@@ -91,7 +107,7 @@ export function AiOrb({
     const el = ref.current
     if (!el) return
 
-    const targetRate = state === 'thinking' ? THINKING_RATE : IDLE_RATE
+    const targetRate = PLAYBACK_RATE[state]
     // Filter to CSSAnimation only — excludes CSS transitions on box-shadow/filter
     const animations = el
       .getAnimations({ subtree: true })
@@ -127,10 +143,12 @@ export function AiOrb({
   return (
     <div
       ref={ref}
+      data-orb-state={state}
       className={cn(
         'ai-orb',
         IS_WEBKIT && 'ai-orb--webkit',
         state === 'thinking' && 'ai-orb--thinking',
+        state === 'detached' && 'ai-orb--detached',
         className,
       )}
       style={

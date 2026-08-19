@@ -8,6 +8,11 @@
  * of signal in a corner, and a collapsed assistant that is working has to be
  * legible from the other side of a four-pane layout.
  *
+ * Once the window is open the AI is in the window, and two live orbs on one
+ * screen is one too many. This one detaches: it opens into a ring, dims and
+ * slows to a crawl, so the pill goes back to being the handle the panel folds
+ * into rather than a second thing to look at.
+ *
  * Purely presentational. Every string arrives translated from the caller, and
  * the parent owns placement (this component never positions itself).
  */
@@ -43,15 +48,21 @@ export function AssistantOrbButton({
   shortcut,
   onClick,
 }: AssistantOrbButtonProps) {
+  // Working, and worth saying so HERE. Once the window is open it carries the
+  // status itself, shimmer and all, so the pill drops the halo and the shimmer
+  // rather than reporting the same run twice at two brightnesses beside a
+  // deliberately quiet orb.
+  const announceBusy = busy && !open
+
   // The label changes as the user moves around the terminal, so the key carries
   // the text itself: a new companion line cross-fades instead of swapping.
-  const labelKey = `${busy ? 'busy' : 'idle'}:${label}`
+  const labelKey = `${announceBusy ? 'busy' : 'idle'}:${label}`
 
   return (
     <Button
       variant="ghost"
       data-assistant-orb=""
-      data-busy={busy ? '' : undefined}
+      data-busy={announceBusy ? '' : undefined}
       aria-expanded={open}
       aria-label={open ? closeLabel : openLabel}
       onClick={onClick}
@@ -73,7 +84,7 @@ export function AssistantOrbButton({
             transition={{ duration: 0.18 }}
             className="block min-w-0"
           >
-            {busy ? (
+            {announceBusy ? (
               <ShimmeringText
                 text={label}
                 duration={1.5}
@@ -97,7 +108,9 @@ export function AssistantOrbButton({
         <AiOrb
           size="30px"
           animationDuration={15}
-          state={busy ? 'thinking' : 'idle'}
+          // Detached outranks busy on purpose: while the window is open it
+          // owns the run, and its own orb is the one that should be spinning.
+          state={open ? 'detached' : busy ? 'thinking' : 'idle'}
           className="shrink-0"
         />
       </span>

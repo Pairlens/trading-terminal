@@ -18,6 +18,12 @@ window folds back into the orb. <kbd>⌘/</kbd> does the same from the keyboard,
 and it works while you are typing in a field, because reaching the assistant
 should not cost you the sentence you were in the middle of.
 
+While the window is open, the orb you clicked opens into a ring: dimmer, less
+coloured, turning at a fraction of the speed. There is one assistant, and it is
+in the window now. What stays behind is the socket it came out of, still the
+button that puts it away, and while the window has it the pill stops repeating
+the status the window is already showing.
+
 <kbd>⌘J</kbd> is bound to it too. On the desktop app either one is fine; on the
 web terminal prefer <kbd>⌘/</kbd>, since <kbd>Ctrl</kbd>+<kbd>J</kbd> is the
 Downloads panel in Chrome and Firefox on Windows and Linux and the browser can
@@ -147,7 +153,8 @@ it: navigating to another page, switching pair, minimizing the window. Ask for a
 backtest on the workbench, minimize the orb, go read the order book, and the run
 is still going when you come back. While it works, the orb reports what it is
 doing in place of the suggestion: **Thinking...**, **Using tools...**, **Looking
-on the web...**, so a collapsed assistant is never a black box.
+on the web...**, and it takes a halo, so a collapsed assistant is never a black
+box. With the window open the header does that job instead.
 
 The window header carries the controls that act on the thread you are in: the
 persona dropdown, a delete button, and the reset button once you have dragged
