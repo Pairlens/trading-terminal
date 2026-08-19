@@ -58,28 +58,39 @@ export const RATE_LIMIT_WINDOW_MS = 60_000
  * DEX Discovery board from cold asks for six chain aggregates and three pages
  * of the selected chain's pools in the same tick — nine requests, comfortably
  * inside 25 a minute and still enough to draw a 429, because the edge also
- * dislikes the burst. Four through, then paced, is what a board opening
- * actually looks like to the provider.
+ * dislikes the burst.
+ *
+ * Two, not the three this used to allow. Measured against the live endpoint:
+ * the FOURTH request of a cold burst draws a 429 about a second and a half in,
+ * so a burst of three plus a request 600ms behind it landed exactly on the
+ * cliff — and the cost of stepping over it is not one refused request but a
+ * cool-off that outlasts the whole board's opening.
  */
-export const RATE_LIMIT_BURST = 3
+export const RATE_LIMIT_BURST = 2
 /**
  * Minimum gap between requests once the burst allowance is spent.
  *
  * Measured, not guessed: a bare shell loop against the same endpoint draws
  * 429s at roughly one request a second, well under the documented per-minute
- * quota. Three straight through and the rest at 600ms puts a cold board's
- * eight requests inside four seconds, which the panes now spend showing a
- * loading state rather than an empty one.
+ * quota, and the documented free tier itself works out to one request every
+ * two seconds. 600ms was between the two and was tripping the edge on every
+ * cold open; 1.2s spreads the board's eleven opening requests over about ten
+ * seconds, which the panes spend showing a loading state instead of spending
+ * the first three on a 429 and the rest on the cool-off it arms.
  */
-export const RATE_LIMIT_SPACING_MS = 600
+export const RATE_LIMIT_SPACING_MS = 1_200
 /**
- * The longest a request may sit in the PACING queue before it is refused.
+ * The longest a request may wait for admission before it is refused.
  *
- * Distinct from a cool-off, which is never waited out at all — see
- * `waitsOutCooldown` below. This ceiling only covers the waits the limiter
- * imposes on itself: the spacing between admissions, and the wait for a slot
- * once the minute's capacity is genuinely spent. Those are ours, they are
- * bounded, and a caller is better off queued for them than refused.
+ * Every wait the limiter can impose is measured against this one ceiling: the
+ * spacing between admissions, the wait for a slot once the minute's capacity
+ * is spent, and the provider's own cool-off. A caller is better off queued for
+ * a wait that ends than told the provider is refusing it, and a wait that does
+ * NOT end is exactly what the ceiling is here to convert into a refusal.
+ *
+ * Fifteen seconds is one poll of the fastest read behind this limiter (the
+ * swap tape), so a refused caller never waits longer than the retry it already
+ * had scheduled.
  */
 export const RATE_LIMIT_MAX_WAIT_MS = 15_000
 
@@ -171,22 +182,32 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
       const t = now()
       while (issued.length > 0 && t - issued[0] >= windowMs) issued.shift()
 
-      // A cool-off is refused on the spot, never slept through.
+      // A cool-off is waited out like any other wait, and refused only when
+      // it outlasts the ceiling.
       //
-      // This is the distinction the panes were losing. A pacing wait is the
-      // limiter's own decision and it ends; a cool-off is the PROVIDER
-      // refusing us, and it does not end on a schedule we control — every 429
-      // extends it, so an endpoint stuck on 429 re-arms the hold each time it
-      // is let through and everything behind it starves. Sleeping on it made
-      // that invisible: `acquire()` had not resolved, so nothing had been
-      // sent, so react-query still saw a fetch in flight and the pool panes
-      // held "Loading swaps" and "Loading pool state" for as long as it
-      // lasted. Nothing is lost by refusing instead: every read behind this
-      // limiter polls on its own interval (15s for the tape, a minute for
-      // pool state, five for listings), so the next attempt is already
-      // scheduled, and in the meantime the pane gets to say what is wrong.
+      // It used to be refused on the spot, on the reasoning that a cool-off is
+      // the PROVIDER's schedule rather than ours and a caller parked on one is
+      // invisible — nothing has been sent, so the pane above it still believes
+      // it is loading. The invisibility was real; the blanket refusal was an
+      // over-correction, and the swap tape paid for it. A cool-off from this
+      // provider is EIGHT SECONDS, an order of magnitude inside the ceiling,
+      // and a board opening from cold arms one before the tape's first request
+      // is ever admitted — so the pane that was one short wait away from its
+      // data drew "Swaps unavailable right now" instead, and then held it
+      // until a fifteen-second poll happened to land in the clear. Refusing a
+      // wait we would happily have spent is how a transient refusal became a
+      // pane that never loads.
+      //
+      // The ceiling is what makes waiting safe, and it is the thing the old
+      // reasoning was missing rather than a reason to refuse: every wait here
+      // is bounded by `deadline`, so a hold that really is open-ended still
+      // reaches the caller as a refusal within `maxWaitMs` and the pane still
+      // gets to say what is wrong. Nothing can hold "Loading swaps" forever.
       const coolOff = cooldownUntil - t
-      if (coolOff > 0) throw refusal(coolOff)
+      if (coolOff > 0) {
+        await waitOrRefuse(coolOff, t)
+        continue
+      }
       // Spacing applies only once the burst allowance inside this window is
       // spent, so a cold board still paints as fast as the provider allows and
       // only the tail of the same burst waits.
