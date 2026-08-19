@@ -4,11 +4,10 @@ import { Star } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
-import { Button } from '@pairlens/ui/components/ui/button'
-import { Separator } from '@pairlens/ui/components/ui/separator'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
+import { HEADER_ICON, HEADER_TICK } from '@/components/chrome/header-chrome'
 import { PageHeader } from '@/components/page-header'
 import { ConnectionIndicator } from '@/components/terminal/connection-indicator'
 import { LatencyIndicator } from '@/components/terminal/latency-indicator'
@@ -100,25 +99,22 @@ export function TerminalTopBar({
           collapsible
         />
       ) : null}
-      <Button
-        size="icon-xs"
-        variant="ghost"
-        className="size-6"
+      <button
+        type="button"
+        className={HEADER_ICON}
         onClick={onStarClick}
         aria-label={t('terminal.manageWatchlists')}
       >
         <Star
           className={cn(
             'size-3.5',
-            isWatched
-              ? 'fill-amber-400 text-amber-400'
-              : 'text-muted-foreground',
+            isWatched && 'fill-amber-400 text-amber-400',
           )}
         />
-      </Button>
+      </button>
       <AlertBell pairKey={streamKey} market={market} />
 
-      <Separator orientation="vertical" className="mx-1 self-stretch" />
+      <span aria-hidden className={HEADER_TICK} />
 
       {/* Market + Wallet — grouped as a trading context pair. The picker is
           scoped to what is being charted: a venue that cannot serve this
@@ -163,13 +159,16 @@ function LivePriceTicker({ prediction }: { prediction: boolean }) {
 
   return (
     <>
-      <Separator orientation="vertical" className="mx-1 self-stretch" />
-      <div className="flex items-center gap-1.5 font-mono text-xs">
-        <span className="text-green-400">{format(bestBid)}</span>
-        <span className="text-muted-foreground/50">/</span>
-        <span className="text-red-400">{format(bestAsk)}</span>
+      <span aria-hidden className={HEADER_TICK} />
+      {/* `--up` / `--down`, not raw greens and reds: these two colours mean
+          the same thing everywhere in the terminal and a theme repaints them
+          together. */}
+      <div className="flex items-center gap-[5px] font-mono text-xs tabular-nums">
+        <span className="text-up">{format(bestBid)}</span>
+        <span className="text-muted-foreground/60">/</span>
+        <span className="text-down">{format(bestAsk)}</span>
         {spread != null && (
-          <span className="text-muted-foreground/60">({format(spread)})</span>
+          <span className="text-muted-foreground">({format(spread)})</span>
         )}
       </div>
     </>

@@ -33,7 +33,12 @@ export function DiscoveryTopBar({
         <LayoutToolbar open={workspacesOpen} onOpenChange={setWorkspacesOpen} />
       }
     >
-      <h1 className="shrink-0 text-sm font-semibold">{t('discovery.title')}</h1>
+      {/* 13px/600, the same weight and size the pair chip's symbol wears on
+          a trade page: whatever the board is called sits at one type size
+          across the whole bar. */}
+      <h1 className="shrink-0 pr-1 text-[13px] font-semibold tracking-[-0.01em]">
+        {t('discovery.title')}
+      </h1>
       <DiscoverySectionTabs
         sections={sections}
         active={activeSection}

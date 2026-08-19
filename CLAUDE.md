@@ -427,6 +427,17 @@ repeating the pane's own name. The shared voice lives in `components/panes/pane-
 (`Th`, `PaneColumnHeader`, `PaneFootnote`, and the `PANE_COLUMN_HEADER` / `PANE_FOOTNOTE` /
 `PANE_TABLE_BODY` class strings).
 
+The board owns the whole frame. `routes/_terminal.tsx` matches the three board route ids
+(`/_terminal/`, `/_terminal/$cls/$market/$id`, `/_terminal/workspace/$workspaceId`) and drops the
+shell's inset card on them: no margin, no radius, no shadow, and the rail painted `--background`
+so it dissolves into the ground. Every other route keeps the inset frame. A board already draws a
+ground and cards; the shell's card around them would be a third one.
+
+The top bar speaks the same language (`components/chrome/header-chrome.ts`). Every control on it
+is a `--card` chip at 10px radius with no border, group separators are 18px ticks rather than
+full-height rules, and the workspace is the one chip that carries the accent. A row of outlined
+buttons over a board that draws no borders is what made the bar read as a different product.
+
 The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `ChartSurface` and
 resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is
 `oklch()`) instead of the theme's own chart palette, so a WebGL plot never reads as a rectangle

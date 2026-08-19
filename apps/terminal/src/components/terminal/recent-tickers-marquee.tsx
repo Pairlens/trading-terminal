@@ -153,7 +153,7 @@ export function RecentTickersMarquee({ current }: { current: MarketRef }) {
   ))
 
   return (
-    <div className="flex h-10 shrink-0 items-center gap-1 border-b border-border/60 bg-background px-2">
+    <div className="flex h-9 shrink-0 items-center gap-1 border-b border-(--pane-rule) bg-background px-3">
       {/* Leading indicator — pinned, never scrolls, marks the strip as the
           recently viewed pairs. */}
       <div

@@ -8,6 +8,7 @@ import {
   redirect,
   useLocation,
   useNavigate,
+  useRouterState,
 } from '@tanstack/react-router'
 import {
   ArrowRight,
@@ -144,6 +145,16 @@ import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-di
 import UserSettingsDialog from '@/components/user-settings-dialog'
 import { MobileTerminalRoot, useViewportMode } from '@/mobile'
 
+/**
+ * The three routes that render a workspace board (Discovery, a trade page, a
+ * saved workspace). See `boardRoute` in the layout for what they get.
+ */
+const BOARD_ROUTE_IDS: ReadonlySet<string> = new Set([
+  '/_terminal/',
+  '/_terminal/$cls/$market/$id',
+  '/_terminal/workspace/$workspaceId',
+])
+
 export const Route = createFileRoute('/_terminal')({
   beforeLoad: () => {
     // First run: the dedicated /onboarding page gates the terminal shell.
@@ -239,6 +250,19 @@ function TerminalLayout() {
   useEffect(() => {
     if (desktopCtaOpen && !desktopCtaSeen) setDesktopCtaSeen(true)
   }, [desktopCtaOpen, desktopCtaSeen, setDesktopCtaSeen])
+
+  // A board route draws its own surfaces already: a `--background` ground
+  // with `--card` columns floating on it. The shell's inset card would be a
+  // third card around those two, so these three routes take the frame edge to
+  // edge and the rail dissolves into the ground beside them, which is what
+  // leaves the columns as the only cards on screen.
+  //
+  // Matched on route id rather than a path prefix, because the trade route is
+  // `/{class}/{venue}/{id}` and has no fixed prefix to match on.
+  const boardRoute = useRouterState({
+    select: (state) =>
+      state.matches.some((m) => BOARD_ROUTE_IDS.has(m.routeId)),
+  })
 
   const activeItem = location.pathname.startsWith('/notifications')
     ? 'notifications'
@@ -434,6 +458,14 @@ function TerminalLayout() {
                       className={cn(
                         'h-svh overflow-hidden',
                         needsTitlebar && 'pt-8',
+                        // On a board, the rail sits on the same value as the
+                        // ground and dissolves into it, so the whole window
+                        // reads as one surface with the columns floating on
+                        // it. `!` because the base rule is the sidebar's own
+                        // `has-data-[variant=inset]:bg-sidebar`, at the same
+                        // specificity: whichever wins would otherwise be
+                        // decided by Tailwind's internal ordering.
+                        boardRoute && 'has-data-[variant=inset]:bg-background!',
                         // The bottom placement hangs the orb in a strip
                         // under the shell. Padding here is what keeps it
                         // OUTSIDE the panes: the rail and the inset both
@@ -701,7 +733,13 @@ function TerminalLayout() {
                           ) : null}
                         </SidebarFooter>
                       </Sidebar>
-                      <div className="bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2 relative flex min-h-0 flex-1 flex-col overflow-hidden">
+                      <div
+                        className={cn(
+                          'bg-background relative flex min-h-0 flex-1 flex-col overflow-hidden',
+                          !boardRoute &&
+                            'md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2',
+                        )}
+                      >
                         {/* The frame itself, and the one target that is
                             always mounted. That is what makes it the
                             landing spot for a navigation: whatever page

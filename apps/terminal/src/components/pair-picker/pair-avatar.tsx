@@ -41,12 +41,16 @@ function hashString(str: string): number {
 }
 
 const SIZE_CLASSES = {
+  // `xs` is the top bar's: a 16px mark inside a 28px chip, so the pair reads
+  // as one control rather than as a badge with a word beside it.
+  xs: 'size-4 text-[8px]',
   sm: 'size-7 text-[10px]',
   md: 'size-9 text-xs',
   lg: 'size-11 text-sm',
 } as const
 
 const OVERLAY_CLASSES = {
+  xs: 'size-2.5 text-[5px]',
   sm: 'size-3.5 text-[6px]',
   md: 'size-4 text-[7px]',
   lg: 'size-5 text-[8px]',

@@ -14,7 +14,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@pairlens/ui/components/ui/alert-dialog'
-import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,6 +36,7 @@ import { GridConfirmDialog } from './grid-confirm-dialog'
 import { GridPicker } from './grid-picker'
 import type { GridPlacement } from './grid-confirm-dialog'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
+import { HEADER_CHIP } from '@/components/chrome/header-chrome'
 import { useLayout } from '@/lib/layout/context'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { usePaneRegistry } from '@/lib/layout/pane-registry'
@@ -141,10 +141,9 @@ export function PanesToolbar() {
             render={
               <DropdownMenuTrigger
                 render={
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="gap-1 text-xs"
+                  <button
+                    type="button"
+                    className={HEADER_CHIP}
                     aria-label={t('layout.panes')}
                   />
                 }

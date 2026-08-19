@@ -5,9 +5,7 @@ import { ChevronDown, Wallet } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
-import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Button } from '@pairlens/ui/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +23,10 @@ import {
 } from '@pairlens/ui/components/ui/tooltip'
 
 import type { WalletChain } from '@pairlens/market-engine/adapter'
+import {
+  HEADER_CHIP,
+  HEADER_CHIP_MUTED,
+} from '@/components/chrome/header-chrome'
 import { useActiveWallet } from '@/lib/active-wallet-context'
 import { useMarketData } from '@/lib/market-data-provider'
 import { credentialsForMarket } from '@/lib/venues/credential-alias'
@@ -144,15 +146,7 @@ export function WalletSelector({ market }: WalletSelectorProps) {
     return (
       <Tooltip>
         <TooltipTrigger
-          render={
-            <Link
-              to="/accounts"
-              className={cn(
-                'inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs',
-                'text-muted-foreground hover:text-foreground hover:bg-accent',
-              )}
-            />
-          }
+          render={<Link to="/accounts" className={HEADER_CHIP_MUTED} />}
         >
           <Wallet className="size-3" />
           {isDex
@@ -189,9 +183,7 @@ export function WalletSelector({ market }: WalletSelectorProps) {
         <TooltipTrigger
           render={
             <DropdownMenuTrigger
-              render={
-                <Button size="sm" variant="outline" className="gap-1 text-xs" />
-              }
+              render={<button type="button" className={HEADER_CHIP} />}
             />
           }
         >
@@ -210,7 +202,7 @@ export function WalletSelector({ market }: WalletSelectorProps) {
                 : t('terminal.wallet.selectAccount')}
             </span>
           )}
-          <ChevronDown className="size-3" />
+          <ChevronDown className="size-3 text-muted-foreground/55" />
         </TooltipTrigger>
         <TooltipContent>
           {selected

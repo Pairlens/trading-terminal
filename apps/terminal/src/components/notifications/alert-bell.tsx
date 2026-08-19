@@ -38,6 +38,7 @@ import {
   selectUnreadCount,
   useNotificationLogStore,
 } from '@/stores/notification-log-store'
+import { HEADER_ICON } from '@/components/chrome/header-chrome'
 import { useNotificationStore } from '@/stores/notification-store'
 
 /** Recent firings shown inline. Enough to answer "did I miss something?". */
@@ -113,10 +114,9 @@ export function AlertBell({ pairKey, market }: AlertBellProps) {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={
-            <Button
-              size="icon-xs"
-              variant="ghost"
-              className="relative size-6"
+            <button
+              type="button"
+              className={cn(HEADER_ICON, 'relative')}
               aria-label={t('terminal.createAlert')}
             />
           }
