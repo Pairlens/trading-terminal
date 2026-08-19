@@ -42,9 +42,27 @@
 
 @layer components {
   :root {
-    /* The slab. Light themes are already at the top of the elevation ladder
-       (paper cannot get brighter), so the step there is carried by the edge
-       and the shadow instead of a lift. */
+    /* The slab, and it is simply what a workspace column is painted with.
+       The panel is a column that lifted off the board, so it is the same
+       surface; what separates it is the edge, the shadow and the frost, not
+       a different colour.
+
+       Dark used to override this with `--card` plus 12% of `--foreground`
+       stirred in, on the reasoning that dark UIs elevate by adding light.
+       That lift was tuned when a pane sat directly on `--background` at
+       L 13.5% and it landed one step above its neighbour. Round 3A moved
+       every pane onto a `--card` column at L 16.8% and the same formula
+       silently became three steps up: L 0.261, which is `--border`, the
+       lightest neutral the theme owns. Measured against real swatches the
+       panel rendered at rgb(37,34,28) beside a column at rgb(17,15,11), and
+       a surface lighter than everything around it is what reads as a grey
+       slab from another product. It renders at rgb(19,23) now.
+
+       `var(--muted)` is the tidier-looking way to say "one step up" and it
+       does not work: cyberpunk-neon and eye-comfort set `--muted` to the SAME
+       value as `--card` in dark, terminal-classic to within 0.01, so on three
+       of eighteen themes it would mean nothing at all. Taking no step is
+       honest in every theme. */
     --ai-surface: var(--card);
 
     /* The frost, applied to the backdrop before the fill goes over it. The
@@ -95,28 +113,6 @@
   }
 
   :root.dark {
-    /* Dark themes elevate by adding light: one step above `--card`, which is
-       what a workspace column is painted with.
-
-       The lift was 12% and it was tuned when a pane sat on `--background` at
-       L 13.5% and this was one step above its neighbour. The board redesign
-       moved every pane onto a `--card` column at L 16.8% and the same mix
-       silently became three steps up: L 0.261, which is `--border`, the
-       lightest neutral the theme owns. Nothing else in the terminal is that
-       pale, and a surface lighter than everything around it is what read as
-       a grey slab from another product. 4% puts it back at L 0.199, level
-       with `--muted`, one honest step over the column it floats on.
-
-       It stays a mix off `--card` rather than becoming `var(--muted)`, which
-       is the tidier-looking version of the same idea. The bundled themes do
-       not agree that `--muted` is an elevation step: cyberpunk-neon and
-       eye-comfort set it to the SAME value as `--card` in dark, and
-       terminal-classic to within 0.01. On those three the panel would land
-       exactly on the column value and read as a hole punched in the board,
-       which is the one failure this variable exists to prevent. A fixed
-       small lift off `--card` is the only form that holds for all eighteen. */
-    --ai-surface: color-mix(in oklab, var(--card) 96%, var(--foreground) 4%);
-
     /* Dark LIFTS. This clamp was below 1 for three passes, and that was the
        thing making the panel read as a hole: over a terminal that is already
        dark, dimming the backdrop puts the panel BELOW its own surroundings,
@@ -128,13 +124,13 @@
        green tape behind the panel has to survive a 72px average, and dimming
        what little is left is how it became grey. */
     --ai-frost: saturate(200%) brightness(1.35);
-    /* 70% for as long as the surface above was L 0.26. Bringing that down to
-       0.199 raised the backdrop's share of the composite in the one place it
-       matters: over a bright pane a darker fill lets more of the structure
-       under it survive, and an order book's rows were starting to resolve
-       through the glass again. Six points thicker buys that back without
-       touching the tone. Thicker is the safe direction here, which is why
-       the fill is allowed to move and the surface is not.
+    /* 70% for as long as the surface above was L 0.26. Dropping it to the
+       column's own L 0.168 raised the backdrop's share of the composite in
+       the one place that matters: over a bright pane a darker fill lets more
+       of the structure under it survive, and an order book's rows were
+       starting to resolve through the glass again. Six points thicker buys
+       that back without touching the tone. Thicker is the safe direction, so
+       the fill is the half that is allowed to move.
 
        Checked over the brightest thing the terminal has, a full order book,
        with the muted text as the thing to watch: it is the first to go, well
