@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { RESERVED_PLUGIN_IDS } from '@pairlens/shared/plugin-manifest-schema'
 
+import { BUILTIN_WORKSPACE_TEMPLATES } from './catalog'
 import {
   BUILTIN_PROVIDER_ID,
   builtinProvider,
@@ -97,7 +98,13 @@ export function useWorkspaceTemplates(): WorkspaceTemplateList {
     queryFn: () => registry.list({ scope: 'all' }),
     staleTime: 60_000,
     retry: 1,
-    placeholderData: (prev) => prev,
+    // The bundled catalog is a static array — it has nothing to wait for, and
+    // the community providers behind the same query take a network round trip.
+    // Seeding the first render with it is what keeps the storefront from
+    // painting its shelves alone and then dropping a 400px spotlight hero on
+    // top of them when the fetch lands. Once real data arrives it wins, and a
+    // refetch keeps whatever is already on screen.
+    placeholderData: (prev) => prev ?? BUILTIN_WORKSPACE_TEMPLATES,
   })
 
   // Refetch (keeping current data visible) only when the provider set may have
@@ -133,5 +140,7 @@ export function useWorkspaceTemplates(): WorkspaceTemplateList {
     return [...byId.values()]
   }, [fetched, contributed])
 
-  return { templates, isLoading: query.isLoading, registry }
+  // `isLoading` means "the real list has not landed yet", not "there is nothing
+  // to show" — the seeded bundled catalog is already on screen either way.
+  return { templates, isLoading: query.isPlaceholderData, registry }
 }
