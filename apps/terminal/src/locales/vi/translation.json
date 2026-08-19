@@ -187,10 +187,11 @@
     "emptyBody": "Lịch công bố đến từ App Server. Bản dựng này chạy độc lập nên không có nguồn để tổng hợp.",
     "columns": {
       "actual": "Thực tế",
-      "implied": "Hàm ý (Kalshi)",
+      "implied": "Hàm ý",
+      "impliedSource": "Kalshi",
       "prior": "Trước",
       "source": "Cơ quan",
-      "time": "Giờ ({{zone}})",
+      "time": "Giờ",
       "event": "Công bố"
     },
     "impact": {

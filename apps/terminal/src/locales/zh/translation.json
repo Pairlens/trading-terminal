@@ -187,10 +187,11 @@
     "emptyBody": "发布日程来自 App Server。此版本以独立模式运行，没有可汇编的来源。",
     "columns": {
       "actual": "实际",
-      "implied": "隐含 (Kalshi)",
+      "implied": "隐含",
+      "impliedSource": "Kalshi",
       "prior": "前值",
       "source": "机构",
-      "time": "时间（{{zone}}）",
+      "time": "时间",
       "event": "发布"
     },
     "impact": {

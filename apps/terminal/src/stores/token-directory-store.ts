@@ -154,3 +154,71 @@ export function useDisplayToken(
       : null,
   )
 }
+
+/**
+ * The same read for a caller that holds an address and no chain.
+ *
+ * A ticker slot has one string — the pair key — and the pair key carries the
+ * address but not the chain it lives on. Scanning is safe because the pin is
+ * display-only: at worst it names the token, never routes an order.
+ *
+ * Ambiguity refuses rather than guesses. The same EVM address exists on
+ * several chains by design (deterministic deploys put the same bytecode at the
+ * same address on Base and Arbitrum), which is fine while every pin agrees on
+ * the ticker; two pins disagreeing means the address is two different tokens,
+ * and labelling a row with either one is a lie the user cannot see through.
+ * The truncated address is the honest answer there.
+ */
+const addressIndexes = new WeakMap<
+  object,
+  Map<string, TokenDirectoryEntry | null>
+>()
+
+function addressIndex(
+  entries: Record<string, TokenDirectoryEntry>,
+): Map<string, TokenDirectoryEntry | null> {
+  const cached = addressIndexes.get(entries)
+  if (cached) return cached
+  const index = new Map<string, TokenDirectoryEntry | null>()
+  for (const entry of Object.values(entries)) {
+    const id = normalizeInstrumentId('dex', entry.address)
+    if (!index.has(id)) {
+      index.set(id, entry)
+      continue
+    }
+    const seen = index.get(id)
+    if (!seen || seen.symbol !== entry.symbol) index.set(id, null)
+  }
+  // Keyed on the entries object, which `register` replaces immutably, so the
+  // index is rebuilt exactly when a pin lands and never on a render.
+  addressIndexes.set(entries, index)
+  return index
+}
+
+/** Pure selector, so the rule is testable without a React tree. */
+export function selectDisplayToken(
+  entries: Record<string, TokenDirectoryEntry>,
+  address: string | undefined,
+  chain?: string,
+): TokenDirectoryEntry | null {
+  if (!address) return null
+  if (chain) return entries[tokenDirectoryKey(chain, address)] ?? null
+  return (
+    addressIndex(entries).get(normalizeInstrumentId('dex', address)) ?? null
+  )
+}
+
+/**
+ * Reactive read keyed on the address alone, with the chain as a hint.
+ *
+ * Pass the chain wherever the caller knows it (a routed pair, a venue-bound
+ * row): it makes the read exact rather than merely unambiguous.
+ */
+export function useDisplayTokenByAddress(
+  address: string | undefined,
+  chain?: string,
+): TokenDirectoryEntry | null {
+  return useTokenDirectoryStore((s) =>
+    selectDisplayToken(s.entries, address, chain),
+  )
+}

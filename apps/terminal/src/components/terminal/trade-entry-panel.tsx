@@ -37,6 +37,7 @@ import { Switch } from '@pairlens/ui/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@pairlens/ui/components/ui/tabs'
 import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
+import { isTokenAddress } from '@pairlens/shared/market-ref'
 import { TradeConfirmButton } from './trade-confirm-button'
 import { TradeConnectGate } from './trade-connect-gate'
 import { FundingEntryRow } from './funding-entry-row'
@@ -48,7 +49,10 @@ import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
 import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import { track } from '@/lib/analytics-events'
+
 import { splitPairAssets } from '@/lib/pairs'
+import { tokenTicker } from '@/lib/dex/token-label'
+import { useDisplayTokenByAddress } from '@/stores/token-directory-store'
 import {
   formatAmount,
   formatPredictionPrice,
@@ -480,6 +484,17 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     equity: isEquities,
   })
 
+  // What the ticket CALLS the base asset, which on a DEX pair is not what it
+  // is keyed by: the leg is a contract address, and `Sell 0xdac17f958d2ee52…`
+  // above a size field is a ticket nobody can read. Display only — the balance
+  // lookups below and everything in `OrderParams` keep the raw leg, because
+  // the address is the identity and a ticker is hundreds of tokens.
+  const basePin = useDisplayTokenByAddress(
+    isTokenAddress(baseAsset) ? baseAsset : undefined,
+    market,
+  )
+  const baseLabel = tokenTicker(baseAsset, basePin).label
+
   // Base units per contract, for the base-equivalent hint and the risk guard.
   // `known` is what decides whether the hint renders at all: on a venue whose
   // contract IS one unit of the base, restating the count would be noise.
@@ -724,7 +739,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const showRegionHint =
     !regionHintDismissed && marketCreds.length > 0 && !isRegionExplicitlySet()
 
-  const sizeAsset = sizeCcy === 'base' ? baseAsset : quoteAsset
+  const sizeAsset = sizeCcy === 'base' ? baseLabel : quoteAsset
   const availableBase = balanceMap.get(baseAsset)?.total ?? '0'
   const availableQuote = balanceMap.get(quoteAsset)?.total ?? '0'
   // One shared rule with the phone's ticket — see `predictionCollateral`.
@@ -740,7 +755,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
   const availableDisplay = isPrediction
     ? `${formatAvailable(collateral.total)} ${collateral.currency}`
     : side === 'sell'
-      ? `${formatAvailable(availableBase)} ${baseAsset}`
+      ? `${formatAvailable(availableBase)} ${baseLabel}`
       : `${formatAvailable(availableQuote)} ${quoteAsset}`
 
   // ── Live price sample ──
@@ -2109,12 +2124,12 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
                   ? t('terminal.trade.buyAsset', {
                       asset: isPrediction
                         ? outcomeLabel || t('terminal.trade.contracts')
-                        : baseAsset,
+                        : baseLabel,
                     })
                   : t('terminal.trade.sellAsset', {
                       asset: isPrediction
                         ? outcomeLabel || t('terminal.trade.contracts')
-                        : baseAsset,
+                        : baseLabel,
                     })}
               {modeBadge}
             </span>

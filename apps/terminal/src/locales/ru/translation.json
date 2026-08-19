@@ -199,10 +199,11 @@
     "emptyBody": "График публикаций приходит с App Server. Эта сборка работает автономно, поэтому собирать его не из чего.",
     "columns": {
       "actual": "Факт",
-      "implied": "Ожидание (Kalshi)",
+      "implied": "Ожидание",
+      "impliedSource": "Kalshi",
       "prior": "Пред.",
       "source": "Ведомство",
-      "time": "Время ({{zone}})",
+      "time": "Время",
       "event": "Публикация"
     },
     "impact": {

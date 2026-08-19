@@ -187,10 +187,11 @@
     "emptyBody": "발표 일정은 App Server에서 옵니다. 이 빌드는 독립 실행 모드라 일정을 모을 곳이 없습니다.",
     "columns": {
       "actual": "실제",
-      "implied": "내재 (Kalshi)",
+      "implied": "내재",
+      "impliedSource": "Kalshi",
       "prior": "이전",
       "source": "기관",
-      "time": "시각 ({{zone}})",
+      "time": "시각",
       "event": "발표"
     },
     "impact": {
