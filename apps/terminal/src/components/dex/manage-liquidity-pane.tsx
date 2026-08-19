@@ -687,7 +687,11 @@ function AddSection({
   onAmount1: (value: string) => void
 }) {
   const { t } = useTranslation()
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
   // Whatever the wallet-provisioning scan already fetched for this wallet on
   // this chain. Read from the store rather than fetched: an extra RPC round
   // trip per keystroke would buy a number that is not needed to submit, and a

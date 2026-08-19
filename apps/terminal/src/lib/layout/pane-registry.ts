@@ -191,6 +191,10 @@ export function usePaneRegistry() {
       'usePaneRegistry must be used within a PaneRegistryContext.Provider',
     )
   }
-  useSyncExternalStore(registry.subscribe, registry.getSnapshot)
+  useSyncExternalStore(
+    registry.subscribe,
+    registry.getSnapshot,
+    registry.getSnapshot,
+  )
   return registry
 }

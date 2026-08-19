@@ -96,6 +96,10 @@ function checkOverlay() {
   }
 }
 
+function getOverlayState() {
+  return lastOverlayState
+}
+
 function scheduleCheck() {
   if (overlayRafId !== null) return
   overlayRafId = requestAnimationFrame(() => {
@@ -126,7 +130,11 @@ function subscribeOverlay(cb: () => void): () => void {
 }
 
 function useOverlayVisible(): boolean {
-  return useSyncExternalStore(subscribeOverlay, () => lastOverlayState)
+  return useSyncExternalStore(
+    subscribeOverlay,
+    getOverlayState,
+    getOverlayState,
+  )
 }
 
 /**

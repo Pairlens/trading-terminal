@@ -60,7 +60,11 @@ export function MarginHealthPane() {
   const { data: results, isPending } = useFuturesPositions(accounts)
   const status = useCredentialsStore((s) => s.status)
   const venues = useFuturesFundingVenues()
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
 
   if (accounts.length === 0) {
     const venue = venues[0]

@@ -267,7 +267,11 @@ function showTradeToast(opts: TradeToastProps) {
 // ── Helpers ───────────────────────────────────────────────────────────
 
 function useBalanceMap(credentialId?: string): Map<string, BalanceRecord> {
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
   const map = new Map<string, BalanceRecord>()
   for (const b of balances) {
     if (credentialId && b.credentialId !== credentialId) continue

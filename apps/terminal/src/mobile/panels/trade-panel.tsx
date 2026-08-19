@@ -223,7 +223,11 @@ function formatFieldValue(raw: string, locale: string): string {
 }
 
 function useBalance(currency: string, scope?: string): string {
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
   for (const balance of balances) {
     if (scope && balance.credentialId !== scope) continue
     if (balance.currency === currency) return balance.total

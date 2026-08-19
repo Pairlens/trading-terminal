@@ -69,7 +69,11 @@ export function usePortfolioValue(credentialId?: string) {
   const { subscribeTicker } = useMarketData()
   const { currency: displayCurrency, symbol: currencySymbol } =
     useDisplayCurrency()
-  const allBalances = useSyncExternalStore(subscribeBalances, getBalances)
+  const allBalances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
   const balances = useMemo(
     () =>
       credentialId

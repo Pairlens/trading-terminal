@@ -51,6 +51,13 @@ function subscribeFullscreen(cb: () => void) {
   return () => listeners.delete(cb)
 }
 
+// Doubles as the server snapshot below. Every `useSyncExternalStore` that
+// renders during hydration needs one: without it React abandons the hydration
+// pass, client-renders from the nearest Suspense boundary and logs a hydration
+// error on the way past. The shell IS server-rendered even though `ssr: false`
+// keeps the routed children off the server, so any component the first render
+// reaches — the onboarding spotlight did — trips it. Safe to read anywhere:
+// `isFullscreen` is a plain module boolean that stays false without a window.
 function getFullscreen() {
   return isFullscreen
 }
@@ -67,7 +74,11 @@ function getFullscreen() {
  * Renders nothing in browser mode or when the window is fullscreen.
  */
 export function TauriDragRegion({ sectionLabel }: { sectionLabel?: string }) {
-  const fullscreen = useSyncExternalStore(subscribeFullscreen, getFullscreen)
+  const fullscreen = useSyncExternalStore(
+    subscribeFullscreen,
+    getFullscreen,
+    getFullscreen,
+  )
   if (!isStandalone || fullscreen) return null
 
   return (
@@ -199,7 +210,11 @@ function NewWindowButton() {
 
 /** True when the desktop app needs the titlebar drag region (not fullscreen). */
 export function useNeedsTitlebar() {
-  const fullscreen = useSyncExternalStore(subscribeFullscreen, getFullscreen)
+  const fullscreen = useSyncExternalStore(
+    subscribeFullscreen,
+    getFullscreen,
+    getFullscreen,
+  )
   return isStandalone && !fullscreen
 }
 

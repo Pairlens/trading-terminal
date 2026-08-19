@@ -127,7 +127,11 @@ export default memo(function PnlScreen({
   // The whole risk store: every field read here changes on a fill or on a
   // settings edit, never on a tick.
   const risk = useRiskConfigStore()
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
   const credentials = useCredentialsStore((s) => s.credentials)
   const credentialsSealed = useCredentialsStore((s) => s.sealed)
   const credentialsLoaded = useCredentialsStore((s) => s.loaded)

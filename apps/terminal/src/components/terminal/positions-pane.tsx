@@ -263,7 +263,11 @@ export function PositionsPane() {
 
   // Order events from exchange (REST backfill + private WS updates).
   // Managed by MarketDataProvider — just read from the store here.
-  const orderEvents = useSyncExternalStore(subscribeOrderEvents, getOrderEvents)
+  const orderEvents = useSyncExternalStore(
+    subscribeOrderEvents,
+    getOrderEvents,
+    getOrderEvents,
+  )
   const { holdings, totalValue, currencySymbol } = usePortfolioValue(
     wallet?.walletId,
   )
