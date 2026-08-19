@@ -3,58 +3,85 @@
 /**
  * How a stacked band is painted, on both shells.
  *
- * Flat fills at a single opacity gave the first stacked build its problem: on
- * a dark plot eight solid slabs desaturate into one muddy column, and the
- * hairline between two of them is the only thing saying where one runner ends
- * and the next begins. Two changes fix both.
+ * The shape being copied is the one a single probability series has everywhere
+ * it is drawn well: a bright line, and underneath it a wash that dissolves
+ * into the background. The line is the data; the fill only says which side of
+ * it the probability lives on. Eight solid slabs at one opacity say the
+ * opposite, which is how the first stacked build ended up a muddy column.
  *
- * **A gradient per band, not one across the chart.** Each band's gradient is
- * mapped to its OWN bounding box (SVG's default `objectBoundingBox`), so a 22%
- * band and a 2% band get the same fade over their own height rather than a
- * slice of a chart-wide wash that would leave the floor solid and the ceiling
- * bare. Strong at the top, falling away toward the bottom, which puts the
- * weight of the colour on the edge the eye follows.
+ * So the line carries the runner's colour at full strength and the fill starts
+ * at half that and falls to nothing:
  *
- * **The edge is a real line.** An `Area`'s stroke draws only its top curve,
- * which in a stack IS the divider against the band above. So it carries the
- * band's own colour at full opacity over a fill that has faded to under half,
- * and a band too thin to read as an area still reads as a line.
+ * **A gradient per band, mapped to its own box.** SVG's default
+ * `objectBoundingBox` means a 22% band and a 2% band each get the whole ramp
+ * over their own height, rather than a slice of a chart-wide wash that would
+ * leave the floor solid and the ceiling bare. Three stops rather than two: the
+ * glow has to hug the line and then let go, and a straight ramp spreads it
+ * evenly over the band instead.
+ *
+ * **The edge is a real line.** An `Area` strokes only its top curve, which in
+ * a stack IS the divider against the band above, so it needs no separate
+ * element. Full opacity over a fill that has already faded past 0.2, which is
+ * the contrast the reference has and flat fills cannot.
+ *
+ * What that costs, stated plainly: a band no longer reads as a solid slab of
+ * mass, and the space just above each line goes dark. That is the trade the
+ * shape makes everywhere it is used. The probability is still the distance
+ * between one line and the next, and the lines are now the most legible thing
+ * on the chart.
  *
  * The numbers live here rather than in either chart because the desktop pane
- * and the phone draw the same field, and a band that was brighter on one of
- * them would be the one place in the product where the same contract reads as
- * two charts. The `<defs>` themselves are written out in each chart: recharts
- * drops any child that is not a literal SVG element, so a shared component
- * returning `<defs>` would silently render nothing.
+ * and the phone draw the same field, and a band brighter on one of them would
+ * be the one place in the product where the same contract reads as two charts.
+ * The `<defs>` themselves are written out in each chart: recharts keeps only
+ * children whose type is a literal SVG tag, so a shared component returning
+ * `<defs>` renders nothing at all.
  */
 
-/** Top and bottom stops of a runner's band. */
-export const BAND_FILL_TOP = 0.95
-export const BAND_FILL_BOTTOM = 0.42
-
-/** The band the route is on, carrying a little more weight. */
-export const ACTIVE_BAND_FILL_TOP = 1
-export const ACTIVE_BAND_FILL_BOTTOM = 0.58
+/** One stop of a band's vertical gradient, top of the band first. */
+export type BandStop = { offset: string; opacity: number }
 
 /**
- * The remainder, and the one band whose gradient runs the other way.
+ * A runner's band: bright against its own line, gone by the floor.
  *
- * A runner's band is strongest at its top because that is where its edge is
- * drawn and where the eye reads it. The remainder has no edge worth drawing:
- * its top is the ceiling of the plot, and stroking that just puts a border
- * around the chart. Its meaningful boundary is at its BOTTOM, against the last
- * runner, so it is strongest there and fades upward into the background, which
- * is what "everything else, thinning out" should look like.
+ * The middle stop is what makes it read as a glow rather than a tint. Two
+ * stops ramp linearly and put 0.25 through the middle of the band, which is
+ * still a slab, just a paler one.
  */
-export const REST_FILL_AT_FIELD = 0.28
-export const REST_FILL_AT_CEILING = 0.08
+export const BAND_STOPS: ReadonlyArray<BandStop> = [
+  { offset: '0%', opacity: 0.5 },
+  { offset: '55%', opacity: 0.14 },
+  { offset: '100%', opacity: 0 },
+]
+
+/** The band the route is on, carrying more of its own colour. */
+export const ACTIVE_BAND_STOPS: ReadonlyArray<BandStop> = [
+  { offset: '0%', opacity: 0.68 },
+  { offset: '55%', opacity: 0.22 },
+  { offset: '100%', opacity: 0 },
+]
 
 /**
- * The divider between one band and the next.
+ * The remainder, the one band whose ramp runs the other way.
+ *
+ * A runner's fill hangs below its line. The remainder has no line: its top is
+ * the ceiling of the plot, and stroking that draws a border around the chart
+ * rather than a boundary in the data. Its edge is at the BOTTOM, against the
+ * last runner, so it is strongest there and dissolves upward, which is what
+ * "everything else, thinning out" should look like.
+ */
+export const REST_STOPS: ReadonlyArray<BandStop> = [
+  { offset: '0%', opacity: 0 },
+  { offset: '45%', opacity: 0.06 },
+  { offset: '100%', opacity: 0.2 },
+]
+
+/**
+ * The line above each band.
  *
  * Two pixels rather than a hairline. At eight bands in a docked pane the
- * thinnest runner is three pixels tall, and a 0.6px edge over a faded fill
- * left the boundary to be inferred from a colour change.
+ * thinnest runner is three pixels tall, and with the fill now dissolving it is
+ * the line, not the area, that has to carry that runner at all.
  */
 export const BAND_EDGE_WIDTH = 2
 export const ACTIVE_BAND_EDGE_WIDTH = 2.75
