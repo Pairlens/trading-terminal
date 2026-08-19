@@ -15,10 +15,11 @@ import type { TerminalLayout } from '../types'
 // explains the one beside it.
 //
 // The heights are cut to what each pane actually draws, so the board opens
-// with no pane looking half-empty: the pulse is one row of five figures, the
-// sector tape is two rows of three tiles, and everything left over goes to
-// the movers table, which is the one pane here that can always use another
-// row. The markets scanner is not on this board: it is a jumping-off point
+// with no pane looking half-empty and none of them clipped: the pulse is one
+// row of five figures, the sector tape is two full rows of three tiles (27%
+// is what clears the second row at 900px rather than slicing it in half), and
+// everything left over goes to the movers table, which is the one pane here
+// that can always use another row and scrolls by design. The markets scanner is not on this board: it is a jumping-off point
 // rather than something to read, it duplicates what omni-search does from any
 // screen, and the rail it used to share is worth more as one full-height
 // watchlist.
@@ -40,13 +41,13 @@ export const DISCOVERY_HOME: TerminalLayout = {
         },
         {
           id: 'cell-movers',
-          heightPercent: 65,
+          heightPercent: 61,
           activeTabIndex: 0,
           panes: [{ id: 'pane-movers', type: 'movers' }],
         },
         {
           id: 'cell-sectors',
-          heightPercent: 23,
+          heightPercent: 27,
           activeTabIndex: 0,
           panes: [{ id: 'pane-sector-tape', type: 'sector-tape' }],
         },
