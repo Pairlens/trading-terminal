@@ -227,7 +227,7 @@ function Basket({ context }: { context: PredictionEventContext }) {
   )
 
   return (
-    <div className="flex h-full flex-col gap-1.5 p-2.5">
+    <div className="flex h-full flex-col gap-1.5 py-1">
       <div className="flex min-h-0 flex-col gap-1.5 overflow-y-auto">
         {ownLegs.map((leg) => {
           const price = priceOf(leg.pairKey)
@@ -253,7 +253,7 @@ function Basket({ context }: { context: PredictionEventContext }) {
               </span>
               <Input
                 aria-label={t('basketTicket.stakeFor', { name: leg.label })}
-                className="h-6 w-14 shrink-0 rounded-md px-1.5 text-right font-mono text-[11px] tabular-nums"
+                className="h-6 w-14 shrink-0 rounded-md border-transparent bg-muted/40 px-1.5 text-right font-mono text-[11px] tabular-nums"
                 inputMode="decimal"
                 onChange={(e) => setStake(leg.pairKey, e.target.value)}
                 placeholder="0"
@@ -303,7 +303,7 @@ function Basket({ context }: { context: PredictionEventContext }) {
 
       <div className="min-h-0 flex-1" />
 
-      <dl className="flex flex-col gap-[3px] text-[11px] text-muted-foreground">
+      <dl className="flex flex-col gap-[3px] rounded-lg bg-muted/40 px-2 py-1.5 text-[11px] text-muted-foreground">
         <SummaryRow
           label={t('basketTicket.totalCost')}
           value={`$${totalStake.toFixed(2)}`}

@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { SquareFunction } from 'lucide-react'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 import { useTranslation } from 'react-i18next'
 
+import { HEADER_TITLE } from '@/components/chrome/header-chrome'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import {
   MasterDetailSkeleton,
   PendingAfter,
@@ -37,27 +37,23 @@ function IndicatorsPage() {
   const { t } = useTranslation()
   const { script } = Route.useSearch()
   return (
-    <SidebarInset className="overflow-hidden">
+    <main className={PAGE_FRAME}>
       <PageHeader>
-        <SquareFunction className="size-4" />
-        <h1 className="text-sm font-semibold">{t('nav.indicators')}</h1>
+        <h1 className={HEADER_TITLE}>{t('nav.indicators')}</h1>
       </PageHeader>
 
-      {/* Explicit height = viewport minus header. No flex chain needed. */}
-      <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
-        <Suspense
-          fallback={
-            <PendingAfter>
-              <MasterDetailSkeleton
-                body="editor"
-                label={t('indicators.loading')}
-              />
-            </PendingAfter>
-          }
-        >
-          <IndicatorWorkbench focusScriptId={script ?? null} />
-        </Suspense>
-      </div>
-    </SidebarInset>
+      <Suspense
+        fallback={
+          <PendingAfter>
+            <MasterDetailSkeleton
+              body="editor"
+              label={t('indicators.loading')}
+            />
+          </PendingAfter>
+        }
+      >
+        <IndicatorWorkbench focusScriptId={script ?? null} />
+      </Suspense>
+    </main>
   )
 }

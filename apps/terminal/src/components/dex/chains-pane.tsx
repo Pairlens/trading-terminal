@@ -85,7 +85,6 @@ export function ChainsPane() {
   return (
     <div className="flex h-full flex-col">
       <DexPaneHeader
-        title={t('dexChains.title')}
         // The design's second line reads "24h volume · net liquidity". There is
         // no signed 24h liquidity delta on any provider we can reach, at any
         // grain, so the rail names what it actually summed and keeps absolute
@@ -101,7 +100,7 @@ export function ChainsPane() {
           out of six shows the five and dashes the sixth; a banner over that
           would be louder than the gap it describes. */}
       {statsError && byMarket.size === 0 ? (
-        <div className="px-3 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner
             venue={t('dexChains.volumesLabel')}
             // A throttle words itself; anything else is plumbing. Same rule,
@@ -208,7 +207,7 @@ function ChainRow({
 
   if (!row.connected) {
     return (
-      <div className="border-b border-border/50 px-3 py-2.5 opacity-55">
+      <div className="border-b border-border/40 px-1.5 py-2.5 opacity-55">
         {body}
         <Link
           to="/plugins"
@@ -228,8 +227,10 @@ function ChainRow({
       onClick={onSelect}
       aria-pressed={selected}
       className={cn(
-        'w-full border-b border-border/50 px-3 py-2.5 text-left transition-colors hover:bg-muted/40',
-        selected && 'border-l-2 border-l-primary bg-primary/10 pl-[10px]',
+        'w-full border-b border-border/40 px-1.5 py-2.5 text-left transition-colors hover:bg-muted/40',
+        // The accent bar eats its own 2px back out of the left pad so the
+        // selected row's text stays on the same column as every other row's.
+        selected && 'border-l-2 border-l-primary bg-primary/10 pl-1',
       )}
     >
       {body}

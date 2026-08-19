@@ -3,11 +3,19 @@
 import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '@pairlens/ui/components/ui/button'
 import { Kbd } from '@pairlens/ui/components/ui/kbd'
-import { Separator } from '@pairlens/ui/components/ui/separator'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@pairlens/ui/components/ui/tooltip'
 import type { ReactNode } from 'react'
 
+import {
+  HEADER_BAR,
+  HEADER_CHIP_MUTED,
+  HEADER_GROUP,
+} from '@/components/chrome/header-chrome'
 import { FullscreenToggleButton } from '@/components/fullscreen-toggle'
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
@@ -25,26 +33,37 @@ export function PageHeader({ children, actions }: PageHeaderProps) {
   const searchShortcut = useKeybindingLabel('general.commandPalette')
 
   return (
-    <header className="flex h-10 shrink-0 items-center gap-2 border-b px-3">
+    <header className={HEADER_BAR}>
       {children}
       <div className="flex-1" />
-      {actions && (
-        <>
-          {actions}
-          <Separator orientation="vertical" className="self-stretch" />
-        </>
-      )}
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-7 gap-2 px-2 text-xs text-muted-foreground"
-        onClick={open}
-      >
-        <Search className="size-3.5" />
-        <span className="hidden sm:inline">{t('search.placeholder')}</span>
-        {searchShortcut ? <Kbd>{searchShortcut}</Kbd> : null}
-      </Button>
-      <FullscreenToggleButton />
+      {actions}
+      {/* Icon and chord only. The bar is dense with numbers a trader reads at
+          a glance, and a search field carrying its own placeholder was the
+          widest thing on it for a control nobody hunts for: everyone who uses
+          it uses the chord. */}
+      <div className={HEADER_GROUP}>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                onClick={open}
+                aria-label={t('search.placeholder')}
+                className={HEADER_CHIP_MUTED}
+              />
+            }
+          >
+            <Search className="size-3.5" />
+            {searchShortcut ? (
+              <Kbd className="border-0 bg-secondary px-1 font-mono text-[10px] shadow-none">
+                {searchShortcut}
+              </Kbd>
+            ) : null}
+          </TooltipTrigger>
+          <TooltipContent>{t('search.placeholder')}</TooltipContent>
+        </Tooltip>
+        <FullscreenToggleButton />
+      </div>
     </header>
   )
 }

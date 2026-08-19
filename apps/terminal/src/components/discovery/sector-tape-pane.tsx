@@ -1,19 +1,24 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Rotation as a row of chips: which sectors are bid, which are being sold, and
- * how one-sided each of those is.
+ * Rotation as a grid of rows: which sectors are bid, which are being sold, and
+ * how one-sided each of those is. Each row is anchored by its own colour rail,
+ * whose strength is the size of the move; the card frame that used to do that
+ * job was a second border inside the column's own.
  *
  * The aggregate percentage is capitalisation-weighted (see `sector-stats.ts`),
- * so a chip says what holding the sector would have done rather than what the
+ * so a row says what holding the sector would have done rather than what the
  * average member did. Beside it, the breadth bar is what stops that number
  * from being read as agreement: "+4.2%" from twelve assets moving together and
  * "+4.2%" from one asset dragging eleven flat ones are different markets, and
  * the bar is the only place that difference shows.
  *
- * Clicking a chip filters the markets scanner beside it to that sector rather
- * than navigating: the scanner and the tape share the same persisted category,
- * so the click lands on the board the user is already looking at.
+ * Clicking a row narrows the movers table and the markets scanner to that
+ * sector rather than navigating: all three panes share one persisted category,
+ * so the click lands on the board the user is already looking at. The default
+ * spot board carries the tape and the movers table, which is the pair that
+ * makes the click worth making; a scanner added later picks up the same
+ * selection.
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -80,18 +85,18 @@ export function SectorTapePane() {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      {/* Title and window on one line. The subtitle that used to sit here
-          explained the weighting and the breadth bar, which is a caption for
-          a chip the reader has already looked at — it rides the title as a
-          tooltip now and gives the grid back a row of height. */}
-      <div className="flex items-center gap-2 border-b px-3 py-2">
+      {/* The pane's name is the shell's now, so the row it used to share with
+          the window toggle carries the caption instead: what the weighting is
+          and what the breadth bar counts. Truncated, with the full sentence on
+          hover, because on a docked rail the toggle is what has to fit. */}
+      <div className="flex shrink-0 items-center gap-2 pb-2">
         <Tooltip>
           <TooltipTrigger
             render={
-              <h2 className="min-w-0 flex-1 truncate text-[13px] font-semibold" />
+              <p className="min-w-0 flex-1 truncate text-[10px] text-muted-foreground" />
             }
           >
-            {t('sectorTape.title')}
+            {t('sectorTape.subtitle')}
           </TooltipTrigger>
           <TooltipContent>{t('sectorTape.subtitle')}</TooltipContent>
         </Tooltip>
@@ -113,7 +118,7 @@ export function SectorTapePane() {
             <ToggleGroupItem
               key={id}
               value={id}
-              className="px-1.5 font-mono text-[10px]"
+              className="h-6 min-w-6 px-1.5 font-mono text-[10px]"
             >
               {id}
             </ToggleGroupItem>
@@ -123,16 +128,16 @@ export function SectorTapePane() {
 
       {/* Three columns, capped. The six curated sectors are meant to sit 3×2
           and be read as a block; letting auto-fill run to five across at the
-          board's own width turned the tape into one long row of thin chips
-          with an orphan underneath. Below 31rem the cap lifts and the cards
+          board's own width turned the tape into one long row of thin cells
+          with an orphan underneath. Below 31rem the cap lifts and the rows
           fall back to filling whatever the dock gives them. */}
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-2 @min-[31rem]/pane:grid-cols-3">
+      <div className="min-h-0 flex-1 overflow-y-auto pb-1">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(10rem,1fr))] gap-x-3 gap-y-1 @min-[31rem]/pane:grid-cols-3">
           {loading
             ? Array.from({ length: 6 }, (_, i) => (
                 <div
                   key={i}
-                  className="h-[4.5rem] animate-pulse rounded-lg bg-muted/50"
+                  className="h-[4.25rem] animate-pulse rounded-md bg-muted/40"
                 />
               ))
             : sectors.map((sector) => (
@@ -165,10 +170,11 @@ function SectorChip({
   const { t } = useTranslation()
   const up = sector.changePct >= 0
   const moved = sector.advancing + sector.declining
-  // Tint depth follows the size of the move, capped so a violent day does not
-  // wash the label out. 12% is where the chip is clearly coloured and the
-  // 13px name is still legible on both themes.
-  const tint = Math.min(12, Math.abs(sector.changePct) * 2.5).toFixed(1)
+  // The rail is what a border and a tinted card used to do together, and it is
+  // the one thing on the row that is the sector's own colour. Its strength
+  // follows the size of the move, floored so a flat sector still has an anchor
+  // and capped at full so a violent day does not read as a different control.
+  const strength = Math.min(1, 0.35 + Math.abs(sector.changePct) * 0.13)
   const geometry = buildSparkline(sector.trajectory, 60, 18, 1.5)
 
   const mover = up ? sector.leader : sector.laggard
@@ -179,74 +185,82 @@ function SectorChip({
       onClick={() => onSelect(sector.category)}
       aria-pressed={selected}
       className={cn(
-        'flex min-w-0 flex-col justify-between gap-1.5 rounded-lg border px-3 py-2.5 text-left transition-colors hover:border-primary/40',
-        selected && 'border-primary/60',
+        'flex min-w-0 items-stretch gap-2.5 rounded-md px-1.5 py-1.5 text-left transition-colors hover:bg-accent/40',
+        selected && 'bg-muted/60',
       )}
-      style={{
-        background: `linear-gradient(180deg,color-mix(in oklch,var(--${up ? 'up' : 'down'}) ${tint}%,transparent),transparent)`,
-      }}
     >
-      <span className="flex items-baseline justify-between gap-2">
-        <span className="truncate text-[13px] font-medium">
-          {t(`markets.category.${sector.category}`)}
-        </span>
-        <span
-          className={cn(
-            'shrink-0 font-mono text-[15px] font-semibold tabular-nums',
-            up ? 'text-up' : 'text-down',
-          )}
-        >
-          {up ? '+' : ''}
-          {sector.changePct.toFixed(1)}%
-        </span>
-      </span>
+      <span
+        aria-hidden
+        className={cn(
+          'w-[3px] shrink-0 rounded-full',
+          up ? 'bg-up' : 'bg-down',
+        )}
+        style={{ opacity: strength }}
+      />
 
-      {/* Breadth: the up side fills a track the down side owns, so a sector
-          carried by one name reads differently from one moving together. */}
-      {moved > 0 && (
-        <span className="block h-1 overflow-hidden rounded-sm [background-color:var(--down)]">
+      <span className="flex min-w-0 flex-1 flex-col justify-between gap-1.5">
+        <span className="flex items-baseline justify-between gap-2">
+          <span className="truncate text-[12.5px] font-medium">
+            {t(`markets.category.${sector.category}`)}
+          </span>
           <span
-            className="block h-full [background-color:var(--up)]"
-            style={{
-              width: `${((sector.advancing / moved) * 100).toFixed(1)}%`,
-            }}
-          />
+            className={cn(
+              'shrink-0 font-mono text-[15px] font-semibold tabular-nums',
+              up ? 'text-up' : 'text-down',
+            )}
+          >
+            {up ? '+' : ''}
+            {sector.changePct.toFixed(1)}%
+          </span>
         </span>
-      )}
 
-      <span className="flex items-center justify-between gap-2">
-        <span className="min-w-0 truncate text-[11px] text-muted-foreground">
-          {/* Three captions, because three things can be true. A sector with
+        {/* Breadth: the up side fills a track the down side owns, so a sector
+            carried by one name reads differently from one moving together. */}
+        {moved > 0 && (
+          <span className="block h-1 overflow-hidden rounded-sm [background-color:var(--down)]">
+            <span
+              className="block h-full [background-color:var(--up)]"
+              style={{
+                width: `${((sector.advancing / moved) * 100).toFixed(1)}%`,
+              }}
+            />
+          </span>
+        )}
+
+        <span className="flex items-center justify-between gap-2">
+          <span className="min-w-0 truncate text-[11px] text-muted-foreground">
+            {/* Three captions, because three things can be true. A sector with
               a side names the name carrying it; one whose members split down
               the middle says so, since picking a leader out of 6-up-5-down
               would be a coin flip dressed as a finding. */}
-          {sector.split
-            ? t('sectorTape.splitTape', { total: sector.members })
-            : mover
-              ? t(up ? 'sectorTape.leads' : 'sectorTape.drags', {
-                  total: sector.members,
-                  symbol: mover.symbol,
-                })
-              : t('sectorTape.assets', { total: sector.members })}
+            {sector.split
+              ? t('sectorTape.splitTape', { total: sector.members })
+              : mover
+                ? t(up ? 'sectorTape.leads' : 'sectorTape.drags', {
+                    total: sector.members,
+                    symbol: mover.symbol,
+                  })
+                : t('sectorTape.assets', { total: sector.members })}
+          </span>
+          {geometry && (
+            <svg
+              viewBox="0 0 60 18"
+              preserveAspectRatio="none"
+              aria-hidden
+              className={cn('h-4 w-14 shrink-0', up ? 'text-up' : 'text-down')}
+            >
+              <path
+                d={geometry.line}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+          )}
         </span>
-        {geometry && (
-          <svg
-            viewBox="0 0 60 18"
-            preserveAspectRatio="none"
-            aria-hidden
-            className={cn('h-4 w-14 shrink-0', up ? 'text-up' : 'text-down')}
-          >
-            <path
-              d={geometry.line}
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-        )}
       </span>
     </button>
   )

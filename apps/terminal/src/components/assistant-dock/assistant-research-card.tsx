@@ -58,7 +58,7 @@ export function AssistantResearchCard({
   const [expanded, setExpanded] = useState(false)
 
   return (
-    <div className="ai-tile overflow-hidden rounded-xl">
+    <div className="ai-tile overflow-hidden rounded-[10px]">
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}

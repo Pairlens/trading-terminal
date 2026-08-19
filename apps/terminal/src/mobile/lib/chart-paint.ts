@@ -58,7 +58,7 @@ export function toRgbTriple(color: string | undefined): string {
  * reaches it, so mounting this on `.pl-mobile-root` costs nothing per frame.
  */
 export function useChartPaint(): CSSProperties {
-  const theme = usePairlensChartTheme()
+  const theme = usePairlensChartTheme('palette')
   return useMemo(
     () =>
       ({

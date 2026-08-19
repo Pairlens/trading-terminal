@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "Perpétuo contra spot",
     "subtitle": "O mesmo ativo nas duas mesas, lado a lado",
     "spot": "spot {{price}}",
     "spotMissing": "sem índice",
@@ -37,8 +36,6 @@
     "hint": "Cada perna é uma ordem limitada real."
   },
   "chainLadder": {
-    "title": "{{asset}} entre redes",
-    "subtitle": "Ordenado pelo que sobra depois do gas, não pela melhor cotação",
     "sizedFor": "Calculado para {{value}}",
     "best": "Melhor",
     "versusBest": "{{bps}} pb",
@@ -107,7 +104,6 @@
     "week52": "52 semanas mín. · máx."
   },
   "dexChains": {
-    "title": "Onde está o fluxo",
     "subtitleNetwork": "Volume 24h, na rede inteira",
     "subtitleSampled": "Volume 24h das pools mais ativas de cada rede",
     "liquidityValue": "{{value}} de liquidez",
@@ -167,11 +163,6 @@
     },
     "today": "Hoje",
     "tomorrow": "Amanhã",
-    "heading": {
-      "today": "Divulgam hoje",
-      "week": "Divulgam esta semana",
-      "watchlist": "Balanços da sua watchlist"
-    },
     "slots": {
       "bmo": "Antes da abertura",
       "amc": "Após o fechamento",
@@ -222,7 +213,6 @@
       "month": "Mês"
     },
     "sourceNote": "Compilado dos calendários de divulgação do BLS, BEA, Federal Reserve e Census. Os valores real e anterior vêm das próprias agências; o implícito é derivado dos preços dos contratos da Kalshi. Horários no Leste dos EUA, como as agências os publicam.",
-    "title": "Macro",
     "today": "Hoje",
     "tomorrow": "Amanhã",
     "countdownDh": "em {{days}} d {{hours}} h",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "no último toque",
-    "title": "Taxas acumuladas",
     "subtitle_one": "{{wallet}} · {{count}} faixa",
     "subtitle_other": "{{wallet}} · {{count}} faixas",
     "claimableLabel": "Disponível para saque",
@@ -385,7 +374,6 @@
     "shortsPaying": "curtos pagando"
   },
   "fundingMatrix": {
-    "title": "Financiamento, anualizado",
     "subtitle": "Positivo = os longos pagam aos curtos",
     "nextPayment": "Próximo pagamento em",
     "colSpread": "Diferença",
@@ -398,7 +386,6 @@
     "emptyBody": "O financiamento é dado público, por isso não é preciso chave de API. Instale um conector de futuros perpétuos e a matriz preenche-se sozinha."
   },
   "inFlight": {
-    "title": "Em trânsito",
     "pendingCount_one": "{{count}} pendente",
     "pendingCount_other": "{{count}} pendentes",
     "emptyTitle": "Nenhuma transferência em trânsito",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "Atividade de insiders",
     "summary": "{{buys}} compras · {{sells}} vendas",
     "span_one": "{{count}} dia",
     "span_other": "{{count}} dias",
@@ -512,9 +498,6 @@
     "bucketTooltip": "{{buy}} comprados, {{sell}} vendidos",
     "axisNote": "Compras menos vendas a cada 5 minutos. A liquidez que os LPs adicionam ou retiram não está neste feed.",
     "biggestLabel": "Maiores swaps",
-    "title": "Fluxo através de {{pool}}",
-    "subtitle": "Compras menos vendas, em blocos de cinco minutos",
-    "subtitleVenue": "{{venue}} · compras menos vendas, em blocos de cinco minutos",
     "waitingTitle": "À espera do mapa",
     "waitingBody": "Os pools da rede ainda estão a carregar. O fluxo aparece assim que um for selecionado.",
     "unavailableTitle": "Pools indisponíveis agora",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "Apenas o valor liquidado. Os dados dos ticks nas bordas desta posição não puderam ser lidos, então as taxas acumuladas desde o último movimento não entram na conta e o valor real pode ser maior.",
-    "title": "Posição de liquidez",
     "subtitle_one": "{{wallet}} · {{count}} faixa",
     "subtitle_other": "{{wallet}} · {{count}} faixas",
     "capped": "{{count}} não exibidas",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "Uma transação, sem aprovações de tokens. O depósito está limitado aos valores acima.",
     "confirmCollectNoteSolana": "Vai para o programa acima. As taxas são liquidadas e pagas a esta carteira na mesma transação, e a nenhuma outra.",
     "rowProgram": "Programa",
-    "title": "Gerir liquidez",
     "subtitle_one": "{{wallet}} · {{count}} posição",
     "subtitle_other": "{{wallet}} · {{count}} posições",
     "position": "Posição",
@@ -677,6 +658,8 @@
       "unusual": "Atípico"
     },
     "window": "Janela do ranking",
+    "clearSector": "Mostrar todos os setores",
+    "emptySector": "Nada em {{sector}} se destaca nesta janela.",
     "columns": {
       "asset": "Ativo",
       "liquidity": "Liquidez",
@@ -943,7 +926,6 @@
     "emptyBody": "Nada passou por esta pool na janela que o provedor retorna."
   },
   "openInterest": {
-    "title": "Líderes de contratos em aberto",
     "changeLabel": "Variação 24 h",
     "notPublished": "não publica contratos em aberto na sua API.",
     "emptyTitle": "Ainda sem contratos em aberto",
@@ -1034,8 +1016,6 @@
     "stateUnavailable": "O provedor de dados não retornou o estado ao vivo do pool. Os números acima são os da listagem da chain."
   },
   "poolMap": {
-    "title": "{{chain}} · principais pools",
-    "subtitle": "Ordenadas por quanto cada pool faz a própria liquidez trabalhar",
     "sortTurnover": "Giro",
     "sortVolume": "Volume",
     "sortLiquidity": "Liquidez",
@@ -1053,11 +1033,6 @@
     "noChainBody": "Escolha uma rede na coluna e as pools dela aparecem aqui: volume contra a liquidez que o sustenta.",
     "emptyTitle": "Nenhuma pool retornada",
     "emptyBody": "O provedor de dados não listou nada para esta rede. Nova tentativa na próxima atualização.",
-    "listTitle": "{{chain}} · todas as pools",
-    "subtitleVolume": "Tamanho pelo volume 24h, cor pela variação 24h",
-    "subtitleLiquidity": "Tamanho pela liquidez, cor pela variação 24h",
-    "subtitleTrades": "Tamanho pelo número de negócios 24h, cor pela variação 24h",
-    "subtitleTurnover": "Tamanho pelo volume contra a liquidez, cor pela variação 24h",
     "sortTrades": "Negócios",
     "morePools": "Mais pools nesta rede",
     "backToMap": "Voltar ao mapa",
@@ -1128,7 +1103,6 @@
   "routeBridge": {
     "confirmDestination": "Chega na {{chain}}, na sua carteira {{wallet}}.",
     "needsDestinationWallet": "Conecte uma carteira {{chain}} para receber esta transferência. O preço acima é real, só falta para onde enviar.",
-    "title": "Ponte",
     "subtitle": "Mova um ativo para fora de {{chain}}",
     "provider": "LI.FI",
     "noConnectorTitle": "Nenhum conector de ponte instalado",
@@ -1369,7 +1343,6 @@
     "leads": "{{total}} ativos · {{symbol}} lidera",
     "drags": "{{total}} ativos · {{symbol}} puxa para baixo",
     "assets": "{{total}} ativos",
-    "title": "Fita Setorial",
     "splitTape": "{{total}} ativos · fita dividida"
   },
   "session": {
@@ -3589,6 +3562,7 @@
     },
     "pane": {
       "close": "Fechar {{pane}}",
+      "move": "Mover o painel {{pane}}",
       "popOutToColumn": "Destacar para nova coluna",
       "bindPairToVariable": "Vincular par a variável",
       "bindWalletToVariable": "Vincular carteira a variável",
@@ -5313,7 +5287,6 @@
     "inDays": "em {{n}} d"
   },
   "markets": {
-    "title": "Mercados",
     "pairCount_one": "{{count}} par",
     "pairCount_other": "{{count}} pares",
     "viewMode": "Modo de exibição",
@@ -5397,7 +5370,6 @@
     }
   },
   "topCoins": {
-    "title": "Principais Moedas",
     "colCoin": "Moeda",
     "colPrice": "Preço",
     "col24h": "24h",
@@ -5408,7 +5380,6 @@
     "willAppear": "As principais moedas aparecerão aqui"
   },
   "heatmap": {
-    "title": "Mapa de Calor do Mercado",
     "failed": "Falha ao carregar o mapa de calor",
     "noData": "Nenhum dado disponível",
     "tryLater": "Tente novamente mais tarde",
@@ -5461,6 +5432,7 @@
     "adjustScope": "Nada no noticiário para este filtro. Tente outro ou volte em alguns minutos.",
     "noWatchedAssets": "Sua watchlist está vazia, então não há a que restringir o noticiário. Marque um par com estrela ou leia Macro.",
     "noAssetNews": "O noticiário está agitado, mas nada dele é sobre a sua watchlist. Macro e Todas seguem em movimento.",
+    "noCryptoNews": "O fluxo está ativo, mas nada é sobre cripto agora. Macro continua em movimento.",
     "noStockNews": "Nada no noticiário sobre os papéis listados agora. Macro e Todas seguem em movimento.",
     "mentionsPairs_one": "menciona {{count}} dos seus pares",
     "mentionsPairs_other": "menciona {{count}} dos seus pares"

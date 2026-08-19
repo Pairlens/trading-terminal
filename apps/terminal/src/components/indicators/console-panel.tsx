@@ -62,7 +62,7 @@ export function ConsolePanel({
   )
 
   return (
-    <div className="flex shrink-0 flex-col border-t border-border">
+    <div className="flex shrink-0 flex-col border-t border-(--pane-rule)">
       <div className="flex items-center gap-2 px-3 py-1.5">
         <button
           type="button"
@@ -111,7 +111,7 @@ export function ConsolePanel({
             pinnedRef.current =
               el.scrollHeight - el.scrollTop - el.clientHeight < 24
           }}
-          className="h-32 overflow-y-auto border-t border-border bg-muted/20 px-3 py-2"
+          className="h-32 overflow-y-auto border-t border-(--pane-rule) bg-muted/20 px-3 py-2"
         >
           {lines.length === 0 ? (
             <p className="font-mono text-[11px] text-muted-foreground/70">

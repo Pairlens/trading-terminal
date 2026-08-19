@@ -103,13 +103,14 @@ function VenueRow({
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => track('affiliate_link_clicked', { venue: market })}
-      className="group flex items-center gap-3 border border-border/70 p-2.5 transition-colors hover:border-primary/30"
+      className="group flex items-center gap-3 rounded-[10px] bg-muted/40 p-2.5 transition-colors hover:bg-muted/70"
+      // Tint only, over the well: the row is a step below the rail card, not
+      // an outlined chip drawn on top of it.
       style={{
-        borderRadius: 14,
-        background: `linear-gradient(120deg, color-mix(in oklch, ${brand.tint} 16%, var(--card)) 0%, var(--card) 70%)`,
+        backgroundImage: `linear-gradient(120deg, color-mix(in oklch, ${brand.tint} 20%, transparent) 0%, transparent 70%)`,
       }}
     >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-[10px] border border-border/40 bg-background/85">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-[8px] bg-card">
         {poster ? (
           <img
             src={poster}
@@ -155,7 +156,7 @@ export function VenueRail({
   const preview = venues.slice(0, RAIL_VENUE_COUNT)
 
   return (
-    <div className="rounded-[17px] border border-border/70 bg-card/50 p-4 backdrop-blur-sm">
+    <div className="rounded-[14px] bg-card p-4">
       <SectionEyebrow className="text-[10px]">
         {t('accounts.openAccountShelfTitle', 'Open a new account')}
       </SectionEyebrow>
@@ -209,9 +210,9 @@ function VenuePosterCard({
       <motion.div
         layoutId={layoutId}
         transition={POSTER_MORPH}
-        className="relative flex h-[150px] items-center justify-center overflow-hidden border border-border"
+        className="relative flex h-[150px] items-center justify-center overflow-hidden"
         style={{
-          borderRadius: 17,
+          borderRadius: 14,
           background: `linear-gradient(160deg, color-mix(in oklch, ${brand.tint} 42%, var(--card)) 0%, var(--card) 78%)`,
         }}
       >
@@ -223,7 +224,7 @@ function VenuePosterCard({
           monoSize={52}
           scrim={false}
         />
-        <span className="absolute right-2.5 top-2.5 flex size-6 items-center justify-center rounded-full border border-border/50 bg-background/60 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
+        <span className="absolute right-2.5 top-2.5 flex size-6 items-center justify-center rounded-full bg-card/80 text-muted-foreground opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100">
           <ArrowUpRight className="size-3.5" />
         </span>
       </motion.div>
@@ -288,7 +289,9 @@ export function AllVenuesPage({
 
   return (
     <motion.div
-      className="absolute inset-0 z-40 overflow-y-auto bg-card"
+      // Ground, not a sheet: the posters are cards floating on it, the same
+      // way a board's panes are.
+      className="absolute inset-0 z-40 overflow-y-auto bg-background"
       // Opacity only — a transform here would skew the shared-element morphs.
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -298,7 +301,7 @@ export function AllVenuesPage({
       <StoreAurora className="fixed" />
 
       {/* Sticky sub-bar */}
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/40 bg-card/70 px-5 py-2.5 backdrop-blur-md">
+      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-(--pane-rule) bg-background/70 px-5 py-2.5 backdrop-blur-md">
         <button
           type="button"
           onClick={onBack}
@@ -328,7 +331,7 @@ export function AllVenuesPage({
               'accounts.openAccountShelfSub',
               'Venues you can connect to Pairlens in minutes',
             )}
-            {' — '}
+            {'. '}
             {t('accounts.affiliateDisclosure')}
           </p>
         </motion.div>

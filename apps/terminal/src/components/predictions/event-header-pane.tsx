@@ -39,7 +39,11 @@ import type { EventOverround } from '@/lib/predictions/race'
 import type { PredictionEventContext } from '@/hooks/use-prediction-event'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { liveQuotePrice } from '@/lib/live-price'
 import { usePredictionEventContext } from '@/hooks/use-prediction-event'
@@ -76,8 +80,8 @@ export function EventHeaderPane() {
   }
 
   return (
-    <div className="flex h-full min-h-0">
-      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 border-r px-4 py-2.5">
+    <div className="flex h-full min-h-0 gap-5">
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 py-0.5">
         <div className="min-w-0">
           <h2 className="text-base font-semibold leading-tight tracking-tight">
             {context.title}
@@ -113,7 +117,7 @@ export function EventHeaderPane() {
         )}
       </div>
 
-      <div className="flex w-[248px] shrink-0 flex-col justify-center gap-2 px-4 py-2.5">
+      <div className="flex w-[236px] shrink-0 flex-col justify-center gap-2 py-0.5">
         {context.isRace ? (
           <RaceReading context={context} />
         ) : (
@@ -210,14 +214,14 @@ function RulesChip({ context }: { context: PredictionEventContext }) {
   return (
     <Popover>
       <PopoverTrigger
-        className="inline-flex h-[18px] items-center gap-1 rounded-md border px-2 text-[10.5px] text-muted-foreground transition-colors hover:text-foreground"
+        className="inline-flex h-[18px] items-center gap-1 rounded-md bg-muted/40 px-2 text-[10.5px] text-muted-foreground transition-colors hover:text-foreground"
         type="button"
       >
         <FileText className="size-3 opacity-70" />
         {t('eventHeader.rules')}
       </PopoverTrigger>
       <PopoverContent align="start" className="w-96 p-0">
-        <div className="border-b px-3 py-2">
+        <div className="px-3 pb-1 pt-2">
           <p className="text-xs font-medium">{t('eventHeader.rulesTitle')}</p>
           <p className="mt-0.5 text-[10.5px] text-muted-foreground">
             {t('eventHeader.rulesSource', { venue: context.venueLabel })}
@@ -383,7 +387,7 @@ function RaceReading({ context }: { context: PredictionEventContext }) {
 function BasisNote({ overround }: { overround: EventOverround }) {
   const { t } = useTranslation()
   return (
-    <p className="font-mono text-[9.5px] uppercase tracking-[.1em] text-muted-foreground/80">
+    <p className={cn(PANE_FOOTNOTE, 'leading-relaxed')}>
       {overround.basis === 'ask'
         ? t('eventHeader.basisAsk', { count: overround.counted })
         : t('eventHeader.basisLast', { count: overround.counted })}

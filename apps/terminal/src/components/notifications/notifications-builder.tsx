@@ -21,6 +21,7 @@ import { NotificationCanvas } from './notification-canvas'
 import { NotificationsAssistantSurface } from './notifications-assistant-surface'
 import { SimpleAlertEditor } from './simple-alert-editor'
 import { useSimpleAlertView } from './use-simple-alert-view'
+import { PAGE_COLUMN_FLUSH, PAGE_GROUND } from '@/components/chrome/page-chrome'
 import { useSearchSelection } from '@/hooks/use-search-selection'
 import { useNotificationStore } from '@/stores/notification-store'
 
@@ -76,22 +77,24 @@ export function NotificationsBuilder({
   const active = rules.find((rule) => rule.id === activeRuleId) ?? null
 
   return (
-    <div className="flex h-full min-h-0">
+    // The form gets one column; the canvas emits its own pair (the board plus
+    // the palette rail), so it sits directly on the ground.
+    <div className={PAGE_GROUND}>
       <NotificationsAssistantSurface
         rule={active}
         simple={Boolean(simpleView)}
         count={rules.length}
       />
       <NotificationsSidebar />
-      <div className="flex h-full min-w-0 flex-1">
-        {simpleView && activeRuleId ? (
+      {simpleView && activeRuleId ? (
+        <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
           <SimpleAlertEditor key={activeRuleId} ruleId={activeRuleId} />
-        ) : (
-          <ReactFlowProvider>
-            <NotificationCanvas />
-          </ReactFlowProvider>
-        )}
-      </div>
+        </div>
+      ) : (
+        <ReactFlowProvider>
+          <NotificationCanvas />
+        </ReactFlowProvider>
+      )}
     </div>
   )
 }

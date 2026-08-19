@@ -146,7 +146,10 @@ export function PoolDetailPane() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="shrink-0 border-b border-border px-3 py-3">
+      {/* Identity, price, move, trend: one block separated from the stats by
+          air. It used to be two ruled strips, which drew a second and a third
+          line across a pane the board already frames. */}
+      <div className="shrink-0 pb-2.5">
         <div className="flex items-center gap-2.5">
           <PoolSwatch seed={pool.address} />
           <div className="min-w-0">
@@ -180,7 +183,7 @@ export function PoolDetailPane() {
       {/* The trend line pays for itself here: the pane is a decision surface,
           and the 24h number alone cannot tell a steady climb from a spike that
           already retraced. It fetches its own candles, viewport-gated. */}
-      <div className="shrink-0 border-b border-border px-3 py-2.5">
+      <div className="shrink-0 pb-2.5">
         <MiniPriceChart
           market={pool.market}
           pair={pairKey}
@@ -188,7 +191,7 @@ export function PoolDetailPane() {
         />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-2.5">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         <dl className="flex flex-col gap-2.5 text-[11.5px]">
           <StatLine
             label={t('poolDetail.liquidity')}
@@ -242,8 +245,8 @@ export function PoolDetailPane() {
         </dl>
 
         {pressure ? (
-          <div className="mt-3 border-t border-border pt-2.5">
-            <p className="text-[11px] text-muted-foreground">
+          <div className="mt-3.5">
+            <p className="text-[10px] text-muted-foreground">
               {t('poolDetail.pressure1h')}
             </p>
             <div className="mt-1.5 flex h-2 overflow-hidden rounded-full">
@@ -292,7 +295,7 @@ export function PoolDetailPane() {
       </div>
 
       {pairKey ? (
-        <div className="shrink-0 border-t border-border p-3">
+        <div className="shrink-0 pt-2.5">
           <Button
             size="sm"
             className="w-full"

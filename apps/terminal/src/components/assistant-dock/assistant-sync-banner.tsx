@@ -49,7 +49,7 @@ export function AssistantSyncBanner({
   }
 
   return (
-    <div className="ai-tile mx-2 mb-2 flex shrink-0 flex-col gap-2 rounded-xl p-2.5">
+    <div className="ai-tile mx-2 mb-2 flex shrink-0 flex-col gap-2 rounded-[10px] p-2.5">
       <div className="flex items-start gap-2">
         <Cloud
           className="mt-0.5 size-3.5 shrink-0"
@@ -71,7 +71,7 @@ export function AssistantSyncBanner({
       <div className="flex flex-col gap-1">
         <Button
           size="sm"
-          className="h-auto min-h-6 w-full rounded-full px-2 py-1 text-[11px] leading-tight whitespace-normal"
+          className="h-auto min-h-6 w-full rounded-[8px] px-2 py-1 text-[11px] leading-tight whitespace-normal"
           onClick={() => answer(true)}
         >
           {t('assistantDock.conversations.syncEnable')}
@@ -79,7 +79,7 @@ export function AssistantSyncBanner({
         <Button
           variant="ghost"
           size="sm"
-          className="text-muted-foreground h-auto min-h-6 w-full rounded-full px-2 py-1 text-[11px] leading-tight whitespace-normal"
+          className="text-muted-foreground h-auto min-h-6 w-full rounded-[8px] px-2 py-1 text-[11px] leading-tight whitespace-normal"
           onClick={() => answer(false)}
         >
           {t('assistantDock.conversations.syncDecline')}

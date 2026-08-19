@@ -2493,6 +2493,8 @@
       "newListings": "New listings"
     },
     "window": "Ranking window",
+    "clearSector": "Show every sector",
+    "emptySector": "Nothing in {{sector}} ranks over this window.",
     "columns": {
       "pair": "Pair",
       "change": "{{window}} change",
@@ -2536,7 +2538,6 @@
     "leads": "{{total}} assets · {{symbol}} leads",
     "drags": "{{total}} assets · {{symbol}} drags",
     "assets": "{{total}} assets",
-    "title": "Sector Tape",
     "splitTape": "{{total}} assets · split tape"
   },
   "sectorPeers": {
@@ -2653,6 +2654,7 @@
     },
     "pane": {
       "close": "Close {{pane}}",
+      "move": "Move {{pane}} pane",
       "popOutToColumn": "Pop Out to Column",
       "bindPairToVariable": "Bind Pair to Variable",
       "bindWalletToVariable": "Bind Wallet to Variable",
@@ -4377,7 +4379,6 @@
     "inDays": "in {{n}}d"
   },
   "markets": {
-    "title": "Markets",
     "pairCount_one": "{{count}} pair",
     "pairCount_other": "{{count}} pairs",
     "viewMode": "View mode",
@@ -4461,7 +4462,6 @@
     }
   },
   "topCoins": {
-    "title": "Top Coins",
     "colCoin": "Coin",
     "colPrice": "Price",
     "col24h": "24h",
@@ -4472,7 +4472,6 @@
     "willAppear": "Top coins will appear here"
   },
   "heatmap": {
-    "title": "Market Heatmap",
     "failed": "Failed to load heatmap",
     "noData": "No data available",
     "tryLater": "Try again later",
@@ -4525,6 +4524,7 @@
     "adjustScope": "Nothing on the wire for this filter. Try another one, or check back in a few minutes.",
     "noWatchedAssets": "Your watchlist is empty, so there is nothing to scope the wire to. Star a pair, or read Macro instead.",
     "noAssetNews": "The wire is busy, but none of it is about your watchlist. Macro and All are still moving.",
+    "noCryptoNews": "The wire is busy, but none of it is about crypto right now. Macro is still moving.",
     "noStockNews": "Nothing on the wire about the listed names right now. Macro and All are still moving.",
     "mentionsPairs_one": "mentions {{count}} of your pairs",
     "mentionsPairs_other": "mentions {{count}} of your pairs"
@@ -4911,7 +4911,6 @@
     }
   },
   "dexChains": {
-    "title": "Where the flow is",
     "subtitleNetwork": "24h volume, chain wide",
     "subtitleSampled": "24h volume across each chain's busiest pools",
     "liquidityValue": "{{value}} liquidity",
@@ -4926,8 +4925,6 @@
     "volumesLabel": "Chain volumes"
   },
   "poolMap": {
-    "title": "{{chain}} · top pools",
-    "subtitle": "Ranked by how hard each pool works its own liquidity",
     "sortTurnover": "Turnover",
     "sortVolume": "Volume",
     "sortLiquidity": "Liquidity",
@@ -4945,11 +4942,6 @@
     "noChainBody": "Choose a chain in the rail and its pools rank here, volume against the liquidity backing it.",
     "emptyTitle": "No pools returned",
     "emptyBody": "The data provider listed nothing for this chain. It retries on the next refresh.",
-    "listTitle": "{{chain}} · all pools",
-    "subtitleVolume": "Sized by 24h volume, coloured by 24h move",
-    "subtitleLiquidity": "Sized by liquidity, coloured by 24h move",
-    "subtitleTrades": "Sized by 24h trade count, coloured by 24h move",
-    "subtitleTurnover": "Sized by volume against liquidity, coloured by 24h move",
     "sortTrades": "Trades",
     "morePools": "More pools on this chain",
     "backToMap": "Back to map",
@@ -4972,9 +4964,6 @@
     "bucketTooltip": "{{buy}} bought, {{sell}} sold",
     "axisNote": "Buys minus sells per 5 minutes. Liquidity added or pulled by LPs is not in this feed.",
     "biggestLabel": "Biggest swaps",
-    "title": "Flow through {{pool}}",
-    "subtitle": "Buys minus sells, five minutes at a time",
-    "subtitleVenue": "{{venue}} · buys minus sells, five minutes at a time",
     "waitingTitle": "Waiting on the map",
     "waitingBody": "The chain’s pools are still loading. Flow shows up as soon as one is selected.",
     "unavailableTitle": "Pools unavailable right now",
@@ -5067,8 +5056,6 @@
     "networkFee": "Network fee"
   },
   "chainLadder": {
-    "title": "{{asset}} across chains",
-    "subtitle": "Ranked by what lands after gas, not by the best quote",
     "sizedFor": "Sized for {{value}}",
     "best": "Best",
     "versusBest": "{{bps}} bps",
@@ -5087,7 +5074,6 @@
     "noChainsBody": "Install an on-chain connector and its chain joins the ladder."
   },
   "lpPosition": {
-    "title": "LP position",
     "subtitle_one": "{{wallet}} · {{count}} range",
     "subtitle_other": "{{wallet}} · {{count}} ranges",
     "capped": "{{count}} not shown",
@@ -5116,7 +5102,6 @@
     "footnote": "Read from the chain: the band, what the liquidity is worth now, and fees not yet collected. A position does not store what it cost, so there is no figure against holding."
   },
   "feeAccrual": {
-    "title": "Fee accrual",
     "subtitle_one": "{{wallet}} · {{count}} range",
     "subtitle_other": "{{wallet}} · {{count}} ranges",
     "claimableLabel": "Claimable now",
@@ -5137,7 +5122,6 @@
     "footnote": "Both legs, per position: what a collect would pay this block on EVM chains, and the same figure replayed from pool fee growth on Solana. Fees already collected leave no trace on chain, so fee APR, time in range and loss versus holding need an indexer and are not shown."
   },
   "manageLiquidity": {
-    "title": "Manage liquidity",
     "subtitle_one": "{{wallet}} · {{count}} position",
     "subtitle_other": "{{wallet}} · {{count}} positions",
     "position": "Position",
@@ -5209,7 +5193,6 @@
     "wouldRead": "Would read {{wallet}} on {{pool}}, {{chain}}"
   },
   "routeBridge": {
-    "title": "Bridge",
     "subtitle": "Move one asset out of {{chain}}",
     "provider": "LI.FI",
     "unsupportedChainTitle": "Not a bridgeable chain",
@@ -5249,7 +5232,6 @@
     }
   },
   "inFlight": {
-    "title": "In flight",
     "pendingCount_one": "{{count}} pending",
     "pendingCount_other": "{{count}} pending",
     "emptyTitle": "No transfers in flight",
@@ -5976,7 +5958,6 @@
     "desktopOnlyLine_other": "{{venues}} stream from the desktop app."
   },
   "fundingMatrix": {
-    "title": "Funding, annualised",
     "subtitle": "Positive = longs pay shorts",
     "nextPayment": "Next payment in",
     "colSpread": "Spread",
@@ -5989,7 +5970,6 @@
     "emptyBody": "Funding is public data, so no API key is needed. Install a perpetual futures connector and the matrix fills itself."
   },
   "basisMonitor": {
-    "title": "Perp vs. spot",
     "subtitle": "The same asset on both desks, side by side",
     "spot": "spot {{price}}",
     "spotMissing": "no index",
@@ -6000,7 +5980,6 @@
     "emptyBody": "Basis needs a mark and an index price. Connect a perpetual venue that publishes both."
   },
   "openInterest": {
-    "title": "OI leaders",
     "changeLabel": "24h change",
     "notPublished": "publishes no open interest through its API.",
     "emptyTitle": "No open interest yet",
@@ -6184,11 +6163,6 @@
       "symbol": "Symbol",
       "company": "Company"
     },
-    "heading": {
-      "today": "Reporting today",
-      "week": "Reporting this week",
-      "watchlist": "Your watchlist reports"
-    },
     "slots": {
       "bmo": "Before the bell",
       "amc": "After the close",
@@ -6199,7 +6173,6 @@
     "periodEnded": "Fiscal quarter ending {{date}}"
   },
   "economicCalendar": {
-    "title": "Macro",
     "scopeLabel": "Release window",
     "scopes": {
       "week": "Week",
@@ -6313,7 +6286,6 @@
     "consensusEps": "Cons. EPS"
   },
   "insiderActivity": {
-    "title": "Insider activity",
     "summary": "{{buys}} buys · {{sells}} sells",
     "span_one": "{{count}} day",
     "span_other": "{{count}} days",

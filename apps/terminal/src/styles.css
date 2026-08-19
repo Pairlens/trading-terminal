@@ -57,3 +57,16 @@ body[data-shortcut-hints] [data-slot='kbd']:not([data-shortcut-hint]) {
   box-shadow: inset 0 0 0 1px
     color-mix(in oklab, var(--primary) 30%, transparent);
 }
+
+/* Workspace chrome — the board's one line.
+
+   Panes stacked inside a column are divided by this hairline and nothing
+   else: no fills, no nested radii, no per-pane borders. Full-strength
+   `--border` was tested at this density and reads as a table gridline, so the
+   45% mix is deliberate and must not be rounded up to a `border-border`
+   utility. Declared here rather than in @pairlens/ui because it is board
+   chrome, not a design-system surface — every theme gets it for free by
+   deriving from that theme's own `--border`. */
+:root {
+  --pane-rule: color-mix(in oklch, var(--border) 45%, transparent);
+}

@@ -67,7 +67,9 @@ export function IntelligenceStrip({ scan }: IntelligenceStripProps) {
   useMinuteTick(latest !== null && !latest.active)
 
   return (
-    <div className="flex h-7 items-center gap-2.5 border-t px-3">
+    // The chart's closing line, not a footer: no rule above it, just the
+    // 6px of air that separates it from the canvas.
+    <div className="mt-1.5 flex h-6 shrink-0 items-center gap-2.5">
       {!scan ? (
         <span className="text-[11px] text-muted-foreground">
           {t('intelligence.analyzing')}

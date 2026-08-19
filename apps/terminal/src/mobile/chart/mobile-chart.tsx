@@ -89,7 +89,10 @@ export const MobileChart = memo(function MobileChart({
     handleDrawingsChange,
   } = useChartActions()
 
-  const baseTheme = usePairlensChartTheme()
+  // 'palette', not the board's 'card': the phone's chart is full-bleed and the
+  // shell paints its own ground from this value (see lib/chart-paint.ts), so
+  // the two agree already and a derived surface would only move both.
+  const baseTheme = usePairlensChartTheme('palette')
   const frameRef = useRef<HTMLDivElement | null>(null)
 
   // `timeAxisHeight` is the engine's own default, pinned rather than inherited:

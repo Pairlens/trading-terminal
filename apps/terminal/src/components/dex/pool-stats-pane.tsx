@@ -120,23 +120,23 @@ function PoolStatsPaneInner({
   return (
     <div className="flex h-full min-h-0 flex-col">
       {error ? (
-        <div className="px-3 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner venue={chain.displayName} message={error} />
         </div>
       ) : null}
 
-      <div className="flex min-h-0 flex-1 @container/poolstats">
-        {/* The grid: two columns at any width, three rows. The cells that
-            collapse are the ones nobody published, never the whole row. */}
-        <div className="grid min-w-0 flex-1 grid-cols-2 grid-rows-3 border-r border-border">
+      <div className="flex min-h-0 flex-1 gap-4 @container/poolstats">
+        {/* The grid: two columns at any width, three rows. Separated by gaps
+            rather than rules, because a stat's own label already tells a reader
+            where its neighbour ends. The cells that collapse are the ones
+            nobody published, never the whole row. */}
+        <div className="grid min-w-0 flex-1 grid-cols-2 grid-rows-3 gap-x-4 gap-y-1">
           <StatCell
-            className="border-b border-r border-border"
             label={t('poolStats.liquidity')}
             value={reserveUsd !== null ? formatCompactUsd(reserveUsd) : '—'}
             sub={stats.dexName || null}
           />
           <StatCell
-            className="border-b border-border"
             label={t('poolStats.volume24h')}
             value={
               stats.volume24hUsd !== null
@@ -150,7 +150,6 @@ function PoolStatsPaneInner({
             }
           />
           <StatCell
-            className="border-b border-r border-border"
             label={t('poolStats.feeTier')}
             value={
               stats.feeTier !== null
@@ -176,7 +175,6 @@ function PoolStatsPaneInner({
             source={reservesFilledBy}
           />
           <StatCell
-            className="border-r border-border"
             label={t('poolStats.trades24h')}
             value={
               stats.trades24h
@@ -203,7 +201,7 @@ function PoolStatsPaneInner({
 
         {/* Impact, one quote per size. Hidden below the width where the bars
             would be shorter than their own labels. */}
-        <div className="hidden w-[236px] shrink-0 flex-col gap-1.5 px-3 py-2.5 @min-[34rem]/poolstats:flex">
+        <div className="hidden w-[236px] shrink-0 flex-col gap-1.5 py-1.5 @min-[34rem]/poolstats:flex">
           <p className="text-[10px] text-muted-foreground">
             {t('poolStats.impactLabel')}
           </p>
@@ -240,22 +238,13 @@ function ReservesCell({
 }) {
   const { t } = useTranslation()
   if (!source) {
-    return (
-      <StatCell
-        className="border-b border-border"
-        label={label}
-        value={value}
-        sub={sub}
-      />
-    )
+    return <StatCell label={label} value={value} sub={sub} />
   }
   return (
     <Tooltip>
-      {/* The grid cell IS the trigger, so the borders stay on the item the grid
-          lays out rather than on a wrapper inside it. */}
-      <TooltipTrigger
-        render={<div className="min-w-0 border-b border-border" />}
-      >
+      {/* The grid cell IS the trigger, so the hover target is the item the grid
+          lays out rather than a wrapper inside it. */}
+      <TooltipTrigger render={<div className="min-w-0" />}>
         <StatCell label={label} value={value} sub={sub} />
       </TooltipTrigger>
       <TooltipContent>

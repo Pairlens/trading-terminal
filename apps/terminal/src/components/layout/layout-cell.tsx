@@ -104,8 +104,8 @@ const ZONE_LABEL_KEY: Record<Zone, string> = {
 }
 
 const ACTIVE_ZONE =
-  'flex flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-primary/60 bg-primary/15 text-primary shadow-sm animate-in fade-in zoom-in-95 duration-150'
-const GHOST_ZONE = 'rounded-md bg-muted/10 animate-in fade-in duration-150'
+  'flex flex-col items-center justify-center gap-1 rounded-[10px] border border-dashed border-primary/60 bg-primary/15 text-primary animate-in fade-in zoom-in-95 duration-150'
+const GHOST_ZONE = 'rounded-[10px] bg-muted/20 animate-in fade-in duration-150'
 
 /** Shared visual for a highlighted drop/placement zone. Identical between
  * drag-to-move and click-to-place so the two flows feel like one. */
@@ -148,7 +148,7 @@ function DropIndicator({ zone }: { zone: Zone | null }) {
   if (!zone) return null
 
   return (
-    <div className="pointer-events-none absolute inset-0 z-20 animate-in fade-in duration-150 p-1">
+    <div className="pointer-events-none absolute inset-0 z-20 animate-in fade-in duration-150">
       <ZoneVisual zone={zone} />
     </div>
   )
@@ -180,7 +180,7 @@ function PlacementOverlay({
   return (
     <div
       data-slot="pane-placement-overlay"
-      className="absolute inset-0 z-20 cursor-pointer p-1"
+      className="absolute inset-0 z-20 cursor-pointer"
       onMouseMove={handleMouseMove}
       onClick={() => onPlace(cellId, zone)}
     >

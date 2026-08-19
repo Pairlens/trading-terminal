@@ -49,7 +49,7 @@ export function EmptyPlaceholderPane() {
         onClick={() => setDialogOpen(true)}
         className="flex size-full items-center justify-center"
       >
-        <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 px-6 py-4 transition-colors hover:border-muted-foreground/50 hover:bg-muted/30">
+        <div className="flex flex-col items-center gap-2 rounded-[10px] border border-dashed border-(--pane-rule) px-6 py-4 transition-colors hover:border-muted-foreground/40 hover:bg-muted/30">
           <Plus className="size-5 text-muted-foreground/60" />
           <span className="text-xs text-muted-foreground">
             {t('layout.emptyPlaceholder')}

@@ -1,6 +1,5 @@
 {
   "basisMonitor": {
-    "title": "永續與現貨",
     "subtitle": "同一資產在兩個交易檯上並排顯示",
     "spot": "現貨 {{price}}",
     "spotMissing": "無指數",
@@ -37,8 +36,6 @@
     "hint": "每條腿都是真實的限價單。"
   },
   "chainLadder": {
-    "title": "跨鏈的 {{asset}}",
-    "subtitle": "依扣掉 gas 後實際到手的數量排序，而非依最佳報價",
     "sizedFor": "以 {{value}} 計算",
     "best": "最佳",
     "versusBest": "{{bps}} 個基點",
@@ -107,7 +104,6 @@
     "week52": "52 週 最低 · 最高"
   },
   "dexChains": {
-    "title": "資金流向何處",
     "subtitleNetwork": "24 小時成交額，全鏈",
     "subtitleSampled": "各鏈最活躍池子的 24 小時成交額",
     "liquidityValue": "流動性 {{value}}",
@@ -167,11 +163,6 @@
     },
     "today": "今天",
     "tomorrow": "明天",
-    "heading": {
-      "today": "今日財報",
-      "week": "本週財報",
-      "watchlist": "自選股財報"
-    },
     "slots": {
       "bmo": "開盤前",
       "amc": "收盤後",
@@ -222,7 +213,6 @@
       "month": "一個月"
     },
     "sourceNote": "彙編自 BLS、BEA、聯準會與 Census 的資料發布行程。實際值與前值來自這些機構本身，隱含值由 Kalshi 合約價格推算。時間為美國東部時間，與機構公布的一致。",
-    "title": "總經",
     "today": "今天",
     "tomorrow": "明天",
     "countdownDh": "{{days}}天{{hours}}小時後",
@@ -326,7 +316,6 @@
   },
   "feeAccrual": {
     "lastTouch": "上次觸碰時",
-    "title": "手續費累積",
     "subtitle_one": "{{wallet}} · {{count}} 個區間",
     "subtitle_other": "{{wallet}} · {{count}} 個區間",
     "claimableLabel": "目前可領取",
@@ -385,7 +374,6 @@
     "shortsPaying": "空頭付費"
   },
   "fundingMatrix": {
-    "title": "資金費率（年化）",
     "subtitle": "正值 = 多頭支付空頭",
     "nextPayment": "距下次結算",
     "colSpread": "價差",
@@ -398,7 +386,6 @@
     "emptyBody": "資金費率是公開資料，不需要 API 金鑰。安裝一個永續合約連接器，表格會自動填滿。"
   },
   "inFlight": {
-    "title": "轉帳中",
     "pendingCount_one": "{{count}} 筆處理中",
     "pendingCount_other": "{{count}} 筆處理中",
     "emptyTitle": "沒有進行中的轉帳",
@@ -423,7 +410,6 @@
     }
   },
   "insiderActivity": {
-    "title": "內部人交易",
     "summary": "買進 {{buys}} 筆 · 賣出 {{sells}} 筆",
     "span_one": "{{count}} 天",
     "span_other": "{{count}} 天",
@@ -512,9 +498,6 @@
     "bucketTooltip": "買入 {{buy}}，賣出 {{sell}}",
     "axisNote": "每 5 分鐘買入減賣出。LP 加入或撤出的流動性不在此資料流中。",
     "biggestLabel": "最大兌換",
-    "title": "流經 {{pool}} 的資金",
-    "subtitle": "買入減賣出，每五分鐘一格",
-    "subtitleVenue": "{{venue}} · 買入減賣出，每五分鐘一格",
     "waitingTitle": "等待池子圖",
     "waitingBody": "該鏈的池子仍在載入。選取池子後就會顯示資金流向。",
     "unavailableTitle": "暫時無法取得池子",
@@ -527,7 +510,6 @@
   },
   "lpPosition": {
     "feesLastTouch": "只是已結清的金額。這個倉位邊界的 tick 資料讀不到，因此上次變動以來累積的手續費未計入，實際可領金額可能更高。",
-    "title": "LP 部位",
     "subtitle_one": "{{wallet}} · {{count}} 個區間",
     "subtitle_other": "{{wallet}} · {{count}} 個區間",
     "capped": "{{count}} 個未顯示",
@@ -558,7 +540,6 @@
     "confirmAddNoteSolana": "一筆交易，不需代幣授權。存入金額以上方的數額為上限。",
     "confirmCollectNoteSolana": "送往上方的程式。手續費會在同一筆交易中結清並支付到本錢包，不會流向別處。",
     "rowProgram": "程式",
-    "title": "管理流動性",
     "subtitle_one": "{{wallet}} · {{count}} 個倉位",
     "subtitle_other": "{{wallet}} · {{count}} 個倉位",
     "position": "倉位",
@@ -677,6 +658,8 @@
       "unusual": "異常"
     },
     "window": "排名區間",
+    "clearSector": "顯示所有板塊",
+    "emptySector": "在此時間範圍內，{{sector}} 沒有可排名的資產。",
     "columns": {
       "asset": "資產",
       "liquidity": "流動性",
@@ -943,7 +926,6 @@
     "emptyBody": "在資料提供方回傳的時間範圍內，該池子沒有任何成交。"
   },
   "openInterest": {
-    "title": "未平倉量排行",
     "changeLabel": "24 小時變化",
     "notPublished": "的 API 不公布未平倉量。",
     "emptyTitle": "尚無未平倉量",
@@ -1034,8 +1016,6 @@
     "stateUnavailable": "資料提供方沒有回傳即時池狀態。上面的數字來自鏈上榜單本身。"
   },
   "poolMap": {
-    "title": "{{chain}} · 主要池子",
-    "subtitle": "依每個池子把自身流動性用得多兇來排序",
     "sortTurnover": "周轉率",
     "sortVolume": "成交額",
     "sortLiquidity": "流動性",
@@ -1053,11 +1033,6 @@
     "noChainBody": "在左側選一條鏈，它的池子就會依成交額對背後流動性的比值排在這裡。",
     "emptyTitle": "未回傳任何池子",
     "emptyBody": "資料提供方沒有為這條鏈回傳任何內容。下次重新整理時會重試。",
-    "listTitle": "{{chain}} · 全部池子",
-    "subtitleVolume": "大小依 24 小時成交額，顏色依 24 小時漲跌",
-    "subtitleLiquidity": "大小依流動性，顏色依 24 小時漲跌",
-    "subtitleTrades": "大小依 24 小時成交筆數，顏色依 24 小時漲跌",
-    "subtitleTurnover": "大小依成交額對流動性之比，顏色依 24 小時漲跌",
     "sortTrades": "成交筆數",
     "morePools": "這條鏈上的更多池子",
     "backToMap": "返回地圖",
@@ -1128,7 +1103,6 @@
   "routeBridge": {
     "confirmDestination": "將到帳 {{chain}}，進入你的錢包 {{wallet}}。",
     "needsDestinationWallet": "連接一個 {{chain}} 錢包來接收這筆轉帳。上面的報價是真實的，只是還沒有收款地址。",
-    "title": "跨鏈",
     "subtitle": "把一種資產從 {{chain}} 轉出",
     "provider": "LI.FI",
     "noConnectorTitle": "未安裝跨鏈連接器",
@@ -1369,7 +1343,6 @@
     "leads": "{{total}} 個資產 · {{symbol}} 領漲",
     "drags": "{{total}} 個資產 · {{symbol}} 拖累",
     "assets": "{{total}} 個資產",
-    "title": "板塊行情帶",
     "splitTape": "{{total}} 個資產 · 漲跌互見"
   },
   "session": {
@@ -3589,6 +3562,7 @@
     },
     "pane": {
       "close": "關閉 {{pane}}",
+      "move": "移動 {{pane}} 面板",
       "popOutToColumn": "彈出至新欄",
       "bindPairToVariable": "將交易對綁定至變數",
       "bindWalletToVariable": "將錢包綁定至變數",
@@ -5313,7 +5287,6 @@
     "inDays": "{{n}}天後"
   },
   "markets": {
-    "title": "市場",
     "pairCount_one": "{{count}} 個交易對",
     "pairCount_other": "{{count}} 個交易對",
     "viewMode": "檢視模式",
@@ -5397,7 +5370,6 @@
     }
   },
   "topCoins": {
-    "title": "熱門幣種",
     "colCoin": "幣種",
     "colPrice": "價格",
     "col24h": "24 小時",
@@ -5408,7 +5380,6 @@
     "willAppear": "熱門幣種將顯示於此"
   },
   "heatmap": {
-    "title": "市場熱力圖",
     "failed": "熱力圖載入失敗",
     "noData": "無可用資料",
     "tryLater": "請稍後再試",
@@ -5461,6 +5432,7 @@
     "adjustScope": "這個篩選下暫時沒有新聞。換一個試試，或幾分鐘後再回來看看。",
     "noWatchedAssets": "你的自選是空的，新聞沒有可對照的範圍。加一個自選交易對，或改看總經。",
     "noAssetNews": "新聞源很熱鬧，但都與你的自選無關。總經和全部仍在更新。",
+    "noCryptoNews": "資訊仍在更新，但目前沒有加密相關內容。總體經濟仍有動態。",
     "noStockNews": "目前沒有關於這些股票的新聞。總經和全部仍在更新。",
     "mentionsPairs_one": "提及你的 {{count}} 個交易對",
     "mentionsPairs_other": "提及你的 {{count}} 個交易對"

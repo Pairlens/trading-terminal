@@ -113,7 +113,7 @@ const RecentTickerRow = memo(function RecentTickerRow({
 
   return (
     <div
-      className="group flex cursor-pointer items-center gap-2 border-b px-2 py-2 transition-colors hover:bg-accent/40"
+      className="group flex cursor-pointer items-center gap-2 border-b border-border/40 px-1.5 py-2 transition-colors hover:bg-accent/40"
       onClick={() => onSelect(marketRef)}
     >
       {inst && (

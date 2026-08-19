@@ -3,10 +3,10 @@
 /**
  * Discover → "All pairs": the whole catalog as a screen.
  *
- * The title is `mobile.markets.title` rather than the desktop's
- * `markets.title`: the pane on a desk is one of several "Markets" surfaces and
- * says so, while the phone reached this screen through a button that promised
- * pairs, and the two words have to agree across that tap.
+ * The title is `mobile.markets.title` rather than the desktop pane's own
+ * label: the pane on a desk is one of several "Markets" surfaces and says so,
+ * while the phone reached this screen through a button that promised pairs,
+ * and the two words have to agree across that tap.
  *
  * This is the desktop Markets pane's data, not its layout. It reads the same
  * `useMarketInstruments` pages (so arriving here from Discover is a cache

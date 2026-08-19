@@ -51,7 +51,10 @@ import { TickArrow } from '@/components/tick-arrow'
 import { formatBookPrice } from '@/lib/format-price'
 import { useSwitchVenue } from '@/hooks/use-switch-venue'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 
 /**
  * How often the ladder is allowed to change ORDER. Prices update at the hook's
@@ -167,12 +170,7 @@ function VenueLadderPaneInner({
       {/* Column header, doubling as the side switch: which column is "best"
           depends on whether this is a buy or a sell, and the toggle says so
           in the same place the answer is read. */}
-      <div
-        className={cn(
-          'border-b border-border/50 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-          LADDER_GRID,
-        )}
-      >
+      <div className={cn('px-1.5 pb-1', PANE_COLUMN_HEADER, LADDER_GRID)}>
         <span className="flex min-w-0 items-center gap-1">
           <span className="truncate">{t('venueLadder.columns.venue')}</span>
           <Button
@@ -288,7 +286,7 @@ const VenueLadderRow = memo(function VenueLadderRow({
             : t('venueLadder.switchTo', { venue: label })
       }
       className={cn(
-        'w-full px-2.5 py-1 text-left font-mono text-[11px] tabular-nums transition-colors',
+        'w-full px-1.5 py-1 text-left font-mono text-[11px] tabular-nums transition-colors',
         LADDER_GRID,
         !unreachable &&
           !unlisted &&

@@ -25,11 +25,30 @@ import type { TopCoinsResponse } from '@pairlens/shared/instrument-types'
 
 import { PairAvatar } from '@/components/pair-picker/pair-avatar'
 import { MiniPriceChart } from '@/components/discovery/mini-price-chart'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
+import {
+  PANE_COLUMN_HEADER,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchTopCoinsWithFallback } from '@/lib/public-market-data'
+
+/**
+ * The design-system table draws its own rule under the header row. On a board
+ * whose only line is the seam between two stacked panes, that rule is exactly
+ * the chrome being removed, so it is switched off at the call site rather than
+ * in the shared component every other table still relies on.
+ */
+const HEADER_ROW = '[&_tr]:border-0'
+
+/** One column header, in the board's voice, aligned with the rows' own pad. */
+const COL = cn('h-6 px-1.5', PANE_COLUMN_HEADER)
+
+/** Every figure in this table: the board's data voice. */
+const CELL = 'flex h-9 items-center px-1.5 font-mono text-[11px] tabular-nums'
 
 function formatPercent(value: number): string {
   const sign = value >= 0 ? '+' : ''
@@ -81,43 +100,44 @@ export function TopCoinsPane() {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b px-4 py-2.5">
-        <h2 className="text-sm font-semibold">{t('topCoins.title')}</h2>
-        {updatedAt && (
-          <span className="text-xs text-muted-foreground">
-            {t('common.updated', { time: formatRelativeTime(updatedAt) })}
-          </span>
-        )}
-      </header>
+      {updatedAt && (
+        <PaneHeaderMetric>
+          {t('common.updated', { time: formatRelativeTime(updatedAt) })}
+        </PaneHeaderMetric>
+      )}
 
       {/* Content */}
       {isLoading ? (
-        <div className="flex-1 overflow-x-auto overflow-y-auto px-1">
+        <div className="flex-1 overflow-x-auto overflow-y-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className={HEADER_ROW}>
               <TableRow>
-                <TableHead className="w-8 text-xs">#</TableHead>
-                <TableHead className="text-xs">
-                  {t('topCoins.colCoin')}
-                </TableHead>
-                <TableHead className="hidden w-10 @min-[352px]/pane:table-cell text-xs @md/pane:w-16">
+                <TableHead className={cn('w-8', COL)}>#</TableHead>
+                <TableHead className={COL}>{t('topCoins.colCoin')}</TableHead>
+                <TableHead
+                  className={cn(
+                    'hidden w-10 @min-[352px]/pane:table-cell @md/pane:w-16',
+                    COL,
+                  )}
+                >
                   {t('common.trend')}
                 </TableHead>
-                <TableHead className="text-right text-xs">
+                <TableHead className={cn('text-right', COL)}>
                   {t('topCoins.colPrice')}
                 </TableHead>
-                <TableHead className="text-right text-xs">
+                <TableHead className={cn('text-right', COL)}>
                   {t('topCoins.col24h')}
                 </TableHead>
-                <TableHead className="hidden @lg/pane:table-cell text-right text-xs">
+                <TableHead
+                  className={cn('hidden text-right @lg/pane:table-cell', COL)}
+                >
                   {t('topCoins.colMktCap')}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {Array.from({ length: 10 }, (_, i) => (
-                <TableRow key={i} className="h-8">
+                <TableRow key={i} className="h-8 border-border/40">
                   <TableCell>
                     <div className="h-3 w-4 animate-pulse rounded bg-muted" />
                   </TableCell>
@@ -145,19 +165,15 @@ export function TopCoinsPane() {
           </Table>
         </div>
       ) : error || coins.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-          <TrendingUp className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="text-sm font-medium">
-            {error ? t('topCoins.failed') : t('topCoins.noData')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {error ? t('topCoins.tryLater') : t('topCoins.willAppear')}
-          </p>
-        </div>
+        <PaneEmpty
+          icon={TrendingUp}
+          title={error ? t('topCoins.failed') : t('topCoins.noData')}
+          body={error ? t('topCoins.tryLater') : t('topCoins.willAppear')}
+        />
       ) : (
         <div
           ref={scrollContainerRef}
-          className="flex-1 overflow-x-auto overflow-y-auto px-1"
+          className="flex-1 overflow-x-auto overflow-y-auto"
         >
           <Table>
             {/* Column budget, measured rather than guessed: rank, coin, price
@@ -165,22 +181,27 @@ export function TopCoinsPane() {
                 the breakpoint the trend column appears at — a narrower rail
                 would push the 24h number off the edge instead. It widens at
                 @md, and market cap waits for @lg. */}
-            <TableHeader>
+            <TableHeader className={HEADER_ROW}>
               <TableRow>
-                <TableHead className="w-8 text-xs">#</TableHead>
-                <TableHead className="text-xs">
-                  {t('topCoins.colCoin')}
-                </TableHead>
-                <TableHead className="hidden w-10 @min-[352px]/pane:table-cell text-xs @md/pane:w-16">
+                <TableHead className={cn('w-8', COL)}>#</TableHead>
+                <TableHead className={COL}>{t('topCoins.colCoin')}</TableHead>
+                <TableHead
+                  className={cn(
+                    'hidden w-10 @min-[352px]/pane:table-cell @md/pane:w-16',
+                    COL,
+                  )}
+                >
                   {t('common.trend')}
                 </TableHead>
-                <TableHead className="text-right text-xs">
+                <TableHead className={cn('text-right', COL)}>
                   {t('topCoins.colPrice')}
                 </TableHead>
-                <TableHead className="text-right text-xs">
+                <TableHead className={cn('text-right', COL)}>
                   {t('topCoins.col24h')}
                 </TableHead>
-                <TableHead className="hidden @lg/pane:table-cell text-right text-xs">
+                <TableHead
+                  className={cn('hidden text-right @lg/pane:table-cell', COL)}
+                >
                   {t('topCoins.colMktCap')}
                 </TableHead>
               </TableRow>
@@ -211,12 +232,15 @@ export function TopCoinsPane() {
                       return (
                         <TableRow
                           key={coin.rank}
-                          className="h-9 cursor-pointer hover:bg-accent/50"
+                          className="h-9 cursor-pointer border-border/40 hover:bg-accent/50"
                         >
                           <TableCell className="p-0">
                             <Link
                               {...chartLinkProps(coinRef)}
-                              className="flex h-9 items-center px-2 text-xs text-muted-foreground"
+                              className={cn(
+                                CELL,
+                                'text-[10px] text-muted-foreground',
+                              )}
                             >
                               {coin.rank}
                             </Link>
@@ -224,7 +248,7 @@ export function TopCoinsPane() {
                           <TableCell className="p-0">
                             <Link
                               {...chartLinkProps(coinRef)}
-                              className="flex h-9 items-center gap-2 px-2"
+                              className="flex h-9 items-center gap-2 px-1.5"
                             >
                               <PairAvatar
                                 base={coin.symbol}
@@ -236,7 +260,7 @@ export function TopCoinsPane() {
                                   min-content width and pushes the 24h number
                                   off the edge of a docked rail. */}
                               <div className="flex min-w-0 flex-col">
-                                <span className="text-xs font-bold">
+                                <span className="font-mono text-[11.5px] font-semibold">
                                   {coin.symbol}
                                 </span>
                                 <span
@@ -251,7 +275,7 @@ export function TopCoinsPane() {
                           <TableCell className="hidden @min-[352px]/pane:table-cell p-0">
                             <Link
                               {...chartLinkProps(coinRef)}
-                              className="flex h-9 items-center px-2"
+                              className="flex h-9 items-center px-1.5"
                             >
                               <MiniPriceChart
                                 market={cryptoMarket}
@@ -263,7 +287,7 @@ export function TopCoinsPane() {
                           <TableCell className="p-0">
                             <Link
                               {...chartLinkProps(coinRef)}
-                              className="flex h-9 items-center justify-end px-2 text-xs"
+                              className={cn(CELL, 'justify-end')}
                             >
                               {formatPrice(coin.price)}
                             </Link>
@@ -272,10 +296,11 @@ export function TopCoinsPane() {
                             <Link
                               {...chartLinkProps(coinRef)}
                               className={cn(
-                                'flex h-9 items-center justify-end px-2 text-xs',
+                                CELL,
+                                'justify-end',
                                 coin.percentChange24h >= 0
-                                  ? 'text-green-500'
-                                  : 'text-red-500',
+                                  ? 'text-up'
+                                  : 'text-down',
                               )}
                             >
                               {formatPercent(coin.percentChange24h)}
@@ -284,7 +309,10 @@ export function TopCoinsPane() {
                           <TableCell className="hidden @lg/pane:table-cell p-0">
                             <Link
                               {...chartLinkProps(coinRef)}
-                              className="flex h-9 items-center justify-end px-2 text-xs text-muted-foreground"
+                              className={cn(
+                                CELL,
+                                'justify-end text-muted-foreground',
+                              )}
                             >
                               {formatCompactUsd(coin.marketCap)}
                             </Link>

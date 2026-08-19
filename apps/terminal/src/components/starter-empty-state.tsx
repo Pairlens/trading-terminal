@@ -178,11 +178,11 @@ export function StarterEmptyState({
             {hero}
 
             <div className="flex w-full items-center gap-3">
-              <span className="h-px flex-1 bg-border" />
+              <span className="h-px flex-1 bg-(--pane-rule)" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 {shelfHeading}
               </span>
-              <span className="h-px flex-1 bg-border" />
+              <span className="h-px flex-1 bg-(--pane-rule)" />
             </div>
 
             <div className="grid w-full gap-2 @xl/starter:grid-cols-2 @4xl/starter:grid-cols-3">
@@ -200,11 +200,11 @@ export function StarterEmptyState({
             {hasSecondary && (
               <>
                 <div className="mt-2 flex w-full items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
+                  <span className="h-px flex-1 bg-(--pane-rule)" />
                   <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                     {secondaryLabel}
                   </span>
-                  <span className="h-px flex-1 bg-border" />
+                  <span className="h-px flex-1 bg-(--pane-rule)" />
                 </div>
                 <div className="grid w-full gap-2 @xl/starter:grid-cols-2 @4xl/starter:grid-cols-3">
                   {secondaryTemplates.map((template) => (
@@ -270,14 +270,16 @@ function TemplateCard({
   const inert = pending || disabled
   return (
     <Item
-      variant="outline"
+      variant="muted"
       size="sm"
       className={cn(
-        'h-full items-start text-left transition-colors',
+        // A well on the column's card, not a card on a card: the fill is the
+        // edge here, the same way a trade ticket's fields are wells.
+        'h-full items-start rounded-[10px] bg-muted/40 text-left transition-colors',
         inert
           ? 'cursor-default opacity-60'
-          : 'cursor-pointer hover:border-primary/45 hover:bg-primary/[0.04]',
-        pending && 'border-primary/45 opacity-100',
+          : 'cursor-pointer hover:bg-primary/[0.07]',
+        pending && 'bg-primary/[0.07] opacity-100',
       )}
       render={<button type="button" disabled={inert} onClick={onPick} />}
     >
@@ -300,7 +302,7 @@ function TemplateCard({
           {template.chips.map((chip) => (
             <span
               key={chip}
-              className="rounded border border-border/70 bg-muted/50 px-1.5 py-px font-mono text-[9.5px] uppercase tracking-wide text-muted-foreground"
+              className="rounded bg-background/60 px-1.5 py-px font-mono text-[9.5px] uppercase tracking-wide text-muted-foreground"
             >
               {chip}
             </span>

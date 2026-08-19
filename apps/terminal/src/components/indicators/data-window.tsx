@@ -62,7 +62,7 @@ export function DataWindow({ run, hoverTs }: DataWindowProps) {
   const series = run.meta.series.filter((s) => s.style !== 'background')
 
   return (
-    <div className="space-y-1.5 border-t border-border px-3 py-2">
+    <div className="space-y-1.5 border-t border-(--pane-rule) px-3 py-2">
       <div className="flex items-center justify-between gap-2">
         <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
           {t('indicatorsPage.dataWindow')}

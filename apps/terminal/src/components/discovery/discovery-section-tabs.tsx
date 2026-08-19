@@ -72,7 +72,7 @@ import { assetClassVisual } from '@/lib/asset-class/visuals'
  * left every tab the identical grey in the default theme.
  */
 const TAB_CLASS =
-  'group/section-tab relative inline-flex h-full shrink-0 cursor-grab items-center gap-1.5 rounded-md border border-transparent px-2 text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing hover:bg-muted/60 dark:hover:bg-muted/30 focus-visible:ring-[3px] focus-visible:ring-ring/50'
+  'group/section-tab relative inline-flex h-[26px] shrink-0 cursor-grab items-center gap-1.5 rounded-[10px] px-[9px] text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing hover:bg-card focus-visible:ring-1 focus-visible:ring-ring'
 
 /**
  * Text colour is per-state and never both at once. A `dark:` variant carries
@@ -130,7 +130,7 @@ export function DiscoverySectionTabs({
         <div
           role="group"
           aria-label={t('discovery.sections.label')}
-          className="flex h-7 min-w-0 items-center gap-1 overflow-x-auto"
+          className="flex h-[26px] min-w-0 items-center gap-1 overflow-x-auto"
         >
           {sections.map((section, index) => (
             <SortableSectionTab
@@ -213,9 +213,9 @@ function SortableSectionTab({
             // The tint is only ever a hint at rest — an unselected strip of
             // five filled pills would read as five things happening at once.
             // The icon carries the colour, the selected tab carries the fill.
-            active
-              ? [visual.activeBg, visual.border, visual.text]
-              : TAB_IDLE_CLASS,
+            // The fill says which board is open; the border it used to carry
+            // said it a second time, in the one vocabulary this bar dropped.
+            active ? [visual.activeBg, visual.text] : TAB_IDLE_CLASS,
           )}
           style={{
             transform: CSS.Transform.toString(transform),

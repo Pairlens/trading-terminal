@@ -11,6 +11,7 @@ import { BotsEmptyState } from './bots-empty-state'
 import { CreateBotDialog } from './create-bot-dialog'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
+import { PAGE_COLUMN_FLUSH, PAGE_GROUND } from '@/components/chrome/page-chrome'
 import { useSearchSelection } from '@/hooks/use-search-selection'
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
@@ -117,7 +118,7 @@ export function BotsPage({
     : null
 
   return (
-    <div className="flex h-full min-h-0">
+    <div className={PAGE_GROUND}>
       <BotsAssistantSurface bot={selected} count={bots.length} />
       <BotList
         selectedId={selectedId}
@@ -126,7 +127,7 @@ export function BotsPage({
         onRequestArm={setArmTarget}
       />
 
-      <div className="flex h-full min-w-0 flex-1 flex-col">
+      <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
         {selected ? (
           <BotDetail
             key={selected.id}

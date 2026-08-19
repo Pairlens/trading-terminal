@@ -13,9 +13,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@pairlens/ui/components/ui/empty'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import type { DiscoverySectionId } from '@/lib/layout/workspaces/discovery-sections'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { DiscoveryAssistantSurface } from '@/components/discovery/discovery-assistant-surface'
 import { DiscoveryTopBar } from '@/components/discovery/discovery-top-bar'
 import { LayoutShell } from '@/components/layout/layout-shell'
@@ -107,7 +107,7 @@ function PresetFromSearch() {
 function NoDiscoveryState() {
   const { t } = useTranslation()
   return (
-    <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <main className={PAGE_FRAME}>
       <div className="flex flex-1 items-center justify-center p-6">
         <Empty className="max-w-md">
           <EmptyHeader>
@@ -130,7 +130,7 @@ function NoDiscoveryState() {
           </Button>
         </Empty>
       </div>
-    </SidebarInset>
+    </main>
   )
 }
 
@@ -195,7 +195,7 @@ function DiscoveryBoard() {
             sections={sections.map((entry) => entry.id)}
           />
           {preset ? <PresetFromSearch /> : null}
-          <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+          <main className={PAGE_FRAME}>
             <DiscoveryTopBar
               sections={sections}
               activeSection={active}
@@ -203,7 +203,7 @@ function DiscoveryBoard() {
               onReorderSections={reorder}
             />
             <LayoutShell />
-          </SidebarInset>
+          </main>
         </LayoutProvider>
       </WorkspaceProvider>
     </DiscoverySectionProvider>

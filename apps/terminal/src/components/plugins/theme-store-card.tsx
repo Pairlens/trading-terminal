@@ -50,8 +50,8 @@ export function ThemeStoreCard({
       <motion.div
         layoutId={layoutId}
         transition={POSTER_MORPH}
-        className="relative flex h-[188px] flex-col overflow-hidden border border-border"
-        style={{ borderRadius: 17 }}
+        className="relative flex h-[188px] flex-col overflow-hidden"
+        style={{ borderRadius: 14 }}
       >
         {swatches.map((color, i) => (
           <div key={i} className="flex-1" style={{ backgroundColor: color }} />

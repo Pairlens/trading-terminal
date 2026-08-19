@@ -42,6 +42,7 @@ import { Crosshair, Loader2 } from 'lucide-react'
 
 import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 import { usePanePair } from '@pairlens/plugin-sdk'
+import { cn } from '@pairlens/ui/lib/utils'
 import {
   ToggleGroup,
   ToggleGroupItem,
@@ -65,7 +66,8 @@ import type {
   LiquidationHeatmapGrid,
   LiquidationWindowHours,
 } from '@/lib/futures/liquidation-clusters'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PANE_FOOTNOTE, PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { track } from '@/lib/analytics-events'
 import { formatCompactUsd } from '@/lib/format-price'
@@ -293,71 +295,80 @@ export function LiquidationMapPane() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-1.5">
-        {showSourcePicker ? (
-          <ToggleGroup
-            aria-label={t('liquidationMap.sourceLabel')}
-            multiple={false}
-            onValueChange={(next) => {
-              if (next[0]) {
-                track('liquidation_map_source_changed', {
-                  venue: next[0],
-                  window_hours: windowHours,
-                })
-                setSourceOverride(next[0])
-              }
-            }}
-            size="sm"
-            value={sourceVenue === null ? [] : [sourceVenue]}
-            variant="outline"
-          >
-            {sources.map((venue) => (
-              <ToggleGroupItem
-                className="px-1.5 text-[10px]"
-                key={venue}
-                value={venue}
-              >
-                {venueLabel(venue)}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        ) : (
-          <span className="truncate text-[11.5px] text-muted-foreground">
-            {sourceVenue === null ? '' : venueLabel(sourceVenue)}
-          </span>
-        )}
+      {/* With no picker there is one feed and no choice to make, so its name
+          is a metric rather than a control and rides the shell's header. */}
+      {!showSourcePicker && sourceVenue !== null && (
+        <PaneHeaderMetric>{venueLabel(sourceVenue)}</PaneHeaderMetric>
+      )}
 
-        {/* The chips only exist where a collector does; on an untracked venue
+      {/* Nothing to draw when there is neither a choice of feed nor a feed:
+          the body below is an empty state, and a strip of dead chrome over it
+          is exactly what this sweep is removing. */}
+      {(showSourcePicker || sourceVenue !== null || hasCollector) && (
+        <div className="flex shrink-0 items-center justify-between gap-2 pb-1">
+          {showSourcePicker ? (
+            <ToggleGroup
+              aria-label={t('liquidationMap.sourceLabel')}
+              multiple={false}
+              onValueChange={(next) => {
+                if (next[0]) {
+                  track('liquidation_map_source_changed', {
+                    venue: next[0],
+                    window_hours: windowHours,
+                  })
+                  setSourceOverride(next[0])
+                }
+              }}
+              size="sm"
+              value={sourceVenue === null ? [] : [sourceVenue]}
+              variant="outline"
+            >
+              {sources.map((venue) => (
+                <ToggleGroupItem
+                  className="h-6 px-1.5 text-[10px]"
+                  key={venue}
+                  value={venue}
+                >
+                  {venueLabel(venue)}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          ) : (
+            <span />
+          )}
+
+          {/* The chips only exist where a collector does; on an untracked venue
             with no alternate they would be four controls that change nothing. */}
-        {(sourceVenue !== null || hasCollector) && (
-          <ToggleGroup
-            aria-label={t('liquidationMap.windowLabel')}
-            className="shrink-0"
-            multiple={false}
-            onValueChange={(next) => {
-              const value = Number(next[0])
-              if (
-                LIQUIDATION_WINDOWS.includes(value as LiquidationWindowHours)
-              ) {
-                setWindowHours(value as LiquidationWindowHours)
-              }
-            }}
-            size="sm"
-            value={[String(windowHours)]}
-            variant="outline"
-          >
-            {LIQUIDATION_WINDOWS.map((hours) => (
-              <ToggleGroupItem
-                className="px-1.5 font-mono text-[10px]"
-                key={hours}
-                value={String(hours)}
-              >
-                {t(WINDOW_LABEL_KEYS[hours])}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        )}
-      </header>
+          {(sourceVenue !== null || hasCollector) && (
+            <ToggleGroup
+              aria-label={t('liquidationMap.windowLabel')}
+              className="shrink-0"
+              multiple={false}
+              onValueChange={(next) => {
+                const value = Number(next[0])
+                if (
+                  LIQUIDATION_WINDOWS.includes(value as LiquidationWindowHours)
+                ) {
+                  setWindowHours(value as LiquidationWindowHours)
+                }
+              }}
+              size="sm"
+              value={[String(windowHours)]}
+              variant="outline"
+            >
+              {LIQUIDATION_WINDOWS.map((hours) => (
+                <ToggleGroupItem
+                  className="h-6 px-1.5 font-mono text-[10px]"
+                  key={hours}
+                  value={String(hours)}
+                >
+                  {t(WINDOW_LABEL_KEYS[hours])}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          )}
+        </div>
+      )}
 
       <LiquidationMapBody
         clusters={clusters}
@@ -753,13 +764,23 @@ function LiquidationMapChart({
         {emptyWindow && (
           // z-10 because the chart stacks its own canvases inside this box; a
           // badge in normal flow lands under the price grid.
-          <p className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-md border border-border bg-background/85 px-2 py-1 text-[11px] text-muted-foreground">
+          <p className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-md bg-card/85 px-2 py-1 text-[11px] text-muted-foreground">
             {t('liquidationMap.noneInWindow', { window: windowLabel })}
           </p>
         )}
       </div>
 
-      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-0.5 border-t border-border px-3 py-1 font-mono text-[10px] [font-variant-numeric:tabular-nums]">
+      {/* The chart's canvas ends on a hard edge, so this seam is one the board
+          sanctions drawing: its own hairline, not a border on the strip. */}
+      <div className="h-px shrink-0 bg-(--pane-rule)" />
+
+      <div
+        className={cn(
+          'flex shrink-0 flex-wrap items-center gap-x-3 gap-y-0.5 pt-1',
+          PANE_FOOTNOTE,
+          '[font-variant-numeric:tabular-nums]',
+        )}
+      >
         <span className="flex items-center gap-1 text-down">
           <span className="size-2 rounded-sm bg-down" />
           {t('liquidationMap.legendLong', {
@@ -787,8 +808,8 @@ function LiquidationMapChart({
         </span>
       </div>
 
-      <footer className="shrink-0 border-t border-border px-3 py-1.5">
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
+      <footer className="shrink-0 pt-1">
+        <p className="text-[10.5px] leading-relaxed text-muted-foreground">
           {clusters.isLoading
             ? t('liquidationMap.clustersLoadingCaption')
             : emptyWindow

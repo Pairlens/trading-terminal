@@ -38,7 +38,7 @@ import {
 import { cn } from '@pairlens/ui'
 import type { LucideIcon } from 'lucide-react'
 
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { PaneColumnHeader, PaneEmpty } from '@/components/panes/pane-primitives'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -106,7 +106,7 @@ export function CategoriesPane() {
   }
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto p-2">
+    <div className="flex h-full flex-col overflow-y-auto py-0.5">
       <div className="flex flex-col gap-0.5">
         <CategoryRow
           active={category === null}
@@ -133,22 +133,22 @@ export function CategoriesPane() {
           />
         ))}
         {counts.length === 0 && !isLoading && (
-          <p className="px-2 py-3 text-[11px] leading-relaxed text-muted-foreground">
+          <p className="py-3 text-[11px] leading-relaxed text-muted-foreground">
             {t('predictionCategories.noneBody')}
           </p>
         )}
       </div>
 
-      <div className="mt-3 border-t pt-2.5">
-        <p className="mb-1 px-2 font-mono text-[9.5px] uppercase tracking-[.14em] text-muted-foreground">
+      <div className="mt-4">
+        <PaneColumnHeader>
           {t('predictionCategories.venueHeading')}
-        </p>
+        </PaneColumnHeader>
         {venues.map((venue) => {
           const result = (data ?? []).find((r) => r.market === venue.market)
           const blocked = Boolean(result?.desktopOnly || result?.error)
           return (
             <div
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs"
+              className="flex items-center gap-2 py-1 text-[11.5px]"
               key={venue.market}
               title={result?.error ?? undefined}
             >
@@ -201,7 +201,7 @@ function CategoryRow({
     <button
       aria-pressed={active}
       className={cn(
-        'flex items-center gap-2 rounded-lg px-2.5 py-[7px] text-left text-xs transition-colors',
+        'flex items-center gap-2 rounded-md px-1.5 py-1 text-left text-[11.5px] transition-colors',
         active
           ? 'bg-primary text-primary-foreground'
           : 'text-foreground hover:bg-accent',

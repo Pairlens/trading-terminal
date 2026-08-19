@@ -22,7 +22,12 @@ import { cn } from '@pairlens/ui/lib/utils'
 import { usePanePair } from '@pairlens/plugin-sdk'
 import type { PoolTrade } from '@pairlens/shared/instrument-types'
 
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { usePoolTrades } from '@/hooks/use-pool-stats'
@@ -35,8 +40,14 @@ const MAX_ROWS = 200
 /** The "large prints only" filter, in USD. */
 const LARGE_TRADE_USD = 50_000
 
+/**
+ * The row geometry, shared by the column header and every print.
+ *
+ * `px-1.5` and no more: a row carries a side-tinted fill, and text that starts
+ * flush against the edge of its own fill is what makes a tape look clipped.
+ */
 const GRID =
-  'grid grid-cols-[3rem_2.75rem_1fr_1fr] gap-1.5 px-2.5 @min-[19rem]/pane:grid-cols-[3rem_2.75rem_1fr_1fr_5.5rem]'
+  'grid grid-cols-[3rem_2.75rem_1fr_1fr] gap-1.5 px-1.5 @min-[19rem]/pane:grid-cols-[3rem_2.75rem_1fr_1fr_5.5rem]'
 
 export function OnchainTradesPane() {
   const activePair = usePanePair()
@@ -96,7 +107,7 @@ function OnchainTradesPaneInner({
 
   return (
     <div className="flex h-full min-h-0 flex-col text-xs">
-      <div className="flex shrink-0 items-center gap-1.5 border-b border-border px-2.5 py-1.5">
+      <div className="flex shrink-0 items-center gap-1.5 pb-1.5">
         <FilterChip
           active={!largeOnly}
           onClick={() => setLargeOnly(false)}
@@ -112,17 +123,12 @@ function OnchainTradesPaneInner({
       </div>
 
       {error ? (
-        <div className="px-2.5 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner venue={chain.displayName} message={error} />
         </div>
       ) : null}
 
-      <div
-        className={cn(
-          GRID,
-          'shrink-0 border-b border-border py-1 font-mono text-[10px] font-medium uppercase tracking-[.12em] text-muted-foreground',
-        )}
-      >
+      <div className={cn(GRID, 'shrink-0 pb-1.5', PANE_COLUMN_HEADER)}>
         <span>{t('onchainTrades.columns.time')}</span>
         <span>{t('onchainTrades.columns.side')}</span>
         <span className="text-right">{t('onchainTrades.columns.value')}</span>
@@ -154,13 +160,16 @@ function OnchainTradesPaneInner({
         </div>
       )}
 
-      <div className="flex shrink-0 items-center justify-between border-t border-border px-2.5 py-1.5">
-        <span className="text-[11px] text-muted-foreground">
-          {t('onchainTrades.net1h')}
-        </span>
+      <div
+        className={cn(
+          'flex shrink-0 items-center justify-between gap-2 px-1.5 pt-1.5',
+          PANE_FOOTNOTE,
+        )}
+      >
+        <span>{t('onchainTrades.net1h')}</span>
         <span
           className={cn(
-            'font-mono text-[11px] [font-variant-numeric:tabular-nums]',
+            '[font-variant-numeric:tabular-nums]',
             net1h >= 0 ? 'text-up' : 'text-down',
           )}
         >

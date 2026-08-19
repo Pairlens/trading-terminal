@@ -401,8 +401,8 @@ export function ChartToolbar() {
     PRICE_SCALE_MODE_OPTIONS[0]
 
   return (
-    <div className="flex items-center gap-1 border-b border-border/40 px-1.5 py-0.5">
-      <Menubar className="h-7 border-none bg-transparent p-0">
+    <div className="flex items-center gap-1 py-0.5">
+      <Menubar className="h-6 border-none bg-transparent p-0">
         {/* Timeframe */}
         <MenubarMenu>
           <Tooltip>
@@ -602,7 +602,7 @@ export function ChartToolbar() {
             <Button
               size="sm"
               variant="ghost"
-              className="size-7 p-0"
+              className="size-6 p-0"
               aria-label={t('chart.toolbar.exportData')}
               onClick={() => setExportDataOpen(true)}
             />
@@ -629,7 +629,7 @@ export function ChartToolbar() {
             <Button
               size="sm"
               variant="outline"
-              className="gap-1 text-xs"
+              className="h-6 gap-1 text-xs"
               onClick={() => setIndicatorPaletteOpen(true)}
             />
           }
@@ -653,7 +653,7 @@ export function ChartToolbar() {
             <Button
               size="sm"
               variant={replayActive ? 'secondary' : 'ghost'}
-              className="gap-1 text-xs"
+              className="h-6 gap-1 text-xs"
               aria-pressed={replayActive}
               onClick={() => (replayActive ? exitReplay() : startReplay())}
             />
@@ -672,7 +672,7 @@ export function ChartToolbar() {
             <Button
               size="sm"
               variant={showBidAsk ? 'secondary' : 'ghost'}
-              className="gap-1 text-xs"
+              className="h-6 gap-1 text-xs"
               aria-pressed={showBidAsk}
               onClick={() => setShowBidAsk(!showBidAsk)}
             />
@@ -693,7 +693,7 @@ export function ChartToolbar() {
             <Button
               size="sm"
               variant="ghost"
-              className="size-7 p-0"
+              className="size-6 p-0"
               onClick={() => setIsFullscreen(!isFullscreen)}
             />
           }

@@ -259,58 +259,49 @@ export function PoolMapPane() {
         }
       />
 
-      <DexPaneHeader
-        title={
-          listView
-            ? t('poolMap.listTitle', { chain: chainName })
-            : t('poolMap.title', { chain: chainName })
-        }
-        subtitle={
-          listView ? t('poolMap.subtitle') : t(MODE_SUBTITLE[activeMode])
-        }
-      >
-        <div className="flex shrink-0 items-center gap-1">
-          {listView ? (
+      {/* The chain, not the mode: the mode is what the pressed button says, and
+          the chain is the one thing the tiles never repeat. */}
+      <DexPaneHeader subtitle={chainName || null}>
+        {listView ? (
+          <button
+            type="button"
+            onClick={() => setView('map')}
+            className="flex h-6 items-center gap-1 rounded-md border border-border px-2 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="size-3" aria-hidden="true" />
+            {t('poolMap.backToMap')}
+          </button>
+        ) : (
+          modes.map((key) => (
             <button
+              key={key}
               type="button"
-              onClick={() => setView('map')}
-              className="flex items-center gap-1 rounded-lg border border-border px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+              onClick={() => setMode(key)}
+              aria-pressed={activeMode === key}
+              className={cn(
+                'h-6 rounded-md px-2 text-[11px] transition-colors',
+                activeMode === key
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border border-border text-muted-foreground hover:text-foreground',
+              )}
             >
-              <ArrowLeft className="size-3" aria-hidden="true" />
-              {t('poolMap.backToMap')}
+              {t(MODE_LABEL[key])}
             </button>
-          ) : (
-            modes.map((key) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setMode(key)}
-                aria-pressed={activeMode === key}
-                className={cn(
-                  'rounded-lg px-2.5 py-1 text-[11px] transition-colors',
-                  activeMode === key
-                    ? 'bg-primary text-primary-foreground'
-                    : 'border border-border text-muted-foreground hover:text-foreground',
-                )}
-              >
-                {t(MODE_LABEL[key])}
-              </button>
-            ))
-          )}
-        </div>
+          ))
+        )}
       </DexPaneHeader>
 
       {/* A banner ABOVE data the reader can still use. With nothing to draw the
           refusal is the whole state, and it says so in the middle of the pane
           instead of as a strip over an empty box that contradicts it. */}
       {error && !refused ? (
-        <div className="px-3 pt-2">
+        <div className="pt-2">
           <PaneErrorBanner venue={chainName} message={error} />
         </div>
       ) : null}
 
       {isLoading && !refused ? (
-        <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1 p-1.5">
+        <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1 py-1.5">
           {Array.from({ length: 24 }, (_, i) => (
             <div key={i} className="animate-pulse rounded-md bg-muted/60" />
           ))}
@@ -370,18 +361,17 @@ export function PoolMapPane() {
       ) : listView ? (
         <div className="min-h-0 flex-1 overflow-auto">
           <table className="w-full border-collapse">
-            <thead className="sticky top-0 z-10 bg-background text-muted-foreground">
-              <tr className="border-b border-border">
-                <th className="pb-1.5 pl-3 pr-3 text-left font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  {t('poolMap.columns.pool')}
-                </th>
+            {/* `bg-card`, not `bg-background`: the pane sits on the column's
+                card, and a background-coloured band scrolling under the rows
+                is the wrong surface. */}
+            <thead className="sticky top-0 z-10 bg-card">
+              <tr>
+                <Th>{t('poolMap.columns.pool')}</Th>
                 <Th align="right">{t('poolMap.columns.price')}</Th>
                 <Th align="right">{t('poolMap.columns.change')}</Th>
                 <Th align="right">{t('poolMap.columns.volume')}</Th>
                 <Th align="right">{t('poolMap.columns.liquidity')}</Th>
-                <th className="pb-1.5 pr-3 text-right font-mono text-[10px] font-medium uppercase tracking-[.14em]">
-                  {t('poolMap.columns.turnover')}
-                </th>
+                <Th align="right">{t('poolMap.columns.turnover')}</Th>
               </tr>
             </thead>
             <tbody>
@@ -457,13 +447,6 @@ const MODE_LABEL: Record<PoolTileMode, string> = {
   turnover: 'poolMap.sortTurnover',
 }
 
-const MODE_SUBTITLE: Record<PoolTileMode, string> = {
-  volume: 'poolMap.subtitleVolume',
-  liquidity: 'poolMap.subtitleLiquidity',
-  trades: 'poolMap.subtitleTrades',
-  turnover: 'poolMap.subtitleTurnover',
-}
-
 function tradeCount(pool: PoolListingEntry): number {
   const counts = pool.trades24h
   return counts ? counts.buys + counts.sells : 0
@@ -526,11 +509,11 @@ function PoolRow({
       onDoubleClick={() => target && void navigate(target)}
       aria-selected={selected}
       className={cn(
-        'cursor-pointer border-b border-border/50 text-xs transition-colors hover:bg-muted/40',
+        'cursor-pointer border-b border-border/40 text-xs transition-colors hover:bg-muted/40',
         selected && 'bg-primary/10',
       )}
     >
-      <td className="max-w-0 py-2 pl-3 pr-3">
+      <td className="max-w-0 py-2 pr-3">
         <div className="flex items-center gap-1.5">
           <span className="min-w-0">
             <span className="block truncate font-mono text-xs">
@@ -566,7 +549,7 @@ function PoolRow({
       <td className="py-2 pr-3 text-right font-mono [font-variant-numeric:tabular-nums]">
         {reserveUsd === null ? '—' : formatCompactUsd(reserveUsd)}
       </td>
-      <td className="w-[104px] py-2 pr-3">
+      <td className="w-[104px] py-2">
         {ratio === null ? (
           <span className="block text-right font-mono text-muted-foreground">
             —

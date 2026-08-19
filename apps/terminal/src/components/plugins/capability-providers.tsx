@@ -333,7 +333,7 @@ export function CapabilityProviders() {
             <h3 className="mb-2 px-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
               {capabilityDomainLabel(t, domain)}
             </h3>
-            <div className="divide-y rounded-xl border">
+            <div className="divide-y divide-(--pane-rule) overflow-hidden rounded-[14px] bg-card">
               {domain.capabilities.map((row) => (
                 <CapabilityRowView
                   key={row.meta.id}

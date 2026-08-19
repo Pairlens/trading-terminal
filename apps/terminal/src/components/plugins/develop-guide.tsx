@@ -16,7 +16,7 @@ function CommandBlock({ command }: { command: string }) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   return (
-    <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/40 px-3 py-2 font-mono text-xs">
+    <div className="flex items-center justify-between gap-3 rounded-[10px] bg-muted/40 px-3 py-2 font-mono text-xs">
       <code className="truncate">{command}</code>
       <Button
         size="icon-xs"
@@ -79,7 +79,7 @@ export function DevelopGuide() {
         </p>
       </div>
 
-      <div className="space-y-5 rounded-lg border p-5">
+      <div className="space-y-5 rounded-[14px] bg-card p-5">
         <Step
           n={1}
           title={t('pluginStore.buildStepScaffold', 'Scaffold a new plugin')}
@@ -131,7 +131,7 @@ export function DevelopGuide() {
         </Step>
       </div>
 
-      <div className="space-y-2 rounded-lg border p-5">
+      <div className="space-y-2 rounded-[14px] bg-card p-5">
         <h3 className="text-sm font-medium">
           {t('pluginStore.buildRuntimeTitle', 'What plugins can use')}
         </h3>

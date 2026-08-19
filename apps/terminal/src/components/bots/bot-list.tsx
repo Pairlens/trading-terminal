@@ -58,6 +58,7 @@ import {
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
 } from '../master-detail'
 import { KeepAwakeToggle } from './keep-awake-toggle'
 import {
@@ -136,7 +137,7 @@ export function BotList({
   return (
     <div className={MASTER_DETAIL_LIST_CLASS}>
       <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
-        <span className="text-xs font-semibold uppercase tracking-wider">
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('botsPage.sidebarTitle')}
         </span>
         <div className="flex items-center gap-0.5">
@@ -206,7 +207,7 @@ export function BotList({
         ))}
       </div>
 
-      <div className="grid gap-2 border-t border-border p-2">
+      <div className="grid gap-2 border-t border-(--pane-rule) p-2">
         {/* The remedy sits with the constraint it answers: bots only run while
             this machine is awake, and this is the switch that keeps it so. */}
         <KeepAwakeToggle armed={runningCount > 0} compact />

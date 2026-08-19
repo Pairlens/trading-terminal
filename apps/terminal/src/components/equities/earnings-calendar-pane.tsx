@@ -57,7 +57,12 @@ import type {
 import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
 import type { EarningsSlot } from '@/lib/equities/earnings-schedule'
 import type { FundamentalsUnavailable } from '@/hooks/use-equity-fundamentals'
-import { PaneEmpty, Th } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+  PaneEmpty,
+  Th,
+} from '@/components/panes/pane-primitives'
 import {
   useEarningsCalendar,
   useIpoCalendar,
@@ -120,12 +125,15 @@ export function EarningsCalendarPane() {
       onValueChange={(value) => setSource(value as SourceId)}
       value={source}
     >
-      <div className="flex shrink-0 items-center gap-2 border-b border-border px-3">
-        <TabsList className="h-9 min-w-0" variant="line">
-          <TabsTrigger className="text-xs" value="earnings">
+      <div className="flex shrink-0 items-center gap-2">
+        <TabsList
+          className="min-w-0 group-data-horizontal/tabs:h-5"
+          variant="line"
+        >
+          <TabsTrigger className="text-[11.5px] leading-none" value="earnings">
             {t('earningsCalendar.title')}
           </TabsTrigger>
-          <TabsTrigger className="text-xs" value="ipo">
+          <TabsTrigger className="text-[11.5px] leading-none" value="ipo">
             {t('earningsCalendar.ipo.title')}
           </TabsTrigger>
         </TabsList>
@@ -169,13 +177,9 @@ function EarningsView({
 
   return (
     <>
-      {/* The pane names what it is showing, and the scopes sit beside the
-          sentence they change. Scopes are an earnings idea: the IPO pipeline is
-          short enough to read whole, and nothing in it is on a watchlist yet. */}
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-        <h2 className="min-w-0 truncate text-[13px] font-semibold">
-          {t(`earningsCalendar.heading.${scope}`)}
-        </h2>
+      {/* Scopes are an earnings idea: the IPO pipeline is short enough to read
+          whole, and nothing in it is on a watchlist yet. */}
+      <div className="flex shrink-0 items-center gap-2 py-1.5">
         <ToggleGroup
           aria-label={t('earningsCalendar.scopeLabel')}
           className="shrink-0"
@@ -190,7 +194,7 @@ function EarningsView({
           variant="outline"
         >
           {SCOPES.map((id) => (
-            <ToggleGroupItem className="text-[10px]" key={id} value={id}>
+            <ToggleGroupItem className="h-6 text-[10px]" key={id} value={id}>
               {t(`earningsCalendar.scopes.${id}`)}
             </ToggleGroupItem>
           ))}
@@ -225,7 +229,7 @@ function EarningsView({
               />
             ))}
             {entries.length > shown.length && (
-              <p className="px-3 py-2 text-[10.5px] text-muted-foreground">
+              <p className={cn('py-2', PANE_FOOTNOTE)}>
                 {t('earningsCalendar.capped', {
                   shown: shown.length,
                   total: entries.length,
@@ -256,9 +260,9 @@ function IpoView() {
 
   return (
     <>
-      <table className="w-full shrink-0 px-3 text-xs">
+      <table className="w-full shrink-0 px-1.5 text-xs">
         <thead>
-          <tr className="border-b border-border/50 text-muted-foreground">
+          <tr className="text-muted-foreground">
             <Th>{t('earningsCalendar.columns.symbol')}</Th>
             <Th>{t('earningsCalendar.columns.company')}</Th>
             <Th>{t('earningsCalendar.ipo.columns.exchange')}</Th>
@@ -290,7 +294,7 @@ function IpoView() {
               />
             ))}
             {entries.length > shown.length && (
-              <p className="px-3 py-2 text-[10.5px] text-muted-foreground">
+              <p className={cn('py-2', PANE_FOOTNOTE)}>
                 {t('earningsCalendar.ipo.capped', {
                   shown: shown.length,
                   total: entries.length,
@@ -370,11 +374,15 @@ function DayGroup({
 function SlotBanner({ count, slot }: { count: number; slot: EarningsSlot }) {
   const { t } = useTranslation()
   return (
-    <p className="flex items-baseline gap-2 border-b border-border/50 bg-[color-mix(in_oklch,var(--muted)_40%,transparent)] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[.1em] text-muted-foreground">
+    <p
+      className={cn(
+        'flex items-baseline gap-2 px-1.5 pb-0.5 pt-2',
+        PANE_COLUMN_HEADER,
+        'font-normal tracking-[.1em] text-muted-foreground/70',
+      )}
+    >
       {t(`earningsCalendar.slots.${slot}`)}
-      <span className="ml-auto tabular-nums tracking-normal text-muted-foreground/70">
-        {count}
-      </span>
+      <span className="ml-auto tabular-nums tracking-normal">{count}</span>
     </p>
   )
 }
@@ -389,7 +397,7 @@ function IpoDayGroup({
   return (
     <section>
       <DayHeader count={entries.length} date={date} />
-      <table className="w-full text-xs">
+      <table className="w-full px-1.5 text-xs">
         <tbody>
           {entries.map((entry) => (
             <IpoRow entry={entry} key={`${entry.symbol}:${entry.date}`} />
@@ -417,8 +425,9 @@ function DayHeader({ date, count }: { date: string; count: number }) {
   return (
     <p
       className={cn(
-        'sticky top-0 z-10 flex items-baseline gap-2 border-b border-border/50 bg-background/95 px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[.14em] backdrop-blur-sm',
-        kind === 'today' ? 'text-[var(--chart-4)]' : 'text-muted-foreground',
+        'sticky top-0 z-10 flex items-baseline gap-2 bg-card/95 px-1.5 py-1 backdrop-blur-sm',
+        PANE_COLUMN_HEADER,
+        kind === 'today' && 'text-[var(--chart-4)]',
       )}
     >
       {label}
@@ -474,7 +483,7 @@ function EarningsRow({
     <Link
       {...chartLinkProps(target)}
       className={cn(
-        'border-b border-border/50 px-3 py-2 text-[13px] last:border-0 hover:bg-accent/40',
+        'border-b border-border/40 px-1.5 py-1.5 text-[12px] last:border-0 hover:bg-accent/40',
         EARNINGS_GRID,
       )}
     >
@@ -492,7 +501,7 @@ function EarningsRow({
           </span>
           {subtitle && (
             <span
-              className="block truncate text-[10.5px] text-muted-foreground"
+              className="block truncate text-[10px] text-muted-foreground"
               title={
                 entry.fiscalDateEnding
                   ? t('earningsCalendar.periodEnded', {
@@ -564,7 +573,7 @@ function IpoRow({ entry }: { entry: IpoCalendarEntry }) {
 
   return (
     <tr className="border-b border-border/40 last:border-0">
-      <td className="py-1.5 pl-3 pr-3 font-mono text-[11.5px] font-medium">
+      <td className="py-1.5 pr-3 font-mono text-[11.5px] font-medium">
         {entry.symbol}
       </td>
       <td className="max-w-[10rem] truncate pr-3 text-[11px] text-muted-foreground">
@@ -573,7 +582,7 @@ function IpoRow({ entry }: { entry: IpoCalendarEntry }) {
       <td className="max-w-[7rem] truncate pr-3 text-[11px] text-muted-foreground">
         {entry.exchange ?? ''}
       </td>
-      <td className="whitespace-nowrap pr-3 text-right font-mono text-[11.5px] tabular-nums">
+      <td className="whitespace-nowrap text-right font-mono text-[11.5px] tabular-nums">
         {/* Most of a forward calendar has not priced. That is a stated
             absence, never a $0.00 range. */}
         {range.kind === 'unknown' ? (
@@ -658,7 +667,7 @@ function IpoUnavailableState({ reason }: { reason: FundamentalsUnavailable }) {
 
 function LoadingRows() {
   return (
-    <div className="space-y-1.5 p-3">
+    <div className="space-y-1.5 py-2">
       {Array.from({ length: 6 }).map((_, i) => (
         <div className="h-6 animate-pulse rounded bg-muted" key={i} />
       ))}

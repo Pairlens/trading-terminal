@@ -117,7 +117,7 @@ export function PaneCredentialsRequired({
 
   if (variant === 'compact') {
     return (
-      <div className="flex h-full min-h-0 flex-1 items-center gap-2.5 px-3 py-2">
+      <div className="flex h-full min-h-0 flex-1 items-center gap-2.5 py-2">
         <Icon className="size-4 shrink-0 text-muted-foreground/50" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-[12.5px] font-medium text-foreground">

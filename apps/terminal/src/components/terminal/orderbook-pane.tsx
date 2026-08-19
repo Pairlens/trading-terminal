@@ -26,7 +26,11 @@ import { PaneTransition } from '@/components/layout/pane-transition'
 import { PaneDataUnavailable } from '@/components/layout/pane-data-unavailable'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
-import { PaneEmpty } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_FOOTNOTE,
+  PaneEmpty,
+} from '@/components/panes/pane-primitives'
 import { usePredictionDesk } from '@/lib/predictions/desk-context'
 import { useMarketCredentialGate } from '@/hooks/use-market-credential-gate'
 import { usePaneVenue } from '@/hooks/use-pane-venue'
@@ -260,7 +264,7 @@ const OrderBookRow = memo(
     const intensity = magnitudeIntensity(row.amount, amountReference)
 
     return (
-      <div className="relative grid grid-cols-3 gap-1 px-2 py-[1px] font-mono text-[11px] leading-[18px]">
+      <div className="relative grid grid-cols-3 gap-1 py-[1px] font-mono text-[11px] leading-[18px]">
         <div
           className="absolute inset-0"
           style={{
@@ -481,9 +485,11 @@ function OrderbookPaneInner({
   // phone all follow it, and it survives a reload.
   const [metric, setMetric] = useOrderbookMetric()
 
-  // Header (~28px), spread row (~26px), buy/sell bar (~32px) — plus the venue
-  // footer (~24px) on the panes that render one.
-  const chromeHeight = venue.isDistinct ? 110 : 86
+  // Measured, not guessed: column header 21px, spread row 29px, buy/sell bar
+  // 29px, plus the venue footer's 21px on the panes that render one. Re-measure
+  // if any of those three change shape; over-reserving here silently costs the
+  // book a row.
+  const chromeHeight = venue.isDistinct ? 100 : 79
 
   // Measure available height for rows (callback ref so it works after loading state)
   useEffect(() => {
@@ -706,8 +712,10 @@ function OrderbookPaneInner({
       ref={setContainerEl}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/50 px-2 py-1">
-        <div className="grid flex-1 grid-cols-3 gap-1 font-mono text-[10.5px] font-medium uppercase tracking-[.11em] text-muted-foreground">
+      <div className="flex items-center justify-between gap-1 pb-1">
+        <div
+          className={cn('grid flex-1 grid-cols-3 gap-1', PANE_COLUMN_HEADER)}
+        >
           <span>{t('terminal.columns.price')}</span>
           <MetricHeader metric={metric} onToggle={handleMetricToggle} />
           <span className="text-right">{t('terminal.columns.total')}</span>
@@ -755,7 +763,7 @@ function OrderbookPaneInner({
 
           {/* Spread indicator */}
           {spread && (
-            <div className="flex items-center justify-center gap-2 border-y border-border px-2 py-1.5">
+            <div className="flex items-center justify-center gap-2 bg-muted/45 py-1.5">
               <span className="font-mono text-[10px] uppercase tracking-[.11em] text-muted-foreground">
                 Spread
               </span>
@@ -798,9 +806,7 @@ function OrderbookPaneInner({
           health is the top bar's job (ConnectionIndicator), which can say
           "stalled"; a per-pane dot could only ever say "streaming". */}
       {venue.isDistinct && (
-        <div className="border-t border-border/50 px-2 py-1 text-[10px] text-muted-foreground">
-          {venue.label}
-        </div>
+        <div className={cn('pt-1.5', PANE_FOOTNOTE)}>{venue.label}</div>
       )}
     </PaneTransition>
   )
@@ -866,7 +872,7 @@ const BuySellBar = memo(
     const sellPct = (totalAsk / total) * 100
 
     return (
-      <div className="border-t border-border/50 px-2 py-1.5">
+      <div className="pt-1.5">
         <div className="mb-1 flex items-center justify-between font-mono text-[10px]">
           <span className="text-up">B {buyPct.toFixed(1)}%</span>
           <span className="text-down">{sellPct.toFixed(1)}% S</span>

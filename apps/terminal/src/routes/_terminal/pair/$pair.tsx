@@ -16,11 +16,11 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Loader2, Unplug } from 'lucide-react'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import { marketRefToPath } from '@pairlens/shared/market-ref'
 
 import type { LegacyAssetClassMap } from '@/lib/market-ref/legacy'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useMarketRefResolver } from '@/lib/market-ref/use-market-ref'
@@ -57,7 +57,7 @@ function LegacyPairRedirect() {
     // Still booting, or genuinely nothing serves it. Both look the same for a
     // beat; only the second one persists.
     return (
-      <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <main className={PAGE_FRAME}>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-muted-foreground">
           {resolution ? (
             <>
@@ -73,15 +73,15 @@ function LegacyPairRedirect() {
             <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
           )}
         </div>
-      </SidebarInset>
+      </main>
     )
   }
 
   return (
-    <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <main className={PAGE_FRAME}>
       <div className="flex flex-1 items-center justify-center">
         <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
       </div>
-    </SidebarInset>
+    </main>
   )
 }

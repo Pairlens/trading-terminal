@@ -129,9 +129,9 @@ export function ExchangeAccountCard({
         delay: index * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="pl-store-lift group relative flex flex-col overflow-hidden border border-border"
+      className="pl-store-lift group relative flex flex-col overflow-hidden"
       style={{
-        borderRadius: 17,
+        borderRadius: 14,
         background: `linear-gradient(165deg, color-mix(in oklch, ${brand.tint} 26%, var(--card)) 0%, var(--card) 62%)`,
       }}
       role="article"
@@ -167,8 +167,9 @@ export function ExchangeAccountCard({
         </span>
       </div>
 
-      {/* Details */}
-      <div className="relative flex flex-1 flex-col border-t border-border/40 bg-card/70 p-4 backdrop-blur-sm">
+      {/* Details. The one line on the card, and it is a real seam: the brand
+          band above, the account below. */}
+      <div className="relative flex flex-1 flex-col border-t border-(--pane-rule) bg-card/70 p-4 backdrop-blur-sm">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-foreground">
@@ -275,8 +276,9 @@ export function ExchangeAccountCard({
           </div>
         )}
 
-        {/* Footer: status + remove */}
-        <div className="mt-auto flex items-center justify-between border-t border-dashed border-border/40 pt-3">
+        {/* Footer: status + remove. Air, not a second rule: the card already
+            draws its one line under the brand band. */}
+        <div className="mt-auto flex items-center justify-between pt-4">
           <div className="flex items-center gap-2">
             <span
               className={cn(
@@ -319,9 +321,9 @@ export function CryptoWalletCard({
 
   return (
     <div
-      className="pl-store-lift group relative flex flex-col overflow-hidden border border-border"
+      className="pl-store-lift group relative flex flex-col overflow-hidden"
       style={{
-        borderRadius: 17,
+        borderRadius: 14,
         background: `linear-gradient(165deg, color-mix(in oklch, ${brand.tint} 24%, var(--card)) 0%, var(--card) 62%)`,
       }}
       role="article"
@@ -354,13 +356,13 @@ export function CryptoWalletCard({
             {brand.mono}
           </span>
         )}
-        <span className="absolute right-3 top-3 rounded-full border border-border/50 bg-background/60 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground backdrop-blur-sm">
+        <span className="absolute right-3 top-3 rounded-full bg-card/80 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground backdrop-blur-sm">
           {schema?.label ?? wallet.chain}
         </span>
       </div>
 
       {/* Details */}
-      <div className="relative flex flex-1 flex-col border-t border-border/40 bg-card/70 p-4 backdrop-blur-sm">
+      <div className="relative flex flex-1 flex-col border-t border-(--pane-rule) bg-card/70 p-4 backdrop-blur-sm">
         <p className="truncate text-sm font-semibold text-foreground">
           {wallet.label}
         </p>
@@ -378,7 +380,7 @@ export function CryptoWalletCard({
           })}
         </div>
 
-        <div className="mt-auto flex items-center justify-end border-t border-dashed border-border/40 pt-3">
+        <div className="mt-auto flex items-center justify-end pt-4">
           <RemoveConfirm
             onRemove={onRemove}
             isBusy={isBusy}

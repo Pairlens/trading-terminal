@@ -67,8 +67,9 @@ The window is clamped so you can never lose it: enough of the header always
 stays on screen to grab again, and if you shrink the terminal or unplug a
 display, a window that would be stranded off screen is pulled back in.
 
-Until you drag it, the window is anchored to the orb's placement: beside the rail
-in sidebar mode, bottom right for the other two. That is why it stays put when
+Until you drag it, the window is anchored to the orb's placement: in sidebar
+mode it hangs off the top bar exactly where a workspace column starts, bottom
+right for the other two. That is why it stays put when
 you resize. Once it has been moved, a reset button appears in the header next to
 the persona menu and puts it back on that anchor.
 
@@ -162,11 +163,11 @@ the window somewhere.
 
 ### Your threads
 
-Down the left of the window is every conversation you have had, newest first,
-grouped by Today, Yesterday, Previous 7 days and Older. **New conversation**
-sits at the top. Clicking a row opens it exactly as you left it: the tool
-activity, the research cards, the order proposals, all of it, because the whole
-message is stored and not just its text.
+Down the left of the window, under **History**, is every conversation you have
+had, newest first, grouped by Today, Yesterday, Previous 7 days and Older. The
+plus beside that title starts a new one. Clicking a row opens it exactly as you
+left it: the tool activity, the research cards, the order proposals, all of it,
+because the whole message is stored and not just its text.
 
 Threads name themselves. The first thing you ask titles the row immediately,
 then the assistant is asked in the background for something shorter and better

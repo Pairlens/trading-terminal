@@ -149,7 +149,12 @@ export function AssistantChatWindow({
       // Wider than the 440px it shipped at, because the thread rail costs
       // 176px and the chat column must not pay for it: the message column
       // is the same width it always was.
-      className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[616px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[20px]"
+      //
+      // 14px, which is a workspace column's radius. The panel floats over a
+      // board rather than sitting in it, but it is the same kind of object,
+      // and reading as one is what stops it looking like a component from
+      // another product parked on top.
+      className="ai-glass ai-aura text-card-foreground relative flex h-[min(660px,calc(100svh-7.5rem))] w-[616px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-[14px]"
     >
       {/* Light on the top edge, masked to nothing at both ends so it reads as
           a highlight and not a progress bar. */}
@@ -160,7 +165,7 @@ export function AssistantChatWindow({
           not smear a text selection across the title. */}
       <header
         {...dragHandleProps}
-        className={`relative z-10 flex shrink-0 items-center gap-2.5 px-3.5 pt-3 pb-2.5 select-none ${
+        className={`relative z-10 flex shrink-0 items-center gap-2.5 px-3 py-2.5 select-none ${
           dragging ? 'cursor-grabbing' : 'cursor-grab'
         }`}
       >
@@ -171,7 +176,7 @@ export function AssistantChatWindow({
           className="shrink-0"
         />
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[13px] leading-tight font-medium">
+          <p className="truncate text-[13px] leading-tight font-semibold tracking-[-0.01em]">
             {title}
           </p>
           {subtitle ? (
@@ -196,7 +201,7 @@ export function AssistantChatWindow({
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-foreground size-7 rounded-full"
+            className="text-muted-foreground hover:text-foreground size-[26px] rounded-[10px]"
             onClick={onClose}
             aria-label={closeLabel}
           >
@@ -205,9 +210,12 @@ export function AssistantChatWindow({
         </div>
       </header>
 
-      {/* Hairline under the header. A `border-b` would inherit the panel's own
-          edge colour; the assistant's edges are its own token. */}
-      <div className="pointer-events-none mx-3.5 h-px shrink-0 bg-[var(--ai-edge-soft)]" />
+      {/* Hairline under the header, full width. A rule between two stacked
+          regions runs edge to edge everywhere else in the terminal, and an
+          inset one here was the panel's own idea of a divider. A `border-b`
+          would inherit the panel's outer edge colour; the assistant's edges
+          are its own token. */}
+      <div className="pointer-events-none h-px shrink-0 bg-[var(--ai-edge-soft)]" />
 
       <div className="relative z-10 flex min-h-0 flex-1 overflow-hidden">
         {sidebar ? (
@@ -221,7 +229,7 @@ export function AssistantChatWindow({
       </div>
 
       {notice ? (
-        <div className="relative z-10 shrink-0 px-3.5 pb-1">{notice}</div>
+        <div className="relative z-10 shrink-0 px-3 pb-1">{notice}</div>
       ) : null}
 
       {footer ? <div className="relative z-10 shrink-0">{footer}</div> : null}

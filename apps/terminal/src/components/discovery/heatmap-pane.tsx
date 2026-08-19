@@ -16,6 +16,8 @@ import type {
   HeatmapResponse,
 } from '@pairlens/shared/instrument-types'
 
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
+import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 import { formatRelativeTime } from '@/lib/format-time'
 import { fetchHeatmapWithFallback } from '@/lib/public-market-data'
@@ -306,51 +308,37 @@ export function HeatmapPane() {
     setHoveredItem(item)
   }, [])
 
+  // The pane's name is the shell's job now, which is what collapses what used
+  // to be three copies of the same header strip (loading, refused, ready) into
+  // three states that each render only their own content.
   if (isLoading) {
     return (
-      <div className="flex h-full flex-col">
-        <header className="flex items-center justify-between border-b px-4 py-2.5">
-          <h2 className="text-sm font-semibold">{t('heatmap.title')}</h2>
-        </header>
-        <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1 p-2">
-          {Array.from({ length: 24 }, (_, i) => (
-            <div key={i} className="animate-pulse rounded bg-muted" />
-          ))}
-        </div>
+      <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1">
+        {Array.from({ length: 24 }, (_, i) => (
+          <div key={i} className="animate-pulse rounded bg-muted" />
+        ))}
       </div>
     )
   }
 
   if (error || items.length === 0) {
     return (
-      <div className="flex h-full flex-col">
-        <header className="flex items-center justify-between border-b px-4 py-2.5">
-          <h2 className="text-sm font-semibold">{t('heatmap.title')}</h2>
-        </header>
-        <div className="flex min-h-0 flex-1 flex-col items-center justify-center p-6 text-center">
-          <Grid3X3 className="mb-3 size-8 text-muted-foreground/40" />
-          <p className="text-sm font-medium">
-            {error ? t('heatmap.failed') : t('heatmap.noData')}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {error ? t('heatmap.tryLater') : t('heatmap.willAppear')}
-          </p>
-        </div>
-      </div>
+      <PaneEmpty
+        icon={Grid3X3}
+        title={error ? t('heatmap.failed') : t('heatmap.noData')}
+        body={error ? t('heatmap.tryLater') : t('heatmap.willAppear')}
+      />
     )
   }
 
   return (
-    <div className="flex h-full flex-col">
-      <header className="flex items-center justify-between border-b px-4 py-2.5">
-        <h2 className="text-sm font-semibold">{t('heatmap.title')}</h2>
-        {updatedAt && (
-          <span className="text-xs text-muted-foreground">
-            {t('common.updated', { time: formatRelativeTime(updatedAt) })}
-          </span>
-        )}
-      </header>
-      <div ref={containerRef} className="relative min-h-0 flex-1 p-1">
+    <>
+      {updatedAt && (
+        <PaneHeaderMetric>
+          {t('common.updated', { time: formatRelativeTime(updatedAt) })}
+        </PaneHeaderMetric>
+      )}
+      <div ref={containerRef} className="relative min-h-0 flex-1">
         <ResponsiveContainer width="100%" height="100%">
           <Treemap
             data={treemapData}
@@ -369,6 +357,6 @@ export function HeatmapPane() {
           <HeatmapTooltip item={hoveredItem} containerRef={containerRef} />
         )}
       </div>
-    </div>
+    </>
   )
 }

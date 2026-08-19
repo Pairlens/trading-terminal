@@ -142,7 +142,7 @@ export function GhostAsset({
   return (
     <div className="flex min-w-0 items-center gap-2 py-1.5">
       <AssetMark base={base} logoUrl={logoUrl ?? null} />
-      <span className="truncate font-mono text-xs font-semibold text-muted-foreground">
+      <span className="truncate font-mono text-[11px] font-semibold text-muted-foreground">
         {base}
       </span>
     </div>
@@ -168,14 +168,14 @@ export function BasisMonitorSkeleton({
   return (
     <div className="flex flex-col gap-2">
       {Array.from({ length: rows }, (_, index) => (
-        <div className="flex items-center gap-3 text-xs" key={index}>
+        <div className="flex items-center gap-3 text-[11px]" key={index}>
           <span className="w-12 shrink-0 truncate font-mono font-semibold text-muted-foreground">
             {bases[index] ?? <Shimmer className="h-3 w-9" delayIndex={index} />}
           </span>
           <Shimmer className="h-3 w-24 shrink-0" delayIndex={index} />
           <Shimmer className="h-3 w-24 shrink-0" delayIndex={index} />
           <span className="relative hidden h-1.5 min-w-0 flex-1 rounded-full bg-muted @sm/pane:block">
-            <span className="absolute left-1/2 top-[-3px] h-3 w-px bg-border" />
+            <span className="absolute left-1/2 top-[-3px] h-3 w-px bg-(--pane-rule)" />
           </span>
           <span className="flex w-20 shrink-0 justify-end">
             <Shimmer className="h-3 w-12" delayIndex={index} />
@@ -204,11 +204,11 @@ export function OpenInterestSkeleton({
     <div>
       {Array.from({ length: rows }, (_, index) => (
         <div
-          className="border-b border-border/50 px-3.5 py-2 last:border-0"
+          className="border-b border-border/40 px-1.5 py-2 last:border-0"
           key={index}
         >
           <div className="flex items-baseline justify-between gap-2">
-            <span className="truncate font-mono text-xs font-semibold text-muted-foreground">
+            <span className="truncate font-mono text-[11px] font-semibold text-muted-foreground">
               {bases[index] ?? (
                 <Shimmer className="h-3 w-10" delayIndex={index} />
               )}
@@ -243,7 +243,7 @@ export function FundingExtremesSkeleton({ rows = 6 }: { rows?: number }) {
     <div>
       {Array.from({ length: rows }, (_, index) => (
         <div
-          className="flex items-center gap-2.5 border-b border-border/50 px-3.5 py-2 last:border-0"
+          className="flex items-center gap-2.5 border-b border-border/40 px-1.5 py-2 last:border-0"
           key={index}
         >
           <Shimmer

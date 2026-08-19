@@ -141,7 +141,7 @@ export function OutcomeSwitch({
         {t('terminal.trade.allOutcomes', { total: legs.length })}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-0">
-        <div className="border-b px-3 py-2 text-[11px] font-medium">
+        <div className="px-3 pb-1 pt-2 text-[11px] font-medium">
           {t('terminal.trade.switchOutcome')}
         </div>
         <ScrollArea className="max-h-64">
@@ -171,7 +171,7 @@ export function OutcomeSwitch({
   return (
     <div
       className={cn(
-        'flex flex-col gap-0.5 rounded-xl border px-2 py-1.5',
+        'flex flex-col gap-0.5 rounded-lg bg-muted/40 px-2 py-1.5',
         className,
       )}
     >
@@ -206,10 +206,12 @@ function LegButton({
       <button
         aria-pressed={active}
         className={cn(
-          'inline-flex h-[22px] max-w-[190px] shrink-0 items-center gap-1.5 rounded-lg border px-2 text-[11px] transition-colors',
+          'inline-flex h-5 max-w-[190px] shrink-0 items-center gap-1.5 rounded-md px-2 text-[11px] transition-colors',
+          // The fill is the state. A ring around every leg turned the header
+          // into a row of boxes on a board that draws one card per column.
           active
-            ? 'border-primary/60 bg-primary/10 text-foreground'
-            : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+            ? 'bg-primary/12 text-foreground'
+            : 'bg-muted/40 text-muted-foreground hover:bg-accent hover:text-foreground',
         )}
         onClick={() => onSelect(leg)}
         title={leg.market.title}

@@ -25,6 +25,7 @@ import {
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
 } from '../master-detail'
 import type { WorkflowRunRecord } from '@/stores/workflow-run-store'
 import { askAssistant } from '@/stores/assistant-store'
@@ -82,7 +83,14 @@ export function WorkflowSidebar() {
     <div className={MASTER_DETAIL_LIST_CLASS}>
       {/* Header with tabs */}
       <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
-        <div className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider">
+        {/* Two names in the list title's voice, one of them selected. Not a
+            pair of small-caps labels shouting over the rows below. */}
+        <div
+          className={cn(
+            'flex items-center gap-1',
+            MASTER_DETAIL_LIST_TITLE_CLASS,
+          )}
+        >
           <button
             type="button"
             className={cn(
@@ -310,7 +318,7 @@ function RunHistoryList() {
         ))}
       </div>
       {runs.length > 0 && (
-        <div className="border-t border-border p-1.5">
+        <div className="border-t border-(--pane-rule) p-1.5">
           <Button
             variant="ghost"
             size="sm"

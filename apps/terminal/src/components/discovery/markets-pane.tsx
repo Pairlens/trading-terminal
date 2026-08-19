@@ -52,6 +52,8 @@ import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
 import type { TopCoin } from '@pairlens/shared/instrument-types'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import { assetClassVisual } from '@/lib/asset-class/visuals'
+import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
+import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -94,6 +96,12 @@ import { PairQuote, quoteForPair } from '@/components/discovery/pair-quote'
  * catalogued under one.
  */
 const SECTORED_ASSET_CLASSES = new Set<AssetClassFilter>(['all', 'crypto'])
+
+/**
+ * What the shared `TableHead` needs to sit in a pane: the 40px row height it
+ * was built for is a third of a pane's visible list.
+ */
+const TABLE_HEAD = 'h-7 pb-1.5 align-bottom'
 
 /**
  * The way out of the predictions empty state.
@@ -417,80 +425,77 @@ export function MarketsPane() {
 
   return (
     <div ref={rootRef} className="flex h-full flex-col overflow-hidden">
-      {/* Header */}
-      <header className="space-y-3 border-b px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-sm font-semibold">{t('markets.title')}</h2>
-            <p className="text-xs text-muted-foreground">
-              {t('markets.pairCount', { count: total })}
-            </p>
-          </div>
+      {/* The pane's name and its count are the shell's row now; what is left
+          is the filter toolbar, with the view toggle riding on the end of the
+          asset-class line rather than owning a row of its own. */}
+      <header className="shrink-0 space-y-1.5 pb-2">
+        <PaneHeaderMetric>
+          {t('markets.pairCount', { count: total })}
+        </PaneHeaderMetric>
 
-          <div className="flex items-center gap-2">
-            {/* View toggle */}
-            <ToggleGroup
-              aria-label={t('markets.viewMode')}
-              multiple={false}
-              size="sm"
-              value={[viewMode]}
-              variant="outline"
-              onValueChange={(next) => {
-                const v = next[0]
-                if (v === 'list' || v === 'grid') setViewMode(v)
-              }}
-            >
-              <ToggleGroupItem aria-label={t('markets.listView')} value="list">
-                <List className="size-3.5" />
-              </ToggleGroupItem>
-              <ToggleGroupItem aria-label={t('markets.gridView')} value="grid">
-                <LayoutGrid className="size-3.5" />
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </div>
-        </div>
-
-        {/* Asset class filter — the same five colours the Discovery tabs and
+        {/* Asset class filter: the same five colours the Discovery tabs and
             the pair badge wear, so the chip a trader picks here matches the
             badge on the pair it opens. */}
-        <div className="flex flex-wrap gap-1">
-          {ASSET_CLASSES.map((ac) => {
-            const cls = normalizeInstrumentClass(ac.id)
-            const visual = cls ? assetClassVisual(cls) : null
-            const selected = assetClassFilter === ac.id
-            return (
-              <Button
-                key={ac.id}
-                size="xs"
-                variant={selected && !visual ? 'default' : 'ghost'}
-                className={cn(
-                  'gap-1 border border-transparent',
-                  selected &&
-                    visual && [visual.activeBg, visual.border, visual.text],
-                )}
-                onClick={() => {
-                  setAssetClassFilter(ac.id)
-                  // Reset category when switching to a class the crypto sector
-                  // taxonomy doesn't describe (equities, prediction outcomes,
-                  // perpetual contracts)
-                  if (
-                    !SECTORED_ASSET_CLASSES.has(ac.id) &&
-                    activeCategory !== 'all' &&
-                    activeCategory !== 'watchlists'
-                  ) {
-                    setActiveCategory('all')
-                  }
-                }}
-              >
-                <ac.icon className={cn('size-3', visual?.text)} />
-                {t(`markets.assetClass.${ac.id}`, ac.label)}
-              </Button>
-            )
-          })}
+        <div className="flex items-start gap-2">
+          <div className="flex min-w-0 flex-1 flex-wrap gap-1">
+            {ASSET_CLASSES.map((ac) => {
+              const cls = normalizeInstrumentClass(ac.id)
+              const visual = cls ? assetClassVisual(cls) : null
+              const selected = assetClassFilter === ac.id
+              return (
+                <Button
+                  key={ac.id}
+                  size="xs"
+                  variant={selected && !visual ? 'default' : 'ghost'}
+                  className={cn(
+                    'gap-1 border border-transparent',
+                    selected &&
+                      visual && [visual.activeBg, visual.border, visual.text],
+                  )}
+                  onClick={() => {
+                    setAssetClassFilter(ac.id)
+                    // Reset category when switching to a class the crypto sector
+                    // taxonomy doesn't describe (equities, prediction outcomes,
+                    // perpetual contracts)
+                    if (
+                      !SECTORED_ASSET_CLASSES.has(ac.id) &&
+                      activeCategory !== 'all' &&
+                      activeCategory !== 'watchlists'
+                    ) {
+                      setActiveCategory('all')
+                    }
+                  }}
+                >
+                  <ac.icon className={cn('size-3', visual?.text)} />
+                  {t(`markets.assetClass.${ac.id}`, ac.label)}
+                </Button>
+              )
+            })}
+          </div>
+
+          <ToggleGroup
+            aria-label={t('markets.viewMode')}
+            className="shrink-0"
+            multiple={false}
+            size="sm"
+            value={[viewMode]}
+            variant="outline"
+            onValueChange={(next) => {
+              const v = next[0]
+              if (v === 'list' || v === 'grid') setViewMode(v)
+            }}
+          >
+            <ToggleGroupItem aria-label={t('markets.listView')} value="list">
+              <List className="size-3.5" />
+            </ToggleGroupItem>
+            <ToggleGroupItem aria-label={t('markets.gridView')} value="grid">
+              <LayoutGrid className="size-3.5" />
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
 
         {/* Category tabs (hidden for classes the crypto sector taxonomy doesn't
-            describe — equities, prediction outcomes, perpetual contracts) */}
+            describe: equities, prediction outcomes, perpetual contracts) */}
         {SECTORED_ASSET_CLASSES.has(assetClassFilter) && (
           <div className="flex flex-wrap gap-1">
             {CATEGORIES.map((cat) => (
@@ -511,7 +516,7 @@ export function MarketsPane() {
 
       <section ref={scrollContainerRef} className="flex-1 overflow-auto">
         {showLoader ? (
-          <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
+          <div className="flex flex-col items-center justify-center py-16 text-center">
             <Loader2 className="mb-3 size-6 animate-spin text-muted-foreground/60" />
             <p className="text-sm text-muted-foreground">
               {t('markets.loading')}
@@ -523,7 +528,7 @@ export function MarketsPane() {
                 they are born and resolved daily. Saying where they ARE beats
                 an empty grid that reads as "no prediction markets exist". */}
             {assetClassFilter === 'prediction' && sortedPairs.length === 0 && (
-              <div className="px-4 py-10 text-center">
+              <div className="py-10 text-center">
                 <p className="text-sm font-medium">
                   {t('markets.predictionsEmptyTitle')}
                 </p>
@@ -540,7 +545,7 @@ export function MarketsPane() {
                 would read as "no perpetual markets exist" when the truth is
                 that no futures venue is connected yet. */}
             {assetClassFilter === 'crypto-perp' && sortedPairs.length === 0 && (
-              <div className="px-4 py-10 text-center">
+              <div className="py-10 text-center">
                 <p className="text-sm font-medium">
                   {t('markets.futuresEmptyTitle')}
                 </p>
@@ -552,7 +557,7 @@ export function MarketsPane() {
 
             {/* Recent strip */}
             {recentPairEntries.length > 0 && (
-              <div className="flex items-center gap-2 border-b px-4 py-2">
+              <div className="flex items-center gap-2 py-2">
                 <Clock className="size-3 shrink-0 text-muted-foreground" />
                 <span className="shrink-0 text-xs text-muted-foreground">
                   {t('markets.recent')}
@@ -561,7 +566,7 @@ export function MarketsPane() {
                   {recentPairEntries.map((pair) => (
                     <Link
                       key={pair.symbol}
-                      className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs transition-colors hover:bg-accent/40"
+                      className="inline-flex items-center gap-1 rounded-md bg-muted/40 px-2 py-0.5 text-xs transition-colors hover:bg-accent/40"
                       {...chartLinkProps(
                         entryToMarketRef(pair, resolveMarket(pair.assetClass)),
                       )}
@@ -586,7 +591,7 @@ export function MarketsPane() {
 
             {/* Featured row */}
             {showFeatured && (
-              <div className="border-b px-4 py-3">
+              <div className="py-3">
                 {/* Column count follows the available width rather than a
                     breakpoint. Three fixed columns meant a 384px pane gave
                     each tile 112px — less than the logo, symbol and price
@@ -599,7 +604,7 @@ export function MarketsPane() {
                       // Its own container: how a tile lays out depends on how
                       // wide that tile ended up, which the pane's width alone
                       // no longer tells us.
-                      className="@container/tile group flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
+                      className="@container/tile group flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg bg-muted/40 p-2.5 transition-colors hover:bg-accent/40"
                       {...chartLinkProps(
                         entryToMarketRef(pair, resolveMarket(pair.assetClass)),
                       )}
@@ -650,7 +655,7 @@ export function MarketsPane() {
             {sortedPairs.length === 0 &&
             assetClassFilter !== 'prediction' &&
             assetClassFilter !== 'crypto-perp' ? (
-              <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
+              <div className="flex flex-col items-center justify-center py-16 text-center">
                 {activeCategory === 'watchlists' ? (
                   <>
                     <Star className="mb-3 size-8 text-muted-foreground/40" />
@@ -682,29 +687,55 @@ export function MarketsPane() {
             ) : viewMode === 'list' ? (
               /* Table view */
               <div className="hidden @md/pane:block">
-                <Table>
-                  <TableHeader>
+                <Table className="[&_td:first-child]:pl-0 [&_td:last-child]:pr-0 [&_th:first-child]:pl-0 [&_th:last-child]:pr-0">
+                  {/* No rule under the head row: the board draws one line and
+                      this is not it. */}
+                  <TableHeader className="[&_tr]:border-0">
                     <TableRow>
-                      <TableHead className="w-10" />
-                      <TableHead>{t('markets.colPair')}</TableHead>
+                      <TableHead
+                        className={cn(PANE_COLUMN_HEADER, TABLE_HEAD, 'w-10')}
+                      />
+                      <TableHead className={cn(PANE_COLUMN_HEADER, TABLE_HEAD)}>
+                        {t('markets.colPair')}
+                      </TableHead>
                       {/* A share of the table, not a fixed 96px. At a fixed
                           width the line covered barely half the distance to
                           the right-aligned price and read as a chart that had
                           stopped drawing rather than a short one. */}
-                      <TableHead className="hidden w-[26%] @lg/pane:table-cell">
+                      <TableHead
+                        className={cn(
+                          PANE_COLUMN_HEADER,
+                          TABLE_HEAD,
+                          'hidden w-[26%] @lg/pane:table-cell',
+                        )}
+                      >
                         {t('common.trend')}
                       </TableHead>
-                      <TableHead className="text-right">
+                      <TableHead
+                        className={cn(
+                          PANE_COLUMN_HEADER,
+                          TABLE_HEAD,
+                          'text-right',
+                        )}
+                      >
                         {t('markets.colPrice24h')}
                       </TableHead>
                       {/* Later than the trend line, at the measured width the
                           badges actually fit on one row (640px pane). Sharing
                           @lg with the trend column left them 74px, narrow
                           enough to wrap and make the row heights ragged. */}
-                      <TableHead className="hidden @min-[40rem]/pane:table-cell">
+                      <TableHead
+                        className={cn(
+                          PANE_COLUMN_HEADER,
+                          TABLE_HEAD,
+                          'hidden @min-[40rem]/pane:table-cell',
+                        )}
+                      >
                         {t('markets.colCategory')}
                       </TableHead>
-                      <TableHead className="w-10" />
+                      <TableHead
+                        className={cn(PANE_COLUMN_HEADER, TABLE_HEAD, 'w-10')}
+                      />
                     </TableRow>
                   </TableHeader>
                   <TableBody ref={tableBodyRef}>
@@ -742,7 +773,7 @@ export function MarketsPane() {
               className={cn(
                 // Same reason as the featured row: a fixed second column at
                 // @xs meant 150px cards, narrower than the content they hold.
-                'grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-2 p-4',
+                'grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-2 py-3',
                 viewMode === 'list' ? '@md/pane:hidden' : '',
               )}
             >
@@ -818,16 +849,11 @@ function MarketsRail({
 
   return (
     <>
-      <header className="flex items-baseline justify-between gap-2 border-b px-3 py-2">
-        <h2 className="truncate text-[13px] font-semibold">
-          {t('markets.title')}
-        </h2>
-        <span className="shrink-0 font-mono text-[10.5px] tabular-nums text-muted-foreground">
-          {t('markets.pairCount', { count: total })}
-        </span>
-      </header>
+      <PaneHeaderMetric>
+        {t('markets.pairCount', { count: total })}
+      </PaneHeaderMetric>
 
-      <div className="flex shrink-0 flex-col gap-1.5 border-b px-2.5 py-2">
+      <div className="flex shrink-0 flex-col gap-1.5 pb-2">
         {/* Dressed as a field, built as a button. There is never a caret in a
             box that cannot answer, click and Enter both reach the palette, and
             it is deliberately NOT wired to `onFocus`: the palette returns
@@ -836,7 +862,7 @@ function MarketsRail({
         <button
           type="button"
           onClick={open}
-          className="flex h-[26px] items-center gap-1.5 rounded-lg border bg-input px-2 text-left transition-colors hover:border-primary/40"
+          className="flex h-6 items-center gap-1.5 rounded-lg bg-muted/40 px-2 text-left transition-colors hover:bg-accent/40"
         >
           <Search className="size-3 shrink-0 text-muted-foreground" />
           <span className="min-w-0 flex-1 truncate text-[11px] text-muted-foreground">
@@ -849,7 +875,7 @@ function MarketsRail({
 
         {/* One line, scrolled. Wrapping these cost the rail two rows of
             height and still truncated the last chip. */}
-        <div className="-mx-2.5 flex gap-1 overflow-x-auto px-2.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
@@ -860,7 +886,7 @@ function MarketsRail({
                 'shrink-0 rounded-md px-1.5 py-0.5 text-[10.5px] font-medium transition-colors',
                 activeCategory === cat.id
                   ? 'bg-primary text-primary-foreground'
-                  : 'border border-border hover:bg-accent/50',
+                  : 'bg-muted/40 hover:bg-accent/50',
               )}
             >
               {t(`markets.category.${cat.id}`, cat.label)}
@@ -875,7 +901,7 @@ function MarketsRail({
             <Loader2 className="size-5 animate-spin text-muted-foreground/60" />
           </div>
         ) : rows.length === 0 ? (
-          <div className="px-4 py-10 text-center">
+          <div className="py-10 text-center">
             <p className="text-[13px] font-medium">
               {t('markets.noPairsFound')}
             </p>
@@ -905,7 +931,7 @@ function MarketsRail({
       <button
         type="button"
         onClick={open}
-        className="flex shrink-0 items-center justify-between gap-2 border-t px-2.5 py-1.5 text-[11px] text-primary transition-colors hover:bg-accent/40"
+        className="mt-1.5 flex shrink-0 items-center justify-between gap-2 rounded-md px-1.5 py-1 text-[11px] text-primary transition-colors hover:bg-accent/40"
       >
         <span className="truncate">
           {t('markets.browseAll', { count: total })}
@@ -929,7 +955,7 @@ const PairRailRow = memo(function PairRailRow({
 }) {
   return (
     <Link
-      className="flex items-center gap-2 border-b border-border/45 px-2.5 py-1.5 transition-colors hover:bg-accent/40"
+      className="flex items-center gap-2 border-b border-border/40 px-1.5 py-1.5 transition-colors hover:bg-accent/40"
       {...chartLinkProps(entryToMarketRef(pair, market))}
       onClick={() => onNavigate(pair)}
     >
@@ -980,7 +1006,7 @@ const PairTableRow = memo(function PairTableRow({
   )
 
   return (
-    <TableRow className="group cursor-pointer">
+    <TableRow className="group cursor-pointer border-border/40">
       <TableCell>
         <Button
           size="icon-xs"
@@ -1086,7 +1112,7 @@ const PairCard = memo(function PairCard({
 
   return (
     <Link
-      className="group flex items-start gap-3 rounded-lg border p-3 transition-colors hover:border-primary/40 hover:bg-accent/40"
+      className="group flex items-start gap-3 rounded-lg bg-muted/40 p-2.5 transition-colors hover:bg-accent/40"
       {...chartLinkProps(entryToMarketRef(pair, market))}
       onClick={() => onNavigate(pair)}
     >

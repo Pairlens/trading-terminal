@@ -92,7 +92,7 @@ function PairInfoPaneInner({ pairKey }: { pairKey: string }) {
 
   if (isLoading) {
     return (
-      <div className="space-y-3 p-4">
+      <div className="space-y-3 py-1">
         <div className="flex items-center gap-2">
           <Skeleton className="h-5 w-32" />
           <Skeleton className="h-5 w-16" />
@@ -164,7 +164,7 @@ function PairInfoPaneInner({ pairKey }: { pairKey: string }) {
   }
 
   return (
-    <div className="h-full overflow-y-auto p-4">
+    <div className="h-full overflow-y-auto py-1">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold">{overview.name}</span>

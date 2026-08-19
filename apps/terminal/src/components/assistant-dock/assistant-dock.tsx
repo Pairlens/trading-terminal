@@ -150,7 +150,7 @@ export function AssistantDock() {
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          className="text-muted-foreground hover:text-foreground size-7 rounded-full"
+                          className="text-muted-foreground hover:text-foreground size-[26px] rounded-[10px]"
                           aria-label={t('assistantDock.resetPosition')}
                           onClick={drag.reset}
                         >
@@ -173,7 +173,7 @@ export function AssistantDock() {
                       <Button
                         variant="ghost"
                         size="icon-sm"
-                        className="text-muted-foreground hover:text-destructive size-7 rounded-full"
+                        className="text-muted-foreground hover:text-destructive size-[26px] rounded-[10px]"
                         aria-label={t('assistantDock.conversations.delete')}
                         disabled={!activeConversationId}
                         onClick={() => {

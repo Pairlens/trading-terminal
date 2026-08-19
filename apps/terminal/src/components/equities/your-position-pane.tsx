@@ -25,7 +25,12 @@ import type { NormalizedPosition } from '@pairlens/market-engine/types'
 
 import { PaneCredentialsRequired } from '@/components/layout/pane-credentials-required'
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
-import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import {
+  PANE_COLUMN_HEADER,
+  PANE_TABLE_BODY,
+  PaneEmpty,
+  PaneErrorBanner,
+} from '@/components/panes/pane-primitives'
 import {
   equityTickerOf,
   useEquityAccounts,
@@ -118,7 +123,7 @@ function YourPositionPaneInner({ pairKey }: { pairKey: string }) {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 overflow-y-auto p-3">
+    <div className="flex h-full min-h-0 flex-col gap-2 overflow-y-auto py-2">
       {held.map(({ result, position }) => (
         <AccountSection
           accountLabel={result.account.accountLabel}
@@ -152,11 +157,7 @@ function AccountSection({
 
   return (
     <section className="flex flex-col gap-2">
-      {multiple && (
-        <p className="text-[10px] font-medium uppercase tracking-[.14em] text-muted-foreground">
-          {accountLabel}
-        </p>
-      )}
+      {multiple && <p className={PANE_COLUMN_HEADER}>{accountLabel}</p>}
       {error && <PaneErrorBanner message={error} venue={venueLabel} />}
       {position && <PositionCard position={position} />}
       {!position && !error && (
@@ -194,7 +195,7 @@ function PositionCard({ position }: { position: NormalizedPosition }) {
         </span>
         <span
           className={cn(
-            'font-mono text-[15px] font-semibold tabular-nums',
+            'font-mono text-[13px] font-semibold tabular-nums',
             signClass(pnl),
           )}
         >
@@ -242,9 +243,9 @@ function Row({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex items-center justify-between gap-2 text-[11px] text-muted-foreground">
+    <div className="flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
       <span>{label}</span>
-      <span className="font-mono tabular-nums text-foreground">{children}</span>
+      <span className={cn('text-foreground', PANE_TABLE_BODY)}>{children}</span>
     </div>
   )
 }

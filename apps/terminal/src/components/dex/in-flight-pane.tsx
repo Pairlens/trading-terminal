@@ -23,6 +23,7 @@ import { usePanePair } from '@pairlens/plugin-sdk'
 
 import type { BridgeTransfer } from '@/lib/dex/bridge-types'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
 import { useLpSourceState } from '@/components/dex/use-lp-source-state'
 import { useBridgeTransferTracking } from '@/hooks/use-bridge'
 import {
@@ -68,14 +69,9 @@ function InFlightPaneInner({ walletAddress }: { walletAddress: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="flex shrink-0 items-center justify-between gap-2 border-b border-border px-3 py-2">
-        <h2 className="truncate text-[13px] font-semibold">
-          {t('inFlight.title')}
-        </h2>
-        <span className="shrink-0 rounded-md bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
-          {t('inFlight.pendingCount', { count: pending.length })}
-        </span>
-      </header>
+      <DexPaneHeader
+        subtitle={t('inFlight.pendingCount', { count: pending.length })}
+      />
       <div className="min-h-0 flex-1 overflow-y-auto">
         {transfers.map((transfer) => (
           <TransferRow key={transfer.id} transfer={transfer} />
@@ -116,7 +112,7 @@ function TransferRow({ transfer }: { transfer: BridgeTransfer }) {
     transfer.updatedAt - transfer.startedAt > transfer.etaSeconds * 3_000
 
   return (
-    <div className="border-b border-border/40 px-3 py-2">
+    <div className="border-b border-border/40 py-2">
       <div className="flex items-baseline justify-between gap-2">
         <span className="truncate font-mono text-xs [font-variant-numeric:tabular-nums]">
           {`${formatAmount(transfer.amount)} ${transfer.symbol}`}

@@ -134,10 +134,15 @@ describe('discoveryWorkspaceFor', () => {
   test('every board carries the scanner its own class browses by', () => {
     // A section that renders the same price table five times is the bug these
     // boards exist to fix, so each one names the pane its class actually
-    // shops with: perps by cost of carry, DEX by pool, stocks by calendar,
-    // predictions by event.
+    // shops with: spot by what moved, perps by cost of carry, DEX by pool,
+    // stocks by calendar, predictions by event.
+    //
+    // Spot browses by `movers`, not by the full `markets` catalog. A crypto
+    // trader opening the home board is asking what is running today, not for
+    // an A-to-Z list of 598 pairs — that list is a keystroke away in
+    // omni-search and has a board of its own (`template:markets-board`).
     const SCANNERS: Record<InstrumentClass, string> = {
-      spot: 'markets',
+      spot: 'movers',
       perp: 'funding-matrix',
       dex: 'pool-map',
       stocks: 'earnings-calendar',

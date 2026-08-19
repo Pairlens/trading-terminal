@@ -3,19 +3,7 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import {
-  Blocks,
-  Cable,
-  Hammer,
-  Package,
-  Search,
-  SlidersHorizontal,
-  Store,
-  X,
-} from 'lucide-react'
-import { Badge } from '@pairlens/ui/components/ui/badge'
-import { Input } from '@pairlens/ui/components/ui/input'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
+import { Cable, Hammer, Package, SlidersHorizontal, Store } from 'lucide-react'
 import {
   Tabs,
   TabsContent,
@@ -23,13 +11,33 @@ import {
   TabsTrigger,
 } from '@pairlens/ui/components/ui/tabs'
 
+import { HEADER_GROUP, HEADER_TITLE } from '@/components/chrome/header-chrome'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { PageHeader } from '@/components/page-header'
+import { StoreSearchChip } from '@/components/store/store-shell'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { PluginStore } from '@/components/plugins/plugin-store'
 import { InstalledPlugins } from '@/components/plugins/installed-plugins'
 import { CapabilityProviders } from '@/components/plugins/capability-providers'
 import { MarketConnectors } from '@/components/plugins/market-connectors'
 import { DevelopGuide } from '@/components/plugins/develop-guide'
+
+/**
+ * The tab strip in the bar's own vocabulary, the way the Discovery strip does
+ * it: no container, one `--card` chip for the tab you are on, muted for the
+ * rest. Every class here overrides a default from the tabs primitive: the
+ * boxed `--muted` tray it ships is right for a tab strip inside a panel and
+ * wrong on a bar that draws no boxes at all.
+ */
+const TAB_STRIP =
+  'gap-1 rounded-none bg-transparent p-0 group-data-horizontal/tabs:h-[26px]'
+
+const TAB_CHIP =
+  'h-[26px] flex-none gap-1.5 rounded-[10px] border-0 px-[9px] text-xs font-normal hover:bg-card group-data-[variant=default]/tabs-list:data-active:shadow-none data-active:bg-card dark:data-active:bg-card'
+
+/** A number the bar reports, not a control: the chip without the hover. */
+const HEADER_READOUT =
+  'inline-flex h-[26px] shrink-0 items-center rounded-[10px] bg-card px-[9px] font-mono text-[10px] tabular-nums text-muted-foreground'
 
 type PluginsSearch = {
   manage?: string
@@ -57,7 +65,7 @@ function PluginsPage() {
   const activeTab = tab ?? 'store'
 
   return (
-    <SidebarInset className="h-svh min-h-svh overflow-hidden">
+    <main className={PAGE_FRAME}>
       <Tabs
         value={activeTab}
         onValueChange={(value) =>
@@ -66,68 +74,55 @@ function PluginsPage() {
             replace: true,
           })
         }
-        className="flex h-full flex-col gap-0"
+        className="flex min-h-0 flex-1 flex-col gap-0"
       >
         <PageHeader
           actions={
-            <div className="flex items-center gap-3">
-              <TabsList>
-                <TabsTrigger value="store">
-                  <Store className="size-3.5" />
-                  {t('pluginStore.backToStore')}
-                </TabsTrigger>
-                <TabsTrigger value="markets">
-                  <Cable className="size-3.5" />
-                  {t('panes.markets')}
-                </TabsTrigger>
-                <TabsTrigger value="installed">
-                  <Package className="size-3.5" />
-                  {t('pluginStore.installedLabel')}
-                </TabsTrigger>
-                <TabsTrigger value="providers">
-                  <SlidersHorizontal className="size-3.5" />
-                  {t('pluginStore.configuration')}
-                </TabsTrigger>
-                <TabsTrigger value="build">
-                  <Hammer className="size-3.5" />
-                  {t('routes.plugins.tabBuild')}
-                </TabsTrigger>
-              </TabsList>
-              <Badge
-                variant="outline"
-                className="shrink-0 gap-1.5 font-mono text-[10px] tabular-nums"
-              >
-                {t('routes.plugins.activeCount', {
-                  active: activeCount,
-                  total: totalCount,
-                })}
-              </Badge>
-              {activeTab === 'store' && (
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
-                  <Input
+            <>
+              <div className={HEADER_GROUP}>
+                <TabsList className={TAB_STRIP}>
+                  <TabsTrigger value="store" className={TAB_CHIP}>
+                    <Store className="size-3.5" />
+                    {t('pluginStore.backToStore')}
+                  </TabsTrigger>
+                  <TabsTrigger value="markets" className={TAB_CHIP}>
+                    <Cable className="size-3.5" />
+                    {t('panes.markets')}
+                  </TabsTrigger>
+                  <TabsTrigger value="installed" className={TAB_CHIP}>
+                    <Package className="size-3.5" />
+                    {t('pluginStore.installedLabel')}
+                  </TabsTrigger>
+                  <TabsTrigger value="providers" className={TAB_CHIP}>
+                    <SlidersHorizontal className="size-3.5" />
+                    {t('pluginStore.configuration')}
+                  </TabsTrigger>
+                  <TabsTrigger value="build" className={TAB_CHIP}>
+                    <Hammer className="size-3.5" />
+                    {t('routes.plugins.tabBuild')}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <div className={HEADER_GROUP}>
+                <span className={HEADER_READOUT}>
+                  {t('routes.plugins.activeCount', {
+                    active: activeCount,
+                    total: totalCount,
+                  })}
+                </span>
+                {activeTab === 'store' && (
+                  <StoreSearchChip
                     value={storeSearch}
-                    onChange={(e) => setStoreSearch(e.target.value)}
+                    onChange={setStoreSearch}
                     placeholder={t('routes.plugins.searchPlaceholder')}
-                    className="h-[30px] w-[210px] pl-8 pr-7 text-xs"
+                    clearLabel={t('routes.plugins.clearSearch')}
                   />
-                  {storeSearch && (
-                    <button
-                      type="button"
-                      onClick={() => setStoreSearch('')}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:text-foreground"
-                      aria-label={t('routes.plugins.clearSearch')}
-                    >
-                      <X className="size-3" />
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            </>
           }
         >
-          <Blocks className="size-4" />
-          <h1 className="text-sm font-semibold">{t('nav.plugins')}</h1>
+          <h1 className={HEADER_TITLE}>{t('nav.plugins')}</h1>
         </PageHeader>
 
         <TabsContent
@@ -149,6 +144,6 @@ function PluginsPage() {
           <DevelopGuide />
         </TabsContent>
       </Tabs>
-    </SidebarInset>
+    </main>
   )
 }

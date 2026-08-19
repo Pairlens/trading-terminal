@@ -11,6 +11,7 @@ import {
   magnitudeIntensity,
   magnitudeTextColor,
 } from '@/components/terminal/magnitude-intensity'
+import { PANE_TABLE_BODY, Th } from '@/components/panes/pane-primitives'
 
 const formatVolume = (value: number) =>
   value.toLocaleString(undefined, { maximumFractionDigits: 2 })
@@ -44,12 +45,10 @@ export function BottomPanelDataLog({
   )
 
   return (
-    <div className="flex h-full gap-3 overflow-hidden">
+    <div className="flex h-full gap-5 overflow-hidden">
       {/* Summary cards */}
-      <div className="hidden @xs/pane:flex w-32 @sm/pane:w-48 shrink-0 flex-col gap-2 border-r pr-3">
-        <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-          Latest
-        </p>
+      <div className="hidden @xs/pane:flex w-32 @sm/pane:w-48 shrink-0 flex-col gap-2">
+        <p className="text-[10px] text-muted-foreground">Latest</p>
         {latestCandle && (
           <>
             <p
@@ -102,20 +101,16 @@ export function BottomPanelDataLog({
       <div className="min-w-0 flex-1 overflow-auto">
         <table className="w-full text-[11px]">
           <thead>
-            <tr className="border-b text-muted-foreground">
-              <th className="pb-1 pr-3 text-left font-medium">Time</th>
-              <th className="pb-1 pr-3 text-right font-medium">
-                {t('terminal.columns.open')}
-              </th>
-              <th className="pb-1 pr-3 text-right font-medium">High</th>
-              <th className="pb-1 pr-3 text-right font-medium">Low</th>
-              <th className="pb-1 pr-3 text-right font-medium">
-                {t('terminal.columns.close')}
-              </th>
-              <th className="pb-1 text-right font-medium">Volume</th>
+            <tr>
+              <Th>Time</Th>
+              <Th align="right">{t('terminal.columns.open')}</Th>
+              <Th align="right">High</Th>
+              <Th align="right">Low</Th>
+              <Th align="right">{t('terminal.columns.close')}</Th>
+              <Th align="right">Volume</Th>
             </tr>
           </thead>
-          <tbody className="font-mono">
+          <tbody className={PANE_TABLE_BODY}>
             {recentCandles.map((candle) => {
               const isUp = candle.close >= candle.open
               const intensity = magnitudeIntensity(

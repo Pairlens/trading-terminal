@@ -154,14 +154,16 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
     <div className="flex h-full min-h-0 flex-col">
       {/*
         Header — identity and state only. `h-10` matches the sidebar's own
-        header strip so the two rules meet across the divider.
+        header strip, so the two names sit on one line across the gutter.
 
         There is deliberately no on/off control here: the list row owns
         arming, and a second switch for the same bot two inches away asks the
         user to work out whether they are the same thing.
       */}
-      <div className="flex h-10 shrink-0 items-center gap-2 border-b border-border px-3">
-        <span className="truncate text-sm font-medium">{bot.name}</span>
+      <div className="flex h-10 shrink-0 items-center gap-2 px-3">
+        <span className="truncate text-[12.5px] leading-none font-medium tracking-[-0.005em]">
+          {bot.name}
+        </span>
         <Badge
           variant={bot.mode === 'live' ? 'destructive' : 'secondary'}
           className="shrink-0 text-[10px] uppercase tracking-wide"
@@ -192,7 +194,7 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
         only two moves there are.
       */}
       {scriptMissing && (
-        <div className="flex shrink-0 items-start gap-2 border-b border-destructive/30 bg-destructive/5 px-3 py-2.5">
+        <div className="flex shrink-0 items-start gap-2 bg-destructive/5 px-3 py-2.5">
           <TriangleAlert className="mt-0.5 size-4 shrink-0 text-destructive" />
           <div className="grid min-w-0 gap-1.5">
             <p className="text-xs font-medium text-destructive">
@@ -227,7 +229,7 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
       )}
 
       {/* Live numbers — position, marks, and where the bot is deployed. */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-b border-border px-3 py-2.5 text-xs sm:grid-cols-3 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-b border-(--pane-rule) px-3 py-2.5 text-xs sm:grid-cols-3 xl:grid-cols-7">
         {/* Which script this runs comes first: a bot's name is the user's
             label for it, not a statement of what it trades on, and one script
             commonly backs several bots. Without this the page never says what
@@ -335,8 +337,8 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
 
           {/* Right — settings. Stacks under the left column when the pane is
               too narrow to give it 22rem without squeezing the charts flat. */}
-          <div className="shrink-0 border-t border-border @4xl/detail:min-h-0 @4xl/detail:w-88 @4xl/detail:overflow-y-auto @4xl/detail:border-t-0 @4xl/detail:border-l">
-            <div className="sticky top-0 z-10 flex h-8 items-center border-b border-border bg-background px-3 text-[10px] uppercase tracking-wide text-muted-foreground">
+          <div className="shrink-0 border-t border-(--pane-rule) @4xl/detail:min-h-0 @4xl/detail:w-88 @4xl/detail:overflow-y-auto @4xl/detail:border-t-0 @4xl/detail:border-l @4xl/detail:border-l-(--pane-rule)">
+            <div className="sticky top-0 z-10 flex h-8 items-center bg-card px-3 text-[10px] uppercase tracking-wide text-muted-foreground">
               {t('botsPage.tabSettings')}
             </div>
 
@@ -357,7 +359,7 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
                 />
               </div>
 
-              <div className="flex items-start gap-3 rounded-lg border border-border p-3">
+              <div className="flex items-start gap-3 rounded-lg bg-muted/40 p-3">
                 <div className="grid min-w-0 gap-0.5">
                   <Label htmlFor="bot-detail-live" className="text-xs">
                     {t('botsPage.liveTrading')}
@@ -382,7 +384,7 @@ export function BotDetail({ bot, onRequestArm }: BotDetailProps) {
               {params && script?.meta && (
                 <div className="grid gap-1.5">
                   <Label className="text-xs">{t('botsPage.paramsTitle')}</Label>
-                  <div className="rounded-lg border border-border">
+                  <div className="rounded-lg bg-muted/40">
                     <PreviewParamsBar
                       meta={script.meta}
                       params={params}
@@ -488,7 +490,7 @@ function TradeLedger({ trades }: { trades: Array<BotTrade> }) {
 
   return (
     <Table className="text-xs">
-      <TableHeader className="sticky top-0 bg-background">
+      <TableHeader className="sticky top-0 bg-card">
         <TableRow>
           <TableHead className="h-8 text-[10px] uppercase tracking-wide text-muted-foreground">
             {t('botsPage.tradeSide')}
@@ -579,7 +581,7 @@ function EventLog({ events }: { events: Array<BotEvent> }) {
 
   return (
     <Table className="text-xs">
-      <TableHeader className="sticky top-0 bg-background">
+      <TableHeader className="sticky top-0 bg-card">
         <TableRow>
           <TableHead className="h-8 text-[10px] uppercase tracking-wide text-muted-foreground">
             {t('botsPage.eventTime')}

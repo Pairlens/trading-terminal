@@ -49,7 +49,7 @@ export function AssistantApprovalCard({
   )
 
   return (
-    <div className="ai-tile rounded-xl p-3 text-xs">
+    <div className="ai-tile rounded-[10px] p-3 text-xs">
       <div className="flex items-center gap-1.5">
         <ShieldQuestion
           className="size-3.5 shrink-0"
