@@ -236,6 +236,16 @@ export type CopilotMarketDataHandle = {
     pair: string,
     cb: (data: unknown) => void,
   ) => () => void
+  /**
+   * The public tape. Optional because not every venue publishes one and the
+   * CLI's own handle has never carried it — a tool that wants trades checks
+   * for the method rather than assuming a provider shape.
+   */
+  subscribeTrades?: (
+    market: string,
+    pair: string,
+    cb: (data: unknown) => void,
+  ) => () => void
 }
 
 export type CopilotChartSnapshot = {
@@ -273,16 +283,34 @@ export type CopilotToolDeps = {
   getChartSnapshot: () => CopilotChartSnapshot | null
 }
 
-/** Resolve tool args against the current chat context, normalizing the pair. */
+/**
+ * Resolve tool args against the current chat context, normalizing the pair.
+ *
+ * The last resort is a hardcoded BTC-USDT on okx, and that is the one thing
+ * about this function worth knowing: it fires when the model named no pair
+ * AND nothing on screen claims an instrument, and the answer it produces is
+ * about a market the user never mentioned. So it is FLAGGED. Every tool
+ * spreads the target into its result, so `assumed` travels with the numbers
+ * and the model can say "you did not name a pair" instead of presenting a
+ * BTC read as an answer about whatever they were actually looking at.
+ */
 export function resolveTarget(
   deps: CopilotToolDeps,
   args: { market?: string; pair?: string; timeframe?: string },
-): { market: string; pair: string; timeframe: string } {
+): {
+  market: string
+  pair: string
+  timeframe: string
+  /** Set when the pair is the fallback rather than anything real. */
+  assumed?: true
+} {
   const ctx = deps.getContextInfo()
+  const named = args.pair ?? ctx.pair
   return {
     market: (args.market ?? ctx.market ?? 'okx').toLowerCase(),
-    pair: normalizePair(args.pair ?? ctx.pair ?? 'BTC-USDT'),
+    pair: normalizePair(named ?? 'BTC-USDT'),
     timeframe: args.timeframe ?? ctx.timeframe ?? '1h',
+    ...(named ? {} : { assumed: true as const }),
   }
 }
 

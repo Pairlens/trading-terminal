@@ -2359,6 +2359,7 @@
     "goToPlugins": "플러그인 스토어 열기",
     "suggest": {
       "chart": "{{pair}} 차트를 분석해 줘",
+      "predictionEvent": "이 이벤트 분석",
       "discovery": "거래할 만한 것을 찾아 줘",
       "workflows": "워크플로우를 만들어 줘",
       "notifications": "알림을 설정해 줘",

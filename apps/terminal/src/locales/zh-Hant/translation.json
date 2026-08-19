@@ -2359,6 +2359,7 @@
     "goToPlugins": "開啟外掛商店",
     "suggest": {
       "chart": "分析 {{pair}} 的圖表",
+      "predictionEvent": "分析此事件",
       "discovery": "幫我找點可以交易的標的",
       "workflows": "建立一個工作流程",
       "notifications": "設定一個提醒",

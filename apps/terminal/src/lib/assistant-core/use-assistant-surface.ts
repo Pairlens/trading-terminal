@@ -41,6 +41,7 @@ export function useAssistantSurface(
       getPriority: () =>
         latest.current.getPriority?.() ?? DEFAULT_SURFACE_PRIORITY,
       getContext: () => latest.current.getContext?.() ?? null,
+      getFocus: () => latest.current.getFocus?.() ?? null,
       getSuggestion: () => latest.current.getSuggestion?.() ?? null,
       getActions: () => latest.current.getActions?.() ?? [],
     })

@@ -2359,6 +2359,7 @@
     "goToPlugins": "Plugin Store öffnen",
     "suggest": {
       "chart": "Analysiere den Chart von {{pair}}",
+      "predictionEvent": "Dieses Ereignis lesen",
       "discovery": "Finde mir etwas zum Handeln",
       "workflows": "Baue einen Workflow",
       "notifications": "Richte einen Alert ein",

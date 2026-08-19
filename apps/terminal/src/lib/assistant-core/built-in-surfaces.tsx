@@ -12,16 +12,28 @@
 // this floor already names the workflow, bot, alert or script on screen
 // before any page-specific surface has a chance to mount.
 //
+// The instrument routes are read the same way. `/{class}/{venue}/{id}`
+// carries the asset class, the tape and the id in the address itself, so
+// this floor names the exact thing being charted on every one of the five
+// classes without any of them cooperating — and, just as importantly, it
+// is what the market tools DEFAULT TO. Without it a board whose chart is
+// not a candle chart (a prediction event, whose chart is a probability
+// chart) left the tools with no instrument at all, and their fallback
+// answered about BTC-USDT on okx.
+//
 // Anything richer than this a page or pane publishes for itself with
 // `useAssistantSurface`.
 
 import { useSyncExternalStore } from 'react'
 import { useLocation } from '@tanstack/react-router'
 
+import { parseMarketRefPath } from '@pairlens/shared/market-ref'
+
 import { CHART_SERVICE_NAME } from './chart-service'
 import { useAssistantSurface } from './use-assistant-surface'
+import type { MarketRef } from '@pairlens/shared/market-ref'
 import type { ChartServiceHandle } from './chart-service'
-import type { AssistantSuggestion } from './types'
+import type { AssistantSuggestion, AssistantSurfaceFocus } from './types'
 import { useServiceRegistry } from '@/lib/service-registry-context'
 import { TERMINAL_PAGES, pageForPath } from '@/lib/routing/pages'
 
@@ -37,11 +49,31 @@ import { TERMINAL_PAGES, pageForPath } from '@/lib/routing/pages'
  * Lowest rank of anything mounted: a page that describes itself always
  * knows more than its URL does.
  */
+/** Model-facing asset-class names. The i18n labels are for humans. */
+const CLASS_NAMES: Record<MarketRef['cls'], string> = {
+  spot: 'spot crypto',
+  perp: 'perpetual futures',
+  dex: 'on-chain DEX',
+  stocks: 'US equities',
+  prediction: 'prediction market',
+}
+
 function RouteSurface() {
   const { pathname, search, searchStr } = useLocation()
   const page = pageForPath(pathname)
   const entry = page ? TERMINAL_PAGES[page] : null
   const href = `${pathname}${searchStr}`
+
+  // The instrument routes are not in the page table — they are not pages,
+  // they are addresses of one instrument each — so they are parsed rather
+  // than looked up. `?o=` is read alongside, because on a prediction event
+  // it names the leg the book, the tape and the ticket are pointed at.
+  const ref = page ? null : parseMarketRefPath(pathname)
+  const outcome =
+    typeof search === 'object' && search !== null
+      ? (search as Record<string, unknown>)['o']
+      : undefined
+  const selectedLeg = typeof outcome === 'string' ? outcome : null
 
   const target =
     entry?.targetParam && typeof search === 'object' && search !== null
@@ -54,6 +86,21 @@ function RouteSurface() {
     getPriority: () => -100,
     revision: href,
     getContext: () => {
+      if (ref) {
+        const leg = selectedLeg
+          ? ` The selected outcome is "${selectedLeg}" — that is the leg with a book, a tape and a ticket.`
+          : ''
+        return {
+          summary: `The user is on the ${CLASS_NAMES[ref.cls]} terminal for "${ref.id}" on ${ref.market} (${href}).${leg}`,
+          detail: {
+            url: href,
+            assetClass: ref.cls,
+            venue: ref.market,
+            instrument: ref.id,
+            ...(selectedLeg ? { selectedOutcome: selectedLeg } : {}),
+          },
+        }
+      }
       if (!entry) return { summary: `The user is at ${href}.` }
       const naming =
         targetId && entry.targetNoun
@@ -70,6 +117,12 @@ function RouteSurface() {
         },
       }
     },
+    // The floor under every instrument route. A prediction desk or a chart
+    // pane outranks it and names something more precise; with neither
+    // mounted this is still a real venue and a real id, which is the whole
+    // difference between reading the market the user is on and guessing.
+    getFocus: (): AssistantSurfaceFocus | null =>
+      ref ? { market: ref.market, pair: selectedLeg ?? ref.id } : null,
     getSuggestion: (): AssistantSuggestion | null =>
       entry ? { key: `assistantDock.suggest.${entry.suggestion}` } : null,
   })
@@ -117,6 +170,17 @@ function ChartSurface() {
           : undefined,
       }
     },
+    // A mounted candle chart IS the instrument, so it outranks the address
+    // it sits on: the address of a prediction event names the question,
+    // and only the chart knows which leg is being streamed.
+    getFocus: (): AssistantSurfaceFocus | null =>
+      chart
+        ? {
+            market: chart.market,
+            pair: chart.pair,
+            timeframe: chart.timeframe,
+          }
+        : null,
     getSuggestion: (): AssistantSuggestion | null =>
       chart
         ? {

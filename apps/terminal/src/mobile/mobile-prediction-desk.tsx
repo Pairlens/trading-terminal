@@ -23,6 +23,7 @@ import type { ReactNode } from 'react'
 import { PredictionDeskProvider } from '@/lib/predictions/desk-context'
 import { useChartConfig } from '@/lib/chart-terminal-context'
 import { usePredictionDeskState } from '@/hooks/use-prediction-desk'
+import { PredictionAssistantSurface } from '@/components/predictions/prediction-assistant-surface'
 
 export function MobilePredictionDesk({
   eventKey,
@@ -79,5 +80,12 @@ function Desk({
     onSelectOutcome(resolved)
   }, [resolved, selectedKey, onSelectOutcome])
 
-  return <PredictionDeskProvider desk={desk}>{children}</PredictionDeskProvider>
+  // The phone renders no orb, but its Assistant tab is the same conversation
+  // against the same registry — so the event has to be published here too.
+  return (
+    <PredictionDeskProvider desk={desk}>
+      <PredictionAssistantSurface />
+      {children}
+    </PredictionDeskProvider>
+  )
 }

@@ -2359,6 +2359,7 @@
     "goToPlugins": "Eklenti Mağazası'nı aç",
     "suggest": {
       "chart": "{{pair}} grafiğini analiz et",
+      "predictionEvent": "Bu olayı incele",
       "discovery": "Bana işlem yapacak bir şey bul",
       "workflows": "Bir iş akışı kur",
       "notifications": "Bir uyarı ayarla",

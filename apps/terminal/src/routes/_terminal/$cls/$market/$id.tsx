@@ -52,6 +52,7 @@ import {
 } from '@/lib/chart-terminal-context'
 import { ActivePairProvider, useActivePair } from '@/lib/active-pair-context'
 import { PredictionDeskProvider } from '@/lib/predictions/desk-context'
+import { PredictionAssistantSurface } from '@/components/predictions/prediction-assistant-surface'
 import { usePredictionDeskState } from '@/hooks/use-prediction-desk'
 import { ActiveWalletProvider } from '@/lib/active-wallet-context'
 import { useCredentialsStore } from '@/stores/credentials-store'
@@ -306,6 +307,9 @@ function PredictionTerminalPage({
 
   return (
     <PredictionDeskProvider desk={desk}>
+      {/* Inside the desk, outside the panes: the assistant has to see the
+          event whether or not any particular pane is on the board. */}
+      <PredictionAssistantSurface />
       <ActivePairProvider
         initial={{ pairKey: activePairKey, market: marketRef.market }}
       >

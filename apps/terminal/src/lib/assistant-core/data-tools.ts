@@ -38,6 +38,8 @@ import type {
   InsiderTransaction,
   LiquidationClustersResponse,
   LiquidationsUnavailableResponse,
+  MarketSessionCalendar,
+  MarketSessionClock,
   NewListingsResponse,
   OpenInterestEntry,
   OpenInterestResponse,
@@ -66,7 +68,8 @@ import {
   summarizeInsiderActivity,
 } from '@/lib/equities/insider-activity'
 import { getCountrySetting } from '@/lib/region-settings'
-import { futuresPluginsFor } from '@/lib/venues/venue-plugins'
+import { futuresPluginsFor, venuePluginsFor } from '@/lib/venues/venue-plugins'
+import { resolveSessionState } from '@/lib/equities/session'
 
 // ── Caps ─────────────────────────────────────────────────────────────
 //
@@ -709,6 +712,73 @@ export function buildDataTools(deps: AssistantDeps): ToolSet {
       },
     }),
 
+    get_market_session: tool({
+      description:
+        'Where the US equity trading day is right now: open, pre-market, after-hours or closed, with the venue\u2019s own clock, the next open and the next close. Ask it before answering anything about a stock\u2019s price action or before preparing an equity order: outside regular hours a market order is refused and only limit orders route.',
+      inputSchema: z.object({}),
+      execute: async () => {
+        const venue = venuePluginsFor(
+          activePlugins(),
+          'market-data:session',
+          'stocks',
+        )[0]
+        if (!venue) {
+          return {
+            unavailable: 'no_equity_venue',
+            hint: 'No equities connector (Alpaca) is installed and active, so there is no trading calendar to read.',
+          }
+        }
+
+        try {
+          // Both halves, because neither answers alone: the clock says open or
+          // shut and the calendar says which extended-hours window a "closed"
+          // actually is. The panes resolve them together and so does this.
+          const [clock, calendar] = await Promise.all([
+            venue.plugin.execute({
+              capability: 'market-data:session',
+              params: { action: 'clock' },
+              context: venueContext(venue.market),
+            }) as Promise<MarketSessionClock>,
+            venue.plugin.execute({
+              capability: 'market-data:session',
+              params: { action: 'calendar' },
+              context: venueContext(venue.market),
+            }) as Promise<MarketSessionCalendar>,
+          ])
+
+          const state = resolveSessionState({
+            // The VENUE'S clock, never the laptop's: a machine running five
+            // minutes fast would otherwise be told the market is already shut.
+            nowMs: clock.nowMs,
+            clock,
+            days: calendar?.days ?? [],
+          })
+
+          return {
+            venue: venue.market,
+            phase: state.phase,
+            isOpen: clock.isOpen,
+            venueTime: isoOf(clock.nowMs),
+            timeZone: calendar?.timeZone ?? clock.timeZone,
+            nextOpen: isoOf(clock.nextOpenMs),
+            nextClose: isoOf(clock.nextCloseMs),
+            note: "'open' is regular trading hours only. In pre-market or after-hours, orders must be limit orders and carry the extended-hours flag; when closed, nothing routes until the next open.",
+          }
+        } catch (error) {
+          const failure = describeVenueFailure(error)
+          return {
+            venue: venue.market,
+            ...(failure.desktopOnly
+              ? {
+                  unavailable: 'desktop_only',
+                  hint: 'This venue refuses browser origins; the trading calendar is readable in the desktop app.',
+                }
+              : { error: failure.error }),
+          }
+        }
+      },
+    }),
+
     get_funding_rates: tool({
       description:
         'Current funding rates and open interest across the active perpetual venues, for named contracts or the whole board. This is the read behind carry, basis and "who is paying whom" questions. A venue that refuses is reported as refusing, never as zero.',
@@ -1095,6 +1165,7 @@ export const DATA_TOOL_LABELS = {
   get_insider_activity: ['read', 'the insider filings'],
   get_new_listings: ['read', 'the new listings'],
   get_liquidation_clusters: ['read', 'the liquidation clusters'],
+  get_market_session: ['check', 'the trading session'],
   get_funding_rates: ['read', 'funding and open interest'],
   get_pool_stats: ['read', 'the pool stats'],
   get_bridge_quote: ['read', 'a bridge quote'],

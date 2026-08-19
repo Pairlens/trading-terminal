@@ -1,12 +1,12 @@
 ---
 title: Assistant tool reference
-description: All 105 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
+description: All 110 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
 group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 17 AUG 2026
-readTime: 9 min read
+updated: 19 AUG 2026
+readTime: 10 min read
 ---
 
 The assistant's agentic loop runs in the terminal, not on a server. These are
@@ -16,7 +16,7 @@ your connectors already hold or your credentials can reach.
 Tool calls are visible in the chat as labelled chips, so you can always see what
 was read and in what order. A turn runs up to 28 steps before it stops.
 
-Two rules govern which of the 105 are actually on the table for a given step, and
+Two rules govern which of the 110 are actually on the table for a given step, and
 both are re-read on every step rather than fixed when the turn started:
 
 - The 27 chart tools that change something are offered only while a chart is
@@ -27,10 +27,15 @@ both are re-read on every step rather than fixed when the turn started:
 
 ## Market data
 
-Nine tools over live venue data. All of them default to the on-screen pair when
-you omit arguments, which is what makes "is this overbought" a complete question,
-and none of them are limited to it: any instrument on any connected venue is one
-call away.
+Ten tools over live venue data. All of them default to the instrument on screen
+when you omit arguments, which is what makes "is this overbought" a complete
+question, and none of them are limited to it: any instrument on any connected
+venue is one call away.
+
+What "the instrument on screen" resolves to is decided by the mounted surface
+that ranks highest, not by the chart. That distinction is the whole reason a
+prediction board works: it has no candle chart, and its desk names the outcome
+the order ticket is pointed at.
 
 | Tool                  | What it does                                                                                |
 | --------------------- | ------------------------------------------------------------------------------------------- |
@@ -39,6 +44,7 @@ call away.
 | `get_ticker`          | Current price and 24h stats                                                                 |
 | `get_signals`         | The deterministic strategy signal (breakout, EMA pullback, mean reversion) and the regime   |
 | `get_orderbook`       | Top of book with spread and bid/ask imbalance                                               |
+| `get_recent_trades`   | The live tape: recent prints with size, side and time, plus the buy/sell split              |
 | `get_multi_timeframe` | The same pair across several timeframes at once, for confluence                             |
 | `compare_pairs`       | Percentage change and trend across several pairs, for relative strength                     |
 | `list_markets`        | Which venues this session has, with asset classes, timeframes, and capabilities             |
@@ -72,10 +78,39 @@ search carries a source count under it that opens into the list of pages. The
 rest of this family reads from the App Server and is unavailable in
 [standalone mode](/docs/self-hosting#standalone-mode).
 
+## Prediction markets
+
+A prediction market publishes its prices on the **event**, as an outcome ladder.
+Nothing else in this reference can reach one: candles and order books address a
+single outcome, and an event has neither. These two tools are how the assistant
+sees an event at all.
+
+| Tool                       | What it does                                                                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `get_prediction_event`     | One event in full: question, category, resolution date and criteria, volume, liquidity, and every outcome with its probability, bid, ask and 24h move |
+| `search_prediction_events` | Search events across every active venue by text or category, with each one's leading outcomes                                                         |
+
+On a race, `get_prediction_event` also returns **what the whole field costs**:
+the sum of every Yes price, and how far that sits from a fair 100%. Buying every
+answer of a field priced at 103.4% is a guaranteed 3.4% loss. A binary market
+gets no such number, because its two legs sum to a dollar by construction and
+reporting that as a reading would invent an edge.
+
+Prices come back as probabilities in collateral units, 0 to 1, with the
+percentage alongside. Every outcome carries the `pairKey` an order takes, which
+is what makes "buy me some of that one" actionable: an event id is not tradeable,
+an outcome is.
+
+Both tools ask each venue directly, so a venue that refuses is reported as
+refusing. Kalshi needing the desktop app is a fact about your build, not an
+event that does not exist.
+
+Open one with `open_instrument`, described under [Terminal](#terminal).
+
 ## Calendars, filings and market structure
 
-Ten reads over the data layers behind the calendar, fundamentals, funding,
-liquidation, pool and bridge panes. Each is one call, so "what is on the
+Eleven reads over the data layers behind the calendar, fundamentals, session,
+funding, liquidation, pool and bridge panes. Each is one call, so "what is on the
 calendar this week" no longer means finding the pane first.
 
 The five below go through the App Server.
@@ -88,16 +123,17 @@ The five below go through the App Server.
 | `get_ipo_calendar`         | Upcoming listings with expected date, exchange and price range                                    |
 | `get_insider_activity`     | Recent Form 4 filings, with a buy against sell summary over the span actually on file             |
 
-These five go to your connectors instead, so they keep working on a build with
+These six go to your connectors instead, so they keep working on a build with
 no App Server. `get_new_listings` uses both and degrades to the on-chain half.
 
-| Tool                       | What it does                                                                           |
-| -------------------------- | -------------------------------------------------------------------------------------- |
-| `get_funding_rates`        | Funding and open interest across every active perpetual venue, or named contracts      |
-| `get_liquidation_clusters` | Forced liquidations collapsed onto price buckets, long and short sides kept apart      |
-| `get_pool_stats`           | One pool's price, 1h and 24h moves, volume, value locked, fee tier and who measured it |
-| `get_new_listings`         | Pairs that started trading recently: venue listings merged with newly created pools    |
-| `get_bridge_quote`         | Prices a cross-chain transfer: what lands, the guaranteed floor, fee, gas and ETA      |
+| Tool                       | What it does                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `get_funding_rates`        | Funding and open interest across every active perpetual venue, or named contracts                     |
+| `get_liquidation_clusters` | Forced liquidations collapsed onto price buckets, long and short sides kept apart                     |
+| `get_pool_stats`           | One pool's price, 1h and 24h moves, volume, value locked, fee tier and who measured it                |
+| `get_new_listings`         | Pairs that started trading recently: venue listings merged with newly created pools                   |
+| `get_bridge_quote`         | Prices a cross-chain transfer: what lands, the guaranteed floor, fee, gas and ETA                     |
+| `get_market_session`       | Where the US equity trading day is: open, pre-market, after-hours or closed, on the venue's own clock |
 
 **`get_bridge_quote` prices, it never sends.** There is no execution tool. A
 transfer is signed by you in the Bridge pane, and the assistant points you there.
@@ -178,11 +214,12 @@ through `update_alert_flow` below.
 
 ## Terminal
 
-| Tool           | What it does                                                                                                                                         |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `navigate_to`  | Open a page, optionally on one record: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store        |
-| `get_screen`   | Read what is mounted right now, what each surface is showing (with real record ids), which surface actions are available, and what can be pointed at |
-| `highlight_ui` | Glow a pane, the script editor or the whole terminal frame for six seconds, to show you where something just happened                                |
+| Tool              | What it does                                                                                                                                         |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `navigate_to`     | Open a page, optionally on one record: Discovery, Accounts, Bots, Indicators, Workflows, Notifications, the Plugin Store, the Workspace Store        |
+| `open_instrument` | Put any instrument on screen by class, venue and id: a spot pair, a perp, an on-chain token, a stock, or a prediction event                          |
+| `get_screen`      | Read what is mounted right now, what each surface is showing (with real record ids), which surface actions are available, and what can be pointed at |
+| `highlight_ui`    | Glow a pane, the script editor or the whole terminal frame for six seconds, to show you where something just happened                                |
 
 `navigate_to` takes a page id from a closed list, not a free path, so it cannot
 send you to a route that does not exist. It also takes a `target`: a workflow
@@ -296,7 +333,7 @@ be gated behind the terminal lock.
 
 ## Surface actions
 
-The 105 above are the fixed set. Anything mounted can publish tools of its own,
+The 110 above are the fixed set. Anything mounted can publish tools of its own,
 and they exist for exactly as long as it is on screen.
 
 The workspace board is the built-in example. It publishes

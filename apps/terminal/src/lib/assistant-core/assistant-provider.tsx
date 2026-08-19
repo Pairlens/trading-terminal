@@ -70,15 +70,16 @@ export function useAssistantDeps(options?: {
     [services],
   )
 
-  const getFocus = useCallback((): AssistantFocus => {
-    const chart = getChart()
-    if (!chart) return {}
-    return {
-      market: chart.market,
-      pair: chart.pair,
-      timeframe: chart.timeframe,
-    }
-  }, [getChart])
+  // Asked of the registry, not of the chart. The chart publishes its own
+  // focus like every other surface now, so the ranking decides — which is
+  // the only way a board whose chart is not a candle chart still points
+  // the market tools at something real. With nothing mounted that claims
+  // an instrument this is {}, and the tools say so rather than reading a
+  // pair the user never asked about.
+  const getFocus = useCallback(
+    (): AssistantFocus => registry.getFocus() ?? {},
+    [registry],
+  )
 
   return useMemo(
     () => ({
