@@ -27,7 +27,7 @@ connections, your sockets or your watchlist.
 | **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair, bringing its venue with it |
 | **Trade**     | Order entry, with the order book above it                                                                          |
 | **Chart**     | The chart on its own, with the drawing toolbar                                                                     |
-| **Assistant** | The full assistant, same 105 tools and same confirm cards as the desktop                                           |
+| **Assistant** | The full assistant, same 110 tools and same confirm cards as the desktop                                           |
 | **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L                                          |
 
 The chart is underneath all five and never unmounts. The other four are bottom

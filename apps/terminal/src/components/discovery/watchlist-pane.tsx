@@ -728,12 +728,17 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
         base={inst.base}
         quote={inst.quote}
         assetClass={inst.assetClass}
+        market={market}
         size="sm"
       />
       <div className="min-w-0 flex-1">
+        {/* The chain rides along here: a watchlist is the one list that holds
+            the same ticker on four chains at once, and two rows both reading
+            `WETH-USDC` name different tokens. */}
         <PairSymbol
           symbol={inst.symbol}
           assetClass={inst.assetClass}
+          market={market}
           className="text-sm"
         />
         <p className="truncate text-xs text-muted-foreground">{inst.name}</p>

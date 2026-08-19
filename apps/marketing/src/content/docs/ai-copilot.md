@@ -1,11 +1,11 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 105 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 12 min read
+readTime: 13 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -212,7 +212,7 @@ against Groq, OpenAI, Anthropic or OpenRouter.
 
 ## What it can do
 
-105 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
+110 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
 chart, pull two more timeframes, write a strategy, backtest it and deploy it
 without coming back to you in between.
 
@@ -267,7 +267,7 @@ are learning why a setup is a setup.
 percentages, one sentence per insight. Best when you already know what you are
 looking at and want numbers.
 
-The persona changes how it writes, not what it can do. All 105 tools are
+The persona changes how it writes, not what it can do. All 110 tools are
 available in every mode, and the safety rules below hold identically in all
 three.
 
@@ -290,6 +290,26 @@ are on, because that decides what every pane on it is listing.
 That means "tighten the stop on this" needs no follow-up question. The assistant
 already has the id, so it reads the record with `get_workflow`, `get_bot`,
 `get_alert` or `get_script` and gets on with it.
+
+An instrument board reports the instrument, whichever of the five asset classes
+it belongs to, because the address of an instrument already names its class, its
+venue and its id. That is the floor: even a board with nothing else mounted can
+say "this is AAPL on alpaca" rather than "this is a URL".
+
+A **prediction event** goes further, and it has to. Its board is the one that
+has no candle chart on it, because a multi-outcome probability chart replaces
+the price chart. So the event desk publishes the event itself: the question, how
+many answers it has, when it resolves, the leading runners with their
+probabilities, what the whole field costs, and the outcome your order ticket is
+currently pointed at. Ask "which of these is worth a look" and the assistant is
+reading the same ladder you are, priced the same way. If it wants the rest of a
+128-runner field it calls
+[`get_prediction_event`](/docs/copilot-tools#prediction-markets).
+
+That publication also decides what "this" means for every market tool. On a
+prediction board the outcome your ticket is pointed at is what `get_ticker`,
+`get_orderbook` and `place_order` default to, because an event has no book and a
+leg does.
 
 Each of those records lives in the address too. `/workflows?workflow=…`,
 `/bots?bot=…`, `/notifications?alert=…`, `/indicators?script=…` and
@@ -394,7 +414,7 @@ and never sees your exchange credentials. See
 
 ## Related
 
-- [Assistant tool reference](/docs/copilot-tools) for all 105 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 110 tools
 - [Research reports](/docs/research-reports) for the long-form sourced write-up
 - [AI providers](/docs/ai-providers) for keys, plans, and credits
 - [Risk guardrails](/docs/risk-guardrails) for the limits the AI cannot move

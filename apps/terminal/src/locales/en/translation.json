@@ -1300,6 +1300,7 @@
     "goToPlugins": "Open the Plugin Store",
     "suggest": {
       "chart": "Analyze the chart of {{pair}}",
+      "predictionEvent": "Read this event",
       "discovery": "Find me something to trade",
       "workflows": "Build a workflow",
       "notifications": "Set up an alert",

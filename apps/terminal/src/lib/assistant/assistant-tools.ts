@@ -45,6 +45,7 @@ import {
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
+import { normalizePairKey } from '@/lib/pairs'
 import { runBacktest } from '@/lib/indicators/backtest'
 import {
   resolveRequestSeries,
@@ -276,9 +277,14 @@ async function validateFiles(
 /**
  * Venue pairs are upper case. A DEX pool id carries a raw token address, and
  * upper-casing one is how you hand a connector a market it cannot find.
+ *
+ * `normalizePairKey` owns that rule for the whole terminal. The local copy
+ * this replaces tested `startsWith('0x')`, which is every EVM address and no
+ * Solana mint: a base58 mint has no prefix, so it was upper-cased into a mint
+ * that does not exist.
  */
 function normalizePair(pair: string): string {
-  return pair.startsWith('0x') ? pair : pair.toUpperCase()
+  return normalizePairKey(pair)
 }
 
 /** BASE-QUOTE, one separator. Loose enough for `0xabc…-USDC`. */

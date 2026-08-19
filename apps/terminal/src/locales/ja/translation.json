@@ -2360,6 +2360,7 @@
     "goToPlugins": "プラグインストアを開く",
     "suggest": {
       "chart": "{{pair}} のチャートを分析して",
+      "predictionEvent": "このイベントを分析",
       "discovery": "取引できそうな銘柄を探して",
       "workflows": "ワークフローを作って",
       "notifications": "アラートを設定して",

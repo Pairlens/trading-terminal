@@ -48,6 +48,7 @@ import type { NotificationStepTypeDefinition } from '@pairlens/notification-engi
 import type { DesiredEdge, DesiredStep, GraphDraftAccess } from './graph-apply'
 import type { SimpleAlertSpec } from '@pairlens/notification-engine/simple-alerts'
 import type { AssistantMarketDataHandle } from './assistant-tools'
+import { normalizePairKey } from '@/lib/pairs'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useWorkflowStore } from '@/stores/workflow-store'
 
@@ -487,9 +488,12 @@ function validateRuleDraft(ruleId: string) {
   }
 }
 
-/** A pair the connectors will recognise. DEX ids carry a raw address. */
+/**
+ * A pair the connectors will recognise. DEX ids carry a raw address, which
+ * `normalizePairKey` knows not to upper-case, on Solana as well as on EVM.
+ */
 function normalizePair(pair: string): string {
-  return pair.startsWith('0x') ? pair : pair.toUpperCase()
+  return normalizePairKey(pair)
 }
 
 function checkTarget(

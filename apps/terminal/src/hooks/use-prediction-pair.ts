@@ -17,8 +17,12 @@
  */
 import { useMemo } from 'react'
 
+import { isTokenAddress } from '@pairlens/shared/market-ref'
+
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { splitDexPairKey, tokenTicker } from '@/lib/dex/token-label'
 import { predictionTicker } from '@/lib/predictions/event-labels'
+import { useDisplayTokenByAddress } from '@/stores/token-directory-store'
 import {
   isPredictionEventEntry,
   usePredictionOutcome,
@@ -33,20 +37,30 @@ export { usePredictionOutcome }
  * a component: the chart's watermark (painted into WebGL), the copilot's
  * heading, an aria-label.
  *
- * A pair key passes through untouched. A pinned prediction outcome becomes
+ * A CEX pair key passes through untouched. A pinned prediction outcome becomes
  * `Gavin Newsom · Yes`, because the alternative is a hundred characters of
- * event slug drawn across the chart at 48px.
+ * event slug drawn across the chart at 48px. A DEX key becomes `USDT-USDC`,
+ * for the same reason in the other direction: its base leg is a contract
+ * address, and the watermark was painting forty hex characters of it.
  */
 export function usePairDisplayLabel(pairKey: string): string {
   const pinned = usePredictionPin(pairKey)
+  const [rawBase, quote] = splitDexPairKey(pairKey)
+  const token = useDisplayTokenByAddress(
+    isTokenAddress(rawBase) ? rawBase : undefined,
+  )
   return useMemo(() => {
-    if (!pinned) return pairKey
+    if (!pinned) {
+      if (!isTokenAddress(rawBase)) return pairKey
+      const { label } = tokenTicker(rawBase, token)
+      return quote ? `${label}-${quote}` : label
+    }
     // An event is already a sentence; appending its favourite would make the
     // watermark a paragraph and would go stale the moment the field moved.
     if (isPredictionEventEntry(pinned)) return pinned.title || pairKey
     const { subject, outcome } = predictionTicker(pinned, pairKey)
     return outcome ? `${subject} · ${outcome}` : subject
-  }, [pinned, pairKey])
+  }, [pinned, pairKey, rawBase, quote, token])
 }
 
 export function useIsPredictionPair(pairKey: string, market?: string): boolean {

@@ -2360,6 +2360,7 @@
     "goToPlugins": "Apri il Plugin Store",
     "suggest": {
       "chart": "Analizza il grafico di {{pair}}",
+      "predictionEvent": "Analizza questo evento",
       "discovery": "Trovami qualcosa su cui operare",
       "workflows": "Crea un workflow",
       "notifications": "Imposta un avviso",

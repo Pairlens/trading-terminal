@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 19 min read
+readTime: 20 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -532,6 +532,30 @@ Prediction positions are their own panel rather than a tab in
 [Positions](/docs/positions-and-portfolio), because a contract that expires
 against a real-world event has different columns than a spot position with a
 mark price and an unrealized P&L.
+
+## Ask the assistant about the field
+
+The [assistant](/docs/agent-interfaces) reads prediction markets the same way it
+reads a chart. On an event board it already knows the question you have open, the
+outcome your ticket is pointed at, and the price of each answer, so "which of
+these is the market actually favouring" is a complete question with nothing
+pasted in.
+
+Two tools sit behind that. `get_prediction_event` pulls a whole event: every
+outcome with its probability, bid, ask and 24h move, the resolution criteria in
+the venue's own words, and on a race the sum of every Yes price. That last number
+is the one worth asking for out loud, because it says whether the field is priced
+over or under a fair 100%. `search_prediction_events` finds an event across both
+venues by text or category, so "is there a market on the next Fed cut" is
+answered rather than delegated.
+
+The assistant prepares prediction orders like any other: `place_order` returns a
+proposal on a confirm card, priced in collateral units, and it is yours to
+approve or throw away. It never places one.
+
+A venue that refuses is reported as refusing. Ask about a Kalshi event from a
+browser and you are told Kalshi needs the desktop app, rather than told the event
+does not exist.
 
 ## Guardrails still apply
 

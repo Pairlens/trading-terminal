@@ -253,3 +253,83 @@ describe('screen context block', () => {
     expect(block.length).toBeLessThan(2000)
   })
 })
+
+// ── What "this pair" means ───────────────────────────────────────────
+//
+// The focus is what the market tools default their arguments to when the
+// user names no instrument, so getting it wrong is not a missing answer,
+// it is a confident answer about a different market. Before surfaces
+// published one, a board with no candle chart on it (a prediction event,
+// whose chart is a probability chart) left the tools with nothing and
+// they fell back to BTC-USDT on okx.
+
+describe('registry focus', () => {
+  test('the leading surface names the instrument', () => {
+    const registry = new AssistantSurfaceRegistry()
+    registry.register({
+      id: 'route',
+      getPriority: () => -100,
+      getFocus: () => ({ market: 'polymarket', pair: '30829' }),
+    })
+    registry.register({
+      id: 'prediction-desk',
+      getPriority: () => 120,
+      getFocus: () => ({ market: 'polymarket', pair: 'AOC-YES' }),
+    })
+
+    // The address names the EVENT and the desk names the LEG. Only the leg
+    // has a book, a tape and a ticket, so only the leg is a tool argument.
+    expect(registry.getFocus()).toEqual({
+      market: 'polymarket',
+      pair: 'AOC-YES',
+    })
+  })
+
+  test('falls through a surface that names nothing', () => {
+    const registry = new AssistantSurfaceRegistry()
+    registry.register({
+      id: 'route',
+      getPriority: () => -100,
+      getFocus: () => ({ market: 'okx', pair: 'BTC-USDT' }),
+    })
+    registry.register({
+      id: 'page:discovery',
+      getPriority: () => 30,
+      getContext: () => ({ summary: 'discovery' }),
+    })
+    // A half-built surface that returns an empty object must not blank out
+    // the address underneath it.
+    registry.register({
+      id: 'half-built',
+      getPriority: () => 90,
+      getFocus: () => ({}),
+    })
+
+    expect(registry.getFocus()).toEqual({ market: 'okx', pair: 'BTC-USDT' })
+  })
+
+  test('a throwing surface does not take the focus down with it', () => {
+    const registry = new AssistantSurfaceRegistry()
+    registry.register({
+      id: 'broken',
+      getPriority: () => 100,
+      getFocus: () => {
+        throw new Error('boom')
+      },
+    })
+    registry.register({
+      id: 'route',
+      getPriority: () => -100,
+      getFocus: () => ({ market: 'kalshi', pair: 'KXPRES-28' }),
+    })
+
+    expect(registry.getFocus()).toEqual({
+      market: 'kalshi',
+      pair: 'KXPRES-28',
+    })
+  })
+
+  test('nothing mounted means no focus, not a default pair', () => {
+    expect(new AssistantSurfaceRegistry().getFocus()).toBeNull()
+  })
+})

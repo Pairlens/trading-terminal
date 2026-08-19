@@ -2434,6 +2434,7 @@
     "goToPlugins": "Otwórz Plugin Store",
     "suggest": {
       "chart": "Przeanalizuj wykres {{pair}}",
+      "predictionEvent": "Przeanalizuj to wydarzenie",
       "discovery": "Znajdź mi coś do handlu",
       "workflows": "Zbuduj workflow",
       "notifications": "Ustaw alert",

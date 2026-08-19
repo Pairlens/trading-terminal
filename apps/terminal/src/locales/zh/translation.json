@@ -2360,6 +2360,7 @@
     "goToPlugins": "打开插件商店",
     "suggest": {
       "chart": "分析 {{pair}} 的图表",
+      "predictionEvent": "分析此事件",
       "discovery": "帮我找点可交易的标的",
       "workflows": "搭建一个工作流",
       "notifications": "设置一个提醒",

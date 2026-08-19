@@ -377,5 +377,6 @@ export function toMarketDataHandle(
     getCapabilities: md.getCapabilities,
     fetchHistory: md.fetchHistory,
     subscribeOrderbook: md.subscribeOrderbook,
+    subscribeTrades: md.subscribeTrades,
   }
 }
