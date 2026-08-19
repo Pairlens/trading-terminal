@@ -4344,6 +4344,16 @@
       "open": "開盤",
       "close": "收盤"
     },
+    "orderbook": {
+      "noAsks": "無賣單",
+      "noBids": "無買單",
+      "noAsksPrediction": "目前沒有人掛單賣出這個結果。",
+      "noBidsPrediction": "目前沒有人掛單買入這個結果。",
+      "noOrders": "盤口沒有掛單",
+      "noOrdersBody": "此刻買賣兩側都沒有掛單。",
+      "noOutcomeTitle": "尚未選擇結果",
+      "noOutcomeBody": "在清單中選擇一個答案即可查看它的盤口。"
+    },
     "sort": {
       "by": "依{{column}}排序",
       "ascending": "已依{{column}}遞增排序",

@@ -4344,6 +4344,16 @@
       "open": "Eröffnung",
       "close": "Schluss"
     },
+    "orderbook": {
+      "noAsks": "Keine Verkäufe",
+      "noBids": "Keine Käufe",
+      "noAsksPrediction": "Niemand bietet dieses Ergebnis zum Verkauf an.",
+      "noBidsPrediction": "Niemand bietet auf dieses Ergebnis.",
+      "noOrders": "Keine offenen Orders",
+      "noOrdersBody": "Auf keiner der beiden Seiten liegt derzeit eine Order.",
+      "noOutcomeTitle": "Kein Ergebnis ausgewählt",
+      "noOutcomeBody": "Wähle eine Antwort in der Leiter, um ihr Orderbuch zu sehen."
+    },
     "sort": {
       "by": "Nach {{column}} sortieren",
       "ascending": "Sortiert nach {{column}}, aufsteigend",

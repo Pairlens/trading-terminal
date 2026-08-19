@@ -5,8 +5,8 @@ group: traders
 parent: market-data
 order: 1
 eyebrow: For traders
-updated: AUG 2026
-readTime: 7 min read
+updated: 19 AUG 2026
+readTime: 8 min read
 ---
 
 The Order Book panel shows resting limit orders on both sides of the market,
@@ -61,6 +61,33 @@ change pair, and it waits for the new venue's first snapshot before measuring,
 so it fits the book you are actually looking at rather than the one you left.
 
 Picking a tick by hand pins it until the pair changes.
+
+**Event contracts get a different ladder.** A contract priced 0 to 1 has no
+decade to walk up, so the general series would happily offer 20¢ and 50¢
+buckets, and grouping a book that spans one dollar into fifty-cent rows is not
+a coarser view of it, it is two rows. A probability gets a fixed ladder
+instead: 1-2-5 from the venue's own tick up to 5¢, and it never reads the
+price. That last part is what keeps a selector on screen for a decided
+contract, where one side of the book is empty and there is no best bid to
+derive a ladder from.
+
+## When a side is empty
+
+On a spot pair a missing side means the feed is broken. On an event contract it
+is ordinary market structure, so the panel says which it is rather than drawing
+a blank half.
+
+Nobody offers to sell a contract that has already been decided, and nobody bids
+for one that has already lost. Polymarket publishes exactly that: a leg trading
+at 99.9¢ has bids and no asks, a leg at 0.1¢ has asks and no bids. The panel
+prints **No asks** or **No bids** in place of the missing ladder, with a line
+saying nobody is quoting that side. When neither side has an order on it, the
+whole panel says so once instead of showing an empty grid under a live header.
+
+There is no complement to fold in, either. A venue's Yes and No books are exact
+mirrors of each other: a 225-contract Yes ask at 21.7¢ _is_ the 225-contract No
+bid at 78.3¢. The liquidity is not hiding on the other ticker, and an empty
+side really is empty.
 
 ## Reading the bars
 

@@ -4344,6 +4344,16 @@
       "open": "Abertura",
       "close": "Fechamento"
     },
+    "orderbook": {
+      "noAsks": "Sem vendas",
+      "noBids": "Sem compras",
+      "noAsksPrediction": "Ninguém está a oferecer este resultado à venda.",
+      "noBidsPrediction": "Ninguém está a licitar por este resultado.",
+      "noOrders": "Sem ordens no livro",
+      "noOrdersBody": "Neste momento não há qualquer ordem em nenhum dos lados.",
+      "noOutcomeTitle": "Nenhum resultado selecionado",
+      "noOutcomeBody": "Escolha uma resposta na escada para ver o seu livro."
+    },
     "sort": {
       "by": "Ordenar por {{column}}",
       "ascending": "Ordenado por {{column}}, crescente",

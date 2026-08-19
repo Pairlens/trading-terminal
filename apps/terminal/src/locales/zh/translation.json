@@ -4344,6 +4344,16 @@
       "open": "开盘",
       "close": "收盘"
     },
+    "orderbook": {
+      "noAsks": "无卖单",
+      "noBids": "无买单",
+      "noAsksPrediction": "目前没有人挂单卖出该结果。",
+      "noBidsPrediction": "目前没有人挂单买入该结果。",
+      "noOrders": "盘口没有挂单",
+      "noOrdersBody": "此刻买卖两侧都没有挂单。",
+      "noOutcomeTitle": "尚未选择结果",
+      "noOutcomeBody": "在列表中选择一个答案即可查看它的盘口。"
+    },
     "sort": {
       "by": "按{{column}}排序",
       "ascending": "已按{{column}}升序排序",

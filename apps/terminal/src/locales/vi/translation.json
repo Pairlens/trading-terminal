@@ -4344,6 +4344,16 @@
       "open": "Mở cửa",
       "close": "Đóng cửa"
     },
+    "orderbook": {
+      "noAsks": "Không có lệnh bán",
+      "noBids": "Không có lệnh mua",
+      "noAsksPrediction": "Không ai chào bán kết quả này.",
+      "noBidsPrediction": "Không ai đặt mua kết quả này.",
+      "noOrders": "Sổ lệnh trống",
+      "noOrdersBody": "Hiện không có lệnh nào ở cả hai bên.",
+      "noOutcomeTitle": "Chưa chọn kết quả",
+      "noOutcomeBody": "Chọn một đáp án trong bảng để xem sổ lệnh của nó."
+    },
     "sort": {
       "by": "Sắp xếp theo {{column}}",
       "ascending": "Đã sắp xếp theo {{column}}, tăng dần",

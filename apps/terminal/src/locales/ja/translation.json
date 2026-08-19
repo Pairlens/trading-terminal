@@ -4344,6 +4344,16 @@
       "open": "始値",
       "close": "終値"
     },
+    "orderbook": {
+      "noAsks": "売り注文なし",
+      "noBids": "買い注文なし",
+      "noAsksPrediction": "この結果を売りに出している人はいません。",
+      "noBidsPrediction": "この結果に買い注文を出している人はいません。",
+      "noOrders": "板に注文がありません",
+      "noOrdersBody": "現在、どちらの側にも注文が残っていません。",
+      "noOutcomeTitle": "結果が未選択です",
+      "noOutcomeBody": "板を見るには一覧から回答を選んでください。"
+    },
     "sort": {
       "by": "{{column}}で並べ替え",
       "ascending": "{{column}}で昇順に並べ替え済み",

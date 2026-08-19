@@ -4344,6 +4344,16 @@
       "open": "Ouverture",
       "close": "Clôture"
     },
+    "orderbook": {
+      "noAsks": "Aucune vente",
+      "noBids": "Aucun achat",
+      "noAsksPrediction": "Personne ne propose de vendre ce résultat.",
+      "noBidsPrediction": "Personne n'enchérit sur ce résultat.",
+      "noOrders": "Aucun ordre en carnet",
+      "noOrdersBody": "Aucun ordre ne repose sur l'un ou l'autre côté pour le moment.",
+      "noOutcomeTitle": "Aucun résultat sélectionné",
+      "noOutcomeBody": "Choisissez une réponse dans l'échelle pour voir son carnet."
+    },
     "sort": {
       "by": "Trier par {{column}}",
       "ascending": "Trié par {{column}}, croissant",
