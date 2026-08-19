@@ -155,9 +155,15 @@ export function RecentTickersMarquee({ current }: { current: MarketRef }) {
   return (
     <div className="flex h-9 shrink-0 items-center gap-1 bg-background px-3 pt-1">
       {/* Leading indicator — pinned, never scrolls, marks the strip as the
-          recently viewed pairs. */}
+          recently viewed pairs. Held off the tape by its own padding: the
+          rule that used to sit here was the last vertical line in the
+          chrome. */}
       <div
-        className="flex h-full shrink-0 items-center border-r border-border/60 px-2.5 text-muted-foreground"
+        // `pl-2` puts this 14px glyph on the same vertical axis as the 16px
+        // pair mark in the bar below (the chip insets its mark by 7px, and
+        // the two icons differ by 2px of width), so the leftmost thing on
+        // each of the two rows lines up.
+        className="flex h-full shrink-0 items-center pl-2 pr-2.5 text-muted-foreground"
         title={t('terminal.recentlyViewed')}
         aria-label={t('terminal.recentlyViewed')}
       >
@@ -230,9 +236,13 @@ const MarqueeChip = memo(function MarqueeChip({
   return (
     <div
       className={cn(
-        'group/chip relative flex h-8 shrink-0 items-center rounded-lg text-xs transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
-        isActive &&
-          '[background-color:color-mix(in_oklch,var(--primary)_10%,transparent)]',
+        // The open pair is marked by a surface, not by a colour. A tinted
+        // chip put the accent on the one thing the trader is already looking
+        // at, next to a bar that spends the accent on exactly one control.
+        // What actually says "this one" is the symbol at full strength while
+        // its neighbours sit muted; the fill only lifts it off the ground.
+        'group/chip relative flex h-8 shrink-0 items-center rounded-[10px] text-xs transition-colors hover:bg-card/60',
+        isActive && 'bg-card hover:bg-card',
       )}
     >
       <button
