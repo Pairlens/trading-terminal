@@ -24,7 +24,6 @@ import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Loader2, Unplug } from 'lucide-react'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import {
   formatInstrumentRef,
@@ -36,6 +35,7 @@ import type { MarketRef } from '@pairlens/shared/market-ref'
 
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { track } from '@/lib/analytics-events'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { TerminalTopBar } from '@/components/terminal/terminal-top-bar'
 import { RecentTickersMarquee } from '@/components/terminal/recent-tickers-marquee'
 import { LayoutShell } from '@/components/layout/layout-shell'
@@ -91,14 +91,14 @@ function RouteMessage({
   action?: React.ReactNode
 }) {
   return (
-    <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <main className={PAGE_FRAME}>
       <div className="flex flex-1 flex-col items-center justify-center gap-3 text-muted-foreground">
         <Unplug className="size-10 opacity-40" />
         <p className="text-sm font-medium">{title}</p>
         <p className="max-w-xs text-center text-xs opacity-70">{description}</p>
         {action}
       </div>
-    </SidebarInset>
+    </main>
   )
 }
 
@@ -115,11 +115,11 @@ function ChartTerminalPage() {
   if (mdStatus !== 'connected' || markets.length === 0) {
     if (!pluginsReady) {
       return (
-        <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <main className={PAGE_FRAME}>
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
           </div>
-        </SidebarInset>
+        </main>
       )
     }
 
@@ -445,7 +445,7 @@ function ChartTerminalBody({
   }, [marketRef.id, marketRef.market, marketRef.cls])
 
   return (
-    <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+    <main className={PAGE_FRAME}>
       {/* The bar first, the recents under it. Every screen in the terminal
           opens with the same 44px row, so moving between Discovery and a
           trade page never shifts the controls down by a strip of tickers. */}
@@ -467,6 +467,6 @@ function ChartTerminalBody({
       {marqueeEnabled && <RecentTickersMarquee current={marketRef} />}
 
       <LayoutShell />
-    </SidebarInset>
+    </main>
   )
 }

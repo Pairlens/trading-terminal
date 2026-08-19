@@ -81,6 +81,7 @@ import type {
 } from '@/lib/assistant/assistant-tools'
 import { SCRIPT_EDITOR_SPOTLIGHT_ID } from '@/stores/ai-spotlight-store'
 import { AiSpotlight } from '@/components/assistant-dock/ai-spotlight'
+import { PAGE_COLUMN_FLUSH, PAGE_GROUND } from '@/components/chrome/page-chrome'
 import { runBacktest } from '@/lib/indicators/backtest'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
 import {
@@ -771,7 +772,7 @@ export function IndicatorWorkbench({
         : null
 
   return (
-    <div className="flex h-full min-h-0">
+    <div className={PAGE_GROUND}>
       <IndicatorsAssistantSurface
         script={selected}
         activePath={activePath}
@@ -788,11 +789,12 @@ export function IndicatorWorkbench({
         onImport={() => setImportOpen(true)}
       />
 
-      <div className="flex h-full min-w-0 flex-1 flex-col">
+      <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
         {selected ? (
           <>
-            {/* Editor header */}
-            <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
+            {/* Editor header. No rule under it: the seam a reader needs is the
+                one over the code, and the tab strip below already draws it. */}
+            <div className="flex items-center gap-2 px-3 py-1.5">
               {selected.meta?.strategy ? (
                 <Bot className="size-4 shrink-0 text-muted-foreground" />
               ) : (
@@ -1008,13 +1010,16 @@ export function IndicatorWorkbench({
                   />
                 </div>
               </ResizablePanel>
-              <ResizableHandle />
+              {/* Editor and preview are two regions of one card, so the seam
+                  between them is the board's hairline. There is no ground
+                  inside a card for a column gutter to show through. */}
+              <ResizableHandle className="bg-(--pane-rule)" />
               <ResizablePanel defaultSize={45} minSize={25}>
                 <div className="flex h-full min-h-0 flex-col">
                   {/* Preview target controls — wraps rather than clipping
                       Re-run when the pane is narrow. Same py-1.5 + h-7 recipe
                       as the editor's file tabs, so both rows line up. */}
-                  <div className="flex flex-wrap items-center gap-1.5 border-b border-border px-3 py-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5 border-b border-(--pane-rule) px-3 py-1.5">
                     <MarketPicker
                       market={market}
                       marketOptions={marketOptions}

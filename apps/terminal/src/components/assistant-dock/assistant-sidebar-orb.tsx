@@ -25,6 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@pairlens/ui/components/ui/sidebar'
+import { RAIL_ITEM } from '@/components/chrome/rail-chrome'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { useAssistantPlacement } from '@/lib/assistant-core/placement'
@@ -96,7 +97,7 @@ export function AssistantSidebarOrb({
         data-assistant-orb=""
         aria-label={open ? closeLabel : openLabel}
         aria-expanded={open}
-        className="size-9 justify-center p-0"
+        className={RAIL_ITEM}
         isActive={open}
         onClick={onClick}
         type="button"

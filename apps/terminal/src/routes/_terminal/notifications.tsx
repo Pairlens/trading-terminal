@@ -3,9 +3,9 @@
 import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Bell } from 'lucide-react'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
+import { HEADER_TITLE } from '@/components/chrome/header-chrome'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { DesktopSurfaceNudge } from '@/components/feedback/desktop-nudge'
 import {
   MasterDetailSkeleton,
@@ -38,30 +38,26 @@ function NotificationsPage() {
   const { t } = useTranslation()
   const { alert } = Route.useSearch()
   return (
-    <SidebarInset className="overflow-hidden">
+    <main className={PAGE_FRAME}>
       {/* Browser build only, once per device: alert rules are evaluated in
           this tab, and a browser suspends tabs. */}
       <DesktopSurfaceNudge surface="notifications" />
       <PageHeader>
-        <Bell className="size-4" />
-        <h1 className="text-sm font-semibold">{t('nav.notifications')}</h1>
+        <h1 className={HEADER_TITLE}>{t('nav.notifications')}</h1>
       </PageHeader>
 
-      {/* Explicit height = viewport minus header. No flex chain needed. */}
-      <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
-        <Suspense
-          fallback={
-            <PendingAfter>
-              <MasterDetailSkeleton
-                body="canvas"
-                label={t('routes.notifications.loading')}
-              />
-            </PendingAfter>
-          }
-        >
-          <NotificationsBuilder ruleId={alert ?? null} />
-        </Suspense>
-      </div>
-    </SidebarInset>
+      <Suspense
+        fallback={
+          <PendingAfter>
+            <MasterDetailSkeleton
+              body="canvas"
+              label={t('routes.notifications.loading')}
+            />
+          </PendingAfter>
+        }
+      >
+        <NotificationsBuilder ruleId={alert ?? null} />
+      </Suspense>
+    </main>
   )
 }

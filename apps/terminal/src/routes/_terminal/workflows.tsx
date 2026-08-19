@@ -3,9 +3,9 @@
 import { useTranslation } from 'react-i18next'
 import { Suspense } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { Workflow } from 'lucide-react'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
+import { HEADER_TITLE } from '@/components/chrome/header-chrome'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import {
   MasterDetailSkeleton,
   PendingAfter,
@@ -39,27 +39,23 @@ function WorkflowsPage() {
   const { t } = useTranslation()
   const { workflow } = Route.useSearch()
   return (
-    <SidebarInset className="overflow-hidden">
+    <main className={PAGE_FRAME}>
       <PageHeader>
-        <Workflow className="size-4" />
-        <h1 className="text-sm font-semibold">{t('nav.workflows')}</h1>
+        <h1 className={HEADER_TITLE}>{t('nav.workflows')}</h1>
       </PageHeader>
 
-      {/* Explicit height = viewport minus header. No flex chain needed. */}
-      <div className="overflow-hidden" style={{ height: 'calc(100% - 40px)' }}>
-        <Suspense
-          fallback={
-            <PendingAfter>
-              <MasterDetailSkeleton
-                body="canvas"
-                label={t('routes.workflows.loading')}
-              />
-            </PendingAfter>
-          }
-        >
-          <WorkflowBuilder workflowId={workflow ?? null} />
-        </Suspense>
-      </div>
-    </SidebarInset>
+      <Suspense
+        fallback={
+          <PendingAfter>
+            <MasterDetailSkeleton
+              body="canvas"
+              label={t('routes.workflows.loading')}
+            />
+          </PendingAfter>
+        }
+      >
+        <WorkflowBuilder workflowId={workflow ?? null} />
+      </Suspense>
+    </main>
   )
 }

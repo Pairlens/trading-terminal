@@ -31,7 +31,7 @@ export function RouteError({ error, reset }: ErrorComponentProps) {
   const message = error instanceof Error ? error.message : String(error)
 
   return (
-    <div className="flex min-h-svh items-center justify-center p-6">
+    <div className="flex h-full min-h-0 items-center justify-center overflow-y-auto p-6">
       <Empty className="max-w-lg">
         <EmptyHeader>
           <EmptyMedia variant="icon">

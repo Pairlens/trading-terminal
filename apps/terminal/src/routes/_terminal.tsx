@@ -87,6 +87,7 @@ import {
   useKeybindingLabel,
   useKeybindingLabels,
 } from '@/hooks/use-keybindings'
+import { RAIL_ITEM, RAIL_SEPARATOR } from '@/components/chrome/rail-chrome'
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
 import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
@@ -470,7 +471,7 @@ function TerminalLayout() {
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.pairs')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'pairs'}
                                     onClick={() => void navigate({ to: '/' })}
                                     type="button"
@@ -491,11 +492,11 @@ function TerminalLayout() {
                                     one the shell hosts itself. The other
                                     two live in the dock below. */}
                                 <AssistantSidebarOrbItem />
-                                <SidebarSeparator className="my-1" />
+                                <SidebarSeparator className={RAIL_SEPARATOR} />
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.notifications')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'notifications'}
                                     onClick={() =>
                                       void navigate({ to: '/notifications' })
@@ -516,7 +517,7 @@ function TerminalLayout() {
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.workflows')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'workflows'}
                                     onClick={() =>
                                       void navigate({ to: '/workflows' })
@@ -537,7 +538,7 @@ function TerminalLayout() {
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.indicators')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'indicators'}
                                     onClick={() =>
                                       void navigate({ to: '/indicators' })
@@ -558,7 +559,7 @@ function TerminalLayout() {
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.bots')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'bots'}
                                     onClick={() =>
                                       void navigate({ to: '/bots' })
@@ -574,12 +575,12 @@ function TerminalLayout() {
                                     />
                                   </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarSeparator className="my-1" />
+                                <SidebarSeparator className={RAIL_SEPARATOR} />
                                 {NAV_ITEMS.map((item) => (
                                   <SidebarMenuItem key={item.id}>
                                     <SidebarMenuButton
                                       aria-label={t(item.labelKey)}
-                                      className="relative size-9 justify-center p-0"
+                                      className={cn(RAIL_ITEM, 'relative')}
                                       isActive={item.id === activeItem}
                                       onClick={() => {
                                         if (item.id === 'accounts') {
@@ -609,11 +610,11 @@ function TerminalLayout() {
                                     )}
                                   </SidebarMenuItem>
                                 ))}
-                                <SidebarSeparator className="my-1" />
+                                <SidebarSeparator className={RAIL_SEPARATOR} />
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('layout.workspaces')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={
                                       activeItem === 'workspaces' ||
                                       workspaceTreeOpen
@@ -637,7 +638,7 @@ function TerminalLayout() {
                                 <SidebarMenuItem>
                                   <SidebarMenuButton
                                     aria-label={t('nav.workspaceStore')}
-                                    className="size-9 justify-center p-0"
+                                    className={RAIL_ITEM}
                                     isActive={activeItem === 'workspace-store'}
                                     onClick={() =>
                                       void navigate({ to: '/workspace-store' })
@@ -666,7 +667,7 @@ function TerminalLayout() {
                               <SidebarMenuItem>
                                 <SidebarMenuButton
                                   aria-label={t('nav.getDesktopApp')}
-                                  className="relative size-9 justify-center p-0"
+                                  className={cn(RAIL_ITEM, 'relative')}
                                   onClick={() => setDesktopCtaOpen(true)}
                                   type="button"
                                 >
@@ -682,7 +683,7 @@ function TerminalLayout() {
                             <SidebarMenuItem>
                               <SidebarMenuButton
                                 aria-label={t('nav.feedback')}
-                                className="size-9 justify-center p-0"
+                                className={RAIL_ITEM}
                                 onClick={() => setFeedbackOpen(true)}
                                 type="button"
                               >
@@ -728,14 +729,22 @@ function TerminalLayout() {
                           description="The whole terminal frame. Use it to draw the eye after moving the user to another page."
                         />
                         <div className="flex min-h-0 flex-1 overflow-hidden">
-                          {/* Workspace tree panel — inside inset container */}
+                          {/* The workspace tree is a column, not a drawer: a
+                              `--card` surface on the ground with the board's
+                              own 14px radius and 10px inset, so opening it
+                              adds a column to the left of the page rather
+                              than a panel with a rule down its edge. The
+                              page's own `px-2.5` draws the gutter on the
+                              other side. */}
                           <div
                             className={cn(
-                              'overflow-hidden shrink-0',
-                              workspaceTreeOpen ? 'w-64 border-r' : 'w-0',
+                              'shrink-0 overflow-hidden',
+                              workspaceTreeOpen
+                                ? 'w-[266px] p-2.5 pr-0'
+                                : 'w-0',
                             )}
                           >
-                            <div className="flex h-full w-64 flex-col bg-card text-card-foreground">
+                            <div className="flex h-full w-64 flex-col overflow-hidden rounded-[14px] bg-card text-card-foreground">
                               <WorkspaceTreeSidebar />
                             </div>
                           </div>
@@ -819,7 +828,7 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
           render={
             <SidebarMenuButton
               aria-label={t('nav.charts')}
-              className="size-9 justify-center p-0"
+              className={RAIL_ITEM}
               isActive={isActive}
               type="button"
             />
@@ -934,7 +943,7 @@ function TerminalUserMenu({
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label={t('userMenu.accountMenu')}
-            className="ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[popup-open]:bg-sidebar-accent data-[popup-open]:text-sidebar-accent-foreground flex h-9 w-9 items-center justify-center rounded-lg outline-hidden focus-visible:ring-2"
+            className="ring-ring flex size-9 items-center justify-center rounded-[10px] outline-hidden transition-colors hover:bg-card/60 focus-visible:ring-2 data-[popup-open]:bg-card"
           >
             {hasSession ? (
               <Avatar className="size-7 rounded-lg" size="sm">

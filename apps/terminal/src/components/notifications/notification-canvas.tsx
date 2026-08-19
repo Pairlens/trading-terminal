@@ -28,6 +28,7 @@ import { CommitBar } from './commit-bar'
 import { NotificationsEmptyState } from './notifications-empty-state'
 import { StepPalette } from './step-palette'
 import type { Connection, Edge, Node } from '@xyflow/react'
+import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useNotificationStore } from '@/stores/notification-store'
 import { onExternalGraphWrite } from '@/lib/assistant/graph-apply'
 import { useNotificationStepRegistry } from '@/lib/notifications/notification-step-registry'
@@ -507,28 +508,41 @@ export function NotificationCanvas() {
   )
 
   if (!draft) {
-    return <NotificationsEmptyState />
+    return (
+      <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
+        <NotificationsEmptyState />
+      </div>
+    )
   }
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col">
-      {/* Canvas + palette row */}
-      <div className="flex flex-1" style={{ minHeight: 0 }}>
+    <>
+      {/*
+        The board column: the canvas, and the commit bar under it across one
+        hairline. The palette is the column NEXT to this one rather than a
+        region inside it. A full-height rail wants the ground between itself
+        and the canvas, and a vertical rule beside the horizontal one under
+        the canvas is what makes a board read as a spreadsheet.
+      */}
+      <div className={`flex-1 ${PAGE_COLUMN_FLUSH}`}>
+        {/*
+          The canvas is a well inside the column, not the column itself: nodes
+          are `--card` objects, so a canvas painted `--card` would dissolve
+          them into their own ground.
+        */}
         <div
-          className="relative"
+          className="relative min-h-0 flex-1 bg-muted/40"
           style={
             {
-              minHeight: 0,
-              flex: '1 1 0%',
-              width: 0,
-              '--xy-background-color': 'var(--background)',
+              // The well above paints the pane; ReactFlow must not paint over it.
+              '--xy-background-color': 'transparent',
               '--xy-node-background-color': 'var(--card)',
               '--xy-node-border-color': 'var(--border)',
               '--xy-edge-stroke':
                 'color-mix(in oklch, var(--muted-foreground) 50%, transparent)',
               '--xy-minimap-background-color': 'var(--card)',
               '--xy-minimap-mask-background-color':
-                'color-mix(in oklch, var(--background) 85%, transparent)',
+                'color-mix(in oklch, var(--card) 85%, transparent)',
               '--xy-minimap-node-background-color':
                 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)',
               '--xy-controls-button-background-color': 'var(--card)',
@@ -579,16 +593,22 @@ export function NotificationCanvas() {
               pannable
               zoomable
               nodeColor="color-mix(in oklch, oklch(0.789 0.154 211.53) 40%, transparent)"
-              maskColor="color-mix(in oklch, var(--background) 80%, transparent)"
+              maskColor="color-mix(in oklch, var(--card) 80%, transparent)"
+              // Floats on the canvas well, so it is shaped like the undo
+              // cluster above it: a card at 10px with no edge of its own.
               style={{
                 backgroundColor: 'var(--card)',
-                borderColor: 'var(--border)',
+                border: 'none',
+                borderRadius: 10,
+                overflow: 'hidden',
               }}
             />
 
             {/* Undo/Redo toolbar */}
             <Panel position="top-left" className="!m-2">
-              <div className="flex items-center gap-0.5 rounded-lg border border-border bg-background/90 p-0.5 shadow-sm backdrop-blur-sm">
+              {/* Floats over the canvas, so it keeps an edge. What it floats
+                  on is the column's own surface, not the page ground. */}
+              <div className="flex items-center gap-0.5 rounded-lg border border-border bg-card/90 p-0.5 shadow-sm backdrop-blur-sm">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -649,14 +669,11 @@ export function NotificationCanvas() {
           )}
         </div>
 
-        {/* Step palette — always visible */}
-        <StepPalette onAddStep={handleAddStepFromPalette} />
-      </div>
-
-      {/* Commit bar — shrink-0 keeps its height, flex-1 above absorbs the rest */}
-      <div className="shrink-0">
         <CommitBar hasCycles={hasCycles} onBeforeCommit={syncStepsToStore} />
       </div>
-    </div>
+
+      {/* Step palette: always visible, always its own column. */}
+      <StepPalette onAddStep={handleAddStepFromPalette} />
+    </>
   )
 }

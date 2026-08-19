@@ -8,8 +8,13 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import { Slider } from '@pairlens/ui/components/ui/slider'
 
 import { getStepType } from '@pairlens/workflow-engine/step-registry'
+import {
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
+} from '../master-detail'
 import type { WorkflowStepConfigField } from '@pairlens/workflow-engine/step-registry'
 
+import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import {
   stepCompatRequires,
@@ -46,9 +51,10 @@ export function StepConfigPanel({
   const errors = stepDef.validate(data)
 
   return (
-    <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
-      <div className="flex items-center justify-between border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold">
+    // A column beside the canvas, like the palette: ground divides them.
+    <div className={`w-56 shrink-0 ${PAGE_COLUMN_FLUSH}`}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {stepTypeLabel(t, 'workflows', stepDef)}
         </span>
         <Button
@@ -92,7 +98,7 @@ export function StepConfigPanel({
           </ul>
         )}
         {stepDef.compat && (
-          <p className="rounded border border-border bg-muted/40 px-2 py-1.5 text-[10px] text-muted-foreground">
+          <p className="rounded-[10px] bg-muted/40 px-2 py-1.5 text-[10px] text-muted-foreground">
             {t('workflows.steps.configPanel.requiresNote', {
               requirement: stepCompatRequires(
                 t,
@@ -149,7 +155,7 @@ function ConfigField({
             {stepFieldLabel(t, 'workflows', stepType, field)}
           </label>
           <select
-            className="nodrag h-7 w-full rounded border border-border bg-background px-2 text-xs"
+            className="nodrag h-7 w-full rounded border border-border bg-card px-2 text-xs"
             value={String(value ?? '')}
             onChange={(e) => onChange(e.target.value)}
           >

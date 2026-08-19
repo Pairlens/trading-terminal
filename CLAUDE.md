@@ -397,7 +397,7 @@ A script exports `meta = indicator(title=..., pane='overlay'|'sub', inputs=[...]
 - **`assistant` is the one opt-in sync domain.** `SyncDomain.defaultEnabled` is absent (= true) everywhere else and `false` here, which gives the switch a third state: no entry at all means "not asked", and that is the only state the rail's `AssistantSyncBanner` renders in. Either answer writes an explicit boolean and retires the banner for good; Settings → Cloud Sync owns it afterwards. The old lossy path is gone for good (`api.getAiMessages`/`saveAiMessage`/`clearAiMessages`, the `copilot` domain, the adapter's `getAIMessages`/`appendAIMessage`): the replacement is a bulk collection at `GET`/`PUT /api/assistant/conversations` carrying whole messages, typed as `SyncedConversation` in `packages/shared/src/persistence-types.ts` and **mirrored into the App Server repo**. The store publishes ONE aggregate key (`assistant.conversations`); the coordinator assembles index + threads at flush time under size caps (25 threads, 250k chars each, 4 MB total) and merges per conversation with `mergeCollections`, never deleting a local thread the server has not seen.
 - **Unchanged:** the App Server is still only an OpenAI-compatible inference proxy (`/api/ai/v1/chat/completions`), and AI provider plugins (Groq/OpenAI/Anthropic/OpenRouter and the bundled `pairlens-intelligence` fallback) expose `getLanguageModel()`.
 
-### Workspace board chrome
+### Board and page chrome
 
 A board is three surfaces and one line. The ground is `--background`
 (`layout-shell.tsx`'s `BOARD`, inset 10px from three edges and none from the top, so the columns
@@ -423,7 +423,10 @@ and every drag handler reads `active.data.current.paneId` rather than the dragga
 What that costs a pane author: content carries no horizontal padding (the column's 12px is the
 inset, so rows bleed to the pane edge on purpose), no rule under a column header or above a
 footer, no `bg-background` on a sticky thead (it sits on `--card` now), and no in-pane title
-repeating the pane's own name. The shared voice lives in `components/panes/pane-primitives.tsx`
+repeating the pane's own name. `layout/__tests__/board-chrome.test.ts` reads the source for that
+sticky-thead trap across every directory that renders inside a column, the four page directories
+included, with an explicit allowlist for dialog and sheet content (a dialog IS painted from the
+ground). The shared voice lives in `components/panes/pane-primitives.tsx`
 (`Th`, `PaneColumnHeader`, `PaneFootnote`, and the `PANE_COLUMN_HEADER` / `PANE_FOOTNOTE` /
 `PANE_TABLE_BODY` class strings).
 
@@ -431,7 +434,35 @@ The shell has one frame, on every route (`routes/_terminal.tsx`): no inset card 
 radius, no shadow) and the rail painted `--background` so it dissolves into the content beside
 it. Every page in the frame draws its own surfaces already, so a card around those was a nesting
 level that only added an edge, and a rail that changed value between a board and a settings page
-repainted the left edge of the window on every navigation.
+repainted the left edge of the window on every navigation. `SidebarInset` is gone from every
+route with it: it still carried `m-2 rounded-xl shadow-sm` behind a `peer-data-[variant=inset]`
+selector the redesign had already broken, so the geometry was dead code waiting to come back.
+
+**The rail** speaks the chip vocabulary too (`components/chrome/rail-chrome.ts`). An item is 36px
+at 10px radius; at rest it is `--muted-foreground` on nothing, and the current section is a
+`--card` chip with the glyph at full strength. It used to be `--sidebar-accent`, two steps
+brighter than a workspace column, which made the loudest fill on screen the button naming the page
+you were already looking at. Group marks are `--pane-rule` at 24px across the middle of the rail,
+not `--sidebar-border` edge to edge. Note the separator writes its width under `data-horizontal:`,
+because that is where the primitive puts its own `w-full` and tailwind-merge will not resolve a
+bare utility against a variant-prefixed one.
+
+**Pages are boards** (`components/chrome/page-chrome.ts`). Bots, Indicators, Notifications and
+Workflows were full-bleed sheets carved up by `border-r` down the master list and `border-b` under
+every header, which is the language 3A deleted. They are columns on ground now, with the board's
+own numbers: `PAGE_GROUND` is the same `px-2.5 pb-2.5` inset, `PAGE_COLUMN` the same
+`rounded-[14px] bg-card p-3`, `PAGE_COLUMN_FLUSH` the same without the padding for a list or a
+canvas that reaches its own edges, and `PAGE_RULE` the same hairline. A master-detail page is one
+`MASTER_DETAIL_LIST_CLASS` column (240px) plus a flush column for the detail; the builders add a
+third for the step palette, because a vertical rule beside the commit bar's horizontal one is the
+spreadsheet reading all over again. The numbers are asserted against `layout-shell.tsx` and
+`layout-column.tsx` by `components/chrome/__tests__/page-chrome.test.ts`, so changing the board's
+inset and not the pages' fails rather than drifting quietly.
+
+The two builder canvases are the one sanctioned well at page scale: `bg-muted/40` with xyflow's
+own background set transparent. Painting the canvas `--card` was not an option, because the nodes
+ARE `--card` objects and would have dissolved into their own ground. Nodes, edges and handles keep
+their outlines: a step on a canvas is a real object, and its border is meaning rather than chrome.
 
 The top bar speaks the same language (`components/chrome/header-chrome.ts`). Every control on it
 is a `--card` chip at 10px radius with no border, and the workspace is the one chip carrying the
@@ -445,8 +476,9 @@ The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `Chart
 resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is
 `oklch()`) instead of the theme's own chart palette, so a WebGL plot never reads as a rectangle
 inset into its column, in any of the 18 themes or either colour mode. Panes take the default
-`'card'`; the workbench preview takes `'background'`; the phone takes `'palette'` and opts out
-entirely, because it paints its shell FROM the chart's colour rather than the other way round.
+`'card'`, the workbench preview included now that it sits on a page column; the phone takes
+`'palette'` and opts out entirely, because it paints its shell FROM the chart's colour rather
+than the other way round.
 
 ### Terminal Routing
 

@@ -43,3 +43,17 @@ export const HEADER_CHIP_PRIMARY =
 /** A bare icon control: no fill until you reach for it. */
 export const HEADER_ICON =
   'inline-flex size-[26px] shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-0 bg-transparent p-0 text-muted-foreground shadow-none transition-colors hover:bg-card hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden'
+
+/**
+ * A page's name on the bar.
+ *
+ * 13px/600, the same size and weight the pair chip's symbol wears on a trade
+ * page and the same the Discovery bar already used, so whatever surface you
+ * are on is named at one type size across the whole product.
+ *
+ * The pages used to prefix this with their section icon. The rail's current
+ * chip carries that same glyph, on the same baseline, thirty pixels to the
+ * left; the second copy said nothing the first had not.
+ */
+export const HEADER_TITLE =
+  'shrink-0 text-[13px] font-semibold tracking-[-0.01em]'

@@ -360,7 +360,7 @@ function ChartPanel({
   children,
 }: ChartPanelProps) {
   return (
-    <div className="min-w-0 rounded-lg border border-border">
+    <div className="min-w-0 rounded-[10px] bg-muted/40">
       <div className="flex items-baseline justify-between gap-2 px-2.5 pt-2">
         <span className="truncate text-[10px] uppercase tracking-wide text-muted-foreground">
           {title}
@@ -401,7 +401,7 @@ export const BotSummaryStrip = memo(function BotSummaryStrip({
   const summary = useMemo(() => summarizeBotTrades(trades), [trades])
 
   return (
-    <div className="grid grid-cols-3 gap-x-4 gap-y-2 rounded-lg border border-border px-3 py-2 @xl/panel:grid-cols-6">
+    <div className="grid grid-cols-3 gap-x-4 gap-y-2 rounded-[10px] bg-muted/40 px-3 py-2 @xl/panel:grid-cols-6">
       {/* The open count is a hint under the closed count, not a cell of its
           own: "3 closed, 1 open" is one fact about the ledger. The placeholder
           is named `open` rather than `count` so i18next does not switch into

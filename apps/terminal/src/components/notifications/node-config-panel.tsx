@@ -8,8 +8,13 @@ import { Input } from '@pairlens/ui/components/ui/input'
 import { Slider } from '@pairlens/ui/components/ui/slider'
 
 import { getStepType } from '@pairlens/notification-engine/step-registry'
+import {
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
+} from '../master-detail'
 import type { ConfigField } from '@pairlens/notification-engine/types'
 
+import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useNotificationStore } from '@/stores/notification-store'
 import {
   stepFieldLabel,
@@ -46,9 +51,10 @@ export function StepConfigPanel({
   const errors = stepDef.validate(data)
 
   return (
-    <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
-      <div className="flex items-center justify-between border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold">
+    // A column beside the canvas, like the palette: ground divides them.
+    <div className={`w-56 shrink-0 ${PAGE_COLUMN_FLUSH}`}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {stepTypeLabel(t, 'notifications', stepDef)}
         </span>
         <Button
@@ -129,7 +135,7 @@ function ConfigFieldComponent({
             {stepFieldLabel(t, 'notifications', stepType, field)}
           </label>
           <select
-            className="nodrag h-7 w-full rounded border border-border bg-background px-2 text-xs"
+            className="nodrag h-7 w-full rounded border border-border bg-card px-2 text-xs"
             value={String(value ?? '')}
             onChange={(e) => onChange(e.target.value)}
           >

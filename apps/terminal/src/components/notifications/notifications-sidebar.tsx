@@ -33,6 +33,7 @@ import { isSimpleAlert } from '@pairlens/notification-engine/simple-alerts'
 import {
   MASTER_DETAIL_LIST_CLASS,
   MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
 } from '../master-detail'
 import { NewAlertDialog } from './new-alert-dialog'
 import { NotificationActivityList } from './notification-activity'
@@ -98,7 +99,7 @@ export function NotificationsSidebar() {
   return (
     <div className={MASTER_DETAIL_LIST_CLASS}>
       <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
-        <span className="text-xs font-semibold uppercase tracking-wider">
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('notifications.builder.sidebar.tabRules')}
         </span>
         <div className="flex items-center gap-0.5">
@@ -202,7 +203,7 @@ export function NotificationsSidebar() {
       {/* The way to something the two-field form cannot say. Bottom of the
           list, quiet: most people never need it, and the ones who do are
           looking for it. */}
-      <div className="border-t border-border p-1.5">
+      <div className="border-t border-(--pane-rule) p-1.5">
         <Button
           variant="ghost"
           size="sm"
@@ -380,9 +381,9 @@ function BindingsPanel({ ruleId }: { ruleId: string }) {
   }
 
   return (
-    <div className="border-t border-border">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="border-t border-(--pane-rule)">
+      <div className="flex h-10 items-center justify-between px-3">
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('notifications.builder.sidebar.pairsLabel')}
         </span>
         <Button
@@ -491,9 +492,9 @@ function RecentActivity() {
   }, [entries, markSeen])
 
   return (
-    <div className="border-t border-border">
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+    <div className="border-t border-(--pane-rule)">
+      <div className="flex h-10 items-center justify-between px-3">
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('notifications.builder.sidebar.recentLabel')}
         </span>
         {entries.length > 0 && (

@@ -25,7 +25,14 @@ import { describe, expect, test } from 'bun:test'
 
 const SRC = join(import.meta.dir, '..', '..', '..')
 
-/** The directories whose files render inside a board column. */
+/**
+ * The directories whose files render inside a `--card` column.
+ *
+ * The bottom four are not boards. They are the master-detail pages, which
+ * stopped being full-bleed sheets and became columns on the same ground (see
+ * `components/chrome/page-chrome.ts`), so the same trap applies to them
+ * verbatim.
+ */
 const PANE_DIRS = [
   join(SRC, 'components', 'terminal'),
   join(SRC, 'components', 'discovery'),
@@ -35,10 +42,25 @@ const PANE_DIRS = [
   join(SRC, 'components', 'equities'),
   join(SRC, 'components', 'panes'),
   join(SRC, 'components', 'layout'),
+  join(SRC, 'components', 'bots'),
+  join(SRC, 'components', 'indicators'),
+  join(SRC, 'components', 'notifications'),
+  join(SRC, 'components', 'workflows'),
 ]
 
-/** Files whose pinned surface really is the app ground, not a column. */
-const ON_THE_GROUND = new Set<string>([])
+/**
+ * Files whose pinned surface really is the app ground, not a column.
+ *
+ * All three are dialog or sheet content. A dialog is its own surface, painted
+ * from the ground rather than from whatever column happened to open it, so a
+ * header pinned inside one is correct where the same line inside a pane is a
+ * bug.
+ */
+const ON_THE_GROUND = new Set<string>([
+  'components/indicators/libraries-dialog.tsx',
+  'components/indicators/version-history.tsx',
+  'components/notifications/notification-history-sheet.tsx',
+])
 
 /**
  * A `className` string that pins an element and paints it with the app ground.

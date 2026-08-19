@@ -185,7 +185,7 @@ export function PluginProductPage({
       <StoreAurora glow={brand.glow} className="fixed" />
 
       {/* Sticky sub-bar */}
-      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-border/40 bg-card/70 px-5 py-2.5 backdrop-blur-md">
+      <div className="sticky top-0 z-20 flex items-center justify-between border-b border-(--pane-rule) bg-card/70 px-5 py-2.5 backdrop-blur-md">
         <button
           type="button"
           onClick={onBack}
@@ -365,7 +365,7 @@ export function PluginProductPage({
                 {screenshots.slice(0, 3).map((src) => (
                   <div
                     key={src}
-                    className="min-w-0 flex-1 overflow-hidden rounded-[14px] border border-border/70"
+                    className="min-w-0 flex-1 overflow-hidden rounded-[14px]"
                   >
                     <img
                       src={src}
@@ -393,7 +393,7 @@ export function PluginProductPage({
                   return (
                     <span
                       key={panel.id}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 py-1.5 text-xs text-foreground/90"
+                      className="inline-flex items-center gap-1.5 rounded-[10px] bg-muted/40 px-2.5 py-1.5 text-xs text-foreground/90"
                       title={
                         panel.descriptionKey
                           ? t(
@@ -436,7 +436,7 @@ export function PluginProductPage({
                 {swatches.map((color, i) => (
                   <div key={i} className="min-w-0 flex-1">
                     <div
-                      className="h-[88px] rounded-[12px] border border-border/60"
+                      className="h-[88px] rounded-[14px]"
                       style={{ backgroundColor: color }}
                     />
                     <p className="mt-1.5 font-mono text-[11px] text-muted-foreground">
@@ -459,7 +459,7 @@ export function PluginProductPage({
               </SectionEyebrow>
               <form
                 onSubmit={onConfigSubmit}
-                className="mt-3 max-w-xl space-y-4 rounded-[14px] border border-border/70 bg-card/60 p-5"
+                className="mt-3 max-w-xl space-y-4 rounded-[14px] bg-muted/40 p-5"
               >
                 {configFields.map(([key, field]) => (
                   <ConfigFieldInput
@@ -501,7 +501,7 @@ export function PluginProductPage({
                   {capabilities.map((cap) => (
                     <span
                       key={cap}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 py-1 font-mono text-[11.5px] text-foreground/90"
+                      className="inline-flex items-center gap-1.5 rounded-[10px] bg-muted/40 px-2.5 py-1 font-mono text-[11.5px] text-foreground/90"
                     >
                       <span className="size-1 rounded-full bg-primary" />
                       {cap}
@@ -519,7 +519,7 @@ export function PluginProductPage({
                   {permissions.map((perm) => (
                     <span
                       key={perm}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-card px-2.5 py-1 font-mono text-[11.5px] text-foreground/90"
+                      className="inline-flex items-center gap-1.5 rounded-[10px] bg-muted/40 px-2.5 py-1 font-mono text-[11.5px] text-foreground/90"
                     >
                       <span className="size-1 rounded-full bg-primary" />
                       {perm}
@@ -537,7 +537,7 @@ export function PluginProductPage({
                   {hosts.map((host) => (
                     <div
                       key={host}
-                      className="flex items-center gap-2.5 rounded-lg border border-border/60 px-3 py-2"
+                      className="flex items-center gap-2.5 rounded-[10px] bg-muted/40 px-3 py-2"
                     >
                       <Globe className="size-3.5 text-muted-foreground" />
                       <span className="font-mono text-xs text-foreground/90">
@@ -623,7 +623,7 @@ export function PluginProductPage({
             <SectionEyebrow>
               {t('pluginStore.detailsHeading', 'Details')}
             </SectionEyebrow>
-            <div className="mt-3 divide-y divide-border/50 rounded-[14px] border border-border/70">
+            <div className="mt-3 divide-y divide-(--pane-rule) overflow-hidden rounded-[14px] bg-muted/40">
               <DetailsRow
                 label={t('pluginStore.author', 'Author')}
                 value={manifest.author}

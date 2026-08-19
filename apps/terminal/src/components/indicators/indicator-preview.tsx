@@ -58,8 +58,10 @@ function PreviewChart({
   run: PreviewRun
   onHoverTsChange?: (ts: number | null) => void
 }) {
-  // The workbench preview is `bg-background`, not a board column.
-  const theme = usePairlensChartTheme('background')
+  // The preview is a region of the workbench's card column now, so the plot
+  // takes the same surface a chart pane does. Painted in the app's ground it
+  // would read as a darker rectangle inset into the card.
+  const theme = usePairlensChartTheme('card')
   const chartRef = useRef<FastFinancialChartRef | null>(null)
   const [readyTick, setReadyTick] = useState(0)
 
@@ -134,7 +136,7 @@ function ErrorPanel({
       <span className="text-xs font-semibold text-destructive">
         {t('indicatorsPage.errorTitle')}
       </span>
-      <ScrollArea className="min-h-0 flex-1 rounded-md border border-destructive/30 bg-destructive/5">
+      <ScrollArea className="min-h-0 flex-1 rounded-[10px] bg-destructive/5">
         <pre className="p-3 font-mono text-[11px] leading-relaxed whitespace-pre-wrap text-destructive">
           {error.traceback?.trim() || error.message}
         </pre>
@@ -173,7 +175,7 @@ export function IndicatorPreview({
   }
 
   return (
-    <div className="relative h-full min-h-0 overflow-hidden bg-background">
+    <div className="relative h-full min-h-0 overflow-hidden">
       <PreviewChart run={run} onHoverTsChange={onHoverTsChange} />
     </div>
   )

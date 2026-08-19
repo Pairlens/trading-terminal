@@ -916,7 +916,10 @@ export function PluginStore({
 
       {/* Store body */}
       <div className="relative z-10 h-full overflow-y-auto">
-        <div className="mx-auto max-w-[1180px] px-[30px] pb-10 pt-6">
+        {/* The board's own inset: 10px from three edges and none from the top,
+            so the hero's left edge lands on the x a workspace column lands on
+            and its top hangs off the bar the same way. */}
+        <div className="px-2.5 pb-2.5">
           {/* Registry offline banner */}
           {registryOffline && (
             <Alert variant="destructive" className="mb-6">

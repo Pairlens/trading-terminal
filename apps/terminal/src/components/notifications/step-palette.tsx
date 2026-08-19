@@ -5,8 +5,13 @@ import { useCallback } from 'react'
 
 import { cn } from '@pairlens/ui'
 
+import {
+  MASTER_DETAIL_LIST_HEADER_CLASS,
+  MASTER_DETAIL_LIST_TITLE_CLASS,
+} from '../master-detail'
 import type { NotificationStepTypeDefinition } from '@pairlens/notification-engine/step-registry'
 
+import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useNotificationStepRegistry } from '@/lib/notifications/notification-step-registry'
 import {
   FallbackStepIcon,
@@ -46,9 +51,12 @@ export function StepPalette({ onAddStep }: StepPaletteProps) {
   )
 
   return (
-    <div className="flex w-56 shrink-0 flex-col border-l border-border bg-background">
-      <div className="border-b border-border px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+    // Its own column on the ground, the same as the rule list opposite: what
+    // used to divide it from the canvas was a `border-l`, and what divides it
+    // now is 10px of ground.
+    <div className={`w-56 shrink-0 ${PAGE_COLUMN_FLUSH}`}>
+      <div className={MASTER_DETAIL_LIST_HEADER_CLASS}>
+        <span className={MASTER_DETAIL_LIST_TITLE_CLASS}>
           {t('notifications.builder.palette.addStep')}
         </span>
       </div>

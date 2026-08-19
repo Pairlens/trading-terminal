@@ -7,12 +7,12 @@ import { Loader2, Settings, Unplug } from 'lucide-react'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 import { Separator } from '@pairlens/ui/components/ui/separator'
-import { SidebarInset } from '@pairlens/ui/components/ui/sidebar'
 
 import type {
   CustomWorkspaceDefinition,
   WorkspaceConfig,
 } from '@/lib/layout/types'
+import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { LayoutShell } from '@/components/layout/layout-shell'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
@@ -59,16 +59,16 @@ function CustomWorkspacePage() {
   if (mdStatus !== 'connected') {
     if (!pluginsReady) {
       return (
-        <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <main className={PAGE_FRAME}>
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
           </div>
-        </SidebarInset>
+        </main>
       )
     }
 
     return (
-      <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <main className={PAGE_FRAME}>
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-muted-foreground">
           <Unplug className="size-10 opacity-40" />
           <p className="text-sm font-medium">
@@ -85,13 +85,13 @@ function CustomWorkspacePage() {
             {t('routes.noConnectors.manage')}
           </Link>
         </div>
-      </SidebarInset>
+      </main>
     )
   }
 
   if (!workspace || !workspaceConfig) {
     return (
-      <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <main className={PAGE_FRAME}>
         <div className="flex flex-1 flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
           <p>{t('routes.workspace.notFound')}</p>
           <button
@@ -101,7 +101,7 @@ function CustomWorkspacePage() {
             {t('routes.goHome')}
           </button>
         </div>
-      </SidebarInset>
+      </main>
     )
   }
 
@@ -118,7 +118,7 @@ function CustomWorkspacePage() {
                 <LayoutProvider key={workspace.id}>
                   <VariableBindingsReconciler />
                   <WorkspaceAssistantSurface workspace={workspace} />
-                  <SidebarInset className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                  <main className={PAGE_FRAME}>
                     <CustomWorkspaceTopBar
                       workspace={workspace}
                       onEdit={() => setEditOpen(true)}
@@ -127,7 +127,7 @@ function CustomWorkspacePage() {
                       onManageVariables={() => setEditOpen(true)}
                     />
                     <LayoutShell />
-                  </SidebarInset>
+                  </main>
                   <EditWorkspaceDialog
                     workspace={workspace}
                     open={editOpen}

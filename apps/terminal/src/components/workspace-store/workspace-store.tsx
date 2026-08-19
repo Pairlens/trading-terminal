@@ -98,7 +98,7 @@ function WorkspaceSpotlight({
 
   return (
     <section
-      className="relative h-[400px] w-full overflow-hidden rounded-[22px] border border-border"
+      className="relative h-[400px] w-full overflow-hidden rounded-[22px]"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -132,7 +132,7 @@ function WorkspaceSpotlight({
         />
         <div
           key={template.id}
-          className="pl-store-heroin relative w-[380px] rounded-[17px] border border-border bg-card/80 p-3 shadow-lg backdrop-blur-sm"
+          className="pl-store-heroin relative w-[380px] rounded-[14px] bg-card/80 p-3 shadow-lg backdrop-blur-sm"
         >
           <WorkspaceLayoutPreview
             layout={template.layout}
@@ -744,7 +744,8 @@ export function WorkspaceStore({
       <StoreAurora />
 
       <div className="relative z-10 h-full overflow-y-auto">
-        <div className="mx-auto max-w-[1180px] px-[30px] pb-10 pt-6">
+        {/* The board's own inset. See the twin in `plugins/plugin-store.tsx`. */}
+        <div className="px-2.5 pb-2.5">
           {/* Spotlight hero */}
           {!filtering && featured.length > 0 && (
             <WorkspaceSpotlight
@@ -826,7 +827,7 @@ export function WorkspaceStore({
           {filtering ? (
             filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-                <span className="flex size-12 items-center justify-center rounded-[14px] border border-border/70 bg-card text-muted-foreground">
+                <span className="flex size-12 items-center justify-center rounded-[14px] bg-card text-muted-foreground">
                   <LayoutTemplate className="size-5" />
                 </span>
                 <p className="font-serif text-xl font-semibold">

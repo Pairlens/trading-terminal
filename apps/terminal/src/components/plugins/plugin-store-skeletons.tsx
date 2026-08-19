@@ -4,7 +4,7 @@ import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 
 export function FeaturedHeroSkeleton() {
   return (
-    <div className="relative h-[472px] w-full overflow-hidden rounded-[22px] border border-border">
+    <div className="relative h-[472px] w-full overflow-hidden rounded-[22px]">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-card to-card" />
       <div className="relative z-10 flex h-full max-w-[60%] flex-col justify-center px-[52px]">
         <Skeleton className="h-3 w-40" />
@@ -39,7 +39,7 @@ export function ShelfSkeleton() {
 export function PosterCardSkeleton() {
   return (
     <div className="w-[152px] shrink-0">
-      <Skeleton className="h-[188px] w-full rounded-[17px]" />
+      <Skeleton className="h-[188px] w-full rounded-[14px]" />
       <Skeleton className="mt-2 h-3.5 w-24" />
       <Skeleton className="mt-1.5 h-3 w-32" />
     </div>
