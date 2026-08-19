@@ -3,11 +3,43 @@
 import { describe, expect, test } from 'bun:test'
 import { isPerpPairKey, normalizePairKey, splitPairAssets } from '../pairs'
 
+const USDT = '0xdac17f958d2ee523a2206206994597c13d831ec7'
+const WSOL = 'So11111111111111111111111111111111111111112'
+
 describe('normalizePairKey', () => {
   test('canonicalises separators and case', () => {
     expect(normalizePairKey('btc/usdt')).toBe('BTC-USDT')
     expect(normalizePairKey(' eth_usd ')).toBe('ETH-USD')
     expect(normalizePairKey('BTC-USDT')).toBe('BTC-USDT')
+  })
+
+  // Every stream hook runs its pair key through here. Upper-casing the base
+  // leg of a DEX key stopped it matching `isTokenAddress`, which sent the pool
+  // resolvers down their search-by-name path for a token the user had already
+  // identified by address.
+  test('leaves a token address in the base leg alone', () => {
+    expect(normalizePairKey(`${USDT}-usdc`)).toBe(`${USDT}-USDC`)
+    expect(normalizePairKey(`${WSOL}-usdc`)).toBe(`${WSOL}-USDC`)
+  })
+
+  test('lower-cases a checksummed EVM address, as the routing layer does', () => {
+    const checksummed = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
+    expect(normalizePairKey(`${checksummed}-USDC`)).toBe(`${USDT}-USDC`)
+  })
+
+  test('still canonicalises the separator on an address key', () => {
+    expect(normalizePairKey(`${USDT}/usdc`)).toBe(`${USDT}-USDC`)
+  })
+
+  test('a bare address normalises to itself', () => {
+    expect(normalizePairKey(WSOL)).toBe(WSOL)
+  })
+
+  // A prediction outcome key is dash-joined and case-carrying, and nothing in
+  // it is an address: it must keep normalising exactly as it did.
+  test('leaves prediction and perp keys on the old path', () => {
+    expect(normalizePairKey('kxbtcd-26aug15-t53')).toBe('KXBTCD-26AUG15-T53')
+    expect(normalizePairKey('btc-usdt-usdt')).toBe('BTC-USDT-USDT')
   })
 })
 
