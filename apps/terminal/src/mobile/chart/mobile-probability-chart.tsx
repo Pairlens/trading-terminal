@@ -42,7 +42,7 @@
  * as the desktop pane: raw probabilities under a grey remainder, and only on a
  * field that is genuinely a partition. See `lib/predictions/stack`.
  */
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Area,
@@ -89,6 +89,19 @@ import {
   isPartitionField,
   stackSeries,
 } from '@/lib/predictions/stack'
+import {
+  ACTIVE_BAND_EDGE_WIDTH,
+  ACTIVE_BAND_FILL_BOTTOM,
+  ACTIVE_BAND_FILL_TOP,
+  BAND_EDGE_WIDTH,
+  BAND_FILL_BOTTOM,
+  BAND_FILL_TOP,
+  REST_FILL_AT_CEILING,
+  REST_FILL_AT_FIELD,
+  bandGradientId,
+  paintScope,
+  restGradientId,
+} from '@/lib/predictions/band-paint'
 import {
   DEFAULT_PREDICTION_CHART_VIEW,
   PREDICTION_CHART_VIEWS,
@@ -191,6 +204,7 @@ export default memo(function MobileProbabilityChart({
     () => new Map(visible.map((runner) => [runner.pairKey, runner])),
     [visible],
   )
+  const scope = paintScope(useId())
 
   const toggle = useCallback((key: string) => {
     haptic('selection')
@@ -243,6 +257,63 @@ export default memo(function MobileProbabilityChart({
               data={bands ? bands.rows : rows}
               margin={{ top: 4, right: 2, bottom: 0, left: 0 }}
             >
+              {/* One gradient per band, mapped to that band's own box, at the
+                  same stops the desktop uses. See `lib/predictions/band-paint`. */}
+              {bands && (
+                <defs>
+                  {bands.order.map((key, index) => {
+                    const runner = byKey.get(key)
+                    if (!runner) return null
+                    return (
+                      <linearGradient
+                        key={key}
+                        id={bandGradientId(scope, index)}
+                        x1="0"
+                        x2="0"
+                        y1="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor={runner.color}
+                          stopOpacity={
+                            runner.active ? ACTIVE_BAND_FILL_TOP : BAND_FILL_TOP
+                          }
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={runner.color}
+                          stopOpacity={
+                            runner.active
+                              ? ACTIVE_BAND_FILL_BOTTOM
+                              : BAND_FILL_BOTTOM
+                          }
+                        />
+                      </linearGradient>
+                    )
+                  })}
+                  <linearGradient
+                    id={restGradientId(scope)}
+                    x1="0"
+                    x2="0"
+                    y1="0"
+                    y2="1"
+                  >
+                    {/* Runs the other way: faint at the ceiling, strongest
+                        where it meets the field. */}
+                    <stop
+                      offset="0%"
+                      stopColor="var(--muted-foreground)"
+                      stopOpacity={REST_FILL_AT_CEILING}
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="var(--muted-foreground)"
+                      stopOpacity={REST_FILL_AT_FIELD}
+                    />
+                  </linearGradient>
+                </defs>
+              )}
               <CartesianGrid
                 stroke="var(--border)"
                 strokeDasharray="2 4"
@@ -299,7 +370,7 @@ export default memo(function MobileProbabilityChart({
                 wrapperStyle={{ pointerEvents: 'none' }}
               />
               {bands
-                ? bands.order.map((key) => {
+                ? bands.order.map((key, index) => {
                     const runner = byKey.get(key)
                     if (!runner) return null
                     return (
@@ -307,12 +378,17 @@ export default memo(function MobileProbabilityChart({
                         key={key}
                         activeDot={false}
                         dataKey={key}
-                        fill={runner.color}
-                        fillOpacity={runner.active ? 0.92 : 0.78}
+                        fill={`url(#${bandGradientId(scope, index)})`}
+                        fillOpacity={1}
                         isAnimationActive={false}
                         stackId="field"
                         stroke={runner.color}
-                        strokeWidth={runner.active ? 1.75 : 0.6}
+                        strokeLinejoin="round"
+                        strokeWidth={
+                          runner.active
+                            ? ACTIVE_BAND_EDGE_WIDTH
+                            : BAND_EDGE_WIDTH
+                        }
                         type="monotone"
                       />
                     )
@@ -336,16 +412,14 @@ export default memo(function MobileProbabilityChart({
                 <Area
                   activeDot={false}
                   dataKey={REST_KEY}
-                  fill="var(--muted-foreground)"
-                  // Recessive, but not invisible: on the phone's pure-black
-                  // plot a lighter grey read as empty space, which is exactly
-                  // the wrong reading for the mass the chart is not drawing.
-                  fillOpacity={0.22}
+                  fill={`url(#${restGradientId(scope)})`}
+                  fillOpacity={1}
                   isAnimationActive={false}
                   stackId="field"
-                  stroke="var(--muted-foreground)"
-                  strokeOpacity={0.45}
-                  strokeWidth={0.6}
+                  // No edge: its top curve is the ceiling of the plot, and
+                  // stroking it just draws a border. The boundary that matters
+                  // is the last runner's own edge, already drawn.
+                  stroke="none"
                   type="monotone"
                 />
               )}
