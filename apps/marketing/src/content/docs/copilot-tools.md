@@ -1,12 +1,12 @@
 ---
 title: Assistant tool reference
-description: All 110 tools the Pairlens assistant can call, by category, with what each one reads or does, which are gated on what is mounted, and which need your confirmation.
+description: All 110 tools the Pairlens assistant can call, by category, plus the workspace and board actions the screen publishes on top, with what each one reads or does and which need your confirmation.
 group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
 updated: 19 AUG 2026
-readTime: 10 min read
+readTime: 12 min read
 ---
 
 The assistant's agentic loop runs in the terminal, not on a server. These are
@@ -336,14 +336,54 @@ be gated behind the terminal lock.
 The 110 above are the fixed set. Anything mounted can publish tools of its own,
 and they exist for exactly as long as it is on screen.
 
-The workspace board is the built-in example. It publishes
-`list_workspace_panes`, `add_pane` and `remove_pane`, so "put a depth chart and
-a tape next to this" is executed by the board that owns the layout rather than
-by a global tool that would have to find one. Navigate away and all three
-withdraw.
+The workspace board is the built-in example. It publishes these, and withdraws
+every one of them the moment you navigate away:
+
+| Tool                     | What it does                                       |
+| ------------------------ | -------------------------------------------------- |
+| `list_workspace_panes`   | The panes on this board, and their ids             |
+| `add_pane`               | Add one pane, in a new column on the right         |
+| `remove_pane`            | Take one pane off the board                        |
+| `apply_board_layout`     | Rebuild the whole board in one call                |
+| `save_current_workspace` | Save what you assembled as a workspace of your own |
+
+"Put a depth chart and a tape next to this" is executed by the board that owns
+the layout rather than by a global tool that would have to find one.
 
 A published action can also require approval, in which case the call parks and
 the chat renders a card, the same mechanism the order proposals use.
+`apply_board_layout` is one: it replaces every pane, so you see the geometry
+before it lands.
+
+### Building workspaces
+
+One surface is published from above the routes, so it is available on every
+screen: the panel catalogue and your saved-workspace tree are not things you
+have to be standing on.
+
+| Tool                             | What it does                                       |
+| -------------------------------- | -------------------------------------------------- |
+| `list_pane_types`                | Every pane this terminal has, with what each shows |
+| `list_workspaces`                | Your saved workspaces and the folders holding them |
+| `get_workspace`                  | One workspace in full, column by column            |
+| `create_workspace`               | Build a new saved workspace and file it            |
+| `update_workspace`               | Rename, refile, re-icon, or replace the layout     |
+| `delete_workspace`               | Remove a saved workspace (asks first)              |
+| `open_workspace`                 | Put a saved workspace on screen                    |
+| `create_workspace_folder`        | Add a folder to the tree                           |
+| `list_workspace_templates`       | Ready-made layouts that can be copied              |
+| `create_workspace_from_template` | Copy one into your own workspaces                  |
+
+`list_pane_types` is the live plugin registry, not a list baked into the
+assistant, which is why a pane a plugin you installed this morning contributes
+is offered the same afternoon. It also reports what each pane needs, so panes
+that follow a pair or an account are bound to the new workspace's `$pair` and
+`$wallet` variables automatically, seeded with whatever you had on screen.
+
+`delete_workspace` parks on a card and waits for you. `update_workspace`
+refuses to rewrite the layout of the board you are currently looking at, and
+says to use `apply_board_layout` instead, because the open board holds its own
+state and would overwrite the change.
 
 ## Adding tools
 

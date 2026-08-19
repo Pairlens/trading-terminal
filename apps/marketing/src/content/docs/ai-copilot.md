@@ -1,11 +1,11 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows and alerts, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows, alerts and workspaces, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 13 min read
+readTime: 14 min read
 ---
 
 The assistant sits outside the content area: an orb, and a line of text that
@@ -237,6 +237,12 @@ strategies, run backtests through the same engine live bots use, and deploy a
 strategy as a bot.
 
 **Automation.** Build and edit workflows, price alerts and alert flows.
+
+**Workspaces.** Read the whole panel catalogue, then build you a saved
+workspace out of it: from scratch, from a Workspace Store template, or from the
+board you are already looking at. It can file boards in folders, rename and
+refile them, and rebuild the board on screen in one step. See
+[workspaces](/docs/workspaces).
 
 **Research.** Web search, news, top coins, Fear and Greed, asset overviews, and
 `deep_research` for a full sourced report. See
