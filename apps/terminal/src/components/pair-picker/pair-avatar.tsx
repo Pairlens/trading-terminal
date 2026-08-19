@@ -153,11 +153,23 @@ export function PairSymbol({ symbol, className, assetClass }: PairSymbolProps) {
 
 function PlainSymbol({ symbol, className }: PairSymbolProps) {
   const idx = symbol.indexOf('-')
-  if (idx === -1) return <span className={className}>{symbol}</span>
+  // `truncate` on both arms, `min-w-0` from the caller, and the full key in a
+  // `title`: a DEX pair opened from a link carries the raw mint address as its
+  // base leg, and an untruncated one ran 480px through the header controls
+  // beside it. The other two arms already do exactly this.
+  if (idx === -1)
+    return (
+      <span className={cn('truncate', className)} title={symbol}>
+        {symbol}
+      </span>
+    )
   const base = symbol.slice(0, idx)
   const quote = symbol.slice(idx + 1)
   return (
-    <span className={cn('font-mono font-semibold', className)}>
+    <span
+      className={cn('truncate font-mono font-semibold', className)}
+      title={symbol}
+    >
       {base}
       <span className="font-normal text-muted-foreground">-{quote}</span>
     </span>

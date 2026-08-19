@@ -3642,6 +3642,20 @@
       "moveRight": "오른쪽으로 이동"
     }
   },
+  "assetClass": {
+    "spot": "현물",
+    "perp": "무기한",
+    "dex": "DEX",
+    "stocks": "주식",
+    "prediction": "이벤트",
+    "binary": "이진",
+    "multiOutcome": "다중 결과",
+    "spotDescription": "거래소에서 자산 자체를 삽니다. 산 것은 당신의 것이고 체결 즉시 결제됩니다.",
+    "perpDescription": "만기가 없는 레버리지 가격 계약입니다. 롱과 숏이 서로 펀딩을 지급해 현물 가격에 가깝게 유지합니다.",
+    "dexDescription": "유동성 풀을 상대로 한 스왑이며 본인 지갑으로 서명합니다. 어느 체인에서 일어나는지도 거래 대상의 일부입니다.",
+    "stocksDescription": "브로커를 통한 주식이며 거래소 자체 달력을 따릅니다. 거래 시간, 거래 정지, 결제 규칙이 적용됩니다.",
+    "predictionDescription": "질문의 답에 대한 계약입니다. 답이 맞으면 1달러를, 틀리면 아무것도 지급하지 않습니다."
+  },
   "pluginStore": {
     "registryOffline": "플러그인 레지스트리가 오프라인입니다. 설치된 플러그인만 표시합니다.",
     "activated": "활성화됨",

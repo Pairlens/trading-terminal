@@ -3642,6 +3642,20 @@
       "moveRight": "Sağa taşı"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "HİSSE",
+    "prediction": "OLAY",
+    "binary": "İkili",
+    "multiOutcome": "Çok sonuçlu",
+    "spotDescription": "Varlığın kendisini bir borsadan alırsın. Aldığın şey senindir ve emir gerçekleşir gerçekleşmez takas olur.",
+    "perpDescription": "Fiyat üzerine kaldıraçlı, vadesi olmayan bir sözleşme. Uzun ve kısa taraflar spota yakın tutmak için birbirine fonlama öder.",
+    "dexDescription": "Bir likidite havuzuna karşı takas; imzayı kendi cüzdanın atar. Hangi zincirde olduğu da işlem ettiğin şeyin parçasıdır.",
+    "stocksDescription": "Bir aracı kurum üzerinden hisse; borsanın kendi takvimine tabidir. Seans saatleri, durdurmalar ve takas kuralları geçerlidir.",
+    "predictionDescription": "Bir sorunun cevabı üzerine sözleşme. Cevap doğruysa 1 $ öder, değilse hiçbir şey."
+  },
   "pluginStore": {
     "registryOffline": "Eklenti kayıt defteri çevrimdışı. Yalnızca kurulu eklentiler gösteriliyor.",
     "activated": "Etkinleştirildi",

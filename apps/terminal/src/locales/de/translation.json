@@ -3642,6 +3642,20 @@
       "moveRight": "Nach rechts verschieben"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "AKTIE",
+    "prediction": "EVENT",
+    "binary": "Binär",
+    "multiOutcome": "Mehrere Ausgänge",
+    "spotDescription": "Du kaufst den Vermögenswert selbst an einer Börse. Was du kaufst, gehört dir und wird sofort abgerechnet.",
+    "perpDescription": "Ein gehebelter Kontrakt auf den Preis, ohne Laufzeitende. Long und Short zahlen einander Funding, damit er nahe am Spot bleibt.",
+    "dexDescription": "Ein Swap gegen einen Liquiditätspool, signiert von deiner eigenen Wallet. Die Chain gehört mit zu dem, was du handelst.",
+    "stocksDescription": "Aktien über einen Broker, nach dem Kalender der Börse. Handelszeiten, Aussetzungen und Abwicklungsregeln gelten.",
+    "predictionDescription": "Ein Kontrakt auf die Antwort einer Frage. Er zahlt 1 $, wenn die Antwort stimmt, und nichts, wenn nicht."
+  },
   "pluginStore": {
     "registryOffline": "Die Plugin-Registry ist offline. Es werden nur installierte Plugins angezeigt.",
     "activated": "Aktiviert",

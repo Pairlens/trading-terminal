@@ -50,6 +50,21 @@
   /* P&L semantics — use everywhere for up/down instead of raw chart tokens */
   --up: var(--chart-2);
   --down: var(--destructive);
+
+  /* Asset-class identity — one hue per class, everywhere the terminal says
+     which kind of market you are looking at: the pair badge, the Discovery
+     tabs, the markets scanner chips. Deliberately theme-independent, unlike
+     everything above it. The association between violet and "perpetual
+     futures" is something a trader learns once, and a theme that repainted it
+     would unteach it. Hues sit ~55 degrees apart so no two read alike at badge
+     size, and every use pairs the colour with a label and an icon, so colour
+     is never the only carrier. */
+  --asset-spot: oklch(0.62 0.14 72);
+  --asset-perp: oklch(0.54 0.17 272);
+  --asset-dex: oklch(0.56 0.2 324);
+  --asset-stocks: oklch(0.52 0.14 158);
+  --asset-prediction: oklch(0.55 0.13 215);
+
   /* AI "magic" gradient stops — reserve for AI surfaces only */
   --magic-1: oklch(0.6 0.17 288);
   --magic-2: oklch(0.58 0.15 250);
@@ -149,6 +164,14 @@
   --chart-5: oklch(0.7 0.16 320);
   --up: var(--chart-2);
   --down: var(--destructive);
+
+  /* Asset-class identity — the same five hues, lifted for a charcoal ground */
+  --asset-spot: oklch(0.8 0.13 80);
+  --asset-perp: oklch(0.76 0.13 274);
+  --asset-dex: oklch(0.76 0.16 322);
+  --asset-stocks: oklch(0.76 0.14 160);
+  --asset-prediction: oklch(0.78 0.11 213);
+
   --magic-1: oklch(0.74 0.15 288);
   --magic-2: oklch(0.7 0.13 250);
   --magic-3: oklch(0.76 0.12 200);
@@ -242,6 +265,12 @@
   /* P&L + AI semantic utilities: bg-up / text-down / border-magic-1 … */
   --color-up: var(--up);
   --color-down: var(--down);
+  /* Asset-class utilities: text-asset-perp / bg-asset-dex/12 / border-asset-spot/30 */
+  --color-asset-spot: var(--asset-spot);
+  --color-asset-perp: var(--asset-perp);
+  --color-asset-dex: var(--asset-dex);
+  --color-asset-stocks: var(--asset-stocks);
+  --color-asset-prediction: var(--asset-prediction);
   --color-magic-1: var(--magic-1);
   --color-magic-2: var(--magic-2);
   --color-magic-3: var(--magic-3);

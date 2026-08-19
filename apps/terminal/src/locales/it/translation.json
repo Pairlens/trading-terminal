@@ -3642,6 +3642,20 @@
       "moveRight": "Sposta a destra"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "AZIONE",
+    "prediction": "EVENTO",
+    "binary": "Binario",
+    "multiOutcome": "Più esiti",
+    "spotDescription": "Compri l’asset stesso su un exchange. Quello che compri è tuo e si regola appena viene eseguito.",
+    "perpDescription": "Un contratto a leva sul prezzo, senza scadenza. Long e short si pagano il funding per tenerlo vicino allo spot.",
+    "dexDescription": "Uno swap contro una pool di liquidità, firmato dal tuo wallet. La chain su cui avviene fa parte di ciò che stai negoziando.",
+    "stocksDescription": "Azioni tramite un broker, sul calendario della borsa. Valgono orari, sospensioni e regole di regolamento.",
+    "predictionDescription": "Un contratto sulla risposta a una domanda. Paga 1 $ se la risposta è giusta e niente se è sbagliata."
+  },
   "pluginStore": {
     "registryOffline": "Il registro plugin è offline. Vengono mostrati solo i plugin installati.",
     "activated": "Attivato",

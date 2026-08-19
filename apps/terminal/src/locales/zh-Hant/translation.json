@@ -3642,6 +3642,20 @@
       "moveRight": "右移"
     }
   },
+  "assetClass": {
+    "spot": "現貨",
+    "perp": "永續",
+    "dex": "DEX",
+    "stocks": "股票",
+    "prediction": "事件",
+    "binary": "二元",
+    "multiOutcome": "多結果",
+    "spotDescription": "在交易所買入資產本身。買到的就是你的，成交即結算。",
+    "perpDescription": "對價格的槓桿合約，沒有到期日。多空之間支付資金費率，使其貼近現貨。",
+    "dexDescription": "與流動性池進行的兌換，由你自己的錢包簽名。發生在哪條鏈上，也是你所交易的一部分。",
+    "stocksDescription": "透過券商買賣股票，遵循交易所自己的行事曆。適用交易時段、暫停交易與交割規則。",
+    "predictionDescription": "對某個問題答案的合約。答對支付 1 美元，答錯則一無所得。"
+  },
   "pluginStore": {
     "registryOffline": "外掛登錄庫目前離線，僅顯示已安裝的外掛。",
     "activated": "已啟用",

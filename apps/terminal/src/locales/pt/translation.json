@@ -3642,6 +3642,20 @@
       "moveRight": "Mover para a direita"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "AÇÃO",
+    "prediction": "EVENTO",
+    "binary": "Binário",
+    "multiOutcome": "Múltiplos resultados",
+    "spotDescription": "Você compra o próprio ativo numa corretora. O que compra é seu e liquida assim que executa.",
+    "perpDescription": "Um contrato alavancado sobre o preço, sem vencimento. Comprados e vendidos pagam funding entre si para mantê-lo perto do spot.",
+    "dexDescription": "Um swap contra um pool de liquidez, assinado pela sua própria carteira. A rede onde acontece faz parte do que você negocia.",
+    "stocksDescription": "Ações via corretora, no calendário da própria bolsa. Valem horários, interrupções e regras de liquidação.",
+    "predictionDescription": "Um contrato sobre a resposta a uma pergunta. Paga US$ 1 se a resposta estiver certa e nada se não estiver."
+  },
   "pluginStore": {
     "registryOffline": "O registro de plugins está offline. Mostrando apenas plugins instalados.",
     "activated": "Ativado",

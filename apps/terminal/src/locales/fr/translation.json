@@ -3642,6 +3642,20 @@
       "moveRight": "Déplacer vers la droite"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "ACTION",
+    "prediction": "ÉVÉNEMENT",
+    "binary": "Binaire",
+    "multiOutcome": "Multi-issues",
+    "spotDescription": "Vous achetez l’actif lui-même sur une plateforme. Ce que vous achetez vous appartient et se règle dès l’exécution.",
+    "perpDescription": "Un contrat à effet de levier sur le prix, sans échéance. Longs et shorts se versent un financement pour le maintenir près du spot.",
+    "dexDescription": "Un swap contre un pool de liquidité, signé par votre propre wallet. La chaîne où il a lieu fait partie de ce que vous négociez.",
+    "stocksDescription": "Des actions via un courtier, au calendrier de la bourse. Horaires, suspensions et règles de règlement s’appliquent.",
+    "predictionDescription": "Un contrat sur la réponse à une question. Il paie 1 $ si la réponse est juste, rien sinon."
+  },
   "pluginStore": {
     "registryOffline": "Le registre de plugins est hors ligne. Affichage des plugins installés uniquement.",
     "activated": "Activé",

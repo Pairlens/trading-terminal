@@ -3642,6 +3642,20 @@
       "moveRight": "Pindahkan ke kanan"
     }
   },
+  "assetClass": {
+    "spot": "SPOT",
+    "perp": "PERP",
+    "dex": "DEX",
+    "stocks": "SAHAM",
+    "prediction": "EVENT",
+    "binary": "Biner",
+    "multiOutcome": "Banyak hasil",
+    "spotDescription": "Kamu membeli asetnya langsung di bursa. Yang kamu beli jadi milikmu dan selesai begitu order tereksekusi.",
+    "perpDescription": "Kontrak berleverage atas harga, tanpa tanggal jatuh tempo. Posisi long dan short saling membayar funding agar tetap dekat harga spot.",
+    "dexDescription": "Swap terhadap pool likuiditas, ditandatangani dompetmu sendiri. Chain tempatnya terjadi adalah bagian dari yang kamu perdagangkan.",
+    "stocksDescription": "Saham lewat broker, mengikuti kalender bursa itu sendiri. Berlaku jam perdagangan, penghentian, dan aturan penyelesaian.",
+    "predictionDescription": "Kontrak atas jawaban sebuah pertanyaan. Membayar $1 jika jawabannya benar dan nol jika salah."
+  },
   "pluginStore": {
     "registryOffline": "Registri plugin sedang offline. Hanya menampilkan plugin yang terpasang.",
     "activated": "Diaktifkan",

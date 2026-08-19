@@ -42,6 +42,7 @@ import {
 import { PREDICTION_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-predictions/workspaces'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
+import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
 import type {
   AssetClassFilter,
   PairCategory,
@@ -50,6 +51,7 @@ import type {
 import type { BulkQuote } from '@/hooks/use-bulk-ticker-quotes'
 import type { TopCoin } from '@pairlens/shared/instrument-types'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -448,32 +450,43 @@ export function MarketsPane() {
           </div>
         </div>
 
-        {/* Asset class filter */}
+        {/* Asset class filter — the same five colours the Discovery tabs and
+            the pair badge wear, so the chip a trader picks here matches the
+            badge on the pair it opens. */}
         <div className="flex flex-wrap gap-1">
-          {ASSET_CLASSES.map((ac) => (
-            <Button
-              key={ac.id}
-              size="xs"
-              variant={assetClassFilter === ac.id ? 'default' : 'ghost'}
-              className="gap-1"
-              onClick={() => {
-                setAssetClassFilter(ac.id)
-                // Reset category when switching to a class the crypto sector
-                // taxonomy doesn't describe (equities, prediction outcomes,
-                // perpetual contracts)
-                if (
-                  !SECTORED_ASSET_CLASSES.has(ac.id) &&
-                  activeCategory !== 'all' &&
-                  activeCategory !== 'watchlists'
-                ) {
-                  setActiveCategory('all')
-                }
-              }}
-            >
-              <ac.icon className="size-3" />
-              {t(`markets.assetClass.${ac.id}`, ac.label)}
-            </Button>
-          ))}
+          {ASSET_CLASSES.map((ac) => {
+            const cls = normalizeInstrumentClass(ac.id)
+            const visual = cls ? assetClassVisual(cls) : null
+            const selected = assetClassFilter === ac.id
+            return (
+              <Button
+                key={ac.id}
+                size="xs"
+                variant={selected && !visual ? 'default' : 'ghost'}
+                className={cn(
+                  'gap-1 border border-transparent',
+                  selected &&
+                    visual && [visual.activeBg, visual.border, visual.text],
+                )}
+                onClick={() => {
+                  setAssetClassFilter(ac.id)
+                  // Reset category when switching to a class the crypto sector
+                  // taxonomy doesn't describe (equities, prediction outcomes,
+                  // perpetual contracts)
+                  if (
+                    !SECTORED_ASSET_CLASSES.has(ac.id) &&
+                    activeCategory !== 'all' &&
+                    activeCategory !== 'watchlists'
+                  ) {
+                    setActiveCategory('all')
+                  }
+                }}
+              >
+                <ac.icon className={cn('size-3', visual?.text)} />
+                {t(`markets.assetClass.${ac.id}`, ac.label)}
+              </Button>
+            )
+          })}
         </div>
 
         {/* Category tabs (hidden for classes the crypto sector taxonomy doesn't
