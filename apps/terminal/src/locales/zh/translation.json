@@ -298,6 +298,11 @@
     "strided_other": "每点 {{count}} 个区间",
     "tooltipCapped_one": "另有 1 个",
     "tooltipCapped_other": "另有 {{count}} 个",
+    "restBand": "其余选项",
+    "view": {
+      "lines": "折线",
+      "stacked": "堆叠"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

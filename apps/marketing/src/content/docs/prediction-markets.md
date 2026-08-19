@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 18 min read
+readTime: 19 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -302,13 +302,43 @@ to that outcome, which is how you go from spotting a crossover to trading it.
 
 **The crosshair reads the whole field.** Hover anywhere and every visible
 runner is listed at that instant, sorted by probability, with the percentage
-and the price in cents. The order re-sorts as you move, so a crossover is
-something you watch happen rather than infer from two lines that got close.
+and the price in cents, plus the rest of the field when bands are drawn. The
+order re-sorts as you move, so a crossover is something you watch happen rather
+than infer from two lines that got close. A runner the venue has no price for
+at that instant is left out rather than read back at 0%.
 
 **The axis is fixed at 0 to 100%.** Never scaled to the field. A race whose leader
 sits at 12% would otherwise fill the pane and read as a certainty, and two
-runners two points apart would look like a chasm. The empty top of the chart is
-part of the reading: nobody here is close to winning.
+runners two points apart would look like a chasm. In the line view the empty
+top of the chart is part of the reading: nobody here is close to winning.
+
+**Lines or bands.** A fixed axis has one bad failure mode and races hit it
+constantly. When the favourite is at 22%, all eight lines share the bottom
+fifth of the pane and the gap between second and third is two pixels. So a race
+can also be drawn stacked: the same runners as bands laid end to end, in the
+same colours, filling the axis by construction. Each band's thickness is that
+runner's probability, so second against third stops being two lines a pixel
+apart and becomes two heights. The switch sits in the footer beside the spans,
+and like the span it is remembered across contracts and across devices.
+
+Stacked bands are the default where they apply. Two rules keep them honest.
+
+They stack the raw probabilities and never normalize to 100%. The obvious
+implementation divides each runner by the sum of the drawn ones, which fills
+the axis perfectly and reports a 22% favourite as a 30% favourite. Instead the
+leftover goes to a grey **Rest of field** band at the top, which is exactly the
+probability mass the chart is not drawing: the runners past the cap, the ones
+you toggled off, the ones the venue has no history for, and whatever the book's
+overround leaves on the table. Every band measures true and the grey says how
+much of the question is off-screen.
+
+And only a field that is genuinely a partition can be stacked at all. A Kalshi
+strike ladder is nested rather than exclusive: "above 60k" is true whenever
+"above 70k" is, and its Yes prices sum to several dollars, so laying them end
+to end would draw a quantity that does not exist. The switch checks what the
+field sums to and simply does not appear on markets that fail it, binaries
+included, where a stack of two is one boundary line the price chart draws
+better.
 
 **Five spans**: 1H, 6H, 1D, 1W, 1M, drawn from the minute, hour and day candles
 both venues serve. The span is remembered across contracts, because it is a

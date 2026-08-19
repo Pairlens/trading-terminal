@@ -298,6 +298,11 @@
     "strided_other": "{{count}} ช่วงต่อจุด",
     "tooltipCapped_one": "อีก 1 รายการ",
     "tooltipCapped_other": "อีก {{count}} รายการ",
+    "restBand": "ตัวเลือกที่เหลือ",
+    "view": {
+      "lines": "เส้น",
+      "stacked": "แบบซ้อน"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

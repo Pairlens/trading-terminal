@@ -334,6 +334,11 @@
     "tooltipCapped_few": "+{{count}} uczestników",
     "tooltipCapped_many": "+{{count}} uczestników",
     "tooltipCapped_other": "+{{count}} uczestnika",
+    "restBand": "Reszta stawki",
+    "view": {
+      "lines": "Linie",
+      "stacked": "Skumulowany"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

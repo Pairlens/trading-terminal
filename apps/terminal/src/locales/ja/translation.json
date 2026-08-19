@@ -298,6 +298,11 @@
     "strided_other": "1点あたり{{count}}区間",
     "tooltipCapped_one": "ほか1件",
     "tooltipCapped_other": "ほか{{count}}件",
+    "restBand": "その他の候補",
+    "view": {
+      "lines": "折れ線",
+      "stacked": "積み上げ"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

@@ -6117,6 +6117,11 @@
     "strided_other": "{{count}} buckets per point",
     "tooltipCapped_one": "+1 more runner",
     "tooltipCapped_other": "+{{count}} more runners",
+    "restBand": "Rest of field",
+    "view": {
+      "lines": "Lines",
+      "stacked": "Stacked"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",

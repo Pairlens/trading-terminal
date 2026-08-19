@@ -298,6 +298,11 @@
     "strided_other": "점당 {{count}}구간",
     "tooltipCapped_one": "외 1개",
     "tooltipCapped_other": "외 {{count}}개",
+    "restBand": "나머지 후보",
+    "view": {
+      "lines": "선",
+      "stacked": "누적"
+    },
     "window": {
       "hour": "1H",
       "sixHours": "6H",
