@@ -363,7 +363,7 @@ export function createCoinglassLiquidationsPlugin(
       const next = String(config['apiKey'] ?? '').trim()
       if (next === '') {
         throw new Error(
-          'Coinglass API key required. Add it in the plugin settings.',
+          'Coinglass API key required: add it in the plugin settings',
         )
       }
       // A new key is a new budget and a new entitlement, so the cached client

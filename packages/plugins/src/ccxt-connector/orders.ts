@@ -304,7 +304,7 @@ export function buildCcxtOrderCall(
     if (order.type === 'market' && has['createStopMarketOrder'] === false) {
       return {
         kind: 'reject',
-        error: `${label} only accepts trigger orders with a limit price — set one and resubmit`,
+        error: `${label} only accepts trigger orders with a limit price: set one and resubmit`,
       }
     }
     // The explicit TP/SL spelling comes FIRST: a Pairlens trigger always
@@ -348,7 +348,7 @@ export function buildCcxtOrderCall(
     if (!hasCostSupport(has, order.side)) {
       return {
         kind: 'reject',
-        error: `${label} does not accept quote-denominated market ${order.side}s — size the order in ${symbol.split('/')[0] ?? 'the base asset'}`,
+        error: `${label} does not accept quote-denominated market ${order.side}s: size the order in ${symbol.split('/')[0] ?? 'the base asset'}`,
       }
     }
     return { kind: 'cost', symbol, side: order.side, cost: size, params }
@@ -464,7 +464,7 @@ export class CcxtTradingRuntime {
           const quote = call.symbol.split('/')[1] ?? 'the quote asset'
           return {
             success: false,
-            error: `${this.opts.venue.displayName} sizes market buys by cost and no reference price is available — try a limit order, or size the order in ${quote}`,
+            error: `${this.opts.venue.displayName} sizes market buys by cost and no reference price is available: try a limit order, or size the order in ${quote}`,
           }
         }
         price = reference
@@ -651,7 +651,7 @@ export class CcxtTradingRuntime {
     if (this.opts.venue.paperOrderParams) return null
     return {
       success: false,
-      error: `${this.opts.venue.displayName} has no paper trading environment — switch this credential to live or paper-trade on another venue`,
+      error: `${this.opts.venue.displayName} has no paper trading environment: switch this credential to live or paper-trade on another venue`,
     }
   }
 
@@ -704,7 +704,7 @@ export class CcxtTradingRuntime {
       if (error instanceof Error && error.name === 'RequestTimeout') {
         // The frame may have been delivered; a blind retry can double-fill.
         const advisory = new Error(
-          `${error.message} — sent over the trading socket; the order may still have been accepted, check open orders before retrying`,
+          `${error.message} (sent over the trading socket; the order may still have been accepted, check open orders before retrying)`,
         )
         advisory.name = error.name
         throw advisory

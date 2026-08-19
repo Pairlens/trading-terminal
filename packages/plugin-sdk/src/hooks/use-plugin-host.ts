@@ -9,8 +9,8 @@ export function usePluginHost(): PluginHostServices {
   const ctx = useContext(PluginHostContext)
   if (!ctx) {
     throw new Error(
-      'usePluginHost must be used within a PluginHostContext.Provider — ' +
-        'this usually means the component is not rendered inside a terminal pane.',
+      'usePluginHost must be used within a PluginHostContext.Provider. ' +
+        'This usually means the component is not rendered inside a terminal pane.',
     )
   }
   return ctx

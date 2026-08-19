@@ -127,7 +127,7 @@ export const nightCityManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Cyberpunk 2077 inspired — electric yellow on dark gunmetal with sharp edges',
+    'Cyberpunk 2077 inspired: electric yellow on dark gunmetal with sharp edges',
   capabilities: [
     {
       id: 'theme:override',
