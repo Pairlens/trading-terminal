@@ -9,6 +9,7 @@ import {
 
 import { LayoutCell } from './layout-cell'
 import { PaneRule, RowHandle } from './layout-handles'
+import { fitCellMaxHeight } from './layout-column-geometry'
 import type {
   DropZone,
   LayoutCell as LayoutCellType,
@@ -137,6 +138,12 @@ export const LayoutColumn = memo(function LayoutColumn({
 
   // Hybrid layout: fitContent cells size to content, others fill remaining space
   const groups = groupCells(column.cells, defs)
+  const fitMaxHeight = fitCellMaxHeight({
+    fitCells: groups.filter((g) => g.type === 'fit').length,
+    flexCells: groups.flatMap((g) => (g.type === 'flex' ? g.cells : [])),
+    separators: column.cells.length - 1,
+    defs,
+  })
 
   return (
     <div className={COLUMN_SURFACE}>
@@ -145,7 +152,10 @@ export const LayoutColumn = memo(function LayoutColumn({
           return (
             <Fragment key={group.cell.id}>
               {gi > 0 && <PaneRule />}
-              <div className="shrink-0">
+              <div
+                className="shrink-0 overflow-y-auto"
+                style={{ maxHeight: fitMaxHeight }}
+              >
                 <LayoutCell cell={group.cell} dropZone={dropZone} fitContent />
               </div>
             </Fragment>

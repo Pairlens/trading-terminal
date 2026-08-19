@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The one-row clock that sits directly above the ticket.
+ * The one-row clock that heads the chart column.
  *
  * It is there because extended hours change what the ticket will ACCEPT, not
  * just a label on it: outside regular hours the order type is forced to limit,
@@ -43,11 +43,14 @@ export function SessionClockPane() {
   }
 
   if (gate !== 'ok') {
+    // The row's own shape, not a centred hero: this pane is one line tall by
+    // design, and a hero inside it read as a broken cell with its own sentence
+    // cut in half.
     return (
       <PaneCredentialsRequired
-        compact
         market={venue.market}
         state={gate}
+        variant="compact"
         venueLabel={venueLabel}
       />
     )

@@ -4,7 +4,7 @@
  * The parts both clock panes draw.
  *
  * `session` is the wide discovery strip and `session-clock` is the one-row
- * version that sits above the ticket; they say the same thing at two sizes, so
+ * version that heads the chart column; they say the same thing at two sizes, so
  * the phase chip, the countdown sentence and the day bar live here rather than
  * in two copies that drift apart on the day a half session proves one of them
  * wrong.

@@ -5,7 +5,7 @@ group: traders
 order: 8
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 11 min read
+readTime: 12 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -65,6 +65,14 @@ the keyboard too.
 A close button sits beside the grip and appears with it. **Close Pane** in the
 panel's right-click menu does the same, alongside **Pop Out to Column** and the
 variable bindings below.
+
+A few panels size to what they draw rather than to a share of the column: the
+trade ticket, the risk bar, and the equities session strips. They take the
+height they need and hand the rest to whatever is stacked with them, which is
+why the session strip on the stock boards is one row tall on a 4K screen and
+one row tall on a laptop. When a column is too short to hold one of them
+outright, the panel scrolls instead of squeezing its neighbours to nothing:
+every other panel in that column keeps at least the height it declares.
 
 ## Discovery is one board per asset class
 
