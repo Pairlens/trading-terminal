@@ -199,10 +199,11 @@
     "emptyBody": "Harmonogram publikacji pochodzi z App Servera. Ta wersja działa samodzielnie, więc nie ma z czego go zestawić.",
     "columns": {
       "actual": "Wynik",
-      "implied": "Implikowane (Kalshi)",
+      "implied": "Implikowane",
+      "impliedSource": "Kalshi",
       "prior": "Poprzednio",
       "source": "Urząd",
-      "time": "Godzina ({{zone}})",
+      "time": "Godzina",
       "event": "Publikacja"
     },
     "impact": {

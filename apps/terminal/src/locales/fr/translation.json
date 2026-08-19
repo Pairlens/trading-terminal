@@ -187,10 +187,11 @@
     "emptyBody": "Le calendrier de publication vient de l'App Server. Cette version fonctionne en autonome, il n'y a donc rien à compiler.",
     "columns": {
       "actual": "Publié",
-      "implied": "Implicite (Kalshi)",
+      "implied": "Implicite",
+      "impliedSource": "Kalshi",
       "prior": "Précédent",
       "source": "Agence",
-      "time": "Heure ({{zone}})",
+      "time": "Heure",
       "event": "Publication"
     },
     "impact": {

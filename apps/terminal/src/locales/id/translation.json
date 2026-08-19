@@ -187,10 +187,11 @@
     "emptyBody": "Jadwal rilis berasal dari App Server. Build ini berjalan mandiri, jadi tidak ada sumber untuk menyusunnya.",
     "columns": {
       "actual": "Aktual",
-      "implied": "Implisit (Kalshi)",
+      "implied": "Implisit",
+      "impliedSource": "Kalshi",
       "prior": "Sebelumnya",
       "source": "Lembaga",
-      "time": "Waktu ({{zone}})",
+      "time": "Waktu",
       "event": "Rilis"
     },
     "impact": {

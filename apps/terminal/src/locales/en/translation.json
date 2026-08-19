@@ -6542,11 +6542,12 @@
     },
     "noneHighBody": "No high impact release in this window. Switch to All to see the rest of the calendar.",
     "columns": {
-      "time": "Time ({{zone}})",
+      "time": "Time",
       "event": "Release",
       "actual": "Actual",
       "prior": "Prior",
-      "implied": "Implied (Kalshi)",
+      "implied": "Implied",
+      "impliedSource": "Kalshi",
       "source": "Agency"
     },
     "countdownDh": "in {{days}}d {{hours}}h",

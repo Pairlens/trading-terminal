@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 9
 eyebrow: For traders
-updated: 18 AUG 2026
+updated: 19 AUG 2026
 readTime: 15 min read
 ---
 
@@ -331,7 +331,9 @@ never look alike.
 
 **The middle figure column is Implied, and it names Kalshi.** It sits between
 Actual and Prior because it is where a reader expects the expectation, and the
-columns read print, expectation, baseline. It is not a consensus and
+columns read print, expectation, baseline. The venue rides the column head
+beside the label, and a pane too narrow to carry both words keeps the label and
+drops the venue; hovering the head or any implied figure still names it. It is not a consensus and
 is never labelled as one. Kalshi runs regulated markets on these exact releases,
 its market data needs no authentication, and reading the ladder of "above X"
 contracts gives a live distribution: the strike where the market prices even odds
