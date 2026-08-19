@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · compras menos vendas, em blocos de cinco minutos",
     "waitingTitle": "À espera do mapa",
     "waitingBody": "Os pools da rede ainda estão a carregar. O fluxo aparece assim que um for selecionado.",
-    "unavailableTitle": "Pools indisponíveis agora"
+    "unavailableTitle": "Pools indisponíveis agora",
+    "swapsUnavailableTitle": "Swaps indisponíveis agora",
+    "swapsUnavailableBody": "O provedor de dados on-chain não retornou os swaps deste pool. Costuma se resolver sozinho."
   },
   "lpPanes": {
     "venueFallback": "esta rede",
@@ -1027,7 +1029,8 @@
     "filledBy": "Lacunas preenchidas por {{provider}}",
     "waitingTitle": "À espera do mapa",
     "waitingBody": "Os pools da rede ainda estão a carregar. O mais líquido abre aqui sozinho.",
-    "unavailableTitle": "Pools indisponíveis agora"
+    "unavailableTitle": "Pools indisponíveis agora",
+    "stateUnavailable": "O provedor de dados não retornou o estado ao vivo do pool. Os números acima são os da listagem da chain."
   },
   "poolMap": {
     "title": "{{chain}} · principais pools",

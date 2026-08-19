@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · Käufe minus Verkäufe, in Fünf-Minuten-Schritten",
     "waitingTitle": "Warte auf die Karte",
     "waitingBody": "Die Pools der Chain laden noch. Der Fluss erscheint, sobald einer ausgewählt ist.",
-    "unavailableTitle": "Pools gerade nicht verfügbar"
+    "unavailableTitle": "Pools gerade nicht verfügbar",
+    "swapsUnavailableTitle": "Swaps gerade nicht verfügbar",
+    "swapsUnavailableBody": "Der On-Chain-Datenanbieter hat die Swaps dieses Pools nicht geliefert. Das löst sich meist von selbst."
   },
   "lpPanes": {
     "venueFallback": "diese Chain",
@@ -1027,7 +1029,8 @@
     "filledBy": "Lücken gefüllt von {{provider}}",
     "waitingTitle": "Warte auf die Karte",
     "waitingBody": "Die Pools der Chain laden noch. Der tiefste öffnet sich hier von selbst.",
-    "unavailableTitle": "Pools gerade nicht verfügbar"
+    "unavailableTitle": "Pools gerade nicht verfügbar",
+    "stateUnavailable": "Der Datenanbieter hat keinen Live-Pool-Status geliefert. Die Zahlen oben stammen aus dem Listing der Chain."
   },
   "poolMap": {
     "title": "{{chain}} · Top-Pools",

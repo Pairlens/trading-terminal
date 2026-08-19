@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · achats moins ventes, par tranches de cinq minutes",
     "waitingTitle": "En attente de la carte",
     "waitingBody": "Les pools de la chaîne chargent encore. Le flux apparaît dès qu’un pool est sélectionné.",
-    "unavailableTitle": "Pools indisponibles pour le moment"
+    "unavailableTitle": "Pools indisponibles pour le moment",
+    "swapsUnavailableTitle": "Swaps indisponibles pour le moment",
+    "swapsUnavailableBody": "Le fournisseur de données on-chain n’a pas renvoyé les swaps de ce pool. Cela se rétablit généralement tout seul."
   },
   "lpPanes": {
     "venueFallback": "cette chaîne",
@@ -1027,7 +1029,8 @@
     "filledBy": "Lacunes comblées par {{provider}}",
     "waitingTitle": "En attente de la carte",
     "waitingBody": "Les pools de la chaîne chargent encore. Le plus profond s’ouvre ici tout seul.",
-    "unavailableTitle": "Pools indisponibles pour le moment"
+    "unavailableTitle": "Pools indisponibles pour le moment",
+    "stateUnavailable": "Le fournisseur de données n’a pas renvoyé l’état en direct du pool. Les chiffres ci-dessus proviennent du listing de la chaîne."
   },
   "poolMap": {
     "title": "{{chain}} · top pools",

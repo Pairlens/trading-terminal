@@ -175,6 +175,33 @@ export async function resolvePool(
   }
 }
 
+/**
+ * Record a pool a caller already knew, so the next reader of the same pair
+ * does not spend a request re-deriving it.
+ *
+ * Only ever called with an address that just answered successfully, which is
+ * what makes it safe to treat as resolved. The point is not only the saved
+ * request: a board that pinned a pool wants every pane describing THAT pool,
+ * candles included, rather than the deepest one the search would have picked.
+ */
+export function notePool(
+  pair: string,
+  network: string,
+  pool: { address: string; dexName?: string; volume24hUsd?: number | null },
+): void {
+  if (!pair || !pool.address) return
+  poolCache.set(`${network}:${pair}`, {
+    pool: {
+      id: `${network}_${pool.address}`,
+      address: pool.address,
+      network,
+      dexName: pool.dexName ?? '',
+      volume24h: pool.volume24hUsd ?? 0,
+    },
+    ts: Date.now(),
+  })
+}
+
 export function clearPoolCache(): void {
   poolCache.clear()
 }

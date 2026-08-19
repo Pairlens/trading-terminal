@@ -87,22 +87,28 @@ export function parsePoolTrades(
 /**
  * Same contract as fetchPoolStats: null for "no pool", throw for a failed
  * request, so the fallback chain can still try DexPaprika on desktop.
+ *
+ * `poolAddress` pins the pool and skips resolution — see fetchPoolStats for
+ * why a caller that has one must pass it. It matters more here than anywhere:
+ * a tape is evidence about a specific pool, and swaps from a deeper pool that
+ * happens to trade the same token are not a smaller version of the truth.
  */
 export async function fetchPoolTrades(
   pair: string,
   network: string,
   minVolumeUsd = 0,
+  poolAddress?: string,
 ): Promise<Array<PoolTrade> | null> {
-  const pool = await resolvePool(pair, network)
-  if (!pool) return null
+  const address = poolAddress || (await resolvePool(pair, network))?.address
+  if (!address) return null
 
   const query =
     minVolumeUsd > 0 ? `?trade_volume_in_usd_greater_than=${minVolumeUsd}` : ''
   const res = await fetch(
-    `${API_BASE}/networks/${pool.network}/pools/${pool.address}/trades${query}`,
+    `${API_BASE}/networks/${network}/pools/${address}/trades${query}`,
   )
   if (!res.ok) {
-    throw new Error(`GeckoTerminal trades ${pool.address}: HTTP ${res.status}`)
+    throw new Error(`GeckoTerminal trades ${address}: HTTP ${res.status}`)
   }
   const json = (await res.json()) as { data?: Array<RawGeckoTrade> }
   return parsePoolTrades(json.data)

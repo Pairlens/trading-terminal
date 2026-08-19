@@ -560,7 +560,9 @@
     "subtitleVenue": "{{venue}} · kupno minus sprzedaż, w pięciominutowych odcinkach",
     "waitingTitle": "Czekam na mapę pul",
     "waitingBody": "Pule tego łańcucha wciąż się ładują. Przepływ pojawi się po wybraniu puli.",
-    "unavailableTitle": "Pule chwilowo niedostępne"
+    "unavailableTitle": "Pule chwilowo niedostępne",
+    "swapsUnavailableTitle": "Swapy chwilowo niedostępne",
+    "swapsUnavailableBody": "Dostawca danych on-chain nie zwrócił swapów tej puli. Zwykle wraca to samo z siebie."
   },
   "lpPanes": {
     "venueFallback": "ten łańcuch",
@@ -1085,7 +1087,8 @@
     "filledBy": "Luki uzupełnione przez {{provider}}",
     "waitingTitle": "Czekam na mapę pul",
     "waitingBody": "Pule tego łańcucha wciąż się ładują. Najgłębsza otworzy się tu sama.",
-    "unavailableTitle": "Pule chwilowo niedostępne"
+    "unavailableTitle": "Pule chwilowo niedostępne",
+    "stateUnavailable": "Dostawca danych nie zwrócił bieżącego stanu puli. Powyższe liczby pochodzą z listingu łańcucha."
   },
   "poolMap": {
     "title": "{{chain}} · czołowe pule",

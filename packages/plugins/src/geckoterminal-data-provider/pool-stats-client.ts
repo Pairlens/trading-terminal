@@ -11,7 +11,7 @@
  * would be right for a constant-product pool and wrong for every
  * concentrated-liquidity one, which is most of the volume.
  */
-import { resolvePool } from './pool-resolver'
+import { notePool, resolvePool } from './pool-resolver'
 import { geckoFetch as fetch } from './rate-limiter'
 import type { PoolStats } from '@pairlens/shared/instrument-types'
 
@@ -131,6 +131,15 @@ export function parsePoolStats(
 /**
  * Resolve the pair's pool and read its state.
  *
+ * `poolAddress` skips the resolution entirely, and callers that have one
+ * should pass it. A discovery board already knows the exact pool the user
+ * clicked, and re-deriving it from `BASE-QUOTE` costs a request out of the
+ * tightest budget in the app to answer a question that was already answered —
+ * sometimes with a DIFFERENT pool, because the resolver picks the deepest pool
+ * for the base token and a chain can list a dozen for one pair. A detail pane
+ * quoting one pool's liquidity beside a map tile sized by another's volume is
+ * not a slower board, it is a wrong one.
+ *
  * Returns null when no pool resolves — a real answer the pane renders as "no
  * pool here". THROWS when the request itself fails, which is what lets the
  * plugin manager walk to DexPaprika instead of latching an empty pane; a 429
@@ -139,17 +148,21 @@ export function parsePoolStats(
 export async function fetchPoolStats(
   pair: string,
   network: string,
+  poolAddress?: string,
 ): Promise<PoolStats | null> {
-  const pool = await resolvePool(pair, network)
-  if (!pool) return null
+  const address = poolAddress || (await resolvePool(pair, network))?.address
+  if (!address) return null
 
-  const res = await fetch(
-    `${API_BASE}/networks/${pool.network}/pools/${pool.address}`,
-  )
+  const res = await fetch(`${API_BASE}/networks/${network}/pools/${address}`)
   if (!res.ok) {
-    throw new Error(`GeckoTerminal pool ${pool.address}: HTTP ${res.status}`)
+    throw new Error(`GeckoTerminal pool ${address}: HTTP ${res.status}`)
   }
   const json = (await res.json()) as { data?: RawGeckoPool }
   if (!json.data) return null
-  return parsePoolStats(json.data, pool.network)
+  const stats = parsePoolStats(json.data, network)
+  // A pinned read proves the pool exists, which is the one thing the resolver
+  // would have spent a request learning. Handing it back means the pair's
+  // candles follow the pool the board selected instead of resolving their own.
+  if (stats && poolAddress) notePool(pair, network, stats)
+  return stats
 }

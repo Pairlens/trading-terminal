@@ -65,9 +65,14 @@ export function LiquidityFlowPane() {
   const listing = usePoolListing(chain, !pool, DISCOVERY_POOL_LISTING)
 
   const pairKey = pool ? poolPairKey(pool) : undefined
-  const { trades, isLoading } = usePoolTrades(pool?.market, pairKey, {
-    enabled: Boolean(pool),
-  })
+  // Pinned to the selected pool's address. A tape is evidence about ONE pool,
+  // and re-resolving the pair can hand back the deepest pool for the same two
+  // tokens — bars that disagree with the tile the reader clicked.
+  const { trades, isLoading, error, throttled, retrying } = usePoolTrades(
+    pool?.market,
+    pairKey,
+    { enabled: Boolean(pool), poolAddress: pool?.address },
+  )
 
   const buckets = useMemo(
     () => bucketNetFlow(trades, BUCKET_MS, BUCKET_COUNT, Date.now()),
@@ -146,17 +151,34 @@ export function LiquidityFlowPane() {
       </DexPaneHeader>
 
       {trades.length === 0 ? (
+        // Three outcomes, three sentences. "No swaps yet" was being shown for
+        // all of them, which on a rate-limited provider told the reader a pool
+        // doing eight figures a day had gone quiet — the one reading of an
+        // empty flow chart that is never recoverable by waiting.
+        //
+        // The failure OUTRANKS the retry, and that ordering is the whole
+        // point. This tape polls every fifteen seconds and a refused cycle
+        // takes longer than that to give up, so a pane that showed "loading"
+        // whenever an attempt was in flight would spend its whole life
+        // claiming to load and never once say what was wrong. Loading is only
+        // honest before the first failure.
         <PaneEmpty
           icon={Waves}
           title={
-            isLoading
-              ? t('liquidityFlow.loadingTitle')
-              : t('liquidityFlow.emptyTitle')
+            error
+              ? t('liquidityFlow.swapsUnavailableTitle')
+              : isLoading || retrying
+                ? t('liquidityFlow.loadingTitle')
+                : t('liquidityFlow.emptyTitle')
           }
           body={
-            isLoading
-              ? t('liquidityFlow.loadingBody')
-              : t('liquidityFlow.emptyBody')
+            error
+              ? throttled
+                ? error
+                : t('liquidityFlow.swapsUnavailableBody')
+              : isLoading || retrying
+                ? t('liquidityFlow.loadingBody')
+                : t('liquidityFlow.emptyBody')
           }
         />
       ) : (

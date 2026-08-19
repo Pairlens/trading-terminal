@@ -47,6 +47,7 @@ import {
 } from '@/lib/dex/pool-math'
 import { providerLabel } from '@/lib/dex/pool-stats-merge'
 import { poolPairKey } from '@/lib/dex/pool-pair'
+import { poolDetailView } from '@/lib/dex/pool-view'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { formatCompactUsd, formatPrice } from '@/lib/format-price'
 
@@ -67,12 +68,17 @@ export function PoolDetailPane() {
   // reader to do something it has made impossible.
   const listing = usePoolListing(chain, !pool, DISCOVERY_POOL_LISTING)
 
-  const { stats, isLoading, filledBy } = usePoolStats(pool?.market, pairKey)
+  // Pinned to the selected pool's own address, not re-resolved from the pair:
+  // the map row already identified it, and the resolver would spend a request
+  // to maybe pick a different pool for the same two tokens.
+  const { stats, isLoading, error, throttled, retrying, filledBy } =
+    usePoolStats(pool?.market, pairKey, true, pool?.address)
 
   // Identical arguments to the flow pane's call, which is the whole point: the
   // two panes share one react-query entry and this one costs no request.
   const { trades } = usePoolTrades(pool?.market, pairKey, {
     enabled: Boolean(pool),
+    poolAddress: pool?.address,
   })
 
   const [impact] = usePriceImpactTiers(
@@ -124,12 +130,15 @@ export function PoolDetailPane() {
     )
   }
 
-  const turnover = volumeToTvl(
-    stats?.volume24hUsd ?? null,
-    stats?.reserveUsd ?? null,
-  )
-  const reserveUsd = measurableReserveUsd(stats?.reserveUsd ?? null)
-  const change = stats?.change24hPct ?? null
+  // Live pool state where we have it, the map row's own figures until then.
+  // `live` is what the footer reads: the same six numbers mean different things
+  // depending on whether a provider just measured the pool or the map listed it
+  // five minutes ago, and only one of those is worth holding a spinner over.
+  const view = poolDetailView(stats, pool.listed)
+
+  const turnover = volumeToTvl(view.volume24hUsd, view.reserveUsd)
+  const reserveUsd = measurableReserveUsd(view.reserveUsd)
+  const change = view.change24hPct
   const venue = titleCaseVenue(pool.dexName)
   const chainName = dexChain(pool.market)?.displayName ?? null
   const impactPct = impact?.impact ?? null
@@ -152,7 +161,7 @@ export function PoolDetailPane() {
           </div>
         </div>
         <p className="mt-2.5 font-mono text-xl font-semibold [font-variant-numeric:tabular-nums]">
-          {stats?.priceUsd != null ? formatPrice(stats.priceUsd) : '—'}
+          {view.priceUsd != null ? formatPrice(view.priceUsd) : '—'}
         </p>
         {change !== null ? (
           <p
@@ -188,8 +197,8 @@ export function PoolDetailPane() {
           <StatLine
             label={t('poolDetail.volume24h')}
             value={
-              stats?.volume24hUsd != null
-                ? formatCompactUsd(stats.volume24hUsd)
+              view.volume24hUsd != null
+                ? formatCompactUsd(view.volume24hUsd)
                 : null
             }
           />
@@ -201,11 +210,11 @@ export function PoolDetailPane() {
                 : null
             }
           />
-          {stats?.trades24h ? (
+          {view.trades24h ? (
             <StatLine
               label={t('poolDetail.trades24h')}
               value={(
-                stats.trades24h.buys + stats.trades24h.sells
+                view.trades24h.buys + view.trades24h.sells
               ).toLocaleString()}
             />
           ) : null}
@@ -224,10 +233,10 @@ export function PoolDetailPane() {
                     : 'plain'
             }
           />
-          {stats?.feeTier != null ? (
+          {view.feeTier != null ? (
             <StatLine
               label={t('poolDetail.feeTier')}
-              value={`${(stats.feeTier * 100).toFixed(2)}%`}
+              value={`${(view.feeTier * 100).toFixed(2)}%`}
             />
           ) : null}
         </dl>
@@ -265,7 +274,17 @@ export function PoolDetailPane() {
           </p>
         ) : null}
 
-        {isLoading && !stats ? (
+        {/* What the figures above are, when they are not the live pool read.
+            Saying nothing here would present a listing snapshot as pool state
+            and, on a rate-limited provider, keep saying "loading" forever. */}
+        {/* Same ordering as the flow pane beside it: once a read has failed,
+            say so and keep saying so. The retry that is already scheduled does
+            not make "loading" the truer of the two sentences. */}
+        {view.live ? null : error ? (
+          <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
+            {throttled ? error : t('poolDetail.stateUnavailable')}
+          </p>
+        ) : isLoading || retrying ? (
           <p className="mt-3 text-[10px] text-muted-foreground">
             {t('poolDetail.loading')}
           </p>

@@ -6,7 +6,7 @@ parent: workspaces
 order: 1
 eyebrow: For traders
 updated: 19 AUG 2026
-readTime: 11 min read
+readTime: 12 min read
 ---
 
 Panels are contributed by plugins, which is why the catalogue grows when you
@@ -178,6 +178,15 @@ Liquidity Flow is named carefully. Neither data provider has a liquidity-flow
 endpoint, so nothing on it measures deposits or withdrawals. What it measures
 is the money that crossed the pool: buy notional minus sell notional per
 bucket, off the same swap feed the tape shows.
+
+Pool Detail and Liquidity Flow follow whatever the Pool Map has selected, and
+they read the pool by its own address rather than by its ticker pair. A chain
+can list a dozen pools for the same two tokens, so re-deriving one from the
+symbols is how a detail pane ends up quoting a different pool than the tile you
+clicked. Pool Detail paints the map row's own figures the moment you select a
+pool and swaps them for live pool state as soon as it lands; when the on-chain
+data provider is rate limiting, both panes say so rather than drawing a pool
+that has gone quiet.
 
 ## News and sentiment
 

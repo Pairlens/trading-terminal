@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · 매수에서 매도를 뺀 값, 5분 단위",
     "waitingTitle": "맵을 기다리는 중",
     "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
-    "unavailableTitle": "지금은 풀을 불러올 수 없음"
+    "unavailableTitle": "지금은 풀을 불러올 수 없음",
+    "swapsUnavailableTitle": "지금은 스왑을 가져올 수 없습니다",
+    "swapsUnavailableBody": "온체인 데이터 제공자가 이 풀의 스왑을 반환하지 않았습니다. 대개 저절로 복구됩니다."
   },
   "lpPanes": {
     "venueFallback": "이 체인",
@@ -1027,7 +1029,8 @@
     "filledBy": "빈 값은 {{provider}} 데이터로 채움",
     "waitingTitle": "맵을 기다리는 중",
     "waitingBody": "체인의 풀을 불러오고 있습니다. 가장 깊은 풀이 여기에 자동으로 열립니다.",
-    "unavailableTitle": "지금은 풀을 불러올 수 없음"
+    "unavailableTitle": "지금은 풀을 불러올 수 없음",
+    "stateUnavailable": "데이터 제공자가 실시간 풀 상태를 반환하지 않았습니다. 위 수치는 체인 목록에 실린 값입니다."
   },
   "poolMap": {
     "title": "{{chain}} · 상위 풀",

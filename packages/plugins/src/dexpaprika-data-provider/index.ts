@@ -118,6 +118,9 @@ export function createDexpaprikaDataProviderPlugin(
       return fetchPoolStats(
         String(p['pair'] ?? context.pair),
         networkForMarket(market),
+        typeof p['poolAddress'] === 'string' && p['poolAddress'].length > 0
+          ? p['poolAddress']
+          : undefined,
       )
     }
 

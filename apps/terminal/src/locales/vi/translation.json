@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · mua trừ bán, theo từng năm phút",
     "waitingTitle": "Đang chờ bản đồ pool",
     "waitingBody": "Các pool của chuỗi vẫn đang tải. Dòng tiền hiện ra ngay khi chọn một pool.",
-    "unavailableTitle": "Hiện chưa lấy được pool"
+    "unavailableTitle": "Hiện chưa lấy được pool",
+    "swapsUnavailableTitle": "Hiện chưa lấy được swap",
+    "swapsUnavailableBody": "Nhà cung cấp dữ liệu on-chain không trả về swap của pool này. Thường sẽ tự khôi phục."
   },
   "lpPanes": {
     "venueFallback": "chuỗi này",
@@ -1027,7 +1029,8 @@
     "filledBy": "Chỗ trống do {{provider}} bổ sung",
     "waitingTitle": "Đang chờ bản đồ pool",
     "waitingBody": "Các pool của chuỗi vẫn đang tải. Pool sâu nhất sẽ tự mở ở đây.",
-    "unavailableTitle": "Hiện chưa lấy được pool"
+    "unavailableTitle": "Hiện chưa lấy được pool",
+    "stateUnavailable": "Nhà cung cấp dữ liệu không trả về trạng thái pool trực tiếp. Các số liệu trên là của bảng niêm yết chuỗi."
   },
   "poolMap": {
     "title": "Pool hàng đầu trên {{chain}}",

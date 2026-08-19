@@ -469,7 +469,14 @@ function tradeCount(pool: PoolListingEntry): number {
   return counts ? counts.buys + counts.sells : 0
 }
 
-/** A listing row reduced to what the other three panes need to follow it. */
+/**
+ * A listing row carried over to the panes that follow the selection.
+ *
+ * Identity AND the row's own figures. The detail pane paints those figures
+ * straight away instead of holding a column of dashes over a provider round
+ * trip — they are the same numbers the tile the user just clicked is drawn
+ * from, so the board cannot contradict itself while it waits.
+ */
 function toSelection(pool: PoolListingEntry, market: string): SelectedPool {
   return {
     market,
@@ -479,6 +486,14 @@ function toSelection(pool: PoolListingEntry, market: string): SelectedPool {
     baseAddress: pool.baseAddress,
     baseSymbol: pool.baseSymbol,
     quoteSymbol: pool.quoteSymbol,
+    listed: {
+      priceUsd: pool.priceUsd,
+      change24hPct: pool.change24hPct,
+      volume24hUsd: pool.volume24hUsd,
+      reserveUsd: pool.reserveUsd,
+      trades24h: pool.trades24h ?? null,
+      fdvUsd: pool.fdvUsd ?? null,
+    },
   }
 }
 

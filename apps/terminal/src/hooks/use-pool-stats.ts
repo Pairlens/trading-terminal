@@ -97,6 +97,10 @@ export type PoolStatsResult = {
   /** The provider answered and there is no pool for this pair on this chain. */
   noPool: boolean
   error: string | null
+  /** The failure is a provider rate limit, whose own message is readable. */
+  throttled: boolean
+  /** The failure is retryable and another attempt is already scheduled. */
+  retrying: boolean
   /**
    * Provider that filled fields the primary did not publish, when one did. The
    * pane names it beside the cells it filled, because a number the user can size
@@ -110,21 +114,29 @@ export type PoolStatsResult = {
 /** The bundled provider that publishes both-side reserves over open CORS. */
 const SUPPLEMENT_PLUGIN_ID = 'dexscreener-data-provider'
 
+/**
+ * `poolAddress` pins the read to a pool the caller already identified — the
+ * discovery board's selection, an LP position's own pool — instead of letting
+ * the provider re-derive one from `BASE-QUOTE`. It is part of the query key,
+ * because two panes looking at two pools of the same pair are two answers.
+ */
 export function usePoolStats(
   market: string | undefined,
   pairKey: string | undefined,
   enabled = true,
+  poolAddress?: string,
 ): PoolStatsResult {
   const { pluginManager, pluginsReady, pluginStateVersion } = usePairlens()
   const active = Boolean(enabled && pluginsReady && market && pairKey)
 
   const query = useQuery({
-    queryKey: ['pool-stats', market, pairKey],
+    queryKey: ['pool-stats', market, pairKey, poolAddress ?? null],
     queryFn: async () =>
       (await pluginManager.execute('market-data:pool-stats', {
         action: 'stats',
         market,
         pair: pairKey,
+        ...(poolAddress ? { poolAddress } : {}),
       })) as PoolStats | null,
     enabled: active,
     staleTime: STATS_REFRESH_MS,
@@ -208,6 +220,11 @@ export function usePoolStats(
     // Only the primary's failure is the pane's error. A supplement that fails
     // means the pane shows exactly what it showed before there was one.
     error: query.error ? errorText(query.error) : null,
+    throttled: isProviderThrottledError(query.error),
+    // `isFetching` would read a backed-off retry, or one parked on the focus
+    // gate with the window in the background, as a first load. See the same
+    // test in `usePoolListing`.
+    retrying: query.failureCount > 0 && query.fetchStatus !== 'idle',
     filledBy: merged.filledBy,
     filled: merged.filled,
   }
@@ -218,33 +235,59 @@ export type PoolTradesResult = {
   isLoading: boolean
   noPool: boolean
   error: string | null
+  /** The failure is a provider rate limit, whose own message is readable. */
+  throttled: boolean
+  /** The failure is retryable and another attempt is already scheduled. */
+  retrying: boolean
 }
 
 /** Newest-first swaps through the pair's pool. One poll, no per-row sockets. */
 export function usePoolTrades(
   market: string | undefined,
   pairKey: string | undefined,
-  options: { enabled?: boolean; minVolumeUsd?: number } = {},
+  options: {
+    enabled?: boolean
+    minVolumeUsd?: number
+    /** Pin the tape to this pool rather than resolving the pair. */
+    poolAddress?: string
+  } = {},
 ): PoolTradesResult {
-  const { enabled = true, minVolumeUsd = 0 } = options
+  const { enabled = true, minVolumeUsd = 0, poolAddress } = options
   const { pluginManager, pluginsReady } = usePairlens()
   const active = Boolean(enabled && pluginsReady && market && pairKey)
 
   const query = useQuery({
-    queryKey: ['pool-trades', market, pairKey, minVolumeUsd],
+    queryKey: [
+      'pool-trades',
+      market,
+      pairKey,
+      minVolumeUsd,
+      poolAddress ?? null,
+    ],
     queryFn: async () =>
       (await pluginManager.execute('market-data:pool-stats', {
         action: 'trades',
         market,
         pair: pairKey,
         minVolumeUsd,
+        ...(poolAddress ? { poolAddress } : {}),
       })) as Array<PoolTrade> | null,
     enabled: active,
     staleTime: TRADES_REFRESH_MS,
     refetchInterval: TRADES_REFRESH_MS,
     gcTime: 5 * 60_000,
-    retry: retryOnThrottle,
-    retryDelay: throttleRetryDelay,
+    // The ONE query here that must not retry internally, and the reason is
+    // the interval above rather than the budget. A retry sequence has to fit
+    // inside its own poll: this tape refreshes every fifteen seconds and the
+    // shared throttle back-off is eight, so two retries outlast the interval,
+    // the interval restarts the sequence before it can exhaust, and the query
+    // never reaches an error state at all. It just stays `pending` — which is
+    // exactly what the flow pane rendered, forever, as "Loading swaps".
+    //
+    // The poll IS the retry, and a better one: it is already scheduled, it
+    // costs the same single request, and between attempts the pane gets to
+    // say what went wrong instead of pretending to still be loading.
+    retry: false,
   })
 
   return {
@@ -252,6 +295,8 @@ export function usePoolTrades(
     isLoading: active && query.isPending,
     noPool: query.isSuccess && query.data === null,
     error: query.error ? errorText(query.error) : null,
+    throttled: isProviderThrottledError(query.error),
+    retrying: query.failureCount > 0 && query.fetchStatus !== 'idle',
   }
 }
 

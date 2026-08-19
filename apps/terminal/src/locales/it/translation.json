@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · acquisti meno vendite, in blocchi da cinque minuti",
     "waitingTitle": "In attesa della mappa",
     "waitingBody": "I pool della chain stanno ancora caricando. Il flusso compare appena ne selezioni uno.",
-    "unavailableTitle": "Pool non disponibili al momento"
+    "unavailableTitle": "Pool non disponibili al momento",
+    "swapsUnavailableTitle": "Swap non disponibili al momento",
+    "swapsUnavailableBody": "Il provider di dati on-chain non ha restituito gli swap di questo pool. Di solito si risolve da sé."
   },
   "lpPanes": {
     "venueFallback": "questa chain",
@@ -1027,7 +1029,8 @@
     "filledBy": "Lacune colmate da {{provider}}",
     "waitingTitle": "In attesa della mappa",
     "waitingBody": "I pool della chain stanno ancora caricando. Il più liquido si apre qui da solo.",
-    "unavailableTitle": "Pool non disponibili al momento"
+    "unavailableTitle": "Pool non disponibili al momento",
+    "stateUnavailable": "Il provider di dati non ha restituito lo stato live del pool. I valori sopra sono quelli del listing della chain."
   },
   "poolMap": {
     "title": "{{chain}} · pool principali",

@@ -106,6 +106,14 @@ export function createGeckoterminalDataProviderPlugin(
       const market = String(p['market'] ?? context.market ?? '')
       const network = networkForMarket(market)
       const action = String(p['action'] ?? 'stats') as PoolStatsAction
+      // The exact pool the caller is looking at, where it knows one. Both
+      // `stats` and `trades` skip pair resolution on it, which is a request
+      // saved and, more to the point, an answer about the right pool: a pair
+      // can have a dozen pools on one chain and the resolver picks the deepest.
+      const poolAddress =
+        typeof p['poolAddress'] === 'string' && p['poolAddress'].length > 0
+          ? p['poolAddress']
+          : undefined
 
       if (action === 'trades') {
         const minVolumeUsd =
@@ -114,6 +122,7 @@ export function createGeckoterminalDataProviderPlugin(
           String(p['pair'] ?? context.pair),
           network,
           minVolumeUsd,
+          poolAddress,
         )
       }
 
@@ -196,7 +205,11 @@ export function createGeckoterminalDataProviderPlugin(
         return rows
       }
 
-      return fetchPoolStats(String(p['pair'] ?? context.pair), network)
+      return fetchPoolStats(
+        String(p['pair'] ?? context.pair),
+        network,
+        poolAddress,
+      )
     }
 
     return null

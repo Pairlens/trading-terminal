@@ -5288,7 +5288,9 @@
     "subtitleVenue": "{{venue}} · buys minus sells, five minutes at a time",
     "waitingTitle": "Waiting on the map",
     "waitingBody": "The chain’s pools are still loading. Flow shows up as soon as one is selected.",
-    "unavailableTitle": "Pools unavailable right now"
+    "unavailableTitle": "Pools unavailable right now",
+    "swapsUnavailableTitle": "Swaps unavailable right now",
+    "swapsUnavailableBody": "The on-chain data provider would not return this pool’s swaps. It usually clears on its own."
   },
   "poolDetail": {
     "emptyTitle": "No pool selected",
@@ -5310,7 +5312,8 @@
     "filledBy": "Gaps filled by {{provider}}",
     "waitingTitle": "Waiting on the map",
     "waitingBody": "The chain’s pools are still loading. The deepest one opens here on its own.",
-    "unavailableTitle": "Pools unavailable right now"
+    "unavailableTitle": "Pools unavailable right now",
+    "stateUnavailable": "The data provider would not return live pool state. The figures above are the chain listing’s own."
   },
   "poolStats": {
     "notOnChainTitle": "Not an on-chain pair",

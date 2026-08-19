@@ -16,6 +16,33 @@
  */
 import { create } from 'zustand'
 
+import type { PoolTradeCounts } from '@pairlens/shared/instrument-types'
+
+/**
+ * What the map row already published about the pool it selected.
+ *
+ * The selection carries it because the alternative is a detail pane that sits
+ * blank next to a tile showing the very numbers it is waiting for. The listing
+ * behind that tile publishes price, 24h change, volume, value locked and trade
+ * counts for every pool on the page; dropping them on selection and then
+ * spending two provider requests to fetch them again is a round trip the
+ * reader watches, on the tightest request budget in the app, and one the
+ * provider refuses outright when it is rate limiting.
+ *
+ * It is a snapshot, not live state: the detail pane draws it immediately and
+ * replaces it wholesale the moment the pool read lands. Fields are never mixed
+ * across the two, so nothing on screen is ever half one measurement and half
+ * another.
+ */
+export type SelectedPoolSnapshot = {
+  priceUsd: number | null
+  change24hPct: number | null
+  volume24hUsd: number | null
+  reserveUsd: number | null
+  trades24h: PoolTradeCounts | null
+  fdvUsd: number | null
+}
+
 export type SelectedPool = {
   /** Pairlens market id of the chain the pool is on. */
   market: string
@@ -26,6 +53,8 @@ export type SelectedPool = {
   baseAddress: string | null
   baseSymbol: string | null
   quoteSymbol: string | null
+  /** The listing row's own figures. See SelectedPoolSnapshot. */
+  listed: SelectedPoolSnapshot
 }
 
 type DexDiscoveryStore = {

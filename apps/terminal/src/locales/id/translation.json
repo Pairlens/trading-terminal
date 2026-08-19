@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · beli dikurangi jual, per lima menit",
     "waitingTitle": "Menunggu peta pool",
     "waitingBody": "Pool di chain ini masih dimuat. Aliran muncul begitu satu pool dipilih.",
-    "unavailableTitle": "Pool belum bisa diambil"
+    "unavailableTitle": "Pool belum bisa diambil",
+    "swapsUnavailableTitle": "Swap tidak tersedia saat ini",
+    "swapsUnavailableBody": "Penyedia data on-chain tidak mengembalikan swap pool ini. Biasanya pulih dengan sendirinya."
   },
   "lpPanes": {
     "venueFallback": "chain ini",
@@ -1027,7 +1029,8 @@
     "filledBy": "Celah diisi oleh {{provider}}",
     "waitingTitle": "Menunggu peta pool",
     "waitingBody": "Pool di chain ini masih dimuat. Yang paling dalam akan terbuka di sini sendiri.",
-    "unavailableTitle": "Pool belum bisa diambil"
+    "unavailableTitle": "Pool belum bisa diambil",
+    "stateUnavailable": "Penyedia data tidak mengembalikan status pool langsung. Angka di atas berasal dari listing chain."
   },
   "poolMap": {
     "title": "{{chain}} · pool teratas",

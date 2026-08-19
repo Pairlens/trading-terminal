@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · 買入減賣出，每五分鐘一格",
     "waitingTitle": "等待池子圖",
     "waitingBody": "該鏈的池子仍在載入。選取池子後就會顯示資金流向。",
-    "unavailableTitle": "暫時無法取得池子"
+    "unavailableTitle": "暫時無法取得池子",
+    "swapsUnavailableTitle": "暫時無法取得交換紀錄",
+    "swapsUnavailableBody": "鏈上資料提供方沒有回傳該池的交換紀錄，通常稍後會自行恢復。"
   },
   "lpPanes": {
     "venueFallback": "這條鏈",
@@ -1027,7 +1029,8 @@
     "filledBy": "缺口由 {{provider}} 補齊",
     "waitingTitle": "等待池子圖",
     "waitingBody": "該鏈的池子仍在載入。流動性最深的池子會自動在這裡打開。",
-    "unavailableTitle": "暫時無法取得池子"
+    "unavailableTitle": "暫時無法取得池子",
+    "stateUnavailable": "資料提供方沒有回傳即時池狀態。上面的數字來自鏈上榜單本身。"
   },
   "poolMap": {
     "title": "{{chain}} · 主要池子",

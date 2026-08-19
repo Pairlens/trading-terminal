@@ -516,7 +516,9 @@
     "subtitleVenue": "{{venue}} · alımlar eksi satımlar, beşer dakikalık dilimlerle",
     "waitingTitle": "Harita bekleniyor",
     "waitingBody": "Zincirin havuzları hâlâ yükleniyor. Bir havuz seçilince akış burada belirir.",
-    "unavailableTitle": "Şu anda havuzlar alınamıyor"
+    "unavailableTitle": "Şu anda havuzlar alınamıyor",
+    "swapsUnavailableTitle": "Takaslar şu anda kullanılamıyor",
+    "swapsUnavailableBody": "Zincir üstü veri sağlayıcısı bu havuzun takaslarını döndürmedi. Genellikle kendiliğinden düzelir."
   },
   "lpPanes": {
     "venueFallback": "bu zincir",
@@ -1027,7 +1029,8 @@
     "filledBy": "Boşluklar {{provider}} ile dolduruldu",
     "waitingTitle": "Harita bekleniyor",
     "waitingBody": "Zincirin havuzları hâlâ yükleniyor. En derini burada kendiliğinden açılacak.",
-    "unavailableTitle": "Şu anda havuzlar alınamıyor"
+    "unavailableTitle": "Şu anda havuzlar alınamıyor",
+    "stateUnavailable": "Veri sağlayıcısı canlı havuz durumunu döndürmedi. Yukarıdaki rakamlar zincir listelemesinin kendi rakamları."
   },
   "poolMap": {
     "title": "{{chain}} · öne çıkan havuzlar",

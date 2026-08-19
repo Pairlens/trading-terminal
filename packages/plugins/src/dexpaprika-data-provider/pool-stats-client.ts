@@ -148,22 +148,28 @@ export function scaleReserve(
   return reserve / 10 ** decimals
 }
 
+/**
+ * `poolAddress` pins the pool and skips resolution. Same reasoning as the
+ * GeckoTerminal client: a caller looking at a specific pool must not have it
+ * re-derived from `BASE-QUOTE`, which costs a request and can land on a
+ * different pool for the same pair. The address is chain-level, so one handed
+ * over by whichever provider listed the pool is valid here too.
+ */
 export async function fetchPoolStats(
   pair: string,
   network: string,
+  poolAddress?: string,
 ): Promise<PoolStats | null> {
-  const pool = await resolvePool(pair, network)
-  if (!pool) return null
+  const id = poolAddress || (await resolvePool(pair, network))?.id
+  if (!id) return null
 
-  const res = await fetch(
-    `${API_BASE}/networks/${pool.network}/pools/${pool.id}`,
-  )
+  const res = await fetch(`${API_BASE}/networks/${network}/pools/${id}`)
   assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
   if (!res.ok) {
-    throw new Error(`DexPaprika pool ${pool.id}: HTTP ${res.status}`)
+    throw new Error(`DexPaprika pool ${id}: HTTP ${res.status}`)
   }
   const json = (await res.json()) as RawDexPaprikaPool
-  return parsePoolStats(json, pool.network)
+  return parsePoolStats(json, network)
 }
 
 export type RawDexPaprikaNetwork = {

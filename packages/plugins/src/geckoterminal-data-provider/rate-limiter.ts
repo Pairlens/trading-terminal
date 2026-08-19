@@ -34,6 +34,7 @@
  */
 import { restFetch } from '@pairlens/market-engine/http'
 import {
+  ProviderThrottledError,
   providerThrottleFromNetworkError,
   providerThrottleFromResponse,
 } from '@pairlens/market-engine/errors'
@@ -71,11 +72,26 @@ export const RATE_LIMIT_BURST = 3
  * loading state rather than an empty one.
  */
 export const RATE_LIMIT_SPACING_MS = 600
+/**
+ * The longest a request may sit in the PACING queue before it is refused.
+ *
+ * Distinct from a cool-off, which is never waited out at all — see
+ * `waitsOutCooldown` below. This ceiling only covers the waits the limiter
+ * imposes on itself: the spacing between admissions, and the wait for a slot
+ * once the minute's capacity is genuinely spent. Those are ours, they are
+ * bounded, and a caller is better off queued for them than refused.
+ */
+export const RATE_LIMIT_MAX_WAIT_MS = 15_000
 
 export type RequestLimiter = {
   /**
    * Resolves when the caller may issue its request, which may be immediately.
    * Admission is FIFO, so a queued burst keeps its order.
+   *
+   * REJECTS with `ProviderThrottledError` when admission would take longer
+   * than `maxWaitMs` — see that option. A caller must treat that exactly like
+   * a 429, because that is what it is: the provider is refusing us, we simply
+   * declined to spend the wait finding out again.
    */
   acquire: () => Promise<void>
   /** Hold every caller back until `Date.now() + ms`. Extends, never shortens. */
@@ -97,6 +113,11 @@ type LimiterOptions = {
   burst?: number
   /** Minimum gap between admissions once the burst allowance is spent. */
   minSpacingMs?: number
+  /**
+   * Refuse rather than queue when admission is further away than this. Omit
+   * for an unbounded queue, which is what the pure-pacing tests want.
+   */
+  maxWaitMs?: number
   /** Injected for tests: a virtual clock keeps them instant and deterministic. */
   now?: () => number
   delay?: (ms: number) => Promise<void>
@@ -104,6 +125,15 @@ type LimiterOptions = {
 
 const realDelay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms))
+
+/** The refusal a caller gets instead of a wait. Identical to a real 429. */
+function refusal(retryAfterMs: number): ProviderThrottledError {
+  return new ProviderThrottledError(
+    GECKOTERMINAL_PROVIDER,
+    429,
+    Math.max(retryAfterMs, 1_000),
+  )
+}
 
 /**
  * Sliding-window limiter.
@@ -118,6 +148,7 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
   const { capacity, windowMs } = options
   const burst = options.burst ?? capacity
   const minSpacingMs = options.minSpacingMs ?? 0
+  const maxWaitMs = options.maxWaitMs ?? Infinity
   const now = options.now ?? (() => Date.now())
   const delay = options.delay ?? realDelay
 
@@ -129,22 +160,40 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
   let chain: Promise<void> = Promise.resolve()
 
   const admit = async (): Promise<void> => {
+    const deadline = now() + maxWaitMs
+    /** Wait, or give up and let the caller hear about it. */
+    const waitOrRefuse = async (ms: number, t: number): Promise<void> => {
+      if (t + ms > deadline) throw refusal(ms)
+      await delay(ms)
+    }
+
     for (;;) {
       const t = now()
       while (issued.length > 0 && t - issued[0] >= windowMs) issued.shift()
 
+      // A cool-off is refused on the spot, never slept through.
+      //
+      // This is the distinction the panes were losing. A pacing wait is the
+      // limiter's own decision and it ends; a cool-off is the PROVIDER
+      // refusing us, and it does not end on a schedule we control — every 429
+      // extends it, so an endpoint stuck on 429 re-arms the hold each time it
+      // is let through and everything behind it starves. Sleeping on it made
+      // that invisible: `acquire()` had not resolved, so nothing had been
+      // sent, so react-query still saw a fetch in flight and the pool panes
+      // held "Loading swaps" and "Loading pool state" for as long as it
+      // lasted. Nothing is lost by refusing instead: every read behind this
+      // limiter polls on its own interval (15s for the tape, a minute for
+      // pool state, five for listings), so the next attempt is already
+      // scheduled, and in the meantime the pane gets to say what is wrong.
       const coolOff = cooldownUntil - t
-      if (coolOff > 0) {
-        await delay(coolOff)
-        continue
-      }
+      if (coolOff > 0) throw refusal(coolOff)
       // Spacing applies only once the burst allowance inside this window is
       // spent, so a cold board still paints as fast as the provider allows and
       // only the tail of the same burst waits.
       if (issued.length >= burst && minSpacingMs > 0) {
         const gap = minSpacingMs - (t - lastIssued)
         if (gap > 0) {
-          await delay(gap)
+          await waitOrRefuse(gap, t)
           continue
         }
       }
@@ -155,7 +204,7 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
       }
       // Wait exactly until the oldest request leaves the window. `+ 1` so the
       // re-check lands after the boundary rather than on it.
-      await delay(windowMs - (t - issued[0]) + 1)
+      await waitOrRefuse(windowMs - (t - issued[0]) + 1, t)
     }
   }
 
@@ -192,6 +241,7 @@ export const geckoLimiter = createRequestLimiter({
   windowMs: RATE_LIMIT_WINDOW_MS,
   burst: RATE_LIMIT_BURST,
   minSpacingMs: RATE_LIMIT_SPACING_MS,
+  maxWaitMs: RATE_LIMIT_MAX_WAIT_MS,
 })
 
 /**
