@@ -251,8 +251,9 @@ Panels declare what they need to render:
 - Nearly every charting panel needs an **active pair**, Level 1, Company,
   Insider Activity, Pool Stats, On-chain Trades, Chain Ladder, Funding Belt,
   Liquidation Map, Event Header, Probability Chart and Event Brief included. So
-  do Route, Outcome Ladder and Sector Peers. Session Clock is the exception: the market is open or closed
-  whatever pair is on screen, which is exactly why it sits above the ticket
+  do Route, Outcome Ladder and Sector Peers. Session Clock is the exception:
+  the market is open or closed whatever pair is on screen, which is exactly why
+  it heads the chart column
 - Positions, Portfolio, Margin Health and In Flight need an **active wallet**,
   which is one of your connected accounts. Trade Entry, Your Position, Basket
   Ticket, Bridge Route and the three LP panels need a pair **and** a wallet

@@ -74,6 +74,10 @@ their own tickers on purpose. The broker quotes SPY; it does not quote the S&P
 500, and printing an index name over an ETF price would be a number from a
 different instrument.
 
+It is a strip, not a panel, and it is sized as one: it takes the single row it
+draws and the two calendars below it split everything else, on a laptop and on
+a 4K screen alike.
+
 **Movers** ranks the broker's own bulk snapshot on this board rather than the
 crypto one, and drops the tabs that snapshot cannot serve instead of showing
 tabs that would always be empty. It carries a Volume tab priced in dollars
@@ -112,8 +116,10 @@ arrived, the panes fall back to the broker's plain open or closed bit and say
 so, rather than drawing an empty day bar.
 
 The **Session Clock** is the one-row version of the same thing, and the default
-stock layout puts it directly above the ticket. That placement is the point:
-extended hours change what the ticket will accept, not just a label on it.
+stock layout puts it at the top of the chart column. That placement is the
+point: extended hours change what the ticket will accept, not just a label on
+it. It sizes to its row the same way Session does, including when it is waiting
+for broker keys, so it never banks chart height it cannot spend.
 
 ## The quote
 

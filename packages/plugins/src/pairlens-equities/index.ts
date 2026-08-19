@@ -37,6 +37,11 @@ export const pairlensEquitiesManifest: PluginManifest = {
   contributes: {
     panels: [
       {
+        // A strip, not a panel: one row of state, day bar and benchmarks, and
+        // the same row again when it is waiting for a key. `fitContent` is
+        // what stops it from banking a percentage of the board it cannot
+        // spend, which on a tall screen was 200px of nothing above the
+        // earnings table.
         id: 'session',
         label: 'Session',
         labelKey: 'panes.session',
@@ -44,6 +49,7 @@ export const pairlensEquitiesManifest: PluginManifest = {
         icon: 'Clock',
         category: 'discovery',
         minHeight: 80,
+        fitContent: true,
       },
       {
         id: 'earnings-calendar',
@@ -65,7 +71,9 @@ export const pairlensEquitiesManifest: PluginManifest = {
       },
       {
         // No `requires`: the market is open or closed whatever pair is on
-        // screen, which is exactly why this sits above the ticket.
+        // screen, which is exactly why it heads the column. `fitContent`
+        // for the same reason as `session`: one row, so it takes one row's
+        // height and hands the rest of the column to the chart.
         id: 'session-clock',
         label: 'Session Clock',
         labelKey: 'panes.sessionClock',
@@ -73,6 +81,7 @@ export const pairlensEquitiesManifest: PluginManifest = {
         icon: 'Clock',
         category: 'charting',
         minHeight: 60,
+        fitContent: true,
       },
       {
         id: 'level-1',

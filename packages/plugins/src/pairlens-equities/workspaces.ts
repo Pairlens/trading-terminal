@@ -26,31 +26,37 @@ const ALPACA_REQUIREMENT = {
  *
  * Still no order book: the broker feed quotes top-of-book, not depth, so
  * `level-1` stands in for it, and a stock has one venue and a spread rather
- * than fourteen tapes. The clock sits directly above the ticket because
- * extended hours change what the ticket will accept, not just a label on it.
+ * than fourteen tapes. The clock heads the column because extended hours
+ * change what the ticket will accept, not just a label on it, and it is the
+ * one fact on this board that is true of every pane at once.
+ *
+ * The clock's own cell is `fitContent`, so the 8% below is a nominal share
+ * rather than a reservation: it draws one row and the chart takes what is
+ * left. The rail is 22% because the ticket lives in it and a stock ticket at
+ * 240px wraps its own quantity field.
  */
 export const EQUITIES_TERMINAL_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 80,
+      widthPercent: 78,
       cells: [
         {
           id: 'cell-session-clock',
-          heightPercent: 13,
+          heightPercent: 8,
           activeTabIndex: 0,
           panes: [{ id: 'pane-session-clock', type: 'session-clock' }],
         },
         {
           id: 'cell-chart',
-          heightPercent: 59,
+          heightPercent: 62,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
           id: 'cell-bottom',
-          heightPercent: 28,
+          heightPercent: 30,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-trades', type: 'trades' },
@@ -62,17 +68,17 @@ export const EQUITIES_TERMINAL_LAYOUT = {
     },
     {
       id: 'col-rail',
-      widthPercent: 20,
+      widthPercent: 22,
       cells: [
         {
           id: 'cell-level-1',
-          heightPercent: 28,
+          heightPercent: 26,
           activeTabIndex: 0,
           panes: [{ id: 'pane-level-1', type: 'level-1' }],
         },
         {
           id: 'cell-trade',
-          heightPercent: 72,
+          heightPercent: 74,
           activeTabIndex: 0,
           panes: [
             { id: 'pane-trade-entry', type: 'trade-entry' },
@@ -98,29 +104,36 @@ export const EQUITIES_TERMINAL_LAYOUT = {
  * question the valuation raises: the people who know the business are either
  * buying it at this multiple or selling into it. Stacked rather than tabbed,
  * so nobody has to remember to look.
+ *
+ * The chart takes 45% rather than the 60% it used to, and that is the whole
+ * point of the board. At 60% the fundamentals pane got a 44px window onto
+ * 566px of content: a reader saw the ticker and the next earnings date, and
+ * every multiple, margin and analyst number was below the fold on a pane whose
+ * entire job is to show them. On this board the price is the context and the
+ * business is the subject, so the split now says that.
  */
 export const EQUITIES_COMPANY_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-left',
-      widthPercent: 58,
+      widthPercent: 54,
       cells: [
         {
           id: 'cell-chart',
-          heightPercent: 60,
+          heightPercent: 45,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
           id: 'cell-company',
-          heightPercent: 20,
+          heightPercent: 31,
           activeTabIndex: 0,
           panes: [{ id: 'pane-company', type: 'company' }],
         },
         {
           id: 'cell-insider',
-          heightPercent: 20,
+          heightPercent: 24,
           activeTabIndex: 0,
           panes: [{ id: 'pane-insider-activity', type: 'insider-activity' }],
         },
@@ -140,7 +153,7 @@ export const EQUITIES_COMPANY_LAYOUT = {
     },
     {
       id: 'col-rail',
-      widthPercent: 18,
+      widthPercent: 22,
       cells: [
         {
           id: 'cell-your-position',
@@ -217,23 +230,36 @@ export const EQUITIES_DESK_LAYOUT = {
  * hardcoded 09:30, because holidays and half days are exactly the days it
  * matters. No sentiment gauge and no heatmap here — both read a crypto index
  * and would be quietly wrong above a list of tickers.
+ *
+ * ## The numbers
+ *
+ * The session strip is `fitContent`, so its 8% is nominal: it draws one row
+ * and the two calendars split everything below it. As a percentage it banked
+ * 16% of the board for 53px of content, which on a tall window was 200px of
+ * empty card sitting above the earnings table.
+ *
+ * The two rails are equal at 24% each. News used to be the narrowest column
+ * on the board at 19%, which is where a wire of full-sentence headlines wraps
+ * to three and four lines and the board's third column reads as an
+ * afterthought. The width comes out of the calendars, which lose the tail of
+ * a company's legal name and nothing else.
  */
 export const EQUITIES_DISCOVERY_LAYOUT = {
   version: 1,
   columns: [
     {
       id: 'col-session',
-      widthPercent: 56,
+      widthPercent: 52,
       cells: [
         {
           id: 'cell-session',
-          heightPercent: 16,
+          heightPercent: 8,
           activeTabIndex: 0,
           panes: [{ id: 'pane-session', type: 'session' }],
         },
         {
           id: 'cell-earnings',
-          heightPercent: 44,
+          heightPercent: 52,
           activeTabIndex: 0,
           panes: [{ id: 'pane-earnings-calendar', type: 'earnings-calendar' }],
         },
@@ -247,7 +273,7 @@ export const EQUITIES_DISCOVERY_LAYOUT = {
     },
     {
       id: 'col-movers',
-      widthPercent: 25,
+      widthPercent: 24,
       cells: [
         {
           id: 'cell-movers',
@@ -259,7 +285,7 @@ export const EQUITIES_DISCOVERY_LAYOUT = {
     },
     {
       id: 'col-news',
-      widthPercent: 19,
+      widthPercent: 24,
       cells: [
         {
           id: 'cell-news',
