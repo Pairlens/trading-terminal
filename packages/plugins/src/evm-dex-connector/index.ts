@@ -40,7 +40,7 @@ function createEvmDexManifest(chain: EvmChainConfig): PluginManifest {
     name: `${chain.displayName} DEX Connector`,
     version: '0.1.0',
     author: 'Pairlens',
-    description: `On-chain ${chain.displayName} swaps — best price routing across all ${chain.displayName} DEXs via the KyberSwap aggregator`,
+    description: `On-chain ${chain.displayName} swaps: best price routing across all ${chain.displayName} DEXs via the KyberSwap aggregator`,
     homepage: 'https://kyberswap.com',
     icon: chain.iconUrl,
     metadata: {

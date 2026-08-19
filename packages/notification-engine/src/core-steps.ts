@@ -75,7 +75,7 @@ const priceAlert: NotificationStepTypeDefinition = {
   defaultData: () => ({ direction: 'above', price: 0 }),
   formatMessage: (data, payload) => ({
     title: `Price Alert: ${String(payload.pair ?? 'unknown')}`,
-    body: `${String(payload.pair ?? '')} is now ${String(data.direction)} ${String(data.price)} — current: ${String(payload.price ?? 'N/A')}`,
+    body: `${String(payload.pair ?? '')} is now ${String(data.direction)} ${String(data.price)} (current: ${String(payload.price ?? 'N/A')})`,
     severity: 'info',
   }),
 }
@@ -158,7 +158,7 @@ const percentMove: NotificationStepTypeDefinition = {
         change,
       ).toFixed(
         2,
-      )}% over the last ${window} — now ${String(payload.price ?? 'N/A')}`,
+      )}% over the last ${window} (now ${String(payload.price ?? 'N/A')})`,
       severity: change >= 0 ? 'success' : 'warning',
     }
   },
@@ -201,7 +201,7 @@ const orderExecuted: NotificationStepTypeDefinition = {
   defaultData: () => ({ side: 'any', status: 'filled' }),
   formatMessage: (data, payload) => ({
     title: 'Order Executed',
-    body: `${String(payload.data.side ?? data.side).toUpperCase()} ${String(payload.pair ?? '')} — ${String(payload.data.status ?? 'filled')}`,
+    body: `${String(payload.data.side ?? data.side).toUpperCase()} ${String(payload.pair ?? '')}: ${String(payload.data.status ?? 'filled')}`,
     severity: 'success',
   }),
 }

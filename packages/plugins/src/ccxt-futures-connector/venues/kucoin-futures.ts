@@ -92,7 +92,7 @@ export const KUCOIN_FUTURES_MAX_LEVERAGE = 125
  * the two ways out, because "paper is unavailable" alone reads as a bug.
  */
 export const KUCOIN_FUTURES_NO_PAPER =
-  'KuCoin Futures has no sandbox environment — switch this credential to live, or paper-trade perpetuals on Binance Futures or Kraken Futures'
+  'KuCoin Futures has no sandbox environment: switch this credential to live, or paper-trade perpetuals on Binance Futures or Kraken Futures'
 
 /**
  * Raw contract-payload keys that mean "this row carries the daily statistics".

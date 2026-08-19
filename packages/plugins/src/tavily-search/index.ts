@@ -101,7 +101,7 @@ export function createTavilySearchPlugin(
     // Without a key every request fails — refuse to activate so a keyless
     // install never wins ai:web-search resolution
     if (String(cfg['apiKey'] ?? '').trim() === '') {
-      throw new Error('Tavily API key required — add it in the plugin settings')
+      throw new Error('Tavily API key required: add it in the plugin settings')
     }
     config = cfg
   }

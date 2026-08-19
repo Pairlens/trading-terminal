@@ -193,7 +193,7 @@ export function createAnthropicInferencePlugin(
     // install never wins ai:inference resolution or grants the copilot gate
     if (String(cfg['apiKey'] ?? '').trim() === '') {
       throw new Error(
-        'Anthropic API key required — add it in the plugin settings',
+        'Anthropic API key required: add it in the plugin settings',
       )
     }
     config = cfg

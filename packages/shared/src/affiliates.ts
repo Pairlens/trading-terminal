@@ -38,7 +38,7 @@ export type ReferralField = {
    * case) — never lowercase on ingest.
    */
   pattern: RegExp
-  /** Human hint for validation errors ("8–12 letters/digits"). */
+  /** Human hint for validation errors ("8-12 letters/digits"). */
   hint: string
   /** A realistically-shaped value, used in docs, previews, and tests. */
   example: string
@@ -81,7 +81,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.okx.com/join/{code}',
       fields: codeField(
         /^[A-Za-z0-9]{4,16}$/,
-        '4–16 letters/digits (default codes are 8 digits)',
+        '4-16 letters/digits (default codes are 8 digits)',
         '47447298',
       ),
     },
@@ -95,7 +95,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://accounts.binance.com/register?ref={code}',
       fields: codeField(
         /^[A-Za-z0-9]{5,12}$/,
-        '5–12 letters/digits (case-sensitive)',
+        '5-12 letters/digits (case-sensitive)',
         'RSKXSP66',
       ),
     },
@@ -110,7 +110,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
     // affiliate link builder ships.
     referral: {
       urlTemplate: 'https://www.bybit.com/invite?ref={code}',
-      fields: codeField(/^[A-Za-z0-9]{4,16}$/, '4–16 letters/digits', '45599'),
+      fields: codeField(/^[A-Za-z0-9]{4,16}$/, '4-16 letters/digits', '45599'),
     },
   },
   {
@@ -122,7 +122,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://account.bitvavo.com/create?a={code}',
       fields: codeField(
         /^[A-Za-z0-9]{4,16}$/,
-        '4–16 letters/digits (case-sensitive)',
+        '4-16 letters/digits (case-sensitive)',
         'Renetoday',
       ),
     },
@@ -136,7 +136,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.mexc.com/register?inviteCode={code}',
       fields: codeField(
         /^(?:mexc-)?[A-Za-z0-9]{4,12}$/,
-        '4–12 letters/digits, optionally prefixed "mexc-"',
+        '4-12 letters/digits, optionally prefixed "mexc-"',
         'mexc-MXUSDT',
       ),
     },
@@ -151,7 +151,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.kucoin.com/r/rf/{code}',
       fields: codeField(
         /^[A-Za-z0-9]{5,10}$/,
-        '5–10 letters/digits',
+        '5-10 letters/digits',
         'QBAY1X4K',
       ),
     },
@@ -165,7 +165,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.gate.com/signup/{code}',
       fields: codeField(
         /^[A-Za-z0-9_]{3,12}$/,
-        '3–12 letters/digits/underscores',
+        '3-12 letters/digits/underscores',
         'VLEWAV0NVQ',
       ),
     },
@@ -180,7 +180,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
     referral: {
       urlTemplate:
         'https://www.bitget.com/referral/register?clacCode={code}&from=referral',
-      fields: codeField(/^[A-Za-z0-9]{3,10}$/, '3–10 letters/digits', 'ew9a68'),
+      fields: codeField(/^[A-Za-z0-9]{3,10}$/, '3-10 letters/digits', 'ew9a68'),
     },
   },
   {
@@ -194,7 +194,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.coinbase.com/join/{code}',
       fields: codeField(
         /^[a-z0-9_]{4,24}$/,
-        '4–24 lowercase letters/digits/underscores',
+        '4-24 lowercase letters/digits/underscores',
         'smith_x7',
       ),
     },
@@ -213,14 +213,14 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
           key: 'prefix',
           label: 'Invite prefix',
           pattern: /^[A-Z0-9]{2,6}$/,
-          hint: '2–6 uppercase letters/digits (first invite-link segment)',
+          hint: '2-6 uppercase letters/digits (first invite-link segment)',
           example: 'JDNW',
         },
         {
           key: 'code',
           label: 'Invite code',
           pattern: /^[a-z0-9]{6,10}$/,
-          hint: '6–10 lowercase letters/digits (second invite-link segment)',
+          hint: '6-10 lowercase letters/digits (second invite-link segment)',
           example: 'geaibzr6',
         },
       ],
@@ -235,7 +235,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.htx.com/invite/en-us/1f?invite_code={code}',
       fields: codeField(
         /^[a-z0-9]{4,10}$/,
-        '4–10 lowercase letters/digits',
+        '4-10 lowercase letters/digits',
         'zmkq8223',
       ),
     },
@@ -251,7 +251,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://crypto.com/exch/{code}',
       fields: codeField(
         /^[a-z0-9]{6,12}$/,
-        '6–12 lowercase letters/digits',
+        '6-12 lowercase letters/digits',
         'bveapsxjw7',
       ),
     },
@@ -265,7 +265,7 @@ export const AFFILIATE_VENUES: Array<AffiliateVenue> = [
       urlTemplate: 'https://www.bitfinex.com/sign-up?refcode={code}',
       fields: codeField(
         /^[A-Za-z0-9]{6,12}$/,
-        '6–12 letters/digits (case-sensitive)',
+        '6-12 letters/digits (case-sensitive)',
         'C2nM6IO5b',
       ),
     },
@@ -368,7 +368,7 @@ export function validateReferralParams(
     if (!field.pattern.test(value)) {
       return {
         ok: false,
-        error: `Invalid ${venue.label} ${field.label.toLowerCase()} — expected ${field.hint}`,
+        error: `Invalid ${venue.label} ${field.label.toLowerCase()}: expected ${field.hint}`,
       }
     }
   }

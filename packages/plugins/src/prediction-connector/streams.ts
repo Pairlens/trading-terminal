@@ -188,7 +188,7 @@ export class PredictionStreamHub {
     const supported = this.opts.venue.timeframes
     if (!supported.includes(timeframe as Timeframe)) {
       throw new Error(
-        `${this.opts.venue.displayName} charts ${supported.join(', ')} only — '${timeframe}' is not available on this venue`,
+        `${this.opts.venue.displayName} charts ${supported.join(', ')} only: '${timeframe}' is not available on this venue`,
       )
     }
     return timeframe as Timeframe
