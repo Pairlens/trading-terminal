@@ -247,6 +247,7 @@ const MarqueeChip = memo(function MarqueeChip({
         <PairSymbol
           symbol={symbol}
           assetClass={instrument.cls}
+          market={marketRef.market}
           className={cn(
             'min-w-0 max-w-56 font-medium',
             isActive ? 'text-foreground' : 'text-muted-foreground',

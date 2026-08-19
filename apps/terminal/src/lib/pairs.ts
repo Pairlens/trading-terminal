@@ -1,12 +1,34 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import {
+  isTokenAddress,
+  normalizeInstrumentId,
+} from '@pairlens/shared/market-ref'
+
 /**
  * Normalize a user/route-supplied pair key to the canonical BASE-QUOTE form
  * connectors expect: trimmed, uppercased, with `/` and `_` separators
  * replaced by `-` (e.g. "btc/usdt" → "BTC-USDT").
+ *
+ * An address base leg is the one thing that must NOT be upper-cased, and this
+ * function is what every stream hook runs its pair key through. Base58 is
+ * case-sensitive, so `SO111…1112` is a different (nonexistent) mint, and an
+ * EVM address loses its checksum casing; downstream both stop matching
+ * `isTokenAddress`, which is the test a DEX resolver uses to decide between
+ * "look up this exact token" and "search pools by name". GeckoTerminal was
+ * being asked `search/pools?query=0XDAC17F958D2EE523…%20USDC`, so a token
+ * opened by address was charted from whatever pool a text search turned up.
+ *
+ * The per-class rule already exists and is shared with the routing layer, so
+ * this defers to it rather than keeping a second copy that can drift. Only the
+ * address arm changes: every other key normalizes exactly as before.
  */
 export function normalizePairKey(pairKey: string): string {
-  return pairKey.trim().toUpperCase().replace(/[/_]/g, '-')
+  const dashed = pairKey.trim().replace(/[/_]/g, '-')
+  const at = dashed.lastIndexOf('-')
+  const base = at === -1 ? dashed : dashed.slice(0, at)
+  if (isTokenAddress(base)) return normalizeInstrumentId('dex', dashed)
+  return dashed.toUpperCase()
 }
 
 /**
