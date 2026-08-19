@@ -74,7 +74,10 @@ import {
 } from '@pairlens/ui/components/ui/sidebar'
 import { toast } from 'sonner'
 import { Toaster } from '@pairlens/ui/components/ui/sonner'
-import { formatInstrumentRef } from '@pairlens/shared/market-ref'
+import {
+  formatInstrumentRef,
+  parseMarketRefPath,
+} from '@pairlens/shared/market-ref'
 import type { InstrumentRef } from '@pairlens/shared/market-ref'
 import type { ReactNode } from 'react'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
@@ -159,6 +162,19 @@ const NAV_ITEMS = [
   { id: 'accounts', labelKey: 'nav.accounts', AnimatedIcon: HandCoinsIcon },
   { id: 'plugins', labelKey: 'nav.plugins', AnimatedIcon: PlugZapIcon },
 ] as const
+
+/**
+ * Whether a path is a trading page.
+ *
+ * Two routes render one: the canonical qualified one (`/spot/okx/BTC-USDT`)
+ * and `/pair/$pair`, which resolves a bare symbol to a venue and exists for
+ * legacy links. Matching only the second is what left the rail lit on Home
+ * while a chart was open, and with it the window title and the section tour,
+ * both of which read the same value.
+ */
+function isChartPath(pathname: string): boolean {
+  return pathname.startsWith('/pair/') || parseMarketRefPath(pathname) !== null
+}
 
 /**
  * Where a stored recent points.
@@ -253,7 +269,7 @@ function TerminalLayout() {
             ? 'indicators'
             : location.pathname.startsWith('/bots')
               ? 'bots'
-              : location.pathname.startsWith('/pair/')
+              : isChartPath(location.pathname)
                 ? 'charts'
                 : location.pathname.startsWith('/workspace-store')
                   ? 'workspace-store'
