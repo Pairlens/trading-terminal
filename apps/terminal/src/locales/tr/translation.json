@@ -5083,25 +5083,17 @@
         "label": "Fiyat Alarmı",
         "fields": {
           "direction": {
-            "label": "Yön",
             "options": {
               "above": "Üzerinde",
               "below": "Altında"
             }
-          },
-          "price": {
-            "label": "Fiyat"
           }
-        },
-        "handles": {
-          "out": "Tetiklendi"
         }
       },
       "order-executed": {
         "label": "Emir Gerçekleşti",
         "fields": {
           "side": {
-            "label": "Yön",
             "options": {
               "any": "Fark etmez",
               "buy": "Al",
@@ -5109,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "Durum",
             "options": {
               "any": "Fark etmez",
               "filled": "Gerçekleşti",
               "partially_filled": "Kısmen Gerçekleşti"
             }
           }
-        },
-        "handles": {
-          "out": "Tetiklendi"
         }
       },
       "signal-generated": {
-        "label": "Sinyal Oluştu",
-        "fields": {
-          "timeframe": {
-            "label": "Zaman Dilimi",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Sinyal Türü (isteğe bağlı)",
-            "placeholder": "Herhangi bir tür"
-          }
-        },
-        "handles": {
-          "out": "Tetiklendi"
-        }
+        "label": "Sinyal Oluştu"
       },
       "indicator-alert": {
-        "label": "Gösterge Uyarısı",
-        "fields": {
-          "timeframe": {
-            "label": "Zaman Dilimi",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Gösterge (isteğe bağlı)",
-            "placeholder": "Herhangi bir gösterge"
-          },
-          "condition": {
-            "label": "Koşul (isteğe bağlı)",
-            "placeholder": "Herhangi bir koşul"
-          }
-        },
-        "handles": {
-          "out": "Tetiklendi"
-        }
+        "label": "Gösterge Uyarısı"
       },
       "candle-close": {
-        "label": "Mum Kapanışı",
-        "fields": {
-          "timeframe": {
-            "label": "Zaman Dilimi",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Tetiklendi"
-        }
+        "label": "Mum Kapanışı"
       },
       "price-condition": {
-        "label": "Fiyat Koşulu",
-        "fields": {
-          "direction": {
-            "label": "Yön",
-            "options": {
-              "above": "Üzerinde",
-              "below": "Altında"
-            }
-          },
-          "price": {
-            "label": "Fiyat"
-          }
-        },
-        "handles": {
-          "pass": "Geçer",
-          "fail": "Geçmez"
-        }
+        "label": "Fiyat Koşulu"
       },
       "percent-change": {
-        "label": "Yüzde Değişimi",
-        "fields": {
-          "percent": {
-            "label": "Yüzde"
-          },
-          "direction": {
-            "label": "Yön",
-            "options": {
-              "up": "Yukarı",
-              "down": "Aşağı",
-              "either": "İkisi de"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Geçer",
-          "fail": "Geçmez"
-        }
+        "label": "Yüzde Değişimi"
       },
       "time-window": {
-        "label": "Zaman Aralığı",
-        "fields": {
-          "startHour": {
-            "label": "Başlangıç Saati (UTC)"
-          },
-          "endHour": {
-            "label": "Bitiş Saati (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Geçer",
-          "fail": "Geçmez"
-        }
+        "label": "Zaman Aralığı"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Sistem Bildirimi",
-        "fields": {
-          "sound": {
-            "label": "Sesi Çal"
-          }
-        }
+        "label": "Sistem Bildirimi"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Yöntem",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Olay Yükünü Dahil Et"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "Sohbet kimliği (isteğe bağlı)",
-            "placeholder": "Bağlı sohbet"
-          },
-          "silent": {
-            "label": "Sessiz mesaj"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Fiyat Hareketi",
-        "fields": {
-          "percent": {
-            "label": "Yüzde"
-          },
-          "direction": {
-            "label": "Yön",
-            "options": {
-              "up": "Yukarı",
-              "down": "Aşağı",
-              "either": "İkisi de"
-            }
-          },
-          "window": {
-            "label": "Şu sürede",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Tetiklendi"
-        }
+        "label": "Fiyat Hareketi"
       }
     },
     "messages": {
@@ -5927,11 +5754,6 @@
       "trigger": {
         "title": "Emir Girişi",
         "badge": "Giriş"
-      },
-      "configPanel": {
-        "requiresNote": "Gerekli: {{requirement}}. Bu yeteneğe sahip olmayan piyasalar, bu adımı içeren iş akışlarını çalıştıramaz.",
-        "on": "Açık",
-        "off": "Kapalı"
       }
     },
     "execution": {
@@ -5947,165 +5769,31 @@
         "label": "Emir Girişi"
       },
       "market-order": {
-        "label": "Piyasa Emri",
-        "fields": {
-          "side": {
-            "label": "Yön",
-            "options": {
-              "inherit": "Tetikleyiciyle aynı",
-              "opposite": "Tetikleyicinin tersi",
-              "buy": "Al",
-              "sell": "Sat"
-            }
-          },
-          "sizeMode": {
-            "label": "Büyüklük Modu",
-            "options": {
-              "percent": "Girdinin %'si",
-              "absolute": "Sabit miktar"
-            }
-          },
-          "size": {
-            "label": "Büyüklük"
-          }
-        }
+        "label": "Piyasa Emri"
       },
       "limit-order": {
         "label": "Limit Emir",
         "compat": "Bekleyen limit emirler",
-        "fields": {
-          "side": {
-            "label": "Yön",
-            "options": {
-              "inherit": "Tetikleyiciyle aynı",
-              "opposite": "Tetikleyicinin tersi",
-              "buy": "Al",
-              "sell": "Sat"
-            }
-          },
-          "sizeMode": {
-            "label": "Büyüklük Modu",
-            "options": {
-              "percent": "Girdinin %'si",
-              "absolute": "Sabit miktar"
-            }
-          },
-          "size": {
-            "label": "Büyüklük"
-          },
-          "priceMode": {
-            "label": "Fiyat Modu",
-            "options": {
-              "absolute": "Sabit fiyat",
-              "offset-percent": "Güncelden %",
-              "offset-absolute": "Güncelden sapma"
-            }
-          },
-          "priceValue": {
-            "label": "Fiyat Değeri"
-          }
-        },
         "compatReason": "bu venue bekleyen limit emirlerini destekleyemiyor (yalnızca takas yapan DEX)"
       },
       "take-profit": {
         "label": "Kâr Al",
         "compat": "Yerel tetikleyici emirler veya bekleyen limit emirler",
-        "fields": {
-          "triggerMode": {
-            "label": "Tetikleyici Modu",
-            "options": {
-              "percent": "% kazanç",
-              "absolute": "Fiyat seviyesi"
-            }
-          },
-          "triggerValue": {
-            "label": "Tetikleyici Değeri"
-          },
-          "sizePercent": {
-            "label": "Kapatma %"
-          },
-          "orderType": {
-            "label": "Emir Türü",
-            "options": {
-              "market": "Piyasa",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Limit Fiyatı"
-          }
-        },
         "compatReason": "bu venue ne tetikleyici emirleri ne de bekleyen limit emirleri destekliyor"
       },
       "stop-loss": {
         "label": "Zarar Durdur",
         "compat": "Yerel tetikleyici emirler",
-        "fields": {
-          "triggerMode": {
-            "label": "Tetikleyici Modu",
-            "options": {
-              "percent": "% kayıp",
-              "absolute": "Fiyat seviyesi"
-            }
-          },
-          "triggerValue": {
-            "label": "Tetikleyici Değeri"
-          },
-          "sizePercent": {
-            "label": "Kapatma %"
-          },
-          "orderType": {
-            "label": "Emir Türü",
-            "options": {
-              "market": "Piyasa",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Limit Fiyatı"
-          }
-        },
         "compatReason": "bu venue'de borsa taraflı tetikleyici emirler yok, bu yüzden bir zarar durdur emri borsada bekleyemez"
       },
       "condition": {
-        "label": "Koşul",
-        "fields": {
-          "conditionType": {
-            "label": "Koşul",
-            "options": {
-              "price-above": "Fiyat üzerinde",
-              "price-below": "Fiyat altında",
-              "percent-change": "Girişten % değişim"
-            }
-          },
-          "value": {
-            "label": "Değer"
-          }
-        }
+        "label": "Koşul"
       },
       "split": {
-        "label": "Paralel Bölme",
-        "fields": {
-          "branches": {
-            "label": "Dallar"
-          }
-        }
+        "label": "Paralel Bölme"
       },
       "wait": {
-        "label": "Bekle",
-        "fields": {
-          "duration": {
-            "label": "Süre"
-          },
-          "unit": {
-            "label": "Birim",
-            "options": {
-              "seconds": "Saniye",
-              "minutes": "Dakika",
-              "hours": "Saat"
-            }
-          }
-        }
+        "label": "Bekle"
       }
     },
     "templates": {

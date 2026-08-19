@@ -5083,25 +5083,17 @@
         "label": "价格提醒",
         "fields": {
           "direction": {
-            "label": "方向",
             "options": {
               "above": "高于",
               "below": "低于"
             }
-          },
-          "price": {
-            "label": "价格"
           }
-        },
-        "handles": {
-          "out": "已触发"
         }
       },
       "order-executed": {
         "label": "订单成交",
         "fields": {
           "side": {
-            "label": "方向",
             "options": {
               "any": "任意",
               "buy": "买入",
@@ -5109,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "状态",
             "options": {
               "any": "任意",
               "filled": "已成交",
               "partially_filled": "部分成交"
             }
           }
-        },
-        "handles": {
-          "out": "已触发"
         }
       },
       "signal-generated": {
-        "label": "信号生成",
-        "fields": {
-          "timeframe": {
-            "label": "周期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "信号类型（选填）",
-            "placeholder": "任意类型"
-          }
-        },
-        "handles": {
-          "out": "已触发"
-        }
+        "label": "信号生成"
       },
       "indicator-alert": {
-        "label": "指标提醒",
-        "fields": {
-          "timeframe": {
-            "label": "周期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "指标（选填）",
-            "placeholder": "任意指标"
-          },
-          "condition": {
-            "label": "条件（选填）",
-            "placeholder": "任意条件"
-          }
-        },
-        "handles": {
-          "out": "已触发"
-        }
+        "label": "指标提醒"
       },
       "candle-close": {
-        "label": "K 线收盘",
-        "fields": {
-          "timeframe": {
-            "label": "周期",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "已触发"
-        }
+        "label": "K 线收盘"
       },
       "price-condition": {
-        "label": "价格条件",
-        "fields": {
-          "direction": {
-            "label": "方向",
-            "options": {
-              "above": "高于",
-              "below": "低于"
-            }
-          },
-          "price": {
-            "label": "价格"
-          }
-        },
-        "handles": {
-          "pass": "通过",
-          "fail": "不通过"
-        }
+        "label": "价格条件"
       },
       "percent-change": {
-        "label": "百分比变化",
-        "fields": {
-          "percent": {
-            "label": "百分比"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上涨",
-              "down": "下跌",
-              "either": "任一"
-            }
-          }
-        },
-        "handles": {
-          "pass": "通过",
-          "fail": "不通过"
-        }
+        "label": "百分比变化"
       },
       "time-window": {
-        "label": "时间窗口",
-        "fields": {
-          "startHour": {
-            "label": "开始小时（UTC）"
-          },
-          "endHour": {
-            "label": "结束小时（UTC）"
-          }
-        },
-        "handles": {
-          "pass": "通过",
-          "fail": "不通过"
-        }
+        "label": "时间窗口"
       },
       "local-toast": {
         "label": "应用内提示"
       },
       "os-notification": {
-        "label": "系统通知",
-        "fields": {
-          "sound": {
-            "label": "播放声音"
-          }
-        }
+        "label": "系统通知"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "方法",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "包含事件负载"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "聊天 ID（可选）",
-            "placeholder": "已关联的聊天"
-          },
-          "silent": {
-            "label": "静默消息"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "价格波动",
-        "fields": {
-          "percent": {
-            "label": "百分比"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上涨",
-              "down": "下跌",
-              "either": "任一"
-            }
-          },
-          "window": {
-            "label": "时间窗口",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "已触发"
-        }
+        "label": "价格波动"
       }
     },
     "messages": {
@@ -5927,11 +5754,6 @@
       "trigger": {
         "title": "订单输入",
         "badge": "入场"
-      },
-      "configPanel": {
-        "requiresNote": "需要：{{requirement}}。不支持此能力的市场无法运行包含此步骤的工作流。",
-        "on": "开",
-        "off": "关"
       }
     },
     "execution": {
@@ -5947,165 +5769,31 @@
         "label": "订单输入"
       },
       "market-order": {
-        "label": "市价单",
-        "fields": {
-          "side": {
-            "label": "方向",
-            "options": {
-              "inherit": "与触发相同",
-              "opposite": "与触发相反",
-              "buy": "买入",
-              "sell": "卖出"
-            }
-          },
-          "sizeMode": {
-            "label": "数量方式",
-            "options": {
-              "percent": "% 输入量",
-              "absolute": "固定数量"
-            }
-          },
-          "size": {
-            "label": "数量"
-          }
-        }
+        "label": "市价单"
       },
       "limit-order": {
         "label": "限价单",
         "compat": "限价挂单",
-        "fields": {
-          "side": {
-            "label": "方向",
-            "options": {
-              "inherit": "与触发相同",
-              "opposite": "与触发相反",
-              "buy": "买入",
-              "sell": "卖出"
-            }
-          },
-          "sizeMode": {
-            "label": "数量方式",
-            "options": {
-              "percent": "% 输入量",
-              "absolute": "固定数量"
-            }
-          },
-          "size": {
-            "label": "数量"
-          },
-          "priceMode": {
-            "label": "价格方式",
-            "options": {
-              "absolute": "固定价格",
-              "offset-percent": "距现价 %",
-              "offset-absolute": "距现价偏移"
-            }
-          },
-          "priceValue": {
-            "label": "价格值"
-          }
-        },
         "compatReason": "此交易所无法挂限价单（仅支持兑换的 DEX）"
       },
       "take-profit": {
         "label": "止盈",
         "compat": "原生触发单或限价挂单",
-        "fields": {
-          "triggerMode": {
-            "label": "触发方式",
-            "options": {
-              "percent": "盈利 %",
-              "absolute": "价格水平"
-            }
-          },
-          "triggerValue": {
-            "label": "触发值"
-          },
-          "sizePercent": {
-            "label": "平仓 %"
-          },
-          "orderType": {
-            "label": "订单类型",
-            "options": {
-              "market": "市价",
-              "limit": "限价"
-            }
-          },
-          "limitPrice": {
-            "label": "限价"
-          }
-        },
         "compatReason": "此交易所既不支持触发单，也不支持挂限价单"
       },
       "stop-loss": {
         "label": "止损",
         "compat": "原生触发单",
-        "fields": {
-          "triggerMode": {
-            "label": "触发方式",
-            "options": {
-              "percent": "亏损 %",
-              "absolute": "价格水平"
-            }
-          },
-          "triggerValue": {
-            "label": "触发值"
-          },
-          "sizePercent": {
-            "label": "平仓 %"
-          },
-          "orderType": {
-            "label": "订单类型",
-            "options": {
-              "market": "市价",
-              "limit": "限价"
-            }
-          },
-          "limitPrice": {
-            "label": "限价"
-          }
-        },
         "compatReason": "此交易所没有原生触发单，止损无法挂在交易所端"
       },
       "condition": {
-        "label": "条件",
-        "fields": {
-          "conditionType": {
-            "label": "条件",
-            "options": {
-              "price-above": "价格高于",
-              "price-below": "价格低于",
-              "percent-change": "距入场价变化 %"
-            }
-          },
-          "value": {
-            "label": "数值"
-          }
-        }
+        "label": "条件"
       },
       "split": {
-        "label": "并行拆分",
-        "fields": {
-          "branches": {
-            "label": "分支数"
-          }
-        }
+        "label": "并行拆分"
       },
       "wait": {
-        "label": "等待",
-        "fields": {
-          "duration": {
-            "label": "时长"
-          },
-          "unit": {
-            "label": "单位",
-            "options": {
-              "seconds": "秒",
-              "minutes": "分钟",
-              "hours": "小时"
-            }
-          }
-        }
+        "label": "等待"
       }
     },
     "templates": {

@@ -127,7 +127,7 @@ describe('activation', () => {
   test('refuses to activate without a key', async () => {
     const plugin = makePlugin()
     await expect(plugin.initialize!({})).rejects.toThrow(
-      /Coinglass API key required\. Add it in the plugin settings\./,
+      /Coinglass API key required: add it in the plugin settings/,
     )
     await expect(plugin.initialize!({ apiKey: '  ' })).rejects.toThrow()
   })

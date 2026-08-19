@@ -183,7 +183,7 @@ export function createOpenaiInferencePlugin(
     // Without a key every request fails — refuse to activate so a keyless
     // install never wins ai:inference resolution or grants the copilot gate
     if (String(cfg['apiKey'] ?? '').trim() === '') {
-      throw new Error('OpenAI API key required — add it in the plugin settings')
+      throw new Error('OpenAI API key required: add it in the plugin settings')
     }
     config = cfg
   }

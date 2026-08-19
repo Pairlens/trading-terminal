@@ -25,7 +25,7 @@ export const openrouterInferenceManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'AI inference via OpenRouter — one API key for hundreds of models across providers (bring your own key)',
+    'AI inference via OpenRouter: one API key for hundreds of models across providers (bring your own key)',
   homepage: 'https://openrouter.ai',
   icon: 'https://openrouter.ai/favicon.ico',
   metadata: { family: 'ai-byok' },
@@ -174,7 +174,7 @@ export function createOpenrouterInferencePlugin(
     // install never wins ai:inference resolution or grants the copilot gate
     if (String(cfg['apiKey'] ?? '').trim() === '') {
       throw new Error(
-        'OpenRouter API key required — add it in the plugin settings',
+        'OpenRouter API key required: add it in the plugin settings',
       )
     }
     config = cfg

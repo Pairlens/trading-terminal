@@ -5083,25 +5083,17 @@
         "label": "Alert Harga",
         "fields": {
           "direction": {
-            "label": "Arah",
             "options": {
               "above": "Di atas",
               "below": "Di bawah"
             }
-          },
-          "price": {
-            "label": "Harga"
           }
-        },
-        "handles": {
-          "out": "Terpicu"
         }
       },
       "order-executed": {
         "label": "Order Tereksekusi",
         "fields": {
           "side": {
-            "label": "Sisi",
             "options": {
               "any": "Apa saja",
               "buy": "Beli",
@@ -5109,211 +5101,46 @@
             }
           },
           "status": {
-            "label": "Status",
             "options": {
               "any": "Apa saja",
               "filled": "Terisi",
               "partially_filled": "Terisi Sebagian"
             }
           }
-        },
-        "handles": {
-          "out": "Terpicu"
         }
       },
       "signal-generated": {
-        "label": "Sinyal Terbentuk",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Tipe Sinyal (opsional)",
-            "placeholder": "Tipe apa saja"
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Sinyal Terbentuk"
       },
       "indicator-alert": {
-        "label": "Alert Indikator",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indikator (opsional)",
-            "placeholder": "Indikator apa saja"
-          },
-          "condition": {
-            "label": "Kondisi (opsional)",
-            "placeholder": "Kondisi apa saja"
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Alert Indikator"
       },
       "candle-close": {
-        "label": "Penutupan Candle",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Penutupan Candle"
       },
       "price-condition": {
-        "label": "Kondisi Harga",
-        "fields": {
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "above": "Di atas",
-              "below": "Di bawah"
-            }
-          },
-          "price": {
-            "label": "Harga"
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Kondisi Harga"
       },
       "percent-change": {
-        "label": "Perubahan Persentase",
-        "fields": {
-          "percent": {
-            "label": "Persentase"
-          },
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "up": "Naik",
-              "down": "Turun",
-              "either": "Keduanya"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Perubahan Persentase"
       },
       "time-window": {
-        "label": "Jendela Waktu",
-        "fields": {
-          "startHour": {
-            "label": "Jam Mulai (UTC)"
-          },
-          "endHour": {
-            "label": "Jam Selesai (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Lolos",
-          "fail": "Gagal"
-        }
+        "label": "Jendela Waktu"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Notifikasi Sistem",
-        "fields": {
-          "sound": {
-            "label": "Putar Suara"
-          }
-        }
+        "label": "Notifikasi Sistem"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Metode",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Sertakan Payload Event"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID obrolan (opsional)",
-            "placeholder": "Obrolan tertaut"
-          },
-          "silent": {
-            "label": "Pesan senyap"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Pergerakan Harga",
-        "fields": {
-          "percent": {
-            "label": "Persentase"
-          },
-          "direction": {
-            "label": "Arah",
-            "options": {
-              "up": "Naik",
-              "down": "Turun",
-              "either": "Keduanya"
-            }
-          },
-          "window": {
-            "label": "Dalam",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Terpicu"
-        }
+        "label": "Pergerakan Harga"
       }
     },
     "messages": {
@@ -5927,11 +5754,6 @@
       "trigger": {
         "title": "Input Order",
         "badge": "Entry"
-      },
-      "configPanel": {
-        "requiresNote": "Butuh: {{requirement}}. Market tanpa kapabilitas ini tidak bisa menjalankan workflow yang berisi langkah ini.",
-        "on": "Aktif",
-        "off": "Nonaktif"
       }
     },
     "execution": {
@@ -5947,165 +5769,31 @@
         "label": "Input Order"
       },
       "market-order": {
-        "label": "Market Order",
-        "fields": {
-          "side": {
-            "label": "Sisi",
-            "options": {
-              "inherit": "Sama seperti trigger",
-              "opposite": "Kebalikan trigger",
-              "buy": "Beli",
-              "sell": "Jual"
-            }
-          },
-          "sizeMode": {
-            "label": "Mode Ukuran",
-            "options": {
-              "percent": "% dari input",
-              "absolute": "Jumlah tetap"
-            }
-          },
-          "size": {
-            "label": "Ukuran"
-          }
-        }
+        "label": "Market Order"
       },
       "limit-order": {
         "label": "Limit Order",
         "compat": "Limit order yang mengendap",
-        "fields": {
-          "side": {
-            "label": "Sisi",
-            "options": {
-              "inherit": "Sama seperti trigger",
-              "opposite": "Kebalikan trigger",
-              "buy": "Beli",
-              "sell": "Jual"
-            }
-          },
-          "sizeMode": {
-            "label": "Mode Ukuran",
-            "options": {
-              "percent": "% dari input",
-              "absolute": "Jumlah tetap"
-            }
-          },
-          "size": {
-            "label": "Ukuran"
-          },
-          "priceMode": {
-            "label": "Mode Harga",
-            "options": {
-              "absolute": "Harga tetap",
-              "offset-percent": "% dari harga saat ini",
-              "offset-absolute": "Selisih dari harga saat ini"
-            }
-          },
-          "priceValue": {
-            "label": "Nilai Harga"
-          }
-        },
         "compatReason": "venue ini tidak bisa mengendapkan limit order (DEX swap-only)"
       },
       "take-profit": {
         "label": "Take Profit",
         "compat": "Trigger order native atau limit order yang mengendap",
-        "fields": {
-          "triggerMode": {
-            "label": "Mode Trigger",
-            "options": {
-              "percent": "% untung",
-              "absolute": "Level harga"
-            }
-          },
-          "triggerValue": {
-            "label": "Nilai Trigger"
-          },
-          "sizePercent": {
-            "label": "Tutup %"
-          },
-          "orderType": {
-            "label": "Tipe Order",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Harga Limit"
-          }
-        },
         "compatReason": "venue ini tidak mendukung trigger order maupun limit order yang mengendap"
       },
       "stop-loss": {
         "label": "Stop Loss",
         "compat": "Trigger order native",
-        "fields": {
-          "triggerMode": {
-            "label": "Mode Trigger",
-            "options": {
-              "percent": "% rugi",
-              "absolute": "Level harga"
-            }
-          },
-          "triggerValue": {
-            "label": "Nilai Trigger"
-          },
-          "sizePercent": {
-            "label": "Tutup %"
-          },
-          "orderType": {
-            "label": "Tipe Order",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Harga Limit"
-          }
-        },
         "compatReason": "venue ini tidak punya trigger order native di exchange, jadi stop loss tidak bisa mengendap di exchange"
       },
       "condition": {
-        "label": "Kondisi",
-        "fields": {
-          "conditionType": {
-            "label": "Kondisi",
-            "options": {
-              "price-above": "Harga di atas",
-              "price-below": "Harga di bawah",
-              "percent-change": "% perubahan dari entry"
-            }
-          },
-          "value": {
-            "label": "Nilai"
-          }
-        }
+        "label": "Kondisi"
       },
       "split": {
-        "label": "Split Paralel",
-        "fields": {
-          "branches": {
-            "label": "Cabang"
-          }
-        }
+        "label": "Split Paralel"
       },
       "wait": {
-        "label": "Tunggu",
-        "fields": {
-          "duration": {
-            "label": "Durasi"
-          },
-          "unit": {
-            "label": "Satuan",
-            "options": {
-              "seconds": "Detik",
-              "minutes": "Menit",
-              "hours": "Jam"
-            }
-          }
-        }
+        "label": "Tunggu"
       }
     },
     "templates": {

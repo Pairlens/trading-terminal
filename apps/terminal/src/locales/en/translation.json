@@ -4175,25 +4175,17 @@
         "label": "Price Alert",
         "fields": {
           "direction": {
-            "label": "Direction",
             "options": {
               "above": "Above",
               "below": "Below"
             }
-          },
-          "price": {
-            "label": "Price"
           }
-        },
-        "handles": {
-          "out": "Triggered"
         }
       },
       "order-executed": {
         "label": "Order Executed",
         "fields": {
           "side": {
-            "label": "Side",
             "options": {
               "any": "Any",
               "buy": "Buy",
@@ -4201,211 +4193,46 @@
             }
           },
           "status": {
-            "label": "Status",
             "options": {
               "any": "Any",
               "filled": "Filled",
               "partially_filled": "Partially Filled"
             }
           }
-        },
-        "handles": {
-          "out": "Triggered"
         }
       },
       "signal-generated": {
-        "label": "Signal Generated",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Signal Type (optional)",
-            "placeholder": "Any type"
-          }
-        },
-        "handles": {
-          "out": "Triggered"
-        }
+        "label": "Signal Generated"
       },
       "indicator-alert": {
-        "label": "Indicator Alert",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indicator (optional)",
-            "placeholder": "Any indicator"
-          },
-          "condition": {
-            "label": "Condition (optional)",
-            "placeholder": "Any condition"
-          }
-        },
-        "handles": {
-          "out": "Triggered"
-        }
+        "label": "Indicator Alert"
       },
       "candle-close": {
-        "label": "Candle Close",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Triggered"
-        }
+        "label": "Candle Close"
       },
       "price-condition": {
-        "label": "Price Condition",
-        "fields": {
-          "direction": {
-            "label": "Direction",
-            "options": {
-              "above": "Above",
-              "below": "Below"
-            }
-          },
-          "price": {
-            "label": "Price"
-          }
-        },
-        "handles": {
-          "pass": "Pass",
-          "fail": "Fail"
-        }
+        "label": "Price Condition"
       },
       "percent-change": {
-        "label": "Percent Change",
-        "fields": {
-          "percent": {
-            "label": "Percent"
-          },
-          "direction": {
-            "label": "Direction",
-            "options": {
-              "up": "Up",
-              "down": "Down",
-              "either": "Either"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Pass",
-          "fail": "Fail"
-        }
+        "label": "Percent Change"
       },
       "time-window": {
-        "label": "Time Window",
-        "fields": {
-          "startHour": {
-            "label": "Start Hour (UTC)"
-          },
-          "endHour": {
-            "label": "End Hour (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Pass",
-          "fail": "Fail"
-        }
+        "label": "Time Window"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "OS Notification",
-        "fields": {
-          "sound": {
-            "label": "Play Sound"
-          }
-        }
+        "label": "OS Notification"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Method",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Include Event Payload"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "Chat ID (optional)",
-            "placeholder": "Linked chat"
-          },
-          "silent": {
-            "label": "Silent Message"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Price Move",
-        "fields": {
-          "percent": {
-            "label": "Percent"
-          },
-          "direction": {
-            "label": "Direction",
-            "options": {
-              "up": "Up",
-              "down": "Down",
-              "either": "Either"
-            }
-          },
-          "window": {
-            "label": "Within",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Triggered"
-        }
+        "label": "Price Move"
       }
     },
     "messages": {
@@ -5019,11 +4846,6 @@
       "trigger": {
         "title": "Order Input",
         "badge": "Entry"
-      },
-      "configPanel": {
-        "requiresNote": "Requires: {{requirement}}. Markets without this capability can't run workflows containing this step.",
-        "on": "On",
-        "off": "Off"
       }
     },
     "execution": {
@@ -5039,165 +4861,31 @@
         "label": "Order Input"
       },
       "market-order": {
-        "label": "Market Order",
-        "fields": {
-          "side": {
-            "label": "Side",
-            "options": {
-              "inherit": "Same as trigger",
-              "opposite": "Opposite of trigger",
-              "buy": "Buy",
-              "sell": "Sell"
-            }
-          },
-          "sizeMode": {
-            "label": "Size Mode",
-            "options": {
-              "percent": "% of input",
-              "absolute": "Fixed amount"
-            }
-          },
-          "size": {
-            "label": "Size"
-          }
-        }
+        "label": "Market Order"
       },
       "limit-order": {
         "label": "Limit Order",
         "compat": "Resting limit orders",
-        "fields": {
-          "side": {
-            "label": "Side",
-            "options": {
-              "inherit": "Same as trigger",
-              "opposite": "Opposite of trigger",
-              "buy": "Buy",
-              "sell": "Sell"
-            }
-          },
-          "sizeMode": {
-            "label": "Size Mode",
-            "options": {
-              "percent": "% of input",
-              "absolute": "Fixed amount"
-            }
-          },
-          "size": {
-            "label": "Size"
-          },
-          "priceMode": {
-            "label": "Price Mode",
-            "options": {
-              "absolute": "Fixed price",
-              "offset-percent": "% from current",
-              "offset-absolute": "Offset from current"
-            }
-          },
-          "priceValue": {
-            "label": "Price Value"
-          }
-        },
         "compatReason": "this venue cannot rest limit orders (swap-only DEX)"
       },
       "take-profit": {
         "label": "Take Profit",
         "compat": "Native trigger orders or resting limit orders",
-        "fields": {
-          "triggerMode": {
-            "label": "Trigger Mode",
-            "options": {
-              "percent": "% gain",
-              "absolute": "Price level"
-            }
-          },
-          "triggerValue": {
-            "label": "Trigger Value"
-          },
-          "sizePercent": {
-            "label": "Close %"
-          },
-          "orderType": {
-            "label": "Order Type",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Limit Price"
-          }
-        },
         "compatReason": "this venue supports neither trigger orders nor resting limit orders"
       },
       "stop-loss": {
         "label": "Stop Loss",
         "compat": "Native trigger orders",
-        "fields": {
-          "triggerMode": {
-            "label": "Trigger Mode",
-            "options": {
-              "percent": "% loss",
-              "absolute": "Price level"
-            }
-          },
-          "triggerValue": {
-            "label": "Trigger Value"
-          },
-          "sizePercent": {
-            "label": "Close %"
-          },
-          "orderType": {
-            "label": "Order Type",
-            "options": {
-              "market": "Market",
-              "limit": "Limit"
-            }
-          },
-          "limitPrice": {
-            "label": "Limit Price"
-          }
-        },
         "compatReason": "this venue has no exchange-native trigger orders, so a stop-loss cannot rest on the exchange"
       },
       "condition": {
-        "label": "Condition",
-        "fields": {
-          "conditionType": {
-            "label": "Condition",
-            "options": {
-              "price-above": "Price above",
-              "price-below": "Price below",
-              "percent-change": "% change from entry"
-            }
-          },
-          "value": {
-            "label": "Value"
-          }
-        }
+        "label": "Condition"
       },
       "split": {
-        "label": "Parallel Split",
-        "fields": {
-          "branches": {
-            "label": "Branches"
-          }
-        }
+        "label": "Parallel Split"
       },
       "wait": {
-        "label": "Wait",
-        "fields": {
-          "duration": {
-            "label": "Duration"
-          },
-          "unit": {
-            "label": "Unit",
-            "options": {
-              "seconds": "Seconds",
-              "minutes": "Minutes",
-              "hours": "Hours"
-            }
-          }
-        }
+        "label": "Wait"
       }
     },
     "templates": {

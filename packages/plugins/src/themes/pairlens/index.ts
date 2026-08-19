@@ -141,7 +141,7 @@ export const pairlensThemeManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'The signature Pairlens theme — crisp black & white with rainbow prism accents',
+    'The signature Pairlens theme: crisp black & white with rainbow prism accents',
   capabilities: [
     {
       id: 'theme:override',

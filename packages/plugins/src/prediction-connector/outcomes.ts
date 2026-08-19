@@ -170,7 +170,7 @@ export class OutcomeResolver {
     }
 
     throw new Error(
-      `${this.venue.displayName} could not resolve '${pairKey}' — the market may have resolved or been delisted; find it again in the events browser`,
+      `${this.venue.displayName} could not resolve '${pairKey}': the market may have resolved or been delisted; find it again in the events browser`,
     )
   }
 

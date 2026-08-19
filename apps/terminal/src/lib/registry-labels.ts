@@ -16,16 +16,20 @@
  * The alternative was a `labelKey` beside every `label` in the engines:
  * sixty duplicated lines, and a new step type that silently forgets one.
  * Instead every key is derived from identifiers those packages already
- * treat as stable — a step's `type`, a config field's `key`, an option's
- * `value`, a capability's `id`. All four are persisted in saved workflows,
- * rules and layouts, so they cannot be renamed casually anyway.
+ * treat as stable — a step's `type` and a capability's `id`. Both are
+ * persisted in saved workflows, rules and layouts, so they cannot be
+ * renamed casually anyway.
  *
  * Derived keys are invisible to the catalog-parity test, which only sees
- * `t('literal')` call sites. `__tests__/registry-labels.test.ts` covers
- * them instead: it walks the real core step definitions and capability
- * table and asserts every derived key resolves in `en`. That test also
- * catches a step type added upstream without translations — which the
- * duplicated-`labelKey` design would not have.
+ * `t('literal')` call sites, and the orphan audit waves the whole
+ * `stepTypes.` subtree through on a prefix. `__tests__/registry-labels.test.ts`
+ * is what covers both blind spots: it walks the real core step definitions
+ * and capability table and asserts every derived key resolves in `en`, then
+ * asserts the reverse — that nothing sits under `stepTypes.` which no
+ * function here can derive. Forward catches a step type added upstream
+ * without translations. Backward is what stops that broad prefix from
+ * shadowing dead weight, which is how the config-field and handle keys sat
+ * unrendered from March to August 2026.
  *
  * ## Third-party steps keep their own English
  *
@@ -40,9 +44,6 @@ import type { TFunction } from 'i18next'
 export type StepScope = 'workflows' | 'notifications'
 
 type StepLike = { type: string; label: string }
-type OptionLike = { value: string; label: string }
-type FieldLike = { key: string; label: string }
-type HandleLike = { id: string; label?: string }
 
 // ── Step types ───────────────────────────────────────────────────────
 
@@ -69,59 +70,6 @@ export function stepTypeLabelById(
 ): string {
   return t(`${scope}.stepTypes.${type}.label`, {
     defaultValue: fallback ?? type,
-  })
-}
-
-export function stepFieldLabel(
-  t: TFunction,
-  scope: StepScope,
-  stepType: string,
-  field: FieldLike,
-): string {
-  return t(`${scope}.stepTypes.${stepType}.fields.${field.key}.label`, {
-    defaultValue: field.label,
-  })
-}
-
-export function stepFieldPlaceholder(
-  t: TFunction,
-  scope: StepScope,
-  stepType: string,
-  field: { key: string; placeholder?: string },
-): string | undefined {
-  if (!field.placeholder) return undefined
-  return t(`${scope}.stepTypes.${stepType}.fields.${field.key}.placeholder`, {
-    defaultValue: field.placeholder,
-  })
-}
-
-export function stepOptionLabel(
-  t: TFunction,
-  scope: StepScope,
-  stepType: string,
-  fieldKey: string,
-  option: OptionLike,
-): string {
-  return t(
-    `${scope}.stepTypes.${stepType}.fields.${fieldKey}.options.${option.value}`,
-    { defaultValue: option.label },
-  )
-}
-
-/**
- * Handle labels sit on the connector dots of a node ('Triggered', 'Pass',
- * 'Fail'). Most handles have none, and an unlabelled handle must stay
- * unlabelled rather than fall back to its id.
- */
-export function stepHandleLabel(
-  t: TFunction,
-  scope: StepScope,
-  stepType: string,
-  handle: HandleLike,
-): string | undefined {
-  if (!handle.label) return undefined
-  return t(`${scope}.stepTypes.${stepType}.handles.${handle.id}`, {
-    defaultValue: handle.label,
   })
 }
 

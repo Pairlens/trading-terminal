@@ -174,8 +174,8 @@ export const okxCcxtVenue: CcxtVenueConfig = {
     const host = resolveOkxCcxtUrls(routed, { authed: true }).hostname
     return (
       `OKX rejected this API key on ${host} (50119: API key doesn't exist). ` +
-      `OKX keys only work on the regional entity where the account was created — ` +
-      `if this account was registered on a different OKX entity (Global, EEA or US), ` +
+      `OKX keys only work on the regional entity where the account was created. ` +
+      `If this account was registered on a different OKX entity (Global, EEA or US), ` +
       `pick that entity on the account's card under "OKX account entity".`
     )
   },

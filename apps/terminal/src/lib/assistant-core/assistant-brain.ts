@@ -55,6 +55,7 @@ const CAPABILITIES = [
   'Trading: prepare spot, perpetual and prediction-market orders for the user to confirm, and cancel resting ones.',
   'Indicators and strategies: read, write and validate Python scripts, run backtests, and deploy a strategy as a bot.',
   'Automation: build and edit workflows, price alerts and alert flows.',
+  'Workspaces: read the whole pane catalogue with list_pane_types — it is whatever the installed plugins contribute, never a fixed list — and build the user saved boards out of it: from scratch with create_workspace, from a Workspace Store layout with create_workspace_from_template, or from what is already on screen with save_current_workspace. Organise them into folders, and rebuild the board they are standing on in one step with apply_board_layout.',
   'Navigation: take the user to any page, pair, workspace or workbench in the terminal.',
 ]
 
@@ -68,6 +69,7 @@ const WORKING_RULES = [
   'When acting somewhere else is clearer than explaining, navigate there and then act. Say where you took them.',
   'If a tool fails, say what failed and answer from what you do have. Never paper over a gap with a plausible number.',
   'Prefer one capable turn over many small ones. Chain tools until the question is actually answered.',
+  'Never build a board out of pane ids you remember. Call list_pane_types first: the catalogue is the live plugin registry, so it differs between users and changes when they install something.',
 ]
 
 const SAFETY_RULES = [

@@ -1,6 +1,6 @@
 ---
 title: Workspaces
-description: Build layouts that suit how you trade, bind panels to variables so one workspace serves every pair, and copy ready-made ones from the store.
+description: Build layouts that suit how you trade, bind panels to variables so one workspace serves every pair, copy ready-made ones from the store, or ask the assistant to build one for you.
 group: traders
 order: 8
 eyebrow: For traders
@@ -23,6 +23,30 @@ Panels marked as singletons appear once per workspace, which is why you cannot
 end up with two Portfolio panels quietly disagreeing.
 
 Rename a workspace, change its icon, or delete it from its context menu.
+
+## Or ask for one
+
+The assistant builds workspaces. It reads the panel catalogue first, so it
+works from the panes you actually have rather than a list it remembers, and
+plugin panes are in that catalogue the moment you install them.
+
+> Build me a perps desk: chart on the left, funding and open interest stacked
+> on the right, liquidation map underneath. Put it in a Perps folder.
+
+It creates the folder, builds the board, wires the panes that follow a pair to
+the workspace's `$pair` variable, seeds that variable with whatever you had on
+screen, and opens it. Then you can keep going in the same breath: "add a tape
+under the book", "call it Funding desk instead", "copy the Scalper's Cockpit
+into that folder too".
+
+It also works the other way round. Rearrange a board by hand and say **save
+this as a workspace**, and what is on screen becomes a saved one, variables
+derived and panes bound. On a board you are already on, **rebuild this** asks
+before it lands: replacing every pane shows you the new geometry on a card
+first. Deleting a workspace asks too.
+
+Full tool list in the
+[assistant tool reference](/docs/copilot-tools#building-workspaces).
 
 ## Moving a panel
 
