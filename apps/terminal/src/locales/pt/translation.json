@@ -5109,25 +5109,17 @@
         "label": "Alerta de preço",
         "fields": {
           "direction": {
-            "label": "Direção",
             "options": {
               "above": "Acima",
               "below": "Abaixo"
             }
-          },
-          "price": {
-            "label": "Preço"
           }
-        },
-        "handles": {
-          "out": "Disparado"
         }
       },
       "order-executed": {
         "label": "Ordem executada",
         "fields": {
           "side": {
-            "label": "Lado",
             "options": {
               "any": "Qualquer",
               "buy": "Compra",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "Status",
             "options": {
               "any": "Qualquer",
               "filled": "Executada",
               "partially_filled": "Parcialmente executada"
             }
           }
-        },
-        "handles": {
-          "out": "Disparado"
         }
       },
       "signal-generated": {
-        "label": "Sinal gerado",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "Tipo de sinal (opcional)",
-            "placeholder": "Qualquer tipo"
-          }
-        },
-        "handles": {
-          "out": "Disparado"
-        }
+        "label": "Sinal gerado"
       },
       "indicator-alert": {
-        "label": "Alerta de indicador",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "Indicador (opcional)",
-            "placeholder": "Qualquer indicador"
-          },
-          "condition": {
-            "label": "Condição (opcional)",
-            "placeholder": "Qualquer condição"
-          }
-        },
-        "handles": {
-          "out": "Disparado"
-        }
+        "label": "Alerta de indicador"
       },
       "candle-close": {
-        "label": "Fechamento de candle",
-        "fields": {
-          "timeframe": {
-            "label": "Timeframe",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "Disparado"
-        }
+        "label": "Fechamento de candle"
       },
       "price-condition": {
-        "label": "Condição de preço",
-        "fields": {
-          "direction": {
-            "label": "Direção",
-            "options": {
-              "above": "Acima",
-              "below": "Abaixo"
-            }
-          },
-          "price": {
-            "label": "Preço"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Não passa"
-        }
+        "label": "Condição de preço"
       },
       "percent-change": {
-        "label": "Variação percentual",
-        "fields": {
-          "percent": {
-            "label": "Percentual"
-          },
-          "direction": {
-            "label": "Direção",
-            "options": {
-              "up": "Alta",
-              "down": "Baixa",
-              "either": "Ambos"
-            }
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Não passa"
-        }
+        "label": "Variação percentual"
       },
       "time-window": {
-        "label": "Janela de horário",
-        "fields": {
-          "startHour": {
-            "label": "Hora de início (UTC)"
-          },
-          "endHour": {
-            "label": "Hora de término (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "Passa",
-          "fail": "Não passa"
-        }
+        "label": "Janela de horário"
       },
       "local-toast": {
         "label": "Toast"
       },
       "os-notification": {
-        "label": "Notificação do sistema",
-        "fields": {
-          "sound": {
-            "label": "Reproduzir som"
-          }
-        }
+        "label": "Notificação do sistema"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "Método",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "Incluir payload do evento"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "ID da conversa (opcional)",
-            "placeholder": "Conversa vinculada"
-          },
-          "silent": {
-            "label": "Mensagem silenciosa"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "Movimento de preço",
-        "fields": {
-          "percent": {
-            "label": "Percentual"
-          },
-          "direction": {
-            "label": "Direção",
-            "options": {
-              "up": "Alta",
-              "down": "Baixa",
-              "either": "Ambos"
-            }
-          },
-          "window": {
-            "label": "Em",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "Disparado"
-        }
+        "label": "Movimento de preço"
       }
     },
     "messages": {
@@ -5970,165 +5797,31 @@
         "label": "Entrada da ordem"
       },
       "market-order": {
-        "label": "Ordem a mercado",
-        "fields": {
-          "side": {
-            "label": "Lado",
-            "options": {
-              "inherit": "Igual ao gatilho",
-              "opposite": "Oposto ao gatilho",
-              "buy": "Comprar",
-              "sell": "Vender"
-            }
-          },
-          "sizeMode": {
-            "label": "Modo de tamanho",
-            "options": {
-              "percent": "% da entrada",
-              "absolute": "Valor fixo"
-            }
-          },
-          "size": {
-            "label": "Tamanho"
-          }
-        }
+        "label": "Ordem a mercado"
       },
       "limit-order": {
         "label": "Ordem limitada",
         "compat": "Ordens limitadas pendentes",
-        "fields": {
-          "side": {
-            "label": "Lado",
-            "options": {
-              "inherit": "Igual ao gatilho",
-              "opposite": "Oposto ao gatilho",
-              "buy": "Comprar",
-              "sell": "Vender"
-            }
-          },
-          "sizeMode": {
-            "label": "Modo de tamanho",
-            "options": {
-              "percent": "% da entrada",
-              "absolute": "Valor fixo"
-            }
-          },
-          "size": {
-            "label": "Tamanho"
-          },
-          "priceMode": {
-            "label": "Modo de preço",
-            "options": {
-              "absolute": "Preço fixo",
-              "offset-percent": "% de desvio",
-              "offset-absolute": "Desvio do preço atual"
-            }
-          },
-          "priceValue": {
-            "label": "Valor do preço"
-          }
-        },
         "compatReason": "esta corretora não consegue manter ordens limitadas pendentes (DEX somente swap)"
       },
       "take-profit": {
         "label": "Take profit",
         "compat": "Ordens de gatilho nativas ou ordens limitadas pendentes",
-        "fields": {
-          "triggerMode": {
-            "label": "Modo de gatilho",
-            "options": {
-              "percent": "% de ganho",
-              "absolute": "Nível de preço"
-            }
-          },
-          "triggerValue": {
-            "label": "Valor do gatilho"
-          },
-          "sizePercent": {
-            "label": "% de fechamento"
-          },
-          "orderType": {
-            "label": "Tipo de ordem",
-            "options": {
-              "market": "Mercado",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Preço limite"
-          }
-        },
         "compatReason": "esta corretora não é compatível com ordens de gatilho nem com ordens limitadas pendentes"
       },
       "stop-loss": {
         "label": "Stop loss",
         "compat": "Ordens de gatilho nativas",
-        "fields": {
-          "triggerMode": {
-            "label": "Modo de gatilho",
-            "options": {
-              "percent": "% de perda",
-              "absolute": "Nível de preço"
-            }
-          },
-          "triggerValue": {
-            "label": "Valor do gatilho"
-          },
-          "sizePercent": {
-            "label": "% de fechamento"
-          },
-          "orderType": {
-            "label": "Tipo de ordem",
-            "options": {
-              "market": "Mercado",
-              "limit": "Limite"
-            }
-          },
-          "limitPrice": {
-            "label": "Preço limite"
-          }
-        },
         "compatReason": "esta corretora não tem ordens de gatilho nativas, então um stop loss não pode ficar pendente na exchange"
       },
       "condition": {
-        "label": "Condição",
-        "fields": {
-          "conditionType": {
-            "label": "Condição",
-            "options": {
-              "price-above": "Preço acima",
-              "price-below": "Preço abaixo",
-              "percent-change": "% de variação a partir da entrada"
-            }
-          },
-          "value": {
-            "label": "Valor"
-          }
-        }
+        "label": "Condição"
       },
       "split": {
-        "label": "Divisão paralela",
-        "fields": {
-          "branches": {
-            "label": "Ramos"
-          }
-        }
+        "label": "Divisão paralela"
       },
       "wait": {
-        "label": "Aguardar",
-        "fields": {
-          "duration": {
-            "label": "Duração"
-          },
-          "unit": {
-            "label": "Unidade",
-            "options": {
-              "seconds": "Segundos",
-              "minutes": "Minutos",
-              "hours": "Horas"
-            }
-          }
-        }
+        "label": "Aguardar"
       }
     },
     "templates": {

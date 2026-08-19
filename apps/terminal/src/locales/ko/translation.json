@@ -5109,25 +5109,17 @@
         "label": "가격 알림",
         "fields": {
           "direction": {
-            "label": "방향",
             "options": {
               "above": "이상",
               "below": "이하"
             }
-          },
-          "price": {
-            "label": "가격"
           }
-        },
-        "handles": {
-          "out": "트리거됨"
         }
       },
       "order-executed": {
         "label": "주문 체결",
         "fields": {
           "side": {
-            "label": "방향",
             "options": {
               "any": "전체",
               "buy": "매수",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "상태",
             "options": {
               "any": "전체",
               "filled": "체결됨",
               "partially_filled": "일부 체결됨"
             }
           }
-        },
-        "handles": {
-          "out": "트리거됨"
         }
       },
       "signal-generated": {
-        "label": "시그널 발생",
-        "fields": {
-          "timeframe": {
-            "label": "시간 프레임",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "시그널 유형 (선택)",
-            "placeholder": "유형 전체"
-          }
-        },
-        "handles": {
-          "out": "트리거됨"
-        }
+        "label": "시그널 발생"
       },
       "indicator-alert": {
-        "label": "지표 알림",
-        "fields": {
-          "timeframe": {
-            "label": "시간 프레임",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "지표 (선택)",
-            "placeholder": "지표 전체"
-          },
-          "condition": {
-            "label": "조건 (선택)",
-            "placeholder": "조건 전체"
-          }
-        },
-        "handles": {
-          "out": "트리거됨"
-        }
+        "label": "지표 알림"
       },
       "candle-close": {
-        "label": "캔들 마감",
-        "fields": {
-          "timeframe": {
-            "label": "시간 프레임",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "트리거됨"
-        }
+        "label": "캔들 마감"
       },
       "price-condition": {
-        "label": "가격 조건",
-        "fields": {
-          "direction": {
-            "label": "방향",
-            "options": {
-              "above": "이상",
-              "below": "이하"
-            }
-          },
-          "price": {
-            "label": "가격"
-          }
-        },
-        "handles": {
-          "pass": "통과",
-          "fail": "미통과"
-        }
+        "label": "가격 조건"
       },
       "percent-change": {
-        "label": "퍼센트 변화",
-        "fields": {
-          "percent": {
-            "label": "퍼센트"
-          },
-          "direction": {
-            "label": "방향",
-            "options": {
-              "up": "상승",
-              "down": "하락",
-              "either": "둘 다"
-            }
-          }
-        },
-        "handles": {
-          "pass": "통과",
-          "fail": "미통과"
-        }
+        "label": "퍼센트 변화"
       },
       "time-window": {
-        "label": "시간대",
-        "fields": {
-          "startHour": {
-            "label": "시작 시각 (UTC)"
-          },
-          "endHour": {
-            "label": "종료 시각 (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "통과",
-          "fail": "미통과"
-        }
+        "label": "시간대"
       },
       "local-toast": {
         "label": "토스트"
       },
       "os-notification": {
-        "label": "시스템 알림",
-        "fields": {
-          "sound": {
-            "label": "소리 재생"
-          }
-        }
+        "label": "시스템 알림"
       },
       "webhook": {
-        "label": "웹훅",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "메서드",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "이벤트 페이로드 포함"
-          }
-        }
+        "label": "웹훅"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "채팅 ID (선택)",
-            "placeholder": "연결된 채팅"
-          },
-          "silent": {
-            "label": "무음 메시지"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "가격 변동",
-        "fields": {
-          "percent": {
-            "label": "퍼센트"
-          },
-          "direction": {
-            "label": "방향",
-            "options": {
-              "up": "상승",
-              "down": "하락",
-              "either": "둘 다"
-            }
-          },
-          "window": {
-            "label": "기간",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "트리거됨"
-        }
+        "label": "가격 변동"
       }
     },
     "messages": {
@@ -5970,165 +5797,31 @@
         "label": "주문 입력"
       },
       "market-order": {
-        "label": "시장가 주문",
-        "fields": {
-          "side": {
-            "label": "방향",
-            "options": {
-              "inherit": "트리거와 동일",
-              "opposite": "트리거의 반대",
-              "buy": "매수",
-              "sell": "매도"
-            }
-          },
-          "sizeMode": {
-            "label": "수량 모드",
-            "options": {
-              "percent": "입력 대비 %",
-              "absolute": "고정 수량"
-            }
-          },
-          "size": {
-            "label": "수량"
-          }
-        }
+        "label": "시장가 주문"
       },
       "limit-order": {
         "label": "지정가 주문",
         "compat": "미체결 지정가 주문",
-        "fields": {
-          "side": {
-            "label": "방향",
-            "options": {
-              "inherit": "트리거와 동일",
-              "opposite": "트리거의 반대",
-              "buy": "매수",
-              "sell": "매도"
-            }
-          },
-          "sizeMode": {
-            "label": "수량 모드",
-            "options": {
-              "percent": "입력 대비 %",
-              "absolute": "고정 수량"
-            }
-          },
-          "size": {
-            "label": "수량"
-          },
-          "priceMode": {
-            "label": "가격 모드",
-            "options": {
-              "absolute": "고정 가격",
-              "offset-percent": "현재가 대비 %",
-              "offset-absolute": "현재가로부터 오프셋"
-            }
-          },
-          "priceValue": {
-            "label": "가격 값"
-          }
-        },
         "compatReason": "이 거래소는 지정가 주문을 미체결로 둘 수 없습니다 (스왑 전용 DEX)"
       },
       "take-profit": {
         "label": "익절",
         "compat": "네이티브 트리거 주문 또는 미체결 지정가 주문",
-        "fields": {
-          "triggerMode": {
-            "label": "트리거 모드",
-            "options": {
-              "percent": "이익 %",
-              "absolute": "가격 수준"
-            }
-          },
-          "triggerValue": {
-            "label": "트리거 값"
-          },
-          "sizePercent": {
-            "label": "청산 %"
-          },
-          "orderType": {
-            "label": "주문 유형",
-            "options": {
-              "market": "시장가",
-              "limit": "지정가"
-            }
-          },
-          "limitPrice": {
-            "label": "지정가"
-          }
-        },
         "compatReason": "이 거래소는 트리거 주문과 미체결 지정가 주문을 모두 지원하지 않습니다"
       },
       "stop-loss": {
         "label": "손절",
         "compat": "네이티브 트리거 주문",
-        "fields": {
-          "triggerMode": {
-            "label": "트리거 모드",
-            "options": {
-              "percent": "손실 %",
-              "absolute": "가격 수준"
-            }
-          },
-          "triggerValue": {
-            "label": "트리거 값"
-          },
-          "sizePercent": {
-            "label": "청산 %"
-          },
-          "orderType": {
-            "label": "주문 유형",
-            "options": {
-              "market": "시장가",
-              "limit": "지정가"
-            }
-          },
-          "limitPrice": {
-            "label": "지정가"
-          }
-        },
         "compatReason": "이 거래소에는 거래소 네이티브 트리거 주문이 없어, 손절 주문을 거래소에 남겨둘 수 없습니다"
       },
       "condition": {
-        "label": "조건",
-        "fields": {
-          "conditionType": {
-            "label": "조건",
-            "options": {
-              "price-above": "가격 상회",
-              "price-below": "가격 하회",
-              "percent-change": "진입가 대비 % 변화"
-            }
-          },
-          "value": {
-            "label": "값"
-          }
-        }
+        "label": "조건"
       },
       "split": {
-        "label": "병렬 분기",
-        "fields": {
-          "branches": {
-            "label": "분기 수"
-          }
-        }
+        "label": "병렬 분기"
       },
       "wait": {
-        "label": "대기",
-        "fields": {
-          "duration": {
-            "label": "기간"
-          },
-          "unit": {
-            "label": "단위",
-            "options": {
-              "seconds": "초",
-              "minutes": "분",
-              "hours": "시간"
-            }
-          }
-        }
+        "label": "대기"
       }
     },
     "templates": {

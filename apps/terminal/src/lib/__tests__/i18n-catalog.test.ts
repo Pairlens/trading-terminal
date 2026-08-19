@@ -237,12 +237,22 @@ const USAGE_ROOTS = [
  * the keys and the test that walks the real definitions to prove they
  * resolve in en — an entry without both is how orphans start hiding again.
  * Keep entries as long as possible: a broad prefix shadows real orphans.
+ *
+ * "Shadows real orphans" is not hypothetical. These two prefixes hid 2295
+ * config-field and handle keys across seventeen catalogs for five months,
+ * from the March 2026 commit that replaced the generic step config panel
+ * with per-step components until August. A prefix cannot be narrowed to
+ * fix that, because the step type sits in the middle of the key. So the
+ * named test now asserts both directions: every derived key resolves, AND
+ * nothing lives under the prefix that no function in registry-labels.ts
+ * can derive. Any entry added here needs that same second assertion.
  */
 const DERIVED_KEY_PREFIXES = [
   // lib/registry-labels.ts builds `${scope}.stepTypes.…` — the scope is a
-  // variable, so no literal prefix exists to extract. Proven by
-  // lib/__tests__/registry-labels.test.ts walking the real step
-  // definitions and capability table.
+  // variable, so no literal prefix exists to extract. Proven in both
+  // directions by lib/__tests__/registry-labels.test.ts, which walks the
+  // real step definitions and capability table and then walks the catalog
+  // back to reject anything undeclared.
   'workflows.stepTypes.',
   'notifications.stepTypes.',
 ]

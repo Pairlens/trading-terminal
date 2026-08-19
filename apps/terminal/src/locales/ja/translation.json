@@ -5109,25 +5109,17 @@
         "label": "価格アラート",
         "fields": {
           "direction": {
-            "label": "方向",
             "options": {
               "above": "以上",
               "below": "以下"
             }
-          },
-          "price": {
-            "label": "価格"
           }
-        },
-        "handles": {
-          "out": "発火"
         }
       },
       "order-executed": {
         "label": "注文約定",
         "fields": {
           "side": {
-            "label": "売買",
             "options": {
               "any": "指定なし",
               "buy": "買い",
@@ -5135,211 +5127,46 @@
             }
           },
           "status": {
-            "label": "状態",
             "options": {
               "any": "指定なし",
               "filled": "約定済み",
               "partially_filled": "一部約定"
             }
           }
-        },
-        "handles": {
-          "out": "発火"
         }
       },
       "signal-generated": {
-        "label": "シグナル発生",
-        "fields": {
-          "timeframe": {
-            "label": "時間足",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "signalType": {
-            "label": "シグナルタイプ (任意)",
-            "placeholder": "種別指定なし"
-          }
-        },
-        "handles": {
-          "out": "発火"
-        }
+        "label": "シグナル発生"
       },
       "indicator-alert": {
-        "label": "インジケーターアラート",
-        "fields": {
-          "timeframe": {
-            "label": "時間足",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          },
-          "indicator": {
-            "label": "インジケーター (任意)",
-            "placeholder": "インジケーター指定なし"
-          },
-          "condition": {
-            "label": "条件 (任意)",
-            "placeholder": "条件指定なし"
-          }
-        },
-        "handles": {
-          "out": "発火"
-        }
+        "label": "インジケーターアラート"
       },
       "candle-close": {
-        "label": "ローソク足確定",
-        "fields": {
-          "timeframe": {
-            "label": "時間足",
-            "options": {
-              "1m": "1m",
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "1d": "1D"
-            }
-          }
-        },
-        "handles": {
-          "out": "発火"
-        }
+        "label": "ローソク足確定"
       },
       "price-condition": {
-        "label": "価格条件",
-        "fields": {
-          "direction": {
-            "label": "方向",
-            "options": {
-              "above": "以上",
-              "below": "以下"
-            }
-          },
-          "price": {
-            "label": "価格"
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "価格条件"
       },
       "percent-change": {
-        "label": "パーセント変化",
-        "fields": {
-          "percent": {
-            "label": "パーセント"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上昇",
-              "down": "下落",
-              "either": "どちらでも"
-            }
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "パーセント変化"
       },
       "time-window": {
-        "label": "時間帯",
-        "fields": {
-          "startHour": {
-            "label": "開始時刻 (UTC)"
-          },
-          "endHour": {
-            "label": "終了時刻 (UTC)"
-          }
-        },
-        "handles": {
-          "pass": "通過",
-          "fail": "不通過"
-        }
+        "label": "時間帯"
       },
       "local-toast": {
         "label": "トースト"
       },
       "os-notification": {
-        "label": "システム通知",
-        "fields": {
-          "sound": {
-            "label": "サウンドを再生"
-          }
-        }
+        "label": "システム通知"
       },
       "webhook": {
-        "label": "Webhook",
-        "fields": {
-          "url": {
-            "label": "URL",
-            "placeholder": "https://example.com/webhook"
-          },
-          "method": {
-            "label": "メソッド",
-            "options": {
-              "GET": "GET",
-              "POST": "POST"
-            }
-          },
-          "includePayload": {
-            "label": "イベントペイロードを含める"
-          }
-        }
+        "label": "Webhook"
       },
       "telegram": {
-        "label": "Telegram",
-        "fields": {
-          "chatId": {
-            "label": "チャットID（任意）",
-            "placeholder": "連携済みチャット"
-          },
-          "silent": {
-            "label": "サイレント送信"
-          }
-        }
+        "label": "Telegram"
       },
       "percent-move": {
-        "label": "価格の変動",
-        "fields": {
-          "percent": {
-            "label": "パーセント"
-          },
-          "direction": {
-            "label": "方向",
-            "options": {
-              "up": "上昇",
-              "down": "下落",
-              "either": "どちらでも"
-            }
-          },
-          "window": {
-            "label": "期間",
-            "options": {
-              "5m": "5m",
-              "15m": "15m",
-              "1h": "1H",
-              "4h": "4H",
-              "24h": "24H"
-            }
-          }
-        },
-        "handles": {
-          "out": "発火"
-        }
+        "label": "価格の変動"
       }
     },
     "messages": {
@@ -5970,165 +5797,31 @@
         "label": "注文入力"
       },
       "market-order": {
-        "label": "成行注文",
-        "fields": {
-          "side": {
-            "label": "売買",
-            "options": {
-              "inherit": "トリガーと同じ",
-              "opposite": "トリガーの逆",
-              "buy": "買い",
-              "sell": "売り"
-            }
-          },
-          "sizeMode": {
-            "label": "サイズモード",
-            "options": {
-              "percent": "入力の%",
-              "absolute": "固定量"
-            }
-          },
-          "size": {
-            "label": "数量"
-          }
-        }
+        "label": "成行注文"
       },
       "limit-order": {
         "label": "指値注文",
         "compat": "板に残る指値注文",
-        "fields": {
-          "side": {
-            "label": "売買",
-            "options": {
-              "inherit": "トリガーと同じ",
-              "opposite": "トリガーの逆",
-              "buy": "買い",
-              "sell": "売り"
-            }
-          },
-          "sizeMode": {
-            "label": "サイズモード",
-            "options": {
-              "percent": "入力の%",
-              "absolute": "固定量"
-            }
-          },
-          "size": {
-            "label": "数量"
-          },
-          "priceMode": {
-            "label": "価格モード",
-            "options": {
-              "absolute": "固定価格",
-              "offset-percent": "現在値からの%",
-              "offset-absolute": "現在値からのオフセット"
-            }
-          },
-          "priceValue": {
-            "label": "価格値"
-          }
-        },
         "compatReason": "この取引所は指値注文を板に残せません(スワップ専用DEX)"
       },
       "take-profit": {
         "label": "テイクプロフィット",
         "compat": "ネイティブのトリガー注文、または板に残る指値注文",
-        "fields": {
-          "triggerMode": {
-            "label": "トリガーモード",
-            "options": {
-              "percent": "利益 %",
-              "absolute": "価格水準"
-            }
-          },
-          "triggerValue": {
-            "label": "トリガー値"
-          },
-          "sizePercent": {
-            "label": "決済%"
-          },
-          "orderType": {
-            "label": "注文タイプ",
-            "options": {
-              "market": "成行",
-              "limit": "指値"
-            }
-          },
-          "limitPrice": {
-            "label": "指値価格"
-          }
-        },
         "compatReason": "この取引所はトリガー注文にも、板に残る指値注文にも対応していません"
       },
       "stop-loss": {
         "label": "ストップロス",
         "compat": "ネイティブのトリガー注文",
-        "fields": {
-          "triggerMode": {
-            "label": "トリガーモード",
-            "options": {
-              "percent": "損失 %",
-              "absolute": "価格水準"
-            }
-          },
-          "triggerValue": {
-            "label": "トリガー値"
-          },
-          "sizePercent": {
-            "label": "決済%"
-          },
-          "orderType": {
-            "label": "注文タイプ",
-            "options": {
-              "market": "成行",
-              "limit": "指値"
-            }
-          },
-          "limitPrice": {
-            "label": "指値価格"
-          }
-        },
         "compatReason": "この取引所には取引所ネイティブのトリガー注文がないため、ストップロスを取引所側に残せません"
       },
       "condition": {
-        "label": "条件",
-        "fields": {
-          "conditionType": {
-            "label": "条件",
-            "options": {
-              "price-above": "価格が上回る",
-              "price-below": "価格が下回る",
-              "percent-change": "エントリーからの%変化"
-            }
-          },
-          "value": {
-            "label": "値"
-          }
-        }
+        "label": "条件"
       },
       "split": {
-        "label": "並列分岐",
-        "fields": {
-          "branches": {
-            "label": "分岐数"
-          }
-        }
+        "label": "並列分岐"
       },
       "wait": {
-        "label": "待機",
-        "fields": {
-          "duration": {
-            "label": "時間"
-          },
-          "unit": {
-            "label": "単位",
-            "options": {
-              "seconds": "秒",
-              "minutes": "分",
-              "hours": "時間"
-            }
-          }
-        }
+        "label": "待機"
       }
     },
     "templates": {
