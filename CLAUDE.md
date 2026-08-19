@@ -427,16 +427,19 @@ repeating the pane's own name. The shared voice lives in `components/panes/pane-
 (`Th`, `PaneColumnHeader`, `PaneFootnote`, and the `PANE_COLUMN_HEADER` / `PANE_FOOTNOTE` /
 `PANE_TABLE_BODY` class strings).
 
-The board owns the whole frame. `routes/_terminal.tsx` matches the three board route ids
-(`/_terminal/`, `/_terminal/$cls/$market/$id`, `/_terminal/workspace/$workspaceId`) and drops the
-shell's inset card on them: no margin, no radius, no shadow, and the rail painted `--background`
-so it dissolves into the ground. Every other route keeps the inset frame. A board already draws a
-ground and cards; the shell's card around them would be a third one.
+The shell has one frame, on every route (`routes/_terminal.tsx`): no inset card (no margin, no
+radius, no shadow) and the rail painted `--background` so it dissolves into the content beside
+it. Every page in the frame draws its own surfaces already, so a card around those was a nesting
+level that only added an edge, and a rail that changed value between a board and a settings page
+repainted the left edge of the window on every navigation.
 
 The top bar speaks the same language (`components/chrome/header-chrome.ts`). Every control on it
-is a `--card` chip at 10px radius with no border, group separators are 18px ticks rather than
-full-height rules, and the workspace is the one chip that carries the accent. A row of outlined
-buttons over a board that draws no borders is what made the bar read as a different product.
+is a `--card` chip at 10px radius with no border, and the workspace is the one chip carrying the
+accent. Grouping is space, not rules: `HEADER_GROUP` holds related controls 7px apart and the bar
+holds the groups 20px apart. There is deliberately no separator constant and no bottom rule on
+the bar; what separates it from the board is the 10px of ground and the first column's card edge.
+A row of outlined buttons over a board that draws no borders is what made the bar read as a
+different product in the first place.
 
 The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `ChartSurface` and
 resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is

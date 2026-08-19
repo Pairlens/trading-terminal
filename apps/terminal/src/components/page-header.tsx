@@ -14,7 +14,7 @@ import type { ReactNode } from 'react'
 import {
   HEADER_BAR,
   HEADER_CHIP_MUTED,
-  HEADER_TICK,
+  HEADER_GROUP,
 } from '@/components/chrome/header-chrome'
 import { FullscreenToggleButton } from '@/components/fullscreen-toggle'
 import { useOmniSearch } from '@/components/omni-search/omni-search-provider'
@@ -37,32 +37,33 @@ export function PageHeader({ children, actions }: PageHeaderProps) {
       {children}
       <div className="flex-1" />
       {actions}
-      {actions ? <span aria-hidden className={HEADER_TICK} /> : null}
       {/* Icon and chord only. The bar is dense with numbers a trader reads at
           a glance, and a search field carrying its own placeholder was the
           widest thing on it for a control nobody hunts for: everyone who uses
           it uses the chord. */}
-      <Tooltip>
-        <TooltipTrigger
-          render={
-            <button
-              type="button"
-              onClick={open}
-              aria-label={t('search.placeholder')}
-              className={HEADER_CHIP_MUTED}
-            />
-          }
-        >
-          <Search className="size-3.5" />
-          {searchShortcut ? (
-            <Kbd className="border-0 bg-secondary px-1 font-mono text-[10px] shadow-none">
-              {searchShortcut}
-            </Kbd>
-          ) : null}
-        </TooltipTrigger>
-        <TooltipContent>{t('search.placeholder')}</TooltipContent>
-      </Tooltip>
-      <FullscreenToggleButton />
+      <div className={HEADER_GROUP}>
+        <Tooltip>
+          <TooltipTrigger
+            render={
+              <button
+                type="button"
+                onClick={open}
+                aria-label={t('search.placeholder')}
+                className={HEADER_CHIP_MUTED}
+              />
+            }
+          >
+            <Search className="size-3.5" />
+            {searchShortcut ? (
+              <Kbd className="border-0 bg-secondary px-1 font-mono text-[10px] shadow-none">
+                {searchShortcut}
+              </Kbd>
+            ) : null}
+          </TooltipTrigger>
+          <TooltipContent>{t('search.placeholder')}</TooltipContent>
+        </Tooltip>
+        <FullscreenToggleButton />
+      </div>
     </header>
   )
 }

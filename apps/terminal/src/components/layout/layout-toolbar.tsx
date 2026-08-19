@@ -40,7 +40,10 @@ import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
 import { PanesToolbar, PendingPanePlacementHint } from './panes-toolbar'
 import type { ScreenPresetGroup } from '@/lib/layout/types'
 import type { ShortcutDefinition } from '@/hooks/use-keyboard-shortcuts'
-import { HEADER_CHIP_PRIMARY } from '@/components/chrome/header-chrome'
+import {
+  HEADER_CHIP_PRIMARY,
+  HEADER_GROUP,
+} from '@/components/chrome/header-chrome'
 import { workspaceAnalyticsKind } from '@/lib/analytics-panels'
 import { track } from '@/lib/analytics-events'
 import { STORE_ASSET_CLASS_FOR } from '@/lib/workspace-store/catalog'
@@ -155,7 +158,10 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
   }
 
   return (
-    <>
+    // Panes and the workspace are one group: both answer "what is on this
+    // board", so they sit together and the bar's own gap holds them off the
+    // search beside them.
+    <div className={HEADER_GROUP}>
       <PanesToolbar />
 
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
@@ -319,6 +325,6 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
       />
 
       <PendingPanePlacementHint />
-    </>
+    </div>
   )
 }

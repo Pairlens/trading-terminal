@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The top bar's vocabulary: chips, ticks, and nothing else.
+ * The top bar's vocabulary: chips, space, and nothing else.
  *
  * The board below the bar draws no borders at all, so a row of outlined
  * buttons above it reads as a different product bolted on top. Every control
@@ -9,14 +9,22 @@
  * and no border, which is the same surface a workspace column is painted
  * with. Two surfaces on the whole screen, and the bar belongs to them.
  *
- * The separators are 18px ticks rather than full-height rules. A rule that
- * spans the bar cuts it into boxes; a tick just marks where one group of
- * controls ends, which is all the bar ever needed.
+ * Grouping is done with space. Controls that belong together sit 7px apart
+ * and groups sit 20px apart, which is far enough that the eye reads the gap
+ * as a break without a rule having to draw one. There is no separator in this
+ * file on purpose: a bar this dense turns into a row of boxes the moment you
+ * start ruling it, and the whole point of the redesign was to stop doing
+ * that. The bar carries no bottom rule either. What separates it from the
+ * board is the 10px of ground above the first column, and the column's own
+ * card edge under that.
  */
 
-/** The bar itself: 44px, 12px inset, 7px between items. */
+/** The bar: 44px, 12px inset, one group-sized gap between its children. */
 export const HEADER_BAR =
-  'flex h-11 shrink-0 items-center gap-[7px] border-b border-(--pane-rule) px-3'
+  'flex h-11 shrink-0 items-center gap-5 overflow-hidden px-3'
+
+/** Controls that belong together. Every direct child of the bar is one. */
+export const HEADER_GROUP = 'flex min-w-0 shrink items-center gap-[7px]'
 
 /** A control on the bar. */
 export const HEADER_CHIP =
@@ -35,6 +43,3 @@ export const HEADER_CHIP_PRIMARY =
 /** A bare icon control: no fill until you reach for it. */
 export const HEADER_ICON =
   'inline-flex size-[26px] shrink-0 cursor-pointer items-center justify-center rounded-[10px] border-0 bg-transparent p-0 text-muted-foreground shadow-none transition-colors hover:bg-card hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-hidden'
-
-/** Where one group of controls ends. Never a full-height rule. */
-export const HEADER_TICK = 'mx-0.5 h-[18px] w-px shrink-0 bg-(--pane-rule)'
