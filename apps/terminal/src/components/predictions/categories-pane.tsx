@@ -36,9 +36,11 @@ import {
   Vote,
 } from 'lucide-react'
 import { cn } from '@pairlens/ui'
+import { CategoryRailSkeleton } from './prediction-skeletons'
 import type { LucideIcon } from 'lucide-react'
 
 import { PaneColumnHeader, PaneEmpty } from '@/components/panes/pane-primitives'
+import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -105,12 +107,22 @@ export function CategoriesPane() {
     )
   }
 
+  // Counts are of the loaded sample, so before it lands there is no count to
+  // print. The Trending row stays real — it is the selected filter and it is
+  // clickable now — and only its number shimmers; "Trending 0" is not a
+  // placeholder, it is a wrong number.
+  const pending = isLoading && counts.length === 0
+
   return (
-    <div className="flex h-full flex-col overflow-y-auto py-0.5">
+    <div
+      aria-busy={pending}
+      className="flex h-full flex-col overflow-y-auto py-0.5"
+    >
       <div className="flex flex-col gap-0.5">
+        {pending && <SkeletonStatus label={t('events.loading')} />}
         <CategoryRow
           active={category === null}
-          count={total}
+          count={pending ? null : total}
           icon={Flame}
           label={t('predictionCategories.trending')}
           onSelect={() => {
@@ -132,6 +144,7 @@ export function CategoriesPane() {
             }}
           />
         ))}
+        {pending && <CategoryRailSkeleton />}
         {counts.length === 0 && !isLoading && (
           <p className="py-3 text-[11px] leading-relaxed text-muted-foreground">
             {t('predictionCategories.noneBody')}
@@ -192,7 +205,8 @@ function CategoryRow({
   onSelect,
 }: {
   active: boolean
-  count: number
+  /** `null` while the sample is still arriving: the row draws, the tally does not. */
+  count: number | null
   icon: LucideIcon
   label: string
   onSelect: () => void
@@ -211,14 +225,20 @@ function CategoryRow({
     >
       <Icon className="size-3.5 shrink-0" />
       <span className="min-w-0 flex-1 truncate capitalize">{label}</span>
-      <span
-        className={cn(
-          'shrink-0 font-mono text-[10px] tabular-nums',
-          active ? 'text-primary-foreground/80' : 'text-muted-foreground',
-        )}
-      >
-        {count}
-      </span>
+      {count === null ? (
+        // Dimmed on the selected row: a `--muted` block sitting on the primary
+        // chip is darker than the chip and reads as a hole punched in it.
+        <Shimmer className={cn('h-2.5 w-4 shrink-0', active && 'opacity-45')} />
+      ) : (
+        <span
+          className={cn(
+            'shrink-0 font-mono text-[10px] tabular-nums',
+            active ? 'text-primary-foreground/80' : 'text-muted-foreground',
+          )}
+        >
+          {count}
+        </span>
+      )}
     </button>
   )
 }

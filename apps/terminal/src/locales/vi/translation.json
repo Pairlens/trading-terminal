@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "Tìm trong 1 thị trường đang mở",
     "searchPlaceholder_other": "Tìm trong {{count}} thị trường đang mở",
     "loadingTitle": "Đang tải bảng",
-    "loadingBody": "Đang hỏi từng sàn xem hiện có gì đang giao dịch.",
     "sort": {
       "new": "Mới",
       "trending": "Nổi bật",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "Xác suất thay đổi mạnh nhất, 24 giờ",
     "loadingTitle": "Đang đọc bảng",
-    "loadingBody": "Biến động sẽ hiện khi các sàn trả lời.",
     "emptyTitle": "Không có gì biến động",
     "emptyBody": "Hôm nay không hợp đồng nào biến động đủ mạnh để có một dòng riêng.",
     "noChangeFrom": "Không xếp hạng: {{venues}} không công bố biến động 24 giờ."
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "Chốt {{when}}",
     "loadingTitle": "Đang đọc lịch",
-    "loadingBody": "Ngày chốt sẽ hiện khi các sàn trả lời.",
     "emptyTitle": "Chưa có gì sắp chốt",
     "emptyBody": "Không hợp đồng mở nào ở đây công bố ngày chốt sắp tới."
   },

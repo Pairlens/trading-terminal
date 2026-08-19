@@ -5735,7 +5735,6 @@
     "searchPlaceholder_one": "Search 1 live market",
     "searchPlaceholder_other": "Search {{count}} live markets",
     "loadingTitle": "Loading the board",
-    "loadingBody": "Asking each venue what is trading right now.",
     "sort": {
       "trending": "Trending",
       "new": "New",
@@ -5763,7 +5762,6 @@
   "oddsMovers": {
     "subtitle": "Biggest probability shifts, 24h",
     "loadingTitle": "Reading the board",
-    "loadingBody": "Moves appear once the venues answer.",
     "emptyTitle": "Nothing moved",
     "emptyBody": "No contract shifted enough today to be worth a row.",
     "noChangeFrom": "Not ranked: {{venues}} publishes no 24h move."
@@ -5771,7 +5769,6 @@
   "resolvingSoon": {
     "resolves": "Resolves {{when}}",
     "loadingTitle": "Reading the clock",
-    "loadingBody": "Resolution dates appear once the venues answer.",
     "emptyTitle": "Nothing settling soon",
     "emptyBody": "No open contract here publishes a resolution date ahead."
   },

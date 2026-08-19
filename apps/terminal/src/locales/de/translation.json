@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "1 aktiven Markt durchsuchen",
     "searchPlaceholder_other": "{{count}} aktive Märkte durchsuchen",
     "loadingTitle": "Board wird geladen",
-    "loadingBody": "Jede Plattform wird gefragt, was gerade gehandelt wird.",
     "sort": {
       "new": "Neu",
       "trending": "Im Trend",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "Größte Wahrscheinlichkeitsverschiebungen, 24 h",
     "loadingTitle": "Board wird gelesen",
-    "loadingBody": "Bewegungen erscheinen, sobald die Plattformen antworten.",
     "emptyTitle": "Nichts hat sich bewegt",
     "emptyBody": "Heute hat sich kein Kontrakt weit genug bewegt für eine eigene Zeile.",
     "noChangeFrom": "Nicht bewertet: {{venues}} veröffentlicht keine 24-h-Bewegung."
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "Endet {{when}}",
     "loadingTitle": "Uhr wird gelesen",
-    "loadingBody": "Auflösungstermine erscheinen, sobald die Plattformen antworten.",
     "emptyTitle": "Nichts läuft bald aus",
     "emptyBody": "Kein offener Kontrakt hier nennt ein bevorstehendes Auflösungsdatum."
   },

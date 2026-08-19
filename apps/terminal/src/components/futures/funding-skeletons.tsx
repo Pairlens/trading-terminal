@@ -19,57 +19,20 @@
  */
 import { useMemo } from 'react'
 
-import { cn } from '@pairlens/ui/lib/utils'
 import { AssetMark } from './funding-scanner'
 import type { TopCoin } from '@pairlens/shared/instrument-types'
+import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
+
+/**
+ * The shimmer block and its screen-reader line live in
+ * `components/panes/pane-skeletons` now that the prediction boards draw them
+ * too. Re-exported here because every futures pane imports them from this
+ * module and the definition moving is not a reason to touch four panes.
+ */
+export { Shimmer, SkeletonStatus }
 
 /** Rows a skeleton draws before it knows how many there will be. */
 export const GHOST_ROWS = 12
-
-/**
- * One shimmering block.
- *
- * `delayIndex` staggers the sweep down a list — 60ms per row, which is slow
- * enough to read as a wave and fast enough that the bottom of a twelve-row
- * pane is not visibly behind the top.
- */
-export function Shimmer({
-  className,
-  delayIndex = 0,
-  still = false,
-  style,
-}: {
-  className?: string
-  delayIndex?: number
-  /**
-   * Draw the block without the travelling highlight.
-   *
-   * For placeholders below the fold. The sweep is a compositor layer per
-   * element, and the funding matrix can hold several hundred cells in a
-   * scroll container while one venue is still out; animating the ones nobody
-   * can see spends GPU memory on nothing. The block itself is identical, so a
-   * still row and a swept one look the same once scrolled to.
-   */
-  still?: boolean
-  style?: React.CSSProperties
-}) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        'block rounded-sm',
-        still ? 'bg-muted' : 'shimmer',
-        className,
-      )}
-      style={
-        {
-          ...style,
-          ...(still ? {} : { '--shimmer-delay': `${delayIndex * 60}ms` }),
-        } as React.CSSProperties
-      }
-    />
-  )
-}
 
 /**
  * Rows deep into a scroller that keep the sweep.
@@ -78,23 +41,6 @@ export function Shimmer({
  * not animated.
  */
 export const SWEPT_ROWS = 16
-
-/**
- * What a screen reader gets while a pane is a skeleton.
- *
- * The blocks themselves are `aria-hidden` — a reader announcing forty empty
- * boxes is worse than silence. `aria-busy` on the container tells an assistive
- * technology the region is mid-update, and this line is the sentence that says
- * what it is waiting for. `role="status"` announces it once, politely, and
- * never interrupts.
- */
-export function SkeletonStatus({ label }: { label: string }) {
-  return (
-    <span className="sr-only" role="status">
-      {label}
-    </span>
-  )
-}
 
 /**
  * The assets a skeleton row is labelled with.

@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "1 件のライブマーケットを検索",
     "searchPlaceholder_other": "{{count}} 件のライブマーケットを検索",
     "loadingTitle": "ボードを読み込み中",
-    "loadingBody": "各取引所に、いま何が取引されているかを問い合わせています。",
     "sort": {
       "new": "新着",
       "trending": "話題",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "24 時間の確率変動が大きい順",
     "loadingTitle": "ボードを読み取り中",
-    "loadingBody": "各取引所が応答すると変動が表示されます。",
     "emptyTitle": "動きなし",
     "emptyBody": "本日、行として出すほど動いた契約はありません。",
     "noChangeFrom": "対象外: {{venues}} は 24 時間の変動を公開していません。"
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "{{when}} に決着",
     "loadingTitle": "期限を読み取り中",
-    "loadingBody": "各取引所が応答すると決着日が表示されます。",
     "emptyTitle": "まもなく決着するものはありません",
     "emptyBody": "ここにある未決済の契約で、今後の決着日を公開しているものはありません。"
   },

@@ -26,8 +26,10 @@ import { TrendingUp } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
+import { OddsMoversSkeleton } from './prediction-skeletons'
 import { PaneEmpty, PaneFootnote } from '@/components/panes/pane-primitives'
 import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
+import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -75,22 +77,29 @@ export function OddsMoversPane() {
       </PaneFootnote>
     ) : null
 
+  // The rail's own shape, with the questions and the moves taken out. The
+  // subtitle rides along because it is furniture: it names what the rail will
+  // rank, and it is true before the first venue answers.
+  if (isLoading && rows.length === 0) {
+    return (
+      <div aria-busy className="flex h-full flex-col">
+        <PaneHeaderMetric>{t('oddsMovers.subtitle')}</PaneHeaderMetric>
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <SkeletonStatus label={t('oddsMovers.loadingTitle')} />
+          <OddsMoversSkeleton />
+        </div>
+      </div>
+    )
+  }
+
   if (rows.length === 0) {
     return (
       <div className="flex h-full flex-col">
         <div className="min-h-0 flex-1">
           <PaneEmpty
-            body={
-              isLoading
-                ? t('oddsMovers.loadingBody')
-                : t('oddsMovers.emptyBody')
-            }
+            body={t('oddsMovers.emptyBody')}
             icon={TrendingUp}
-            title={
-              isLoading
-                ? t('oddsMovers.loadingTitle')
-                : t('oddsMovers.emptyTitle')
-            }
+            title={t('oddsMovers.emptyTitle')}
           />
         </div>
         {footer}

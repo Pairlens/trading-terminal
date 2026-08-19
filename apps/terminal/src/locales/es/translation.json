@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "Buscar en 1 mercado activo",
     "searchPlaceholder_other": "Buscar en {{count}} mercados activos",
     "loadingTitle": "Cargando el tablero",
-    "loadingBody": "Preguntando a cada plataforma qué se está negociando ahora.",
     "sort": {
       "new": "Nuevos",
       "trending": "Tendencia",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "Mayores cambios de probabilidad, 24 h",
     "loadingTitle": "Leyendo el tablero",
-    "loadingBody": "Los movimientos aparecen cuando responden las plataformas.",
     "emptyTitle": "Nada se movió",
     "emptyBody": "Hoy ningún contrato se movió lo suficiente como para merecer una fila.",
     "noChangeFrom": "Sin clasificar: {{venues}} no publica el movimiento de 24 h."
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "Se resuelve {{when}}",
     "loadingTitle": "Leyendo el reloj",
-    "loadingBody": "Las fechas de resolución aparecen cuando responden las plataformas.",
     "emptyTitle": "Nada se liquida pronto",
     "emptyBody": "Ningún contrato abierto aquí publica una fecha de resolución próxima."
   },

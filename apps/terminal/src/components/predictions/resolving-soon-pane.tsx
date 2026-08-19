@@ -21,7 +21,9 @@ import { CalendarClock, Timer } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
+import { ResolvingSoonSkeleton } from './prediction-skeletons'
 import { PaneEmpty } from '@/components/panes/pane-primitives'
+import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
   usePredictionEvents,
   usePredictionVenues,
@@ -76,20 +78,23 @@ export function ResolvingSoonPane() {
     )
   }
 
+  // Same rows, same countdown line, same right-hand probability — only the
+  // readings are missing, so only they shimmer.
+  if (isLoading && rows.length === 0) {
+    return (
+      <div aria-busy className="h-full overflow-hidden">
+        <SkeletonStatus label={t('resolvingSoon.loadingTitle')} />
+        <ResolvingSoonSkeleton />
+      </div>
+    )
+  }
+
   if (rows.length === 0) {
     return (
       <PaneEmpty
-        body={
-          isLoading
-            ? t('resolvingSoon.loadingBody')
-            : t('resolvingSoon.emptyBody')
-        }
+        body={t('resolvingSoon.emptyBody')}
         icon={CalendarClock}
-        title={
-          isLoading
-            ? t('resolvingSoon.loadingTitle')
-            : t('resolvingSoon.emptyTitle')
-        }
+        title={t('resolvingSoon.emptyTitle')}
       />
     )
   }

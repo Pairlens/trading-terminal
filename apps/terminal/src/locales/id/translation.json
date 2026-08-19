@@ -224,7 +224,6 @@
     "searchPlaceholder_one": "Cari di 1 pasar aktif",
     "searchPlaceholder_other": "Cari di {{count}} pasar aktif",
     "loadingTitle": "Memuat papan",
-    "loadingBody": "Menanyakan ke tiap bursa apa yang sedang diperdagangkan.",
     "sort": {
       "new": "Terbaru",
       "trending": "Sedang ramai",
@@ -690,7 +689,6 @@
   "oddsMovers": {
     "subtitle": "Pergeseran probabilitas terbesar, 24 jam",
     "loadingTitle": "Membaca papan",
-    "loadingBody": "Pergerakan muncul setelah bursa menjawab.",
     "emptyTitle": "Tidak ada yang bergerak",
     "emptyBody": "Hari ini tidak ada kontrak yang bergerak cukup jauh untuk ditampilkan.",
     "noChangeFrom": "Tidak diperingkat: {{venues}} tidak mempublikasikan pergerakan 24 jam."
@@ -1081,7 +1079,6 @@
   "resolvingSoon": {
     "resolves": "Selesai {{when}}",
     "loadingTitle": "Membaca jadwal",
-    "loadingBody": "Tanggal penyelesaian muncul setelah bursa menjawab.",
     "emptyTitle": "Tidak ada yang segera selesai",
     "emptyBody": "Tidak ada kontrak terbuka di sini yang mencantumkan tanggal penyelesaian mendatang."
   },
