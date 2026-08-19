@@ -2143,7 +2143,8 @@
     "switchTo": "Buka chart pasangan ini di {{venue}}",
     "desktopOnly": "Desktop",
     "notListed": "pasangan tidak terdaftar",
-    "noBook": "belum ada kuotasi"
+    "noBook": "belum ada kuotasi",
+    "noTopOfBook": "tak ada buku dikutip"
   },
   "whatMovedIt": {
     "noPairTitle": "Belum ada kontrak dipilih",

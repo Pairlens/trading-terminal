@@ -40,6 +40,16 @@
  * - **No `watchTickers`.** Irrelevant to the bridge, which subscribes per
  *   symbol; the bulk snapshot is REST `fetchTickers` behind
  *   `market-data:ticker-snapshot`, which is an `execute`, not a stream.
+ * - **The ticker rides `market.<id>.ticker`, not ccxt's default
+ *   `market.<id>.detail`.** `detail` carries open/high/low/close/volume and
+ *   NO top of book, so every consumer that ranks on bid/ask (the Venue
+ *   Ladder, the cross-venue arb edge) silently skipped HTX. `ticker` is the
+ *   same 100 ms aggregate plus `bid`/`bidSize`/`ask`/`askSize`, and ccxt maps
+ *   both channels through the same `handleTicker`/`parseTicker` pair, so this
+ *   is strictly more data on the same one subscription — verified frame for
+ *   frame against `detail` (identical last, high, volume and percentage).
+ *   Spot only, which is all this bridge trades; ccxt throws `BadRequest` if a
+ *   contract market ever asks for it.
  * - **No client ping, but a responder for three server-ping shapes**, so
  *   inbound traffic is guaranteed and the silence watchdog has something to
  *   measure.
@@ -141,6 +151,10 @@ export const htxCcxtVenue: CcxtVenueConfig = {
     options: {
       // Object form, not the array the other venues take — see the header.
       fetchMarkets: { types: { spot: true, linear: false, inverse: false } },
+      // Top of book on the ticker channel — see the header. `unWatchTicker`
+      // reads the same option, so the unsubscribe still names the topic that
+      // was subscribed.
+      watchTicker: { name: 'market.{marketId}.ticker' },
     },
   },
   // 5 | 20 | 150 | 400 — anything else throws ExchangeError.

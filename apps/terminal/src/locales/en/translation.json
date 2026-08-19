@@ -2435,7 +2435,8 @@
     "switchTo": "Chart this pair on {{venue}}",
     "desktopOnly": "Desktop",
     "notListed": "pair not listed",
-    "noBook": "no quotes yet"
+    "noBook": "no quotes yet",
+    "noTopOfBook": "no book quoted"
   },
   "pairDossier": {
     "marketCap": "Market cap",

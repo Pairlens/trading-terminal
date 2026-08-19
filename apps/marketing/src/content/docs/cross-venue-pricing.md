@@ -93,6 +93,26 @@ Treat the strip as a measure of how fragmented this asset's liquidity is, which
 is genuinely useful, rather than as a trade you can lift. Real cross-venue
 execution needs inventory already sitting on both sides.
 
+## Where bid and ask come from
+
+Most venues publish their top of book on the same stream that carries the last
+price, and that is where the ladder reads it.
+
+Three do not. ByBit, MEXC and Upbit send 24-hour statistics with no quote in
+them at all, which used to leave those rows blank on a panel that ranks venues
+by their spread. They are not bookless venues: the depth panel one pane over
+was streaming the same exchange's spread the whole time. So the Venue Ladder
+opens the venue's own order book and reads the top of it, and the row quotes
+what the book quotes.
+
+That second stream is opened only for a venue that has been ticking for a few
+seconds without quoting. A venue that quotes on its ticker never costs one, and
+the venue you are charting already has its book open for the depth panel, so
+there it costs nothing at all.
+
+A row that still has no quote once the wait is over reads `no book quoted`.
+That is an answer rather than a delay, and it is why the row stops shimmering.
+
 ## Only comparable venues
 
 Venues are only quoted when they share an asset class with the charted one.

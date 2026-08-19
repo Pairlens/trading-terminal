@@ -2143,7 +2143,8 @@
     "switchTo": "Bu paritenin grafiğini {{venue}} üzerinde aç",
     "desktopOnly": "Masaüstü",
     "notListed": "parite listelenmemiş",
-    "noBook": "henüz kotasyon yok"
+    "noBook": "henüz kotasyon yok",
+    "noTopOfBook": "defter kote edilmiyor"
   },
   "whatMovedIt": {
     "noPairTitle": "Seçili sözleşme yok",

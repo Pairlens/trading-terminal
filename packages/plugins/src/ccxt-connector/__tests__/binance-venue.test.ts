@@ -36,6 +36,26 @@ describe('binance venue options', () => {
     expect(binanceCcxtVenue.batchTickers).toBe(true)
   })
 
+  // …and on the channel that carries top of book. ccxt's `watchTickers`
+  // defaults to `<id>@miniTicker`, which has no bid or ask in it, so with
+  // batching on Binance quoted a spread exactly once — from the REST seed —
+  // and every socket frame after it came back 0. The chart header hides that
+  // (it reads the depth stream); anything ranking venues on their spread does
+  // not. `<id>@ticker` is the same 1000 ms cadence with `b`/`a` in the frame.
+  it('batches on the channel that quotes a book, not miniTicker', () => {
+    const options = binanceCcxtVenue.options?.['options'] as Record<
+      string,
+      unknown
+    >
+    expect(options['watchTickers']).toEqual({ name: 'ticker' })
+  })
+
+  // Constructor keys are spread onto the instance, where `watchTickers` is a
+  // METHOD. The option only ever belongs in the nested ccxt options bag.
+  it('keeps the ticker channel out of the constructor bag', () => {
+    expect(binanceCcxtVenue.options?.['watchTickers']).toBeUndefined()
+  })
+
   // ccxt ships 50 ms per weight unit — a 1200/min budget against Binance's
   // real 6000/min. The conservative default queues the reload's REST burst
   // (bulk tickers weight 40 + depth-500 snapshot weight 25) into seconds of

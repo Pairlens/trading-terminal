@@ -2143,7 +2143,8 @@
     "switchTo": "Afficher cette paire sur {{venue}}",
     "desktopOnly": "Bureau",
     "notListed": "paire non listée",
-    "noBook": "pas encore de cotation"
+    "noBook": "pas encore de cotation",
+    "noTopOfBook": "pas de carnet coté"
   },
   "whatMovedIt": {
     "noPairTitle": "Aucun contrat sélectionné",

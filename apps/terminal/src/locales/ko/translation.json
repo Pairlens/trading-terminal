@@ -2143,7 +2143,8 @@
     "switchTo": "{{venue}}에서 이 페어 차트 보기",
     "desktopOnly": "데스크톱",
     "notListed": "미상장 페어",
-    "noBook": "호가 없음"
+    "noBook": "호가 없음",
+    "noTopOfBook": "호가창 미제공"
   },
   "whatMovedIt": {
     "noPairTitle": "선택된 계약이 없습니다",

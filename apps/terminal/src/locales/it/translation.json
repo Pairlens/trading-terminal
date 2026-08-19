@@ -2143,7 +2143,8 @@
     "switchTo": "Apri il grafico di questa coppia su {{venue}}",
     "desktopOnly": "Desktop",
     "notListed": "coppia non quotata",
-    "noBook": "ancora nessuna quotazione"
+    "noBook": "ancora nessuna quotazione",
+    "noTopOfBook": "nessun book quotato"
   },
   "whatMovedIt": {
     "noPairTitle": "Nessun contratto selezionato",

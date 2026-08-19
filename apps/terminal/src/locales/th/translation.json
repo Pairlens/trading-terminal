@@ -2143,7 +2143,8 @@
     "switchTo": "ดูกราฟคู่นี้บน {{venue}}",
     "desktopOnly": "เดสก์ท็อป",
     "notListed": "ไม่มีคู่นี้",
-    "noBook": "ยังไม่มีราคาเสนอ"
+    "noBook": "ยังไม่มีราคาเสนอ",
+    "noTopOfBook": "ไม่มีการเสนอออเดอร์บุ๊ก"
   },
   "whatMovedIt": {
     "noPairTitle": "ยังไม่ได้เลือกสัญญา",

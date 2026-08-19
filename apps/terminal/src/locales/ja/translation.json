@@ -2143,7 +2143,8 @@
     "switchTo": "このペアを {{venue}} でチャート表示",
     "desktopOnly": "デスクトップ",
     "notListed": "ペア未上場",
-    "noBook": "気配なし"
+    "noBook": "気配なし",
+    "noTopOfBook": "板の提示なし"
   },
   "whatMovedIt": {
     "noPairTitle": "契約が未選択です",
