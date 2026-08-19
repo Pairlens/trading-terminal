@@ -237,6 +237,10 @@ export function useAssistantSurfaceRegistry(): AssistantSurfaceRegistry {
 /** The registry, re-rendering the caller when surfaces mount or unmount. */
 export function useAssistantSurfaces(): AssistantSurfaceRegistry {
   const registry = useAssistantSurfaceRegistry()
-  useSyncExternalStore(registry.subscribe, registry.getSnapshot)
+  useSyncExternalStore(
+    registry.subscribe,
+    registry.getSnapshot,
+    registry.getSnapshot,
+  )
   return registry
 }

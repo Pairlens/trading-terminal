@@ -24,7 +24,7 @@
 // Anything richer than this a page or pane publishes for itself with
 // `useAssistantSurface`.
 
-import { useSyncExternalStore } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import { useLocation } from '@tanstack/react-router'
 
 import { parseMarketRefPath } from '@pairlens/shared/market-ref'
@@ -134,9 +134,14 @@ function RouteSurface() {
 
 function useChartService(): ChartServiceHandle | null {
   const services = useServiceRegistry()
+  const read = useCallback(
+    () => services.get<ChartServiceHandle>(CHART_SERVICE_NAME),
+    [services],
+  )
   return useSyncExternalStore(
     (listener) => services.onChange(CHART_SERVICE_NAME, listener),
-    () => services.get<ChartServiceHandle>(CHART_SERVICE_NAME),
+    read,
+    read,
   )
 }
 

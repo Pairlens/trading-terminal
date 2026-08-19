@@ -141,6 +141,10 @@ export function useWorkflowStepRegistry(): WorkflowStepRegistry {
       'useWorkflowStepRegistry must be used within a WorkflowStepRegistryContext.Provider',
     )
   }
-  useSyncExternalStore(registry.subscribe, registry.getSnapshot)
+  useSyncExternalStore(
+    registry.subscribe,
+    registry.getSnapshot,
+    registry.getSnapshot,
+  )
   return registry
 }

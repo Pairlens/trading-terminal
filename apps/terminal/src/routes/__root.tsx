@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import {
+  ClientOnly,
   HeadContent,
   Scripts,
   createRootRouteWithContext,
@@ -16,7 +17,7 @@ import { ThemeProvider } from 'next-themes'
 import { useTranslation } from 'react-i18next'
 import { TooltipProvider } from '@pairlens/ui/components/ui/tooltip'
 
-import appCss from '../styles.css?url'
+import appCssUrl from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { isStandalone } from '@/lib/platform'
@@ -31,6 +32,26 @@ import { ThemeColorMeta } from '@/components/theme-color-meta'
 export interface RouterContext {
   queryClient: QueryClient
 }
+
+/**
+ * The app stylesheet, with any Vite dev query stripped.
+ *
+ * Vite's `?url` loader stamps `?t=<hmr timestamp>` onto the URL it exports,
+ * and it reads that timestamp from the module graph of whichever environment
+ * asked — see the `vite:asset` load hook. The client graph learns a timestamp
+ * the first time the stylesheet (or anything it `@import`s) is edited; the
+ * server graph rendering the shell does not, so from that edit onward the two
+ * sides emit different hrefs for the same file. React 19 keys a
+ * `<link rel="stylesheet">` in `<head>` by href, so a different href is a
+ * different resource — a structural hydration mismatch, which is why
+ * `suppressHydrationWarning` on the element cannot absorb it, and why it fires
+ * on every route until the dev server restarts.
+ *
+ * The query carries nothing either side needs: dev serves the same file with
+ * or without it under `Cache-Control: no-cache`, HMR still repaints the page,
+ * and a production URL is content-hashed with no query at all.
+ */
+const appCss = appCssUrl.split('?')[0]
 
 // Dev-only per-component render counter for re-render profiling (dropped
 // from production builds via the import.meta.env.DEV guard at the <script>
@@ -378,7 +399,26 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           disableTransitionOnChange
           enableSystem
         >
-          <TooltipProvider>{children}</TooltipProvider>
+          <TooltipProvider>
+            {/* Routed content is client-only, and the shell has to say so.
+                `ssr: false` above already means no route renders on a server:
+                what ships is a document whose routed slot is an EMPTY, closed
+                Suspense boundary. Start keeps the first CLIENT render equally
+                empty by flagging `matches[1]` as `_displayPending` during
+                hydration — but it flags the match for the URL the document was
+                served for, and a `beforeLoad` redirect resolved inside that
+                first `router.load()` swaps a different match in (`/` →
+                `/onboarding` on a first run, `/onboarding` → `/` once it is
+                done). The swapped-in match arrives unflagged, renders real DOM
+                into a slot React has already hydrated as empty, and the tree is
+                torn down with a hydration mismatch — in production builds too.
+                Restating `ssr: false` on each route does NOT fix it: Start
+                deletes that option from the client bundle outright
+                (`deleteNodes: ['ssr', 'server', 'headers']`). Gating here does,
+                because both sides then render the same nothing by
+                construction, redirect or no redirect. */}
+            <ClientOnly>{children}</ClientOnly>
+          </TooltipProvider>
           {/* Renders ON TOP of the routed children, never instead of them:
               closeSplashScreen() only fires when _terminal mounts, so a lock
               that replaced the app would strand the desktop build behind its

@@ -85,7 +85,11 @@ export const DiscoverPnlCard = memo(function DiscoverPnlCard() {
   const { t } = useTranslation()
   const { pushOverlay } = useMobileActions()
   const dailyPnl = useRiskConfigStore((s) => s.dailyPnl)
-  const balances = useSyncExternalStore(subscribeBalances, getBalances)
+  const balances = useSyncExternalStore(
+    subscribeBalances,
+    getBalances,
+    getBalances,
+  )
 
   const positions = balances.length
   const venues = new Set(balances.map((b) => b.market)).size

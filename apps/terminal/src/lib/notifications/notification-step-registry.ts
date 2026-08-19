@@ -153,6 +153,10 @@ export function useNotificationStepRegistry(): NotificationStepRegistry {
       'useNotificationStepRegistry must be used within a NotificationStepRegistryContext.Provider',
     )
   }
-  useSyncExternalStore(registry.subscribe, registry.getSnapshot)
+  useSyncExternalStore(
+    registry.subscribe,
+    registry.getSnapshot,
+    registry.getSnapshot,
+  )
   return registry
 }
