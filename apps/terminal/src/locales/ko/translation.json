@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "주문 입력",
         "badge": "진입"
-      },
-      "configPanel": {
-        "requiresNote": "필요 조건: {{requirement}}. 이 기능이 없는 마켓에서는 이 단계가 포함된 워크플로우를 실행할 수 없습니다.",
-        "on": "켜짐",
-        "off": "꺼짐"
       }
     },
     "execution": {

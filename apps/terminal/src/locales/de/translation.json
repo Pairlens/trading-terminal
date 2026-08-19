@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Order-Eingang",
         "badge": "Einstieg"
-      },
-      "configPanel": {
-        "requiresNote": "Erfordert: {{requirement}}. Märkte ohne diese Fähigkeit können Workflows mit diesem Schritt nicht ausführen.",
-        "on": "Ein",
-        "off": "Aus"
       }
     },
     "execution": {

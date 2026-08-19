@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Entrée d'ordre",
         "badge": "Entrée"
-      },
-      "configPanel": {
-        "requiresNote": "Nécessite : {{requirement}}. Les marchés sans cette capacité ne peuvent pas exécuter de workflows contenant cette étape.",
-        "on": "Activé",
-        "off": "Désactivé"
       }
     },
     "execution": {

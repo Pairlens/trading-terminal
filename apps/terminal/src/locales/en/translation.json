@@ -5019,11 +5019,6 @@
       "trigger": {
         "title": "Order Input",
         "badge": "Entry"
-      },
-      "configPanel": {
-        "requiresNote": "Requires: {{requirement}}. Markets without this capability can't run workflows containing this step.",
-        "on": "On",
-        "off": "Off"
       }
     },
     "execution": {

@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Input Order",
         "badge": "Entry"
-      },
-      "configPanel": {
-        "requiresNote": "Butuh: {{requirement}}. Market tanpa kapabilitas ini tidak bisa menjalankan workflow yang berisi langkah ini.",
-        "on": "Aktif",
-        "off": "Nonaktif"
       }
     },
     "execution": {

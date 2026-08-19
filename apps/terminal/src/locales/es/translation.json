@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Entrada de la orden",
         "badge": "Entrada"
-      },
-      "configPanel": {
-        "requiresNote": "Requiere: {{requirement}}. Los mercados sin esta capacidad no pueden ejecutar flujos de trabajo que incluyan este paso.",
-        "on": "Activado",
-        "off": "Desactivado"
       }
     },
     "execution": {

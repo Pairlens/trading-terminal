@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "订单输入",
         "badge": "入场"
-      },
-      "configPanel": {
-        "requiresNote": "需要：{{requirement}}。不支持此能力的市场无法运行包含此步骤的工作流。",
-        "on": "开",
-        "off": "关"
       }
     },
     "execution": {

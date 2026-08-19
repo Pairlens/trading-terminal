@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Entrada da ordem",
         "badge": "Entrada"
-      },
-      "configPanel": {
-        "requiresNote": "Requer: {{requirement}}. Mercados sem esse recurso não conseguem executar workflows que contenham essa etapa.",
-        "on": "Ativado",
-        "off": "Desativado"
       }
     },
     "execution": {

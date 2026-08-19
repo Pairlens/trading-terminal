@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Emir Girişi",
         "badge": "Giriş"
-      },
-      "configPanel": {
-        "requiresNote": "Gerekli: {{requirement}}. Bu yeteneğe sahip olmayan piyasalar, bu adımı içeren iş akışlarını çalıştıramaz.",
-        "on": "Açık",
-        "off": "Kapalı"
       }
     },
     "execution": {

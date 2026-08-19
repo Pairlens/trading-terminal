@@ -6065,11 +6065,6 @@
       "trigger": {
         "title": "Wejście zlecenia",
         "badge": "Wejście"
-      },
-      "configPanel": {
-        "requiresNote": "Wymaga: {{requirement}}. Rynki bez tej funkcji nie mogą uruchamiać workflowów zawierających ten krok.",
-        "on": "Wł.",
-        "off": "Wył."
       }
     },
     "execution": {

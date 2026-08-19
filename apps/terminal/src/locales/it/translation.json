@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Ingresso ordine",
         "badge": "Ingresso"
-      },
-      "configPanel": {
-        "requiresNote": "Richiede: {{requirement}}. I mercati privi di questa funzionalità non possono eseguire workflow che includono questo passaggio.",
-        "on": "Attivo",
-        "off": "Disattivo"
       }
     },
     "execution": {

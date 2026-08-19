@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "注文入力",
         "badge": "エントリー"
-      },
-      "configPanel": {
-        "requiresNote": "必要条件: {{requirement}}。この機能がない市場では、このステップを含むワークフローを実行できません。",
-        "on": "オン",
-        "off": "オフ"
       }
     },
     "execution": {

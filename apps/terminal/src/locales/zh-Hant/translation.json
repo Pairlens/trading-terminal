@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "委託輸入",
         "badge": "進場"
-      },
-      "configPanel": {
-        "requiresNote": "需要：{{requirement}}。不支援此能力的市場無法執行包含此步驟的工作流程。",
-        "on": "開",
-        "off": "關"
       }
     },
     "execution": {

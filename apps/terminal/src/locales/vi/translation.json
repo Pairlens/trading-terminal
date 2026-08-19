@@ -5955,11 +5955,6 @@
       "trigger": {
         "title": "Đầu vào lệnh",
         "badge": "Vào lệnh"
-      },
-      "configPanel": {
-        "requiresNote": "Yêu cầu: {{requirement}}. Các thị trường không có khả năng này không thể chạy quy trình chứa bước này.",
-        "on": "Bật",
-        "off": "Tắt"
       }
     },
     "execution": {
