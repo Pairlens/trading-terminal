@@ -159,7 +159,7 @@ export const boomergManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'Amber-on-black homage to the classic Bloomberg terminal — monospace UI, square corners, and function-key colors',
+    'Amber-on-black homage to the classic Bloomberg terminal: monospace UI, square corners, and function-key colors',
   capabilities: [
     {
       id: 'theme:override',
