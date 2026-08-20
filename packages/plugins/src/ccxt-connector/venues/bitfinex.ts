@@ -83,8 +83,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/37.png'
+const ICON_URL = '/posters/bitfinex-market-connector.png'
 
 export const BITFINEX_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'bitfinex',

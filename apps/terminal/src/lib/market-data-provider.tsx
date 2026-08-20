@@ -132,6 +132,14 @@ function orderAnalyticsProps(params: Record<string, unknown>): TradeEventProps {
   }
 }
 
+/**
+ * The candle stream's one full-state frame: the connector's REST backfill,
+ * emitted once per subscription. Distinct from an orderbook 'snapshot', which
+ * is what every book frame is called.
+ */
+const isCandleSnapshot = (d: unknown): boolean =>
+  (d as { type?: string })?.type === 'snapshot'
+
 export function orderFailReason(err: unknown): TradeFailReason {
   // Typed before textual: a sealed vault is its own bucket, not an `auth`
   // failure. Filing it under `auth` would read in the funnel as "the venue
@@ -1188,6 +1196,14 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
        * stream that qualifies.
        */
       feedVenue?: string,
+      /**
+       * Frames that must reach consumers even when a live update lands in the
+       * same throttle window. Only the candle stream passes one: its
+       * `snapshot` is the venue's REST backfill, it arrives once, and the
+       * throttle's queue is lossy (see StreamThrottle.wrap). An orderbook
+       * frame is a snapshot every time, so it deliberately does NOT.
+       */
+      immediate?: (data: unknown) => boolean,
     ): (() => void) => {
       if (pausedRef.current) return () => {}
 
@@ -1202,17 +1218,21 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         } = {
           callbacks: new Set(),
           unsub: () => {},
-          throttled: throttleRef.current.wrap(channel, (data: unknown) => {
-            // `e` is closed over and assigned below before any data can arrive.
-            if (shouldCache(data)) e.cached = data
-            for (const c of e.callbacks) {
-              try {
-                c(data)
-              } catch {
-                // one bad consumer must not break the fan-out
+          throttled: throttleRef.current.wrap(
+            channel,
+            (data: unknown) => {
+              // `e` is closed over and assigned below before any data can arrive.
+              if (shouldCache(data)) e.cached = data
+              for (const c of e.callbacks) {
+                try {
+                  c(data)
+                } catch {
+                  // one bad consumer must not break the fan-out
+                }
               }
-            }
-          }),
+            },
+            immediate ? { immediate } : {},
+          ),
           cached: undefined,
         }
         // start() may throw if no plugin serves the capability (e.g. DEX has no
@@ -1306,8 +1326,13 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
             dispatch,
           )
         },
-        (d) => (d as { type?: string })?.type === 'snapshot',
+        isCandleSnapshot,
         cb,
+        undefined,
+        // The one frame carrying history. Exempt from the throttle's lossy
+        // queue, where a live update arriving milliseconds later used to
+        // delete it — leaving the chart on a single forming bar.
+        isCandleSnapshot,
       )
     },
     [pluginManager, multiplex, clampForMarket],

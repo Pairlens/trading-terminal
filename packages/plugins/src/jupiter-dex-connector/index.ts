@@ -79,7 +79,7 @@ export const jupiterDexConnectorManifest: PluginManifest = {
   description:
     'Solana DEX aggregator: best price routing across all Solana DEXs',
   homepage: 'https://jup.ag',
-  icon: 'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
+  icon: '/posters/jupiter-dex-connector.png',
   metadata: {
     family: 'dex',
     assetClass: 'dex',
@@ -87,7 +87,7 @@ export const jupiterDexConnectorManifest: PluginManifest = {
     dexLimitOrders: true,
     gradient: 'from-emerald-400 to-teal-500',
     abbr: 'JUP',
-    logoUrl: 'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
+    logoUrl: '/posters/jupiter-dex-connector.png',
   },
   capabilities: [
     {

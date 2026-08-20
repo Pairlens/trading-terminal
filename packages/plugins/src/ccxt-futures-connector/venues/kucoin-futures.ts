@@ -69,8 +69,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/311.png'
+const ICON_URL = '/posters/kucoin-market-connector.png'
 
 /** The venue's swap granularity map, intersected with the app's union. */
 export const KUCOIN_FUTURES_TIMEFRAMES: Array<Timeframe> = [

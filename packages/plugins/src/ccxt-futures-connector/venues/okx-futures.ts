@@ -66,8 +66,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://static.okx.com/cdn/oksupport/asset/currency/icon/okb.png'
+const ICON_URL = '/posters/okx-market-connector.png'
 
 /** The spot venue's list: OKX serves the same candle intervals on swap. */
 export const OKX_FUTURES_TIMEFRAMES: Array<Timeframe> = [

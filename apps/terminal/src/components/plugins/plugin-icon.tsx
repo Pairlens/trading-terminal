@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes'
 import { Blocks } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 
-import { pluginBrand } from './plugin-brand'
+import { pluginBrand, pluginIconSrc } from './plugin-brand'
 
 type ThemePreviewColors = { light: Array<string>; dark: Array<string> }
 
@@ -155,11 +155,16 @@ export function PluginBrandTile({
 }
 
 export function PluginIcon({
+  id,
   src,
   name,
   themeColors,
   className,
 }: {
+  // Manifest id, so a bundled plugin gets its poster instead of whatever
+  // remote favicon its manifest names. Optional: a registry entry that is not
+  // bundled has no poster and falls back to `src`.
+  id?: string
   src?: string
   name: string
   // Theme plugins ship no image icon but declare a preview palette. Pass
@@ -171,11 +176,12 @@ export function PluginIcon({
 }) {
   const [failed, setFailed] = useState(false)
   const { resolvedTheme } = useTheme()
+  const resolved = id ? pluginIconSrc(id, src) : src
 
-  if (src && !failed) {
+  if (resolved && !failed) {
     return (
       <img
-        src={src}
+        src={resolved}
         alt={name}
         className={cn('size-8 rounded-md object-contain', className)}
         onError={() => setFailed(true)}

@@ -36,7 +36,10 @@ export const pairlensPredictionsManifest: PluginManifest = {
   description:
     'Prediction-market surfaces: the event board, the outcome ladder, baskets and open contract positions',
   homepage: 'https://pairlens.finance',
-  icon: 'https://pairlens.finance/favicon.svg',
+  // Served from the terminal bundle, not pairlens.finance: a first-party
+  // plugin's mark must render offline, on the desktop app, and inside the
+  // desktop CSP without reaching for the marketing site.
+  icon: '/logo512.png',
   metadata: { family: 'predictions' },
   capabilities: [],
   config: {},

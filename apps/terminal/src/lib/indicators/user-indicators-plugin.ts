@@ -28,7 +28,9 @@ export const userIndicatorsManifest: PluginManifest = {
   author: 'Pairlens',
   description:
     'Your custom Python indicators, created in the Indicators editor.',
-  icon: 'SquareFunction',
+  // A manifest icon is an image, not a lucide name — 'SquareFunction' was
+  // requested as an <img> src, failed, and fell through to the generic glyph.
+  icon: '/logo512.png',
   metadata: { family: 'core' },
   capabilities: [
     {

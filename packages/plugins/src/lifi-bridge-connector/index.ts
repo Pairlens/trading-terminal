@@ -71,6 +71,7 @@ export const lifiBridgeConnectorManifest: PluginManifest = {
   description:
     'Move one asset between Ethereum, Base, Arbitrum, BNB Chain, Polygon and Solana. Quotes the best bridge for the size, states the fee, the source gas and the time to land, and tracks the transfer until it arrives. Signs with the wallets you already connected, and dry-runs every Solana transfer against the chain before it asks for your key.',
   homepage: 'https://li.fi',
+  icon: '/posters/lifi-bridge-connector.png',
   metadata: {
     family: 'dex',
     assetClass: 'dex',

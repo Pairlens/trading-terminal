@@ -9,6 +9,7 @@ import {
   isGeoRestrictedError,
   isPlatformRestrictedError,
   isProviderThrottledError,
+  isTransportError,
 } from '@pairlens/market-engine/errors'
 import { isProviderThrottled } from '@pairlens/market-engine/provider-throttle'
 import { scanSignals } from '@pairlens/strategy-engine'
@@ -40,11 +41,17 @@ const NO_DATA_TIMEOUT_MS = 12_000
 // while an unlisted pair resolves in about a second instead of twelve.
 const PROBE_AFTER_MS = 1_000
 // Live WS updates flowing with no snapshot means the connector's REST
-// backfill died (rate limit, outage) even after its retry. The chart gates
-// on hasSnapshot, so without this guard it would stay empty/stale forever
-// while the ticker and orderbook stream on. After this window we promote the
+// backfill is late or dead (rate limit, outage). The chart gates on
+// hasSnapshot, so without this guard it would stay empty/stale forever while
+// the ticker and orderbook stream on. After this window we promote the
 // accumulated updates to a seed — a short live chart beats a dead one.
 // Venue-agnostic: covers third-party connectors that never emit a snapshot.
+//
+// The seed it produces is a STUB, and the chart treats it as one: a snapshot
+// that lands later and reaches further back re-seeds the chart wholesale (see
+// the reseed branch in use-chart-terminal-state). Without that, a promoted
+// stub was permanent — one forming bar, live but historyless, until the user
+// switched pair or timeframe. That is the bug this window used to cause.
 const PROMOTE_UPDATES_AFTER_MS = 8_000
 // A rate-limited data provider is silent for the same reason an unlisted pair
 // is, and the verdict below outlives the limit — so while a provider is inside
@@ -377,11 +384,15 @@ export function useCandleStream(
             }
             return
           }
-          // The provider refused the REQUEST, not the market. Answering this
-          // with a verdict is the defect: a free-tier 429 while a DEX board is
-          // open made every pair on that connector read as unlisted, and the
-          // verdict survived the limit.
-          if (isProviderThrottledError(err)) {
+          // The provider refused the REQUEST, or nothing answered at all —
+          // neither says anything about the market. Answering either with a
+          // verdict is the defect: a free-tier 429 while a DEX board is open
+          // made every pair on that connector read as unlisted, and the
+          // verdict survived the limit. A transport failure is the same shape
+          // and more common on a venue switch, where a burst of REST lands at
+          // once; the deferral window outlasts the connector's own backfill
+          // retries, so a venue that recovers clears the question with data.
+          if (isProviderThrottledError(err) || isTransportError(err)) {
             if (resolved) return
             // Falls through to the verdict once the deferral budget is spent,
             // so a provider that never recovers still resolves to something.

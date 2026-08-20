@@ -1496,6 +1496,7 @@ function InstalledPluginRow({
   return (
     <div className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/30">
       <PluginIcon
+        id={plugin.manifest.id}
         src={plugin.manifest.icon}
         name={plugin.manifest.name}
         themeColors={plugin.manifest.theme?.previewColors}

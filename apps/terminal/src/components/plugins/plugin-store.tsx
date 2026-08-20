@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 import { Alert, AlertDescription } from '@pairlens/ui/components/ui/alert'
 
-import { StoreAurora, StoreShelf } from '../store/store-shell'
+import { StoreCanvas, StoreShelf } from '../store/store-shell'
 import { ConfirmUninstallDialog } from './confirm-uninstall-dialog'
 import { useFullTrustConsent } from './full-trust-consent'
 import { useNetworkConsent } from './network-consent'
@@ -912,110 +912,102 @@ export function PluginStore({
 
   return (
     <div className="relative h-full">
-      <StoreAurora />
+      <StoreCanvas>
+        {/* Registry offline banner */}
+        {registryOffline && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="size-4" />
+            <AlertDescription>
+              {t('pluginStore.registryOffline')}
+            </AlertDescription>
+          </Alert>
+        )}
 
-      {/* Store body */}
-      <div className="relative z-10 h-full overflow-y-auto">
-        {/* The board's own inset: 10px from three edges and none from the top,
-            so the hero's left edge lands on the x a workspace column lands on
-            and its top hangs off the bar the same way. */}
-        <div className="px-2.5 pb-2.5">
-          {/* Registry offline banner */}
-          {registryOffline && (
-            <Alert variant="destructive" className="mb-6">
-              <AlertTriangle className="size-4" />
-              <AlertDescription>
-                {t('pluginStore.registryOffline')}
-              </AlertDescription>
-            </Alert>
-          )}
+        {/* Spotlight hero */}
+        {!searching && !categoryFilter && (
+          <>
+            {featuredQuery.isLoading && <FeaturedHeroSkeleton />}
+            {featured.length > 0 && (
+              <SpotlightHero
+                entries={featured}
+                categoryLabel={categoryLabel}
+                isActive={isActive}
+                busyPluginId={busyPluginId}
+                paused={!!selectedEntry}
+                onInstall={(entry) => void handleToggle(entry.manifest, true)}
+                onDetails={openProductPage}
+              />
+            )}
+          </>
+        )}
 
-          {/* Spotlight hero */}
-          {!searching && !categoryFilter && (
-            <>
-              {featuredQuery.isLoading && <FeaturedHeroSkeleton />}
-              {featured.length > 0 && (
-                <SpotlightHero
-                  entries={featured}
-                  categoryLabel={categoryLabel}
-                  isActive={isActive}
-                  busyPluginId={busyPluginId}
-                  paused={!!selectedEntry}
-                  onInstall={(entry) => void handleToggle(entry.manifest, true)}
-                  onDetails={openProductPage}
-                />
-              )}
-            </>
-          )}
+        {/* Loading shelves */}
+        {registryQuery.isLoading && (
+          <>
+            <ShelfSkeleton />
+            <ShelfSkeleton />
+          </>
+        )}
 
-          {/* Loading shelves */}
-          {registryQuery.isLoading && (
-            <>
-              <ShelfSkeleton />
-              <ShelfSkeleton />
-            </>
-          )}
+        {/* Category "Show all" view */}
+        {categoryFilter && !registryQuery.isLoading && (
+          <section>
+            <button
+              type="button"
+              onClick={() => setCategoryFilter(undefined)}
+              className="mb-5 inline-flex items-center gap-1 text-[13px] font-semibold text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ChevronLeft className="size-4" />
+              {t('pluginStore.backToStore', 'Store')}
+            </button>
+            <h2 className="font-serif text-[28px] font-semibold tracking-[-0.02em]">
+              {categoryLabel(categoryFilter)}
+            </h2>
+            <div className="mt-6 flex flex-wrap gap-4">
+              {filteredEntries.map((e) => renderCard(e, 'all'))}
+            </div>
+          </section>
+        )}
 
-          {/* Category "Show all" view */}
-          {categoryFilter && !registryQuery.isLoading && (
-            <section>
-              <button
-                type="button"
-                onClick={() => setCategoryFilter(undefined)}
-                className="mb-5 inline-flex items-center gap-1 text-[13px] font-semibold text-muted-foreground transition-colors hover:text-foreground"
+        {/* Topic shelves */}
+        {!categoryFilter && !registryQuery.isLoading && (
+          <>
+            {editorsPicks.length > 0 && (
+              <StoreShelf
+                label={t('pluginStore.editorsPicks', "Editor's picks")}
+                subLabel={t('pluginStore.curated', 'Curated this week')}
+                showAllLabel={t('pluginStore.showMore', 'Show all')}
+                className={searching ? 'mt-2' : undefined}
               >
-                <ChevronLeft className="size-4" />
-                {t('pluginStore.backToStore', 'Store')}
-              </button>
-              <h2 className="font-serif text-[28px] font-semibold tracking-[-0.02em]">
-                {categoryLabel(categoryFilter)}
-              </h2>
-              <div className="mt-6 flex flex-wrap gap-4">
-                {filteredEntries.map((e) => renderCard(e, 'all'))}
-              </div>
-            </section>
-          )}
+                {editorsPicks.map((e) => renderCard(e, 'picks'))}
+              </StoreShelf>
+            )}
+            {shelves.map((shelf) => (
+              <StoreShelf
+                key={shelf.id}
+                label={shelf.label}
+                subLabel={shelf.subLabel}
+                onShowAll={() => setCategoryFilter(shelf.id)}
+                showAllLabel={t('pluginStore.showMore', 'Show all')}
+              >
+                {shelf.plugins.map((e) => renderCard(e, shelf.id))}
+                {registryQuery.isFetching && shelf.plugins.length === 0 && (
+                  <PosterCardSkeleton />
+                )}
+              </StoreShelf>
+            ))}
+          </>
+        )}
 
-          {/* Topic shelves */}
-          {!categoryFilter && !registryQuery.isLoading && (
-            <>
-              {editorsPicks.length > 0 && (
-                <StoreShelf
-                  label={t('pluginStore.editorsPicks', "Editor's picks")}
-                  subLabel={t('pluginStore.curated', 'Curated this week')}
-                  showAllLabel={t('pluginStore.showMore', 'Show all')}
-                  className={searching ? 'mt-2' : undefined}
-                >
-                  {editorsPicks.map((e) => renderCard(e, 'picks'))}
-                </StoreShelf>
-              )}
-              {shelves.map((shelf) => (
-                <StoreShelf
-                  key={shelf.id}
-                  label={shelf.label}
-                  subLabel={shelf.subLabel}
-                  onShowAll={() => setCategoryFilter(shelf.id)}
-                  showAllLabel={t('pluginStore.showMore', 'Show all')}
-                >
-                  {shelf.plugins.map((e) => renderCard(e, shelf.id))}
-                  {registryQuery.isFetching && shelf.plugins.length === 0 && (
-                    <PosterCardSkeleton />
-                  )}
-                </StoreShelf>
-              ))}
-            </>
-          )}
-
-          {noResults && (
-            <p className="py-24 text-center text-sm text-muted-foreground">
-              {t('pluginStore.noMatches', {
-                defaultValue: 'No plugins match “{{query}}”.',
-                query: search.trim(),
-              })}
-            </p>
-          )}
-        </div>
-      </div>
+        {noResults && (
+          <p className="py-24 text-center text-sm text-muted-foreground">
+            {t('pluginStore.noMatches', {
+              defaultValue: 'No plugins match “{{query}}”.',
+              query: search.trim(),
+            })}
+          </p>
+        )}
+      </StoreCanvas>
 
       {/* Full-screen product page */}
       <AnimatePresence>

@@ -57,7 +57,7 @@ describe('backfillCandles', () => {
     expect(applied).toEqual([CANDLES])
   })
 
-  it('gives up after the second failure (no retry storm)', async () => {
+  it('gives up after the retry budget (no retry storm)', async () => {
     let calls = 0
     backfillCandles({
       fetch: () => {
@@ -68,8 +68,46 @@ describe('backfillCandles', () => {
       apply: () => {},
       retryDelayMs: 5,
     })
-    await sleep(30)
+    // 5 + 10 + 20 = 35ms of retries after the first attempt.
+    await sleep(120)
+    expect(calls).toBe(4)
+  })
+
+  it('retries an empty result, then applies the last one', async () => {
+    const applied: Array<Array<Candle>> = []
+    let calls = 0
+    backfillCandles({
+      fetch: () => {
+        calls++
+        return Promise.resolve([])
+      },
+      isLive: () => true,
+      apply: (c) => applied.push(c),
+      retryDelayMs: 5,
+    })
+    await sleep(120)
+    // An empty answer is retried like a failure — a rate-limited venue that
+    // returns [] must not settle the backfill on nothing — but the last
+    // attempt applies so a pair with no REST history still resolves.
+    expect(calls).toBe(4)
+    expect(applied).toEqual([[]])
+  })
+
+  it('stops retrying an empty result as soon as candles arrive', async () => {
+    const applied: Array<Array<Candle>> = []
+    let calls = 0
+    backfillCandles({
+      fetch: () => {
+        calls++
+        return Promise.resolve(calls === 1 ? [] : CANDLES)
+      },
+      isLive: () => true,
+      apply: (c) => applied.push(c),
+      retryDelayMs: 5,
+    })
+    await sleep(120)
     expect(calls).toBe(2)
+    expect(applied).toEqual([CANDLES])
   })
 
   it('skips the retry when the subscription was released', async () => {

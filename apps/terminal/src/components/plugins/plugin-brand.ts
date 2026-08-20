@@ -28,6 +28,16 @@ export function pluginPosterSrc(
   )
 }
 
+/**
+ * Best available mark for a small list-row icon. The bundled poster wins over
+ * `manifest.icon` for the same reason it does on the poster: it is in the
+ * bundle, so it renders offline and costs no request to a third-party favicon
+ * host on every row of the Installed list.
+ */
+export function pluginIconSrc(id: string, icon?: string): string | undefined {
+  return BUNDLED_POSTERS[id] ?? icon
+}
+
 export type PluginBrand = {
   /** 2–3 letter monogram shown on the poster tile. */
   mono: string
@@ -127,6 +137,14 @@ const BRANDS: Record<string, BrandSeed> = {
   'dexpaprika-data-provider': { mono: 'DXP', tint: '#e11d48', fg: '#ffffff' },
   'dexscreener-data-provider': { mono: 'DXS', tint: '#5c7cfa', fg: '#04091a' },
   'lifi-bridge-connector': { mono: 'LFI', tint: '#f14ba0', fg: '#ffffff' },
+  'coinglass-liquidations': { mono: 'CGL', tint: '#111827', fg: '#e8ecf4' },
+  'helius-rpc-provider': { mono: 'HEL', tint: '#e84a27', fg: '#ffffff' },
+  'kalshi-market-connector': { mono: 'KAL', tint: '#00d09c', fg: '#04201a' },
+  'polymarket-market-connector': {
+    mono: 'PLY',
+    tint: '#1652f0',
+    fg: '#ffffff',
+  },
   'exa-search': { mono: 'EXA', tint: '#1f6feb', fg: '#ffffff' },
   'tavily-search': { mono: 'TVL', tint: '#0ea5e9', fg: '#04121a' },
   'basic-symbols': { mono: 'SYM', tint: '#64748b', fg: '#ffffff' },
@@ -136,6 +154,20 @@ const BRANDS: Record<string, BrandSeed> = {
 
 /** Per-chain EVM DEX connectors share one visual identity. */
 const EVM_DEX_BRAND: BrandSeed = { mono: 'EVM', tint: '#627eea', fg: '#ffffff' }
+
+/**
+ * Pairlens's own plugins wear the product's identity — the asset-class family
+ * plugins, the community store, the user's indicators. Only the monogram
+ * changes, and it only ever shows if `/logo512.png` fails to load.
+ */
+const PAIRLENS_MONO: Record<string, string> = {
+  'pairlens-predictions': 'PRD',
+  'pairlens-cex-futures': 'PRP',
+  'pairlens-dex': 'DEX',
+  'pairlens-equities': 'EQ',
+  'pairlens-community': 'CMY',
+  'user-indicators': 'PY',
+}
 
 function hashHue(id: string): number {
   let hash = 0
@@ -163,10 +195,23 @@ function withHero(seed: BrandSeed): PluginBrand {
   }
 }
 
+/**
+ * Seeds that follow from the id rather than being spelled out: every EVM chain
+ * connector, every Pairlens-owned plugin, and every perpetual-futures venue,
+ * which is the same brand as the spot venue it settles against.
+ */
+function derivedSeed(id: string): BrandSeed | null {
+  if (id.endsWith('-dex-connector')) return EVM_DEX_BRAND
+  const mono = PAIRLENS_MONO[id]
+  if (mono) return { ...BRANDS['pairlens-core'], mono }
+  const spot = id.replace('-futures-market-connector', '-market-connector')
+  if (spot !== id && BRANDS[spot]) return BRANDS[spot]
+  return null
+}
+
 /** Resolve the brand identity for a plugin. Always returns something usable. */
 export function pluginBrand(id: string, name: string): PluginBrand {
-  const seed =
-    BRANDS[id] ?? (id.endsWith('-dex-connector') ? EVM_DEX_BRAND : null)
+  const seed = BRANDS[id] ?? derivedSeed(id)
   if (seed) return withHero(seed)
   const hue = hashHue(id)
   return withHero({
