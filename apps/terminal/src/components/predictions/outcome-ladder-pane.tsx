@@ -19,6 +19,13 @@
  * adding to a basket must never be something a user does by accident while
  * trying to look at a runner.
  *
+ * The whole ROW takes Yes. Anywhere that is not one of those three controls —
+ * the rank, the sparkline, the volume, the empty space between them — is the
+ * same target as the runner's name, because a row in a ladder reads as one
+ * object and a 12px name is a small thing to have to hit. The three controls
+ * stop the event so they keep their own meanings, and so `select` (which
+ * tracks) fires exactly once per click.
+ *
  * Sorting never happens on a tick. The prices come from the events index on a
  * 60-second stale timer, so rows hold still while you read them; the live
  * price lives on the chart, one click away.
@@ -244,7 +251,17 @@ function Ladder({
             <col className="w-14" />
             <col className="w-20" />
             <col className="w-[76px]" />
-            <col className="w-[164px]" />
+            {/* Wide enough that a chip never wraps, in any locale. Worst case
+                is a 5-letter word ("Tidak", "Không") plus the longest price a
+                0..1 contract can print, "99.9¢" — 74px of JetBrains Mono at
+                11px/600, so a 94px chip carries it with room for a fallback
+                mono face whose metrics are not ours. Two of those, two 4px
+                gaps, and the 18px basket button. The chips are `flex-1` and
+                split the column evenly rather than sizing to their own text,
+                so the Yes chips line up down the pane instead of going ragged,
+                and `whitespace-nowrap` makes a miss overflow visibly rather
+                than quietly wrapping again. */}
+            <col className="w-[214px]" />
           </colgroup>
           {/* Paints the column's own card surface, not the page's: a
               sticky bg-background thead reads as a hole once the pane sits
@@ -403,23 +420,34 @@ const LadderRow = memo(function LadderRow({
 
   const canSelect = context.event !== null
 
+  const takeYes = () => {
+    if (!canSelect) return
+    onOpen(selection(runner.yes.pairKey, runner.yes.label))
+  }
+
   return (
     <tr
       className={cn(
         'border-b border-border/40 last:border-0',
-        active && 'bg-primary/8',
+        canSelect && 'cursor-pointer',
+        active ? 'bg-primary/8 hover:bg-primary/12' : 'hover:bg-accent/40',
       )}
+      onClick={takeYes}
     >
       <td className="py-1.5 pr-2 font-mono text-[11px] tabular-nums text-muted-foreground">
         {rank}
       </td>
       <td className="min-w-0 py-1.5 pr-3">
+        {/* Still a real button, and still the only one in the row a keyboard
+            reaches: the row's own click is a pointer shortcut, not the
+            control. */}
         <button
           className="flex min-w-0 items-center gap-2 text-left"
           disabled={!canSelect}
-          onClick={() =>
-            canSelect && onOpen(selection(runner.yes.pairKey, runner.yes.label))
-          }
+          onClick={(e) => {
+            e.stopPropagation()
+            takeYes()
+          }}
           title={runner.market.title}
           type="button"
         >
@@ -468,12 +496,12 @@ const LadderRow = memo(function LadderRow({
       <td className="py-1.5">
         <div className="flex items-center justify-end gap-1">
           <button
-            className="rounded-md bg-up/18 px-2 py-[3px] font-mono text-[11px] font-semibold text-up transition-colors hover:bg-up/28 disabled:opacity-40"
+            className="flex-1 whitespace-nowrap rounded-md bg-up/18 px-2 py-[3px] font-mono text-[11px] font-semibold text-up transition-colors hover:bg-up/28 disabled:opacity-40"
             disabled={!canSelect || price === null}
-            onClick={() =>
-              canSelect &&
-              onOpen(selection(runner.yes.pairKey, runner.yes.label))
-            }
+            onClick={(e) => {
+              e.stopPropagation()
+              takeYes()
+            }}
             type="button"
           >
             {t('outcomeLadder.yesChip', {
@@ -481,13 +509,13 @@ const LadderRow = memo(function LadderRow({
             })}
           </button>
           <button
-            className="rounded-md bg-down/14 px-2 py-[3px] font-mono text-[11px] font-semibold text-down transition-colors hover:bg-down/24 disabled:opacity-40"
+            className="flex-1 whitespace-nowrap rounded-md bg-down/14 px-2 py-[3px] font-mono text-[11px] font-semibold text-down transition-colors hover:bg-down/24 disabled:opacity-40"
             disabled={!canSelect || !runner.no || noPrice === null}
-            onClick={() =>
-              canSelect &&
-              runner.no &&
+            onClick={(e) => {
+              e.stopPropagation()
+              if (!canSelect || !runner.no) return
               onOpen(selection(runner.no.pairKey, runner.no.label))
-            }
+            }}
             type="button"
           >
             {t('outcomeLadder.noChip', {
@@ -498,9 +526,10 @@ const LadderRow = memo(function LadderRow({
               be a thing a user does while reaching for a runner. */}
           <button
             aria-label={t('outcomeLadder.addToBasket', { name: runner.label })}
-            className="rounded-md bg-muted/40 p-[3px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
+            className="shrink-0 rounded-md bg-muted/40 p-[3px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:opacity-40"
             disabled={!canSelect || !eventKey || price === null}
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
               if (!canSelect || !eventKey) return
               onStage(selection(runner.yes.pairKey, runner.yes.label))
               stageBasketLeg(eventKey, {

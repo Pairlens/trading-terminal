@@ -86,7 +86,11 @@ export type StackRow = { ts: number } & Record<string, number>
 
 export type StackedSeries = {
   rows: Array<StackRow>
-  /** Bands bottom-first, richest at the floor. Recharts stacks in this order. */
+  /**
+   * Bands bottom-first: longest shot on the axis, favourite at the top of the
+   * field. Recharts stacks in this order, and the pane draws the rest band
+   * after them, so the grey caps the stack.
+   */
   order: Array<string>
   /** Where the axis has to top out: 1, or the overround if it prices above. */
   max: number
@@ -105,7 +109,19 @@ const EMPTY: StackedSeries = {
 }
 
 /**
- * Lay the given runners end to end on each row, richest at the floor.
+ * Lay the given runners end to end on each row, favourite at the top.
+ *
+ * The stack runs the way the field is read: highest probability highest on the
+ * chart. Richest-at-the-floor was the first build, and it inverted the one
+ * instinct every reader brings to a race, that the leader is the runner out in
+ * front and the field is behind it. It also sat the favourite's band on the
+ * axis, where a 74% leader read as the floor everyone else was standing on
+ * rather than as the answer the market has nearly settled on.
+ *
+ * Only the runners invert. The rest band still caps the stack, because a
+ * runner's band is stroked along its TOP and the topmost band's top is the
+ * ceiling: put the favourite there and its line sits flat at 100%, which is
+ * the one thing a probability chart must never draw for a runner at 20%.
  *
  * The order is taken from each runner's LAST drawn value rather than from the
  * row being laid out. Ordering per row would re-sort the bands at every
@@ -119,9 +135,11 @@ export function stackSeries(
   if (rows.length === 0 || keys.length === 0) return EMPTY
 
   const last = lastValues(rows, keys)
+  // Ascending, because Recharts stacks its first band at the floor: the
+  // longest shot is declared first and the favourite is drawn on top.
   const order = keys
     .slice()
-    .sort((a, b) => (last.get(b) ?? 0) - (last.get(a) ?? 0))
+    .sort((a, b) => (last.get(a) ?? 0) - (last.get(b) ?? 0))
 
   const out: Array<StackRow> = []
   const gaps = new Map<number, Set<string>>()

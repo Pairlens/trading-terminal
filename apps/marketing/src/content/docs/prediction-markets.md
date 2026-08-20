@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 20 min read
 ---
 
@@ -340,19 +340,21 @@ fifth of the pane and the gap between second and third is two pixels. So a race
 can also be drawn stacked: the same runners as bands laid end to end, in the
 same colours, filling the axis by construction. Each band's thickness is that
 runner's probability, so second against third stops being two lines a pixel
-apart and becomes two heights. The switch sits in the footer beside the spans,
-and like the span it is remembered across contracts and across devices.
+apart and becomes two heights. The field is ordered the way you read it,
+favourite at the top and the longest shots along the axis, so the runner higher
+up the chart is the runner in front. The switch sits in the footer beside the
+spans, and like the span it is remembered across contracts and across devices.
 
 Stacked bands are the default where they apply. Two rules keep them honest.
 
 They stack the raw probabilities and never normalize to 100%. The obvious
 implementation divides each runner by the sum of the drawn ones, which fills
 the axis perfectly and reports a 22% favourite as a 30% favourite. Instead the
-leftover goes to a grey **Rest of field** band at the top, which is exactly the
-probability mass the chart is not drawing: the runners past the cap, the ones
-you toggled off, the ones the venue has no history for, and whatever the book's
-overround leaves on the table. Every band measures true and the grey says how
-much of the question is off-screen.
+leftover goes to a grey **Rest of field** band above the runners, which is
+exactly the probability mass the chart is not drawing: the runners past the cap,
+the ones you toggled off, the ones the venue has no history for, and whatever
+the book's overround leaves on the table. Every band measures true and the grey
+says how much of the question is off-screen.
 
 And only a field that is genuinely a partition can be stacked at all. A Kalshi
 strike ladder is nested rather than exclusive: "above 60k" is true whenever
@@ -455,9 +457,12 @@ rather than a cause.
 
 **Outcome Ladder.** Every answer in the field priced in cents, sortable and
 searchable, with Yes and No chips that point the whole page at that contract.
-It opens the data strip on both boards, because "every way to take a side on
-this question, with a price and a trade button on each" is what a prediction
-board is for, whether the question has two answers or a hundred and twenty-eight.
+Clicking a row anywhere else takes Yes on that runner, so reaching a contract is
+a whole-row target rather than a name to hit; the No chip and the basket button
+keep their own meanings. It opens the data strip on both boards, because "every
+way to take a side on this question, with a price and a trade button on each" is
+what a prediction board is for, whether the question has two answers or a hundred
+and twenty-eight.
 This is also the fix for "show 26 more markets": the ninetieth runner is a
 filter box away instead of four pages deep. Prices come off a 60-second timer
 rather than the tick, so rows hold still while you read them, and the footer

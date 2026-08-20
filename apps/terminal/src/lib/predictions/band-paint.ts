@@ -67,7 +67,7 @@ export const ACTIVE_BAND_STOPS: ReadonlyArray<BandStop> = [
  * A runner's fill hangs below its line. The remainder has no line: its top is
  * the ceiling of the plot, and stroking that draws a border around the chart
  * rather than a boundary in the data. Its edge is at the BOTTOM, against the
- * last runner, so it is strongest there and dissolves upward, which is what
+ * favourite, so it is strongest there and dissolves upward, which is what
  * "everything else, thinning out" should look like.
  */
 export const REST_STOPS: ReadonlyArray<BandStop> = [

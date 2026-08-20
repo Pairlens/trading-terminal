@@ -4,7 +4,7 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 11 min read
 ---
 
@@ -104,9 +104,10 @@ leaving to the ladder.
 Beside the spans is the same lines-or-bands switch the desktop has, and it
 matters more here. Eight lines under a 22% favourite are cramped on a laptop;
 on a phone they are one thick smear. Stacked bands fill the axis instead, so
-each runner is a thickness rather than a hairline, with the grey rest of the
-field on top for everything the chart is not drawing. It is the default where
-the field is a partition, and your choice follows you back to the laptop.
+each runner is a thickness rather than a hairline, favourite highest and the
+longest shots along the axis, with the grey rest of the field on top for
+everything the chart is not drawing. It is the default where the field is a
+partition, and your choice follows you back to the laptop.
 
 The chip in the corner switches to **candles**, which brings back the chart
 engine, the interval picker and the drawing toolbar for the one outcome you are

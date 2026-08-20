@@ -291,7 +291,7 @@ export default memo(function MobileProbabilityChart({
                     y2="1"
                   >
                     {/* Runs the other way: gone at the ceiling, strongest
-                        where it meets the field. */}
+                        where it meets the favourite. */}
                     {REST_STOPS.map((band) => (
                       <stop
                         key={band.offset}
@@ -359,7 +359,9 @@ export default memo(function MobileProbabilityChart({
                 wrapperStyle={{ pointerEvents: 'none' }}
               />
               {bands
-                ? bands.order.map((key, index) => {
+                ? /* Bottom-first: longest shot on the axis, favourite at the
+                     top of the field. */
+                  bands.order.map((key, index) => {
                     const runner = byKey.get(key)
                     if (!runner) return null
                     return (
@@ -396,7 +398,9 @@ export default memo(function MobileProbabilityChart({
                     />
                   ))}
               {/* Everything the chart is not drawing, drawn. Last, so it caps
-                  the stack. */}
+                  the stack rather than taking the ceiling off the favourite:
+                  a runner strokes the top of its band, and a line at 100%
+                  would read as a runner that has already won. */}
               {bands?.hasRest && (
                 <Area
                   activeDot={false}
@@ -407,7 +411,7 @@ export default memo(function MobileProbabilityChart({
                   stackId="field"
                   // No edge: its top curve is the ceiling of the plot, and
                   // stroking it just draws a border. The boundary that matters
-                  // is the last runner's own edge, already drawn.
+                  // is the favourite's own edge, already drawn.
                   stroke="none"
                   type="monotone"
                 />
