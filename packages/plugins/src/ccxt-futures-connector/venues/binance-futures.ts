@@ -51,7 +51,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://bin.bnbstatic.com/static/images/common/favicon.ico'
+const ICON_URL = '/posters/binance-market-connector.png'
 
 /** Every interval in the app's union is a real fapi kline interval. */
 export const BINANCE_FUTURES_TIMEFRAMES: Array<Timeframe> = [

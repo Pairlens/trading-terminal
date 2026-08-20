@@ -52,8 +52,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/544.png'
+const ICON_URL = '/posters/mexc-market-connector.png'
 
 export const MEXC_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'mexc',

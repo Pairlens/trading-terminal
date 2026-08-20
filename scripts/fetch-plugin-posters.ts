@@ -3,16 +3,16 @@
 /**
  * Fetch high-resolution brand marks for the bundled plugins' store posters.
  *
- * For each plugin we walk a source chain, sharpest and most trustworthy
- * first, and take the first image at least MIN_EDGE across. Anything smaller
- * is discarded and the store falls back to `manifest.icon` / monograms.
+ * For each plugin we walk a source chain: an explicit OVERRIDE, the venue's
+ * CoinGecko exchange art, the site's own apple-touch-icon, and finally
+ * Google's favicon service (256px). Images smaller than MIN_EDGE are
+ * discarded — the store then falls back to `manifest.icon` / monograms.
  *
- * ORDER IS THE QUALITY CONTROL, not pixel dimensions. The last resort,
- * Google's favicon service, answers `sz=256` by UPSCALING whatever tiny
- * favicon the site ships, so it always passes a size check while looking
- * blocky at poster scale. That is how Crypto.com shipped as a 64px favicon
- * blown up to a 256px canvas. Keep real sources ahead of it, and check a
- * regenerated poster by eye rather than by its header.
+ * Clearbit's logo CDN used to lead that chain. HubSpot retired it, so the
+ * host no longer resolves at all; four marks (Alpaca and three EVM chains)
+ * silently dropped out of the map on the next bare run while their PNGs
+ * stayed on disk. Anything that reads like a general-purpose logo CDN belongs
+ * in OVERRIDES with a pinned URL instead.
  *
  * Output:
  *   apps/terminal/public/posters/<plugin-id>.png          (the images)
@@ -37,6 +37,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dir, '..')
 const OUT_DIR = join(ROOT, 'apps/terminal/public/posters')
+const CHAIN_DIR = join(ROOT, 'apps/terminal/public/chains')
 const MAP_FILE = join(
   ROOT,
   'apps/terminal/src/components/plugins/plugin-posters.ts',
@@ -75,6 +76,9 @@ const DOMAINS: Record<string, string> = {
   'geckoterminal-data-provider': 'geckoterminal.com',
   'dexpaprika-data-provider': 'dexpaprika.com',
   'dexscreener-data-provider': 'dexscreener.com',
+  'coinglass-liquidations': 'coinglass.com',
+  'lifi-bridge-connector': 'li.fi',
+  'helius-rpc-provider': 'helius.dev',
   // Both prediction venues refuse direct image fetches (kalshi.com resets the
   // TLS handshake, polymarket.com sits behind bot protection), so the Google
   // favicon fallback is the one source that resolves them. It returns their
@@ -83,22 +87,6 @@ const DOMAINS: Record<string, string> = {
   'polymarket-market-connector': 'polymarket.com',
   'exa-search': 'exa.ai',
   'tavily-search': 'tavily.com',
-  'helius-rpc-provider': 'helius.dev',
-}
-
-/**
- * Plugins that wear another plugin's mark: a futures connector is the same
- * venue as its spot sibling, so it reuses that poster rather than fetching
- * the brand twice. Without these the futures cards fell back to
- * `manifest.icon`, which for Binance is a 32px favicon — the blockiest art
- * in the store, against a 152px render.
- */
-const POSTER_ALIASES: Record<string, string> = {
-  'binance-futures-market-connector': 'binance-market-connector',
-  'bybit-futures-market-connector': 'bybit-market-connector',
-  'okx-futures-market-connector': 'okx-market-connector',
-  'kucoin-futures-market-connector': 'kucoin-market-connector',
-  'kraken-futures-market-connector': 'kraken-market-connector',
 }
 
 /**
@@ -110,27 +98,54 @@ const OVERRIDES: Record<string, string> = {
   // is the same brand hexagon at genuine resolution.
   'cryptocom-market-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png',
-  // Bitget's own site serves no usable mark and CoinGecko answers JPEG,
-  // which this script cannot size. CoinMarketCap's 200px exchange art is the
-  // same cyan mark at more than the poster renders.
-  'bitget-market-connector':
-    'https://s2.coinmarketcap.com/static/img/exchanges/200x200/513.png',
   'jupiter-dex-connector':
     'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
+  // Trust Wallet's Base entry is a plain blue square, not the ring-and-bar
+  // mark; base-org's avatar is the real one.
   'base-dex-connector':
-    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/info/logo.png',
+    'https://avatars.githubusercontent.com/u/108554348?s=512',
   'arbitrum-dex-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png',
   'bsc-dex-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png',
+  // Verified GitHub org avatars — the only 460px source these publish.
+  // DexScreener's site is behind Cloudflare bot protection, so neither the
+  // apple-touch-icon nor the favicon service reaches anything large enough to
+  // clear MIN_EDGE.
+  'dexscreener-data-provider':
+    'https://avatars.githubusercontent.com/u/99915600?s=512',
+  'lifi-bridge-connector':
+    'https://avatars.githubusercontent.com/u/85288935?s=512',
+  // Bitget's own site serves no usable mark and CoinGecko answers JPEG, which
+  // pngSize cannot measure. CoinMarketCap's exchange art is the same cyan
+  // mark at more than the poster renders.
+  'bitget-market-connector':
+    'https://s2.coinmarketcap.com/static/img/exchanges/200x200/513.png',
+  // GeckoTerminal serves no apple-touch-icon at the root; the marked-up path
+  // is where the 180px app icon lives.
+  'geckoterminal-data-provider':
+    'https://www.geckoterminal.com/images/icons/180x180.png',
+}
+
+/**
+ * Plugin ids that wear another plugin's mark. A perpetual-futures venue is
+ * the same brand as its spot venue, and shipping the mark twice under two
+ * names would be two copies of one PNG in the bundle.
+ */
+const POSTER_ALIASES: Record<string, string> = {
+  'binance-futures-market-connector': 'binance-market-connector',
+  'bybit-futures-market-connector': 'bybit-market-connector',
+  'okx-futures-market-connector': 'okx-market-connector',
+  'kucoin-futures-market-connector': 'kucoin-market-connector',
+  'kraken-futures-market-connector': 'kraken-market-connector',
 }
 
 /** CoinGecko exchange ids — resolved via their API to "large" images. */
 const COINGECKO_EXCHANGES: Record<string, string> = {
   'bybit-market-connector': 'bybit_spot',
-  // Both venues' own sites answer the poster fetch with HTML, so without
-  // these they fell through to a Google-upscaled favicon and shipped at
-  // 128px and 144px of real detail against a 152px render.
+  // Both venues answer every icon path on their own domain with HTML, so
+  // without these they fell through to the favicon service and shipped 128px
+  // and 144px of real detail against a 152px render.
   'htx-market-connector': 'huobi',
   'kucoin-market-connector': 'kucoin',
   'gate-market-connector': 'gate',
@@ -143,21 +158,50 @@ const COINGECKO_EXCHANGES: Record<string, string> = {
   'coinbase-market-connector': 'gdax',
 }
 
-/** Pairlens's own plugins reuse the logo already shipped in public/. */
+/**
+ * Pairlens's own plugins reuse the logo already shipped in public/. Every
+ * first-party id belongs here — a Pairlens plugin has no brand to fetch, and
+ * one left out falls through to a monogram tile that reads as a third-party
+ * stub in a grid where its siblings wear the logo.
+ */
+/**
+ * Chain marks, which are not plugin marks: the DEX chain rail lists chains
+ * whose connector may not even be installed, and Solana's connector is
+ * Jupiter, an aggregator whose own logo is not the chain's. Written to
+ * `public/chains/` and referenced by literal path from `lib/dex/chain-catalog.ts`,
+ * so no generated map and no collision with the poster orphan check.
+ *
+ * Every EVM chain reads its mark off its connector's poster instead, through
+ * `EVM_CHAINS` — Solana is the one chain with nowhere else to look.
+ */
+const CHAIN_MARKS: Record<string, string> = {
+  solana:
+    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
+}
+
 const LOCAL_POSTERS: Record<string, string> = {
   'pairlens-core': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
+  'pairlens-predictions': '/logo512.png',
+  'pairlens-cex-futures': '/logo512.png',
+  'pairlens-dex': '/logo512.png',
+  'pairlens-equities': '/logo512.png',
+  'pairlens-community': '/logo512.png',
+  'user-indicators': '/logo512.png',
+  'basic-symbols': '/logo512.png',
 }
 
 /**
- * Brands with no fetchable mark, committed to the repo instead.
+ * Brand marks committed to the repo rather than fetched, because no source
+ * publishes them usably. Alpaca's favicon is 48px and its icon paths answer
+ * HTML; tavily.com's apple-touch-icon sits behind a content hash that changes
+ * on every deploy. Both were previously taken from GitHub org avatars, which
+ * gave Alpaca a soft mark and Tavily a photograph that weighed 104 KB against
+ * 23 KB for the flat logo committed here.
  *
- * Both sites answer every icon path with HTML, and Google's favicon service
- * reports a true 16px favicon for them however large a size you ask for — so
- * every source in the chain either fails or returns something far too small
- * for a poster. These are NEVER fetched and never rewritten: a run that
- * re-derived them would replace a 512px mark with a 48px favicon, which is
- * the silent downgrade this whole file is trying not to repeat.
+ * These ids are NEVER fetched and never rewritten: a run that re-derived them
+ * would trade 512px art for whatever a favicon service upscales that day,
+ * which is the silent downgrade the rest of this file exists to prevent.
  */
 const VENDORED_POSTERS: Record<string, string> = {
   'alpaca-market-connector': '/posters/alpaca-market-connector.png',
@@ -181,9 +225,9 @@ function pngSize(buf: Uint8Array): { w: number; h: number } | null {
 
 async function fetchImage(url: string): Promise<Uint8Array | null> {
   // One retry, because a miss here is silent and lasting: the plugin drops to
-  // its `manifest.icon` (often a 32px favicon), the poster map loses the
-  // entry, and nothing about the committed result says a CDN blinked. Seen
-  // live — raw.githubusercontent.com refused one id in a batch and served it
+  // the next source (often a favicon service that upscales), the committed
+  // PNG changes, and nothing in the diff says a CDN blinked. Seen live -
+  // raw.githubusercontent.com refused one id inside a batch and served it
   // fine on its own a second later.
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
@@ -224,10 +268,8 @@ async function bestMark(
     if (url) sources.push(url)
   }
   sources.push(
-    // Clearbit's logo CDN used to lead this chain at 512px. It was retired
-    // (every request now answers a short text body), which is what quietly
-    // demoted several venues to the upscaling fallback below.
     `https://${domain}/apple-touch-icon.png`,
+    `https://www.${domain}/apple-touch-icon.png`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=256`,
   )
   for (const url of sources) {
@@ -243,11 +285,27 @@ async function bestMark(
 const only = new Set(Bun.argv.slice(2))
 
 await mkdir(OUT_DIR, { recursive: true })
+await mkdir(CHAIN_DIR, { recursive: true })
 const posters: Record<string, string> = {
   ...LOCAL_POSTERS,
   ...VENDORED_POSTERS,
 }
 const skipped: Array<string> = []
+
+// Chain marks ride along: same fetch, same size floor, different directory.
+// Named on the command line as `chain:<id>`, so they never collide with a
+// plugin id and a plugin-only run leaves them alone.
+for (const [chain, url] of Object.entries(CHAIN_MARKS)) {
+  if (only.size > 0 && !only.has(`chain:${chain}`)) continue
+  const buf = await fetchImage(url)
+  const size = buf ? pngSize(buf) : null
+  if (!buf || !size || size.w < MIN_EDGE || size.h < MIN_EDGE) {
+    skipped.push(`chain:${chain} (${url})`)
+    continue
+  }
+  await Bun.write(join(CHAIN_DIR, `${chain}.png`), buf)
+  console.log(`✓ chain:${chain} (${size.w}×${size.h})`)
+}
 
 // A filtered run keeps every poster it is not refreshing, so the map that
 // lands is the shipped one plus the ids asked for.
@@ -255,7 +313,9 @@ if (only.size > 0) {
   const { BUNDLED_POSTERS } = (await import(MAP_FILE)) as {
     BUNDLED_POSTERS: Record<string, string>
   }
-  Object.assign(posters, BUNDLED_POSTERS)
+  // LOCAL_POSTERS re-applied on top: this file is the source of truth for
+  // where a first-party mark lives, and the shipped map may predate an entry.
+  Object.assign(posters, BUNDLED_POSTERS, LOCAL_POSTERS)
 }
 
 for (const [id, domain] of Object.entries(DOMAINS)) {
@@ -290,19 +350,19 @@ for (const [id, domain] of Object.entries(DOMAINS)) {
   console.log(`✓ ${id} ← ${domain} (${size.w}×${size.h})`)
 }
 
+// Aliases resolve last so they pick up whatever this run wrote for the venue
+// they borrow from. An alias whose source never landed is dropped rather than
+// pointing the map at a file that is not in public/.
+for (const [id, source] of Object.entries(POSTER_ALIASES)) {
+  if (posters[source]) posters[id] = posters[source]
+  else skipped.push(`${id} (alias of ${source}, which has no poster)`)
+}
+
 if (skipped.length > 0) {
   console.log(
     `\nSkipped (no image ≥ ${MIN_EDGE}px — store falls back to manifest.icon):`,
   )
   for (const s of skipped) console.log(`  ✗ ${s}`)
-}
-
-// Aliases resolve against whatever the run produced, so a venue that lost its
-// poster does not leave its futures sibling pointing at a missing file.
-for (const [alias, source] of Object.entries(POSTER_ALIASES)) {
-  const poster = posters[source]
-  if (poster) posters[alias] = poster
-  else delete posters[alias]
 }
 
 const sorted = Object.fromEntries(

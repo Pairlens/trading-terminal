@@ -459,8 +459,17 @@ spreadsheet reading all over again. The numbers are asserted against `layout-she
 `layout-column.tsx` by `components/chrome/__tests__/page-chrome.test.ts`, so changing the board's
 inset and not the pages' fails rather than drifting quietly.
 
-The two builder canvases are the one sanctioned well at page scale: `bg-muted/40` with xyflow's
-own background set transparent. Painting the canvas `--card` was not an option, because the nodes
+The two builder canvases are the one sanctioned well at page scale, and the one place the well
+carries two alphas: `bg-muted/70 dark:bg-muted/40`, with xyflow's own background set transparent.
+`--muted` sits above `--card` in dark and below it in light, so a single alpha cannot serve both.
+At 40% the light well landed under two points of lightness from the card around it, which took
+the canvas edge, the minimap and the zoom controls with it. The dot grids are token-driven in
+both modes for the same reason: light used to fall through to xyflow's own cool grey. They are
+also drawn through `components/flow/canvas-dot-grid.tsx` rather than `<Background>` directly,
+because xyflow sizes the dot in canvas coordinates (`radius = size * zoom / 2`): right for the
+gap, which travels with the nodes, wrong for the dot, which is texture and vanished below about
+0.8 zoom in both modes. Dividing the size by the live zoom cancels that. The zoom subscription
+belongs in that leaf and nowhere else, so a pinch re-renders eleven lines rather than a builder. Painting the canvas `--card` was not an option, because the nodes
 ARE `--card` objects and would have dissolved into their own ground. Nodes, edges and handles keep
 their outlines: a step on a canvas is a real object, and its border is meaning rather than chrome.
 
@@ -471,6 +480,19 @@ holds the groups 20px apart. There is deliberately no separator constant and no 
 the bar; what separates it from the board is the 10px of ground and the first column's card edge.
 A row of outlined buttons over a board that draws no borders is what made the bar read as a
 different product in the first place.
+
+**The two storefronts unstack that bar** (`PageHeader floating` + `StoreCanvas` in
+`components/store/store-shell.tsx`). A store opens on a 400px hero with its own light in it, and a
+flat `--background` strip stacked on top of that artwork was the only thing on screen the
+storefront's atmosphere never reached. So the content runs the full height of the frame, the
+aurora with it, and the bar hovers over the top 44px with nothing behind it. The edge comes back
+only when it is needed: past 4px of scroll a `--background` scrim fades in behind the bar and
+blurs what passes under it, with the board's own 14px radius on its bottom corners. The two
+offsets that used to be implied by the flex column are written down as `STORE_BAR_PAD` and
+`STORE_BAR_OFFSET` and pinned to `HEADER_BAR`'s height by
+`components/store/__tests__/store-chrome.test.ts`. Anything that overlays a store starts at
+`STORE_BAR_OFFSET`, never `inset-0`: the product sheets stop at the bar's lower edge so search,
+the tabs and the way out of the store stay reachable.
 
 The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `ChartSurface` and
 resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is

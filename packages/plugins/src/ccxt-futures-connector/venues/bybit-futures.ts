@@ -60,7 +60,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://www.bybit.com/favicon.ico'
+const ICON_URL = '/posters/bybit-market-connector.png'
 
 /**
  * The venue's kline intervals, intersected with the app's union. ByBit also

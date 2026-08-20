@@ -30,7 +30,8 @@ export const communityStoreManifest: PluginManifest = {
   version: '1.0.0',
   author: 'Pairlens',
   description: 'Community workspace templates shared by Pairlens users.',
-  icon: 'Users',
+  // See the note in user-indicators-plugin.ts: this field is an image URL.
+  icon: '/logo512.png',
   capabilities: [
     {
       id: 'workspace-store:catalog',

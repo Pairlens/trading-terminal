@@ -74,9 +74,12 @@ function PluginsPage() {
             replace: true,
           })
         }
-        className="flex min-h-0 flex-1 flex-col gap-0"
+        // `relative` for the storefront tab, where the bar hovers over the
+        // store instead of stacking above it.
+        className="relative flex min-h-0 flex-1 flex-col gap-0"
       >
         <PageHeader
+          floating={activeTab === 'store'}
           actions={
             <>
               <div className={HEADER_GROUP}>

@@ -48,7 +48,7 @@ import type {
 // bitvavo.com serves a 403 to non-browser clients, so the apex favicon renders
 // blank in the venue picker / store card. The account subdomain serves the same
 // mark (256px) without the block.
-const ICON_URL = 'https://account.bitvavo.com/favicon.ico'
+const ICON_URL = '/posters/bitvavo-market-connector.png'
 
 /**
  * Refuse the regions Bitvavo does not serve.

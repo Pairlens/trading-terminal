@@ -19,7 +19,7 @@ export const tavilySearchManifest: PluginManifest = {
   description:
     'Web search grounding for AI research via the Tavily Search API (bring your own key)',
   homepage: 'https://tavily.com',
-  icon: 'https://tavily.com/favicon.ico',
+  icon: '/posters/tavily-search.png',
   metadata: { family: 'ai-byok' },
   capabilities: [
     {

@@ -73,8 +73,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/102.png'
+const ICON_URL = '/posters/htx-market-connector.png'
 
 export const HTX_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'htx',

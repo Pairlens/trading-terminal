@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 import { cn } from '@pairlens/ui'
 import { Button } from '@pairlens/ui/components/ui/button'
 
-import { StoreAurora, StoreShelf } from '../store/store-shell'
+import { StoreCanvas, StoreShelf } from '../store/store-shell'
 import { ShareWorkspaceDialog } from './share-workspace-dialog'
 import { WorkspaceLayoutPreview } from './workspace-layout-preview'
 import { WorkspaceProductPage } from './workspace-product-page'
@@ -741,174 +741,166 @@ export function WorkspaceStore({
 
   return (
     <div className="relative h-full">
-      <StoreAurora />
+      <StoreCanvas>
+        {/* Spotlight hero */}
+        {!filtering && featured.length > 0 && (
+          <WorkspaceSpotlight
+            templates={featured}
+            paused={selected !== null}
+            applying={applying}
+            onApply={(tpl) => void applyTemplate(tpl)}
+            onDetails={(tpl) => setSelectedId(tpl.id)}
+          />
+        )}
 
-      <div className="relative z-10 h-full overflow-y-auto">
-        {/* The board's own inset. See the twin in `plugins/plugin-store.tsx`. */}
-        <div className="px-2.5 pb-2.5">
-          {/* Spotlight hero */}
-          {!filtering && featured.length > 0 && (
-            <WorkspaceSpotlight
-              templates={featured}
-              paused={selected !== null}
-              applying={applying}
-              onApply={(tpl) => void applyTemplate(tpl)}
-              onDetails={(tpl) => setSelectedId(tpl.id)}
-            />
-          )}
-
-          {/* Filters row */}
-          <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="mr-1 w-14 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                  {t('workspaceStore.source.label', 'Source')}
-                </span>
-                {(
+        {/* Filters row */}
+        <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className="mr-1 w-14 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                {t('workspaceStore.source.label', 'Source')}
+              </span>
+              {(
+                [
+                  ['all', t('workspaceStore.source.all', 'All')],
+                  ['builtin', t('workspaceStore.source.builtin', 'Pairlens')],
                   [
-                    ['all', t('workspaceStore.source.all', 'All')],
-                    ['builtin', t('workspaceStore.source.builtin', 'Pairlens')],
-                    [
-                      'community',
-                      t('workspaceStore.source.community', 'Community'),
-                    ],
-                    ['mine', t('workspaceStore.source.mine', 'Yours')],
-                  ] as Array<[SourceFilter, string]>
-                ).map(([value, label]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setSource(value)}
-                    className={cn(
-                      'rounded-full px-2.5 py-1 text-xs transition-colors',
-                      source === value
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:bg-muted',
-                    )}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <FacetGroup
-                label={t('workspaceStore.facet.trader', 'Trader')}
-                values={TRADER_TYPES}
-                labelOf={(v) => traderTypeLabel(t, v)}
-                active={trader}
-                onChange={setTrader}
-              />
-              <FacetGroup
-                label={t('workspaceStore.facet.asset', 'Asset')}
-                values={ASSET_CLASSES}
-                labelOf={(v) => assetClassLabel(t, v)}
-                active={asset}
-                onChange={setAsset}
-              />
-              <FacetGroup
-                label={t('workspaceStore.facet.screen', 'Screen')}
-                values={SCREEN_SIZES}
-                labelOf={(v) => screenSizeLabel(t, v)}
-                active={screen}
-                onChange={setScreen}
-              />
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="shrink-0 gap-1.5"
-              onClick={() => setShareOpen(true)}
-            >
-              <Share2 className="size-3.5" />
-              {t('workspaceStore.share.cta', 'Share a workspace')}
-            </Button>
-          </div>
-
-          {/* Filtered grid */}
-          {filtering ? (
-            filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-                <span className="flex size-12 items-center justify-center rounded-[14px] bg-card text-muted-foreground">
-                  <LayoutTemplate className="size-5" />
-                </span>
-                <p className="font-serif text-xl font-semibold">
-                  {t('workspaceStore.noResultsTitle', 'Nothing matches')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {t(
-                    'workspaceStore.noResults',
-                    'No workspaces match those filters.',
+                    'community',
+                    t('workspaceStore.source.community', 'Community'),
+                  ],
+                  ['mine', t('workspaceStore.source.mine', 'Yours')],
+                ] as Array<[SourceFilter, string]>
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setSource(value)}
+                  className={cn(
+                    'rounded-full px-2.5 py-1 text-xs transition-colors',
+                    source === value
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-muted-foreground hover:bg-muted',
                   )}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSource('all')
-                    setTrader(null)
-                    setAsset(null)
-                    setScreen(null)
-                  }}
                 >
-                  {t('workspaceStore.clearFilters', 'Clear filters')}
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-8 flex flex-wrap gap-4">
-                {filtered.map((tpl) => renderCard(tpl, 'all'))}
-              </div>
-            )
-          ) : (
-            <>
-              {/* Topic shelves */}
-              {featured.length > 0 && (
-                <StoreShelf
-                  label={t('workspaceStore.editorsPicks', "Editor's picks")}
-                  subLabel={t('workspaceStore.curated', 'Curated layouts')}
-                >
-                  {featured.map((tpl) => renderCard(tpl, 'picks'))}
-                </StoreShelf>
-              )}
-              {traderShelves.map((shelf) => (
-                <StoreShelf
-                  key={shelf.id}
-                  label={shelf.label}
-                  subLabel={shelf.subLabel}
-                  onShowAll={() => setTrader(shelf.id)}
-                  showAllLabel={t('workspaceStore.showAll', 'Show all')}
-                >
-                  {shelf.templates.map((tpl) => renderCard(tpl, shelf.id))}
-                </StoreShelf>
+                  {label}
+                </button>
               ))}
-              {communityShelf.length > 0 && (
-                <StoreShelf
-                  label={t('workspaceStore.source.community', 'Community')}
-                  subLabel={t(
-                    'workspaceStore.communitySub',
-                    'Shared by other traders',
-                  )}
-                  onShowAll={() => setSource('community')}
-                  showAllLabel={t('workspaceStore.showAll', 'Show all')}
-                >
-                  {communityShelf.map((tpl) => renderCard(tpl, 'community'))}
-                </StoreShelf>
-              )}
-              {mineShelf.length > 0 && (
-                <StoreShelf
-                  label={t('workspaceStore.source.mine', 'Yours')}
-                  subLabel={t(
-                    'workspaceStore.mineSub',
-                    'Workspaces you shared',
-                  )}
-                  onShowAll={() => setSource('mine')}
-                  showAllLabel={t('workspaceStore.showAll', 'Show all')}
-                >
-                  {mineShelf.map((tpl) => renderCard(tpl, 'mine'))}
-                </StoreShelf>
-              )}
-            </>
-          )}
+            </div>
+            <FacetGroup
+              label={t('workspaceStore.facet.trader', 'Trader')}
+              values={TRADER_TYPES}
+              labelOf={(v) => traderTypeLabel(t, v)}
+              active={trader}
+              onChange={setTrader}
+            />
+            <FacetGroup
+              label={t('workspaceStore.facet.asset', 'Asset')}
+              values={ASSET_CLASSES}
+              labelOf={(v) => assetClassLabel(t, v)}
+              active={asset}
+              onChange={setAsset}
+            />
+            <FacetGroup
+              label={t('workspaceStore.facet.screen', 'Screen')}
+              values={SCREEN_SIZES}
+              labelOf={(v) => screenSizeLabel(t, v)}
+              active={screen}
+              onChange={setScreen}
+            />
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="shrink-0 gap-1.5"
+            onClick={() => setShareOpen(true)}
+          >
+            <Share2 className="size-3.5" />
+            {t('workspaceStore.share.cta', 'Share a workspace')}
+          </Button>
         </div>
-      </div>
+
+        {/* Filtered grid */}
+        {filtering ? (
+          filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
+              <span className="flex size-12 items-center justify-center rounded-[14px] bg-card text-muted-foreground">
+                <LayoutTemplate className="size-5" />
+              </span>
+              <p className="font-serif text-xl font-semibold">
+                {t('workspaceStore.noResultsTitle', 'Nothing matches')}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  'workspaceStore.noResults',
+                  'No workspaces match those filters.',
+                )}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSource('all')
+                  setTrader(null)
+                  setAsset(null)
+                  setScreen(null)
+                }}
+              >
+                {t('workspaceStore.clearFilters', 'Clear filters')}
+              </Button>
+            </div>
+          ) : (
+            <div className="mt-8 flex flex-wrap gap-4">
+              {filtered.map((tpl) => renderCard(tpl, 'all'))}
+            </div>
+          )
+        ) : (
+          <>
+            {/* Topic shelves */}
+            {featured.length > 0 && (
+              <StoreShelf
+                label={t('workspaceStore.editorsPicks', "Editor's picks")}
+                subLabel={t('workspaceStore.curated', 'Curated layouts')}
+              >
+                {featured.map((tpl) => renderCard(tpl, 'picks'))}
+              </StoreShelf>
+            )}
+            {traderShelves.map((shelf) => (
+              <StoreShelf
+                key={shelf.id}
+                label={shelf.label}
+                subLabel={shelf.subLabel}
+                onShowAll={() => setTrader(shelf.id)}
+                showAllLabel={t('workspaceStore.showAll', 'Show all')}
+              >
+                {shelf.templates.map((tpl) => renderCard(tpl, shelf.id))}
+              </StoreShelf>
+            ))}
+            {communityShelf.length > 0 && (
+              <StoreShelf
+                label={t('workspaceStore.source.community', 'Community')}
+                subLabel={t(
+                  'workspaceStore.communitySub',
+                  'Shared by other traders',
+                )}
+                onShowAll={() => setSource('community')}
+                showAllLabel={t('workspaceStore.showAll', 'Show all')}
+              >
+                {communityShelf.map((tpl) => renderCard(tpl, 'community'))}
+              </StoreShelf>
+            )}
+            {mineShelf.length > 0 && (
+              <StoreShelf
+                label={t('workspaceStore.source.mine', 'Yours')}
+                subLabel={t('workspaceStore.mineSub', 'Workspaces you shared')}
+                onShowAll={() => setSource('mine')}
+                showAllLabel={t('workspaceStore.showAll', 'Show all')}
+              >
+                {mineShelf.map((tpl) => renderCard(tpl, 'mine'))}
+              </StoreShelf>
+            )}
+          </>
+        )}
+      </StoreCanvas>
 
       {/* Full-screen product page */}
       <AnimatePresence>

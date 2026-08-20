@@ -5,7 +5,7 @@
     "": {
       "name": "pairlens",
       "dependencies": {
-        "@pairlens/fast-financial-charts": "^1.5.3",
+        "@pairlens/fast-financial-charts": "^2.1.0",
       },
       "devDependencies": {
         "@tanstack/eslint-config": "^0.3.4",
@@ -36,7 +36,7 @@
     },
     "apps/desktop": {
       "name": "@pairlens/desktop",
-      "version": "0.4.0",
+      "version": "0.5.0",
       "dependencies": {
         "@tauri-apps/api": "^2.10.1",
         "@tauri-apps/plugin-shell": "^2.2.1",
@@ -108,7 +108,7 @@
         "@fontsource-variable/geist": "^5.2.8",
         "@lezer/highlight": "^1.2.1",
         "@pairlens/bot-engine": "workspace:*",
-        "@pairlens/fast-financial-charts": "^1.5.2",
+        "@pairlens/fast-financial-charts": "^2.1.0",
         "@pairlens/market-engine": "workspace:*",
         "@pairlens/notification-engine": "workspace:*",
         "@pairlens/persistence": "workspace:*",
@@ -849,7 +849,7 @@
 
     "@pairlens/desktop": ["@pairlens/desktop@workspace:apps/desktop"],
 
-    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@1.5.3", "", { "peerDependencies": { "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["react", "react-dom"] }, "sha512-aKKsi+pvVoZl8eT6x8yjvkAL3bLKNWkwgBlzpl+/6ehtyn6m6rqmqMQXYVAgtAI6bYei4lFFHxxCJH/CsVhr/A=="],
+    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@2.1.0", "", { "peerDependencies": { "@types/react": ">=19", "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["@types/react", "react", "react-dom"] }, "sha512-ql9izRW1hXRQXx9nEk9kSyrgmUicUdvxaEjgHkwxi4wZFh8L/4rvI8GtMGLsx5tgQvmkrhbYiU6yx7H5tlblcQ=="],
 
     "@pairlens/market-engine": ["@pairlens/market-engine@workspace:packages/market-engine"],
 

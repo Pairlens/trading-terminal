@@ -30,7 +30,10 @@ export const pairlensEquitiesManifest: PluginManifest = {
   description:
     'Stock surfaces: the session clock, Level 1 quotes, company fundamentals, insider filings and the earnings calendar',
   homepage: 'https://pairlens.finance',
-  icon: 'https://pairlens.finance/favicon.svg',
+  // Served from the terminal bundle, not pairlens.finance: a first-party
+  // plugin's mark must render offline, on the desktop app, and inside the
+  // desktop CSP without reaching for the marketing site.
+  icon: '/logo512.png',
   metadata: { family: 'equities' },
   capabilities: [],
   config: {},

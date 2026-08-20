@@ -16,7 +16,7 @@ export const openaiInferenceManifest: PluginManifest = {
   author: 'Pairlens',
   description: 'AI inference via OpenAI API',
   homepage: 'https://openai.com',
-  icon: 'https://openai.com/favicon.ico',
+  icon: '/posters/openai-inference.png',
   metadata: { family: 'ai-byok' },
   capabilities: [
     {
