@@ -92,6 +92,7 @@ export const coinglassLiquidationsManifest: PluginManifest = {
   description:
     'Liquidation prints from your own Coinglass key, for the perpetual venues Pairlens does not collect itself. Desktop only, and the liquidation-order endpoint it reads starts at the Coinglass Standard plan.',
   homepage: 'https://www.coinglass.com/pricing',
+  icon: '/posters/coinglass-liquidations.png',
   metadata: {
     family: 'cex-futures',
     assetClass: 'crypto-perp',

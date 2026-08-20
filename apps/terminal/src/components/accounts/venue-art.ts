@@ -30,6 +30,10 @@ export function venuePosterSrc(market: string): string | undefined {
 // no matching mark fall back to the tinted monogram tile.
 const CHAIN_POSTER_IDS: Record<string, string> = {
   ethereum: 'ethereum-dex-connector',
+  base: 'base-dex-connector',
+  arbitrum: 'arbitrum-dex-connector',
+  bsc: 'bsc-dex-connector',
+  polygon: 'polygon-dex-connector',
 }
 
 export function chainPosterSrc(chain: string): string | undefined {

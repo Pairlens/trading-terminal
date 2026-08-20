@@ -18,6 +18,7 @@ export const dexpaprikaDataProviderManifest: PluginManifest = {
   author: 'Pairlens',
   description: 'DEX market data powered by DexPaprika',
   homepage: 'https://dexpaprika.com',
+  icon: '/posters/dexpaprika-data-provider.png',
   metadata: { family: 'dex', assetClass: 'dex' },
   // Priority 6 — fallback behind GeckoTerminal (priority 5). DexPaprika's API
   // sends no Access-Control-Allow-Origin header, so browser/webview fetches

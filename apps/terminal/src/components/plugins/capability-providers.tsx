@@ -543,6 +543,7 @@ function ProviderSelect({
     return (
       <span className="flex items-center gap-1.5">
         <PluginIcon
+          id={provider.plugin.manifest.id}
           src={provider.plugin.manifest.icon}
           name={provider.plugin.manifest.name}
           themeColors={provider.plugin.manifest.theme?.previewColors}
@@ -578,6 +579,7 @@ function ProviderSelect({
             disabled={!active && value !== plugin.manifest.id}
           >
             <PluginIcon
+              id={plugin.manifest.id}
               src={plugin.manifest.icon}
               name={plugin.manifest.name}
               themeColors={plugin.manifest.theme?.previewColors}

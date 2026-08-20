@@ -116,6 +116,7 @@ export function PluginDetailDialog({
         <DialogHeader>
           <div className="flex items-start gap-3">
             <PluginIcon
+              id={manifest.id}
               src={manifest.icon}
               name={manifest.name}
               themeColors={manifest.theme?.previewColors}
