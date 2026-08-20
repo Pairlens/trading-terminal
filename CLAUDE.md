@@ -459,8 +459,12 @@ spreadsheet reading all over again. The numbers are asserted against `layout-she
 `layout-column.tsx` by `components/chrome/__tests__/page-chrome.test.ts`, so changing the board's
 inset and not the pages' fails rather than drifting quietly.
 
-The two builder canvases are the one sanctioned well at page scale: `bg-muted/40` with xyflow's
-own background set transparent. Painting the canvas `--card` was not an option, because the nodes
+The two builder canvases are the one sanctioned well at page scale, and the one place the well
+carries two alphas: `bg-muted/70 dark:bg-muted/40`, with xyflow's own background set transparent.
+`--muted` sits above `--card` in dark and below it in light, so a single alpha cannot serve both.
+At 40% the light well landed under two points of lightness from the card around it, which took
+the canvas edge, the minimap and the zoom controls with it. The dot grids are token-driven in
+both modes for the same reason: light used to fall through to xyflow's own cool grey. Painting the canvas `--card` was not an option, because the nodes
 ARE `--card` objects and would have dissolved into their own ground. Nodes, edges and handles keep
 their outlines: a step on a canvas is a real object, and its border is meaning rather than chrome.
 
