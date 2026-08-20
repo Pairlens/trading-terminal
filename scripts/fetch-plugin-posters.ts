@@ -3,9 +3,16 @@
 /**
  * Fetch high-resolution brand marks for the bundled plugins' store posters.
  *
- * For each plugin we try Clearbit's logo CDN (512px) and fall back to
- * Google's favicon service (256px). Images smaller than MIN_EDGE are
- * discarded — the store then falls back to `manifest.icon` / monograms.
+ * For each plugin we walk a source chain, sharpest and most trustworthy
+ * first, and take the first image at least MIN_EDGE across. Anything smaller
+ * is discarded and the store falls back to `manifest.icon` / monograms.
+ *
+ * ORDER IS THE QUALITY CONTROL, not pixel dimensions. The last resort,
+ * Google's favicon service, answers `sz=256` by UPSCALING whatever tiny
+ * favicon the site ships, so it always passes a size check while looking
+ * blocky at poster scale. That is how Crypto.com shipped as a 64px favicon
+ * blown up to a 256px canvas. Keep real sources ahead of it, and check a
+ * regenerated poster by eye rather than by its header.
  *
  * Output:
  *   apps/terminal/public/posters/<plugin-id>.png          (the images)
@@ -76,6 +83,22 @@ const DOMAINS: Record<string, string> = {
   'polymarket-market-connector': 'polymarket.com',
   'exa-search': 'exa.ai',
   'tavily-search': 'tavily.com',
+  'helius-rpc-provider': 'helius.dev',
+}
+
+/**
+ * Plugins that wear another plugin's mark: a futures connector is the same
+ * venue as its spot sibling, so it reuses that poster rather than fetching
+ * the brand twice. Without these the futures cards fell back to
+ * `manifest.icon`, which for Binance is a 32px favicon — the blockiest art
+ * in the store, against a 152px render.
+ */
+const POSTER_ALIASES: Record<string, string> = {
+  'binance-futures-market-connector': 'binance-market-connector',
+  'bybit-futures-market-connector': 'bybit-market-connector',
+  'okx-futures-market-connector': 'okx-market-connector',
+  'kucoin-futures-market-connector': 'kucoin-market-connector',
+  'kraken-futures-market-connector': 'kraken-market-connector',
 }
 
 /**
@@ -87,6 +110,11 @@ const OVERRIDES: Record<string, string> = {
   // is the same brand hexagon at genuine resolution.
   'cryptocom-market-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png',
+  // Bitget's own site serves no usable mark and CoinGecko answers JPEG,
+  // which this script cannot size. CoinMarketCap's 200px exchange art is the
+  // same cyan mark at more than the poster renders.
+  'bitget-market-connector':
+    'https://s2.coinmarketcap.com/static/img/exchanges/200x200/513.png',
   'jupiter-dex-connector':
     'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
   'base-dex-connector':
@@ -100,6 +128,11 @@ const OVERRIDES: Record<string, string> = {
 /** CoinGecko exchange ids — resolved via their API to "large" images. */
 const COINGECKO_EXCHANGES: Record<string, string> = {
   'bybit-market-connector': 'bybit_spot',
+  // Both venues' own sites answer the poster fetch with HTML, so without
+  // these they fell through to a Google-upscaled favicon and shipped at
+  // 128px and 144px of real detail against a 152px render.
+  'htx-market-connector': 'huobi',
+  'kucoin-market-connector': 'kucoin',
   'gate-market-connector': 'gate',
   'bitfinex-market-connector': 'bitfinex',
   // Clearbit still serves Coinbase's retired Material-era app icon — a
@@ -114,6 +147,21 @@ const COINGECKO_EXCHANGES: Record<string, string> = {
 const LOCAL_POSTERS: Record<string, string> = {
   'pairlens-core': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
+}
+
+/**
+ * Brands with no fetchable mark, committed to the repo instead.
+ *
+ * Both sites answer every icon path with HTML, and Google's favicon service
+ * reports a true 16px favicon for them however large a size you ask for — so
+ * every source in the chain either fails or returns something far too small
+ * for a poster. These are NEVER fetched and never rewritten: a run that
+ * re-derived them would replace a 512px mark with a 48px favicon, which is
+ * the silent downgrade this whole file is trying not to repeat.
+ */
+const VENDORED_POSTERS: Record<string, string> = {
+  'alpaca-market-connector': '/posters/alpaca-market-connector.png',
+  'tavily-search': '/posters/tavily-search.png',
 }
 
 function pngSize(buf: Uint8Array): { w: number; h: number } | null {
@@ -132,15 +180,23 @@ function pngSize(buf: Uint8Array): { w: number; h: number } | null {
 }
 
 async function fetchImage(url: string): Promise<Uint8Array | null> {
-  try {
-    const res = await fetch(url, { redirect: 'follow' })
-    if (!res.ok) return null
-    const type = res.headers.get('content-type') ?? ''
-    if (!type.startsWith('image/')) return null
-    return new Uint8Array(await res.arrayBuffer())
-  } catch {
-    return null
+  // One retry, because a miss here is silent and lasting: the plugin drops to
+  // its `manifest.icon` (often a 32px favicon), the poster map loses the
+  // entry, and nothing about the committed result says a CDN blinked. Seen
+  // live — raw.githubusercontent.com refused one id in a batch and served it
+  // fine on its own a second later.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, { redirect: 'follow' })
+      if (!res.ok) continue
+      const type = res.headers.get('content-type') ?? ''
+      if (!type.startsWith('image/')) return null
+      return new Uint8Array(await res.arrayBuffer())
+    } catch {
+      // Retry once, then let the next source have it.
+    }
   }
+  return null
 }
 
 async function coingeckoImage(exchangeId: string): Promise<string | null> {
@@ -168,7 +224,9 @@ async function bestMark(
     if (url) sources.push(url)
   }
   sources.push(
-    `https://logo.clearbit.com/${domain}?size=512&format=png`,
+    // Clearbit's logo CDN used to lead this chain at 512px. It was retired
+    // (every request now answers a short text body), which is what quietly
+    // demoted several venues to the upscaling fallback below.
     `https://${domain}/apple-touch-icon.png`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=256`,
   )
@@ -185,7 +243,10 @@ async function bestMark(
 const only = new Set(Bun.argv.slice(2))
 
 await mkdir(OUT_DIR, { recursive: true })
-const posters: Record<string, string> = { ...LOCAL_POSTERS }
+const posters: Record<string, string> = {
+  ...LOCAL_POSTERS,
+  ...VENDORED_POSTERS,
+}
 const skipped: Array<string> = []
 
 // A filtered run keeps every poster it is not refreshing, so the map that
@@ -199,6 +260,10 @@ if (only.size > 0) {
 
 for (const [id, domain] of Object.entries(DOMAINS)) {
   if (only.size > 0 && !only.has(id)) continue
+  if (VENDORED_POSTERS[id]) {
+    console.log(`• ${id} ← committed art (not fetched)`)
+    continue
+  }
   const buf = await bestMark(id, domain)
   if (!buf) {
     skipped.push(`${id} (${domain})`)
@@ -230,6 +295,14 @@ if (skipped.length > 0) {
     `\nSkipped (no image ≥ ${MIN_EDGE}px — store falls back to manifest.icon):`,
   )
   for (const s of skipped) console.log(`  ✗ ${s}`)
+}
+
+// Aliases resolve against whatever the run produced, so a venue that lost its
+// poster does not leave its futures sibling pointing at a missing file.
+for (const [alias, source] of Object.entries(POSTER_ALIASES)) {
+  const poster = posters[source]
+  if (poster) posters[alias] = poster
+  else delete posters[alias]
 }
 
 const sorted = Object.fromEntries(
