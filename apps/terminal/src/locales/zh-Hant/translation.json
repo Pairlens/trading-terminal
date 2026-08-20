@@ -2436,7 +2436,8 @@
     "resetPosition": "重設位置",
     "conversations": {
       "new": "新對話",
-      "untitled": "未命名",
+      "rename": "重新命名",
+      "nameLabel": "對話名稱",
       "history": "紀錄",
       "close": "關閉",
       "empty": "還沒有內容。問點什麼，它會保存在這台裝置上。",

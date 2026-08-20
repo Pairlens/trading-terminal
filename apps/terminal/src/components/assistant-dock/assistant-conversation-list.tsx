@@ -10,10 +10,14 @@
 // Rows are grouped by recency rather than stamped with a time. A rail
 // this narrow can show a title or a timestamp, not both, and the title
 // is the part you are scanning for.
+//
+// A row is renamed in place: double-click it, or right-click for the
+// menu. Both land on the same input drawn over the row, because a dialog
+// asking for one short string is a modal too many for a rail this size.
 
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Cloud, MessagesSquare, Plus, Trash2 } from 'lucide-react'
+import { Cloud, MessagesSquare, Pencil, Plus, Trash2 } from 'lucide-react'
 
 import {
   AlertDialog,
@@ -26,15 +30,25 @@ import {
   AlertDialogTitle,
 } from '@pairlens/ui/components/ui/alert-dialog'
 import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from '@pairlens/ui/components/ui/context-menu'
 
 import { AssistantSyncBanner } from './assistant-sync-banner'
 import type { AssistantConversationMeta } from '@/stores/assistant-conversations-store'
+import {
+  MAX_TITLE_CHARS,
+  useAssistantConversationsStore,
+} from '@/stores/assistant-conversations-store'
 import {
   MASTER_DETAIL_LIST_HEADER_CLASS,
   MASTER_DETAIL_LIST_TITLE_CLASS,
 } from '@/components/master-detail'
 import { PANE_COLUMN_HEADER } from '@/components/panes/pane-primitives'
-import { useAssistantConversationsStore } from '@/stores/assistant-conversations-store'
 import { track } from '@/lib/analytics-events'
 import { useCloudSyncPreferences } from '@/hooks/use-cloud-sync'
 import { syncDomainDefault } from '@/lib/sync/sync-domains'
@@ -122,10 +136,14 @@ export function AssistantConversationList({
   const create = useAssistantConversationsStore((state) => state.create)
   const select = useAssistantConversationsStore((state) => state.select)
   const load = useAssistantConversationsStore((state) => state.load)
+  const rename = useAssistantConversationsStore((state) => state.rename)
   const preferences = useCloudSyncPreferences()
   const syncing =
     preferences.enabled &&
     (preferences.domains.assistant ?? syncDomainDefault('assistant'))
+
+  /** The row being renamed. One at a time, so the rail holds the id. */
+  const [editingId, setEditingId] = useState<string | null>(null)
 
   // The rail is mounted by the dock, which sits ABOVE the capability gates:
   // it is on screen for a signed-out user whose threads are all still on
@@ -144,8 +162,10 @@ export function AssistantConversationList({
   )
 
   const rowHeight = size === 'md' ? 'py-2.5' : 'py-1.5'
+  const placeholder = t('assistantDock.conversations.new')
 
   const startNew = () => {
+    setEditingId(null)
     create()
     track('assistant_conversation_action', {
       action: 'created',
@@ -153,6 +173,26 @@ export function AssistantConversationList({
       surface,
     })
     onNavigate?.()
+  }
+
+  // An empty name clears the title rather than storing one, which puts the
+  // row back on the placeholder instead of leaving a blank line in the
+  // rail. Renaming to what it already said writes nothing: the index is
+  // the sync payload, and a no-op write would move the thread for every
+  // other device too.
+  const commitRename = (id: string, raw: string) => {
+    setEditingId(null)
+    const current = conversations.find((meta) => meta.id === id)
+    if (!current) return
+    const trimmed = raw.trim().replace(/\s+/g, ' ').slice(0, MAX_TITLE_CHARS)
+    const next = trimmed ? trimmed : null
+    if (next === current.title) return
+    rename(id, next)
+    track('assistant_conversation_action', {
+      action: 'renamed',
+      count: conversations.length,
+      surface,
+    })
   }
 
   return (
@@ -207,42 +247,34 @@ export function AssistantConversationList({
               </p>
               <ul className="flex flex-col gap-0.5">
                 {group.items.map((conversation) => (
-                  <li key={conversation.id} className="group/row relative">
-                    <button
-                      type="button"
-                      aria-current={
-                        conversation.id === activeId ? 'true' : undefined
+                  <ConversationRow
+                    key={conversation.id}
+                    conversation={conversation}
+                    active={conversation.id === activeId}
+                    editing={conversation.id === editingId}
+                    rowHeight={rowHeight}
+                    placeholder={placeholder}
+                    onSelect={() => {
+                      if (conversation.id !== activeId) {
+                        select(conversation.id)
+                        track('assistant_conversation_action', {
+                          action: 'switched',
+                          count: conversations.length,
+                          surface,
+                        })
                       }
-                      onClick={() => {
-                        if (conversation.id !== activeId) {
-                          select(conversation.id)
-                          track('assistant_conversation_action', {
-                            action: 'switched',
-                            count: conversations.length,
-                            surface,
-                          })
-                        }
-                        onNavigate?.()
-                      }}
-                      className={`ai-row text-muted-foreground hover:text-foreground aria-[current]:text-foreground flex w-full items-center gap-2 rounded-[10px] px-2 ${rowHeight} pr-7 text-left text-xs`}
-                    >
-                      <span className="min-w-0 flex-1 truncate">
-                        {conversation.title ??
-                          t('assistantDock.conversations.untitled')}
-                      </span>
-                    </button>
-                    {/* Always reachable by keyboard, only painted on hover:
-                        a trash icon on every row at rest turns a quiet list
-                        into a wall of red. */}
-                    <button
-                      type="button"
-                      aria-label={t('assistantDock.conversations.delete')}
-                      onClick={() => onRequestDelete(conversation.id)}
-                      className="text-muted-foreground hover:text-destructive absolute top-1/2 right-1 flex size-6 -translate-y-1/2 items-center justify-center rounded-[6px] opacity-0 transition-opacity group-hover/row:opacity-100 focus-visible:opacity-100"
-                    >
-                      <Trash2 className="size-3" />
-                    </button>
-                  </li>
+                      onNavigate?.()
+                    }}
+                    onStartEdit={() => setEditingId(conversation.id)}
+                    onCommitEdit={(value) =>
+                      commitRename(conversation.id, value)
+                    }
+                    onCancelEdit={() => setEditingId(null)}
+                    onRequestDelete={() => {
+                      setEditingId(null)
+                      onRequestDelete(conversation.id)
+                    }}
+                  />
                 ))}
               </ul>
             </div>
@@ -269,6 +301,187 @@ export function AssistantConversationList({
         </span>
       </p>
     </div>
+  )
+}
+
+// ── One row ──────────────────────────────────────────────────────────
+
+type ConversationRowProps = {
+  conversation: AssistantConversationMeta
+  active: boolean
+  editing: boolean
+  rowHeight: string
+  /** What an unnamed thread is called, and the rename field's own hint. */
+  placeholder: string
+  onSelect: () => void
+  onStartEdit: () => void
+  onCommitEdit: (value: string) => void
+  onCancelEdit: () => void
+  onRequestDelete: () => void
+}
+
+function ConversationRow({
+  conversation,
+  active,
+  editing,
+  rowHeight,
+  placeholder,
+  onSelect,
+  onStartEdit,
+  onCommitEdit,
+  onCancelEdit,
+  onRequestDelete,
+}: ConversationRowProps) {
+  const { t } = useTranslation()
+  // A long press on a touch screen opens the menu and STILL sends a click to
+  // the row when the finger lifts. On the phone that click selects the thread
+  // and closes the History overlay the menu is drawn inside, so the menu dies
+  // in the same gesture that opened it. The row therefore ignores a click that
+  // arrives while the menu is up, or in the moment after it closes.
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuClosedAt = useRef(0)
+
+  // No menu while the field is open: right-clicking an input should give
+  // the browser's own paste menu, and our Rename item would be a no-op
+  // anyway. The row is a bare <li> for exactly as long as it is edited.
+  if (editing) {
+    return (
+      <li className="relative">
+        <ConversationTitleField
+          initial={conversation.title ?? ''}
+          placeholder={placeholder}
+          className={`text-foreground bg-muted/40 ring-ring/50 w-full rounded-[10px] px-2 ${rowHeight} text-xs ring-1 outline-none`}
+          label={t('assistantDock.conversations.nameLabel')}
+          onCommit={onCommitEdit}
+          onCancel={onCancelEdit}
+        />
+      </li>
+    )
+  }
+
+  return (
+    <ContextMenu
+      onOpenChange={(open) => {
+        setMenuOpen(open)
+        if (!open) menuClosedAt.current = Date.now()
+      }}
+    >
+      <ContextMenuTrigger className="group/row relative" render={<li />}>
+        <button
+          type="button"
+          aria-current={active ? 'true' : undefined}
+          onClick={() => {
+            if (menuOpen || Date.now() - menuClosedAt.current < 400) return
+            onSelect()
+          }}
+          onDoubleClick={onStartEdit}
+          className={`ai-row text-muted-foreground hover:text-foreground aria-[current]:text-foreground flex w-full items-center gap-2 rounded-[10px] px-2 ${rowHeight} pr-7 text-left text-xs`}
+        >
+          <span className="min-w-0 flex-1 truncate">
+            {conversation.title ?? placeholder}
+          </span>
+        </button>
+        {/* Always reachable by keyboard, only painted on hover:
+                a trash icon on every row at rest turns a quiet list
+                into a wall of red. */}
+        <button
+          type="button"
+          aria-label={t('assistantDock.conversations.delete')}
+          onClick={onRequestDelete}
+          className="text-muted-foreground hover:text-destructive absolute top-1/2 right-1 flex size-6 -translate-y-1/2 items-center justify-center rounded-[6px] opacity-0 transition-opacity group-hover/row:opacity-100 focus-visible:opacity-100"
+        >
+          <Trash2 className="size-3" />
+        </button>
+      </ContextMenuTrigger>
+      {/* `finalFocus={false}`: the menu hands focus back to its trigger as
+          it closes, and that trigger is the row the rename field has just
+          replaced. Letting it fire would blur the caret on the frame it
+          appeared. */}
+      <ContextMenuContent className="w-44" finalFocus={false}>
+        <ContextMenuItem onClick={onStartEdit}>
+          <Pencil className="size-3.5" />
+          {t('assistantDock.conversations.rename')}
+        </ContextMenuItem>
+        <ContextMenuSeparator />
+        <ContextMenuItem variant="destructive" onClick={onRequestDelete}>
+          <Trash2 className="size-3.5" />
+          {t('assistantDock.conversations.delete')}
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
+  )
+}
+
+/**
+ * The rename field. Uncontrolled on purpose: the title is a string the
+ * rail does not need to see until it is committed, and keystroke state
+ * here would rerender every row in the list.
+ *
+ * Enter and blur commit, Escape reverts. `settled` is what keeps the blur
+ * that follows Enter from committing a second time, and Escape's blur
+ * from committing at all.
+ */
+function ConversationTitleField({
+  initial,
+  placeholder,
+  className,
+  label,
+  onCommit,
+  onCancel,
+}: {
+  initial: string
+  placeholder: string
+  className: string
+  label: string
+  onCommit: (value: string) => void
+  onCancel: () => void
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+  const settled = useRef(false)
+
+  useEffect(() => {
+    const input = ref.current
+    if (!input) return
+    input.focus()
+    input.select()
+    // Opened from the context menu, the caret has one competitor: whatever
+    // the menu does with focus on its way out. Claiming it again on the
+    // next frame costs nothing and settles that race in every browser.
+    const frame = requestAnimationFrame(() => {
+      if (document.activeElement !== input) {
+        input.focus()
+        input.select()
+      }
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  return (
+    <input
+      ref={ref}
+      type="text"
+      aria-label={label}
+      defaultValue={initial}
+      placeholder={placeholder}
+      maxLength={MAX_TITLE_CHARS}
+      className={className}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault()
+          settled.current = true
+          onCommit(event.currentTarget.value)
+        } else if (event.key === 'Escape') {
+          event.preventDefault()
+          settled.current = true
+          onCancel()
+        }
+      }}
+      onBlur={(event) => {
+        if (settled.current) return
+        settled.current = true
+        onCommit(event.currentTarget.value)
+      }}
+    />
   )
 }
 
@@ -344,7 +557,7 @@ export function AssistantDeleteConversationDialog({
           </AlertDialogTitle>
           <AlertDialogDescription>
             {t('assistantDock.conversations.deleteDescription', {
-              name: target?.title ?? t('assistantDock.conversations.untitled'),
+              name: target?.title ?? t('assistantDock.conversations.new'),
             })}
           </AlertDialogDescription>
         </AlertDialogHeader>

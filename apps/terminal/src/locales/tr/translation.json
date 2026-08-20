@@ -2436,7 +2436,8 @@
     "resetPosition": "Konumu sıfırla",
     "conversations": {
       "new": "Yeni sohbet",
-      "untitled": "Adsız",
+      "rename": "Yeniden adlandır",
+      "nameLabel": "Sohbet adı",
       "history": "Geçmiş",
       "close": "Kapat",
       "empty": "Henüz bir şey yok. Bir şey sorun, bu cihazda saklanır.",

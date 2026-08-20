@@ -1332,7 +1332,8 @@
     "resetPosition": "Reset position",
     "conversations": {
       "new": "New conversation",
-      "untitled": "Untitled",
+      "rename": "Rename",
+      "nameLabel": "Conversation name",
       "history": "History",
       "close": "Close",
       "empty": "Nothing yet. Ask something and it is kept here on this device.",

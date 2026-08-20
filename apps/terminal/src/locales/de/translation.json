@@ -2436,7 +2436,8 @@
     "resetPosition": "Position zurücksetzen",
     "conversations": {
       "new": "Neue Unterhaltung",
-      "untitled": "Ohne Titel",
+      "rename": "Umbenennen",
+      "nameLabel": "Name der Unterhaltung",
       "history": "Verlauf",
       "close": "Schließen",
       "empty": "Noch nichts da. Stell eine Frage, sie bleibt auf diesem Gerät.",

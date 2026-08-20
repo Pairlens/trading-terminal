@@ -2512,7 +2512,8 @@
     "resetPosition": "Przywróć pozycję",
     "conversations": {
       "new": "Nowa rozmowa",
-      "untitled": "Bez tytułu",
+      "rename": "Zmień nazwę",
+      "nameLabel": "Nazwa rozmowy",
       "history": "Historia",
       "close": "Zamknij",
       "empty": "Na razie pusto. Zapytaj o coś, a zostanie na tym urządzeniu.",

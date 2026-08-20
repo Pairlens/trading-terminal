@@ -4,7 +4,7 @@ description: One assistant for the whole terminal, in the nav rail, a strip unde
 group: traders
 order: 4
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 14 min read
 ---
 
@@ -171,15 +171,22 @@ because the whole message is stored and not just its text.
 
 Threads name themselves. The first thing you ask titles the row immediately,
 then the assistant is asked in the background for something shorter and better
-and swaps it in. Nothing about titling blocks the answer you asked for.
+and swaps it in. Nothing about titling blocks the answer you asked for. Until
+the first message lands the row reads **New conversation**.
+
+**Rename a thread in place.** Double-click a row, or right-click it and pick
+**Rename**, and the title becomes a field on the row itself with the old name
+selected. Enter saves it, Escape puts it back, clicking away saves. Clear the
+field entirely and the row goes back to reading **New conversation**.
 
 Starting a new conversation while one is still running stops that run and keeps
 what it had already written. The last 50 conversations are kept; past that the
 oldest fall off.
 
-Deleting asks first, and deletes the conversation rather than emptying it. The
-button in the header takes the thread on screen; each row in the rail has its
-own, on hover. Neither is undoable, which is why both confirm.
+Deleting asks first, and deletes the conversation rather than emptying it. Three
+ways in: the button in the window header, which takes the thread on screen, the
+trash on a row when you hover it, and **Delete conversation** in that row's
+right-click menu. None of them is undoable, which is why they all confirm.
 
 ### Where they are stored
 
