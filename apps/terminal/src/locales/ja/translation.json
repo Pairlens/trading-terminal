@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "この取引所はイベントにカテゴリを付けていません。",
     "venueHeading": "取引所",
-    "desktopOnly": "デスクトップ",
     "venueError": "エラー",
     "trending": "話題",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "ストップロス {{percent}}",
       "sizeAtOffset": "{{offset}}で{{size}}",
       "waitDuration": "{{duration}}待機"
-    }
+    },
+    "desktopOnlyBadge": "デスクトップ"
   },
   "legal": {
     "terms": "利用規約",

@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Questa piattaforma non assegna categorie ai suoi eventi.",
     "venueHeading": "Piattaforma",
-    "desktopOnly": "Desktop",
     "venueError": "errore",
     "trending": "Di tendenza",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} a {{offset}}",
       "waitDuration": "Attesa {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Termini e Condizioni",

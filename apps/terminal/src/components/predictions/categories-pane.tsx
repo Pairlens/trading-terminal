@@ -23,11 +23,12 @@
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Monitor, Vote } from 'lucide-react'
+import { Vote } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { CategoryRailSkeleton } from './prediction-skeletons'
 import type { LucideIcon } from 'lucide-react'
+import { DesktopOnlyBadge } from '@/components/venues/desktop-only-badge'
 
 import { PaneColumnHeader, PaneEmpty } from '@/components/panes/pane-primitives'
 import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
@@ -156,23 +157,13 @@ export function CategoriesPane() {
               >
                 {venue.label}
               </span>
-              {/* The same badge the venue picker draws for a desktop-only
-                  venue, down to the glyph: this row and that menu are two
-                  places saying the identical thing about the identical venue,
-                  and one of them saying it in bare grey type read as a
-                  disabled label rather than as a platform fact. The error mark
-                  beside it takes the badge shape too, because two different
-                  shapes in one slot in one row is the mismatch that made the
-                  first one look accidental. */}
-              {result?.desktopOnly && (
-                <Badge
-                  className="h-4 shrink-0 gap-1 px-1.5 text-[10px] text-muted-foreground"
-                  variant="outline"
-                >
-                  <Monitor />
-                  {t('predictionCategories.desktopOnly')}
-                </Badge>
-              )}
+              {/* The venue picker's own mark, shared rather than restyled:
+                  this row and that menu say the identical thing about the
+                  identical venue. The error mark beside it takes the badge
+                  shape too, because two different shapes in one slot in one
+                  row is the mismatch that made the first one look
+                  accidental. */}
+              {result?.desktopOnly && <DesktopOnlyBadge />}
               {!result?.desktopOnly && result?.error && (
                 <Badge
                   className="h-4 shrink-0 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"

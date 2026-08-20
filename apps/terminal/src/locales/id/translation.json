@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Bursa ini tidak memberi kategori pada acaranya.",
     "venueHeading": "Bursa",
-    "desktopOnly": "Desktop",
     "venueError": "kesalahan",
     "trending": "Sedang ramai",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop Loss {{percent}}",
       "sizeAtOffset": "{{size}} di {{offset}}",
       "waitDuration": "Tunggu {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Syarat & Ketentuan",

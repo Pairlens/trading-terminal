@@ -71,8 +71,21 @@ import { assetClassVisual } from '@/lib/asset-class/visuals'
  * `data-active:text-foreground` loses to `dark:text-muted-foreground`, which
  * left every tab the identical grey in the default theme.
  */
+/**
+ * `cursor-pointer`, not `cursor-grab`, and the reason is what a tab is FOR.
+ *
+ * Reordering the strip is a thing you can do to it; opening a board is what it
+ * is there for, and it is what all but a handful of interactions with it will
+ * ever be. An open hand at rest advertises the rare gesture and hides the
+ * common one, and `active:cursor-grabbing` made it worse than cosmetic: `:active`
+ * fires on mousedown, so every ordinary CLICK flashed a closed fist at you and
+ * then opened a board, which reads as a drag that went wrong.
+ *
+ * The grabbing cursor is kept for the case that is actually a drag, driven off
+ * dnd-kit's own `isDragging` rather than off the pointer being down.
+ */
 const TAB_CLASS =
-  'group/section-tab relative inline-flex h-[26px] shrink-0 cursor-grab items-center gap-1.5 rounded-[10px] px-[9px] text-xs font-medium whitespace-nowrap transition-colors outline-none select-none active:cursor-grabbing hover:bg-card focus-visible:ring-1 focus-visible:ring-ring'
+  'group/section-tab relative inline-flex h-[26px] shrink-0 cursor-pointer items-center gap-1.5 rounded-[10px] px-[9px] text-xs font-medium whitespace-nowrap transition-colors outline-none select-none hover:bg-card focus-visible:ring-1 focus-visible:ring-ring'
 
 /**
  * Text colour is per-state and never both at once. A `dark:` variant carries
@@ -216,6 +229,7 @@ function SortableSectionTab({
             // The fill says which board is open; the border it used to carry
             // said it a second time, in the one vocabulary this bar dropped.
             active ? [visual.activeBg, visual.text] : TAB_IDLE_CLASS,
+            isDragging && 'cursor-grabbing',
           )}
           style={{
             transform: CSS.Transform.toString(transform),
