@@ -3,8 +3,6 @@
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  Background,
-  BackgroundVariant,
   Controls,
   MiniMap,
   Panel,
@@ -28,6 +26,7 @@ import { CommitBar } from './commit-bar'
 import { NotificationsEmptyState } from './notifications-empty-state'
 import { StepPalette } from './step-palette'
 import type { Connection, Edge, Node } from '@xyflow/react'
+import { CanvasDotGrid } from '@/components/flow/canvas-dot-grid'
 import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useNotificationStore } from '@/stores/notification-store'
 import { onExternalGraphWrite } from '@/lib/assistant/graph-apply'
@@ -588,17 +587,14 @@ export function NotificationCanvas() {
               style: { strokeWidth: 2 },
             }}
           >
-            <Background
-              variant={BackgroundVariant.Dots}
-              gap={16}
-              size={1}
-              /*
-                20% of cyan-600 over a near-white well was a one-pixel dot about
-                seven points of lightness from its ground: the grid was there in
-                the DOM and gone on the screen, so the canvas read as blank
-                paper. 45% puts the light dot the same distance from its well
-                that the dark one sits from its own.
-              */
+            {/*
+              20% of cyan-600 over a near-white well was a one-pixel dot about
+              seven points of lightness from its ground: the grid was there in
+              the DOM and gone on the screen, so the canvas read as blank
+              paper. 45% puts the light dot the same distance from its well
+              that the dark one sits from its own.
+            */}
+            <CanvasDotGrid
               color={
                 colorMode === 'dark'
                   ? 'color-mix(in oklch, oklch(0.789 0.154 211.53) 25%, transparent)' // cyan-400 at 25%

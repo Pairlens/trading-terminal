@@ -464,7 +464,12 @@ carries two alphas: `bg-muted/70 dark:bg-muted/40`, with xyflow's own background
 `--muted` sits above `--card` in dark and below it in light, so a single alpha cannot serve both.
 At 40% the light well landed under two points of lightness from the card around it, which took
 the canvas edge, the minimap and the zoom controls with it. The dot grids are token-driven in
-both modes for the same reason: light used to fall through to xyflow's own cool grey. Painting the canvas `--card` was not an option, because the nodes
+both modes for the same reason: light used to fall through to xyflow's own cool grey. They are
+also drawn through `components/flow/canvas-dot-grid.tsx` rather than `<Background>` directly,
+because xyflow sizes the dot in canvas coordinates (`radius = size * zoom / 2`): right for the
+gap, which travels with the nodes, wrong for the dot, which is texture and vanished below about
+0.8 zoom in both modes. Dividing the size by the live zoom cancels that. The zoom subscription
+belongs in that leaf and nowhere else, so a pinch re-renders eleven lines rather than a builder. Painting the canvas `--card` was not an option, because the nodes
 ARE `--card` objects and would have dissolved into their own ground. Nodes, edges and handles keep
 their outlines: a step on a canvas is a real object, and its border is meaning rather than chrome.
 
