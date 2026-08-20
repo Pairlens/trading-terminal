@@ -3318,6 +3318,7 @@
     "unsupported": "L’aperçu du ticker n’est disponible que pour les actions et les paires crypto.",
     "loadError": "Échec du chargement de l’aperçu du ticker.",
     "noData": "Aucune donnée d’aperçu disponible pour ce ticker.",
+    "standalone": "Les aperçus de ticker viennent de l’App Server, que cette version n’utilise pas.",
     "marketCap": "Capitalisation boursière",
     "exchange": "Exchange",
     "industry": "Secteur",

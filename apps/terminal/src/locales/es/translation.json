@@ -3318,6 +3318,7 @@
     "unsupported": "La información del ticker solo está disponible para acciones y pares cripto.",
     "loadError": "Error al cargar la información del ticker.",
     "noData": "No hay datos disponibles para este ticker.",
+    "standalone": "Las fichas de ticker vienen del App Server, que esta versión no utiliza.",
     "marketCap": "Cap. de mercado",
     "exchange": "Exchange",
     "industry": "Industria",

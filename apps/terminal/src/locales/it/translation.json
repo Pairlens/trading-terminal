@@ -3318,6 +3318,7 @@
     "unsupported": "La panoramica del ticker è disponibile solo per azioni e coppie crypto.",
     "loadError": "Impossibile caricare la panoramica del ticker.",
     "noData": "Nessun dato di panoramica disponibile per questo ticker.",
+    "standalone": "Le schede del ticker arrivano dall’App Server, che questa build non utilizza.",
     "marketCap": "Capitalizzazione di mercato",
     "exchange": "Exchange",
     "industry": "Settore",

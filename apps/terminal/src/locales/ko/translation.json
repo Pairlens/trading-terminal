@@ -3318,6 +3318,7 @@
     "unsupported": "티커 개요는 주식 및 암호화폐 페어에서만 제공됩니다.",
     "loadError": "티커 개요를 불러오지 못했습니다.",
     "noData": "이 티커에 대한 개요 데이터가 없습니다.",
+    "standalone": "티커 개요는 App Server에서 옵니다. 이 빌드는 App Server를 쓰지 않습니다.",
     "marketCap": "시가총액",
     "exchange": "거래소",
     "industry": "산업",

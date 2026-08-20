@@ -2214,6 +2214,7 @@
     "unsupported": "Ticker overview is only available for stocks and crypto pairs.",
     "loadError": "Failed to load ticker overview.",
     "noData": "No overview data available for this ticker.",
+    "standalone": "Ticker overviews come from the App Server, which this build is not using.",
     "marketCap": "Market Cap",
     "exchange": "Exchange",
     "industry": "Industry",

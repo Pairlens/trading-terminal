@@ -3318,6 +3318,7 @@
     "unsupported": "A visão geral do ticker está disponível apenas para ações e pares cripto.",
     "loadError": "Falha ao carregar a visão geral do ticker.",
     "noData": "Nenhum dado de visão geral disponível para este ticker.",
+    "standalone": "As fichas de ticker vêm do App Server, que esta versão não utiliza.",
     "marketCap": "Capitalização de Mercado",
     "exchange": "Exchange",
     "industry": "Setor",

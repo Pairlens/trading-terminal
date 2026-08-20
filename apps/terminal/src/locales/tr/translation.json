@@ -3318,6 +3318,7 @@
     "unsupported": "Ticker genel bakışı yalnızca hisse senedi ve kripto pariteleri için kullanılabilir.",
     "loadError": "Ticker genel bakışı yüklenemedi.",
     "noData": "Bu ticker için genel bakış verisi yok.",
+    "standalone": "Ticker özetleri, bu sürümün kullanmadığı App Server’dan gelir.",
     "marketCap": "Piyasa Değeri",
     "exchange": "Borsa",
     "industry": "Sektör",

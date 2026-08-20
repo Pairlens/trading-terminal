@@ -3318,6 +3318,7 @@
     "unsupported": "商品總覽僅適用於股票與加密貨幣交易對。",
     "loadError": "載入商品總覽失敗。",
     "noData": "此商品目前沒有可用的總覽資料。",
+    "standalone": "行情概覽來自 App Server，而此版本沒有使用它。",
     "marketCap": "市值",
     "exchange": "交易所",
     "industry": "產業",

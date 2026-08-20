@@ -3,41 +3,20 @@
 import { useMemo } from 'react'
 import { ExternalLink, Info } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
 
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
-import {
-  usePanePair,
-  usePluginFetch,
-  usePluginQuery,
-} from '@pairlens/plugin-sdk'
+import { usePanePair } from '@pairlens/plugin-sdk'
 import { BottomPanelPlaceholder } from './bottom-panel-placeholder'
-import type { TickerOverviewResponse } from '@pairlens/shared/instrument-types'
+import type { LegacyAssetClassMap } from '@/lib/market-ref/legacy'
 
 import { PanePairPicker } from '@/components/layout/pane-pair-picker'
 import { usePersistedState } from '@/hooks/use-persisted-state'
-
-/**
- * Convert a pairKey + assetClass to a Massive API ticker format.
- * - Crypto: `BTC-USDT` → `X:BTCUSD`
- * - Stock: `AAPL` or `AAPL-USD` → `AAPL`
- * - Other/undefined → null
- */
-function toMassiveTicker(pairKey: string, assetClass?: string): string | null {
-  if (!pairKey || !assetClass) return null
-
-  if (assetClass === 'crypto') {
-    const base = pairKey.split('-')[0]
-    if (!base) return null
-    return `X:${base}USD`
-  }
-
-  if (assetClass === 'stocks') {
-    return pairKey.split('-')[0] ?? null
-  }
-
-  return null
-}
+import { api } from '@/lib/api'
+import { hasAppServer } from '@/lib/auth-client'
+import { legacySymbolToInstrumentRef } from '@/lib/market-ref/legacy'
+import { tickerOverviewTarget } from '@/lib/ticker-overview'
 
 export function PairInfoPane() {
   const activePair = usePanePair()
@@ -51,41 +30,54 @@ export function PairInfoPane() {
 
 function PairInfoPaneInner({ pairKey }: { pairKey: string }) {
   const { t } = useTranslation()
-  const apiFetch = usePluginFetch()
 
-  const [assetClassMap] = usePersistedState<Record<string, string>>(
+  // The same class rule the rest of the app navigates by: the side table a
+  // picker wrote first, then the symbol's own shape. Reading the table ALONE
+  // is what emptied this pane, because a pair reached by a shared link, by the
+  // recents strip or by a venue switch never passed through a picker — so
+  // MNT-USDT, a crypto pair by any reading, was refused as an unsupported
+  // class rather than looked up.
+  const [assetClassMap] = usePersistedState<LegacyAssetClassMap>(
     'pair-picker.assetClassMap',
     {},
   )
-  const assetClass = assetClassMap[pairKey]
-
-  const ticker = useMemo(
-    () => toMassiveTicker(pairKey, assetClass),
-    [pairKey, assetClass],
+  const target = useMemo(
+    () =>
+      tickerOverviewTarget(legacySymbolToInstrumentRef(pairKey, assetClassMap)),
+    [pairKey, assetClassMap],
   )
-  const isSupported = assetClass === 'crypto' || assetClass === 'stocks'
 
-  const { data, isLoading, error } = usePluginQuery<TickerOverviewResponse>({
-    queryKey: ['ticker-overview', ticker],
-    queryFn: async () => {
-      const qs = new URLSearchParams({ ticker: ticker! })
-      if (assetClass) qs.set('assetClass', assetClass)
-      const res = await apiFetch(`/api/ticker-overview?${qs}`)
-      return res.json()
-    },
-    enabled: isSupported && !!ticker,
+  // `api`, not the plugin transport: `usePluginFetch` builds its base from the
+  // OWNING plugin's config, and only the two backend-bound official plugins
+  // are handed one. This pane belongs to `pairlens-core`, so every request it
+  // made went to the terminal's own origin — a 404 in dev, the SPA shell in
+  // the hosted build, and an empty pane in both.
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['ticker-overview', target?.assetClass, target?.ticker],
+    queryFn: () => api.getTickerOverview(target!.ticker, target!.assetClass),
+    enabled: hasAppServer && target !== null,
     staleTime: 30 * 60_000,
     gcTime: 60 * 60_000,
   })
 
   const overview = data?.overview ?? null
 
-  if (!isSupported) {
+  if (!target) {
     return (
       <BottomPanelPlaceholder
         icon={Info}
         title={t('pairInfo.title')}
         description={t('pairInfo.unsupported')}
+      />
+    )
+  }
+
+  if (!hasAppServer) {
+    return (
+      <BottomPanelPlaceholder
+        icon={Info}
+        title={t('pairInfo.title')}
+        description={t('pairInfo.standalone')}
       />
     )
   }

@@ -3318,6 +3318,7 @@
     "unsupported": "Ringkasan ticker hanya tersedia untuk pair saham dan kripto.",
     "loadError": "Gagal memuat ringkasan ticker.",
     "noData": "Tidak ada data ringkasan untuk ticker ini.",
+    "standalone": "Ikhtisar ticker berasal dari App Server, yang tidak dipakai build ini.",
     "marketCap": "Kapitalisasi Pasar",
     "exchange": "Exchange",
     "industry": "Industri",
