@@ -42,7 +42,10 @@ import {
 } from '@pairlens/shared/market-ref'
 
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
-import { consumePairAdoptionSuppression } from './lib/mobile-history'
+import {
+  consumePairAdoptionSuppression,
+  decidePairAddress,
+} from './lib/mobile-history'
 import { getInitialViewportMode } from './use-viewport-mode'
 import type { MarketRef } from '@pairlens/shared/market-ref'
 import { track } from '@/lib/analytics-events'
@@ -96,6 +99,18 @@ export function useMobileRouteSync(): void {
   // effect re-runs on the focus change it just caused and toasts twice.
   const handledRef = useRef<string | null>(null)
 
+  /**
+   * The address as of the last time this effect reconciled it, so a run can
+   * tell WHICH side moved.
+   *
+   * That question is the whole of the adoption rule below. Null until the
+   * first run, because the first run is a cold load: the shell seeds its pair
+   * from the path but takes its venue from chart config, so a link to
+   * `/spot/kraken/BTC-USDT` arrives already disagreeing and the address has to
+   * win.
+   */
+  const reconciledPathRef = useRef<string | null>(null)
+
   // The INSTRUMENT, never the leg. On a prediction the address is the
   // question: that is what the user opened, what a share link should reopen,
   // and what the watchlist and the recents strip already store. Which answer
@@ -108,22 +123,29 @@ export function useMobileRouteSync(): void {
   const canonicalPath = marketRefToPath(canonical)
 
   useEffect(() => {
+    // Which side moved since the last reconciliation. Read BEFORE anything
+    // returns, so a run that has nothing to do still records the address it
+    // saw.
+    const addressMoved =
+      reconciledPathRef.current === null ||
+      reconciledPathRef.current !== pathname
+    reconciledPathRef.current = pathname
+
     const routed = marketRefFromPath(pathname)
     if (routed) {
       handledRef.current = null
-      const differs =
-        routed.id !== focusedInstrument ||
-        routed.cls !== focusedClass ||
-        routed.market !== focusedVenue
-      if (!differs) return
-
-      // Back out of an overlay and the entry underneath can still name the
-      // market the user was on before they picked one INSIDE that overlay —
-      // every focus change rewrites the URL with `replace`, so it lands on
-      // the overlay's own entry and never reaches the one below. Adopting
-      // it would undo the pick the user just made, so the shell latches the
-      // move and the canonical URL is re-asserted instead.
-      if (consumePairAdoptionSuppression()) {
+      // Which side is the newer fact. The rule, and what reading it backwards
+      // cost the pair picker, are in `lib/mobile-history.ts`.
+      const decision = decidePairAddress({
+        differs:
+          routed.id !== focusedInstrument ||
+          routed.cls !== focusedClass ||
+          routed.market !== focusedVenue,
+        addressMoved,
+        consumeLatch: consumePairAdoptionSuppression,
+      })
+      if (decision === 'idle') return
+      if (decision === 'reassert') {
         void navigate({ to: canonicalPath, replace: true })
         return
       }

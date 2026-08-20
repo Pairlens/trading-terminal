@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it } from 'bun:test'
 import {
   SHELL_DEPTH_KEY,
   consumePairAdoptionSuppression,
+  decidePairAddress,
   historyBackSteps,
   planShellMove,
   reconcileHistory,
@@ -377,5 +378,69 @@ describe('pair adoption latch', () => {
   it('expires rather than suppressing a later navigation', () => {
     suppressPairAdoption(1_000)
     expect(consumePairAdoptionSuppression(60_000)).toBe(false)
+  })
+})
+
+describe('decidePairAddress', () => {
+  const never = () => false
+  const latched = () => true
+
+  it('does nothing while the address and the focused market agree', () => {
+    expect(
+      decidePairAddress({
+        differs: false,
+        addressMoved: true,
+        consumeLatch: latched,
+      }),
+    ).toBe('idle')
+  })
+
+  it('writes the pick into the URL when only the focus moved', () => {
+    // The pair picker: its exit is animated, so the tap walks no history
+    // entry off and latches nothing. Adopting the still address here undid
+    // every selection made in that screen.
+    expect(
+      decidePairAddress({
+        differs: true,
+        addressMoved: false,
+        consumeLatch: never,
+      }),
+    ).toBe('reassert')
+  })
+
+  it('does not spend the latch on a disagreement the address did not cause', () => {
+    let spent = 0
+    decidePairAddress({
+      differs: true,
+      addressMoved: false,
+      consumeLatch: () => {
+        spent += 1
+        return true
+      },
+    })
+    expect(spent).toBe(0)
+  })
+
+  it('takes the market a moved address names', () => {
+    // A deep link, a shared URL, a back press onto another market.
+    expect(
+      decidePairAddress({
+        differs: true,
+        addressMoved: true,
+        consumeLatch: never,
+      }),
+    ).toBe('adopt')
+  })
+
+  it('refuses a moved address the shell itself landed on', () => {
+    // Rule 3: backing out of an overlay lands on an entry that still names
+    // the market the user was on before they picked one inside it.
+    expect(
+      decidePairAddress({
+        differs: true,
+        addressMoved: true,
+        consumeLatch: latched,
+      }),
+    ).toBe('reassert')
   })
 })

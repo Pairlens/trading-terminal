@@ -1322,6 +1322,26 @@ html[data-viewport='mobile'] [data-pl-desktop-only] {
   display: none !important;
 }
 
+/* The TanStack devtools, which are mounted in `__root.tsx` above the shell
+   branch and are desktop-only for a load-bearing reason: their trigger is a
+   56px badge fixed 8px off the bottom-left corner, and on a phone that corner
+   is the Watchlist tab. It swallowed every tap on it, and the tap that did
+   land opened a 400px panel across the tab bar and the bottom half of whatever
+   sheet was up, so the shell read as frozen. Bottom-left is still right on the
+   desktop (bottom-right is the assistant orb) and the phone has no free corner
+   to move it to, so it steps aside below the breakpoint; widen the window and
+   it returns with the desktop shell.
+
+   Keyed on the devtools' own root because it mounts itself straight into
+   <body> rather than into the tree that renders it, so a wrapper element here
+   is not its ancestor and cannot hide it. `display: none` takes both fixed
+   children — badge and panel — with it, which also un-sticks a session that
+   left the panel open (that state persists in localStorage). Inert in a build
+   either way: the devtools Vite plugin strips the component on `build`. */
+html[data-viewport='mobile'] [data-testid='tanstack_devtools'] {
+  display: none !important;
+}
+
 /* Shared dialogs portal to <body> at z-50, below the mobile overlay scale
    (sheets 40, tab bar 50, full-screen overlays 60). On a phone every dialog is
    the topmost interaction — vault unlock, destructive confirms — so the whole
