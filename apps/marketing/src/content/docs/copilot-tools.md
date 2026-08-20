@@ -5,7 +5,7 @@ group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 19 AUG 2026
+updated: 21 AUG 2026
 readTime: 12 min read
 ---
 
@@ -172,7 +172,11 @@ Thirty tools, split four ways. This is the same surface a user drives by hand, s
 anything the assistant draws is a real drawing you can edit or delete.
 
 **Indicators (4).** `add_indicator`, `remove_indicator`, `remove_all_indicators`,
-`update_indicator`.
+`update_indicator`. `add_indicator` reaches your own Python indicators as well as
+the built-in catalog, and you can name one by its title: "add Memecoin Pulse to
+this chart" works without anyone spelling out an id. Whatever it adds lands in
+the pane the indicator declares, with the author's default inputs, so the
+assistant's chart looks like the one you would have built from the picker.
 
 **Drawings (14).** `draw_horizontal_line`, `draw_vertical_line`, `draw_trendline`,
 `draw_rectangle`, `draw_circle`, `draw_fibonacci`, `annotate_chart`,

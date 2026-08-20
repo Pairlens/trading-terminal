@@ -26,6 +26,7 @@ import type { ChartServiceHandle } from './chart-service'
 import { legacySymbolToInstrumentRef } from '@/lib/market-ref/legacy'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { normalizePair, normalizeTimeframe } from '@/lib/copilot/tool-deps'
+import { resolveIndicatorRequest } from '@/lib/indicators/resolve-indicator-request'
 
 type MarketData = ReturnType<typeof useMarketData>
 type NavigateFn = ReturnType<typeof useNavigate>
@@ -161,6 +162,25 @@ export type ClientToolContext = {
 }
 
 /**
+ * Is this exact indicator already on the chart? Compared on type + params,
+ * matching the toggle rule `addIndicator` itself applies, so EMA(20) and
+ * EMA(50) still count as different indicators.
+ */
+function hasMatchingIndicator(
+  handle: ChartServiceHandle,
+  resolved: Omit<IndicatorInstanceInput, 'seriesId'>,
+): boolean {
+  const active = handle.getSnapshot?.()?.indicators
+  if (!active?.length) return false
+  const wanted = JSON.stringify(resolved.params ?? {})
+  return active.some(
+    (entry) =>
+      entry.type === resolved.type &&
+      JSON.stringify(entry.params ?? {}) === wanted,
+  )
+}
+
+/**
  * Perform the real effect of a client-forwarded tool call (chart mutations +
  * navigation). Data/read tools resolve in the transport; trading tools render
  * a confirmation card — both are ignored here.
@@ -177,10 +197,22 @@ export function executeClientTool(
   try {
     // ── Indicators ──
     if (toolName === 'add_indicator') {
-      const payload: Record<string, unknown> = { type: p.type }
-      if (p.period != null) payload.params = { period: p.period }
-      if (p.color) payload.color = p.color
-      handle?.addIndicator(payload as IndicatorInstanceInput)
+      if (!handle || !p.type) return
+      // Resolve through the same table the picker reads, so an indicator the
+      // assistant adds lands in the pane it belongs in and carries the params
+      // its author declared. Sending a bare `{ type }` let the engine default
+      // the pane to `overlay`, which is where a sub-pane oscillator becomes an
+      // invisible line on the price axis.
+      const resolved = resolveIndicatorRequest(String(p.type), {
+        period: typeof p.period === 'number' ? p.period : undefined,
+        params: p.params as Record<string, unknown> | undefined,
+        color: typeof p.color === 'string' ? p.color : undefined,
+      })
+      // `addIndicator` is a toggle — the picker needs that, an instruction to
+      // add does not. Adding what is already on the chart would silently take
+      // it back off, so an exact match is left alone.
+      if (hasMatchingIndicator(handle, resolved)) return
+      handle.addIndicator(resolved as IndicatorInstanceInput)
       return
     }
     if (toolName === 'remove_indicator') {

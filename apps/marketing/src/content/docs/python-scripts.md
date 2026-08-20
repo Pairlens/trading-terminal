@@ -4,7 +4,7 @@ description: The workbench where you write indicators and strategies in real Pyt
 group: traders
 order: 5
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 21 AUG 2026
 readTime: 6 min read
 ---
 
@@ -104,7 +104,9 @@ one that asks which you meant.
 It is one assistant, not one per page. A finished strategy you want running
 goes to [Bots](/docs/bots) inside the same conversation, and a bot idea that
 turns out to need real code comes back here the same way. Nothing is explained
-twice.
+twice. A finished indicator goes the other way just as easily: ask for it on a
+pair and the assistant opens that chart and adds the script by name, in the
+pane the script declares and with the defaults its inputs carry.
 
 The assistant uses whatever AI provider the terminal resolves: Pairlens
 Intelligence when you are signed in with a plan, or any bring-your-own-key

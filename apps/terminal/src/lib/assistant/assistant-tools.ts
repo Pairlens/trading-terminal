@@ -45,8 +45,10 @@ import {
 import { useBotRunsStore } from '@/stores/bot-runs-store'
 import { useBotsStore } from '@/stores/bots-store'
 import { fetchHistoryDepth } from '@/lib/indicators/fetch-depth'
+import { customIndicatorType } from '@/lib/indicators/custom-indicator-registry'
 import { normalizePairKey } from '@/lib/pairs'
 import { runBacktest } from '@/lib/indicators/backtest'
+import { USER_INDICATORS_PLUGIN_ID } from '@/lib/indicators/user-indicators-plugin'
 import {
   resolveRequestSeries,
   toCandleArrays,
@@ -165,6 +167,17 @@ function scriptKind(
 ): 'strategy' | 'indicator' | 'draft' {
   if (!script.meta) return 'draft'
   return script.meta.strategy ? 'strategy' : 'indicator'
+}
+
+/**
+ * The chart-engine type a validated indicator script is addable under.
+ * `add_indicator` also takes the title, but naming the type is unambiguous —
+ * and nothing else in the tool surface spells this string out, which is how
+ * an assistant-created indicator ended up on the chart under a guess.
+ */
+function chartIndicatorType(script: IndicatorScript): string | null {
+  if (!script.meta || script.meta.strategy) return null
+  return customIndicatorType(USER_INDICATORS_PLUGIN_ID, script.id)
 }
 
 /** What the model needs to know about a meta without the full JSON blob. */
@@ -372,6 +385,7 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
             id: script.id,
             name: script.name,
             kind: scriptKind(script),
+            chartType: chartIndicatorType(script),
             metaError: script.metaError,
             updatedAt: new Date(script.updatedAt).toISOString(),
           })),
@@ -390,6 +404,7 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
           id: script.id,
           name: script.name,
           kind: scriptKind(script),
+          chartType: chartIndicatorType(script),
           metaError: script.metaError,
           meta: script.meta ? summarizeMeta(script.meta) : null,
           files: currentFiles(deps, script),
@@ -417,6 +432,9 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
         return {
           scriptId,
           kind: result.meta.strategy ? 'strategy' : 'indicator',
+          chartType: result.meta.strategy
+            ? null
+            : customIndicatorType(USER_INDICATORS_PLUGIN_ID, scriptId),
           meta: summarizeMeta(result.meta),
         }
       },
@@ -465,6 +483,9 @@ export function buildAssistantTools(deps: AssistantToolDeps) {
         return {
           scriptId: script.id,
           kind: result.meta.strategy ? 'strategy' : 'indicator',
+          chartType: result.meta.strategy
+            ? null
+            : customIndicatorType(USER_INDICATORS_PLUGIN_ID, script.id),
           meta: summarizeMeta(result.meta),
         }
       },
