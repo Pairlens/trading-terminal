@@ -1,9 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * Starter watchlists — a terminal that has never persisted a watchlist opens
- * with two curated lists (Top Crypto, Top Equities) so the pane shows live
- * markets instead of an empty state.
+ * Starter watchlists: a terminal that has never persisted a watchlist opens
+ * with two curated lists, Top Crypto and Top Equities, each holding the 30
+ * largest assets of its class by market cap, so the pane shows live markets
+ * instead of an empty state.
  *
  * They are ordinary lists: renameable, reorderable and deletable. Deleting one
  * writes the watchlists state, and seeding only ever runs when nothing is
@@ -31,25 +32,82 @@ const STARTER_WATCHLISTS: Array<StarterWatchlist> = [
     id: TOP_CRYPTO_WATCHLIST_ID,
     name: 'Top Crypto',
     assetClass: 'crypto',
+    // The top 30 by market cap, stablecoins excluded (a list of things pinned
+    // to a dollar prices nothing worth watching), in market-cap order. Mirrors
+    // the first 30 base assets in the bundled catalog.
     symbols: [
       'BTC-USDT',
       'ETH-USDT',
-      'SOL-USDT',
       'XRP-USDT',
       'BNB-USDT',
+      'SOL-USDT',
       'DOGE-USDT',
+      'TRX-USDT',
       'ADA-USDT',
+      'LINK-USDT',
+      'XLM-USDT',
       'AVAX-USDT',
+      'SUI-USDT',
+      'BCH-USDT',
+      'HBAR-USDT',
+      'TON-USDT',
+      'LTC-USDT',
+      'SHIB-USDT',
+      'DOT-USDT',
+      'UNI-USDT',
+      'PEPE-USDT',
+      'NEAR-USDT',
+      'APT-USDT',
+      'ICP-USDT',
+      'ETC-USDT',
+      'POL-USDT',
+      'TAO-USDT',
+      'AAVE-USDT',
+      'ARB-USDT',
+      'ATOM-USDT',
+      'FIL-USDT',
     ],
   },
   {
     id: TOP_EQUITIES_WATCHLIST_ID,
     name: 'Top Equities',
     assetClass: 'stocks',
-    // Bare tickers, the form both instrument catalogs serve for stocks. The
-    // Alpaca connector accepts either, but a watchlist row only renders when
-    // discovery resolves the symbol exactly.
-    symbols: ['AAPL', 'NVDA', 'MSFT', 'AMZN', 'GOOGL', 'META', 'TSLA', 'SPY'],
+    // The top 30 US listings by market cap, in market-cap order. Bare tickers,
+    // the form both instrument catalogs serve for stocks. The Alpaca connector
+    // accepts either, but a watchlist row only renders when discovery resolves
+    // the symbol exactly.
+    symbols: [
+      'NVDA',
+      'AAPL',
+      'MSFT',
+      'GOOGL',
+      'AMZN',
+      'META',
+      'AVGO',
+      'TSLA',
+      'BRK.B',
+      'JPM',
+      'WMT',
+      'LLY',
+      'ORCL',
+      'V',
+      'MA',
+      'NFLX',
+      'XOM',
+      'COST',
+      'JNJ',
+      'PG',
+      'HD',
+      'ABBV',
+      'PLTR',
+      'BAC',
+      'KO',
+      'AMD',
+      'CVX',
+      'CRM',
+      'GE',
+      'UNH',
+    ],
   },
 ]
 
