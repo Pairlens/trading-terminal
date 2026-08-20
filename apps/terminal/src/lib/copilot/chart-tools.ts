@@ -22,7 +22,9 @@ const INDICATOR_HINT =
   'Indicator type. Common: SMA, EMA, WMA, VWAP, RSI, StochRSI, Stochastic, MACD, ' +
   'BollingerBands, KeltnerChannels, DonchianChannels, ATR, ADX, SuperTrend, ' +
   'Ichimoku, OBV, MFI, CMF, CCI, WilliamsR, ParabolicSAR, Aroon, Momentum, ROC, ' +
-  'Volume, AwesomeOscillator, PivotPoints. The engine supports many more.'
+  'Volume, AwesomeOscillator, PivotPoints. The engine supports many more. ' +
+  "One of the user's own Python indicators can be named by its title or by " +
+  'its script id; the chart context lists the ones this chart can render.'
 
 const point = z.object({ ts: z.number(), price: z.number() })
 
@@ -61,10 +63,19 @@ export function buildChartTools(deps: CopilotToolDeps) {
     // ---- Indicators ----
     add_indicator: tool({
       description:
-        'Add a technical indicator to the chart. Supports the engine’s full catalog (100+ types).',
+        'Add an indicator to the chart: the engine’s full catalog (100+ types) ' +
+        'plus the user’s own Python indicators. Params you leave out come from ' +
+        'the indicator’s own defaults, and it lands in the pane its author ' +
+        'declared, so passing only a type is the normal call.',
       inputSchema: z.object({
         type: z.string().describe(INDICATOR_HINT),
         period: z.number().optional(),
+        params: z
+          .record(z.union([z.string(), z.number(), z.boolean()]))
+          .optional()
+          .describe(
+            'Override specific inputs by key. Anything omitted keeps its default.',
+          ),
         color: z.string().optional(),
       }),
       execute: async ({ type, period }) =>

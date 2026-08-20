@@ -38,6 +38,7 @@ import type { MarketRef } from '@pairlens/shared/market-ref'
 import type { ChartServiceHandle } from './chart-service'
 import type { AssistantSuggestion, AssistantSurfaceFocus } from './types'
 import { useServiceRegistry } from '@/lib/service-registry-context'
+import { customIndicatorRegistry } from '@/lib/indicators/custom-indicator-registry'
 import { TERMINAL_PAGES, pageForPath } from '@/lib/routing/pages'
 
 // ── The page ─────────────────────────────────────────────────────────
@@ -148,10 +149,31 @@ function useChartService(): ChartServiceHandle | null {
   )
 }
 
+/** The script-defined indicators this chart can render, title → type. */
+function customIndicatorEntries(): Array<{ title: string; type: string }> {
+  return customIndicatorRegistry
+    .getAll()
+    .map((entry) => ({ title: entry.descriptor.meta.title, type: entry.type }))
+}
+
+const subscribeToCustomIndicators = (onChange: () => void) =>
+  customIndicatorRegistry.subscribe(onChange)
+const getCustomIndicatorsVersion = () => customIndicatorRegistry.getVersion()
+
 function ChartSurface() {
   const chart = useChartService()
+  // The user's Python indicators are addable by name, but `custom:<provider>:
+  // <scriptId>` is a machine string nothing else hands the assistant. Publish
+  // the titles with the types so it can name one it just wrote. Folded into
+  // the revision because the registry changes while this stays mounted —
+  // saving a script in the workbench is exactly that case.
+  const customIndicatorsVersion = useSyncExternalStore(
+    subscribeToCustomIndicators,
+    getCustomIndicatorsVersion,
+    getCustomIndicatorsVersion,
+  )
   const revision = chart
-    ? `${chart.market}:${chart.pair}:${chart.timeframe}`
+    ? `${chart.market}:${chart.pair}:${chart.timeframe}:${customIndicatorsVersion}`
     : 'none'
 
   useAssistantSurface({
@@ -163,6 +185,7 @@ function ChartSurface() {
     getContext: () => {
       if (!chart) return null
       const snapshot = chart.getSnapshot?.()
+      const custom = customIndicatorEntries()
       return {
         summary: `A chart is open showing ${chart.pair} on ${chart.market}, ${chart.timeframe} candles.`,
         detail: snapshot
@@ -172,6 +195,9 @@ function ChartSurface() {
               indicators: snapshot.indicators?.map(
                 (indicator) => indicator.type,
               ),
+              ...(custom.length > 0
+                ? { customIndicatorsAvailable: custom }
+                : {}),
               drawings: snapshot.drawings?.length ?? 0,
               compareSymbols: snapshot.compareSymbols,
             }
