@@ -3,8 +3,6 @@
 import { useTranslation } from 'react-i18next'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  Background,
-  BackgroundVariant,
   Controls,
   MiniMap,
   Panel,
@@ -29,6 +27,7 @@ import { StepPalette, clearDragStepType, getDragStepType } from './step-palette'
 import { WorkflowsEmptyState } from './workflows-empty-state'
 import type { DragEvent } from 'react'
 import type { Connection, Edge, Node } from '@xyflow/react'
+import { CanvasDotGrid } from '@/components/flow/canvas-dot-grid'
 import { PAGE_COLUMN_FLUSH } from '@/components/chrome/page-chrome'
 import { useWorkflowStore } from '@/stores/workflow-store'
 import { useWorkflowStepRegistry } from '@/lib/workflows/workflow-step-registry'
@@ -616,17 +615,14 @@ export function WorkflowCanvas() {
               style: { strokeWidth: 2 },
             }}
           >
-            <Background
-              variant={BackgroundVariant.Dots}
-              gap={16}
-              size={1}
-              /*
-                Both modes name a token. Light used to fall through to xyflow's
-                own default, a cool grey (#91919a) that knows nothing about the
-                18 themes it has to sit inside and reads blue against a warm
-                paper ground. The alphas differ because the grid has to carry
-                the same weight over a near-white well as over a near-black one.
-              */
+            {/*
+              Both modes name a token. Light used to fall through to xyflow's
+              own default, a cool grey (#91919a) that knows nothing about the
+              18 themes it has to sit inside and reads blue against a warm
+              paper ground. The alphas differ because the grid has to carry
+              the same weight over a near-white well as over a near-black one.
+            */}
+            <CanvasDotGrid
               color={
                 colorMode === 'dark'
                   ? 'color-mix(in oklch, var(--muted-foreground) 25%, transparent)'
