@@ -4967,24 +4967,28 @@
     "retryingTitle": "Asking again",
     "retry": "Try again",
     "retryingBody": "The provider is refusing requests right now. Trying again on its own.",
-    "unavailableBody": "The pool data provider could not be reached. Try again in a moment."
+    "unavailableBody": "The pool data provider could not be reached. Try again in a moment.",
+    "loadingLabel": "Loading this chain's pools",
+    "pacedNote": "Ranking pools. The on-chain data provider is metered, so the first read takes a few seconds.",
+    "pacedNoteChain": "Ranking pools on {{chain}}. The on-chain data provider is metered, so the first read takes a few seconds.",
+    "deepening": "more pools loading",
+    "refreshing": "refreshing"
   },
   "liquidityFlow": {
     "noPoolTitle": "Pick a pool",
     "noPoolBody": "Select a pool in the map and the money crossing it shows up here, five minutes at a time.",
-    "loadingTitle": "Loading swaps",
-    "loadingBody": "Fetching this pool's recent swaps.",
     "emptyTitle": "No swaps yet",
     "emptyBody": "Nothing has traded through this pool recently, so there is no flow to net out.",
     "netHour": "{{value}} last hour",
     "bucketTooltip": "{{buy}} bought, {{sell}} sold",
     "axisNote": "Buys minus sells per 5 minutes. Liquidity added or pulled by LPs is not in this feed.",
     "biggestLabel": "Biggest swaps",
-    "waitingTitle": "Waiting on the map",
-    "waitingBody": "The chain’s pools are still loading. Flow shows up as soon as one is selected.",
     "unavailableTitle": "Pools unavailable right now",
     "swapsUnavailableTitle": "Swaps unavailable right now",
-    "swapsUnavailableBody": "The on-chain data provider would not return this pool’s swaps. It usually clears on its own."
+    "swapsUnavailableBody": "The on-chain data provider would not return this pool’s swaps. It usually clears on its own.",
+    "loadingLabel": "Loading swaps",
+    "pacedNote": "Waiting on the map to rank this chain's pools.",
+    "pacedNotePool": "Reading swaps through {{pool}}. The provider paces requests, so this takes a few seconds."
   },
   "poolDetail": {
     "emptyTitle": "No pool selected",

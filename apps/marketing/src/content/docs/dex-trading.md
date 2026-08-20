@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 5
 eyebrow: For traders
-updated: 19 AUG 2026
-readTime: 19 min read
+updated: 20 AUG 2026
+readTime: 20 min read
 ---
 
 On-chain markets work like any other market in Pairlens. Same chart, same
@@ -83,6 +83,40 @@ and an hour of buy against sell pressure summed from the same trades feed the
 flow pane reads. It shows only what the provider actually published, so
 turnover collapses without a liquidity figure and the fee tier collapses on a
 venue that labels none, rather than filling the space with dashes.
+
+### How the board loads
+
+Everything on this board comes from one on-chain data provider on a free tier
+of roughly 30 requests a minute, shared with the candle and ticker pollers any
+charted pair is already running. Pairlens paces itself inside that budget
+rather than bursting through it and taking a rate limit that would knock out
+the chart too, so opening the board is a few seconds of real work. Three things
+keep those seconds from feeling like a stall.
+
+The reads are prioritised. The selected pool's own state and its swap tape jump
+the queue ahead of the chain rail's background sweep across every other chain,
+because they are the two panes you are looking at and the last two that can be
+asked for: nothing can request a pool's swaps until the map has ranked the
+chain and picked one.
+
+The map paints in two passes. It ranks three pages deep to get past the pools a
+bot has painted volume onto, and it draws the first page as soon as that page
+lands instead of waiting for the walk to finish. The selection is seeded from
+it immediately, so Pool Detail and Liquidity Flow start loading while the
+deeper pages are still coming. The header says "more pools loading" while that
+is happening.
+
+The last ranking is kept. A chain's pools and the rail's chain volumes are
+stored locally and painted instantly on your next visit, marked "refreshing"
+while a live copy is fetched behind them. Nothing older than half an hour is
+ever shown, and a fresh read always goes out, so the cache only ever buys you
+the first paint.
+
+While a pane genuinely has nothing yet it draws its own shape rather than a
+spinner: the map shows a treemap of placeholder tiles, Liquidity Flow shows its
+bars around the midline. If a read runs past about four seconds, both add a
+line saying the provider is metered, so you know to wait rather than reload,
+which throws the paced queue away and starts it from cold.
 
 ## What a pair is called
 

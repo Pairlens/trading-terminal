@@ -118,11 +118,17 @@ export function createGeckoterminalDataProviderPlugin(
       if (action === 'trades') {
         const minVolumeUsd =
           typeof p['minVolumeUsd'] === 'number' ? p['minVolumeUsd'] : 0
+        // High: the swap tape is the pane the reader is looking at, and it is
+        // the LAST thing a Discovery board can ask for — nothing can request a
+        // pool's swaps until the map has ranked the chain and picked one. Left
+        // at the back of a FIFO queue behind the rail's chain sweep, it landed
+        // ten seconds after the board opened.
         return fetchPoolTrades(
           String(p['pair'] ?? context.pair),
           network,
           minVolumeUsd,
           poolAddress,
+          'high',
         )
       }
 
@@ -143,12 +149,15 @@ export function createGeckoterminalDataProviderPlugin(
         // was rate limited, and the board drew an empty state over a chain it
         // had the top of. So the first page decides whether this call can
         // answer at all, and the rest only ever add to it.
+        // Page one is what the map paints; pages two and three only deepen it.
+        // The priorities say exactly that, and it is what lets the board's
+        // first tiles arrive before the depth walk has even started.
         const pages: Array<Array<PoolListingEntry>> = [
-          await fetchTopPools(network, 1, sort),
+          await fetchTopPools(network, 1, sort, 'normal'),
         ]
         for (let page = 2; page <= depth; page++) {
           try {
-            pages.push(await fetchTopPools(network, page, sort))
+            pages.push(await fetchTopPools(network, page, sort, 'low'))
           } catch {
             break
           }
@@ -181,10 +190,15 @@ export function createGeckoterminalDataProviderPlugin(
         // and it is the exact page the pool map asks for on the selected
         // chain, so the rail and the map collapse into one request there
         // instead of two (see the in-flight map in pool-listing-client).
+        // Low, every one of them: this is a background sweep across chains the
+        // reader is not looking at, and on a cold board it is six requests
+        // queued in the same tick as the three the selected chain needs. The
+        // rail filling in a few seconds late costs nothing; the map, the detail
+        // pane and the flow chart waiting behind it cost the whole board.
         const settled = await Promise.allSettled(
           markets.map(async (id) => {
             const slug = networkForMarket(id)
-            const pools = await fetchTopPools(slug, 1, 'volume')
+            const pools = await fetchTopPools(slug, 1, 'volume', 'low')
             return aggregateChainStats(slug, id, names[id] ?? id, pools)
           }),
         )
@@ -205,10 +219,13 @@ export function createGeckoterminalDataProviderPlugin(
         return rows
       }
 
+      // High, for the same reason as the tape: pool state is the selected
+      // pool's own pane, and it cannot be asked for until a pool is selected.
       return fetchPoolStats(
         String(p['pair'] ?? context.pair),
         network,
         poolAddress,
+        'high',
       )
     }
 

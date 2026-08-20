@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Pool auswählen",
     "noPoolBody": "Wählen Sie einen Pool in der Karte, dann erscheint hier das Geld, das durch ihn fließt, in Fünf-Minuten-Schritten.",
-    "loadingTitle": "Swaps werden geladen",
-    "loadingBody": "Die jüngsten Swaps dieses Pools werden abgerufen.",
     "emptyTitle": "Noch keine Swaps",
     "emptyBody": "Durch diesen Pool wurde zuletzt nichts gehandelt, es gibt also keinen Fluss zu saldieren.",
     "netHour": "{{value}} letzte Stunde",
     "bucketTooltip": "{{buy}} gekauft, {{sell}} verkauft",
     "axisNote": "Käufe minus Verkäufe je 5 Minuten. Von LPs zugeführte oder abgezogene Liquidität steckt nicht in diesem Feed.",
     "biggestLabel": "Größte Swaps",
-    "waitingTitle": "Warte auf die Karte",
-    "waitingBody": "Die Pools der Chain laden noch. Der Fluss erscheint, sobald einer ausgewählt ist.",
     "unavailableTitle": "Pools gerade nicht verfügbar",
     "swapsUnavailableTitle": "Swaps gerade nicht verfügbar",
-    "swapsUnavailableBody": "Der On-Chain-Datenanbieter hat die Swaps dieses Pools nicht geliefert. Das löst sich meist von selbst."
+    "swapsUnavailableBody": "Der On-Chain-Datenanbieter hat die Swaps dieses Pools nicht geliefert. Das löst sich meist von selbst.",
+    "loadingLabel": "Swaps werden geladen",
+    "pacedNote": "Warten auf die Pool-Rangliste dieser Chain.",
+    "pacedNotePool": "Swaps durch {{pool}} werden gelesen. Der Anbieter drosselt Anfragen, das dauert einige Sekunden."
   },
   "lpPanes": {
     "venueFallback": "diese Chain",
@@ -1068,7 +1067,12 @@
     "retryingTitle": "Neuer Versuch",
     "retry": "Erneut versuchen",
     "retryingBody": "Der Anbieter weist Anfragen gerade ab. Es wird automatisch neu versucht.",
-    "unavailableBody": "Der Pool-Datenanbieter war nicht erreichbar. Versuche es gleich noch einmal."
+    "unavailableBody": "Der Pool-Datenanbieter war nicht erreichbar. Versuche es gleich noch einmal.",
+    "loadingLabel": "Pools dieser Chain werden geladen",
+    "pacedNote": "Pools werden sortiert. Der On-Chain-Datenanbieter ist limitiert, der erste Abruf dauert einige Sekunden.",
+    "pacedNoteChain": "Pools auf {{chain}} werden sortiert. Der On-Chain-Datenanbieter ist limitiert, der erste Abruf dauert einige Sekunden.",
+    "deepening": "weitere Pools werden geladen",
+    "refreshing": "wird aktualisiert"
   },
   "poolStats": {
     "notOnChainTitle": "Kein On-Chain-Paar",

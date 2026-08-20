@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Scegli un pool",
     "noPoolBody": "Seleziona un pool nella mappa e qui compare il denaro che lo attraversa, in blocchi da cinque minuti.",
-    "loadingTitle": "Caricamento swap",
-    "loadingBody": "Recupero degli swap recenti di questo pool.",
     "emptyTitle": "Ancora nessuno swap",
     "emptyBody": "Su questo pool non è passato nulla di recente, quindi non c'è flusso da compensare.",
     "netHour": "{{value}} nell'ultima ora",
     "bucketTooltip": "{{buy}} comprati, {{sell}} venduti",
     "axisNote": "Acquisti meno vendite ogni 5 minuti. La liquidità aggiunta o ritirata dagli LP non è in questo feed.",
     "biggestLabel": "Swap più grandi",
-    "waitingTitle": "In attesa della mappa",
-    "waitingBody": "I pool della chain stanno ancora caricando. Il flusso compare appena ne selezioni uno.",
     "unavailableTitle": "Pool non disponibili al momento",
     "swapsUnavailableTitle": "Swap non disponibili al momento",
-    "swapsUnavailableBody": "Il provider di dati on-chain non ha restituito gli swap di questo pool. Di solito si risolve da sé."
+    "swapsUnavailableBody": "Il provider di dati on-chain non ha restituito gli swap di questo pool. Di solito si risolve da sé.",
+    "loadingLabel": "Caricamento degli swap",
+    "pacedNote": "In attesa che la mappa classifichi le pool di questa chain.",
+    "pacedNotePool": "Lettura degli swap su {{pool}}. Il provider limita le richieste, servono alcuni secondi."
   },
   "lpPanes": {
     "venueFallback": "questa chain",
@@ -1068,7 +1067,12 @@
     "retryingTitle": "Nuovo tentativo",
     "retry": "Riprova",
     "retryingBody": "Il provider sta rifiutando le richieste. Nuovo tentativo automatico.",
-    "unavailableBody": "Il provider dei dati sui pool non è raggiungibile. Riprova tra poco."
+    "unavailableBody": "Il provider dei dati sui pool non è raggiungibile. Riprova tra poco.",
+    "loadingLabel": "Caricamento delle pool di questa chain",
+    "pacedNote": "Classificazione delle pool. Il provider di dati on-chain è limitato, la prima lettura richiede qualche secondo.",
+    "pacedNoteChain": "Classificazione delle pool su {{chain}}. Il provider di dati on-chain è limitato, la prima lettura richiede qualche secondo.",
+    "deepening": "altre pool in caricamento",
+    "refreshing": "aggiornamento"
   },
   "poolStats": {
     "notOnChainTitle": "Non è una coppia on-chain",

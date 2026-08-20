@@ -36,6 +36,7 @@ import {
 } from '@/components/panes/pane-primitives'
 import { TreemapGrid } from '@/components/panes/treemap-grid'
 import { DexPaneHeader, ShareBar } from '@/components/dex/dex-pane-primitives'
+import { PoolMapSkeleton } from '@/components/dex/dex-skeletons'
 import { DISCOVERY_POOL_LISTING, usePoolListing } from '@/hooks/use-pool-stats'
 import { useDexChains } from '@/hooks/use-dex-chains'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
@@ -87,8 +88,16 @@ export function PoolMapPane() {
   // The volume ranking, three pages deep: on bot-heavy chains the provider's
   // trending page holds almost none of the real top pools, and the quality bar
   // needs a wide enough net to keep a full mosaic after it strips the fakes.
-  const { pools, isLoading, error, throttled, retrying, retry } =
-    usePoolListing(chain, true, DISCOVERY_POOL_LISTING)
+  const {
+    pools,
+    isLoading,
+    deepening,
+    revalidating,
+    error,
+    throttled,
+    retrying,
+    retry,
+  } = usePoolListing(chain, true, DISCOVERY_POOL_LISTING)
 
   // A listing with no trade counts anywhere is a provider that does not
   // publish them, and a mode that would draw an empty map is worse than a mode
@@ -261,7 +270,25 @@ export function PoolMapPane() {
 
       {/* The chain, not the mode: the mode is what the pressed button says, and
           the chain is the one thing the tiles never repeat. */}
-      <DexPaneHeader subtitle={chainName || null}>
+      <DexPaneHeader
+        subtitle={
+          chainName ? (
+            <>
+              {chainName}
+              {/* What the map is still doing, where it is doing something the
+                  tiles cannot show. Deepening means page one is drawn and the
+                  ranking is still widening; refreshing means these tiles were
+                  restored from the last visit and a live read is in flight.
+                  Neither is a loading state, and neither may look like one. */}
+              {deepening || revalidating ? (
+                <span className="ml-2 text-muted-foreground/70">
+                  {deepening ? t('poolMap.deepening') : t('poolMap.refreshing')}
+                </span>
+              ) : null}
+            </>
+          ) : null
+        }
+      >
         {listView ? (
           <button
             type="button"
@@ -301,11 +328,7 @@ export function PoolMapPane() {
       ) : null}
 
       {isLoading && !refused ? (
-        <div className="grid min-h-0 flex-1 grid-cols-6 grid-rows-4 gap-1 py-1.5">
-          {Array.from({ length: 24 }, (_, i) => (
-            <div key={i} className="animate-pulse rounded-md bg-muted/60" />
-          ))}
-        </div>
+        <PoolMapSkeleton chainName={chainName || null} />
       ) : empty ? (
         // Three different nothings. The provider REFUSING is one, and it is the
         // only one that is about us rather than about the chain. The provider

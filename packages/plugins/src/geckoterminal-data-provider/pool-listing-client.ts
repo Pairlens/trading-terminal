@@ -12,6 +12,7 @@
  */
 import { geckoFetch as fetch } from './rate-limiter'
 import { numberOrNull, splitPoolName } from './pool-stats-client'
+import type { RequestPriority } from './rate-limiter'
 import type {
   ChainPoolStats,
   PoolListingEntry,
@@ -243,14 +244,22 @@ export function fetchTopPools(
   network: string,
   page = 1,
   sort: PoolListingSort = 'trending',
+  priority: RequestPriority = 'normal',
 ): Promise<Array<PoolListingEntry>> {
   const sortParam = sort === 'volume' ? '&sort=h24_volume_usd_desc' : ''
+  // The priority belongs to the REQUEST, never to the cache key. Two callers
+  // wanting the same page at different urgencies is the normal case on a
+  // Discovery board — the map wants the selected chain's first page now, the
+  // rail wants it whenever — and keying on it would split one request into two.
+  // The first caller in wins the priority, which is the right one: it is the
+  // caller that is waiting.
   return cachedListing(`${network}:${sort}:${page}`, () =>
     requestPoolPage(
       `${API_BASE}/networks/${network}/pools?page=${page}${sortParam}`,
       {
         network,
         label: 'pools',
+        priority,
       },
     ),
   )
@@ -292,11 +301,13 @@ export function mergePoolPages(
 export function fetchNewPools(
   network: string,
   page = 1,
+  priority: RequestPriority = 'low',
 ): Promise<Array<PoolListingEntry>> {
   return cachedListing(`new:${network}:${page}`, () =>
     requestPoolPage(`${API_BASE}/networks/${network}/new_pools?page=${page}`, {
       network,
       label: 'new_pools',
+      priority,
     }),
   )
 }
@@ -329,9 +340,9 @@ function cachedListing(
 
 async function requestPoolPage(
   url: string,
-  meta: { network: string; label: string },
+  meta: { network: string; label: string; priority?: RequestPriority },
 ): Promise<Array<PoolListingEntry>> {
-  const res = await fetch(url)
+  const res = await fetch(url, undefined, meta.priority)
   if (!res.ok) {
     throw new Error(
       `GeckoTerminal ${meta.label} ${meta.network}: HTTP ${res.status}`,

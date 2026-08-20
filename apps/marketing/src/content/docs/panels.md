@@ -189,6 +189,13 @@ pool and swaps them for live pool state as soon as it lands; when the on-chain
 data provider is rate limiting, both panes say so rather than drawing a pool
 that has gone quiet.
 
+The three panes share one metered provider, so the board loads in a deliberate
+order: the selected pool's state and swaps are fetched ahead of the chain
+rail's background sweep, the Pool Map seeds its selection from the first page
+of the ranking rather than the whole three-page walk, and the last ranking is
+kept locally so a revisit paints before the network answers. See
+[DEX and wallets](/docs/dex-trading) for the detail.
+
 ## News and sentiment
 
 | Panel             | What it shows                                                                                                                   |

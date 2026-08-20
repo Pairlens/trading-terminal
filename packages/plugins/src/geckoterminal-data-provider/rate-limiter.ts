@@ -26,6 +26,17 @@
  * pages of pools — is well inside 25 a minute and still draws a 429, and a 429
  * from this provider is invisible to a browser (see `createGeckoFetch`).
  *
+ * Queued requests are NOT first come, first served, and that is the difference
+ * between a Discovery board that paints in three seconds and one that paints in
+ * eleven. The board opens by asking for six chain aggregates for its rail, three
+ * pages of pools for its map, and then — only once the map has picked a pool —
+ * that pool's state and its swap tape. FIFO put the two reads the user is
+ * actually looking at ninth and tenth in a queue paced at 1.2s a request, so the
+ * flow pane spent ten seconds on a spinner while the rail it was not looking at
+ * filled in. Callers now declare a priority and the queue admits by it: the
+ * selected pool's reads jump the rail's sweep, and the sweep loses nothing but
+ * its place in line.
+ *
  * Two things it is NOT. It is not a retry: a queued request is issued exactly
  * once, and a 429 that still gets through raises `ProviderThrottledError` for
  * the caller to handle. And it is not a cache: `pool-resolver` already caches
@@ -94,17 +105,42 @@ export const RATE_LIMIT_SPACING_MS = 1_200
  */
 export const RATE_LIMIT_MAX_WAIT_MS = 15_000
 
+/**
+ * What a caller is waiting on, in the order the queue cares about.
+ *
+ * `high` is a read the user is looking at right now and cannot be shown without
+ * — the selected pool's state and its swap tape on the Discovery board.
+ * `normal` is the default and covers everything a pane asked for directly.
+ * `low` is a background sweep whose pane can fill in late without the board
+ * reading as broken: the chain rail's per-chain aggregates, the depth pages
+ * behind the first page of a listing, the new-pools feed.
+ *
+ * Starvation is bounded rather than prevented, and deliberately so: the board
+ * issues a fixed handful of requests per cycle, and every waiter still carries
+ * `maxWaitMs`, so a low-priority request that genuinely cannot be admitted is
+ * refused within the ceiling instead of parked forever.
+ */
+export type RequestPriority = 'high' | 'normal' | 'low'
+
+/** Lower sorts first. */
+const PRIORITY_RANK: Record<RequestPriority, number> = {
+  high: 0,
+  normal: 1,
+  low: 2,
+}
+
 export type RequestLimiter = {
   /**
    * Resolves when the caller may issue its request, which may be immediately.
-   * Admission is FIFO, so a queued burst keeps its order.
+   * Admission is by priority, then FIFO within a priority, so a queued burst of
+   * equal-priority callers keeps its order.
    *
    * REJECTS with `ProviderThrottledError` when admission would take longer
    * than `maxWaitMs` — see that option. A caller must treat that exactly like
    * a 429, because that is what it is: the provider is refusing us, we simply
    * declined to spend the wait finding out again.
    */
-  acquire: () => Promise<void>
+  acquire: (priority?: RequestPriority) => Promise<void>
   /** Hold every caller back until `Date.now() + ms`. Extends, never shortens. */
   cooldown: (ms: number) => void
   /** Callers currently waiting for a slot. Test/diagnostic seam. */
@@ -147,13 +183,23 @@ function refusal(retryAfterMs: number): ProviderThrottledError {
 }
 
 /**
- * Sliding-window limiter.
+ * Sliding-window limiter with a priority queue in front of it.
  *
- * Admission is serialized through a promise chain, which is the part that is
- * easy to get wrong: without it, twenty callers arriving in the same tick would
- * all read the same "one slot free" and all take it. Each `acquire` waits for
- * the previous admission DECISION only, never for the previous request to
- * finish, so throughput is still the full budget.
+ * Admission is serialized through a single pump rather than run per caller,
+ * which is the part that is easy to get wrong: without it, twenty callers
+ * arriving in the same tick would all read the same "one slot free" and all
+ * take it. The pump waits for the next admission the window allows, never for
+ * the previous request to FINISH, so throughput is still the full budget.
+ *
+ * It re-picks the head after every wait, which is what makes priority mean
+ * anything. A high-priority read arriving while the pump is spacing out the
+ * tail of a burst is admitted next, not after the six low-priority sweeps that
+ * were queued before it.
+ *
+ * The pump starts on a microtask, never synchronously inside `acquire`. A burst
+ * of callers in one tick must all be queued before any of them is admitted, or
+ * the first few would be served in `acquire` itself and their priorities would
+ * never be compared against the rest of the same burst.
  */
 export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
   const { capacity, windowMs } = options
@@ -167,87 +213,151 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
   const issued: Array<number> = []
   let lastIssued = 0
   let cooldownUntil = 0
-  let waiting = 0
-  let chain: Promise<void> = Promise.resolve()
 
-  const admit = async (): Promise<void> => {
-    const deadline = now() + maxWaitMs
-    /** Wait, or give up and let the caller hear about it. */
-    const waitOrRefuse = async (ms: number, t: number): Promise<void> => {
-      if (t + ms > deadline) throw refusal(ms)
-      await delay(ms)
+  type Waiter = {
+    rank: number
+    /** Arrival order, which is the tie-break inside a priority. */
+    seq: number
+    /**
+     * When this waiter first reached the head of the queue, and where its
+     * ceiling is measured from.
+     *
+     * From the head rather than from arrival, which is the semantic the promise
+     * chain had before there was a queue: `maxWaitMs` bounds the wait we impose
+     * on a caller whose turn it is, not the time it spent behind other people's
+     * requests. Measuring from arrival would refuse the tail of a legitimate
+     * burst that was always going to be admitted.
+     */
+    headSince: number
+    resolve: () => void
+    reject: (error: unknown) => void
+  }
+
+  const queue: Array<Waiter> = []
+  let seq = 0
+  let pumping = false
+
+  /** Index of the waiter to serve next: best rank, then earliest arrival. */
+  const headIndex = (): number => {
+    let best = 0
+    for (let i = 1; i < queue.length; i += 1) {
+      const a = queue[i]
+      const b = queue[best]
+      if (a.rank < b.rank || (a.rank === b.rank && a.seq < b.seq)) best = i
     }
+    return best
+  }
 
-    for (;;) {
-      const t = now()
-      while (issued.length > 0 && t - issued[0] >= windowMs) issued.shift()
+  /**
+   * How long until the window allows another request. Zero means now.
+   *
+   * Prunes the window as a side effect, which is why it is called once per pump
+   * iteration rather than memoized.
+   */
+  const gapUntilAdmission = (t: number): number => {
+    while (issued.length > 0 && t - issued[0] >= windowMs) issued.shift()
 
-      // A cool-off is waited out like any other wait, and refused only when
-      // it outlasts the ceiling.
-      //
-      // It used to be refused on the spot, on the reasoning that a cool-off is
-      // the PROVIDER's schedule rather than ours and a caller parked on one is
-      // invisible — nothing has been sent, so the pane above it still believes
-      // it is loading. The invisibility was real; the blanket refusal was an
-      // over-correction, and the swap tape paid for it. A cool-off from this
-      // provider is EIGHT SECONDS, an order of magnitude inside the ceiling,
-      // and a board opening from cold arms one before the tape's first request
-      // is ever admitted — so the pane that was one short wait away from its
-      // data drew "Swaps unavailable right now" instead, and then held it
-      // until a fifteen-second poll happened to land in the clear. Refusing a
-      // wait we would happily have spent is how a transient refusal became a
-      // pane that never loads.
-      //
-      // The ceiling is what makes waiting safe, and it is the thing the old
-      // reasoning was missing rather than a reason to refuse: every wait here
-      // is bounded by `deadline`, so a hold that really is open-ended still
-      // reaches the caller as a refusal within `maxWaitMs` and the pane still
-      // gets to say what is wrong. Nothing can hold "Loading swaps" forever.
-      const coolOff = cooldownUntil - t
-      if (coolOff > 0) {
-        await waitOrRefuse(coolOff, t)
-        continue
-      }
-      // Spacing applies only once the burst allowance inside this window is
-      // spent, so a cold board still paints as fast as the provider allows and
-      // only the tail of the same burst waits.
-      if (issued.length >= burst && minSpacingMs > 0) {
-        const gap = minSpacingMs - (t - lastIssued)
+    // A cool-off is waited out like any other wait, and refused only when
+    // it outlasts the ceiling.
+    //
+    // It used to be refused on the spot, on the reasoning that a cool-off is
+    // the PROVIDER's schedule rather than ours and a caller parked on one is
+    // invisible — nothing has been sent, so the pane above it still believes
+    // it is loading. The invisibility was real; the blanket refusal was an
+    // over-correction, and the swap tape paid for it. A cool-off from this
+    // provider is EIGHT SECONDS, an order of magnitude inside the ceiling,
+    // and a board opening from cold arms one before the tape's first request
+    // is ever admitted — so the pane that was one short wait away from its
+    // data drew "Swaps unavailable right now" instead, and then held it
+    // until a fifteen-second poll happened to land in the clear. Refusing a
+    // wait we would happily have spent is how a transient refusal became a
+    // pane that never loads.
+    //
+    // The ceiling is what makes waiting safe, and it is the thing the old
+    // reasoning was missing rather than a reason to refuse: every wait here
+    // is bounded by the head's own deadline, so a hold that really is
+    // open-ended still reaches the caller as a refusal within `maxWaitMs` and
+    // the pane still gets to say what is wrong. Nothing holds "Loading swaps"
+    // forever.
+    const coolOff = cooldownUntil - t
+    if (coolOff > 0) return coolOff
+
+    // Spacing applies only once the burst allowance inside this window is
+    // spent, so a cold board still paints as fast as the provider allows and
+    // only the tail of the same burst waits.
+    if (issued.length >= burst && minSpacingMs > 0) {
+      const gap = minSpacingMs - (t - lastIssued)
+      if (gap > 0) return gap
+    }
+    if (issued.length < capacity) return 0
+    // Wait exactly until the oldest request leaves the window. `+ 1` so the
+    // re-check lands after the boundary rather than on it.
+    return windowMs - (t - issued[0]) + 1
+  }
+
+  const pump = async (): Promise<void> => {
+    if (pumping) return
+    pumping = true
+    try {
+      while (queue.length > 0) {
+        const index = headIndex()
+        const head = queue[index]
+        const t = now()
+        if (head.headSince === 0) head.headSince = t
+
+        const gap = gapUntilAdmission(t)
         if (gap > 0) {
-          await waitOrRefuse(gap, t)
+          if (t + gap > head.headSince + maxWaitMs) {
+            // Refuse the head and re-pick rather than refusing the queue:
+            // anything behind it is waiting at least as long, so it will reach
+            // this same test on its own turn.
+            queue.splice(index, 1)
+            head.reject(refusal(gap))
+            continue
+          }
+          await delay(gap)
           continue
         }
-      }
-      if (issued.length < capacity) {
+
+        queue.splice(index, 1)
         issued.push(t)
         lastIssued = t
-        return
+        head.resolve()
+        // Hand the tick back before serving the next one. Two reasons, and the
+        // cheaper one is not the important one: an admitted caller gets to
+        // issue its request before the queue moves on, and a waiter that
+        // arrives in that gap is ranked against the rest of the queue rather
+        // than losing to whatever the pump had already lined up. The cost is
+        // one microtask per admission, against a floor of a network round trip.
+        await Promise.resolve()
       }
-      // Wait exactly until the oldest request leaves the window. `+ 1` so the
-      // re-check lands after the boundary rather than on it.
-      await waitOrRefuse(windowMs - (t - issued[0]) + 1, t)
+    } finally {
+      pumping = false
     }
   }
 
   return {
-    acquire() {
-      waiting += 1
-      const admitted = chain.then(admit)
-      // The chain must never reject, or every later caller inherits the
-      // rejection. It also must not keep the admission's result.
-      chain = admitted.then(
-        () => undefined,
-        () => undefined,
-      )
-      return admitted.finally(() => {
-        waiting -= 1
+    acquire(priority: RequestPriority = 'normal') {
+      seq += 1
+      const promise = new Promise<void>((resolve, reject) => {
+        queue.push({
+          rank: PRIORITY_RANK[priority],
+          seq,
+          headSince: 0,
+          resolve,
+          reject,
+        })
       })
+      // A microtask, so a burst queued in one tick is ordered by priority
+      // before any of it is served. See the note on the pump.
+      void Promise.resolve().then(pump)
+      return promise
     },
     cooldown(ms) {
       const until = now() + Math.max(ms, 0)
       if (until > cooldownUntil) cooldownUntil = until
     },
-    waiting: () => waiting,
+    waiting: () => queue.length,
     reset() {
       issued.length = 0
       lastIssued = 0
@@ -277,9 +387,13 @@ export const geckoLimiter = createRequestLimiter({
  */
 export function createGeckoFetch(
   limiter: RequestLimiter,
-): (url: string, init?: RequestInit) => Promise<Response> {
-  return async (url, init) => {
-    await limiter.acquire()
+): (
+  url: string,
+  init?: RequestInit,
+  priority?: RequestPriority,
+) => Promise<Response> {
+  return async (url, init, priority) => {
+    await limiter.acquire(priority)
     let res: Response
     try {
       res = await restFetch(url, init)

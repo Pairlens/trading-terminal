@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "풀 선택",
     "noPoolBody": "맵에서 풀을 고르면 그 풀을 통과한 자금이 5분 단위로 여기에 표시됩니다.",
-    "loadingTitle": "스왑 불러오는 중",
-    "loadingBody": "이 풀의 최근 스왑을 가져오고 있습니다.",
     "emptyTitle": "아직 스왑 없음",
     "emptyBody": "최근 이 풀에서 체결된 거래가 없어 상계할 흐름이 없습니다.",
     "netHour": "최근 1시간 {{value}}",
     "bucketTooltip": "매수 {{buy}}, 매도 {{sell}}",
     "axisNote": "5분당 매수에서 매도를 뺀 값입니다. LP가 넣거나 뺀 유동성은 이 피드에 포함되지 않습니다.",
     "biggestLabel": "최대 스왑",
-    "waitingTitle": "맵을 기다리는 중",
-    "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
     "unavailableTitle": "지금은 풀을 불러올 수 없음",
     "swapsUnavailableTitle": "지금은 스왑을 가져올 수 없습니다",
-    "swapsUnavailableBody": "온체인 데이터 제공자가 이 풀의 스왑을 반환하지 않았습니다. 대개 저절로 복구됩니다."
+    "swapsUnavailableBody": "온체인 데이터 제공자가 이 풀의 스왑을 반환하지 않았습니다. 대개 저절로 복구됩니다.",
+    "loadingLabel": "스왑을 불러오는 중",
+    "pacedNote": "맵이 이 체인의 풀을 정렬하기를 기다리는 중입니다.",
+    "pacedNotePool": "{{pool}}을 지나는 스왑을 읽는 중입니다. 제공자가 요청을 제한해 몇 초가 걸립니다."
   },
   "lpPanes": {
     "venueFallback": "이 체인",
@@ -1068,7 +1067,12 @@
     "retryingTitle": "다시 시도 중",
     "retry": "다시 시도",
     "retryingBody": "제공자가 지금 요청을 거부하고 있습니다. 자동으로 다시 시도합니다.",
-    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요."
+    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요.",
+    "loadingLabel": "이 체인의 풀을 불러오는 중",
+    "pacedNote": "풀을 정렬하는 중입니다. 온체인 데이터 제공자에 요청 제한이 있어 첫 조회에 몇 초가 걸립니다.",
+    "pacedNoteChain": "{{chain}}의 풀을 정렬하는 중입니다. 온체인 데이터 제공자에 요청 제한이 있어 첫 조회에 몇 초가 걸립니다.",
+    "deepening": "풀을 더 불러오는 중",
+    "refreshing": "새로고침 중"
   },
   "poolStats": {
     "notOnChainTitle": "온체인 페어가 아님",

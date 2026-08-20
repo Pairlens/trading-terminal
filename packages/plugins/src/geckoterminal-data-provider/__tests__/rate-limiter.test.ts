@@ -277,6 +277,116 @@ describe('createRequestLimiter', () => {
     await expect(limiter.acquire()).rejects.toMatchObject({ status: 429 })
   })
 
+  it('serves a high-priority caller before a sweep queued ahead of it', async () => {
+    // The Discovery board's actual shape. The rail's six chain aggregates and
+    // the map's first page are queued in one tick; the selected pool's state
+    // and its swap tape cannot be asked for until the map has answered, so
+    // FIFO put the two panes the reader is looking at dead last.
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 25,
+      windowMs: 60_000,
+      burst: 2,
+      minSpacingMs: 1_200,
+      now: clock.now,
+      delay: clock.delay,
+    })
+    const order: Array<string> = []
+
+    const sweep = Array.from({ length: 6 }, (_, i) =>
+      limiter.acquire('low').then(() => {
+        order.push(`chain${i}`)
+      }),
+    )
+    const map = limiter.acquire('normal').then(() => {
+      order.push('map')
+    })
+    const tape = limiter.acquire('high').then(() => {
+      order.push('tape')
+    })
+
+    await Promise.all([...sweep, map, tape])
+
+    // The two the board cannot paint without go first, in priority order.
+    expect(order.slice(0, 2)).toEqual(['tape', 'map'])
+    expect(order.slice(2)).toEqual([
+      'chain0',
+      'chain1',
+      'chain2',
+      'chain3',
+      'chain4',
+      'chain5',
+    ])
+  })
+
+  it('keeps arrival order inside a priority', async () => {
+    const clock = virtualClock()
+    const limiter = limiterOn(clock)
+    const order: Array<number> = []
+
+    await Promise.all(
+      Array.from({ length: 6 }, (_, i) =>
+        limiter.acquire('low').then(() => {
+          order.push(i)
+        }),
+      ),
+    )
+
+    expect(order).toEqual([0, 1, 2, 3, 4, 5])
+  })
+
+  it('lets a high-priority caller jump a queue that is already waiting', async () => {
+    // Priority is only worth having if it applies to the queue as it stands,
+    // not just to whatever happened to arrive in the same tick. The pump
+    // re-picks its head after every wait for exactly this.
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 2,
+      windowMs: 1_000,
+      now: clock.now,
+      delay: clock.delay,
+    })
+    const order: Array<string> = []
+
+    // Spend the window, then queue two sweeps behind it.
+    await limiter.acquire()
+    await limiter.acquire()
+    const first = limiter.acquire('low').then(() => {
+      order.push('low-a')
+    })
+    const second = limiter.acquire('low').then(() => {
+      order.push('low-b')
+    })
+    // Arrives last and still goes first.
+    const urgent = limiter.acquire('high').then(() => {
+      order.push('high')
+    })
+
+    await Promise.all([first, second, urgent])
+    expect(order).toEqual(['high', 'low-a', 'low-b'])
+  })
+
+  it('defaults to normal, so an unannotated caller is not deprioritized', async () => {
+    const clock = virtualClock()
+    const limiter = createRequestLimiter({
+      capacity: 1,
+      windowMs: 1_000,
+      now: clock.now,
+      delay: clock.delay,
+    })
+    const order: Array<string> = []
+
+    const low = limiter.acquire('low').then(() => {
+      order.push('low')
+    })
+    const bare = limiter.acquire().then(() => {
+      order.push('bare')
+    })
+
+    await Promise.all([low, bare])
+    expect(order).toEqual(['bare', 'low'])
+  })
+
   it('one caller s rejection does not poison the queue behind it', async () => {
     // Admission is serialized through a promise chain. If that chain kept a
     // rejection, one failed acquire would fail every later one for the life of

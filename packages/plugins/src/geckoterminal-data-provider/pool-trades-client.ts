@@ -19,6 +19,7 @@
 import { resolvePool } from './pool-resolver'
 import { geckoFetch as fetch } from './rate-limiter'
 import { numberOrNull } from './pool-stats-client'
+import type { RequestPriority } from './rate-limiter'
 import type { PoolTrade } from '@pairlens/shared/instrument-types'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
@@ -98,6 +99,7 @@ export async function fetchPoolTrades(
   network: string,
   minVolumeUsd = 0,
   poolAddress?: string,
+  priority: RequestPriority = 'normal',
 ): Promise<Array<PoolTrade> | null> {
   const address = poolAddress || (await resolvePool(pair, network))?.address
   if (!address) return null
@@ -106,6 +108,8 @@ export async function fetchPoolTrades(
     minVolumeUsd > 0 ? `?trade_volume_in_usd_greater_than=${minVolumeUsd}` : ''
   const res = await fetch(
     `${API_BASE}/networks/${network}/pools/${address}/trades${query}`,
+    undefined,
+    priority,
   )
   if (!res.ok) {
     throw new Error(`GeckoTerminal trades ${address}: HTTP ${res.status}`)

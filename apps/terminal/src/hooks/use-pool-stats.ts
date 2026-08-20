@@ -21,7 +21,7 @@
  * `usePoolStats` is the one exception to the single-answer rule above, and it
  * has to be: see the reserve supplement below.
  */
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 
 import {
@@ -42,6 +42,10 @@ import type {
 
 import type { PoolStatsMerge } from '@/lib/dex/pool-stats-merge'
 import { mergePoolStats, needsReserves } from '@/lib/dex/pool-stats-merge'
+import {
+  readDiscoverySnapshot,
+  writeDiscoverySnapshot,
+} from '@/lib/dex/discovery-cache'
 import { learnedTokenPin } from '@/lib/dex/token-label'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { getCountrySetting } from '@/lib/region-settings'
@@ -323,9 +327,57 @@ export function usePoolTrades(
   }
 }
 
+/**
+ * React Query options that paint a stored snapshot while a fresh read runs.
+ *
+ * `initialDataUpdatedAt` is the load-bearing half. Without it React Query dates
+ * the seed to now, treats it as inside the stale window and skips the refetch
+ * entirely, and the board shows half-hour-old numbers with nothing in flight.
+ * With it, every seeded query refetches on mount and the snapshot is only ever
+ * the first paint.
+ */
+function seededFromSnapshot<T>(key: string | null): {
+  initialData?: () => T
+  initialDataUpdatedAt?: number
+} {
+  const seed = key ? readDiscoverySnapshot<T>(key) : null
+  if (!seed) return {}
+  return { initialData: () => seed.data, initialDataUpdatedAt: seed.ts }
+}
+
+/**
+ * Keep `key`'s snapshot in step with a query's data.
+ *
+ * `updatedAt` is React Query's own `dataUpdatedAt`, which is the measurement
+ * time rather than the render time — see `writeDiscoverySnapshot` for why
+ * re-stamping a seeded value would make it immortal.
+ */
+function useSnapshotWriter(
+  key: string | null,
+  data: unknown,
+  updatedAt: number,
+): void {
+  useEffect(() => {
+    if (!key || data === undefined || data === null) return
+    writeDiscoverySnapshot(key, data, updatedAt)
+  }, [key, data, updatedAt])
+}
+
 export type PoolListingResult = {
   pools: PoolListingResponse['pools']
   isLoading: boolean
+  /**
+   * The first page is on screen and the depth pages behind it are still in
+   * flight. Not a loading state: the map has tiles to draw and is only going to
+   * gain more.
+   */
+  deepening: boolean
+  /**
+   * What is on screen was restored from a stored snapshot and a fresh read is
+   * in flight. The pane says so rather than presenting half-hour-old volume as
+   * a live reading.
+   */
+  revalidating: boolean
   /**
    * The failure, when there is one — and only ever shown to a reader when
    * `throttled` says it was written for one. Everything else that reaches here
@@ -341,7 +393,39 @@ export type PoolListingResult = {
   retry: () => void
 }
 
-/** A chain's pools, ranked by the provider's own 24h volume ordering. */
+/** Where a listing's snapshot lives between reloads. */
+function listingSnapshotKey(
+  market: string,
+  sort: string,
+  depth: number,
+): string {
+  return `dex-listing:${market}:${sort}:${depth}`
+}
+
+/**
+ * A chain's pools, ranked by the provider's own 24h volume ordering.
+ *
+ * Two queries where there used to be one, and the split is the whole reason the
+ * board paints in seconds rather than in double figures.
+ *
+ * A depth walk is three sequential requests through a limiter that paces at
+ * 1.2s, and the OLD shape resolved only when all three had landed. Nothing
+ * downstream could start until then: the map seeds the board's pool selection
+ * from this listing, and the detail pane and the flow chart cannot ask for
+ * anything until a pool is selected. So a chart of one pool's swaps waited on
+ * two pages of OTHER pools it would never draw.
+ *
+ * Now page one is its own query. It is also the exact page the chain rail
+ * already asks for when it samples this chain, so on a cold board it usually
+ * costs no request at all (see the in-flight map in `pool-listing-client`). The
+ * map draws its first tiles from it, seeds the selection, and the panes beside
+ * it get their high-priority reads into the queue while the depth pages are
+ * still walking. The deep answer replaces it wholesale when it lands, and it is
+ * a superset, so nothing on screen moves except by gaining tiles.
+ *
+ * Both halves are seeded from the stored snapshot, so a reload paints the last
+ * ranking immediately and revalidates behind the reader.
+ */
 export function usePoolListing(
   market: string | null | undefined,
   enabled = true,
@@ -350,38 +434,111 @@ export function usePoolListing(
   const { pluginManager, pluginsReady } = usePairlens()
   const active = Boolean(enabled && pluginsReady && market)
   const sort = opts?.sort
-  const depth = opts?.depth
+  const sortKey = sort ?? 'trending'
+  const depth = opts?.depth ?? 1
+  /** A depth walk has a fast half worth splitting out; a single page does not. */
+  const deep = depth > 1
+  /**
+   * When this pane started looking, and the only way to tell a snapshot paint
+   * from a live one.
+   *
+   * `initialData` puts a query straight into `success`, so every "is it still
+   * loading" flag reads false the moment a seed is served — which is what makes
+   * the seed useful and also what hides the fact that the numbers on screen were
+   * measured before the reader arrived. Comparing React Query's `dataUpdatedAt`
+   * against this is the test: older than the mount means it is the seed, and a
+   * fetch in flight beside it means a live copy is coming. A routine five-minute
+   * poll is newer than the mount, so it never flashes the label.
+   */
+  const [mountedAt] = useState(() => Date.now())
 
-  const query = useQuery({
-    queryKey: ['pool-listing', market, sort ?? 'trending', depth ?? 1],
-    queryFn: async () =>
+  const request = useCallback(
+    async (pages: number) =>
       (await pluginManager.execute('market-data:pool-stats', {
         action: 'pools',
         market,
         ...(sort ? { sort } : {}),
-        ...(depth ? { depth } : {}),
+        ...(pages > 1 ? { depth: pages } : {}),
       })) as PoolListingResponse | null,
+    [pluginManager, market, sort],
+  )
+
+  // Page one. Same key the depth-1 callers have always used, so a pane that
+  // wants one page and a pane that wants three share this query rather than
+  // opening two.
+  const head = useQuery({
+    queryKey: ['pool-listing', market, sortKey, 1],
+    queryFn: () => request(1),
     enabled: active,
     staleTime: LISTING_REFRESH_MS,
     refetchInterval: LISTING_REFRESH_MS,
     gcTime: 30 * 60_000,
     retry: retryOnThrottle,
     retryDelay: throttleRetryDelay,
+    ...seededFromSnapshot<PoolListingResponse | null>(
+      market ? listingSnapshotKey(market, sortKey, 1) : null,
+    ),
   })
 
+  const full = useQuery({
+    queryKey: ['pool-listing', market, sortKey, depth],
+    queryFn: () => request(depth),
+    enabled: active && deep,
+    staleTime: LISTING_REFRESH_MS,
+    refetchInterval: LISTING_REFRESH_MS,
+    gcTime: 30 * 60_000,
+    retry: retryOnThrottle,
+    retryDelay: throttleRetryDelay,
+    ...seededFromSnapshot<PoolListingResponse | null>(
+      market && deep ? listingSnapshotKey(market, sortKey, depth) : null,
+    ),
+  })
+
+  // The deep answer wins whenever it exists: it contains page one, so swapping
+  // to it only ever adds pools. Falling back the other way would drop tiles.
+  const data = (deep ? full.data : undefined) ?? head.data ?? null
+
+  useSnapshotWriter(
+    market ? listingSnapshotKey(market, sortKey, 1) : null,
+    head.data,
+    head.dataUpdatedAt,
+  )
+  useSnapshotWriter(
+    market && deep ? listingSnapshotKey(market, sortKey, depth) : null,
+    full.data,
+    full.dataUpdatedAt,
+  )
+
+  // Page one is what must succeed; the plugin already swallows a failed page
+  // two or three rather than throwing the first page away with them, so in
+  // practice these two carry the same failure.
+  const failure = head.error ?? (deep ? full.error : null)
+  const headRetrying = head.failureCount > 0 && head.fetchStatus !== 'idle'
+  const fullRetrying =
+    deep && full.failureCount > 0 && full.fetchStatus !== 'idle'
+
   return {
-    pools: query.data?.pools ?? [],
-    isLoading: active && query.isPending,
-    error: query.error ? errorText(query.error) : null,
-    throttled: isProviderThrottledError(query.error),
+    pools: data?.pools ?? [],
+    isLoading:
+      active && data === null && (head.isPending || (deep && full.isPending)),
+    deepening: deep && data !== null && full.isPending,
+    revalidating:
+      data !== null &&
+      (head.isFetching || (deep && full.isFetching)) &&
+      Math.max(head.dataUpdatedAt, deep ? full.dataUpdatedAt : 0) < mountedAt,
+    error: failure ? errorText(failure) : null,
+    throttled: isProviderThrottledError(failure),
     // `isFetching` is the wrong test, and the news feed learned this the hard
     // way (see `newsFeedView` in components/news/news-feed-state.ts): a retry
     // that is backing off, or parked on the focus gate because the window is
     // in the background, sits at `fetchStatus: 'paused'` with nothing in
     // flight. Read through `isFetching` that is indistinguishable from a first
     // load, and the pane holds a skeleton for as long as the tab stays hidden.
-    retrying: query.failureCount > 0 && query.fetchStatus !== 'idle',
-    retry: () => void query.refetch(),
+    retrying: headRetrying || fullRetrying,
+    retry: () => {
+      void head.refetch()
+      if (deep) void full.refetch()
+    },
   }
 }
 
@@ -529,6 +686,11 @@ export function useChainStats(
   const key = markets.slice().sort().join(',')
   const active = Boolean(enabled && pluginsReady && markets.length > 0)
 
+  // Rows, not the Map the rail reads: a Map does not survive JSON, and the
+  // snapshot has to be the thing that crosses a reload.
+  const snapshotKey = `dex-chain-stats:${key}`
+  const seed = readDiscoverySnapshot<Array<ChainPoolStats>>(snapshotKey)
+
   const query = useQuery({
     queryKey: ['chain-stats', key],
     queryFn: async () => {
@@ -537,9 +699,7 @@ export function useChainStats(
         markets,
         displayNames,
       })) as Array<ChainPoolStats> | null
-      const map = new Map<string, ChainPoolStats>()
-      for (const row of rows ?? []) map.set(row.market, row)
-      return map
+      return rows ?? []
     },
     enabled: active,
     staleTime: LISTING_REFRESH_MS,
@@ -547,10 +707,22 @@ export function useChainStats(
     gcTime: 30 * 60_000,
     retry: retryOnThrottle,
     retryDelay: throttleRetryDelay,
+    ...(seed
+      ? { initialData: () => seed.data, initialDataUpdatedAt: seed.ts }
+      : {}),
   })
 
+  useSnapshotWriter(snapshotKey, query.data, query.dataUpdatedAt)
+
+  const byMarket = useMemo(() => {
+    if (!query.data) return EMPTY_CHAIN_STATS
+    const map = new Map<string, ChainPoolStats>()
+    for (const row of query.data) map.set(row.market, row)
+    return map
+  }, [query.data])
+
   return {
-    byMarket: query.data ?? EMPTY_CHAIN_STATS,
+    byMarket,
     isLoading: active && query.isPending,
     error: query.error ? errorText(query.error) : null,
     throttled: isProviderThrottledError(query.error),

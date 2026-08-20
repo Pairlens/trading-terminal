@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "選擇一個池子",
     "noPoolBody": "在圖中選一個池子，穿過它的資金會以五分鐘為單位顯示在這裡。",
-    "loadingTitle": "正在載入兌換",
-    "loadingBody": "正在取得該池子的近期兌換。",
     "emptyTitle": "尚無兌換",
     "emptyBody": "這個池子近期沒有成交，因此沒有可軋差的資金流。",
     "netHour": "最近一小時 {{value}}",
     "bucketTooltip": "買入 {{buy}}，賣出 {{sell}}",
     "axisNote": "每 5 分鐘買入減賣出。LP 加入或撤出的流動性不在此資料流中。",
     "biggestLabel": "最大兌換",
-    "waitingTitle": "等待池子圖",
-    "waitingBody": "該鏈的池子仍在載入。選取池子後就會顯示資金流向。",
     "unavailableTitle": "暫時無法取得池子",
     "swapsUnavailableTitle": "暫時無法取得交換紀錄",
-    "swapsUnavailableBody": "鏈上資料提供方沒有回傳該池的交換紀錄，通常稍後會自行恢復。"
+    "swapsUnavailableBody": "鏈上資料提供方沒有回傳該池的交換紀錄，通常稍後會自行恢復。",
+    "loadingLabel": "正在載入兌換紀錄",
+    "pacedNote": "正在等待地圖為該鏈的流動性池排序。",
+    "pacedNotePool": "正在讀取經過 {{pool}} 的兌換紀錄。提供方限制請求頻率，需要幾秒。"
   },
   "lpPanes": {
     "venueFallback": "這條鏈",
@@ -1068,7 +1067,12 @@
     "retryingTitle": "正在重試",
     "retry": "重試",
     "retryingBody": "資料來源目前拒絕請求，正在自動重試。",
-    "unavailableBody": "無法連線到池子資料來源，請稍後再試。"
+    "unavailableBody": "無法連線到池子資料來源，請稍後再試。",
+    "loadingLabel": "正在載入該鏈的流動性池",
+    "pacedNote": "正在為流動性池排序。鏈上資料提供方有速率限制，首次讀取需要幾秒。",
+    "pacedNoteChain": "正在為 {{chain}} 上的流動性池排序。鏈上資料提供方有速率限制，首次讀取需要幾秒。",
+    "deepening": "正在載入更多流動性池",
+    "refreshing": "正在重新整理"
   },
   "poolStats": {
     "notOnChainTitle": "不是鏈上交易對",
