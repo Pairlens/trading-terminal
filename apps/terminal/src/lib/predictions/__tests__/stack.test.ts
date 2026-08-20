@@ -99,12 +99,19 @@ describe('stackSeries', () => {
     }
   })
 
-  test('orders bands richest at the floor, by the last value not the first', () => {
+  test('orders bands favourite last, by the last value not the first', () => {
+    // Recharts stacks its first band at the floor, so the favourite has to be
+    // declared LAST to be drawn on top: a race reads leader-highest, and the
+    // first build had the 74% favourite sitting on the axis.
     const crossing: Array<SeriesRow> = [
       { ts: 0, A: 0.6, B: 0.2 },
       { ts: HOUR, A: 0.2, B: 0.6 },
     ]
-    expect(stackSeries(crossing, ['A', 'B']).order).toEqual(['B', 'A'])
+    expect(stackSeries(crossing, ['A', 'B']).order).toEqual(['A', 'B'])
+  })
+
+  test('the whole field is ordered longest shot to favourite', () => {
+    expect(stackSeries(rows, ['A', 'B', 'C']).order).toEqual(['C', 'B', 'A'])
   })
 
   test('a runner with no quote is a zero band and a recorded gap', () => {

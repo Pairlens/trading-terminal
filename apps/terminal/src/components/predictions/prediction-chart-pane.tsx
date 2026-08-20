@@ -339,7 +339,7 @@ function PredictionChartBody({
                     y2="1"
                   >
                     {/* Runs the other way: gone at the ceiling, strongest
-                        where it meets the field. */}
+                        where it meets the favourite. */}
                     {REST_STOPS.map((band) => (
                       <stop
                         key={band.offset}
@@ -404,9 +404,9 @@ function PredictionChartBody({
                 cursor={{ stroke: 'var(--border)', strokeWidth: 1 }}
               />
               {bands
-                ? /* Bottom-first, richest at the floor. The band the route is
-                     on is outlined heavily so it stays findable in a field of
-                     eight fills. */
+                ? /* Bottom-first: longest shot on the axis, favourite at the
+                     top of the field. The band the route is on is outlined
+                     heavily so it stays findable in a field of eight fills. */
                   bands.order.map((key, index) => {
                     const runner = byKey.get(key)
                     if (!runner) return null
@@ -450,7 +450,12 @@ function PredictionChartBody({
                   ))}
               {/* Everything the chart is not drawing, drawn. Declared last so
                   it caps the stack, and kept grey and unlabelled in the plot
-                  because it is a residue rather than a runner. */}
+                  because it is a residue rather than a runner. Capping it
+                  rather than flooring it is what keeps the favourite's own
+                  edge a boundary in the data: a runner strokes the top of its
+                  band, and the topmost band's top is the ceiling, where a line
+                  would sit flat at 100% and read as a runner that has already
+                  won. */}
               {bands?.hasRest && (
                 <Area
                   activeDot={false}
@@ -464,7 +469,7 @@ function PredictionChartBody({
                   stackId="field"
                   // No edge: its top curve is the ceiling of the plot, and
                   // stroking it just draws a border. The boundary that matters
-                  // is the last runner's own edge, already drawn.
+                  // is the favourite's own edge, already drawn.
                   stroke="none"
                   type="monotone"
                 />
