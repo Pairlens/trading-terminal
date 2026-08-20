@@ -38,6 +38,7 @@ import { ScrollArea } from '@pairlens/ui/components/ui/scroll-area'
 import type { EventOverround } from '@/lib/predictions/race'
 import type { PredictionEventContext } from '@/hooks/use-prediction-event'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
+import { predictionCategoryLabel } from '@/lib/predictions/category-display'
 import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import {
   PANE_FOOTNOTE,
@@ -92,7 +93,7 @@ export function EventHeaderPane() {
                 className="h-[18px] px-2 text-[10.5px]"
                 variant="secondary"
               >
-                {context.event.category}
+                {predictionCategoryLabel(t, context.event.category)}
               </Badge>
             )}
             <RulesChip context={context} />

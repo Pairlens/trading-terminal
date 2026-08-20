@@ -38,6 +38,7 @@ import { createPredictionConnectorManifest } from '../manifest'
 import { createPredictionConnectorPlugin } from '../index'
 import type {
   PredictionExchangeCtor,
+  PredictionExchangeLike,
   PredictionSlot,
   PredictionVenueConfig,
 } from '../types'
@@ -125,6 +126,227 @@ export const kalshiMarketConnectorManifest: PluginManifest =
     marketOrders: 'none',
   })
 
+/**
+ * The events browser's cold open.
+ *
+ * `fetchEvents` refuses an unscoped call, and Kalshi's scope vocabulary is
+ * category and series ticker (declared in its `eventScopeParams`). The old
+ * answer was one hardcoded category, and it was wrong twice over: the Trending
+ * board was Economics and nothing else, so every other chip on the rail was
+ * invisible until the user searched; and the path itself cost SIXTY requests
+ * and 26 seconds, because a category resolves to a /series listing (744 series
+ * for Economics, 612 KB) and then one /events page per series until the limit
+ * fills. Measured 2026-08-20.
+ *
+ * What answers instead is Kalshi's own ranked feed: `/v1/search/series` on the
+ * elections host, which ccxt already declares (`electionsPublicGetSearchSeries`)
+ * and already uses for free-text search. Unqueried it returns events ordered by
+ * recent volume, and every entry carries its event ticker, title, subtitle,
+ * category and its markets with live prices, the previous price and volume.
+ * That is the whole board in one response.
+ *
+ * It is fanned across categories rather than taken unscoped, and that is the
+ * one judgement call here. The unscoped feed is Kalshi's honest front page, and
+ * Kalshi's front page is live sport: 71 of the top 100 entries, and 25 of the
+ * top 25. A rail built from that reads "Sports" and nothing else, which is the
+ * defect this replaced wearing different clothes. So each category is asked for
+ * its own busiest events (`?category=`, which the feed supports and which
+ * answers in 0.2-0.5 s) and the pages are interleaved. Nothing is invented: the
+ * order inside a category is the venue's, and the rounds are ordered by the
+ * venue's own `recent_volume`, so the biggest markets still lead.
+ *
+ * Cost: one request per category, fired together against ccxt's 200 ms
+ * throttle, roughly 600 KB and 4 seconds against 1.2 MB and 26.
+ */
+export const KALSHI_BROWSE_CATEGORIES = [
+  'Sports',
+  'Elections',
+  'Crypto',
+  'Economics',
+  'Politics',
+  'Entertainment',
+  'Financials',
+  'Climate and Weather',
+  'Companies',
+  'Commodities',
+  'Science and Technology',
+  'Mentions',
+  'Health',
+  'World',
+  'Social',
+  'Transportation',
+] as const
+
+/**
+ * Entries asked of each category.
+ *
+ * The floor is what makes a thin category (Health, Transportation) reach the
+ * rail at all; the ceiling keeps a large `limit` from turning sixteen cheap
+ * requests into sixteen expensive ones. A crypto entry carries a fifty-strike
+ * ladder, so page size and payload are not linearly related.
+ */
+const MIN_PER_CATEGORY = 2
+const MAX_PER_CATEGORY = 10
+
+/** The elections-host search endpoint, which is not on the shared shape. */
+type KalshiSearchEndpoint = {
+  electionsPublicGetSearchSeries?: (
+    params?: Record<string, unknown>,
+  ) => Promise<Record<string, unknown>>
+}
+
+export async function browseKalshiEvents(
+  exchange: PredictionExchangeLike,
+  limit: number,
+): Promise<Array<Record<string, unknown>>> {
+  const search = (exchange as PredictionExchangeLike & KalshiSearchEndpoint)
+    .electionsPublicGetSearchSeries
+  const parseEvent = exchange.parseEvent
+  if (typeof search !== 'function' || typeof parseEvent !== 'function') {
+    throw new Error('Kalshi does not publish a browsable event listing')
+  }
+
+  const pageSize = Math.min(
+    MAX_PER_CATEGORY,
+    Math.max(
+      MIN_PER_CATEGORY,
+      Math.ceil(limit / KALSHI_BROWSE_CATEGORIES.length),
+    ),
+  )
+
+  // Fired together: ccxt's throttle still spaces them 200 ms apart, but they
+  // overlap in flight, so the board waits for the slowest category rather than
+  // for the sum of sixteen.
+  let failure: unknown = null
+  const pages = await Promise.all(
+    KALSHI_BROWSE_CATEGORIES.map(async (category) => {
+      try {
+        const response = await search.call(exchange, {
+          page_size: pageSize,
+          category,
+        })
+        return asList(response['current_page'])
+      } catch (err) {
+        // One category that will not answer must not empty the board. The
+        // error is kept so a browse where NOTHING answered can still say why.
+        failure ??= err
+        return []
+      }
+    }),
+  )
+
+  const entries = interleavePages(pages, limit)
+  if (entries.length === 0 && failure) throw failure
+  return entries.map((entry) =>
+    parseEvent.call(exchange, searchEntryToRawEvent(entry)),
+  )
+}
+
+/**
+ * Round-robin across the category pages, busiest first inside each round.
+ *
+ * Concatenating and sorting by volume instead would drop the tail categories
+ * entirely: a live tennis match trades four million contracts a day and a
+ * Health event trades a few hundred, so every Health row would fall below the
+ * cut. Taking one from each category before taking a second from any is what
+ * puts sixteen chips on the rail, and ordering each round by the venue's own
+ * `recent_volume` is what keeps the top of the board honest.
+ *
+ * Exported for the test that pins both properties.
+ */
+export function interleavePages(
+  pages: Array<Array<Record<string, unknown>>>,
+  limit: number,
+): Array<Record<string, unknown>> {
+  const out: Array<Record<string, unknown>> = []
+  const depth = Math.max(0, ...pages.map((page) => page.length))
+  for (let rank = 0; rank < depth && out.length < limit; rank++) {
+    const round: Array<Record<string, unknown>> = []
+    for (const page of pages) {
+      const entry = page[rank]
+      if (entry) round.push(entry)
+    }
+    round.sort((a, b) => recentVolume(b) - recentVolume(a))
+    for (const entry of round) {
+      if (out.length >= limit) break
+      out.push(entry)
+    }
+  }
+  return out
+}
+
+/**
+ * One search entry, reshaped into the raw Kalshi event `parseEvent` expects.
+ *
+ * The two payloads describe the same thing in different words, and the
+ * translation is the whole adapter: `event_title` for `title`, `close_ts` for
+ * `close_time`, `yes_subtitle` for `yes_sub_title`. Prices are the exception
+ * and need no translation, because the feed already states them in the
+ * `*_dollars` fields `parseMarket` and `marketChange24h` read.
+ *
+ * Two fields have no source and are left absent rather than guessed:
+ * `liquidity_dollars` and `open_interest_fp`, so a browse card states volume
+ * and not those. Opening the event fetches it canonically and gets both, along
+ * with the resolution criteria.
+ *
+ * `status` IS synthesised, from `result`: the feed lists tradeable events and
+ * states the settlement result as an empty string until one exists, and
+ * without a status `parseEvent` reports every browsed event as inactive.
+ *
+ * Exported for the fixture test, which drives it with entries copied off the
+ * live feed.
+ */
+export function searchEntryToRawEvent(
+  entry: Record<string, unknown>,
+): Record<string, unknown> {
+  const eventTicker = readString(entry['event_ticker'])
+  const title = readString(entry['event_title'])
+  const markets = asList(entry['markets']).map((market) => {
+    const result = readString(market['result'])
+    return {
+      ticker: readString(market['ticker']),
+      event_ticker: eventTicker,
+      // The event's question. A Kalshi market on a ladder or a field states
+      // the strike in `yes_sub_title`, and the projection appends it, so the
+      // row reads "Fed decision in September? · Cut 25bps".
+      title,
+      yes_sub_title: readString(market['yes_subtitle']),
+      no_sub_title: readString(market['no_subtitle']),
+      status: result === '' ? 'active' : 'settled',
+      result,
+      close_time: readString(market['close_ts']),
+      open_time: readString(market['open_ts']),
+      expiration_time: readString(market['expected_expiration_ts']),
+      volume: market['volume'],
+      last_price_dollars: market['last_price_dollars'],
+      previous_price_dollars: market['previous_price_dollars'],
+      yes_bid_dollars: market['yes_bid_dollars'],
+      yes_ask_dollars: market['yes_ask_dollars'],
+    }
+  })
+  return {
+    event_ticker: eventTicker,
+    series_ticker: readString(entry['series_ticker']),
+    title,
+    sub_title: readString(entry['event_subtitle']),
+    category: readString(entry['category']),
+    markets,
+  }
+}
+
+function recentVolume(entry: Record<string, unknown>): number {
+  const value = entry['recent_volume']
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function asList(value: unknown): Array<Record<string, unknown>> {
+  return Array.isArray(value) ? (value as Array<Record<string, unknown>>) : []
+}
+
+function readString(value: unknown): string {
+  return typeof value === 'string' ? value : ''
+}
+
 export const kalshiPredictionVenue: PredictionVenueConfig = {
   exchangeId: 'kalshi',
   marketId: 'kalshi',
@@ -158,16 +380,8 @@ export const kalshiPredictionVenue: PredictionVenueConfig = {
     // ccxt's kalshi never reads `secret`; the PEM belongs in `privateKey`.
     return { apiKey, privateKey: normalizeKalshiPem(pem) }
   },
-  /**
-   * The events browser's cold open.
-   *
-   * `fetchEvents` refuses an unscoped call, and Kalshi's own scope vocabulary
-   * is category and series ticker (declared in its `eventScopeParams`). A
-   * category is the closest thing the venue has to "what is busy right now",
-   * and Economics is both broad and permanently populated — an empty browse
-   * that returned nothing would read as a broken pane.
-   */
-  defaultEventScope: (limit) => ({ category: 'Economics', limit }),
+  // Kalshi's own ranked feed, fanned across categories — see browseKalshiEvents.
+  browseEvents: browseKalshiEvents,
   /**
    * Four independent polls per open pair, against a 200 ms rate limiter.
    *

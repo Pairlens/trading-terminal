@@ -1074,7 +1074,25 @@
     "venueHeading": "取引所",
     "desktopOnly": "デスクトップ",
     "venueError": "エラー",
-    "trending": "話題"
+    "trending": "話題",
+    "names": {
+      "esports": "eスポーツ",
+      "sports": "スポーツ",
+      "mentions": "発言",
+      "elections": "選挙",
+      "crypto": "暗号資産",
+      "climate": "気候",
+      "health": "健康",
+      "geopolitics": "地政学",
+      "commodities": "コモディティ",
+      "transport": "交通",
+      "economics": "経済",
+      "financials": "金融",
+      "companies": "企業",
+      "techScience": "テクノロジー・科学",
+      "culture": "カルチャー",
+      "politics": "政治"
+    }
   },
   "resolvingSoon": {
     "resolves": "{{when}} に決着",

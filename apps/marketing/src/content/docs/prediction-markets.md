@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 19 AUG 2026
-readTime: 20 min read
+updated: 20 AUG 2026
+readTime: 21 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -153,11 +153,36 @@ is dropped rather than shown as closed.
 
 The category rail narrows all three at once, and it counts from the unfiltered
 result, so picking a category never shrinks the rail that did the narrowing.
-Polymarket publishes no category, so the rail derives one from the event's
-tags, taking the first tag that names a topic it knows rather than the first
-tag. Counts are of the loaded board, which is what the rail can honestly
-narrow. The top row is Trending: no category filter, and the venue's own
-front-page order.
+Counts are of the loaded board, which is what the rail can honestly narrow. The
+top row is Trending: no category filter, and the venues' own ranking.
+
+What Trending means differs by venue, because the venues rank differently.
+Polymarket has one front page and the board opens on it, ordered by 24h volume.
+Kalshi has no single trending endpoint, and its busiest markets are live sport
+by a wide margin: the top 25 of its own ranked feed are 25 sports events. So the
+board asks Kalshi for the busiest events in each of its categories and
+interleaves them, which is the difference between a board that is all tennis and
+a board you can browse. Nothing is invented: the order inside a category is
+Kalshi's, and the rounds lead with the biggest markets.
+
+There are sixteen categories and both venues are read into the same set:
+Elections, Politics, Geopolitics, Economics, Financials, Commodities,
+Companies, Crypto, Sports, Esports, Mentions, Tech & Science, Climate, Health,
+Culture and Transport. That matters because the venues do not agree on what a
+category is. Kalshi publishes one per event out of its own closed list, so its
+'Entertainment' becomes Culture, its 'World' becomes Geopolitics and its
+'Science and Technology' becomes Tech & Science. Polymarket publishes none at
+all, only a tag array, so the category is read from the tags: the most specific
+topic present wins, which is why an election tagged Politics files under
+Elections and an esports match tagged Sports files under Esports. An event
+whose tags name no topic this list knows stays uncategorised and sits under
+Trending, because a wrong chip is worse than none.
+
+Picking a chip sends each venue its own word for it. Kalshi is asked for
+'World' when you click Geopolitics; Polymarket is asked for the gamma tags
+behind it. Where a venue has no word at all (Kalshi files esports under
+Sports), the chip filters the board that is already loaded instead of asking
+for something the venue cannot answer.
 
 While the venues are still answering, all four panes draw their own layout with
 the numbers taken out: ghost cards on the board, ghost rows on both rails, a
@@ -556,8 +581,10 @@ outcome with its probability, bid, ask and 24h move, the resolution criteria in
 the venue's own words, and on a race the sum of every Yes price. That last number
 is the one worth asking for out loud, because it says whether the field is priced
 over or under a fair 100%. `search_prediction_events` finds an event across both
-venues by text or category, so "is there a market on the next Fed cut" is
-answered rather than delegated.
+venues by text or one of the sixteen categories, so "is there a market on the
+next Fed cut" is answered rather than delegated. The category is a closed list
+rather than free text, and each venue is sent its own word for it, so asking
+for Geopolitics returns Kalshi's World book too.
 
 The assistant prepares prediction orders like any other: `place_order` returns a
 proposal on a confirm card, priced in collateral units, and it is yours to

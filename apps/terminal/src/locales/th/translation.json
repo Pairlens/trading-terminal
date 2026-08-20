@@ -1074,7 +1074,25 @@
     "venueHeading": "แพลตฟอร์ม",
     "desktopOnly": "เดสก์ท็อป",
     "venueError": "ผิดพลาด",
-    "trending": "มาแรง"
+    "trending": "มาแรง",
+    "names": {
+      "esports": "อีสปอร์ต",
+      "sports": "กีฬา",
+      "mentions": "การกล่าวถึง",
+      "elections": "การเลือกตั้ง",
+      "crypto": "คริปโต",
+      "climate": "ภูมิอากาศ",
+      "health": "สุขภาพ",
+      "geopolitics": "ภูมิรัฐศาสตร์",
+      "commodities": "สินค้าโภคภัณฑ์",
+      "transport": "การขนส่ง",
+      "economics": "เศรษฐกิจ",
+      "financials": "การเงิน",
+      "companies": "บริษัท",
+      "techScience": "เทคโนโลยีและวิทยาศาสตร์",
+      "culture": "วัฒนธรรม",
+      "politics": "การเมือง"
+    }
   },
   "resolvingSoon": {
     "resolves": "ตัดสิน {{when}}",

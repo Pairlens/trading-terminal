@@ -270,22 +270,18 @@ export type PredictionVenueConfig = {
     fields: Record<string, string>,
   ) => PredictionCredentialSet | null
   /**
-   * `fetchEvents` REQUIRES a scope selector — an unscoped call would page the
-   * whole venue, so ccxt throws `ArgumentsRequired` instead. This is the
-   * venue's default browse scope for an empty query, for venues whose scope
-   * vocabulary can express one (Kalshi declares `category` in its
-   * `eventScopeParams`).
-   */
-  defaultEventScope?: (limit: number) => Record<string, unknown>
-  /**
-   * Unscoped browse for a venue that cannot express one as a scope.
+   * The events browser's cold open: what this venue answers with when nothing
+   * has been searched for or filtered to.
    *
-   * Polymarket declares NO `eventScopeParams`, so `requireEventQuery` accepts
-   * only query/queries/tags/eventId/slug — none of which mean "the busiest
-   * events right now", which is exactly what an events browser opens on. This
-   * hook goes to the venue's own listing endpoint and returns the same
-   * `PredictionEvent[]` `fetchEvents` would have. Preferred over
-   * `defaultEventScope` when both are present.
+   * `fetchEvents` REQUIRES a scope selector, because an unscoped call would
+   * page the venue's whole universe and ccxt throws `ArgumentsRequired` rather
+   * than try. But no venue's scope vocabulary can express "the busiest events
+   * right now", which is exactly what a browser opens on: Polymarket declares
+   * no `eventScopeParams` at all, and Kalshi's are category and series ticker,
+   * neither of which means "busy". So a browse goes to the venue's own ranked
+   * listing instead and returns the same `PredictionEvent[]` `fetchEvents`
+   * would have. A venue that genuinely can express its cold open as a scope is
+   * free to implement this by calling `fetchEvents` with it.
    */
   browseEvents?: (
     exchange: PredictionExchangeLike,

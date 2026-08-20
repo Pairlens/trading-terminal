@@ -46,6 +46,7 @@ import {
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
 import { EVENT_LIST_SORTS, sortEventSummaries } from '@/lib/predictions/board'
+import { predictionCategoryLabel } from '@/lib/predictions/category-display'
 import { usePredictionSelect } from '@/lib/predictions/navigate'
 import { formatCompactUsd } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
@@ -232,7 +233,7 @@ export function EventsPane() {
               <Chip
                 active={category === id}
                 key={id}
-                label={id}
+                label={predictionCategoryLabel(t, id)}
                 onClick={() => setCategory(id)}
               />
             ))}

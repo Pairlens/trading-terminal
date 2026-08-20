@@ -30,6 +30,7 @@ import type {
   PredictionMarketSummary,
 } from '@pairlens/shared/instrument-types'
 
+import { predictionCategoryLabel } from '@/lib/predictions/category-display'
 import { formatCompactUsd } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
 
@@ -94,7 +95,9 @@ export function EventDialog({
                   {venueLabel}
                 </span>
                 {event.category && (
-                  <span className="capitalize">{event.category}</span>
+                  <span className="capitalize">
+                    {predictionCategoryLabel(t, event.category)}
+                  </span>
                 )}
               </DialogDescription>
             </div>

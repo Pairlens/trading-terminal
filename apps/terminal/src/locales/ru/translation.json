@@ -1138,7 +1138,25 @@
     "venueHeading": "Площадка",
     "desktopOnly": "десктоп",
     "venueError": "ошибка",
-    "trending": "В тренде"
+    "trending": "В тренде",
+    "names": {
+      "esports": "Киберспорт",
+      "sports": "Спорт",
+      "mentions": "Упоминания",
+      "elections": "Выборы",
+      "crypto": "Криптовалюты",
+      "climate": "Климат",
+      "health": "Здоровье",
+      "geopolitics": "Геополитика",
+      "commodities": "Сырьё",
+      "transport": "Транспорт",
+      "economics": "Экономика",
+      "financials": "Финансы",
+      "companies": "Компании",
+      "techScience": "Технологии и наука",
+      "culture": "Культура",
+      "politics": "Политика"
+    }
   },
   "resolvingSoon": {
     "resolves": "Расчёт {{when}}",

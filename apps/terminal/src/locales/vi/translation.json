@@ -1074,7 +1074,25 @@
     "venueHeading": "Sàn",
     "desktopOnly": "máy tính",
     "venueError": "lỗi",
-    "trending": "Nổi bật"
+    "trending": "Nổi bật",
+    "names": {
+      "esports": "Thể thao điện tử",
+      "sports": "Thể thao",
+      "mentions": "Nhắc đến",
+      "elections": "Bầu cử",
+      "crypto": "Tiền mã hóa",
+      "climate": "Khí hậu",
+      "health": "Sức khỏe",
+      "geopolitics": "Địa chính trị",
+      "commodities": "Hàng hóa",
+      "transport": "Giao thông",
+      "economics": "Kinh tế",
+      "financials": "Tài chính",
+      "companies": "Doanh nghiệp",
+      "techScience": "Công nghệ & Khoa học",
+      "culture": "Văn hóa",
+      "politics": "Chính trị"
+    }
   },
   "resolvingSoon": {
     "resolves": "Chốt {{when}}",

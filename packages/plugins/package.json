@@ -66,6 +66,7 @@
     "./ccxt-futures-connector/kucoin-futures": "./src/ccxt-futures-connector/venues/kucoin-futures.ts",
     "./ccxt-futures-connector/kraken-futures": "./src/ccxt-futures-connector/venues/kraken-futures.ts",
     "./prediction-connector": "./src/prediction-connector/index.ts",
+    "./prediction-connector/categories": "./src/prediction-connector/categories.ts",
     "./prediction-connector/kalshi": "./src/prediction-connector/venues/kalshi.ts",
     "./prediction-connector/polymarket": "./src/prediction-connector/venues/polymarket.ts"
   },

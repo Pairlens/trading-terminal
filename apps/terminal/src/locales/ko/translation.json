@@ -1074,7 +1074,25 @@
     "venueHeading": "거래소",
     "desktopOnly": "데스크톱",
     "venueError": "오류",
-    "trending": "인기"
+    "trending": "인기",
+    "names": {
+      "esports": "이스포츠",
+      "sports": "스포츠",
+      "mentions": "발언",
+      "elections": "선거",
+      "crypto": "크립토",
+      "climate": "기후",
+      "health": "건강",
+      "geopolitics": "지정학",
+      "commodities": "원자재",
+      "transport": "교통",
+      "economics": "경제",
+      "financials": "금융",
+      "companies": "기업",
+      "techScience": "기술·과학",
+      "culture": "문화",
+      "politics": "정치"
+    }
   },
   "resolvingSoon": {
     "resolves": "{{when}} 정산",

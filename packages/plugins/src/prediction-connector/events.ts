@@ -14,10 +14,16 @@
  *
  * `fetchEvents` REQUIRES a scope. An unscoped call would page the venue's whole
  * universe, so ccxt throws `ArgumentsRequired` rather than trying; an empty
- * query therefore becomes the venue's own default browse scope
- * (`defaultEventScope`) instead of an error the user cannot act on.
+ * query therefore goes to the venue's own ranked listing (`browseEvents`)
+ * instead of returning an error the user cannot act on.
  */
 
+import {
+  categoryFromTags,
+  isCanonicalPredictionCategory,
+  normalizePredictionCategory,
+  predictionCategoryScope,
+} from './categories'
 import {
   marketChange24h,
   marketCreatedMs,
@@ -52,12 +58,10 @@ export type PredictionEventsContext = {
  *
  * A category and a free-text query are both scopes ccxt accepts, and both are
  * forwarded as-is. The third case — the empty browse the events pane opens on —
- * has no single answer, because `requireEventQuery` rejects a call carrying no
- * selector at all and the venues disagree about what counts as one. Kalshi
- * declares `category` in its `eventScopeParams`, so a category IS a scope
- * there. Polymarket declares none, so no combination of `status`, `sort` or
- * `limit` is a scope and only the venue's own listing endpoint can answer
- * "what is busy right now" — that is what `browseEvents` is for.
+ * is not a scope at all, because `requireEventQuery` rejects a call carrying no
+ * selector and no venue has a selector meaning "what is busy right now". Both
+ * venues answer that from their own ranked listing instead, which is what
+ * `browseEvents` is for.
  */
 export async function fetchPredictionEvents(
   exchange: PredictionExchangeLike,
@@ -80,7 +84,11 @@ export async function fetchPredictionEvents(
       )
     }
     raw = await exchange.fetchEvents(buildScope(ctx.venue, query, limit))
-  } else if (!text && !category && ctx.venue.browseEvents) {
+  } else if (
+    !text &&
+    !scopableCategory(ctx.venue, category) &&
+    ctx.venue.browseEvents
+  ) {
     raw = await ctx.venue.browseEvents(exchange, limit)
   } else {
     if (typeof exchange.fetchEvents !== 'function') {
@@ -164,19 +172,41 @@ function buildScope(
   if (eventId) return { limit, eventId }
   const text = query.query?.trim()
   if (text) scope['query'] = text
-  const category = query.category?.trim()
-  // ccxt accepts `tags` on both venues and additionally `category` on Kalshi
-  // (declared in its `eventScopeParams`); sending both is how one category
-  // string scopes either venue without a per-venue branch here.
-  if (category) {
-    scope['tags'] = [category]
-    scope['category'] = category
+  // A canonical id is not a venue word — neither venue has heard of
+  // 'Geopolitics' or 'Tech & Science' — so it is translated back into the
+  // venue's own vocabulary first. See `scopableCategory`.
+  const scoped = scopableCategory(venue, query.category)
+  if (scoped) {
+    if (scoped.category) scope['category'] = scoped.category
+    if (scoped.tags) scope['tags'] = scoped.tags
   }
   if (query.cursor) scope['cursor'] = query.cursor
-  if (!text && !category && venue.defaultEventScope) {
-    return { ...venue.defaultEventScope(limit), ...scope }
-  }
   return scope
+}
+
+/**
+ * The venue-side scope a category asks for, or null when there is none to send.
+ *
+ * Three cases, and the third is the one worth naming. A canonical id the venue
+ * speaks translates ('Geopolitics' → Kalshi's 'World'). A string the taxonomy
+ * does not own is a venue-native category and is forwarded verbatim, so a
+ * category Kalshi lists tomorrow still scopes. And a canonical id the venue
+ * has no word for — Esports on Kalshi, which files esports under Sports —
+ * scopes to NOTHING rather than to itself: sending 'Esports' as a Kalshi
+ * category resolves zero series, and ccxt answers a scope that resolved to
+ * nothing with `ArgumentsRequired` rather than with an empty list. Unscoped,
+ * the browse returns the venue's own board and the caller filters it.
+ */
+function scopableCategory(
+  venue: PredictionVenueConfig,
+  category: string | undefined,
+): { category?: string; tags?: Array<string> } | null {
+  const trimmed = category?.trim()
+  if (!trimmed) return null
+  const mapped = predictionCategoryScope(venue.exchangeId, trimmed)
+  if (mapped) return mapped
+  if (isCanonicalPredictionCategory(trimmed)) return null
+  return { category: trimmed, tags: [trimmed] }
 }
 
 function toEventSummary(
@@ -199,9 +229,15 @@ function toEventSummary(
     id,
     market: ctx.venue.marketId,
     title,
-    // The venue's own category first; Polymarket publishes none, so its tags
-    // are read instead — see `categoryFromTags`.
-    ...opt('category', str(raw['category']) || categoryFromTags(raw['tags'])),
+    // The venue's own category first, read into the canonical list; Polymarket
+    // publishes none, so its tags are read instead. Both land on the same
+    // sixteen ids, which is what keeps one rail from carrying Kalshi's
+    // 'Entertainment' beside Polymarket's 'Culture' — see `./categories`.
+    ...opt(
+      'category',
+      normalizePredictionCategory(str(raw['category'])) ||
+        categoryFromTags(raw['tags']),
+    ),
     ...opt('imageUrl', str(raw['image'])),
     markets,
     // Kalshi maps event volume onto the unified field; Polymarket leaves it
@@ -210,84 +246,6 @@ function toEventSummary(
     ...optNum('liquidity', raw['liquidity'] ?? info['liquidity']),
     ...optNum('endMs', raw['end']),
   }
-}
-
-/**
- * The categories the rail is built from, and the tag shapes that reach them.
- *
- * Kalshi publishes a real `category` per event. Polymarket publishes none at
- * all: gamma events carry a `tags[]` array, which ccxt's `parseEvent` flattens
- * to the tag LABELS ('Politics', 'Fed Rates', 'Esports'). Without this the
- * browser's whole category rail was one row reading "All".
- *
- * Tags are not a taxonomy, which is the thing to know before reading the list.
- * A live browse (measured 2026-08-18) returns tag arrays like
- * `['fomc', 'Economic Policy', 'Fed Rates', 'Jerome Powell', 'Politics']` and
- * `['Bitcoin', 'Monthly', 'Hit Price', 'Crypto', 'Recurring']` — the first tag
- * is as often a subject or an editorial marker as a topic, and gamma also tags
- * events with operational strings ('Hide From New', 'Earn 4%', 'Multi
- * Strikes'). So the walk takes the first tag that lands on a KNOWN topic
- * rather than the first tag, and an event whose tags land on none stays
- * uncategorised: it is still on the board under Trending, which is a smaller
- * lie than filing "UK election called by…?" under "pedophile".
- *
- * Order matters within the list, not just between tags. 'World Elections'
- * matches both the election rule and the world rule, and it is an election.
- */
-const CATEGORY_RULES: Array<[RegExp, string]> = [
-  [/crypto|bitcoin|ethereum|solana|altcoin|memecoin|\bnft\b/i, 'Crypto'],
-  [
-    /sport|soccer|football|basketball|baseball|tennis|hockey|golf|olympic|esport|cricket|boxing|\bmlb\b|\bnfl\b|\bnba\b|\bnhl\b|\bufc\b|\bf1\b|formula 1|league|\bgames\b/i,
-    'Sports',
-  ],
-  // Ahead of the politics rule, which 'geopolitics' would otherwise match on
-  // its own suffix. The broad geopolitics shapes stay below it, because
-  // 'World Elections' is an election first.
-  [/geopolit/i, 'Geopolitics'],
-  [
-    /econom|financ|\bfed\b|fomc|inflation|\bcpi\b|\bgdp\b|interest rate|monetary|recession|unemploy|\bjobs\b|tariff|business/i,
-    'Economics',
-  ],
-  [
-    /politic|election|senate|congress|president|primary|parliament|governor|impeach|nominee|nomination|white house|supreme court|legislat|referendum|prime minister|\bpoll/i,
-    'Politics',
-  ],
-  [
-    /\bwar\b|ukraine|russia|israel|gaza|iran|china|\bnato\b|middle east|conflict|ceasefire|sanction|\bworld\b|global/i,
-    'Geopolitics',
-  ],
-  [
-    /culture|entertain|celebrit|music|movie|\bfilm\b|award|oscar|grammy|emmy|fashion|royal/i,
-    'Culture',
-  ],
-  [
-    /science|space|\bai\b|artificial intelligence|technolog|\btech\b|climate|weather|health|medic|nasa|spacex|rocket/i,
-    'Science',
-  ],
-]
-
-/**
- * The first tag that names a topic this board knows, or '' for none.
- *
- * Exported for the fixture test, which pins it against tag arrays copied off
- * the live gamma listing rather than invented ones.
- */
-export function categoryFromTags(value: unknown): string {
-  if (!Array.isArray(value)) return ''
-  for (const entry of value) {
-    // ccxt hands over strings; a raw gamma payload that skipped the parser
-    // would hand over `{ label, slug }`, and reading both costs one line.
-    const tag =
-      typeof entry === 'string'
-        ? entry
-        : str(asRecord(entry)['label']) || str(asRecord(entry)['slug'])
-    const normalized = tag.trim()
-    if (!normalized) continue
-    for (const [pattern, category] of CATEGORY_RULES) {
-      if (pattern.test(normalized)) return category
-    }
-  }
-  return ''
 }
 
 function toMarketSummary(

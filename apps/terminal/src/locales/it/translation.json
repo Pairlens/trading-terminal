@@ -1074,7 +1074,25 @@
     "venueHeading": "Piattaforma",
     "desktopOnly": "desktop",
     "venueError": "errore",
-    "trending": "Di tendenza"
+    "trending": "Di tendenza",
+    "names": {
+      "esports": "Esports",
+      "sports": "Sport",
+      "mentions": "Menzioni",
+      "elections": "Elezioni",
+      "crypto": "Cripto",
+      "climate": "Clima",
+      "health": "Salute",
+      "geopolitics": "Geopolitica",
+      "commodities": "Materie prime",
+      "transport": "Trasporti",
+      "economics": "Economia",
+      "financials": "Finanza",
+      "companies": "Aziende",
+      "techScience": "Tecnologia e scienza",
+      "culture": "Cultura",
+      "politics": "Politica"
+    }
   },
   "resolvingSoon": {
     "resolves": "Si risolve {{when}}",

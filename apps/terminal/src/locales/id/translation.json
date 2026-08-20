@@ -1074,7 +1074,25 @@
     "venueHeading": "Bursa",
     "desktopOnly": "desktop",
     "venueError": "kesalahan",
-    "trending": "Sedang ramai"
+    "trending": "Sedang ramai",
+    "names": {
+      "esports": "Esports",
+      "sports": "Olahraga",
+      "mentions": "Sebutan",
+      "elections": "Pemilu",
+      "crypto": "Kripto",
+      "climate": "Iklim",
+      "health": "Kesehatan",
+      "geopolitics": "Geopolitik",
+      "commodities": "Komoditas",
+      "transport": "Transportasi",
+      "economics": "Ekonomi",
+      "financials": "Keuangan",
+      "companies": "Perusahaan",
+      "techScience": "Teknologi & Sains",
+      "culture": "Budaya",
+      "politics": "Politik"
+    }
   },
   "resolvingSoon": {
     "resolves": "Selesai {{when}}",

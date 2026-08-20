@@ -1074,7 +1074,25 @@
     "venueHeading": "平台",
     "desktopOnly": "桌面端",
     "venueError": "错误",
-    "trending": "热门"
+    "trending": "热门",
+    "names": {
+      "esports": "电竞",
+      "sports": "体育",
+      "mentions": "言论",
+      "elections": "选举",
+      "crypto": "加密货币",
+      "climate": "气候",
+      "health": "健康",
+      "geopolitics": "地缘政治",
+      "commodities": "大宗商品",
+      "transport": "交通",
+      "economics": "经济",
+      "financials": "金融",
+      "companies": "公司",
+      "techScience": "科技与科学",
+      "culture": "文化",
+      "politics": "政治"
+    }
   },
   "resolvingSoon": {
     "resolves": "{{when}} 结算",
