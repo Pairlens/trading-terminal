@@ -1,13 +1,17 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 /**
- * The fitContent cap, and the geometry every shipped board is held to.
+ * The fitContent cap, the geometry every shipped board is held to, and the
+ * box a lone column gets.
  *
- * Two halves, one subject. The cap is what stops a content-sized cell from
+ * Three parts, one subject. The cap is what stops a content-sized cell from
  * eating a column whole; the board sweep is what stops a default layout from
- * quietly drifting away from 100%. Both are about a pane getting the room it
- * was promised.
+ * quietly drifting away from 100%; the shell check is what stops a
+ * single-column board from being handed no width at all. All three are about
+ * a pane getting the room it was promised.
  */
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, test } from 'bun:test'
 
 import {
@@ -149,4 +153,26 @@ describe('every shipped board', () => {
       }
     },
   )
+})
+
+describe('a board of one column', () => {
+  // With two or more columns a `ResizablePanel` hands each one its box. Alone,
+  // the column is rendered straight into the board's flex row, and a flex item
+  // with no basis shrinks to the width of its own content: the Markets board,
+  // Chart Focus and Laptop Focused all opened as a narrow strip against a
+  // screen of empty ground. Nothing errors, so only a screenshot catches it.
+  test('is handed the whole board rather than shrinking to its content', () => {
+    const source = readFileSync(
+      join(import.meta.dir, '..', 'layout-shell.tsx'),
+      'utf8',
+    )
+    const branch = source.slice(
+      source.indexOf('if (layout.columns.length === 1)'),
+    )
+    expect(branch).toContain('if (layout.columns.length === 1)')
+    const wrapper = branch.match(
+      /className="([^"]*)">\s*<LayoutColumn column=\{col\}/,
+    )
+    expect(wrapper?.[1] ?? '').toContain('flex-1')
+  })
 })
