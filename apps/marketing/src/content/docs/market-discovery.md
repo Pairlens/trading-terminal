@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 8 min read
 ---
 
@@ -31,6 +31,10 @@ answers "what should I be looking at". Each asset class gets its own, ranked by
 what matters there, funding and basis on perps, turnover on pools, the calendar
 on stocks, the clock and the odds move on event contracts. See
 [workspaces](/docs/workspaces).
+
+The **CEX Spot** board carries a venue button on its bar, left of **Panes**.
+Spot rows are priced and opened on whichever exchange you last chose, and that
+button is where you choose it without leaving the board.
 
 The pair picker filters by asset class, and two classes get their own tab.
 **Predictions** rows read as the question rather than the ticker, because a
