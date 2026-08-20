@@ -31,7 +31,10 @@ export const pairlensIntelligenceManifest: PluginManifest = {
   description:
     'AI inference, instrument discovery, news feeds, and market intelligence powered by the Pairlens backend',
   homepage: 'https://pairlens.finance',
-  icon: 'https://pairlens.finance/favicon.svg',
+  // Served from the terminal bundle, not pairlens.finance: a first-party
+  // plugin's mark must render offline, on the desktop app, and inside the
+  // desktop CSP without reaching for the marketing site.
+  icon: '/logo512.png',
   // Hosted AI is the paid Pairlens Intelligence add-on: signed-in users start
   // at 'free' (no hosted AI); an active subscription grants 'intelligence'
   // via /api/entitlements. BYOK AI provider plugins are never gated.

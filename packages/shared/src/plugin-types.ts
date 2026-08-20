@@ -521,6 +521,15 @@ export type PluginManifest = {
   author: string
   description: LocalizedText
   homepage?: string
+  /**
+   * Brand mark, as an image URL. NOT a lucide icon name — the store renders
+   * this straight into an `<img src>`, so a name lands as a failed request and
+   * a generic fallback glyph.
+   *
+   * Bundled plugins point at a path the terminal serves itself
+   * (`/posters/<id>.png`, `/logo512.png`): a first-party mark has to render
+   * offline, in the desktop app, and under the desktop CSP.
+   */
   icon?: string
   minTerminalVersion?: string
   capabilities: Array<PluginCapabilityDeclaration>
