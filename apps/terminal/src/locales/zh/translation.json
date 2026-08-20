@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "按最近五天小时收盘价算出的年化已实现波动率 {{sigma}}%，做无漂移扩散。",
+    "modelTooltip": "以 {{sigma}}% 年化已实现波动率计算的无漂移扩散，取自最近一天的五分钟收盘价。",
     "referenceTooltip": "按 {{source}} 结算。",
-    "modelNote": "模型采用近期已实现波动率下的无漂移扩散，未计入手续费、买卖价差和盘口深度。",
-    "approxNote": "≈ 表示该基准取自包含平台一分钟结算价的那根小时线。",
-    "desktopOnly": "{{venues}} 需要桌面应用。",
     "viewFocus": "聚焦",
     "viewBoard": "看板",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "卖",
       "oddsStale": "赔率已过期"
     },
-    "oddsStaleTooltip": "该平台的赔率尚未刷新，与实时价格比较得出的 edge 没有意义。"
+    "oddsStaleTooltip": "该平台的赔率尚未刷新，与实时价格比较得出的 edge 没有意义。",
+    "referenceApproxTooltip": "按 {{source}} 结算。≈ 表示该参考价读自包含平台一分钟结算成交价的那个小时。"
   },
   "onboarding": {
     "phase": {

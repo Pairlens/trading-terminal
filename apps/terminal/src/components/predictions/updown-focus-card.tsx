@@ -143,6 +143,16 @@ export function UpDownFocusCard({ row, now }: { row: UpDownRow; now: number }) {
               sub={t('cryptoUpDown.focus.settlesOn', {
                 source: row.meta.settlementSource,
               })}
+              // The legend for the `≈`, on the number that draws it. It used to
+              // be a line in the pane's footnote, which is the one place a
+              // reader looking at the mark is not looking.
+              title={
+                row.meta.referenceExact
+                  ? undefined
+                  : t('cryptoUpDown.referenceApproxTooltip', {
+                      source: row.meta.settlementSource,
+                    })
+              }
               value={
                 reference === undefined
                   ? '–'
@@ -273,15 +283,17 @@ function Stat({
   sub,
   tone = 'muted',
   subTone = 'muted',
+  title,
 }: {
   label: string
   value: string
   sub?: string
   tone?: 'muted' | 'up' | 'down'
   subTone?: 'muted' | 'up' | 'down'
+  title?: string
 }) {
   return (
-    <div className="min-w-0">
+    <div className="min-w-0" title={title}>
       <p className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
         {label}
       </p>

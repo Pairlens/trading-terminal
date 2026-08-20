@@ -23,8 +23,9 @@
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Vote } from 'lucide-react'
+import { Monitor, Vote } from 'lucide-react'
 import { cn } from '@pairlens/ui'
+import { Badge } from '@pairlens/ui/components/ui/badge'
 import { CategoryRailSkeleton } from './prediction-skeletons'
 import type { LucideIcon } from 'lucide-react'
 
@@ -155,15 +156,30 @@ export function CategoriesPane() {
               >
                 {venue.label}
               </span>
+              {/* The same badge the venue picker draws for a desktop-only
+                  venue, down to the glyph: this row and that menu are two
+                  places saying the identical thing about the identical venue,
+                  and one of them saying it in bare grey type read as a
+                  disabled label rather than as a platform fact. The error mark
+                  beside it takes the badge shape too, because two different
+                  shapes in one slot in one row is the mismatch that made the
+                  first one look accidental. */}
               {result?.desktopOnly && (
-                <span className="shrink-0 text-[9.5px] text-muted-foreground">
+                <Badge
+                  className="h-4 shrink-0 gap-1 px-1.5 text-[10px] text-muted-foreground"
+                  variant="outline"
+                >
+                  <Monitor />
                   {t('predictionCategories.desktopOnly')}
-                </span>
+                </Badge>
               )}
               {!result?.desktopOnly && result?.error && (
-                <span className="shrink-0 text-[9.5px] text-amber-600 dark:text-amber-400">
+                <Badge
+                  className="h-4 shrink-0 px-1.5 text-[10px] text-amber-600 dark:text-amber-400"
+                  variant="outline"
+                >
                   {t('predictionCategories.venueError')}
-                </span>
+                </Badge>
               )}
             </div>
           )

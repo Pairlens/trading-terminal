@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Khuếch tán không trôi ở mức biến động thực tế quy năm {{sigma}}%, tính từ giá đóng cửa theo giờ của năm ngày gần nhất.",
+    "modelTooltip": "Khuếch tán không trôi ở mức biến động thực tế quy năm {{sigma}}%, từ các giá đóng cửa năm phút trong ngày gần nhất.",
     "referenceTooltip": "Thanh toán theo {{source}}.",
-    "modelNote": "Mô hình là một khuếch tán không trôi theo biến động thực tế gần đây. Nó bỏ qua phí, chênh lệch giá mua bán và độ sâu sổ lệnh.",
-    "approxNote": "≈ đánh dấu tham chiếu đọc từ khung giờ chứa giá thanh toán một phút của sàn.",
-    "desktopOnly": "{{venues}} cần ứng dụng máy tính.",
     "viewFocus": "Tiêu điểm",
     "viewBoard": "Bảng",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "BÁN",
       "oddsStale": "tỷ lệ đã cũ"
     },
-    "oddsStaleTooltip": "Tỷ lệ của sàn chưa được làm mới nên edge so với giá trực tiếp sẽ không có ý nghĩa."
+    "oddsStaleTooltip": "Tỷ lệ của sàn chưa được làm mới nên edge so với giá trực tiếp sẽ không có ý nghĩa.",
+    "referenceApproxTooltip": "Thanh toán theo {{source}}. Dấu ≈ đánh dấu mốc tham chiếu đọc từ giờ chứa bản in thanh toán một phút của sàn."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Sàn này không gắn danh mục cho các sự kiện của mình.",
     "venueHeading": "Sàn",
-    "desktopOnly": "máy tính",
+    "desktopOnly": "Máy tính",
     "venueError": "lỗi",
     "trending": "Nổi bật",
     "names": {

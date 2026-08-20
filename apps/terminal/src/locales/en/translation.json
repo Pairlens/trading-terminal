@@ -5747,7 +5747,7 @@
   "predictionCategories": {
     "noneBody": "This venue does not tag its events by category.",
     "venueHeading": "Venue",
-    "desktopOnly": "desktop",
+    "desktopOnly": "Desktop",
     "venueError": "error",
     "trending": "Trending",
     "names": {
@@ -5826,11 +5826,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Driftless diffusion at {{sigma}}% annualized realized volatility, from the last five days of hourly closes.",
+    "modelTooltip": "Driftless diffusion at {{sigma}}% annualized realized volatility, from the last day of five-minute closes.",
     "referenceTooltip": "Settles on {{source}}.",
-    "modelNote": "Model is a driftless diffusion at recent realized volatility. It ignores fees, the spread and the depth of the book.",
-    "approxNote": "≈ marks a reference read from the hour containing the venue's one-minute settlement print.",
-    "desktopOnly": "{{venues}} needs the desktop app.",
     "viewFocus": "Focus",
     "viewBoard": "Board",
     "focus": {
@@ -5854,7 +5851,8 @@
       "printSell": "SELL",
       "oddsStale": "odds are stale"
     },
-    "oddsStaleTooltip": "The venue's odds have not refreshed, so the edge against a live price would be meaningless."
+    "oddsStaleTooltip": "The venue's odds have not refreshed, so the edge against a live price would be meaningless.",
+    "referenceApproxTooltip": "Settles on {{source}}. The ≈ marks a reference read from the hour containing the venue's one-minute settlement print."
   },
   "resolvingSoon": {
     "resolves": "Resolves {{when}}",

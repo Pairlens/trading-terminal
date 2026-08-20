@@ -57,7 +57,6 @@ import { UpDownFocusCard } from '@/components/predictions/updown-focus-card'
 import {
   PaneEmpty,
   PaneErrorBanner,
-  PaneFootnote,
   Th,
 } from '@/components/panes/pane-primitives'
 import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
@@ -158,14 +157,6 @@ export function CryptoUpDownPane() {
 
   const results = data ?? []
   const errors = results.filter((r) => r.error)
-  const desktopOnly = results.filter((r) => r.desktopOnly).map((r) => r.label)
-  // Scoped to what is on screen. The approximation note explains a "≈" the
-  // reader can see, so on the focus card it is about that one contract and on
-  // the board it is about any row that carries the mark.
-  const inexact =
-    view === 'focus'
-      ? focusRow !== null && !focusRow.meta.referenceExact
-      : priced.some((row) => !row.meta.referenceExact)
 
   if (venues.length === 0) {
     return (
@@ -308,13 +299,6 @@ export function CryptoUpDownPane() {
           </table>
         )}
       </div>
-
-      <Footnote
-        desktopOnly={desktopOnly}
-        focus={view === 'focus'}
-        hasRows={priced.length > 0}
-        inexact={inexact}
-      />
     </div>
   )
 }
@@ -504,9 +488,15 @@ function Row({ row, onOpen }: { row: UpDownRow; onOpen: () => void }) {
 
       <td
         className="py-1.5 pr-3 text-right font-mono tabular-nums text-muted-foreground"
-        title={t('cryptoUpDown.referenceTooltip', {
-          source: row.meta.settlementSource,
-        })}
+        title={
+          row.meta.referenceExact
+            ? t('cryptoUpDown.referenceTooltip', {
+                source: row.meta.settlementSource,
+              })
+            : t('cryptoUpDown.referenceApproxTooltip', {
+                source: row.meta.settlementSource,
+              })
+        }
       >
         {row.reference === undefined ? (
           <Missing state={row.referenceState} />
@@ -590,33 +580,6 @@ function Missing({ state }: { state: UpDownRow['referenceState'] }) {
     <span className="text-muted-foreground/60">
       {state === 'pending' ? '···' : '–'}
     </span>
-  )
-}
-
-function Footnote({
-  hasRows,
-  inexact,
-  desktopOnly,
-  focus,
-}: {
-  hasRows: boolean
-  inexact: boolean
-  desktopOnly: Array<string>
-  /** Focus draws one window, so the board's column-wide caveats do not apply. */
-  focus: boolean
-}) {
-  const { t } = useTranslation()
-  if (!hasRows && desktopOnly.length === 0) return null
-  return (
-    <PaneFootnote className="flex-col items-start gap-0.5 leading-relaxed">
-      {hasRows && !focus && <span>{t('cryptoUpDown.modelNote')}</span>}
-      {inexact && <span>{t('cryptoUpDown.approxNote')}</span>}
-      {desktopOnly.length > 0 && (
-        <span>
-          {t('cryptoUpDown.desktopOnly', { venues: desktopOnly.join(', ') })}
-        </span>
-      )}
-    </PaneFootnote>
   )
 }
 
