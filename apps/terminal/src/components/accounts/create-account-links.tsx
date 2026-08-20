@@ -5,11 +5,17 @@ import { motion, useReducedMotion } from 'motion/react'
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
 
 import { AFFILIATE_VENUE_MAP } from '@pairlens/shared/affiliates'
+import { cn } from '@pairlens/ui'
 
 import { Button } from '@pairlens/ui/components/ui/button'
 
 import { PluginPosterArt } from '../plugins/plugin-icon'
-import { POSTER_MORPH, SectionEyebrow, StoreAurora } from '../store/store-shell'
+import {
+  POSTER_MORPH,
+  STORE_BAR_OFFSET,
+  SectionEyebrow,
+  StoreAurora,
+} from '../store/store-shell'
 import { venueBrand, venuePluginId, venuePosterSrc } from './venue-art'
 import { track } from '@/lib/analytics-events'
 import { useAffiliateLinks } from '@/hooks/use-affiliate-links'
@@ -290,8 +296,14 @@ export function AllVenuesPage({
   return (
     <motion.div
       // Ground, not a sheet: the posters are cards floating on it, the same
-      // way a board's panes are.
-      className="absolute inset-0 z-40 overflow-y-auto bg-background"
+      // way a board's panes are. It starts at the bar's lower edge rather than
+      // at `inset-0`, the way a storefront's product sheet does: the page's own
+      // bar hovers over this surface, and covering it would strand the user
+      // with no search, no way back and nothing but this page's own back link.
+      className={cn(
+        'absolute inset-x-0 bottom-0 z-40 overflow-y-auto bg-background',
+        STORE_BAR_OFFSET,
+      )}
       // Opacity only — a transform here would skew the shared-element morphs.
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

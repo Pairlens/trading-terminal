@@ -15,6 +15,7 @@ import {
   Wallet,
 } from 'lucide-react'
 
+import { cn } from '@pairlens/ui'
 import { Alert, AlertDescription } from '@pairlens/ui/components/ui/alert'
 import { Button } from '@pairlens/ui/components/ui/button'
 import {
@@ -25,7 +26,7 @@ import {
   EmptyTitle,
 } from '@pairlens/ui/components/ui/empty'
 
-import { SectionEyebrow, StoreAurora } from '../store/store-shell'
+import { SectionEyebrow, StoreCanvas } from '../store/store-shell'
 import { AddCredentialPicker } from './add-credential-picker'
 import {
   AllVenuesPage,
@@ -45,7 +46,11 @@ import { WALLET_SCHEMAS, useWalletsStore } from '@/stores/wallets-store'
 import { isBrokerMarket, useCredentialsStore } from '@/stores/credentials-store'
 import { useConnectWizardState } from '@/hooks/use-connect-wizard-state'
 import { usePortfolioValue } from '@/hooks/use-portfolio-value'
-import { HEADER_TITLE } from '@/components/chrome/header-chrome'
+import {
+  HEADER_CHIP,
+  HEADER_GROUP,
+  HEADER_TITLE,
+} from '@/components/chrome/header-chrome'
 import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { PageHeader } from '@/components/page-header'
 import { VaultEnrollmentDialog } from '@/components/security/vault-enrollment-dialog'
@@ -394,18 +399,26 @@ export function AccountsPage() {
     sealed || readFailed || credentials.length > 0 || cryptoWallets.length > 0
 
   return (
-    <main className={PAGE_FRAME}>
-      {/* Compact header */}
+    // `relative` because the bar hovers over the page rather than stacking
+    // above it, the way both storefronts do it: this page paints its own light
+    // (aurora, spotlight hero) all the way to the top edge, and a flat strip of
+    // chrome above that artwork read as a seam.
+    <main className={cn(PAGE_FRAME, 'relative')}>
       <PageHeader
+        floating
         actions={
-          <div className="flex items-center gap-2">
+          <div className={HEADER_GROUP}>
             <LocalOnlyBadge />
             {(availableSchemaMarkets.length > 0 ||
               availableChains.length > 0) && (
-              <Button size="sm" onClick={openTypePicker}>
+              <button
+                type="button"
+                className={HEADER_CHIP}
+                onClick={openTypePicker}
+              >
                 <Plus className="size-3.5" />
                 {t('accounts.connect')}
-              </Button>
+              </button>
             )}
           </div>
         }
@@ -413,68 +426,65 @@ export function AccountsPage() {
         <h1 className={HEADER_TITLE}>{t('accounts.pageTitle')}</h1>
       </PageHeader>
 
-      {/* Content. The 10px inset is the board's own ground inset, so the
-          scrolling body starts on the same x a board column starts on and
-          moving between the two stops reading as two products. The aurora is
-          absolute, so it still washes the full frame behind it. */}
-      <section className="relative min-h-0 flex-1 overflow-hidden px-2.5 pb-2.5">
-        <StoreAurora />
-        <div className="relative z-10 h-full overflow-y-auto">
-          <div className="mx-auto max-w-[1060px] px-8 pb-16 pt-8">
-            {!loaded ? (
-              <div className="flex flex-col items-center justify-center py-16">
-                <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
-              </div>
-            ) : (
-              <>
-                {/* Add credential type picker */}
-                <AddCredentialPicker
-                  open={showTypePicker}
-                  onOpenChange={setShowTypePicker}
-                  hasExchanges={exchangeSchemaMarkets.length > 0}
-                  hasChains={availableChains.length > 0}
-                  hasBrokers={brokerSchemaMarkets.length > 0}
-                  onPick={pickKind}
-                />
+      {/* The storefronts' own canvas: aurora behind, the board's 10px ground
+          inset plus the bar's height on top, and the scrim that fades in behind
+          the bar once the content starts passing under it. */}
+      <StoreCanvas>
+        <div className="mx-auto max-w-[1060px] px-8 pb-16 pt-8">
+          {!loaded ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <Loader2 className="size-6 animate-spin text-muted-foreground/60" />
+            </div>
+          ) : (
+            <>
+              {/* Add credential type picker */}
+              <AddCredentialPicker
+                open={showTypePicker}
+                onOpenChange={setShowTypePicker}
+                hasExchanges={exchangeSchemaMarkets.length > 0}
+                hasChains={availableChains.length > 0}
+                hasBrokers={brokerSchemaMarkets.length > 0}
+                onPick={pickKind}
+              />
 
-                {/* Exchange / broker API key wizard */}
-                <ConnectExchangeWizard
-                  open={showForm}
-                  onOpenChange={closeWizard}
-                  initialMarket={wizardInitialMarket}
-                  availableMarkets={wizardMarkets}
-                  variant={formKind}
-                  isBusy={isBusy}
-                  feedback={feedback}
-                  onSubmit={handleSubmit}
-                  mode={mode}
-                  setMode={setMode}
-                  setSelectedMarket={setSelectedMarket}
-                  walletName={walletName}
-                  setWalletName={setWalletName}
-                  formFields={formFields}
-                  setFormFields={setFormFields}
-                  setFeedback={setFeedback}
-                  schema={schema}
-                  resolvedMarket={resolvedMarket}
-                />
+              {/* Exchange / broker API key wizard */}
+              <ConnectExchangeWizard
+                open={showForm}
+                onOpenChange={closeWizard}
+                initialMarket={wizardInitialMarket}
+                availableMarkets={wizardMarkets}
+                variant={formKind}
+                isBusy={isBusy}
+                feedback={feedback}
+                onSubmit={handleSubmit}
+                mode={mode}
+                setMode={setMode}
+                setSelectedMarket={setSelectedMarket}
+                walletName={walletName}
+                setWalletName={setWalletName}
+                formFields={formFields}
+                setFormFields={setFormFields}
+                setFeedback={setFeedback}
+                schema={schema}
+                resolvedMarket={resolvedMarket}
+              />
 
-                {/* Add crypto wallet dialog */}
-                <AddCryptoWalletDialog
-                  open={showCryptoForm}
-                  onOpenChange={setShowCryptoForm}
-                  availableChains={availableChains}
-                  cryptoChain={cryptoChain}
-                  setCryptoChain={setCryptoChain}
-                  cryptoLabel={cryptoLabel}
-                  setCryptoLabel={setCryptoLabel}
-                  cryptoPrivateKey={cryptoPrivateKey}
-                  setCryptoPrivateKey={setCryptoPrivateKey}
-                  isBusy={isBusy}
-                  onSubmit={handleAddCryptoWallet}
-                />
+              {/* Add crypto wallet dialog */}
+              <AddCryptoWalletDialog
+                open={showCryptoForm}
+                onOpenChange={setShowCryptoForm}
+                availableChains={availableChains}
+                cryptoChain={cryptoChain}
+                setCryptoChain={setCryptoChain}
+                cryptoLabel={cryptoLabel}
+                setCryptoLabel={setCryptoLabel}
+                cryptoPrivateKey={cryptoPrivateKey}
+                setCryptoPrivateKey={setCryptoPrivateKey}
+                isBusy={isBusy}
+                onSubmit={handleAddCryptoWallet}
+              />
 
-                {/* Enrollment gate. Resumes whatever the user was doing.
+              {/* Enrollment gate. Resumes whatever the user was doing.
                     The dialog closes itself BEFORE it reports success, so
                     clearing `pendingAction` on close would drop the very retry
                     this exists for — and the user would have to press Save
@@ -482,129 +492,275 @@ export function AccountsPage() {
                     consumes it, and only a real enrollment fires that, so a
                     cancelled dialog just leaves a closure nothing calls; the
                     next attempt overwrites it. */}
-                <VaultEnrollmentDialog
-                  open={enrollOpen}
-                  onOpenChange={setEnrollOpen}
-                  onEnrolled={resumePending}
-                />
-                {/* A sealed vault is a locked door, not a failed save:
+              <VaultEnrollmentDialog
+                open={enrollOpen}
+                onOpenChange={setEnrollOpen}
+                onEnrolled={resumePending}
+              />
+              {/* A sealed vault is a locked door, not a failed save:
                     unlocking resumes the submit that hit it, with the form
                     still filled in. */}
-                <VaultUnlockDialog
-                  open={unlockOpen}
-                  onOpenChange={setUnlockOpen}
-                  onUnlocked={resumePending}
-                />
-                {/* Offered after the save, never before it: the key is stored
+              <VaultUnlockDialog
+                open={unlockOpen}
+                onOpenChange={setUnlockOpen}
+                onUnlocked={resumePending}
+              />
+              {/* Offered after the save, never before it: the key is stored
                     either way, and a security prompt in front of the Save
                     button is how people abandon the connect flow. */}
-                <VaultPasskeyNudgeDialog
-                  open={passkeyNudgeVenue !== null}
-                  onOpenChange={(next) =>
-                    setPasskeyNudgeVenue(next ? passkeyNudgeVenue : null)
-                  }
-                  venueLabel={passkeyNudgeVenue ?? ''}
-                />
+              <VaultPasskeyNudgeDialog
+                open={passkeyNudgeVenue !== null}
+                onOpenChange={(next) =>
+                  setPasskeyNudgeVenue(next ? passkeyNudgeVenue : null)
+                }
+                venueLabel={passkeyNudgeVenue ?? ''}
+              />
 
-                {/* A sealed vault is NOT an empty account list. Saying so is
+              {/* A sealed vault is NOT an empty account list. Saying so is
                     the difference between "unlock to see your keys" and a
                     user re-entering API keys over a vault they can't open. */}
-                {sealed && (
-                  <Alert className="mb-6 border-amber-500/30 bg-amber-500/10">
-                    <KeyRound className="size-4 text-amber-600 dark:text-amber-400" />
-                    <AlertDescription className="flex flex-wrap items-center gap-3">
-                      <span className="min-w-0 flex-1">
-                        {t('accounts.vaultSealedBody')}
-                      </span>
-                      <Button size="sm" onClick={() => setUnlockOpen(true)}>
-                        {t('security.vault.sealedBannerAction')}
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {readFailed && (
-                  <Alert className="mb-6 border-destructive/30 bg-destructive/10">
-                    <TriangleAlert className="size-4 text-destructive" />
-                    <AlertDescription className="flex flex-wrap items-center gap-3">
-                      <span className="min-w-0 flex-1">
-                        {t('accounts.credentialsUnreadable')}
-                      </span>
-                      <Button size="sm" onClick={() => void reload()}>
-                        {t('common.retry')}
-                      </Button>
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {/* Spotlight hero — the acquisition moment, shown until the
-                    first venue is connected */}
-                {!hasAnyCredential && (
-                  <div className="pl-store-heroin mb-11 pt-2">
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
-                      {t('accounts.hero.eyebrow', 'Your venues')}
+              {sealed && (
+                <Alert className="mb-6 border-amber-500/30 bg-amber-500/10">
+                  <KeyRound className="size-4 text-amber-600 dark:text-amber-400" />
+                  <AlertDescription className="flex flex-wrap items-center gap-3">
+                    <span className="min-w-0 flex-1">
+                      {t('accounts.vaultSealedBody')}
                     </span>
-                    <h2 className="mt-3 max-w-[24ch] font-serif text-[40px] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground">
-                      {t('accounts.hero.title', 'Trade with your own keys')}
-                    </h2>
-                    <p className="mt-3.5 max-w-[54ch] text-[14.5px] leading-[1.65] text-muted-foreground">
-                      {t(
-                        'accounts.hero.subtitle',
-                        'Connect exchanges, brokers, and on-chain wallets with API keys that never leave this device. Pairlens talks to each venue directly: no custody, no middlemen.',
-                      )}
-                    </p>
-                    {(availableSchemaMarkets.length > 0 ||
-                      availableChains.length > 0) && (
-                      <Button className="mt-6" onClick={openTypePicker}>
-                        <Plus className="size-3.5" />
-                        {t('accounts.connect')}
-                      </Button>
+                    <Button size="sm" onClick={() => setUnlockOpen(true)}>
+                      {t('security.vault.sealedBannerAction')}
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {readFailed && (
+                <Alert className="mb-6 border-destructive/30 bg-destructive/10">
+                  <TriangleAlert className="size-4 text-destructive" />
+                  <AlertDescription className="flex flex-wrap items-center gap-3">
+                    <span className="min-w-0 flex-1">
+                      {t('accounts.credentialsUnreadable')}
+                    </span>
+                    <Button size="sm" onClick={() => void reload()}>
+                      {t('common.retry')}
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Spotlight hero — the acquisition moment, shown until the
+                    first venue is connected */}
+              {!hasAnyCredential && (
+                <div className="pl-store-heroin mb-11 pt-2">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+                    {t('accounts.hero.eyebrow', 'Your venues')}
+                  </span>
+                  <h2 className="mt-3 max-w-[24ch] font-serif text-[40px] font-semibold leading-[1.05] tracking-[-0.03em] text-foreground">
+                    {t('accounts.hero.title', 'Trade with your own keys')}
+                  </h2>
+                  <p className="mt-3.5 max-w-[54ch] text-[14.5px] leading-[1.65] text-muted-foreground">
+                    {t(
+                      'accounts.hero.subtitle',
+                      'Connect exchanges, brokers, and on-chain wallets with API keys that never leave this device. Pairlens talks to each venue directly: no custody, no middlemen.',
                     )}
-                  </div>
+                  </p>
+                  {(availableSchemaMarkets.length > 0 ||
+                    availableChains.length > 0) && (
+                    <Button className="mt-6" onClick={openTypePicker}>
+                      <Plus className="size-3.5" />
+                      {t('accounts.connect')}
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              <div className="space-y-11">
+                {/* Portfolio overview */}
+                {credentials.length > 0 && holdings.length > 0 && (
+                  <section>
+                    <SectionEyebrow>
+                      {t('accounts.portfolioEyebrow', 'Portfolio')}
+                    </SectionEyebrow>
+                    <div className="mt-3.5">
+                      <PortfolioOverview
+                        holdings={holdings}
+                        totalValue={totalValue}
+                        currencySymbol={currencySymbol}
+                        displayCurrency={displayCurrency}
+                        credentials={credentials}
+                      />
+                    </div>
+                  </section>
                 )}
 
-                <div className="space-y-11">
-                  {/* Portfolio overview */}
-                  {credentials.length > 0 && holdings.length > 0 && (
-                    <section>
-                      <SectionEyebrow>
-                        {t('accounts.portfolioEyebrow', 'Portfolio')}
-                      </SectionEyebrow>
-                      <div className="mt-3.5">
-                        <PortfolioOverview
-                          holdings={holdings}
-                          totalValue={totalValue}
-                          currencySymbol={currencySymbol}
-                          displayCurrency={displayCurrency}
-                          credentials={credentials}
-                        />
+                {/* Success feedback */}
+                {!showForm && feedback?.type === 'success' && (
+                  <Alert>
+                    <CircleCheck className="size-4 text-emerald-500" />
+                    <AlertDescription>{feedback.message}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* ── Exchange API Keys ─────────────────────────── */}
+                <section className="space-y-4">
+                  <SectionHeader
+                    title={t('accounts.exchangeAccountsTitle')}
+                    description={t('accounts.exchangeAccountsDesc')}
+                    count={exchangeCredentials.length}
+                    action={
+                      exchangeSchemaMarkets.length > 0 ? (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => openWizard('exchange')}
+                        >
+                          <Plus className="size-3.5" />
+                          {t('accounts.connectExchange')}
+                        </Button>
+                      ) : undefined
+                    }
+                  />
+
+                  <SectionColumns
+                    rail={
+                      <VenueRail
+                        venues={cexVenues}
+                        kind="cex"
+                        onSeeAll={() => setVenuesOpen(true)}
+                      />
+                    }
+                  >
+                    {exchangeCredentials.length === 0 ? (
+                      <EmptyPanel
+                        icon={
+                          exchangeSchemaMarkets.length === 0 ? Unplug : KeyRound
+                        }
+                        title={
+                          exchangeSchemaMarkets.length === 0
+                            ? t('accounts.noConnectors')
+                            : t('accounts.noExchangeAccounts')
+                        }
+                        description={
+                          exchangeSchemaMarkets.length === 0
+                            ? t('accounts.noConnectorsDesc')
+                            : t('accounts.noExchangeAccountsDesc')
+                        }
+                        action={
+                          exchangeSchemaMarkets.length > 0 && !showForm ? (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="mt-3 gap-2"
+                              onClick={() => openWizard('exchange')}
+                            >
+                              <Plus className="size-3.5" />
+                              {t('accounts.connectExchange')}
+                            </Button>
+                          ) : undefined
+                        }
+                      />
+                    ) : (
+                      <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                        {exchangeCredentials.map((cred, index) => (
+                          <ExchangeAccountCard
+                            key={cred.id}
+                            credential={cred}
+                            index={index}
+                            onRemove={() => void handleRemove(cred.id)}
+                            onEntityChange={(entity) =>
+                              void handleEntityChange(cred.id, entity)
+                            }
+                            isBusy={isBusy}
+                            currencySymbol={currencySymbol}
+                          />
+                        ))}
                       </div>
-                    </section>
-                  )}
+                    )}
+                  </SectionColumns>
+                </section>
 
-                  {/* Success feedback */}
-                  {!showForm && feedback?.type === 'success' && (
-                    <Alert>
-                      <CircleCheck className="size-4 text-emerald-500" />
-                      <AlertDescription>{feedback.message}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {/* ── Exchange API Keys ─────────────────────────── */}
+                {/* ── Crypto Wallets ────────────────────────────── */}
+                {(availableChains.length > 0 || cryptoWallets.length > 0) && (
                   <section className="space-y-4">
                     <SectionHeader
-                      title={t('accounts.exchangeAccountsTitle')}
-                      description={t('accounts.exchangeAccountsDesc')}
-                      count={exchangeCredentials.length}
+                      title={t('accounts.cryptoWalletsTitle')}
+                      description={t('accounts.cryptoWalletsDesc')}
+                      count={cryptoWallets.length}
                       action={
-                        exchangeSchemaMarkets.length > 0 ? (
+                        availableChains.length > 0 ? (
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => openWizard('exchange')}
+                            onClick={() => openForChain()}
                           >
                             <Plus className="size-3.5" />
-                            {t('accounts.connectExchange')}
+                            {t('accounts.addWallet')}
+                          </Button>
+                        ) : undefined
+                      }
+                    />
+
+                    <SectionColumns
+                      rail={
+                        <ChainRail
+                          chains={availableChains}
+                          onAdd={openForChain}
+                        />
+                      }
+                    >
+                      {cryptoWallets.length === 0 ? (
+                        <EmptyPanel
+                          icon={Wallet}
+                          title={t('accounts.noCryptoWallets')}
+                          description={t('accounts.noCryptoWalletsDesc')}
+                          action={
+                            availableChains.length > 0 && !showCryptoForm ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="mt-3 gap-2"
+                                onClick={() => openForChain()}
+                              >
+                                <Plus className="size-3.5" />
+                                {t('accounts.addWallet')}
+                              </Button>
+                            ) : undefined
+                          }
+                        />
+                      ) : (
+                        <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+                          {cryptoWallets.map((wallet) => (
+                            <CryptoWalletCard
+                              key={wallet.id}
+                              wallet={wallet}
+                              onRemove={() =>
+                                void handleRemoveCryptoWallet(wallet.id)
+                              }
+                              isBusy={isBusy}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </SectionColumns>
+                  </section>
+                )}
+
+                {/* ── Stock Brokers ─────────────────────────────── */}
+                {(brokerSchemaMarkets.length > 0 ||
+                  brokerCredentials.length > 0) && (
+                  <section className="space-y-4">
+                    <SectionHeader
+                      title={t('accounts.brokerAccountsTitle')}
+                      description={t('accounts.brokerAccountsDesc')}
+                      count={brokerCredentials.length}
+                      action={
+                        brokerSchemaMarkets.length > 0 ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => openWizard('broker')}
+                          >
+                            <Plus className="size-3.5" />
+                            {t('accounts.connectBroker')}
                           </Button>
                         ) : undefined
                       }
@@ -613,46 +769,34 @@ export function AccountsPage() {
                     <SectionColumns
                       rail={
                         <VenueRail
-                          venues={cexVenues}
-                          kind="cex"
+                          venues={brokerVenues}
+                          kind="broker"
                           onSeeAll={() => setVenuesOpen(true)}
                         />
                       }
                     >
-                      {exchangeCredentials.length === 0 ? (
+                      {brokerCredentials.length === 0 ? (
                         <EmptyPanel
-                          icon={
-                            exchangeSchemaMarkets.length === 0
-                              ? Unplug
-                              : KeyRound
-                          }
-                          title={
-                            exchangeSchemaMarkets.length === 0
-                              ? t('accounts.noConnectors')
-                              : t('accounts.noExchangeAccounts')
-                          }
-                          description={
-                            exchangeSchemaMarkets.length === 0
-                              ? t('accounts.noConnectorsDesc')
-                              : t('accounts.noExchangeAccountsDesc')
-                          }
+                          icon={Landmark}
+                          title={t('accounts.noBrokerAccounts')}
+                          description={t('accounts.noBrokerAccountsDesc')}
                           action={
-                            exchangeSchemaMarkets.length > 0 && !showForm ? (
+                            !showForm ? (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="mt-3 gap-2"
-                                onClick={() => openWizard('exchange')}
+                                onClick={() => openWizard('broker')}
                               >
                                 <Plus className="size-3.5" />
-                                {t('accounts.connectExchange')}
+                                {t('accounts.connectBroker')}
                               </Button>
                             ) : undefined
                           }
                         />
                       ) : (
                         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                          {exchangeCredentials.map((cred, index) => (
+                          {brokerCredentials.map((cred, index) => (
                             <ExchangeAccountCard
                               key={cred.id}
                               credential={cred}
@@ -669,160 +813,25 @@ export function AccountsPage() {
                       )}
                     </SectionColumns>
                   </section>
-
-                  {/* ── Crypto Wallets ────────────────────────────── */}
-                  {(availableChains.length > 0 || cryptoWallets.length > 0) && (
-                    <section className="space-y-4">
-                      <SectionHeader
-                        title={t('accounts.cryptoWalletsTitle')}
-                        description={t('accounts.cryptoWalletsDesc')}
-                        count={cryptoWallets.length}
-                        action={
-                          availableChains.length > 0 ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => openForChain()}
-                            >
-                              <Plus className="size-3.5" />
-                              {t('accounts.addWallet')}
-                            </Button>
-                          ) : undefined
-                        }
-                      />
-
-                      <SectionColumns
-                        rail={
-                          <ChainRail
-                            chains={availableChains}
-                            onAdd={openForChain}
-                          />
-                        }
-                      >
-                        {cryptoWallets.length === 0 ? (
-                          <EmptyPanel
-                            icon={Wallet}
-                            title={t('accounts.noCryptoWallets')}
-                            description={t('accounts.noCryptoWalletsDesc')}
-                            action={
-                              availableChains.length > 0 && !showCryptoForm ? (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="mt-3 gap-2"
-                                  onClick={() => openForChain()}
-                                >
-                                  <Plus className="size-3.5" />
-                                  {t('accounts.addWallet')}
-                                </Button>
-                              ) : undefined
-                            }
-                          />
-                        ) : (
-                          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                            {cryptoWallets.map((wallet) => (
-                              <CryptoWalletCard
-                                key={wallet.id}
-                                wallet={wallet}
-                                onRemove={() =>
-                                  void handleRemoveCryptoWallet(wallet.id)
-                                }
-                                isBusy={isBusy}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </SectionColumns>
-                    </section>
-                  )}
-
-                  {/* ── Stock Brokers ─────────────────────────────── */}
-                  {(brokerSchemaMarkets.length > 0 ||
-                    brokerCredentials.length > 0) && (
-                    <section className="space-y-4">
-                      <SectionHeader
-                        title={t('accounts.brokerAccountsTitle')}
-                        description={t('accounts.brokerAccountsDesc')}
-                        count={brokerCredentials.length}
-                        action={
-                          brokerSchemaMarkets.length > 0 ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => openWizard('broker')}
-                            >
-                              <Plus className="size-3.5" />
-                              {t('accounts.connectBroker')}
-                            </Button>
-                          ) : undefined
-                        }
-                      />
-
-                      <SectionColumns
-                        rail={
-                          <VenueRail
-                            venues={brokerVenues}
-                            kind="broker"
-                            onSeeAll={() => setVenuesOpen(true)}
-                          />
-                        }
-                      >
-                        {brokerCredentials.length === 0 ? (
-                          <EmptyPanel
-                            icon={Landmark}
-                            title={t('accounts.noBrokerAccounts')}
-                            description={t('accounts.noBrokerAccountsDesc')}
-                            action={
-                              !showForm ? (
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="mt-3 gap-2"
-                                  onClick={() => openWizard('broker')}
-                                >
-                                  <Plus className="size-3.5" />
-                                  {t('accounts.connectBroker')}
-                                </Button>
-                              ) : undefined
-                            }
-                          />
-                        ) : (
-                          <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-                            {brokerCredentials.map((cred, index) => (
-                              <ExchangeAccountCard
-                                key={cred.id}
-                                credential={cred}
-                                index={index}
-                                onRemove={() => void handleRemove(cred.id)}
-                                onEntityChange={(entity) =>
-                                  void handleEntityChange(cred.id, entity)
-                                }
-                                isBusy={isBusy}
-                                currencySymbol={currencySymbol}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </SectionColumns>
-                    </section>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-
-        {/* Full-screen all-venues page — rail rows morph into grid posters */}
-        <AnimatePresence>
-          {venuesOpen && (
-            <AllVenuesPage
-              cexVenues={cexVenues}
-              brokerVenues={brokerVenues}
-              onBack={() => setVenuesOpen(false)}
-            />
+                )}
+              </div>
+            </>
           )}
-        </AnimatePresence>
-      </section>
+        </div>
+      </StoreCanvas>
+
+      {/* Full-screen all-venues page — rail rows morph into grid posters.
+          Outside the canvas, like a storefront's product sheet: it is absolute
+          against the frame, so a scrolling ancestor would carry it up with it. */}
+      <AnimatePresence>
+        {venuesOpen && (
+          <AllVenuesPage
+            cexVenues={cexVenues}
+            brokerVenues={brokerVenues}
+            onBack={() => setVenuesOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </main>
   )
 }

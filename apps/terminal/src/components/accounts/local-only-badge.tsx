@@ -4,16 +4,21 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
 
-import { Badge } from '@pairlens/ui/components/ui/badge'
-
+import { HEADER_CHIP } from '@/components/chrome/header-chrome'
 import { KeySecurityDialog } from '@/components/security/key-security-dialog'
 
 // ---------------------------------------------------------------------------
 // Local Only badge
 //
-// A prominent, clickable trust signal in the Accounts header. The explainer it
-// opens lives in components/security/key-security-dialog so the same answer is
-// one click away from every other place the app makes this promise.
+// A clickable trust signal on the Accounts bar. The explainer it opens lives in
+// components/security/key-security-dialog so the same answer is one click away
+// from every other place the app makes this promise.
+//
+// It wears the bar's chip rather than an outlined badge: every control on a
+// page bar is a borderless `--card` chip at 10px (see chrome/header-chrome),
+// and a green-outlined pill was the loudest thing on a bar that draws no boxes
+// at all. The promise is still green — the shield keeps the colour, which is
+// what the eye reads here anyway.
 // ---------------------------------------------------------------------------
 
 export function LocalOnlyBadge() {
@@ -22,16 +27,15 @@ export function LocalOnlyBadge() {
 
   return (
     <>
-      <Badge
-        variant="outline"
-        render={<button type="button" />}
+      <button
+        type="button"
         onClick={() => setOpen(true)}
         aria-label={t('accounts.localOnly.badgeAria')}
-        className="h-6 cursor-pointer gap-1.5 border-emerald-500/30 bg-emerald-500/10 px-2.5 text-xs font-medium text-emerald-700 transition-colors hover:border-emerald-500/50 hover:bg-emerald-500/20 dark:text-emerald-300"
+        className={HEADER_CHIP}
       >
-        <ShieldCheck className="size-3.5" />
+        <ShieldCheck className="size-3.5 text-emerald-600 dark:text-emerald-400" />
         {t('accounts.localOnly.badge')}
-      </Badge>
+      </button>
 
       <KeySecurityDialog open={open} onOpenChange={setOpen} />
     </>
