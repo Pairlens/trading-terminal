@@ -115,7 +115,9 @@
     "installConnector": "Pasang konektor",
     "emptyTitle": "Tidak ada chain untuk dijelajahi",
     "emptyBody": "Build ini tidak menyertakan konektor on-chain, jadi tidak ada chain yang pool-nya bisa diperingkat.",
-    "volumesLabel": "Volume per chain"
+    "volumesLabel": "Volume per chain",
+    "loadingLabel": "Memuat volume per chain",
+    "pacedNote": "Menjumlahkan volume 24 jam tiap chain. Penyedia data on-chain punya kuota, jadi chain terisi satu per satu dalam beberapa detik."
   },
   "earningsCalendar": {
     "capped": "Menampilkan {{shown}} dari {{total}} laporan pertama.",

@@ -43,10 +43,17 @@ const STORAGE_KEY = 'pairlens:dex-discovery-cache'
 export const DISCOVERY_SNAPSHOT_TTL_MS = 30 * 60_000
 
 /**
- * Entries kept. The board reads at most a listing and an aggregate row per
- * chain, so this covers browsing several chains and still bounds the blob.
+ * Entries kept. The board reads two listings and an aggregate row per chain,
+ * so this covers browsing several chains and still bounds the blob.
+ *
+ * Twenty-four rather than the twelve this started at, because the chain rail
+ * now keeps ONE ENTRY PER CHAIN instead of one per rail: it fetches per chain
+ * so a row can paint as its own answer lands, and a six-chain rail that spent
+ * six of twelve slots would have evicted the listings it was there to seed.
+ * The rows themselves are a handful of numbers each; the byte cap below is
+ * what actually bounds this, and the listings are what fill it.
  */
-const MAX_ENTRIES = 12
+const MAX_ENTRIES = 24
 
 /**
  * Ceiling on the serialized store.

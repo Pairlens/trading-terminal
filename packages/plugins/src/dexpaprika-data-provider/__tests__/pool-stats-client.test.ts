@@ -1,8 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { describe, expect, it } from 'bun:test'
+import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
 
 import {
+  clearNetworksCache,
+  fetchNetworkStats,
   normalizeFee,
   parseNetworkStats,
   parsePoolStats,
@@ -139,5 +141,61 @@ describe('parseNetworkStats', () => {
     expect(row.displayName).toBe('polygon')
     expect(row.volume24hUsd).toBeNull()
     expect(row.poolsCount).toBeNull()
+  })
+})
+
+describe('fetchNetworkStats', () => {
+  const realFetch = globalThis.fetch
+  let calls = 0
+
+  beforeEach(() => {
+    calls = 0
+    clearNetworksCache()
+    globalThis.fetch = mock(async () => {
+      calls += 1
+      return new Response(
+        JSON.stringify([
+          { id: 'base', display_name: 'Base', volume_usd_24h: 1.2e9 },
+        ]),
+        { status: 200 },
+      )
+    }) as unknown as typeof fetch
+  })
+
+  afterEach(() => {
+    globalThis.fetch = realFetch
+    clearNetworksCache()
+  })
+
+  it('serves a whole rail of chains from one request', async () => {
+    // One endpoint answers for every chain at once, and the rail asks per
+    // chain so a row can paint the moment its own answer lands. Six identical
+    // requests is the wrong way to serve that.
+    const rows = await Promise.all([
+      fetchNetworkStats([{ market: 'base', network: 'base' }]),
+      fetchNetworkStats([{ market: 'ethereum', network: 'ethereum' }]),
+      fetchNetworkStats([{ market: 'jupiter', network: 'solana' }]),
+    ])
+    expect(calls).toBe(1)
+    expect(rows.map(([row]) => row.market)).toEqual([
+      'base',
+      'ethereum',
+      'jupiter',
+    ])
+  })
+
+  it('does not pin later callers to a failed sweep', async () => {
+    globalThis.fetch = mock(async () => {
+      calls += 1
+      return new Response('nope', { status: 500 })
+    }) as unknown as typeof fetch
+
+    await expect(
+      fetchNetworkStats([{ market: 'base', network: 'base' }]),
+    ).rejects.toThrow()
+    await expect(
+      fetchNetworkStats([{ market: 'base', network: 'base' }]),
+    ).rejects.toThrow()
+    expect(calls).toBe(2)
   })
 })

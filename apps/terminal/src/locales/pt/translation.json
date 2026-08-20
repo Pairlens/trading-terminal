@@ -115,7 +115,9 @@
     "installConnector": "Instalar conector",
     "emptyTitle": "Nenhuma rede disponível",
     "emptyBody": "Esta build não traz conectores on-chain, então não há rede cujas pools possam ser ranqueadas.",
-    "volumesLabel": "Volumes por rede"
+    "volumesLabel": "Volumes por rede",
+    "loadingLabel": "Carregando volumes por rede",
+    "pacedNote": "Somando o volume de 24 h de cada rede. O provedor de dados on-chain é limitado, então as redes vão sendo preenchidas uma a uma ao longo de alguns segundos."
   },
   "earningsCalendar": {
     "capped": "Mostrando os primeiros {{shown}} de {{total}} balanços.",

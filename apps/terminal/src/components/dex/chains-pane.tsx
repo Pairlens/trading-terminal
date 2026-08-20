@@ -23,9 +23,12 @@ import { cn } from '@pairlens/ui/lib/utils'
 
 import type { DexChainRow } from '@/hooks/use-dex-chains'
 import { PaneEmpty, PaneErrorBanner } from '@/components/panes/pane-primitives'
+import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
 import { DexPaneHeader, ShareBar } from '@/components/dex/dex-pane-primitives'
+import { PacedNote } from '@/components/dex/dex-skeletons'
 import { useChainGas, useDexChains } from '@/hooks/use-dex-chains'
 import { useChainStats } from '@/hooks/use-pool-stats'
+import { useSlowLoad } from '@/hooks/use-slow-load'
 import { useDexDiscoveryStore } from '@/lib/dex/discovery-store'
 import { formatCompactUsd } from '@/lib/format-price'
 
@@ -45,17 +48,32 @@ export function ChainsPane() {
     [connected],
   )
 
-  const {
-    byMarket,
-    isLoading,
-    error: statsError,
-    throttled,
-  } = useChainStats(markets, displayNames)
-  const { gweiByMarket } = useChainGas(rows)
-
   // The board opens on a chain rather than on nothing: the first connected
   // one, which is also what the pool map needs before it can rank anything.
   const firstConnected = connected[0]?.market ?? null
+
+  // The selected chain leads the sweep. Its aggregate is summed from the same
+  // listing page the pool map is already fetching for it, so the two collapse
+  // into one request and the row the reader is looking at fills first rather
+  // than last.
+  //
+  // `?? firstConnected` is doing real work: the selection is not persisted, so
+  // on a cold board `chain` is null for the first render and the effect below
+  // fills it on the second. React Query keeps the queryFn a fetch started
+  // with, so a lead named one render late is a lead that never applies, and
+  // the row the reader lands on would queue with the rest of the sweep. The
+  // board opens on the first connected chain; naming it here is the same
+  // answer the effect is about to reach.
+  const {
+    byMarket,
+    pendingMarkets,
+    error: statsError,
+    throttled,
+  } = useChainStats(markets, displayNames, {
+    leadMarket: chain ?? firstConnected,
+  })
+  const { gweiByMarket } = useChainGas(rows)
+
   useEffect(() => {
     if (chain === null && firstConnected) setChain(firstConnected)
   }, [chain, firstConnected, setChain])
@@ -67,6 +85,12 @@ export function ChainsPane() {
     }
     return peak
   }, [byMarket])
+
+  // Four seconds of shimmer is a pane that looks slow; four seconds of shimmer
+  // with a reason is a pane that looks paced. Reading the whole sweep rather
+  // than one row, because what the note explains is the queue behind all of
+  // them.
+  const slow = useSlowLoad(pendingMarkets.size > 0)
 
   // Every provider row carries the same coverage, so the first one speaks for
   // the column.
@@ -110,11 +134,18 @@ export function ChainsPane() {
         </div>
       ) : null}
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {rows.map((row) => (
+      <div
+        className="min-h-0 flex-1 overflow-y-auto"
+        aria-busy={pendingMarkets.size > 0}
+      >
+        {pendingMarkets.size > 0 ? (
+          <SkeletonStatus label={t('dexChains.loadingLabel')} />
+        ) : null}
+        {rows.map((row, index) => (
           <ChainRow
             key={row.market}
             row={row}
+            index={index}
             selected={row.market === chain}
             onSelect={() => row.connected && setChain(row.market)}
             volumeUsd={byMarket.get(row.market)?.volume24hUsd ?? null}
@@ -122,9 +153,13 @@ export function ChainsPane() {
             poolsCount={byMarket.get(row.market)?.poolsCount ?? null}
             peakVolume={peakVolume}
             gwei={gweiByMarket.get(row.market) ?? null}
-            loading={isLoading}
+            pending={pendingMarkets.has(row.market)}
           />
         ))}
+        {/* Under the rows rather than over them, and only once the wait has
+            earned it: the rail is already showing every chain's name, so the
+            sentence explains the missing NUMBERS rather than an empty pane. */}
+        <PacedNote show={slow}>{t('dexChains.pacedNote')}</PacedNote>
       </div>
     </div>
   )
@@ -132,6 +167,7 @@ export function ChainsPane() {
 
 function ChainRow({
   row,
+  index,
   selected,
   onSelect,
   volumeUsd,
@@ -139,9 +175,11 @@ function ChainRow({
   poolsCount,
   peakVolume,
   gwei,
-  loading,
+  pending,
 }: {
   row: DexChainRow
+  /** Position in the rail, which staggers the shimmer down the column. */
+  index: number
   selected: boolean
   onSelect: () => void
   volumeUsd: number | null
@@ -149,10 +187,14 @@ function ChainRow({
   poolsCount: number | null
   peakVolume: number
   gwei: number | null
-  loading: boolean
+  /** This chain's own read is still in flight. Per row, not per pane. */
+  pending: boolean
 }) {
   const { t } = useTranslation()
   const share = peakVolume > 0 && volumeUsd ? volumeUsd / peakVolume : 0
+  // Only where a number is actually missing. A chain that has answered keeps
+  // its figures through the next refresh rather than flashing back to blocks.
+  const waiting = pending && volumeUsd === null
 
   const body = (
     <>
@@ -168,29 +210,42 @@ function ChainRow({
           </span>
         </span>
         <span className="shrink-0 font-mono text-xs [font-variant-numeric:tabular-nums]">
-          {volumeUsd === null
-            ? loading && row.connected
-              ? ''
-              : '—'
-            : formatCompactUsd(volumeUsd)}
+          {volumeUsd !== null ? (
+            formatCompactUsd(volumeUsd)
+          ) : waiting ? (
+            // A block where the figure goes, at the figure's own height. The
+            // old empty string was the whole complaint: a rail that had been
+            // told to wait looked exactly like a rail that had nothing to say.
+            <Shimmer delayIndex={index} className="h-3 w-14" />
+          ) : (
+            '—'
+          )}
         </span>
       </div>
 
       <div className="mt-1.5">
-        <ShareBar fraction={share} tone={selected ? 'accent' : 'muted'} />
+        {waiting ? (
+          <Shimmer delayIndex={index} className="h-1.5 w-full rounded-full" />
+        ) : (
+          <ShareBar fraction={share} tone={selected ? 'accent' : 'muted'} />
+        )}
       </div>
 
       <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-muted-foreground">
-        <span className="truncate">
-          {reserveUsd !== null
-            ? t('dexChains.liquidityValue', {
-                value: formatCompactUsd(reserveUsd),
-              })
-            : poolsCount !== null
-              ? t('dexChains.poolsValue', { count: poolsCount })
-              : row.connected
-                ? ''
-                : t('dexChains.notInstalled')}
+        <span className="flex min-w-0 truncate">
+          {reserveUsd !== null ? (
+            t('dexChains.liquidityValue', {
+              value: formatCompactUsd(reserveUsd),
+            })
+          ) : poolsCount !== null ? (
+            t('dexChains.poolsValue', { count: poolsCount })
+          ) : waiting ? (
+            <Shimmer delayIndex={index} className="my-[3px] h-2.5 w-20" />
+          ) : row.connected ? (
+            ''
+          ) : (
+            t('dexChains.notInstalled')
+          )}
         </span>
         <span className="shrink-0 font-mono [font-variant-numeric:tabular-nums]">
           {row.hasGasPrice

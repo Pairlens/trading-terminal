@@ -22,7 +22,7 @@
  * has to be: see the reserve supplement below.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQueries, useQuery } from '@tanstack/react-query'
 
 import {
   ProviderThrottledError,
@@ -661,16 +661,41 @@ export function useNewPools(
 export type ChainStatsResult = {
   /** Keyed by Pairlens market id — the `market` field each row echoes back. */
   byMarket: Map<string, ChainPoolStats>
-  isLoading: boolean
+  /**
+   * Chains still waiting on their own answer, so a row can shimmer while the
+   * rows beside it show real numbers. The rail fills in chain by chain now,
+   * and a single pane-wide flag cannot express that.
+   */
+  pendingMarkets: ReadonlySet<string>
   error: string | null
   /** The failure is a provider rate limit, whose own message is readable. */
   throttled: boolean
 }
 
 const EMPTY_CHAIN_STATS: Map<string, ChainPoolStats> = new Map()
+const EMPTY_PENDING: ReadonlySet<string> = new Set()
+
+/** Where a chain's aggregate row is kept across a reload. */
+function chainStatsSnapshotKey(market: string): string {
+  return `dex-chain-stats:${market}`
+}
 
 /**
- * One row per chain, batched into a single execute.
+ * One row per chain, one QUERY per chain.
+ *
+ * This used to be a single execute carrying every market, and the plugin
+ * behind it fans out with `Promise.allSettled` — so the rail painted nothing
+ * until the LAST chain answered. On a metered provider paced at roughly one
+ * request every 1.2 seconds, behind the map's own reads, that is the whole
+ * rail sitting blank for the better part of ten seconds and then filling in
+ * one frame. Per chain, each row lands on its own, and the first numbers show
+ * up as soon as the first request does.
+ *
+ * `leadMarket` is the chain the reader has selected, and it is asked for at
+ * normal priority while the rest of the sweep stays in the background. That
+ * costs nothing: it is the same listing page the pool map is already fetching
+ * for that chain, so the two collapse into one request inside the plugin, and
+ * the row the reader is looking at fills with the map rather than behind it.
  *
  * The two providers answer differently on purpose and the rows say which:
  * DexPaprika publishes chain-wide totals, GeckoTerminal can only sum the pools
@@ -680,52 +705,93 @@ const EMPTY_CHAIN_STATS: Map<string, ChainPoolStats> = new Map()
 export function useChainStats(
   markets: Array<string>,
   displayNames: Record<string, string>,
-  enabled = true,
+  options: { enabled?: boolean; leadMarket?: string | null } = {},
 ): ChainStatsResult {
   const { pluginManager, pluginsReady } = usePairlens()
-  const key = markets.slice().sort().join(',')
+  const { enabled = true, leadMarket = null } = options
   const active = Boolean(enabled && pluginsReady && markets.length > 0)
 
-  // Rows, not the Map the rail reads: a Map does not survive JSON, and the
-  // snapshot has to be the thing that crosses a reload.
-  const snapshotKey = `dex-chain-stats:${key}`
-  const seed = readDiscoverySnapshot<Array<ChainPoolStats>>(snapshotKey)
-
-  const query = useQuery({
-    queryKey: ['chain-stats', key],
-    queryFn: async () => {
-      const rows = (await pluginManager.execute('market-data:pool-stats', {
-        action: 'networks',
-        markets,
-        displayNames,
-      })) as Array<ChainPoolStats> | null
-      return rows ?? []
-    },
-    enabled: active,
-    staleTime: LISTING_REFRESH_MS,
-    refetchInterval: LISTING_REFRESH_MS,
-    gcTime: 30 * 60_000,
-    retry: retryOnThrottle,
-    retryDelay: throttleRetryDelay,
-    ...(seed
-      ? { initialData: () => seed.data, initialDataUpdatedAt: seed.ts }
-      : {}),
+  const results = useQueries({
+    queries: markets.map((market) => ({
+      queryKey: ['chain-stats', market],
+      queryFn: async () => {
+        const rows = (await pluginManager.execute('market-data:pool-stats', {
+          action: 'networks',
+          market,
+          markets: [market],
+          displayNames: { [market]: displayNames[market] ?? market },
+          // Not part of the query key: priority is about who is waiting, not
+          // about what comes back, and keying on it would split one chain's
+          // row into two queries the moment the selection moved.
+          priority: market === leadMarket ? 'normal' : 'low',
+        })) as Array<ChainPoolStats> | null
+        return rows ?? []
+      },
+      enabled: active,
+      staleTime: LISTING_REFRESH_MS,
+      refetchInterval: LISTING_REFRESH_MS,
+      gcTime: 30 * 60_000,
+      retry: retryOnThrottle,
+      retryDelay: throttleRetryDelay,
+      // Rows, not the Map the rail reads: a Map does not survive JSON, and the
+      // snapshot has to be the thing that crosses a reload.
+      ...seededFromSnapshot<Array<ChainPoolStats>>(
+        chainStatsSnapshotKey(market),
+      ),
+    })),
   })
 
-  useSnapshotWriter(snapshotKey, query.data, query.dataUpdatedAt)
+  // One effect over the whole sweep rather than a writer hook per chain: the
+  // number of chains is data, and a hook per row would change the hook count
+  // when a connector is installed.
+  const writeSignature = results
+    .map((result, index) => `${markets[index]}:${result.dataUpdatedAt}`)
+    .join('|')
+  useEffect(() => {
+    results.forEach((result, index) => {
+      const market = markets[index]
+      if (!market || !result.data || result.data.length === 0) return
+      writeDiscoverySnapshot(
+        chainStatsSnapshotKey(market),
+        result.data,
+        result.dataUpdatedAt,
+      )
+    })
+    // The signature is the change worth reacting to; `results` is a fresh array
+    // every render and would run this on each one.
+  }, [writeSignature])
 
   const byMarket = useMemo(() => {
-    if (!query.data) return EMPTY_CHAIN_STATS
     const map = new Map<string, ChainPoolStats>()
-    for (const row of query.data) map.set(row.market, row)
-    return map
-  }, [query.data])
+    for (const result of results) {
+      for (const row of result.data ?? []) map.set(row.market, row)
+    }
+    return map.size === 0 ? EMPTY_CHAIN_STATS : map
+    // Same reasoning as the writer: rebuild when an answer changed, not when
+    // React re-rendered.
+  }, [writeSignature])
+
+  // Pending, not `isFetching`: a five-minute refresh of a row that is already
+  // on screen is not a row the reader should watch shimmer.
+  const pendingSignature = results
+    .map((result, index) => (result.isPending ? markets[index] : ''))
+    .join('|')
+  const pendingMarkets = useMemo(() => {
+    if (!active) return EMPTY_PENDING
+    const pending = new Set(pendingSignature.split('|').filter(Boolean))
+    return pending.size === 0 ? EMPTY_PENDING : pending
+  }, [active, pendingSignature])
+
+  // A chain that failed on its own is a dash on one row; the pane's banner is
+  // for the case where nothing answered at all, so the failure it names is the
+  // first one that came back.
+  const failure = results.find((result) => result.error)?.error ?? null
 
   return {
     byMarket,
-    isLoading: active && query.isPending,
-    error: query.error ? errorText(query.error) : null,
-    throttled: isProviderThrottledError(query.error),
+    pendingMarkets,
+    error: failure ? errorText(failure) : null,
+    throttled: results.some((result) => isProviderThrottledError(result.error)),
   }
 }
 

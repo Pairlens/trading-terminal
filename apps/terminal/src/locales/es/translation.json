@@ -115,7 +115,9 @@
     "installConnector": "Instalar conector",
     "emptyTitle": "No hay cadenas disponibles",
     "emptyBody": "Esta compilación no incluye conectores on-chain, así que no hay ninguna cadena cuyos pools clasificar.",
-    "volumesLabel": "Volúmenes por cadena"
+    "volumesLabel": "Volúmenes por cadena",
+    "loadingLabel": "Cargando volúmenes por cadena",
+    "pacedNote": "Sumando el volumen de 24 h de cada cadena. El proveedor de datos on-chain está limitado, así que las cadenas se completan una a una durante unos segundos."
   },
   "earningsCalendar": {
     "capped": "Mostrando los primeros {{shown}} de {{total}} informes.",

@@ -115,7 +115,9 @@
     "installConnector": "Cài connector",
     "emptyTitle": "Không có chuỗi nào để xem",
     "emptyBody": "Bản dựng này không kèm connector on-chain, nên không có chuỗi nào để xếp hạng pool.",
-    "volumesLabel": "Khối lượng theo chuỗi"
+    "volumesLabel": "Khối lượng theo chuỗi",
+    "loadingLabel": "Đang tải khối lượng theo chuỗi",
+    "pacedNote": "Đang cộng khối lượng 24 giờ của từng chuỗi. Nhà cung cấp dữ liệu on-chain có giới hạn nên các chuỗi hiện dần từng cái trong vài giây."
   },
   "earningsCalendar": {
     "capped": "Đang hiển thị {{shown}} trong {{total}} báo cáo đầu tiên.",

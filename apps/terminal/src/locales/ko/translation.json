@@ -115,7 +115,9 @@
     "installConnector": "커넥터 설치",
     "emptyTitle": "탐색할 체인 없음",
     "emptyBody": "이 빌드에는 온체인 커넥터가 없어 풀을 정렬할 체인이 없습니다.",
-    "volumesLabel": "체인별 거래량"
+    "volumesLabel": "체인별 거래량",
+    "loadingLabel": "체인별 거래량 불러오는 중",
+    "pacedNote": "각 체인의 24시간 거래량을 합산하고 있습니다. 온체인 데이터 제공자에 요청 제한이 있어 체인이 몇 초에 걸쳐 하나씩 채워집니다."
   },
   "earningsCalendar": {
     "capped": "{{total}}건 중 처음 {{shown}}건을 보여 줍니다.",

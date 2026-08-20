@@ -115,7 +115,9 @@
     "installConnector": "Installa connettore",
     "emptyTitle": "Nessuna chain disponibile",
     "emptyBody": "Questa build non include connettori on-chain, quindi non c'è alcuna chain di cui classificare i pool.",
-    "volumesLabel": "Volumi per chain"
+    "volumesLabel": "Volumi per chain",
+    "loadingLabel": "Caricamento dei volumi per catena",
+    "pacedNote": "Somma del volume 24 h di ogni catena. Il provider di dati on-chain è a consumo, quindi le catene si popolano una alla volta nell'arco di alcuni secondi."
   },
   "earningsCalendar": {
     "capped": "Mostrate le prime {{shown}} trimestrali su {{total}}.",
