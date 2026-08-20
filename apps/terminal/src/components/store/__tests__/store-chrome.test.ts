@@ -44,6 +44,9 @@ describe('the floating store bar', () => {
     for (const file of [
       ['components', 'plugins', 'plugin-product-page.tsx'],
       ['components', 'workspace-store', 'workspace-product-page.tsx'],
+      // Accounts floats its bar over the same canvas, so its full-screen
+      // venues page is a product sheet by every rule that matters here.
+      ['components', 'accounts', 'create-account-links.tsx'],
     ]) {
       const source = read(...file)
       expect(source).toContain('STORE_BAR_OFFSET')
