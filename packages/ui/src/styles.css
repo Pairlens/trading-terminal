@@ -152,7 +152,6 @@
   --elevation-panel:
     0 1px 0 color-mix(in oklch, white 55%, transparent) inset,
     0 24px 48px -30px hsl(60 8% 10% / 0.25);
-  --noise-opacity: 0.03;
 }
 
 .dark {
@@ -265,7 +264,6 @@
   --elevation-panel:
     0 1px 0 color-mix(in oklch, white 6%, transparent) inset,
     0 30px 60px -44px black;
-  --noise-opacity: 0.06;
 }
 
 @theme inline {
@@ -807,18 +805,15 @@
   }
 }
 
-/* Noise texture on sidebar wrapper (area outside content inset) */
+/* The shell wrapper is the positioning root for what the shell hangs off it.
+   It used to carry a fractal-noise overlay as well, sized to "the area outside
+   the content inset" — which, back when every route was a `SidebarInset` with
+   `m-2 rounded-xl shadow-sm`, meant the frame of ground around a floating card.
+   That card is gone. The routed pages paint their own opaque ground now, so the
+   only place the noise still landed was the rail, the one surface that is
+   supposed to dissolve into the ground beside it. At 6% over `oklch(13.5%)` it
+   read as a lighter, grainier strip down the left of every dark theme, and it
+   was invisible in light mode, which is why it survived so long. */
 [data-slot='sidebar-wrapper'] {
   position: relative;
-}
-
-[data-slot='sidebar-wrapper']::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
-    repeat;
-  background-size: 200px 200px;
-  opacity: var(--noise-opacity);
-  pointer-events: none;
 }
