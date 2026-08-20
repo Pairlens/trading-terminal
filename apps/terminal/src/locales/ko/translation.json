@@ -2609,6 +2609,14 @@
       "fullscreen": "전체 화면",
       "exitFullscreen": "전체 화면 종료"
     },
+    "symbolChip": {
+      "aria": "이 차트의 종목 변경",
+      "tooltip": "이 차트의 종목",
+      "pinnedBadge": "고정됨",
+      "followBoard": "보드 따라가기",
+      "followingBoard": "보드를 따라갑니다. 페어를 선택하면 이 차트만의 종목이 됩니다.",
+      "boundTo": "{{variable}}에서 설정"
+    },
     "exportData": {
       "title": "차트 데이터 내보내기",
       "description": "차트의 봉을 CSV 파일로 저장합니다.",

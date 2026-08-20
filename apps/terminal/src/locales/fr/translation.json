@@ -2609,6 +2609,14 @@
       "fullscreen": "Plein écran",
       "exitFullscreen": "Quitter le plein écran"
     },
+    "symbolChip": {
+      "aria": "Changer le symbole de ce graphique",
+      "tooltip": "Symbole de ce graphique",
+      "pinnedBadge": "Épinglé",
+      "followBoard": "Suivre le tableau",
+      "followingBoard": "Suit le tableau. Choisissez une paire pour donner la sienne à ce graphique.",
+      "boundTo": "Défini par {{variable}}"
+    },
     "exportData": {
       "title": "Exporter les données du graphique",
       "description": "Enregistrez les bougies du graphique dans un fichier CSV.",

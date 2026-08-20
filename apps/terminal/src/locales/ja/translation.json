@@ -2609,6 +2609,14 @@
       "fullscreen": "全画面表示",
       "exitFullscreen": "全画面表示を終了"
     },
+    "symbolChip": {
+      "aria": "このチャートの銘柄を変更",
+      "tooltip": "このチャートの銘柄",
+      "pinnedBadge": "固定",
+      "followBoard": "ボードに合わせる",
+      "followingBoard": "ボードに追随中。ペアを選ぶとこのチャート専用になります。",
+      "boundTo": "{{variable}} が設定"
+    },
     "exportData": {
       "title": "チャートデータをエクスポート",
       "description": "チャートのローソク足を CSV ファイルとして保存します。",

@@ -2609,6 +2609,14 @@
       "fullscreen": "Vollbild",
       "exitFullscreen": "Vollbild beenden"
     },
+    "symbolChip": {
+      "aria": "Symbol dieses Charts ändern",
+      "tooltip": "Symbol dieses Charts",
+      "pinnedBadge": "Fixiert",
+      "followBoard": "Dem Board folgen",
+      "followingBoard": "Folgt dem Board. Wähle ein Paar, damit dieser Chart ein eigenes bekommt.",
+      "boundTo": "Gesetzt von {{variable}}"
+    },
     "exportData": {
       "title": "Chartdaten exportieren",
       "description": "Speichere die Kerzen des Charts als CSV-Datei.",

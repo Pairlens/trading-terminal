@@ -2609,6 +2609,14 @@
       "fullscreen": "Tam Ekran",
       "exitFullscreen": "Tam Ekrandan Çık"
     },
+    "symbolChip": {
+      "aria": "Bu grafiğin sembolünü değiştir",
+      "tooltip": "Bu grafiğin sembolü",
+      "pinnedBadge": "Sabitlendi",
+      "followBoard": "Panoyu izle",
+      "followingBoard": "Panoyu izliyor. Bu grafiğe kendi paritesini vermek için bir parite seçin.",
+      "boundTo": "{{variable}} tarafından ayarlanır"
+    },
     "exportData": {
       "title": "Grafik verilerini dışa aktar",
       "description": "Grafiğin mumlarını CSV dosyası olarak kaydedin.",

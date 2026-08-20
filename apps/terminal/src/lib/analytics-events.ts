@@ -330,6 +330,13 @@ export interface AnalyticsEvents {
    * pixels. Flushed periodically, on tab-hide, and on workspace switch. */
   panel_dwell: { pane_type: string; seconds: number; workspace: WorkspaceKind }
   preset_applied: { preset: string; workspace: WorkspaceKind }
+  /**
+   * A chart pane was given a symbol of its own from its toolbar chip —
+   * the thing that makes a Dual/Triple/Quad board worth opening. `scope`
+   * says who took the write: the pane itself, or the workspace variable it
+   * is bound to. No symbol here; the taxonomy carries none.
+   */
+  chart_pane_pair_pinned: { scope: 'pane' | 'variable' }
   /** Which asset-class desk traders actually work from on Discovery. */
   discovery_section_selected: { section: string }
   /**

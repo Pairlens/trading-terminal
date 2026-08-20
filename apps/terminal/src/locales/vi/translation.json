@@ -2609,6 +2609,14 @@
       "fullscreen": "Toàn màn hình",
       "exitFullscreen": "Thoát toàn màn hình"
     },
+    "symbolChip": {
+      "aria": "Đổi mã của biểu đồ này",
+      "tooltip": "Mã của biểu đồ này",
+      "pinnedBadge": "Đã ghim",
+      "followBoard": "Theo bảng",
+      "followingBoard": "Đang theo bảng. Chọn một cặp để biểu đồ này có mã riêng.",
+      "boundTo": "Được đặt bởi {{variable}}"
+    },
     "exportData": {
       "title": "Xuất dữ liệu biểu đồ",
       "description": "Lưu các nến của biểu đồ thành tệp CSV.",

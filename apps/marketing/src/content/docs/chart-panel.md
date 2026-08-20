@@ -4,8 +4,8 @@ description: 16 chart types, up to 11 timeframes, four price-scale modes, bar re
 group: traders
 order: 1
 eyebrow: For traders
-updated: 17 AUG 2026
-readTime: 7 min read
+updated: 20 AUG 2026
+readTime: 8 min read
 ---
 
 The chart is the centre of the terminal. It is rendered by
@@ -21,6 +21,23 @@ pages:
 ## The toolbar
 
 Everything below lives in the toolbar strip along the top of the chart panel.
+
+### Symbol
+
+The first chip on the strip is what this chart is of, and clicking it points
+**this** chart somewhere else: search any instrument, pick a venue from the row
+above the results, and the chart moves while the rest of the board stays where
+it is. The pair switcher in the top bar is the other half of that: it moves the
+whole board, book and ticket included.
+
+A chart holding a symbol of its own is badged **Pinned**, and its panel header
+repeats the symbol beside the panel name, so a four-chart board says at a glance
+which panels still follow the top bar. **Follow the board** at the bottom of the
+picker hands one back.
+
+On a saved workspace, a chart bound to a
+[pair variable](/docs/workspaces#variables) sets that variable instead, so every
+panel bound to it moves together. The chip says which variable it is reading.
 
 ### Timeframes
 
@@ -181,9 +198,18 @@ else stays per pair.
 
 ## Multiple charts
 
-Add more than one chart panel to a workspace and each keeps its own timeframe,
-type, and indicator set. Keyboard shortcuts go to the chart you last pointed at
-or focused, so digits and tool chords always land where you expect.
+Add more than one chart panel to a workspace and each keeps its own symbol,
+venue, timeframe, type, and indicator set.
+
+**Dual Charts**, **Triple Charts** and **Quad Charts** in the Workspaces menu
+are the ready-made versions. They open with a different instrument per panel:
+the first panel follows the pair you were already looking at, the rest arrive on
+their own, and every one of them is changeable from its symbol chip. Venues
+follow the page you opened them from, so a board opened on Binance is a board of
+Binance tapes.
+
+Keyboard shortcuts go to the chart you last pointed at or focused, so digits and
+tool chords always land where you expect.
 
 ## Related
 

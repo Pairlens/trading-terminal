@@ -1094,7 +1094,16 @@ export const BUILTIN_WORKSPACE_TEMPLATES: Array<WorkspaceTemplate> = [
   ...PRESET_TEMPLATES,
 ]
 
-export type RoutePreset = { label: string; layout: TerminalLayout }
+export type RoutePreset = {
+  label: string
+  layout: TerminalLayout
+  /**
+   * The template's variables, carried so an in-place apply can materialize
+   * the ones no other pane shares — see `materializePerPaneChartPairs`. The
+   * layout alone cannot say what `$chart2` was supposed to mean.
+   */
+  variables?: Array<WorkspaceVariableDefinition>
+}
 
 /**
  * Whether a template is built for the given instrument class. Facet values
@@ -1127,9 +1136,11 @@ export const STORE_ASSET_CLASS_FOR: Record<InstrumentClass, AssetClass> = {
 
 /**
  * In-place layout presets for a route's ⌘⇧L menu, derived from the catalog —
- * the store is the single source. Returns the raw (unbound) layout; on the
- * pair/home routes those bindings would be inert anyway (no variables provider),
- * so panes resolve against the route's active pair.
+ * the store is the single source. Returns the raw (bound) layout together with
+ * the variables behind it: a binding several panes share is inert on the
+ * pair/home routes (no variables provider) and those panes resolve against the
+ * route's active pair, while a binding one pane owns is materialized at apply
+ * time so a multi-chart board opens with a chart per instrument.
  *
  * Pass `cls` to tailor the menu to an asset class: only templates whose
  * asset-class facet serves it (or `multi-asset`) are offered, so a
@@ -1143,7 +1154,11 @@ export function routePresets(
   for (const t of BUILTIN_WORKSPACE_TEMPLATES) {
     if ((t.context ?? 'standalone') !== context || !t.routeMenu) continue
     if (cls && !templateServesClass(t, cls)) continue
-    out[t.id] = { label: t.menuLabel ?? t.name, layout: t.layout }
+    out[t.id] = {
+      label: t.menuLabel ?? t.name,
+      layout: t.layout,
+      variables: t.variables,
+    }
   }
   return out
 }
@@ -1191,7 +1206,7 @@ export function mergeRoutePresets(
     if (cls && !templateServesClass(t, cls)) continue
     const label = t.menuLabel ?? t.name
     const bucket = t.menuLabel === DEFAULT_PRESET_LABEL ? leading : trailing
-    bucket[t.id] = { label, layout: t.layout }
+    bucket[t.id] = { label, layout: t.layout, variables: t.variables }
   }
 
   const merged = { ...leading, ...base, ...trailing }

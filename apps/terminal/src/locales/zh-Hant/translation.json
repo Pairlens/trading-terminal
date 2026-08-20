@@ -2609,6 +2609,14 @@
       "fullscreen": "全螢幕",
       "exitFullscreen": "結束全螢幕"
     },
+    "symbolChip": {
+      "aria": "變更此圖表的商品",
+      "tooltip": "此圖表的商品",
+      "pinnedBadge": "已釘選",
+      "followBoard": "跟隨看板",
+      "followingBoard": "正在跟隨看板。選擇一個交易對，讓此圖表有自己的商品。",
+      "boundTo": "由 {{variable}} 設定"
+    },
     "exportData": {
       "title": "匯出圖表資料",
       "description": "將圖表的K線儲存為 CSV 檔案。",

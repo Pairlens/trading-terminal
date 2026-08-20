@@ -2609,6 +2609,14 @@
       "fullscreen": "Tela Cheia",
       "exitFullscreen": "Sair da Tela Cheia"
     },
+    "symbolChip": {
+      "aria": "Alterar o símbolo deste gráfico",
+      "tooltip": "Símbolo deste gráfico",
+      "pinnedBadge": "Fixado",
+      "followBoard": "Seguir o painel",
+      "followingBoard": "Seguindo o painel. Escolha um par para dar um próprio a este gráfico.",
+      "boundTo": "Definido por {{variable}}"
+    },
     "exportData": {
       "title": "Exportar dados do gráfico",
       "description": "Salve os candles do gráfico em um arquivo CSV.",

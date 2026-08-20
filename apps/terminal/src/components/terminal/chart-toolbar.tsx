@@ -55,6 +55,7 @@ import type {
   PriceScaleMode,
 } from '@pairlens/fast-financial-charts/types'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
+import { ChartSymbolChip } from '@/components/terminal/chart-symbol-chip'
 import { CompareMenu } from '@/components/terminal/compare-symbol-menu'
 import { ChartExportDataDialog } from '@/components/terminal/chart-export-data-dialog'
 import { ShortcutHint } from '@/components/shortcut-hints'
@@ -402,6 +403,9 @@ export function ChartToolbar() {
 
   return (
     <div className="flex items-center gap-1 py-0.5">
+      {/* What this chart is of, leading the controls that shape it — and on a
+          multi-chart board, the only place a pane's own symbol can be set. */}
+      <ChartSymbolChip />
       <Menubar className="h-6 border-none bg-transparent p-0">
         {/* Timeframe */}
         <MenubarMenu>

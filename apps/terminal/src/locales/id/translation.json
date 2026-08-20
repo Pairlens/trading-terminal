@@ -2609,6 +2609,14 @@
       "fullscreen": "Layar Penuh",
       "exitFullscreen": "Keluar Layar Penuh"
     },
+    "symbolChip": {
+      "aria": "Ubah simbol grafik ini",
+      "tooltip": "Simbol grafik ini",
+      "pinnedBadge": "Disematkan",
+      "followBoard": "Ikuti papan",
+      "followingBoard": "Mengikuti papan. Pilih pasangan agar grafik ini punya miliknya sendiri.",
+      "boundTo": "Diatur oleh {{variable}}"
+    },
     "exportData": {
       "title": "Ekspor data chart",
       "description": "Simpan candle chart sebagai file CSV.",
