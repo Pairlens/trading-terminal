@@ -59,8 +59,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://static.okx.com/cdn/oksupport/asset/currency/icon/okb.png'
+const ICON_URL = '/posters/okx-market-connector.png'
 
 export const OKX_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'okx',

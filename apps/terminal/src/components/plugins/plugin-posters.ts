@@ -25,6 +25,7 @@ export const BUNDLED_POSTERS: Record<string, string> = {
   'dexpaprika-data-provider': '/posters/dexpaprika-data-provider.png',
   'dexscreener-data-provider': '/posters/dexscreener-data-provider.png',
   'ethereum-dex-connector': '/posters/ethereum-dex-connector.png',
+  'exa-search': '/posters/exa-search.png',
   'gate-market-connector': '/posters/gate-market-connector.png',
   'geckoterminal-data-provider': '/posters/geckoterminal-data-provider.png',
   'groq-inference': '/posters/groq-inference.png',
@@ -51,6 +52,7 @@ export const BUNDLED_POSTERS: Record<string, string> = {
   'pairlens-predictions': '/logo512.png',
   'polygon-dex-connector': '/posters/polygon-dex-connector.png',
   'polymarket-market-connector': '/posters/polymarket-market-connector.png',
+  'tavily-search': '/posters/tavily-search.png',
   'upbit-market-connector': '/posters/upbit-market-connector.png',
   'user-indicators': '/logo512.png',
 }

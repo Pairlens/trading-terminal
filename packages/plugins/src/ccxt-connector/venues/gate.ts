@@ -50,8 +50,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/302.png'
+const ICON_URL = '/posters/gate-market-connector.png'
 
 export const GATE_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'gate',

@@ -37,6 +37,7 @@ import { join } from 'node:path'
 
 const ROOT = join(import.meta.dir, '..')
 const OUT_DIR = join(ROOT, 'apps/terminal/public/posters')
+const CHAIN_DIR = join(ROOT, 'apps/terminal/public/chains')
 const MAP_FILE = join(
   ROOT,
   'apps/terminal/src/components/plugins/plugin-posters.ts',
@@ -117,6 +118,12 @@ const OVERRIDES: Record<string, string> = {
     'https://avatars.githubusercontent.com/u/99915600?s=512',
   'lifi-bridge-connector':
     'https://avatars.githubusercontent.com/u/85288935?s=512',
+  // tavily.com's apple-touch-icon lives behind a content hash that changes on
+  // every deploy, so the avatar is the only stable source. Asked for at 256
+  // rather than 512 because this mark is a photograph behind the arrows: the
+  // 512 rendition is 354 KB, three times the next-largest poster in the
+  // bundle, for detail nothing renders at.
+  'tavily-search': 'https://avatars.githubusercontent.com/u/170207473?s=256',
   // GeckoTerminal serves no apple-touch-icon at the root; the marked-up path
   // is where the 180px app icon lives.
   'geckoterminal-data-provider':
@@ -155,6 +162,21 @@ const COINGECKO_EXCHANGES: Record<string, string> = {
  * one left out falls through to a monogram tile that reads as a third-party
  * stub in a grid where its siblings wear the logo.
  */
+/**
+ * Chain marks, which are not plugin marks: the DEX chain rail lists chains
+ * whose connector may not even be installed, and Solana's connector is
+ * Jupiter, an aggregator whose own logo is not the chain's. Written to
+ * `public/chains/` and referenced by literal path from `lib/dex/chain-catalog.ts`,
+ * so no generated map and no collision with the poster orphan check.
+ *
+ * Every EVM chain reads its mark off its connector's poster instead, through
+ * `EVM_CHAINS` — Solana is the one chain with nowhere else to look.
+ */
+const CHAIN_MARKS: Record<string, string> = {
+  solana:
+    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png',
+}
+
 const LOCAL_POSTERS: Record<string, string> = {
   'pairlens-core': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
@@ -236,8 +258,24 @@ async function bestMark(
 const only = new Set(Bun.argv.slice(2))
 
 await mkdir(OUT_DIR, { recursive: true })
+await mkdir(CHAIN_DIR, { recursive: true })
 const posters: Record<string, string> = { ...LOCAL_POSTERS }
 const skipped: Array<string> = []
+
+// Chain marks ride along: same fetch, same size floor, different directory.
+// Named on the command line as `chain:<id>`, so they never collide with a
+// plugin id and a plugin-only run leaves them alone.
+for (const [chain, url] of Object.entries(CHAIN_MARKS)) {
+  if (only.size > 0 && !only.has(`chain:${chain}`)) continue
+  const buf = await fetchImage(url)
+  const size = buf ? pngSize(buf) : null
+  if (!buf || !size || size.w < MIN_EDGE || size.h < MIN_EDGE) {
+    skipped.push(`chain:${chain} (${url})`)
+    continue
+  }
+  await Bun.write(join(CHAIN_DIR, `${chain}.png`), buf)
+  console.log(`✓ chain:${chain} (${size.w}×${size.h})`)
+}
 
 // A filtered run keeps every poster it is not refreshing, so the map that
 // lands is the shipped one plus the ids asked for.
