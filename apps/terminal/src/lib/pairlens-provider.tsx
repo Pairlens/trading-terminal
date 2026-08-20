@@ -235,6 +235,11 @@ const FIRST_PARTY_COMPONENTS: Record<
         default: m.EventBoardPane,
       })),
     ),
+    'crypto-updown': lazyChunk(() =>
+      import('@/components/predictions/crypto-updown-pane').then((m) => ({
+        default: m.CryptoUpDownPane,
+      })),
+    ),
     'odds-movers': lazyChunk(() =>
       import('@/components/predictions/odds-movers-pane').then((m) => ({
         default: m.OddsMoversPane,

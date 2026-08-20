@@ -2316,6 +2316,7 @@
     "riskControls": "Risk Controls",
     "categories": "Categories",
     "eventBoard": "Event Board",
+    "cryptoUpDown": "Crypto Up/Down",
     "oddsMovers": "Odds Movers",
     "resolvingSoon": "Resolving Soon",
     "eventHeader": "Event Header",
@@ -2388,6 +2389,7 @@
     "riskControls": "Your daily loss cap, trade count, position size and kill switch, editable where the trade happens",
     "categories": "Every event category with a live contract count, so the board narrows in one click",
     "eventBoard": "Live event markets as cards: the question, Yes and No in cents, volume, and when it resolves",
+    "cryptoUpDown": "The recurring BTC, ETH and SOL up-or-down windows on Kalshi and Polymarket, priced against the spot market they settle on",
     "oddsMovers": "The contracts whose probability moved most today, with the move stated in points",
     "resolvingSoon": "Contracts closest to settlement, sorted by the clock rather than by volume",
     "eventHeader": "The question, when and how it resolves, and the probability the market is paying right now",
@@ -3955,6 +3957,12 @@
         "tagline": "Every runner priced, and the overround stated.",
         "description": "For an event with a field rather than two sides: the header with the runner count and the overround, a stacked-shares chart, and a ladder that prices every runner and stakes from the row. The basket sums to the overround, so sweeping the field is visibly not free money.",
         "menuLabel": "Race"
+      },
+      "prediction-crypto-updown": {
+        "name": "Crypto Up/Down",
+        "tagline": "Every open window, against the tape it settles on.",
+        "description": "The recurring crypto contracts on both venues in one table: Kalshi opens a fifteen-minute window on five assets, Polymarket an hourly and a daily one on four. Each row carries the settlement reference, live spot, the distance between them and what a driftless diffusion at recent realized volatility makes of the time remaining, so the odds have something to be compared against.",
+        "menuLabel": "Crypto Up/Down"
       }
     },
     "traderTypes": {
@@ -5783,6 +5791,34 @@
     "emptyTitle": "Nothing moved",
     "emptyBody": "No contract shifted enough today to be worth a row.",
     "noChangeFrom": "Not ranked: {{venues}} publishes no 24h move."
+  },
+  "cryptoUpDown": {
+    "subtitle": "Recurring windows, both venues",
+    "windowCount_one": "{{count}} open window",
+    "windowCount_other": "{{count}} open windows",
+    "loading": "Reading the open windows",
+    "noVenuesBody": "Install Kalshi or Polymarket to see their recurring up-or-down contracts.",
+    "emptyTitle": "No open windows",
+    "emptyBody": "Neither venue has a crypto up-or-down contract trading right now.",
+    "colContract": "Contract",
+    "colCloses": "Closes",
+    "colReference": "Reference",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Market",
+    "colModel": "Model",
+    "colEdge": "Edge",
+    "horizonAll": "All",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Driftless diffusion at {{sigma}}% annualized realized volatility, from the last five days of hourly closes.",
+    "referenceTooltip": "Settles on {{source}}.",
+    "modelNote": "Model is a driftless diffusion at recent realized volatility. It ignores fees, the spread and the depth of the book.",
+    "approxNote": "≈ marks a reference read from the hour containing the venue's one-minute settlement print.",
+    "desktopOnly": "{{venues}} needs the desktop app."
   },
   "resolvingSoon": {
     "resolves": "Resolves {{when}}",

@@ -3,6 +3,12 @@
 /**
  * `pairlens-predictions` — the prediction-market surfaces, as a plugin.
  *
+ * One pane here is not purely a prediction surface: `crypto-updown` joins the
+ * venues' recurring up/down contracts to the spot market they settle against.
+ * It still ships with this family rather than with `pairlens-core`, because
+ * without a prediction venue there is nothing to join — a deployment that
+ * drops predictions has no up/down board to keep.
+ *
  * Panels only: no capabilities, no runtime. Every pane here reads
  * `market-data:events` and `trading:positions` from whichever prediction
  * connector is active, so this plugin serves nothing itself. It exists so the
@@ -77,6 +83,22 @@ export const pairlensPredictionsManifest: PluginManifest = {
         icon: 'Vote',
         category: 'discovery',
         minHeight: 200,
+        singleton: true,
+      },
+      {
+        // The one discovery pane in the family that reads two asset classes.
+        // It needs no `requires`: the contracts are the venue's own recurring
+        // series, and the spot side rides the bulk quotes the terminal already
+        // shares. A workspace with no CEX connector still gets the odds, the
+        // countdown and the venue's published target — it loses the spot
+        // column and the model, and the pane says so per row.
+        id: 'crypto-updown',
+        label: 'Crypto Up/Down',
+        labelKey: 'panes.cryptoUpDown',
+        descriptionKey: 'paneDescriptions.cryptoUpDown',
+        icon: 'Timer',
+        category: 'discovery',
+        minHeight: 160,
         singleton: true,
       },
       {

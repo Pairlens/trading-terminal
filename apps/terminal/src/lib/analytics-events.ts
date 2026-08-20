@@ -418,6 +418,19 @@ export interface AnalyticsEvents {
    * are stackable at all. `runners` is how many were drawn, never which
    * event. */
   prediction_chart_view_selected: { view: string; runners: number }
+  /** A row opened from the crypto up/down scanner. Three questions at once:
+   * whether the recurring windows are worth their place at the top of the
+   * discovery board, which horizon people actually trade (a fifteen-minute
+   * window and a daily one are different products), and whether the model
+   * column is doing any work — `hasModel` is false when the settlement candle
+   * or the volatility sample was missing, so a high share of false rows means
+   * the join to spot is failing in the field. Venue and horizon name our own
+   * surfaces; never the contract, the asset or any size. */
+  prediction_updown_opened: {
+    venue: string
+    horizon: string
+    hasModel: boolean
+  }
 
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }

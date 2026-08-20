@@ -743,6 +743,36 @@
     "emptyBody": "Dziś żaden kontrakt nie ruszył się na tyle, by zająć wiersz.",
     "noChangeFrom": "Bez rankingu: {{venues}} nie publikuje zmiany z 24 h."
   },
+  "cryptoUpDown": {
+    "subtitle": "Cykliczne okna, obie giełdy",
+    "windowCount_one": "{{count}} otwarte okno",
+    "windowCount_few": "{{count}} otwarte okna",
+    "windowCount_many": "{{count}} otwartych okien",
+    "windowCount_other": "{{count}} otwartych okien",
+    "loading": "Odczytywanie otwartych okien",
+    "noVenuesBody": "Zainstaluj Kalshi lub Polymarket, aby zobaczyć ich cykliczne kontrakty w górę lub w dół.",
+    "emptyTitle": "Brak otwartych okien",
+    "emptyBody": "Żadna z giełd nie handluje teraz kryptowalutowym kontraktem w górę lub w dół.",
+    "colContract": "Kontrakt",
+    "colCloses": "Zamknięcie",
+    "colReference": "Odniesienie",
+    "colSpot": "Spot",
+    "colDistance": "Dyst.",
+    "colMarket": "Rynek",
+    "colModel": "Model",
+    "colEdge": "Przewaga",
+    "horizonAll": "Wszystkie",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Dyfuzja bez dryfu przy zannualizowanej zrealizowanej zmienności {{sigma}}%, z godzinowych zamknięć z ostatnich pięciu dni.",
+    "referenceTooltip": "Rozlicza się według {{source}}.",
+    "modelNote": "Model to dyfuzja bez dryfu przy ostatniej zrealizowanej zmienności. Pomija prowizje, spread i głębokość arkusza.",
+    "approxNote": "≈ oznacza odniesienie odczytane z godziny zawierającej minutową cenę rozliczeniową giełdy.",
+    "desktopOnly": "{{venues}} wymaga aplikacji desktopowej."
+  },
   "onboarding": {
     "phase": {
       "ready": "Gotowe"
@@ -3456,6 +3486,7 @@
     "riskControls": "Kontrola ryzyka",
     "categories": "Kategorie",
     "eventBoard": "Pulpit wydarzeń",
+    "cryptoUpDown": "Krypto W górę/W dół",
     "oddsMovers": "Liderzy prawdopodobieństwa",
     "resolvingSoon": "Wkrótce rozliczenie",
     "eventHeader": "Nagłówek wydarzenia",
@@ -3528,6 +3559,7 @@
     "riskControls": "Twój dzienny limit strat, licznik transakcji, wielkość pozycji i kill switch, edytowalne tam, gdzie zawierana jest transakcja",
     "categories": "Każda kategoria wydarzeń z liczbą aktywnych kontraktów, więc tablica zawęża się jednym kliknięciem",
     "eventBoard": "Żywe rynki zdarzeń jako karty: pytanie, Tak i Nie w centach, wolumen oraz termin rozliczenia",
+    "cryptoUpDown": "Cykliczne okna w górę lub w dół dla BTC, ETH i SOL na Kalshi i Polymarket, wyceniane względem rynku spot, na którym się rozliczają",
     "oddsMovers": "Kontrakty, których prawdopodobieństwo zmieniło się najbardziej dzisiaj, ze zmianą podaną w punktach",
     "resolvingSoon": "Kontrakty najbliższe rozliczeniu, posortowane według czasu, a nie wolumenu",
     "eventHeader": "Pytanie, kiedy i jak się rozstrzyga, oraz prawdopodobieństwo, jakie rynek wycenia właśnie teraz",
@@ -4978,6 +5010,12 @@
         "tagline": "Każdy wynik wyceniony, a marża podana.",
         "description": "Dla wydarzenia z zestawem wyników, a nie dwiema stronami: nagłówek z liczbą wyników i marżą, wykres skumulowanych udziałów, oraz ranking, który wycenia każdy wynik i pozwala postawić prosto z wiersza. Koszyk sumuje się do marży, więc obstawienie całego zestawu wyraźnie nie jest darmowymi pieniędzmi.",
         "menuLabel": "Wyścig"
+      },
+      "prediction-crypto-updown": {
+        "name": "Krypto W górę/W dół",
+        "tagline": "Każde otwarte okno, względem kursu, na którym się rozlicza.",
+        "description": "Cykliczne kontrakty kryptowalutowe obu giełd w jednej tabeli: Kalshi otwiera piętnastominutowe okno na pięciu aktywach, Polymarket godzinowe i dzienne na czterech. Każdy wiersz zawiera odniesienie rozliczeniowe, kurs spot na żywo, odległość między nimi oraz to, co z pozostałego czasu wynika z dyfuzji bez dryfu przy ostatniej zrealizowanej zmienności, dzięki czemu kursy mają do czego być porównane.",
+        "menuLabel": "Krypto W górę/W dół"
       }
     },
     "traderTypes": {

@@ -48,6 +48,7 @@ const PANEL_IDS = [
   'prediction-positions',
   'categories',
   'event-board',
+  'crypto-updown',
   'odds-movers',
   'resolving-soon',
   'event-header',

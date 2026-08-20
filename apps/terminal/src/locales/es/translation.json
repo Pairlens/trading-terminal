@@ -693,6 +693,34 @@
     "emptyBody": "Hoy ningún contrato se movió lo suficiente como para merecer una fila.",
     "noChangeFrom": "Sin clasificar: {{venues}} no publica el movimiento de 24 h."
   },
+  "cryptoUpDown": {
+    "subtitle": "Ventanas recurrentes, ambos mercados",
+    "windowCount_one": "{{count}} ventana abierta",
+    "windowCount_other": "{{count}} ventanas abiertas",
+    "loading": "Leyendo las ventanas abiertas",
+    "noVenuesBody": "Instala Kalshi o Polymarket para ver sus contratos recurrentes de sube o baja.",
+    "emptyTitle": "Sin ventanas abiertas",
+    "emptyBody": "Ninguno de los dos mercados negocia ahora mismo un contrato cripto de sube o baja.",
+    "colContract": "Contrato",
+    "colCloses": "Cierra",
+    "colReference": "Referencia",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Mercado",
+    "colModel": "Modelo",
+    "colEdge": "Ventaja",
+    "horizonAll": "Todas",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Difusión sin deriva con una volatilidad realizada anualizada del {{sigma}}%, calculada con los cierres horarios de los últimos cinco días.",
+    "referenceTooltip": "Liquida contra {{source}}.",
+    "modelNote": "El modelo es una difusión sin deriva con la volatilidad realizada reciente. No tiene en cuenta comisiones, el spread ni la profundidad del libro.",
+    "approxNote": "≈ marca una referencia leída de la hora que contiene el precio de liquidación de un minuto del mercado.",
+    "desktopOnly": "{{venues}} necesita la app de escritorio."
+  },
   "onboarding": {
     "phase": {
       "ready": "Listo"
@@ -3368,6 +3396,7 @@
     "riskControls": "Controles de riesgo",
     "categories": "Categorías",
     "eventBoard": "Tablero de eventos",
+    "cryptoUpDown": "Cripto Sube/Baja",
     "oddsMovers": "Movers de cuotas",
     "resolvingSoon": "Resolución próxima",
     "eventHeader": "Encabezado del evento",
@@ -3440,6 +3469,7 @@
     "riskControls": "Tu límite diario de pérdidas, número de operaciones, tamaño de posición e interruptor de emergencia, editables donde ocurre la operación",
     "categories": "Cada categoría de evento con un recuento de contratos en vivo, para que el tablero se acote en un clic",
     "eventBoard": "Mercados de eventos en vivo como tarjetas: la pregunta, Sí y No en centavos, volumen, y cuándo se resuelve",
+    "cryptoUpDown": "Las ventanas recurrentes de sube o baja de BTC, ETH y SOL en Kalshi y Polymarket, valoradas contra el mercado spot con el que liquidan",
     "oddsMovers": "Los contratos cuya probabilidad más se movió hoy, con el movimiento expresado en puntos",
     "resolvingSoon": "Contratos más cercanos a resolverse, ordenados por el reloj y no por el volumen",
     "eventHeader": "La pregunta, cuándo y cómo se resuelve, y la probabilidad que el mercado cotiza ahora mismo",
@@ -4878,6 +4908,12 @@
         "tagline": "Cada participante con precio, y el overround declarado.",
         "description": "Para un evento con un campo de participantes en vez de dos lados: el encabezado con el número de participantes y el overround, un gráfico de participaciones apiladas, y una escalera que cotiza a cada participante y permite apostar desde la fila. La cesta suma el overround, así que cubrir todo el campo visiblemente no es dinero gratis.",
         "menuLabel": "Carrera"
+      },
+      "prediction-crypto-updown": {
+        "name": "Cripto Sube/Baja",
+        "tagline": "Cada ventana abierta, contra la cinta con la que liquida.",
+        "description": "Los contratos cripto recurrentes de ambos mercados en una tabla: Kalshi abre una ventana de quince minutos sobre cinco activos y Polymarket una horaria y una diaria sobre cuatro. Cada fila lleva la referencia de liquidación, el spot en vivo, la distancia entre ambos y lo que una difusión sin deriva con la volatilidad realizada reciente hace del tiempo restante, para que las probabilidades tengan con qué compararse.",
+        "menuLabel": "Cripto Sube/Baja"
       }
     },
     "traderTypes": {

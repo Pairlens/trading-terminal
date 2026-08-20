@@ -693,6 +693,34 @@
     "emptyBody": "Oggi nessun contratto si è mosso abbastanza da meritare una riga.",
     "noChangeFrom": "Non in classifica: {{venues}} non pubblica la variazione a 24 h."
   },
+  "cryptoUpDown": {
+    "subtitle": "Finestre ricorrenti, entrambe le sedi",
+    "windowCount_one": "{{count}} finestra aperta",
+    "windowCount_other": "{{count}} finestre aperte",
+    "loading": "Lettura delle finestre aperte",
+    "noVenuesBody": "Installa Kalshi o Polymarket per vedere i loro contratti ricorrenti su o giù.",
+    "emptyTitle": "Nessuna finestra aperta",
+    "emptyBody": "Al momento nessuna delle due sedi tratta un contratto cripto su o giù.",
+    "colContract": "Contratto",
+    "colCloses": "Chiude",
+    "colReference": "Riferimento",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Mercato",
+    "colModel": "Modello",
+    "colEdge": "Margine",
+    "horizonAll": "Tutte",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Diffusione senza deriva con volatilità realizzata annualizzata del {{sigma}}%, dalle chiusure orarie degli ultimi cinque giorni.",
+    "referenceTooltip": "Liquida su {{source}}.",
+    "modelNote": "Il modello è una diffusione senza deriva alla volatilità realizzata recente. Ignora commissioni, spread e profondità del book.",
+    "approxNote": "≈ indica un riferimento letto dall'ora che contiene il prezzo di liquidazione al minuto della sede.",
+    "desktopOnly": "{{venues}} richiede l'app desktop."
+  },
   "onboarding": {
     "phase": {
       "ready": "Pronto"
@@ -3368,6 +3396,7 @@
     "riskControls": "Controlli di rischio",
     "categories": "Categorie",
     "eventBoard": "Dashboard degli eventi",
+    "cryptoUpDown": "Cripto Su/Giù",
     "oddsMovers": "Mover delle quote",
     "resolvingSoon": "Risoluzione imminente",
     "eventHeader": "Intestazione dell'evento",
@@ -3440,6 +3469,7 @@
     "riskControls": "Il tuo limite di perdita giornaliero, il conteggio delle operazioni, la size della posizione e il kill switch, modificabili dove avviene l'operazione",
     "categories": "Ogni categoria di evento con un conteggio dei contratti in tempo reale, così la dashboard si restringe con un clic",
     "eventBoard": "Mercati di eventi live come card: la domanda, Sì e No in centesimi, il volume, e quando si risolve",
+    "cryptoUpDown": "Le finestre ricorrenti su o giù di BTC, ETH e SOL su Kalshi e Polymarket, valutate rispetto al mercato spot su cui liquidano",
     "oddsMovers": "I contratti la cui probabilità si è mossa di più oggi, con il movimento espresso in punti",
     "resolvingSoon": "Contratti più vicini alla risoluzione, ordinati per orologio e non per volume",
     "eventHeader": "La domanda, quando e come si risolve, e la probabilità che il mercato sta quotando in questo momento",
@@ -4878,6 +4908,12 @@
         "tagline": "Ogni concorrente quotato, l'overround dichiarato.",
         "description": "Per un evento con un campo di concorrenti invece di due lati: l'intestazione con il conteggio dei concorrenti e l'overround, un grafico a quote impilate, e una scala che quota ogni concorrente e permette di puntare dalla riga. Il paniere somma all'overround, così coprire l'intero campo visibilmente non è denaro gratis.",
         "menuLabel": "Corsa"
+      },
+      "prediction-crypto-updown": {
+        "name": "Cripto Su/Giù",
+        "tagline": "Ogni finestra aperta, contro il prezzo su cui liquida.",
+        "description": "I contratti cripto ricorrenti di entrambe le sedi in una tabella: Kalshi apre una finestra da quindici minuti su cinque asset, Polymarket una oraria e una giornaliera su quattro. Ogni riga porta il riferimento di liquidazione, lo spot in tempo reale, la distanza tra i due e quello che una diffusione senza deriva alla volatilità realizzata recente ricava dal tempo rimasto, così le quote hanno un termine di paragone.",
+        "menuLabel": "Cripto Su/Giù"
       }
     },
     "traderTypes": {

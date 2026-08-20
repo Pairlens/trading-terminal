@@ -230,6 +230,7 @@ describe('WorkspaceTemplateRegistry', () => {
     expect(registry.getTemplates().map((t) => t.id)).toEqual([
       'template:prediction-terminal',
       'template:prediction-discovery',
+      'template:prediction-crypto-updown',
       'template:prediction-race',
     ])
 
@@ -275,8 +276,9 @@ describe('WorkspaceTemplateRegistry', () => {
         trusted: true,
       })
     }
-    // Every family ships a discovery board now — one per Discovery section —
-    // and none of them may show up as a pair-route preset.
+    // Every family ships a discovery board — at least one per Discovery
+    // section, and predictions ships a second for the recurring crypto
+    // up/down windows — and none of them may show up as a pair-route preset.
     const discovery = Object.keys(
       mergeRoutePresets({}, registry.getTemplates(), 'discovery'),
     ).sort()
@@ -284,6 +286,7 @@ describe('WorkspaceTemplateRegistry', () => {
       'template:dex-discovery',
       'template:equities-discovery',
       'template:perps-discovery',
+      'template:prediction-crypto-updown',
       'template:prediction-discovery',
     ])
     // Standalone store templates are never quick-apply presets, and the perp

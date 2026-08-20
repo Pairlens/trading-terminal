@@ -1,12 +1,12 @@
 ---
 title: Prediction markets
-description: Trade event contracts on Kalshi and Polymarket from the same terminal. A pair here is the question rather than one side of it, so opening an event puts every answer on screen, priced in cents and one click from the ticket, with a probability chart over the whole field, the resolution criteria in the venue's own words, an outcome ladder, a basket ticket that states its overround, and positions that settle.
+description: Trade event contracts on Kalshi and Polymarket from the same terminal. A pair here is the question rather than one side of it, so opening an event puts every answer on screen, priced in cents and one click from the ticket, with a probability chart over the whole field, the resolution criteria in the venue's own words, an outcome ladder, a basket ticket that states its overround, and positions that settle. Includes Crypto Up/Down, a scanner for the recurring BTC, ETH and SOL up-or-down windows that prices each one against the spot market it settles on.
 group: traders
 parent: trading
 order: 6
 eyebrow: For traders
 updated: 20 AUG 2026
-readTime: 21 min read
+readTime: 25 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -111,9 +111,10 @@ the rest somewhere else.
 
 Start from the **Predictions** tab on Discovery, the board the predictions
 plugin ships. It is built for questions rather than for pairs: a **Categories**
-rail on the left with a live contract count per category, the **Event Board**
-across the middle, and a right rail carrying **Odds Movers** over **Resolving
-Soon**. The tab is its own workspace, so what you arrange there stays there.
+rail on the left with a live contract count per category, **Crypto Up/Down**
+over the **Event Board** across the middle, and a right rail carrying **Odds
+Movers** over **Resolving Soon**. The tab is its own workspace, so what you
+arrange there stays there.
 The Predictions filter in the Markets panel sends you to it rather than showing
 an empty grid, because prediction outcomes are never in the pair catalog that
 panel reads: they are listed and resolved daily.
@@ -193,6 +194,89 @@ block under the category rail, which is read from the connectors you have
 installed, and the search box and sort chips, which work on whatever has
 landed. A venue that cannot answer at all still says so in a line above the
 board.
+
+## Crypto up/down
+
+Both venues run a permanent conveyor of short-dated crypto contracts that ask
+one question: will the price be higher at the close than it was at the open.
+Kalshi opens a fifteen-minute window on BTC, ETH, SOL, XRP and DOGE every
+quarter hour. Polymarket runs an hourly and a daily one on BTC, ETH, SOL and
+XRP. They are the busiest contracts either venue lists, and they are the one
+prediction product a crypto terminal can price better than the venue's own
+site, because the terminal already streams the spot market they settle against.
+
+**Crypto Up/Down** is that board. One row per live contract, sorted by what
+settles soonest, with eight columns:
+
+| Column        | What it is                                                         |
+| ------------- | ------------------------------------------------------------------ |
+| **Contract**  | Asset, horizon and venue                                           |
+| **Closes**    | A live countdown in minutes and seconds, not rounded to the minute |
+| **Reference** | The price the contract settles against                             |
+| **Spot**      | The live price on the pair the venue settles on                    |
+| **Dist**      | How far spot has moved from the reference, signed                  |
+| **Market**    | What the venue pays for Up, in cents                               |
+| **Model**     | What a plain diffusion model makes of the same window              |
+| **Edge**      | Model minus market, in probability points                          |
+
+The board shows the window that is trading, one per asset, horizon and venue.
+The venues answer with a ladder of future windows and all but the first sit at
+exactly 50 cents with no book, because nobody trades a contract that opens in
+six hours. Listing them would push the live row off the top behind seven
+placeholders quoting a coin flip. The horizon chips above the table narrow to
+one of 15m, 1H or 1D.
+
+Rows come from a thirty-second fetch, and the clock filters them on every
+tick rather than on every fetch: a fifteen-minute window expires while the
+board is on screen.
+
+### Where the reference comes from
+
+The two venues describe the settlement price differently, and the board says
+which one it got.
+
+Kalshi publishes the number. Every fifteen-minute market carries a target
+("Target Price: $69,506.94") and settles on the average of the sixty CF
+Benchmarks index prints before the close, measured against the same average
+before the open. Nothing has to be derived, so the Reference column is exactly
+what the contract pays on.
+
+Polymarket names a candle instead. Its hourly contract resolves Up when the
+close of the Binance BTC/USDT one-hour candle beginning at the titled hour is
+at or above its open, so the reference is that candle's open and the terminal
+reads it from your own Binance connector. Its daily contract compares one-minute
+closes at noon ET on two consecutive days; the terminal reads the hour that
+contains the reference minute, which is right to within a minute of tape rather
+than exact. Those rows mark their reference with `≈` and the footnote says why.
+
+If no connector you have installed carries the settlement pair, the row still
+runs. You lose Spot, Dist and Model, and you keep the odds, the countdown and
+whatever reference the venue published.
+
+### What the model is, and is not
+
+The Model column is `N(d2)`: the probability spot finishes above the reference
+under a driftless lognormal walk at recent realized volatility, with volatility
+estimated from the last five days of hourly closes on the settlement pair. It
+is closed-form arithmetic over numbers on the same row, and it is there so the
+venue's probability has something to be compared against.
+
+It is not a recommendation and it is not a fair value. It assumes zero drift,
+constant volatility and a lognormal walk, and a fifteen-minute crypto window is
+none of those. It knows nothing about fees, the spread, or how thin the book
+is at the size you would trade. A four-point edge on a contract quoted two
+cents wide is not four points of anything.
+
+The column is blank rather than approximate when a leg is missing. No
+reference, no live spot or too short a volatility sample means no model, on
+that row, with the other columns still doing their job.
+
+Clicking any row opens that contract on the prediction terminal, with its
+book, its tape and the same guarded ticket.
+
+There is also a dedicated **Crypto Up/Down** board in the Discovery route menu
+and the Workspace Store: the scanner across the left with a watchlist and Odds
+Movers on the right, for when the recurring windows are the whole session.
 
 ## Sorting the board
 

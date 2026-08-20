@@ -693,6 +693,34 @@
     "emptyBody": "Nenhum contrato se moveu o suficiente hoje para merecer uma linha.",
     "noChangeFrom": "Sem classificação: {{venues}} não publica variação de 24 h."
   },
+  "cryptoUpDown": {
+    "subtitle": "Janelas recorrentes, as duas casas",
+    "windowCount_one": "{{count}} janela aberta",
+    "windowCount_other": "{{count}} janelas abertas",
+    "loading": "Lendo as janelas abertas",
+    "noVenuesBody": "Instale a Kalshi ou a Polymarket para ver seus contratos recorrentes de sobe ou desce.",
+    "emptyTitle": "Nenhuma janela aberta",
+    "emptyBody": "Nenhuma das duas casas tem um contrato cripto de sobe ou desce em negociação agora.",
+    "colContract": "Contrato",
+    "colCloses": "Fecha",
+    "colReference": "Referência",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Mercado",
+    "colModel": "Modelo",
+    "colEdge": "Vantagem",
+    "horizonAll": "Todas",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Difusão sem deriva com volatilidade realizada anualizada de {{sigma}}%, a partir dos fechamentos horários dos últimos cinco dias.",
+    "referenceTooltip": "Liquida contra {{source}}.",
+    "modelNote": "O modelo é uma difusão sem deriva na volatilidade realizada recente. Ignora taxas, o spread e a profundidade do livro.",
+    "approxNote": "≈ marca uma referência lida da hora que contém o preço de liquidação de um minuto da casa.",
+    "desktopOnly": "{{venues}} precisa do app de desktop."
+  },
   "onboarding": {
     "phase": {
       "ready": "Pronto"
@@ -3368,6 +3396,7 @@
     "riskControls": "Controles de Risco",
     "categories": "Categorias",
     "eventBoard": "Painel de Eventos",
+    "cryptoUpDown": "Cripto Sobe/Desce",
     "oddsMovers": "Movers de Odds",
     "resolvingSoon": "Resolvendo em Breve",
     "eventHeader": "Cabeçalho do Evento",
@@ -3440,6 +3469,7 @@
     "riskControls": "Seu limite diário de perda, contagem de negociações, tamanho de posição e kill switch, editáveis onde a negociação acontece",
     "categories": "Cada categoria de evento com uma contagem de contratos ao vivo, para que o painel se estreite em um clique",
     "eventBoard": "Mercados de eventos ao vivo como cartões: a pergunta, Sim e Não em centavos, volume, e quando resolve",
+    "cryptoUpDown": "As janelas recorrentes de sobe ou desce de BTC, ETH e SOL na Kalshi e na Polymarket, avaliadas contra o mercado spot em que liquidam",
     "oddsMovers": "Os contratos cuja probabilidade mais se moveu hoje, com o movimento declarado em pontos",
     "resolvingSoon": "Contratos mais próximos da liquidação, ordenados pelo relógio em vez do volume",
     "eventHeader": "A pergunta, quando e como ela se resolve, e a probabilidade que o mercado está pagando agora",
@@ -4878,6 +4908,12 @@
         "tagline": "Cada resultado precificado, e a margem exibida.",
         "description": "Para um evento com um conjunto de resultados em vez de dois lados: o cabeçalho com a contagem de resultados e a margem, um gráfico de participações empilhadas, e um ranking que precifica cada resultado e permite apostar direto na linha. A cesta soma até a margem, para que apostar em todo o conjunto visivelmente não seja dinheiro fácil.",
         "menuLabel": "Corrida"
+      },
+      "prediction-crypto-updown": {
+        "name": "Cripto Sobe/Desce",
+        "tagline": "Cada janela aberta, contra o preço em que liquida.",
+        "description": "Os contratos cripto recorrentes das duas casas em uma tabela: a Kalshi abre uma janela de quinze minutos em cinco ativos e a Polymarket uma por hora e uma por dia em quatro. Cada linha traz a referência de liquidação, o spot ao vivo, a distância entre os dois e o que uma difusão sem deriva na volatilidade realizada recente faz do tempo restante, para que as probabilidades tenham com o que ser comparadas.",
+        "menuLabel": "Cripto Sobe/Desce"
       }
     },
     "traderTypes": {

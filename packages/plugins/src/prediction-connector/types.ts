@@ -14,6 +14,7 @@
  */
 
 import type { Timeframe } from '@pairlens/shared/types'
+import type { CryptoUpDownConfig } from './crypto-updown'
 
 /** One ccxt unified OHLCV row: `[ts, open, high, low, close, volume]`. */
 export type PredictionOhlcvRow = Array<number | string | undefined>
@@ -287,6 +288,17 @@ export type PredictionVenueConfig = {
     exchange: PredictionExchangeLike,
     limit: number,
   ) => Promise<Array<PredictionEventLike>>
+  /**
+   * The venue's recurring crypto up/down contracts, if it runs any.
+   *
+   * Declared rather than discovered, for the same reason `browseEvents` is a
+   * venue-supplied hook: each family is a venue-native SERIES, series are not
+   * searchable, and the connector is the only thing that knows which of its
+   * own series are the up/down conveyor. Absent means the venue lists none,
+   * and the `crypto-updown` preset answers with an empty list rather than an
+   * error.
+   */
+  cryptoUpDown?: CryptoUpDownConfig
   /** Poll cadences, ms. Ignored when `streaming: 'watch'`. */
   pollIntervals?: {
     candles?: number

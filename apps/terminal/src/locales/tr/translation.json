@@ -693,6 +693,34 @@
     "emptyBody": "Bugün hiçbir sözleşme satır açacak kadar hareket etmedi.",
     "noChangeFrom": "Sıralanmadı: {{venues}} 24 saatlik hareketi yayımlamıyor."
   },
+  "cryptoUpDown": {
+    "subtitle": "Yinelenen pencereler, iki borsa",
+    "windowCount_one": "{{count}} açık pencere",
+    "windowCount_other": "{{count}} açık pencere",
+    "loading": "Açık pencereler okunuyor",
+    "noVenuesBody": "Yinelenen yukarı ya da aşağı sözleşmelerini görmek için Kalshi veya Polymarket kurun.",
+    "emptyTitle": "Açık pencere yok",
+    "emptyBody": "Şu anda iki borsada da işlem gören bir kripto yukarı ya da aşağı sözleşmesi yok.",
+    "colContract": "Sözleşme",
+    "colCloses": "Kapanış",
+    "colReference": "Referans",
+    "colSpot": "Spot",
+    "colDistance": "Mesafe",
+    "colMarket": "Piyasa",
+    "colModel": "Model",
+    "colEdge": "Fark",
+    "horizonAll": "Tümü",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Son beş günün saatlik kapanışlarından hesaplanan %{{sigma}} yıllıklandırılmış gerçekleşen oynaklıkta sürüklenmesiz difüzyon.",
+    "referenceTooltip": "{{source}} üzerinden uzlaşır.",
+    "modelNote": "Model, son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyondur. Komisyonları, makası ve emir defteri derinliğini yok sayar.",
+    "approxNote": "≈ borsanın bir dakikalık uzlaşma fiyatını içeren saatten okunan referansı işaretler.",
+    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir."
+  },
   "onboarding": {
     "phase": {
       "ready": "Hazır"
@@ -3368,6 +3396,7 @@
     "riskControls": "Risk Kontrolleri",
     "categories": "Kategoriler",
     "eventBoard": "Olay Panosu",
+    "cryptoUpDown": "Kripto Yukarı/Aşağı",
     "oddsMovers": "Olasılık Hareketleri",
     "resolvingSoon": "Yakında Sonuçlanacaklar",
     "eventHeader": "Olay Başlığı",
@@ -3440,6 +3469,7 @@
     "riskControls": "Günlük zarar sınırın, işlem sayın, pozisyon büyüklüğün ve acil durdurman, işlemin yapıldığı yerde düzenlenebilir",
     "categories": "Canlı kontrat sayısıyla her olay kategorisi, böylece pano tek tıkla daralır",
     "eventBoard": "Kart halinde canlı olay piyasaları: soru, sent cinsinden Evet ve Hayır, hacim ve ne zaman sonuçlanacağı",
+    "cryptoUpDown": "Kalshi ve Polymarket üzerindeki yinelenen BTC, ETH ve SOL yukarı mı aşağı mı pencereleri, uzlaştıkları spot piyasaya göre fiyatlanır",
     "oddsMovers": "Bugün olasılığı en çok değişen kontratlar, hareket puan cinsinden belirtilmiş halde",
     "resolvingSoon": "Sonuçlanmaya en yakın kontratlar, hacme değil saate göre sıralanmış",
     "eventHeader": "Soru, nasıl ve ne zaman sonuçlanacağı, ve piyasanın şu an fiyatladığı olasılık",
@@ -4878,6 +4908,12 @@
         "tagline": "Her sonuç fiyatlanmış, ve overround belirtilmiş.",
         "description": "İki taraf yerine bir alanın olduğu bir olay için: sonuç sayısı ve overround'ı gösteren başlık, yığılmış paylar grafiği, ve her sonucu fiyatlayan ve satırdan bahis alan bir sıralama. Sepet overround'a denk gelir; böylece tüm alanı süpürmenin bedava para olmadığı açıkça görülür.",
         "menuLabel": "Yarış"
+      },
+      "prediction-crypto-updown": {
+        "name": "Kripto Yukarı/Aşağı",
+        "tagline": "Her açık pencere, uzlaştığı fiyata karşı.",
+        "description": "İki borsanın yinelenen kripto sözleşmeleri tek tabloda: Kalshi beş varlıkta on beş dakikalık, Polymarket dört varlıkta saatlik ve günlük pencere açar. Her satırda uzlaşma referansı, canlı spot, aradaki mesafe ve son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyonun kalan süreden çıkardığı olasılık yer alır; böylece oranların karşılaştırılacağı bir şey olur.",
+        "menuLabel": "Kripto Yukarı/Aşağı"
       }
     },
     "traderTypes": {

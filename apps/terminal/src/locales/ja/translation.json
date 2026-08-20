@@ -693,6 +693,34 @@
     "emptyBody": "本日、行として出すほど動いた契約はありません。",
     "noChangeFrom": "対象外: {{venues}} は 24 時間の変動を公開していません。"
   },
+  "cryptoUpDown": {
+    "subtitle": "繰り返し建つ枠、両取引所",
+    "windowCount_one": "未決済の枠 {{count}} 件",
+    "windowCount_other": "未決済の枠 {{count}} 件",
+    "loading": "未決済の枠を読み込み中",
+    "noVenuesBody": "Kalshi または Polymarket をインストールすると、繰り返し建つアップ/ダウン契約が表示されます。",
+    "emptyTitle": "未決済の枠がありません",
+    "emptyBody": "現在、どちらの取引所でも暗号資産のアップ/ダウン契約は取引されていません。",
+    "colContract": "契約",
+    "colCloses": "締切",
+    "colReference": "基準値",
+    "colSpot": "現物",
+    "colDistance": "乖離",
+    "colMarket": "市場",
+    "colModel": "モデル",
+    "colEdge": "差分",
+    "horizonAll": "すべて",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "直近5日間の1時間足終値から求めた年率実現ボラティリティ {{sigma}}% によるドリフトなし拡散です。",
+    "referenceTooltip": "{{source}} で決済されます。",
+    "modelNote": "モデルは直近の実現ボラティリティによるドリフトなし拡散です。手数料、スプレッド、板の厚みは考慮していません。",
+    "approxNote": "≈ は、取引所の1分決済値を含む時間足から読み取った基準値を示します。",
+    "desktopOnly": "{{venues}} にはデスクトップアプリが必要です。"
+  },
   "onboarding": {
     "phase": {
       "ready": "準備完了"
@@ -3368,6 +3396,7 @@
     "riskControls": "リスク管理",
     "categories": "カテゴリー",
     "eventBoard": "イベントボード",
+    "cryptoUpDown": "暗号資産アップ/ダウン",
     "oddsMovers": "確率変動",
     "resolvingSoon": "決済間近",
     "eventHeader": "イベントヘッダー",
@@ -3440,6 +3469,7 @@
     "riskControls": "日次損失の上限、取引回数、ポジションサイズ、緊急停止スイッチを、取引が行われるその場で編集可能",
     "categories": "全イベントカテゴリーをリアルタイムの契約数とともに表示し、ワンクリックでボードを絞り込めます",
     "eventBoard": "進行中のイベント市場をカードで表示：質問文、YesとNoのセント建て価格、出来高、決済時期",
+    "cryptoUpDown": "Kalshi と Polymarket で繰り返し建つ BTC・ETH・SOL のアップ/ダウン枠を、決済に使われる現物市場と突き合わせて表示します",
     "oddsMovers": "今日最も確率が変動した契約を、変動幅（ポイント）とともに表示",
     "resolvingSoon": "決済が最も近い契約を、出来高ではなく時間順に並べて表示",
     "eventHeader": "質問文、決済の時期と方法、そして市場が今織り込んでいる確率",
@@ -4878,6 +4908,12 @@
         "tagline": "全結果に値がつき、オーバーラウンドも明示。",
         "description": "二択ではなく多数の候補がある予測市場向け：結果数とオーバーラウンドを示すヘッダー、積み上げシェアチャート、そして全結果に値をつけ行から直接ベットできるラダー。バスケットの合計はオーバーラウンド分になるため、全結果を買い占めても無料の利益にはならないことが一目でわかります。",
         "menuLabel": "レース"
+      },
+      "prediction-crypto-updown": {
+        "name": "暗号資産アップ/ダウン",
+        "tagline": "すべての未決済枠を、決済に使われる価格と並べて。",
+        "description": "両取引所で繰り返し建つ暗号資産契約を一つの表に。Kalshi は5銘柄に15分枠を、Polymarket は4銘柄に1時間枠と1日枠を建てます。各行には決済基準値、リアルタイムの現物価格、その乖離、そして直近の実現ボラティリティによるドリフトなし拡散が残り時間から導く確率が並ぶので、オッズに比較対象ができます。",
+        "menuLabel": "暗号資産アップ/ダウン"
       }
     },
     "traderTypes": {

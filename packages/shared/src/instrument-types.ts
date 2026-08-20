@@ -244,10 +244,107 @@ export type PredictionEventSummary = {
   volume?: number
   liquidity?: number
   endMs?: number
+  /**
+   * Set when the event is one of the venue's recurring crypto up/down windows.
+   * Absent on everything else, which is how a caller tells a scanner row from
+   * an ordinary question without reading the title.
+   */
+  upDown?: PredictionUpDown
+}
+
+// ── Recurring crypto up/down contracts ───────────────────────────────
+//
+// Both prediction venues run a permanent conveyor of "will BTC be higher at
+// the close than it was at the open" contracts: Kalshi opens a fifteen-minute
+// window on five assets, Polymarket an hourly and a daily one on four. They
+// are the busiest thing either venue lists and they are the one prediction
+// product a crypto terminal can price better than the venue's own site, because
+// the terminal already streams the spot market the contract settles against.
+//
+// A connector that recognises one of its own recurring contracts attaches this
+// to the event. Nothing downstream parses a title: the venue knows which series
+// it asked for, so the asset, the window and the settlement source are stated
+// rather than inferred.
+
+/** How often a recurring up/down contract opens a new window. */
+export type PredictionUpDownHorizon = '15m' | 'hourly' | 'daily'
+
+/** One side of an up/down contract. */
+export type PredictionUpDownLeg = {
+  /** Route-safe pair key the serving connector resolves. */
+  pairKey: string
+  /** The venue's own word for the side: 'Up', 'YES'. */
+  label: string
+  /** Probability the leg is priced at, 0..1. */
+  price?: number
+  bid?: number
+  ask?: number
+}
+
+/**
+ * Where the price a contract settles against comes from.
+ *
+ * `venue` means the number is published and sits in `referencePrice` — Kalshi
+ * states the target on the market itself. `candle-open` means the venue named
+ * a candle instead of a number, so the reference is the open of the `spotPair`
+ * candle beginning at `opensMs` and the terminal has to read it.
+ */
+export type PredictionUpDownReferenceBasis = 'venue' | 'candle-open'
+
+export type PredictionUpDown = {
+  /** Base asset the contract settles on: 'BTC', 'ETH', 'SOL'. */
+  asset: string
+  /**
+   * Dash-form spot pair the venue settles against.
+   *
+   * The pair the SETTLEMENT SOURCE quotes, never one the prediction venue
+   * lists: Polymarket names Binance BTC/USDT in its own rules, and Kalshi
+   * settles on a CF Benchmarks index that tracks the same market. It is what a
+   * terminal should quote beside the odds.
+   */
+  spotPair: string
+  /** What the venue publishes as its settlement source, for display. */
+  settlementSource: string
+  horizon: PredictionUpDownHorizon
+  /** The instant the reference price is taken, ms. */
+  opensMs: number
+  /** The instant the contract settles, ms. */
+  closesMs: number
+  /** The settlement reference, when the venue publishes the number itself. */
+  referencePrice?: number
+  referenceBasis: PredictionUpDownReferenceBasis
+  /** Timeframe of the settlement candle, when the basis is `candle-open`. */
+  referenceTimeframe?: string
+  /**
+   * False when the candle named here only CONTAINS the venue's reference
+   * rather than being it. Polymarket's daily contract settles on a one-minute
+   * close at noon ET and the terminal reads the hour that starts there, so the
+   * number is right to within a minute of tape and must not be printed as
+   * exact.
+   */
+  referenceExact: boolean
+  /** Venue market the two legs trade on. */
+  marketId: string
+  up: PredictionUpDownLeg
+  down: PredictionUpDownLeg
 }
 
 /** Params accepted by `market-data:events` execute calls. */
 export type PredictionEventsQuery = {
+  /**
+   * A named slate rather than a scope.
+   *
+   * `crypto-updown` asks the venue for every recurring crypto up/down window
+   * it currently has open, across all of its assets and horizons. It is not
+   * expressible as a query or a category on either venue — each series is its
+   * own scope — so the connector fans out over the series it declares and
+   * returns the union, every event carrying `upDown`. A venue that runs no
+   * such contracts answers with an empty list rather than an error.
+   *
+   * Beats every other selector when set, for the same reason `eventId` does:
+   * it names a fixed slate, so narrowing it could only empty it.
+   */
+  preset?: 'crypto-updown'
   /**
    * One event, by its venue-native id — the cold-link path.
    *

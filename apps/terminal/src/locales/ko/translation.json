@@ -693,6 +693,34 @@
     "emptyBody": "오늘 한 줄을 차지할 만큼 움직인 계약이 없습니다.",
     "noChangeFrom": "순위 제외: {{venues}}는 24시간 변동을 공개하지 않습니다."
   },
+  "cryptoUpDown": {
+    "subtitle": "반복 구간, 양쪽 거래소",
+    "windowCount_one": "열린 구간 {{count}}개",
+    "windowCount_other": "열린 구간 {{count}}개",
+    "loading": "열린 구간을 읽는 중",
+    "noVenuesBody": "Kalshi 또는 Polymarket을 설치하면 반복되는 상승 또는 하락 계약을 볼 수 있습니다.",
+    "emptyTitle": "열린 구간 없음",
+    "emptyBody": "지금은 어느 거래소에서도 암호화폐 상승 또는 하락 계약이 거래되지 않습니다.",
+    "colContract": "계약",
+    "colCloses": "마감",
+    "colReference": "기준가",
+    "colSpot": "현물",
+    "colDistance": "괴리",
+    "colMarket": "시장",
+    "colModel": "모델",
+    "colEdge": "격차",
+    "horizonAll": "전체",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "최근 5일간의 시간별 종가로 구한 연율 실현 변동성 {{sigma}}%를 사용하는 드리프트 없는 확산입니다.",
+    "referenceTooltip": "{{source}} 기준으로 정산됩니다.",
+    "modelNote": "모델은 최근 실현 변동성을 사용하는 드리프트 없는 확산입니다. 수수료, 스프레드, 호가 깊이는 고려하지 않습니다.",
+    "approxNote": "≈는 거래소의 1분 정산가가 포함된 시간대에서 읽은 기준가를 뜻합니다.",
+    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다."
+  },
   "onboarding": {
     "phase": {
       "ready": "준비 완료"
@@ -3368,6 +3396,7 @@
     "riskControls": "리스크 관리",
     "categories": "카테고리",
     "eventBoard": "이벤트 보드",
+    "cryptoUpDown": "암호화폐 상승/하락",
     "oddsMovers": "확률 변동",
     "resolvingSoon": "정산 임박",
     "eventHeader": "이벤트 헤더",
@@ -3440,6 +3469,7 @@
     "riskControls": "일일 손실 한도, 거래 횟수, 포지션 사이즈, 킬 스위치를 거래가 일어나는 바로 그 자리에서 편집",
     "categories": "실시간 계약 수와 함께 보여주는 모든 이벤트 카테고리, 클릭 한 번으로 보드를 좁힐 수 있게",
     "eventBoard": "진행 중인 이벤트 시장을 카드로: 질문, 센트 단위의 Yes와 No, 거래량, 정산 시점",
+    "cryptoUpDown": "Kalshi와 Polymarket에서 반복되는 BTC, ETH, SOL 상승 또는 하락 구간을 정산 기준이 되는 현물 시장과 비교해 보여줍니다",
     "oddsMovers": "오늘 확률이 가장 크게 움직인 계약, 변동폭을 포인트 단위로 표시",
     "resolvingSoon": "정산이 가장 임박한 계약을 거래량이 아니라 시간 순으로 정렬",
     "eventHeader": "질문, 언제 어떻게 정산되는지, 그리고 지금 시장이 반영하는 확률",
@@ -4878,6 +4908,12 @@
         "tagline": "모든 결과에 값이 매겨지고, 오버라운드도 명시.",
         "description": "양자택일이 아니라 여러 후보가 있는 이벤트를 위한 화면: 결과 수와 오버라운드를 보여주는 헤더, 누적 지분 차트, 그리고 모든 결과에 값을 매기고 행에서 바로 베팅할 수 있는 래더. 바스켓의 합계는 오버라운드만큼이 되므로, 전체를 쓸어 담아도 공짜 돈이 아니라는 게 눈에 보입니다.",
         "menuLabel": "레이스"
+      },
+      "prediction-crypto-updown": {
+        "name": "암호화폐 상승/하락",
+        "tagline": "열린 모든 구간을 정산 기준 가격과 나란히.",
+        "description": "양쪽 거래소의 반복 암호화폐 계약을 한 표에 모았습니다. Kalshi는 다섯 자산에 15분 구간을, Polymarket은 네 자산에 시간별과 일별 구간을 엽니다. 각 행에는 정산 기준가, 실시간 현물가, 둘 사이의 거리, 그리고 최근 실현 변동성을 사용하는 드리프트 없는 확산이 남은 시간에서 도출한 확률이 담겨 있어 배당률을 견줄 대상이 생깁니다.",
+        "menuLabel": "암호화폐 상승/하락"
       }
     },
     "traderTypes": {
