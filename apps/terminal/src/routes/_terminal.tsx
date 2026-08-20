@@ -90,7 +90,11 @@ import {
   useKeybindingLabel,
   useKeybindingLabels,
 } from '@/hooks/use-keybindings'
-import { RAIL_ITEM, RAIL_SEPARATOR } from '@/components/chrome/rail-chrome'
+import {
+  RAIL_ITEM,
+  RAIL_SEPARATOR,
+  railSection,
+} from '@/components/chrome/rail-chrome'
 import { BillingStateSync } from '@/components/billing/billing-state-sync'
 import { AssistantProvider } from '@/lib/assistant-core/assistant-provider'
 import { AssistantDock } from '@/components/assistant-dock/assistant-dock'
@@ -480,11 +484,20 @@ function TerminalLayout() {
                         sidebarWidth="3.75rem"
                         className="[&>[data-slot=sidebar-inner]]:bg-transparent [&>[data-slot=sidebar-inner]]:shadow-none [&>[data-slot=sidebar-inner]]:ring-0"
                       >
-                        <SidebarContent className="p-2">
+                        {/* The scroll container is also the clip box, and
+                            the spine hangs 6px left of an item that already
+                            sits in this element's padding. So it spans the
+                            rail edge to edge and puts the inset back as its
+                            own padding: identical geometry, but the clip
+                            edge is now the window's edge and the spine
+                            survives it. */}
+                        <SidebarContent className="-mx-2 px-4 py-2">
                           <SidebarGroup className="p-0">
                             <SidebarGroupContent>
                               <SidebarMenu className="items-center gap-1">
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('pairs')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.pairs')}
                                     className={RAIL_ITEM}
@@ -509,7 +522,9 @@ function TerminalLayout() {
                                     two live in the dock below. */}
                                 <AssistantSidebarOrbItem />
                                 <SidebarSeparator className={RAIL_SEPARATOR} />
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('notifications')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.notifications')}
                                     className={RAIL_ITEM}
@@ -530,7 +545,9 @@ function TerminalLayout() {
                                     />
                                   </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('workflows')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.workflows')}
                                     className={RAIL_ITEM}
@@ -551,7 +568,9 @@ function TerminalLayout() {
                                     />
                                   </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('indicators')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.indicators')}
                                     className={RAIL_ITEM}
@@ -572,7 +591,9 @@ function TerminalLayout() {
                                     />
                                   </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('bots')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.bots')}
                                     className={RAIL_ITEM}
@@ -593,7 +614,10 @@ function TerminalLayout() {
                                 </SidebarMenuItem>
                                 <SidebarSeparator className={RAIL_SEPARATOR} />
                                 {NAV_ITEMS.map((item) => (
-                                  <SidebarMenuItem key={item.id}>
+                                  <SidebarMenuItem
+                                    className={railSection(item.id)}
+                                    key={item.id}
+                                  >
                                     <SidebarMenuButton
                                       aria-label={t(item.labelKey)}
                                       className={cn(RAIL_ITEM, 'relative')}
@@ -627,7 +651,9 @@ function TerminalLayout() {
                                   </SidebarMenuItem>
                                 ))}
                                 <SidebarSeparator className={RAIL_SEPARATOR} />
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('workspaces')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('layout.workspaces')}
                                     className={RAIL_ITEM}
@@ -651,7 +677,9 @@ function TerminalLayout() {
                                     />
                                   </SidebarMenuButton>
                                 </SidebarMenuItem>
-                                <SidebarMenuItem>
+                                <SidebarMenuItem
+                                  className={railSection('workspace-store')}
+                                >
                                   <SidebarMenuButton
                                     aria-label={t('nav.workspaceStore')}
                                     className={RAIL_ITEM}
@@ -838,7 +866,7 @@ function ChartsNavItem({ isActive }: { isActive: boolean }) {
   const [recentPairs] = useRecentPairs()
 
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem className={railSection('charts')}>
       <DropdownMenu>
         <DropdownMenuTrigger
           render={

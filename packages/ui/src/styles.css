@@ -65,6 +65,25 @@
   --asset-stocks: oklch(0.52 0.14 158);
   --asset-prediction: oklch(0.55 0.13 215);
 
+  /* Section identity — one hue per rail destination, spent on the spine that
+     marks the section you are in. Same idea as the asset-class hues above and
+     the same reason for living out here rather than in a theme: the rail is
+     the one control that never moves, so the colour beside Bots is worth
+     learning once. Ten hues, 36 degrees apart, and each one only ever appears
+     alone — a single item is active at a time — so the spine is a reminder of
+     where you are, never a legend to decode. It is also never the only mark:
+     the icon and the chip under it say the same thing without colour. */
+  --section-plugins: oklch(0.55 0.16 20);
+  --section-notifications: oklch(0.58 0.14 56);
+  --section-indicators: oklch(0.55 0.15 92);
+  --section-workflows: oklch(0.53 0.15 128);
+  --section-accounts: oklch(0.53 0.14 164);
+  --section-charts: oklch(0.54 0.13 200);
+  --section-pairs: oklch(0.53 0.16 236);
+  --section-bots: oklch(0.54 0.17 272);
+  --section-workspaces: oklch(0.55 0.18 308);
+  --section-workspace-store: oklch(0.56 0.17 344);
+
   /* AI "magic" gradient stops — reserve for AI surfaces only */
   --magic-1: oklch(0.6 0.17 288);
   --magic-2: oklch(0.58 0.15 250);
@@ -171,6 +190,18 @@
   --asset-dex: oklch(0.76 0.16 322);
   --asset-stocks: oklch(0.76 0.14 160);
   --asset-prediction: oklch(0.78 0.11 213);
+
+  /* Section identity — the same ten hues, lifted for a charcoal ground */
+  --section-plugins: oklch(0.76 0.15 20);
+  --section-notifications: oklch(0.8 0.13 56);
+  --section-indicators: oklch(0.82 0.15 92);
+  --section-workflows: oklch(0.79 0.15 128);
+  --section-accounts: oklch(0.79 0.13 164);
+  --section-charts: oklch(0.79 0.11 200);
+  --section-pairs: oklch(0.75 0.14 236);
+  --section-bots: oklch(0.76 0.14 272);
+  --section-workspaces: oklch(0.76 0.16 308);
+  --section-workspace-store: oklch(0.77 0.15 344);
 
   --magic-1: oklch(0.74 0.15 288);
   --magic-2: oklch(0.7 0.13 250);

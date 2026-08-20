@@ -23,7 +23,12 @@ import {
   PAGE_GROUND,
   PAGE_RULE,
 } from '../page-chrome'
-import { RAIL_ITEM, RAIL_SEPARATOR } from '../rail-chrome'
+import {
+  RAIL_ITEM,
+  RAIL_ITEM_SLOT,
+  RAIL_SEPARATOR,
+  railSection,
+} from '../rail-chrome'
 import { HEADER_CHIP } from '../header-chrome'
 
 const SRC = join(import.meta.dir, '..', '..', '..')
@@ -81,5 +86,58 @@ describe('page chrome tracks board chrome', () => {
     expect(RAIL_ITEM).toContain('data-active:bg-card')
     expect(RAIL_ITEM).toContain('rounded-[10px]')
     expect(RAIL_ITEM).not.toContain('sidebar-accent')
+  })
+
+  test('the current section is marked by a spine in its own hue', () => {
+    // The spine hangs off the item's left edge, which is why it lives on the
+    // `<li>`: the button is `overflow-hidden` and would clip it away.
+    expect(RAIL_ITEM_SLOT).toContain('before:-left-1.5')
+    expect(RAIL_ITEM_SLOT).toContain('has-data-active:before:opacity-100')
+    expect(RAIL_ITEM_SLOT).toContain('before:bg-(--rail-spine)')
+
+    // Every destination names a hue, and no two sections share one.
+    const sections = [
+      'pairs',
+      'charts',
+      'notifications',
+      'workflows',
+      'indicators',
+      'bots',
+      'accounts',
+      'plugins',
+      'workspaces',
+      'workspace-store',
+    ] as const
+    const hues = sections.map((id) => {
+      const cls = railSection(id)
+      expect(cls).toContain(RAIL_ITEM_SLOT)
+      return cls.replace(RAIL_ITEM_SLOT, '').trim()
+    })
+    expect(new Set(hues).size).toBe(sections.length)
+    for (const id of sections) {
+      expect(railSection(id)).toContain(`[--rail-spine:var(--section-${id})]`)
+    }
+
+    // An item that is not a destination draws nothing: no variable, no bar.
+    expect(railSection()).toBe(RAIL_ITEM_SLOT)
+
+    // The hues are declared once, out with the asset-class ones, so a theme
+    // cannot repaint what the rail spent a session teaching.
+    const tokens = readFileSync(
+      join(SRC, '..', '..', '..', 'packages', 'ui', 'src', 'styles.css'),
+      'utf8',
+    )
+    for (const id of sections) {
+      expect(tokens).toContain(`--section-${id}:`)
+    }
+  })
+
+  test('the rail spans its own width so the spine survives the clip', () => {
+    // `SidebarContent` is the scroll container, and a scroll container clips
+    // at its padding box. The spine sits left of an item that already lives
+    // in that padding, so the element runs edge to edge and puts the inset
+    // back as its own padding.
+    const shell = read('routes', '_terminal.tsx')
+    expect(shell).toContain('<SidebarContent className="-mx-2 px-4 py-2">')
   })
 })
