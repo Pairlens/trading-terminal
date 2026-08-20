@@ -377,7 +377,15 @@ function LayoutGrid() {
         onDragCancel={handleDragCancel}
       >
         <div className={BOARD}>
-          <LayoutColumn column={col} dropZone={activeDropZone} />
+          {/* The column fills the board itself here. With more than one
+              column a `ResizablePanel` is what gives each of them a box;
+              alone, the column would be a bare flex child and shrink to the
+              width of its own content, leaving the rest of the board empty
+              ground. `min-w-0` for the same reason it is on the surface: the
+              tables inside refuse to shrink without it. */}
+          <div className="min-w-0 flex-1">
+            <LayoutColumn column={col} dropZone={activeDropZone} />
+          </div>
           {activeDrag && (
             <div
               data-slot="drag-overlay"
