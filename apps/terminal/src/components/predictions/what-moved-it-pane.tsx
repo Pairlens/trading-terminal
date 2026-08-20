@@ -21,13 +21,13 @@ import { useTranslation } from 'react-i18next'
 import { History } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
-import { usePluginFetch } from '@pairlens/plugin-sdk'
 import { useQuery } from '@tanstack/react-query'
 import type { NewsFeedResponse } from '@pairlens/shared/instrument-types'
 
 import type { ProbabilityMove } from '@/lib/predictions/moves'
 import { PaneEmpty, PaneFootnote, Th } from '@/components/panes/pane-primitives'
 import { fetchNewsPage } from '@/components/news/news-shared'
+import { appServerUrl, authFetch } from '@/lib/api'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { useOptionalCandleData } from '@/lib/chart-terminal-context'
 import { usePredictionOutcome } from '@/stores/prediction-directory-store'
@@ -201,6 +201,16 @@ function MoveRow({
 }
 
 /**
+ * `authFetch` against the App Server, not `usePluginFetch`: the plugin fetch
+ * builds its base from the owning plugin's config, and only the two
+ * backend-bound official plugins are handed one. This pane belongs to
+ * `pairlens-predictions`, so a relative path went to the terminal's own origin
+ * and the headline column was empty everywhere.
+ */
+const newsFetch = (path: string, init?: RequestInit) =>
+  authFetch(`${appServerUrl}${path}`, init)
+
+/**
  * Headlines for the instrument the question names, or null when it names none.
  *
  * Deliberately one page and no paging: this is a garnish on a timeline that
@@ -212,12 +222,11 @@ function useNewsForTicker(
   ticker: string | null,
   enabled: boolean,
 ): NewsFeedResponse['articles'] | null {
-  const apiFetch = usePluginFetch()
   const { data } = useQuery({
     queryKey: ['prediction-news', ticker],
     queryFn: () =>
       fetchNewsPage(
-        apiFetch,
+        newsFetch,
         new URLSearchParams({ tickers: ticker! }).toString(),
       ),
     enabled: Boolean(ticker) && enabled,

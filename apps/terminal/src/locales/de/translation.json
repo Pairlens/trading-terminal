@@ -3317,6 +3317,7 @@
     "unsupported": "Die Ticker-Übersicht ist nur für Aktien und Krypto-Paare verfügbar.",
     "loadError": "Ticker-Übersicht konnte nicht geladen werden.",
     "noData": "Keine Übersichtsdaten für diesen Ticker verfügbar.",
+    "standalone": "Ticker-Übersichten kommen vom App Server, den dieser Build nicht nutzt.",
     "marketCap": "Marktkapitalisierung",
     "exchange": "Exchange",
     "industry": "Branche",

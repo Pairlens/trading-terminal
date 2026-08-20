@@ -3317,6 +3317,7 @@
     "unsupported": "Tổng quan ticker chỉ khả dụng cho cổ phiếu và cặp crypto.",
     "loadError": "Không thể tải tổng quan ticker.",
     "noData": "Không có dữ liệu tổng quan cho ticker này.",
+    "standalone": "Thông tin tổng quan về ticker đến từ App Server, thứ mà bản dựng này không dùng.",
     "marketCap": "Vốn hóa thị trường",
     "exchange": "Sàn giao dịch",
     "industry": "Ngành",

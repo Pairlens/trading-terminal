@@ -20,6 +20,7 @@ import type {
   InsiderTransactionsResponse,
   IpoCalendarResponse,
   NewListingsResponse,
+  TickerOverviewResponse,
 } from '@pairlens/shared/instrument-types'
 import {
   APP_SERVER_CREDENTIALS,
@@ -325,11 +326,6 @@ export type FearGreed = {
   }>
 }
 
-export type TickerOverview = {
-  overview: Record<string, unknown>
-  fetchedAt?: number
-}
-
 export type TradeJournalEntry = {
   id: string
   market: string
@@ -599,10 +595,13 @@ export const api = {
 
   getFearGreed: () => fetchApi<FearGreed>('/api/fear-greed'),
 
+  /** Asset metadata for one ticker. `overview` is null when nothing is known. */
   getTickerOverview: (ticker: string, assetClass?: 'crypto' | 'stocks') => {
     const qs = new URLSearchParams({ ticker })
     if (assetClass) qs.set('assetClass', assetClass)
-    return fetchApi<TickerOverview>(`/api/ticker-overview?${qs.toString()}`)
+    return fetchApi<TickerOverviewResponse>(
+      `/api/ticker-overview?${qs.toString()}`,
+    )
   },
 
   /**

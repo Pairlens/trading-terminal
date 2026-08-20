@@ -3317,6 +3317,7 @@
     "unsupported": "行情概览仅适用于股票和加密货币交易对。",
     "loadError": "加载行情概览失败。",
     "noData": "该标的暂无概览数据。",
+    "standalone": "行情概览来自 App Server，而此版本没有使用它。",
     "marketCap": "市值",
     "exchange": "交易所",
     "industry": "行业",

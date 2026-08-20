@@ -3407,6 +3407,7 @@
     "unsupported": "Przegląd tickera jest dostępny tylko dla akcji i par kryptowalutowych.",
     "loadError": "Nie udało się załadować przeglądu tickera.",
     "noData": "Brak danych przeglądu dla tego tickera.",
+    "standalone": "Przeglądy tickerów pochodzą z App Servera, którego ta wersja nie używa.",
     "marketCap": "Kapitalizacja rynkowa",
     "exchange": "Giełda",
     "industry": "Branża",

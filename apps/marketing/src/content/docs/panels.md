@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 21 AUG 2026
 readTime: 12 min read
 ---
 
@@ -20,30 +20,30 @@ dialog with it. That is the user-level way to drop a whole asset class. See
 
 ## Charting and data
 
-| Panel                 | What it shows                                                                                                                        |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **Chart**             | The main chart: 16 types, 90 indicators, 45 drawing tools. See [the chart](/docs/chart-panel)                                        |
-| **Order Book**        | Live bids and asks. See [the order book](/docs/order-book)                                                                           |
-| **Trades**            | The live tape. See [time and sales](/docs/time-and-sales)                                                                            |
-| **Market Depth**      | The cumulative depth curve. See [depth and liquidity](/docs/depth-and-liquidity)                                                     |
-| **Liquidity Heatmap** | Resting liquidity over time. See [depth and liquidity](/docs/depth-and-liquidity)                                                    |
-| **Multi-Price**       | Every venue at once. See [cross-venue pricing](/docs/cross-venue-pricing)                                                            |
-| **Venue Ladder**      | Every connected venue's best bid and ask for this pair, ranked so the cheapest fill is the top row                                   |
-| **Pair Info**         | Key stats and metadata for the active pair                                                                                           |
-| **Pair Dossier**      | The stats that decide a size: range, volume, liquidity within one percent, and where the pair trades best                            |
-| **Data Log**          | The raw signal and event feed                                                                                                        |
-| **Funding Belt**      | The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns                            |
-| **Liquidation Map**   | A time-by-price heatmap of measured liquidations, painted behind the contract's candles, with your own liquidation levels over it    |
-| **Pool Stats**        | Reserves, value locked, a day's volume, the fee tier, and quoted price impact at $1k, $10k and $100k                                 |
-| **On-chain Trades**   | Every swap through the pool as it confirms, with the signing address and a link to the transaction                                   |
-| **Chain Ladder**      | The same token priced on every chain with gas folded in, so the best total wins rather than the best quote                           |
-| **Session Clock**     | A one-line clock for the trading day, so an out-of-hours ticket is never a surprise                                                  |
-| **Level 1**           | Bid and ask with their sizes, the spread in price and basis points, where the last print sits, and a halt row when the venue says so |
-| **Company**           | The ticker as a business: next report, valuation, growth, margins, the range and the analyst split                                   |
-| **Insider Activity**  | Form 4 buys and sells for this ticker: date, insider, role, shares, price, value, and a buys-versus-sells summary                    |
-| **Event Header**      | The question, when and how it resolves, and the probability the market is paying right now                                           |
-| **Probability Chart** | Every outcome in the event on one time axis, as lines or as stacked bands, with a crosshair that reads them all at once              |
-| **Event Brief**       | What the contract pays on, in the venue's own words, with the settlement date and what has traded through it                         |
+| Panel                 | What it shows                                                                                                                                                                                            |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Chart**             | The main chart: 16 types, 90 indicators, 45 drawing tools. See [the chart](/docs/chart-panel)                                                                                                            |
+| **Order Book**        | Live bids and asks. See [the order book](/docs/order-book)                                                                                                                                               |
+| **Trades**            | The live tape. See [time and sales](/docs/time-and-sales)                                                                                                                                                |
+| **Market Depth**      | The cumulative depth curve. See [depth and liquidity](/docs/depth-and-liquidity)                                                                                                                         |
+| **Liquidity Heatmap** | Resting liquidity over time. See [depth and liquidity](/docs/depth-and-liquidity)                                                                                                                        |
+| **Multi-Price**       | Every venue at once. See [cross-venue pricing](/docs/cross-venue-pricing)                                                                                                                                |
+| **Venue Ladder**      | Every connected venue's best bid and ask for this pair, ranked so the cheapest fill is the top row                                                                                                       |
+| **Pair Info**         | What the asset itself is: description, market cap or shares outstanding, launch or listing date, tags and links. Coins and stocks; a pool or a contract has no profile to show. Served by the App Server |
+| **Pair Dossier**      | The stats that decide a size: range, volume, liquidity within one percent, and where the pair trades best                                                                                                |
+| **Data Log**          | The raw signal and event feed                                                                                                                                                                            |
+| **Funding Belt**      | The countdown to the next funding stamp, the current and predicted rate, and what your size pays or earns                                                                                                |
+| **Liquidation Map**   | A time-by-price heatmap of measured liquidations, painted behind the contract's candles, with your own liquidation levels over it                                                                        |
+| **Pool Stats**        | Reserves, value locked, a day's volume, the fee tier, and quoted price impact at $1k, $10k and $100k                                                                                                     |
+| **On-chain Trades**   | Every swap through the pool as it confirms, with the signing address and a link to the transaction                                                                                                       |
+| **Chain Ladder**      | The same token priced on every chain with gas folded in, so the best total wins rather than the best quote                                                                                               |
+| **Session Clock**     | A one-line clock for the trading day, so an out-of-hours ticket is never a surprise                                                                                                                      |
+| **Level 1**           | Bid and ask with their sizes, the spread in price and basis points, where the last print sits, and a halt row when the venue says so                                                                     |
+| **Company**           | The ticker as a business: next report, valuation, growth, margins, the range and the analyst split                                                                                                       |
+| **Insider Activity**  | Form 4 buys and sells for this ticker: date, insider, role, shares, price, value, and a buys-versus-sells summary                                                                                        |
+| **Event Header**      | The question, when and how it resolves, and the probability the market is paying right now                                                                                                               |
+| **Probability Chart** | Every outcome in the event on one time axis, as lines or as stacked bands, with a crosshair that reads them all at once                                                                                  |
+| **Event Brief**       | What the contract pays on, in the venue's own words, with the settlement date and what has traded through it                                                                                             |
 
 The Liquidity Heatmap is the one people miss. It renders where resting
 liquidity has actually sat over the last few hours, which shows you the levels
