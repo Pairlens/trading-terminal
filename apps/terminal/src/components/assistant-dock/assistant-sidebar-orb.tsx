@@ -25,7 +25,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@pairlens/ui/components/ui/sidebar'
-import { RAIL_ITEM } from '@/components/chrome/rail-chrome'
+import { RAIL_ITEM, RAIL_ITEM_SLOT } from '@/components/chrome/rail-chrome'
 import { ShortcutHint } from '@/components/shortcut-hints'
 import { useKeybindingLabel } from '@/hooks/use-keybindings'
 import { useAssistantPlacement } from '@/lib/assistant-core/placement'
@@ -91,8 +91,13 @@ export function AssistantSidebarOrb({
   // under the panel.
   const announceBusy = busy && !open
 
+  // The one rail item whose spine is not a section hue: open means the
+  // assistant is in the window, and the AI speaks in the magic palette
+  // wherever it appears.
   return (
-    <SidebarMenuItem className="group/assistant relative">
+    <SidebarMenuItem
+      className={`group/assistant ${RAIL_ITEM_SLOT} [--rail-spine:var(--magic-1)]`}
+    >
       <SidebarMenuButton
         data-assistant-orb=""
         aria-label={open ? closeLabel : openLabel}

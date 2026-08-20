@@ -16,7 +16,10 @@ away. Here is the map.
 The rail down the left side is how you move between the big surfaces. It is
 painted the same colour as the page beside it, so it has no edge of its own and
 nothing competes with the middle of the window. The section you are on is the
-one entry resting on a soft chip.
+one entry resting on a soft chip, with a coloured spine against the window's
+edge beside it. Each section owns a hue and keeps it: Bots is violet, Accounts
+green, Notifications amber. Two weeks in you stop reading the rail and just
+look at where the colour is.
 
 | Entry                       | What lives there                                                             |
 | --------------------------- | ---------------------------------------------------------------------------- |
