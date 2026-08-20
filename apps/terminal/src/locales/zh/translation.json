@@ -2609,6 +2609,14 @@
       "fullscreen": "全屏",
       "exitFullscreen": "退出全屏"
     },
+    "symbolChip": {
+      "aria": "更改此图表的品种",
+      "tooltip": "此图表的品种",
+      "pinnedBadge": "已固定",
+      "followBoard": "跟随看板",
+      "followingBoard": "正在跟随看板。选择一个交易对，让此图表有自己的品种。",
+      "boundTo": "由 {{variable}} 设置"
+    },
     "exportData": {
       "title": "导出图表数据",
       "description": "将图表的K线保存为 CSV 文件。",

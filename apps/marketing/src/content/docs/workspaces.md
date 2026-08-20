@@ -4,7 +4,7 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 12 min read
 ---
 
@@ -231,6 +231,12 @@ instruments you point it at.
 
 The variables editor shows how many panels use each variable, so you know what
 you are about to affect before you change one.
+
+A panel can also hold an instrument of its own without a variable behind it.
+That is what the chart's [symbol chip](/docs/chart-panel#symbol) writes, and
+what the ready-made Dual, Triple and Quad chart boards arrive with: one panel
+per instrument, changeable panel by panel. Its pane menu clears the pin and
+hands the panel back to the page's pair.
 
 Panels declare what they need. A chart needs an active pair; a trade ticket
 needs a pair and a wallet. A panel whose requirement is unbound tells you what

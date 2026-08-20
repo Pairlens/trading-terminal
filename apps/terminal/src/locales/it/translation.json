@@ -2609,6 +2609,14 @@
       "fullscreen": "Schermo intero",
       "exitFullscreen": "Esci da schermo intero"
     },
+    "symbolChip": {
+      "aria": "Cambia il simbolo di questo grafico",
+      "tooltip": "Simbolo di questo grafico",
+      "pinnedBadge": "Fissato",
+      "followBoard": "Segui la board",
+      "followingBoard": "Segue la board. Scegli una coppia per dare a questo grafico la sua.",
+      "boundTo": "Impostato da {{variable}}"
+    },
     "exportData": {
       "title": "Esporta i dati del grafico",
       "description": "Salva le candele del grafico in un file CSV.",

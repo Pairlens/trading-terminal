@@ -2609,6 +2609,14 @@
       "fullscreen": "Pantalla completa",
       "exitFullscreen": "Salir de pantalla completa"
     },
+    "symbolChip": {
+      "aria": "Cambiar el símbolo de este gráfico",
+      "tooltip": "Símbolo de este gráfico",
+      "pinnedBadge": "Fijado",
+      "followBoard": "Seguir al tablero",
+      "followingBoard": "Sigue al tablero. Elige un par para darle uno propio a este gráfico.",
+      "boundTo": "Definido por {{variable}}"
+    },
     "exportData": {
       "title": "Exportar datos del gráfico",
       "description": "Guarda las velas del gráfico en un archivo CSV.",

@@ -1530,6 +1530,14 @@
       "fullscreen": "Fullscreen",
       "exitFullscreen": "Exit Fullscreen"
     },
+    "symbolChip": {
+      "aria": "Change this chart's symbol",
+      "tooltip": "Symbol for this chart",
+      "pinnedBadge": "Pinned",
+      "followBoard": "Follow the board",
+      "followingBoard": "Following the board. Pick a pair to give this chart its own.",
+      "boundTo": "Set by {{variable}}"
+    },
     "exportData": {
       "title": "Export chart data",
       "description": "Save the chart's bars as a CSV file.",

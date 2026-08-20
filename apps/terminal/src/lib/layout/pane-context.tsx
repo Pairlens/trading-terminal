@@ -194,6 +194,28 @@ export function PaneContextProvider({
     [boundVarName, varCtx],
   )
 
+  // A pane holding its own pair holds its own VENUE with it: pair and venue
+  // are one instrument, and a pane whose chart kept a separately persisted
+  // venue would chart OKX under a `BTC-USDT on Binance` badge. Switching venue
+  // from inside such a pane (the venue ladder does it, so does the chart's own
+  // no-data state) lands here rather than in the chart's local state.
+  const setPaneMarket = useCallback(
+    (market: string) => {
+      if (!resolvedPair || resolvedPair.market === market) return
+      const next = { pairKey: resolvedPair.pairKey, market }
+      if (pairSource === 'variable') setVariableValue(next)
+      else if (pairSource === 'override') {
+        dispatch({
+          type: 'SET_PANE_OVERRIDE',
+          paneId,
+          slot: 'active-pair',
+          value: next,
+        })
+      }
+    },
+    [resolvedPair, pairSource, setVariableValue, dispatch, paneId],
+  )
+
   const value = useMemo<PaneContextValue>(
     () => ({
       paneId,
@@ -238,6 +260,7 @@ export function PaneContextProvider({
         resolvedPair={resolvedPair}
         pairSource={pairSource}
         resolvedTimeframe={resolvedTimeframe}
+        onMarketChange={setPaneMarket}
       >
         {children}
       </PaneStreamProvider>
@@ -258,12 +281,14 @@ function PaneStreamProvider({
   resolvedPair,
   pairSource,
   resolvedTimeframe,
+  onMarketChange,
   children,
 }: {
   paneId: string
   resolvedPair: ActivePairState | null
   pairSource: 'override' | 'variable' | 'global' | null
   resolvedTimeframe: string | null
+  onMarketChange: (market: string) => void
   children: ReactNode
 }) {
   // Presence check only — chart config changes on user interaction, unlike
@@ -284,6 +309,11 @@ function PaneStreamProvider({
     return <>{children}</>
   }
 
+  // A pinned pane's venue comes from the pin, not from the pane's own
+  // persisted preference: the pin is the instrument, and the two disagreeing
+  // is how a pane ends up charting a venue nothing on it names.
+  const owned = pairSource === 'override' || pairSource === 'variable'
+
   return (
     <ChartTerminalProvider
       pairKey={resolvedPair.pairKey}
@@ -291,6 +321,8 @@ function PaneStreamProvider({
       defaultMarket={resolvedPair.market ?? defaultMarket}
       defaultTimeframe={resolvedTimeframe ?? undefined}
       stateScope={paneId}
+      marketOverride={owned ? resolvedPair.market : undefined}
+      onMarketChange={owned ? onMarketChange : undefined}
     >
       {children}
     </ChartTerminalProvider>

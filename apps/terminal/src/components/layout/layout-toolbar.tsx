@@ -49,8 +49,11 @@ import { track } from '@/lib/analytics-events'
 import { STORE_ASSET_CLASS_FOR } from '@/lib/workspace-store/catalog'
 import { templateMenuLabel } from '@/lib/workspace-store/template-labels'
 import { normalizeLayout } from '@/lib/layout/utils'
+import { materializePerPaneChartPairs } from '@/lib/layout/multi-chart'
 import { uniqueWorkspaceName } from '@/lib/layout/save-workspace'
+import { useActivePair } from '@/lib/active-pair-context'
 import { useLayout } from '@/lib/layout/context'
+import { useOptionalWorkspaceVariables } from '@/lib/layout/workspace-variables-context'
 import { useRoutePresets } from '@/lib/layout/use-route-presets'
 import { useWorkspace } from '@/lib/layout/workspace-context'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
@@ -139,13 +142,29 @@ export function LayoutToolbar({ open, onOpenChange }: LayoutToolbarProps) {
 
   const workspaceKind = workspaceAnalyticsKind(workspace.storageKey)
 
+  // What a preset's per-chart variables mean here: with a variable bar above
+  // the board they stay variables, without one they become pinned panes.
+  const { activePair } = useActivePair()
+  const hasVariableBar = useOptionalWorkspaceVariables() !== null
+
   const handlePreset = (key: string) => {
     const preset = presets[key]
     if (!preset) return
     track('preset_applied', { preset: key, workspace: workspaceKind })
+    // Only where the bindings would be inert. A workspace with a variable bar
+    // drives its charts from that bar, and pinning its panes here would take
+    // them out of its hands.
+    const next = hasVariableBar
+      ? preset.layout
+      : materializePerPaneChartPairs(
+          preset.layout,
+          preset.variables,
+          activePair,
+          normalizeInstrumentClass(workspace.assetClass),
+        )
     dispatch({
       type: 'APPLY_PRESET',
-      layout: structuredClone(preset.layout),
+      layout: structuredClone(next),
     })
   }
 

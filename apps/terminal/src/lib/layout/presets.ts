@@ -301,8 +301,10 @@ export const PRESET_ANALYSIS: TerminalLayout = {
 
 /**
  * Dual Charts — two side-by-side chart panes (TradingView 2-chart layout).
- * Each pane persists its own market/timeframe/chart-type via its pane id;
- * pick a different pair per pane with the pane's pair picker.
+ * Each pane persists its own market/timeframe/chart-type via its pane id, and
+ * holds its own instrument: the catalog binds a `$chartN` variable per pane,
+ * which `materializePerPaneChartPairs` turns into a pane pin when the board is
+ * applied in place. The chart's symbol chip is what edits it afterwards.
  */
 export const PRESET_DUAL_CHARTS: TerminalLayout = {
   version: 1,

@@ -2609,6 +2609,14 @@
       "fullscreen": "เต็มจอ",
       "exitFullscreen": "ออกจากเต็มจอ"
     },
+    "symbolChip": {
+      "aria": "เปลี่ยนสัญลักษณ์ของกราฟนี้",
+      "tooltip": "สัญลักษณ์ของกราฟนี้",
+      "pinnedBadge": "ปักหมุดแล้ว",
+      "followBoard": "ตามบอร์ด",
+      "followingBoard": "กำลังตามบอร์ด เลือกคู่เทรดเพื่อให้กราฟนี้มีของตัวเอง",
+      "boundTo": "กำหนดโดย {{variable}}"
+    },
     "exportData": {
       "title": "ส่งออกข้อมูลกราฟ",
       "description": "บันทึกแท่งเทียนของกราฟเป็นไฟล์ CSV",
