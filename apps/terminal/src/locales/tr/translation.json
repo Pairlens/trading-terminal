@@ -115,7 +115,9 @@
     "installConnector": "Konektörü kur",
     "emptyTitle": "Gezilecek zincir yok",
     "emptyBody": "Bu derleme zincir üstü konektör içermiyor, dolayısıyla havuzları sıralanacak bir zincir yok.",
-    "volumesLabel": "Zincir hacimleri"
+    "volumesLabel": "Zincir hacimleri",
+    "loadingLabel": "Zincir hacimleri yükleniyor",
+    "pacedNote": "Her zincirin 24 saatlik hacmi toplanıyor. Zincir üstü veri sağlayıcısı kotalı, bu yüzden zincirler birkaç saniye içinde teker teker doluyor."
   },
   "earningsCalendar": {
     "capped": "{{total}} bilançonun ilk {{shown}} tanesi gösteriliyor.",

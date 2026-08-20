@@ -13,6 +13,7 @@ import {
   mergePoolPages,
 } from './pool-listing-client'
 import { geckoFetch as fetch } from './rate-limiter'
+import type { RequestPriority } from './rate-limiter'
 import type {
   PoolListingEntry,
   PoolStatsAction,
@@ -74,6 +75,18 @@ export const geckoterminalDataProviderManifest: PluginManifest = {
 }
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
+
+/**
+ * A caller-supplied priority, or the background default.
+ *
+ * `low` is the right default for every sweep across chains nobody is looking
+ * at, and anything unrecognized falls back to it rather than to the caller's
+ * benefit: a typo must not quietly promote a background sweep past the panes
+ * the board is waiting on.
+ */
+function readPriority(raw: unknown): RequestPriority {
+  return raw === 'high' || raw === 'normal' ? raw : 'low'
+}
 
 export function createGeckoterminalDataProviderPlugin(
   manifest: PluginManifest,
@@ -196,10 +209,18 @@ export function createGeckoterminalDataProviderPlugin(
         // queued in the same tick as the three the selected chain needs. The
         // rail filling in a few seconds late costs nothing; the map, the detail
         // pane and the flow chart waiting behind it cost the whole board.
+        //
+        // With one exception, and it is the caller's to make: the rail asks
+        // for the chain the reader is ON as its own single-market call and
+        // says so with `priority`. That request is the same page the map is
+        // already fetching for the selected chain, so it collapses into it in
+        // flight and costs nothing — the row the reader is looking at fills
+        // with the map instead of eight seconds behind it.
+        const priority = readPriority(p['priority'])
         const settled = await Promise.allSettled(
           markets.map(async (id) => {
             const slug = networkForMarket(id)
-            const pools = await fetchTopPools(slug, 1, 'volume', 'low')
+            const pools = await fetchTopPools(slug, 1, 'volume', priority)
             return aggregateChainStats(slug, id, names[id] ?? id, pools)
           }),
         )

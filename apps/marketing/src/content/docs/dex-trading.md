@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 5
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 21 AUG 2026
 readTime: 20 min read
 ---
 
@@ -99,6 +99,14 @@ because they are the two panes you are looking at and the last two that can be
 asked for: nothing can request a pool's swaps until the map has ranked the
 chain and picked one.
 
+The chain rail fills one chain at a time. Each chain's 24h volume is its own
+read, so a row shows its number the moment that read lands rather than the
+whole rail waiting on the slowest chain. The chain you are on goes first, and
+costs nothing extra: its figures are summed from the same page of pools the map
+is already fetching for it, so the two collapse into one request. Until a row
+has its number it draws a block where the figure goes, so a rail that is
+working never looks like a rail with nothing to say.
+
 The map paints in two passes. It ranks three pages deep to get past the pools a
 bot has painted volume onto, and it draws the first page as soon as that page
 lands instead of waiting for the walk to finish. The selection is seeded from
@@ -114,9 +122,10 @@ the first paint.
 
 While a pane genuinely has nothing yet it draws its own shape rather than a
 spinner: the map shows a treemap of placeholder tiles, Liquidity Flow shows its
-bars around the midline. If a read runs past about four seconds, both add a
-line saying the provider is metered, so you know to wait rather than reload,
-which throws the paced queue away and starts it from cold.
+bars around the midline, and the chain rail keeps every chain's name and icon
+with blocks where its numbers will go. If a read runs past about four seconds,
+each of them adds a line saying the provider is metered, so you know to wait
+rather than reload, which throws the paced queue away and starts it from cold.
 
 ## What a pair is called
 

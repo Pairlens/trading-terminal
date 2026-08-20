@@ -115,7 +115,9 @@
     "installConnector": "安装连接器",
     "emptyTitle": "没有可浏览的链",
     "emptyBody": "此版本未包含链上连接器，因此没有可以排序池子的链。",
-    "volumesLabel": "链上成交量"
+    "volumesLabel": "链上成交量",
+    "loadingLabel": "正在加载各链成交量",
+    "pacedNote": "正在汇总每条链的 24 小时成交量。链上数据提供方有速率限制，因此各链会在几秒内逐条填充。"
   },
   "earningsCalendar": {
     "capped": "共 {{total}} 份财报，显示前 {{shown}} 份。",

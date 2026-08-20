@@ -114,6 +114,41 @@ describe('the caps', () => {
     expect(readDiscoverySnapshot('listing:chain39')).not.toBeNull()
     expect(readDiscoverySnapshot('listing:chain0')).toBeNull()
   })
+
+  test('holds a whole DEX board: a row per chain and two listings per chain', () => {
+    // The rail keeps one entry per chain rather than one per rail, so a
+    // six-chain board carries six rows plus the page-1 and depth listings of
+    // the chains it has visited. If the cap cannot hold that, the entries the
+    // cache exists to seed are the ones it evicts.
+    const now = Date.now()
+    const chains = ['jupiter', 'ethereum', 'base', 'arbitrum', 'bsc', 'polygon']
+    let step = 0
+    for (const chain of chains) {
+      writeDiscoverySnapshot(
+        `dex-chain-stats:${chain}`,
+        { chain },
+        now + step++,
+      )
+    }
+    for (const chain of chains.slice(0, 3)) {
+      writeDiscoverySnapshot(
+        `listing:${chain}:volume:1`,
+        { chain },
+        now + step++,
+      )
+      writeDiscoverySnapshot(
+        `listing:${chain}:volume:3`,
+        { chain },
+        now + step++,
+      )
+    }
+
+    for (const chain of chains) {
+      expect(readDiscoverySnapshot(`dex-chain-stats:${chain}`)).not.toBeNull()
+    }
+    expect(readDiscoverySnapshot('listing:jupiter:volume:1')).not.toBeNull()
+    expect(readDiscoverySnapshot('listing:base:volume:3')).not.toBeNull()
+  })
 })
 
 describe('a store it cannot read', () => {

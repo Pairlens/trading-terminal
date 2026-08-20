@@ -209,12 +209,58 @@ export function parseNetworkStats(
   })
 }
 
+/**
+ * Short-lived cache of the networks table, with an in-flight map beside it.
+ *
+ * One endpoint answers for every chain at once, and the chain rail asks per
+ * chain: it fans out one query per row so a row can paint the moment its own
+ * answer lands, rather than the whole rail waiting on the slowest chain. Six
+ * identical `/networks` requests is the wrong way to serve that, so the first
+ * one serves them all and the other five are the same promise.
+ *
+ * The TTL is far shorter than the rail's own five-minute stale window, so this
+ * only ever collapses duplicates and never shows a pane older data than it
+ * asked for. Same shape, and the same reasoning, as the GeckoTerminal listing
+ * cache.
+ */
+const NETWORKS_TTL_MS = 60_000
+let networksCache: { rows: Array<RawDexPaprikaNetwork>; ts: number } | null =
+  null
+let networksInFlight: Promise<Array<RawDexPaprikaNetwork>> | null = null
+
+async function fetchNetworks(): Promise<Array<RawDexPaprikaNetwork>> {
+  const cached = networksCache
+  if (cached && Date.now() - cached.ts < NETWORKS_TTL_MS) return cached.rows
+  if (networksInFlight) return networksInFlight
+
+  const request = (async () => {
+    const res = await fetch(`${API_BASE}/networks`)
+    assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
+    if (!res.ok) throw new Error(`DexPaprika networks: HTTP ${res.status}`)
+    const json = (await res.json()) as Array<RawDexPaprikaNetwork>
+    const rows = Array.isArray(json) ? json : []
+    networksCache = { rows, ts: Date.now() }
+    return rows
+  })()
+
+  networksInFlight = request
+  try {
+    return await request
+  } finally {
+    // Cleared whether it resolved or threw: a failed sweep must not pin every
+    // later caller to the same rejection.
+    if (networksInFlight === request) networksInFlight = null
+  }
+}
+
+/** Test seam, and what a provider swap has to reset. */
+export function clearNetworksCache(): void {
+  networksCache = null
+  networksInFlight = null
+}
+
 export async function fetchNetworkStats(
   wanted: Array<{ market: string; network: string }>,
 ): Promise<Array<ChainPoolStats>> {
-  const res = await fetch(`${API_BASE}/networks`)
-  assertNotThrottled(res, DEXPAPRIKA_PROVIDER)
-  if (!res.ok) throw new Error(`DexPaprika networks: HTTP ${res.status}`)
-  const rows = (await res.json()) as Array<RawDexPaprikaNetwork>
-  return parseNetworkStats(Array.isArray(rows) ? rows : [], wanted)
+  return parseNetworkStats(await fetchNetworks(), wanted)
 }

@@ -27,8 +27,18 @@ import { useSlowLoad } from '@/hooks/use-slow-load'
  * The line under a skeleton that says why it is still a skeleton.
  *
  * Reserved height, so the pane does not jump when it appears four seconds in.
+ *
+ * Exported because the chain rail needs the same sentence without the same
+ * skeleton: its rows carry a name and an icon from the first frame, so it is
+ * never a full placeholder, and only the numbers arrive on the paced queue.
  */
-function PacedNote({ show, children }: { show: boolean; children: string }) {
+export function PacedNote({
+  show,
+  children,
+}: {
+  show: boolean
+  children: string
+}) {
   return (
     <p
       className={cn(

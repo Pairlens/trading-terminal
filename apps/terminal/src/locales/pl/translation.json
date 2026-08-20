@@ -127,7 +127,9 @@
     "installConnector": "Zainstaluj konektor",
     "emptyTitle": "Brak łańcuchów do przeglądania",
     "emptyBody": "Ta kompilacja nie zawiera konektorów on-chain, więc nie ma łańcucha, którego pule można uszeregować.",
-    "volumesLabel": "Wolumeny łańcuchów"
+    "volumesLabel": "Wolumeny łańcuchów",
+    "loadingLabel": "Wczytywanie wolumenów łańcuchów",
+    "pacedNote": "Sumowanie wolumenu 24 h każdego łańcucha. Dostawca danych on-chain ma limity, więc łańcuchy uzupełniają się pojedynczo przez kilka sekund."
   },
   "earningsCalendar": {
     "capped": "Pokazano pierwsze {{shown}} z {{total}} raportów.",

@@ -115,7 +115,9 @@
     "installConnector": "Installer le connecteur",
     "emptyTitle": "Aucune chaîne disponible",
     "emptyBody": "Cette version ne contient aucun connecteur on-chain, il n'y a donc aucune chaîne dont classer les pools.",
-    "volumesLabel": "Volumes par chaîne"
+    "volumesLabel": "Volumes par chaîne",
+    "loadingLabel": "Chargement des volumes par chaîne",
+    "pacedNote": "Somme du volume 24 h de chaque chaîne. Le fournisseur de données on-chain est limité, les chaînes se remplissent donc une à une sur quelques secondes."
   },
   "earningsCalendar": {
     "capped": "Affichage des {{shown}} premières publications sur {{total}}.",

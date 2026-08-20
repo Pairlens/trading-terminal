@@ -148,6 +148,34 @@ describe('the background sweeps', () => {
     expect(asked).toEqual(['low', 'low', 'low'])
   })
 
+  it('lets the rail raise the one chain the reader is on', async () => {
+    // The rail fetches per chain so a row can paint as its own answer lands,
+    // and the selected chain rides at normal: it is the same listing page the
+    // pool map is already fetching, so the two collapse in flight and that row
+    // fills with the map rather than eight seconds behind it.
+    await run({
+      action: 'networks',
+      market: 'base',
+      markets: ['base'],
+      displayNames: { base: 'Base' },
+      priority: 'normal',
+    })
+    expect(asked).toEqual(['normal'])
+  })
+
+  it('refuses to promote a sweep on an unrecognized priority', async () => {
+    // A typo must fall back to the background default, never to the caller's
+    // benefit: a promoted sweep pushes the panes the board is waiting on back.
+    await run({
+      action: 'networks',
+      market: 'base',
+      markets: ['base'],
+      displayNames: { base: 'Base' },
+      priority: 'urgent',
+    })
+    expect(asked).toEqual(['low'])
+  })
+
   it('asks for the new-pools feed at low priority', async () => {
     await run({ action: 'new-pools', market: 'base' })
     expect(asked).toEqual(['low'])

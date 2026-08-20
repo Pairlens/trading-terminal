@@ -115,7 +115,9 @@
     "installConnector": "Connector installieren",
     "emptyTitle": "Keine Chains verfügbar",
     "emptyBody": "Dieser Build enthält keine On-Chain-Connectoren, also gibt es keine Chain, deren Pools sich ranken ließen.",
-    "volumesLabel": "Volumen je Chain"
+    "volumesLabel": "Volumen je Chain",
+    "loadingLabel": "Chain-Volumen wird geladen",
+    "pacedNote": "Das 24-h-Volumen jeder Chain wird summiert. Der On-Chain-Datenanbieter ist limitiert, daher füllen sich die Chains über einige Sekunden nacheinander."
   },
   "earningsCalendar": {
     "capped": "Zeigt die ersten {{shown}} von {{total}} Berichten.",

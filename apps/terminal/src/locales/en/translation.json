@@ -4941,7 +4941,9 @@
     "installConnector": "Install connector",
     "emptyTitle": "No chains to browse",
     "emptyBody": "This build ships no on-chain connectors, so there is no chain to rank pools on.",
-    "volumesLabel": "Chain volumes"
+    "volumesLabel": "Chain volumes",
+    "loadingLabel": "Loading chain volumes",
+    "pacedNote": "Summing each chain's 24h volume. The on-chain data provider is metered, so chains fill in one at a time over a few seconds."
   },
   "poolMap": {
     "sortTurnover": "Turnover",
