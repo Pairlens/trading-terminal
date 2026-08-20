@@ -38,7 +38,10 @@
  *      leaves the one below it pointing at the previous pair. Adopting that
  *      URL would silently undo the user's pick, so a shell-driven history move
  *      latches "the next disagreement is stale" and the route sync re-asserts
- *      the canonical URL instead of adopting it.
+ *      the canonical URL instead of adopting it. The latch is only half of
+ *      that answer; `decidePairAddress` at the foot of this file is the other
+ *      half, and the half whose absence cost the pair picker every selection
+ *      made in it.
  */
 
 /** History-state key carrying the shell depth an entry represents. */
@@ -184,4 +187,44 @@ export function consumePairAdoptionSuppression(
 /** Test seam: drop any latch left behind by a previous case. */
 export function resetPairAdoptionLatch(): void {
   latchedAt = null
+}
+
+export type PairAddressDecision =
+  /** Address and focus agree. Nothing to do. */
+  | 'idle'
+  /** The address is the newer fact: take the market it names. */
+  | 'adopt'
+  /** Focus is the newer fact: rewrite the address to match it. */
+  | 'reassert'
+
+/**
+ * Which of the address and the focused market is the newer fact.
+ *
+ * Rule 3 above says a shell-driven history move can land on an entry naming a
+ * stale market. This is the other half of that rule, and the half that was
+ * missing: the address is only ever authoritative when the ADDRESS is what
+ * moved. Focus moving under a still address means the user just picked
+ * something, and the only correct answer is to write that pick into the URL.
+ *
+ * Reading it the other way is what silently undid every pick made in the pair
+ * picker. That screen animates its exit and hands its overlay back half a
+ * second later, so unlike a watchlist or Discover row it walks no history
+ * entry off in the tap's own commit and latches nothing; the reconciliation
+ * then ran with the URL still naming the old market and adopted it back over
+ * the selection, about a frame after the user made it.
+ *
+ * `consumeLatch` is passed rather than read because the latch is one-shot: it
+ * must be spent only on the question it answers, which is "the address moved,
+ * but did WE move it onto a stale entry?".
+ */
+export function decidePairAddress(input: {
+  /** The address names a different market than the shell is focused on. */
+  differs: boolean
+  /** The path changed since the last reconciliation (or this is the first). */
+  addressMoved: boolean
+  consumeLatch: () => boolean
+}): PairAddressDecision {
+  if (!input.differs) return 'idle'
+  if (!input.addressMoved) return 'reassert'
+  return input.consumeLatch() ? 'reassert' : 'adopt'
 }

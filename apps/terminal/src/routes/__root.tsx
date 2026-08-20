@@ -439,6 +439,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
               once a theme is resolved. */}
           <ThemeColorMeta />
         </ThemeProvider>
+        {/* Desktop only, and hidden from the phone by mobile.css rather than
+            from here: the component mounts its own root into <body>, so a
+            wrapper element around it is not its ancestor. See the rule keyed
+            on `[data-testid='tanstack_devtools']` for what its badge was doing
+            to the mobile tab bar. */}
         <TanStackDevtools
           config={{
             // Bottom-left, because bottom-right is the assistant dock and
