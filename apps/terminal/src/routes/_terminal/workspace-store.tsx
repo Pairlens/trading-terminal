@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@pairlens/ui'
+
 import type { AssetClass } from '@/lib/workspace-store/types'
 import { HEADER_GROUP, HEADER_TITLE } from '@/components/chrome/header-chrome'
 import { PAGE_FRAME } from '@/components/chrome/page-chrome'
@@ -34,8 +36,11 @@ function WorkspaceStorePage() {
   const [search, setSearch] = useState('')
 
   return (
-    <main className={PAGE_FRAME}>
+    // `relative` because the bar hovers over the storefront rather than
+    // stacking above it; the store reserves its 44px itself.
+    <main className={cn(PAGE_FRAME, 'relative')}>
       <PageHeader
+        floating
         actions={
           <div className={HEADER_GROUP}>
             <StoreSearchChip
@@ -54,7 +59,7 @@ function WorkspaceStorePage() {
           {t('nav.workspaceStore', 'Workspace Store')}
         </h1>
       </PageHeader>
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <WorkspaceStore
           autoOpenTemplateId={template}
           initialAssetClass={assetClass}

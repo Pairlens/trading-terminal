@@ -1,10 +1,22 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import { useCallback, useState } from 'react'
 import { ChevronRight, Search, X } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
 import './store.css'
+
+/**
+ * The floating bar's height, restated as the offsets everything under it
+ * needs. Both storefronts run their content the full height of the frame and
+ * let the top bar hover over it (see `StoreCanvas`), so the two numbers that
+ * used to be implied by the flex column — where the scroll starts, where a
+ * product sheet starts — have to be written down. `HEADER_BAR`'s `h-11` is the
+ * source; `store/__tests__/store-chrome.test.ts` fails if they drift apart.
+ */
+export const STORE_BAR_PAD = 'pt-11'
+export const STORE_BAR_OFFSET = 'top-11'
 
 /** Shared-element morph timing (poster card → product-page visual). */
 export const POSTER_MORPH = {
@@ -58,6 +70,77 @@ export function StoreSearchChip({
           <X className="size-3" />
         </button>
       )}
+    </div>
+  )
+}
+
+/**
+ * A storefront, under a bar that is part of it.
+ *
+ * Every other page in the terminal stacks its bar above its ground: 44px of
+ * chrome, then the board hanging off it. A store is not a board. It opens on
+ * a 400px hero with its own light in it, and stacking a flat `--background`
+ * strip on top of that read as a strip of some other product pasted over the
+ * artwork — the bar was the only thing on screen that the storefront's own
+ * atmosphere did not reach.
+ *
+ * So here the bar hovers instead. The content runs the full height of the
+ * frame, the aurora with it, and the bar floats over the top 44px with
+ * nothing behind it: at rest you are looking straight through it at the same
+ * glow the hero is lit by. Its chips are solid `--card`, so they hold their
+ * own against whatever drifts underneath.
+ *
+ * What was lost by unstacking is the edge — with nothing behind the bar,
+ * content scrolling up would run into the title. That edge comes back only
+ * when it is needed: past the first few pixels of scroll a `--background`
+ * scrim fades in behind the bar and blurs what passes under it, with the
+ * board's own 14px radius on its bottom corners so it reads as a surface
+ * hanging from the top of the window rather than a band ruled across it.
+ * Scroll back to the top and it dissolves again.
+ *
+ * Rule for anything that overlays a store (a product sheet): start at
+ * `STORE_BAR_OFFSET`, not at `inset-0`. The bar stays reachable — search,
+ * tabs and the workspace controls are not modal, and a sheet that covered
+ * them would strand you.
+ */
+export function StoreCanvas({
+  children,
+  className,
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  const [scrolled, setScrolled] = useState(false)
+
+  // Threshold, not raw offset: this flips a boolean twice per visit rather
+  // than re-rendering the storefront on every wheel tick. React bails out on
+  // an identical value, so the guard is the point.
+  const handleScroll = useCallback((event: React.UIEvent<HTMLDivElement>) => {
+    const next = event.currentTarget.scrollTop > 4
+    setScrolled((prev) => (prev === next ? prev : next))
+  }, [])
+
+  return (
+    <div className={cn('relative h-full', className)}>
+      <StoreAurora />
+
+      <div
+        onScroll={handleScroll}
+        className="relative z-10 h-full overflow-y-auto"
+      >
+        {/* The board's own inset — 10px from three edges, none from the top —
+            plus the height of the bar the content now runs under, so at rest
+            the hero's top edge lands exactly where a workspace column's does. */}
+        <div className={cn('px-2.5 pb-2.5', STORE_BAR_PAD)}>{children}</div>
+      </div>
+
+      <div
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute inset-x-0 top-0 z-20 h-11 rounded-b-[14px] bg-background/72 backdrop-blur-[14px] transition-opacity duration-300',
+          scrolled ? 'opacity-100' : 'opacity-0',
+        )}
+      />
     </div>
   )
 }

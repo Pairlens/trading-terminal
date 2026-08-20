@@ -472,6 +472,19 @@ the bar; what separates it from the board is the 10px of ground and the first co
 A row of outlined buttons over a board that draws no borders is what made the bar read as a
 different product in the first place.
 
+**The two storefronts unstack that bar** (`PageHeader floating` + `StoreCanvas` in
+`components/store/store-shell.tsx`). A store opens on a 400px hero with its own light in it, and a
+flat `--background` strip stacked on top of that artwork was the only thing on screen the
+storefront's atmosphere never reached. So the content runs the full height of the frame, the
+aurora with it, and the bar hovers over the top 44px with nothing behind it. The edge comes back
+only when it is needed: past 4px of scroll a `--background` scrim fades in behind the bar and
+blurs what passes under it, with the board's own 14px radius on its bottom corners. The two
+offsets that used to be implied by the flex column are written down as `STORE_BAR_PAD` and
+`STORE_BAR_OFFSET` and pinned to `HEADER_BAR`'s height by
+`components/store/__tests__/store-chrome.test.ts`. Anything that overlays a store starts at
+`STORE_BAR_OFFSET`, never `inset-0`: the product sheets stop at the bar's lower edge so search,
+the tabs and the way out of the store stay reachable.
+
 The chart is part of the same surface: `hooks/use-chart-theme.ts` takes a `ChartSurface` and
 resolves the plot and axis background from the live token (via a 1x1 canvas, since the token is
 `oklch()`) instead of the theme's own chart palette, so a WebGL plot never reads as a rectangle
