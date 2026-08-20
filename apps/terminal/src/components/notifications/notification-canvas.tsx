@@ -531,7 +531,17 @@ export function NotificationCanvas() {
           them into their own ground.
         */}
         <div
-          className="relative min-h-0 flex-1 bg-muted/40"
+          /*
+            Two alphas, because `--muted` sits on opposite sides of `--card` in
+            the two modes. Dark stacks it above (19.5% over a 16.8% card), light
+            below (94.5% under a 99.3% one), so one number cannot serve both: at
+            40% the light well landed under two points of lightness from the card
+            it sits in and from the nodes floating on it, which is inside the
+            noise floor of a near-white screen. The canvas simply had no edges,
+            and the minimap and the zoom controls — `--card` chips that read by
+            contrast with the well and nothing else — went with it.
+          */
+          className="relative min-h-0 flex-1 bg-muted/70 dark:bg-muted/40"
           style={
             {
               // The well above paints the pane; ReactFlow must not paint over it.
@@ -582,17 +592,32 @@ export function NotificationCanvas() {
               variant={BackgroundVariant.Dots}
               gap={16}
               size={1}
+              /*
+                20% of cyan-600 over a near-white well was a one-pixel dot about
+                seven points of lightness from its ground: the grid was there in
+                the DOM and gone on the screen, so the canvas read as blank
+                paper. 45% puts the light dot the same distance from its well
+                that the dark one sits from its own.
+              */
               color={
                 colorMode === 'dark'
                   ? 'color-mix(in oklch, oklch(0.789 0.154 211.53) 25%, transparent)' // cyan-400 at 25%
-                  : 'color-mix(in oklch, oklch(0.6 0.126 211.53) 20%, transparent)' // cyan-600 at 20%
+                  : 'color-mix(in oklch, oklch(0.6 0.126 211.53) 45%, transparent)' // cyan-600 at 45%
               }
             />
             <Controls showInteractive={false} />
             <MiniMap
               pannable
               zoomable
-              nodeColor="color-mix(in oklch, oklch(0.789 0.154 211.53) 40%, transparent)"
+              // Cyan-400 on the light minimap's `--card` ground is eight points
+              // of lightness: the blobs a minimap exists to show were the
+              // faintest thing on it. Cyan-600 is the same swatch the light
+              // dot grid uses, and it lands where the dark one does.
+              nodeColor={
+                colorMode === 'dark'
+                  ? 'color-mix(in oklch, oklch(0.789 0.154 211.53) 40%, transparent)'
+                  : 'color-mix(in oklch, oklch(0.6 0.126 211.53) 55%, transparent)'
+              }
               maskColor="color-mix(in oklch, var(--card) 80%, transparent)"
               // Floats on the canvas well, so it is shaped like the undo
               // cluster above it: a card at 10px with no edge of its own.

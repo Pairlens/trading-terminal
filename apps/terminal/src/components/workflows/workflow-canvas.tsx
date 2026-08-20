@@ -557,7 +557,17 @@ export function WorkflowCanvas() {
           them into their own ground.
         */}
         <div
-          className="relative min-h-0 flex-1 bg-muted/40"
+          /*
+            Two alphas, because `--muted` sits on opposite sides of `--card` in
+            the two modes. Dark stacks it above (19.5% over a 16.8% card), light
+            below (94.5% under a 99.3% one), so one number cannot serve both: at
+            40% the light well landed under two points of lightness from the card
+            it sits in and from the nodes floating on it, which is inside the
+            noise floor of a near-white screen. The canvas simply had no edges,
+            and the minimap and the zoom controls — `--card` chips that read by
+            contrast with the well and nothing else — went with it.
+          */
+          className="relative min-h-0 flex-1 bg-muted/70 dark:bg-muted/40"
           style={
             {
               // The well above paints the pane; ReactFlow must not paint over it.
@@ -610,10 +620,17 @@ export function WorkflowCanvas() {
               variant={BackgroundVariant.Dots}
               gap={16}
               size={1}
+              /*
+                Both modes name a token. Light used to fall through to xyflow's
+                own default, a cool grey (#91919a) that knows nothing about the
+                18 themes it has to sit inside and reads blue against a warm
+                paper ground. The alphas differ because the grid has to carry
+                the same weight over a near-white well as over a near-black one.
+              */
               color={
                 colorMode === 'dark'
                   ? 'color-mix(in oklch, var(--muted-foreground) 25%, transparent)'
-                  : undefined
+                  : 'color-mix(in oklch, var(--muted-foreground) 35%, transparent)'
               }
             />
             <Controls showInteractive={false} />
