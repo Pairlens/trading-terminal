@@ -67,10 +67,28 @@ export class StreamThrottle {
    * pending timer fires after teardown and delivers a stale frame to the (now
    * defunct) callback, which on a market switch shows the previous pair's last
    * tick on the new pair, and leaks the timer + callback reference.
+   *
+   * `options.immediate` marks frames that must never be queued and never
+   * dropped. The lossiness above is right for frames that supersede each
+   * other and wrong for a frame that is a different KIND of thing, arriving
+   * once. The candle stream's `snapshot` is exactly that: it carries the
+   * venue's REST backfill, and the chart paints no history without one. A
+   * live candle update landing inside the same window replaced it in the
+   * queue and it was gone for good — the chart then sat on a single forming
+   * bar until the user switched pair or timeframe, which is precisely the
+   * shape of a bug that reads as "sometimes". The frames most likely to
+   * delete a snapshot are the ones that follow it by milliseconds, so this is
+   * a race a busy venue wins often.
+   *
+   * The predicate is the caller's, not a payload sniff, because `snapshot`
+   * does not mean the same thing on every stream: an orderbook frame is a
+   * snapshot EVERY time, and marking those immediate would throttle the
+   * heaviest stream in the terminal not at all.
    */
   wrap<T>(
     streamType: keyof ThrottleConfig,
     callback: (data: T) => void,
+    options: { immediate?: (data: T) => boolean } = {},
   ): ((data: T) => void) & { cancel: () => void } {
     let lastCall = 0
     let pending: T | null = null
@@ -94,6 +112,19 @@ export class StreamThrottle {
     this.reschedulers.add(reschedule)
 
     const wrapped = (data: T) => {
+      // Never queued, never superseded — see `options.immediate`. Any frame
+      // already queued IS superseded: a snapshot carries the whole state.
+      if (options.immediate?.(data) === true) {
+        if (timer) {
+          clearTimeout(timer)
+          timer = null
+        }
+        pending = null
+        lastCall = Date.now()
+        callback(data)
+        return
+      }
+
       // Read interval dynamically so mode changes take effect immediately
       const intervalMs = CONFIGS[this.mode][streamType]
       if (intervalMs === 0) {

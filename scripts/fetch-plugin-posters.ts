@@ -108,22 +108,19 @@ const OVERRIDES: Record<string, string> = {
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png',
   'bsc-dex-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png',
-  // Verified GitHub org avatars — the only 460px source these four publish.
-  // Alpaca's own favicon is 48px, and DexScreener's site is behind Cloudflare
-  // bot protection, so neither the apple-touch-icon nor the favicon service
-  // reaches anything large enough to clear MIN_EDGE.
-  'alpaca-market-connector':
-    'https://avatars.githubusercontent.com/u/30398729?s=512',
+  // Verified GitHub org avatars — the only 460px source these publish.
+  // DexScreener's site is behind Cloudflare bot protection, so neither the
+  // apple-touch-icon nor the favicon service reaches anything large enough to
+  // clear MIN_EDGE.
   'dexscreener-data-provider':
     'https://avatars.githubusercontent.com/u/99915600?s=512',
   'lifi-bridge-connector':
     'https://avatars.githubusercontent.com/u/85288935?s=512',
-  // tavily.com's apple-touch-icon lives behind a content hash that changes on
-  // every deploy, so the avatar is the only stable source. Asked for at 256
-  // rather than 512 because this mark is a photograph behind the arrows: the
-  // 512 rendition is 354 KB, three times the next-largest poster in the
-  // bundle, for detail nothing renders at.
-  'tavily-search': 'https://avatars.githubusercontent.com/u/170207473?s=256',
+  // Bitget's own site serves no usable mark and CoinGecko answers JPEG, which
+  // pngSize cannot measure. CoinMarketCap's exchange art is the same cyan
+  // mark at more than the poster renders.
+  'bitget-market-connector':
+    'https://s2.coinmarketcap.com/static/img/exchanges/200x200/513.png',
   // GeckoTerminal serves no apple-touch-icon at the root; the marked-up path
   // is where the 180px app icon lives.
   'geckoterminal-data-provider':
@@ -146,6 +143,11 @@ const POSTER_ALIASES: Record<string, string> = {
 /** CoinGecko exchange ids — resolved via their API to "large" images. */
 const COINGECKO_EXCHANGES: Record<string, string> = {
   'bybit-market-connector': 'bybit_spot',
+  // Both venues answer every icon path on their own domain with HTML, so
+  // without these they fell through to the favicon service and shipped 128px
+  // and 144px of real detail against a 152px render.
+  'htx-market-connector': 'huobi',
+  'kucoin-market-connector': 'kucoin',
   'gate-market-connector': 'gate',
   'bitfinex-market-connector': 'bitfinex',
   // Clearbit still serves Coinbase's retired Material-era app icon — a
@@ -189,6 +191,23 @@ const LOCAL_POSTERS: Record<string, string> = {
   'basic-symbols': '/logo512.png',
 }
 
+/**
+ * Brand marks committed to the repo rather than fetched, because no source
+ * publishes them usably. Alpaca's favicon is 48px and its icon paths answer
+ * HTML; tavily.com's apple-touch-icon sits behind a content hash that changes
+ * on every deploy. Both were previously taken from GitHub org avatars, which
+ * gave Alpaca a soft mark and Tavily a photograph that weighed 104 KB against
+ * 23 KB for the flat logo committed here.
+ *
+ * These ids are NEVER fetched and never rewritten: a run that re-derived them
+ * would trade 512px art for whatever a favicon service upscales that day,
+ * which is the silent downgrade the rest of this file exists to prevent.
+ */
+const VENDORED_POSTERS: Record<string, string> = {
+  'alpaca-market-connector': '/posters/alpaca-market-connector.png',
+  'tavily-search': '/posters/tavily-search.png',
+}
+
 function pngSize(buf: Uint8Array): { w: number; h: number } | null {
   // PNG: 8-byte signature, IHDR width/height at offsets 16/20 (big-endian).
   if (
@@ -205,15 +224,23 @@ function pngSize(buf: Uint8Array): { w: number; h: number } | null {
 }
 
 async function fetchImage(url: string): Promise<Uint8Array | null> {
-  try {
-    const res = await fetch(url, { redirect: 'follow' })
-    if (!res.ok) return null
-    const type = res.headers.get('content-type') ?? ''
-    if (!type.startsWith('image/')) return null
-    return new Uint8Array(await res.arrayBuffer())
-  } catch {
-    return null
+  // One retry, because a miss here is silent and lasting: the plugin drops to
+  // the next source (often a favicon service that upscales), the committed
+  // PNG changes, and nothing in the diff says a CDN blinked. Seen live -
+  // raw.githubusercontent.com refused one id inside a batch and served it
+  // fine on its own a second later.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetch(url, { redirect: 'follow' })
+      if (!res.ok) continue
+      const type = res.headers.get('content-type') ?? ''
+      if (!type.startsWith('image/')) return null
+      return new Uint8Array(await res.arrayBuffer())
+    } catch {
+      // Retry once, then let the next source have it.
+    }
   }
+  return null
 }
 
 async function coingeckoImage(exchangeId: string): Promise<string | null> {
@@ -259,7 +286,10 @@ const only = new Set(Bun.argv.slice(2))
 
 await mkdir(OUT_DIR, { recursive: true })
 await mkdir(CHAIN_DIR, { recursive: true })
-const posters: Record<string, string> = { ...LOCAL_POSTERS }
+const posters: Record<string, string> = {
+  ...LOCAL_POSTERS,
+  ...VENDORED_POSTERS,
+}
 const skipped: Array<string> = []
 
 // Chain marks ride along: same fetch, same size floor, different directory.
@@ -290,6 +320,10 @@ if (only.size > 0) {
 
 for (const [id, domain] of Object.entries(DOMAINS)) {
   if (only.size > 0 && !only.has(id)) continue
+  if (VENDORED_POSTERS[id]) {
+    console.log(`• ${id} ← committed art (not fetched)`)
+    continue
+  }
   const buf = await bestMark(id, domain)
   if (!buf) {
     skipped.push(`${id} (${domain})`)

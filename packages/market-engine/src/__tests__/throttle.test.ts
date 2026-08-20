@@ -137,3 +137,81 @@ describe('StreamThrottle — trades are lossless', () => {
     wrapped.cancel()
   })
 })
+
+describe('StreamThrottle — immediate frames', () => {
+  type Frame = { type: 'snapshot' | 'update'; n: number }
+  const isSnapshot = (f: Frame) => f.type === 'snapshot'
+
+  it('delivers a snapshot even when a live update is already queued', () => {
+    // The shipped bug: the connector emits its REST backfill as one
+    // `snapshot`, a live candle lands milliseconds later, and the lossy queue
+    // REPLACED the snapshot with it. The terminal never saw a snapshot, so
+    // the chart never painted history — one forming bar until the user
+    // switched pair or timeframe.
+    const throttle = new StreamThrottle()
+    throttle.setMode('balanced')
+    const received: Array<Frame> = []
+    const wrapped = throttle.wrap<Frame>('candles', (d) => received.push(d), {
+      immediate: isSnapshot,
+    })
+
+    wrapped({ type: 'update', n: 1 }) // leading edge, delivered
+    wrapped({ type: 'update', n: 2 }) // queued
+    wrapped({ type: 'snapshot', n: 3 }) // must not be queued behind it
+
+    expect(received).toEqual([
+      { type: 'update', n: 1 },
+      { type: 'snapshot', n: 3 },
+    ])
+    wrapped.cancel()
+  })
+
+  it('drops the frame the snapshot supersedes rather than replaying it after', () => {
+    const throttle = new StreamThrottle()
+    throttle.setMode('energy-saver')
+    const received: Array<Frame> = []
+    const wrapped = throttle.wrap<Frame>('candles', (d) => received.push(d), {
+      immediate: isSnapshot,
+    })
+
+    wrapped({ type: 'update', n: 1 })
+    wrapped({ type: 'update', n: 2 })
+    wrapped({ type: 'snapshot', n: 3 })
+    // The queued update was older than the snapshot and is contained by it,
+    // so it must be dropped, not replayed on top afterwards.
+    wrapped.cancel()
+
+    expect(received).toEqual([
+      { type: 'update', n: 1 },
+      { type: 'snapshot', n: 3 },
+    ])
+  })
+
+  it('keeps throttling everything the predicate does not mark', () => {
+    const throttle = new StreamThrottle()
+    throttle.setMode('balanced')
+    const received: Array<Frame> = []
+    const wrapped = throttle.wrap<Frame>('candles', (d) => received.push(d), {
+      immediate: isSnapshot,
+    })
+
+    for (let n = 1; n <= 25; n++) wrapped({ type: 'update', n })
+
+    expect(received).toEqual([{ type: 'update', n: 1 }])
+    wrapped.cancel()
+  })
+
+  it('throttles as before with no predicate — the orderbook contract', () => {
+    const throttle = new StreamThrottle()
+    throttle.setMode('balanced')
+    const received: Array<Frame> = []
+    const wrapped = throttle.wrap<Frame>('orderbook', (d) => received.push(d))
+
+    // Every ccxt book frame is typed 'snapshot'. Exempting those would leave
+    // the heaviest stream in the terminal unthrottled.
+    for (let n = 1; n <= 25; n++) wrapped({ type: 'snapshot', n })
+
+    expect(received).toEqual([{ type: 'snapshot', n: 1 }])
+    wrapped.cancel()
+  })
+})

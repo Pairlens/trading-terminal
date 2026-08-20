@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: 18 AUG 2026
+updated: 20 AUG 2026
 readTime: 8 min read
 ---
 
@@ -49,6 +49,24 @@ venue is likely having an incident.
 If the dot is green but nothing moves, check
 [Data Rate](/docs/settings#data-rate): Energy Saver caps the book and ticker at
 one update per second, which on a quiet pair genuinely looks static.
+
+## The chart shows only the newest candle
+
+A chart paints its history from one REST call to the venue, made the moment
+you open a pair or change timeframe. The live socket is a separate feed, and
+it starts arriving first. So if that one call is slow, or the venue rate limits
+it because you have just switched a few times in a row, the terminal shows what
+it has: the bar currently forming, moving on its own with nothing behind it.
+
+It fills itself in. The request is retried on a widening schedule for about
+twenty seconds, and the moment history arrives the chart redraws around it and
+snaps back to the latest bars. Nothing to click, and no need to change
+timeframe and change back.
+
+If it is still a single bar a minute later, the venue is refusing the request
+rather than delaying it. Check the connection dot, then the country setting
+under [Settings](/docs/settings): a venue serving a region you are not in
+answers market data with a refusal, not with candles.
 
 ## A stock chart asks me to unlock or connect
 
