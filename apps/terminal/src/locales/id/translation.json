@@ -2436,7 +2436,8 @@
     "resetPosition": "Reset posisi",
     "conversations": {
       "new": "Percakapan baru",
-      "untitled": "Tanpa judul",
+      "rename": "Ganti nama",
+      "nameLabel": "Nama percakapan",
       "history": "Riwayat",
       "close": "Tutup",
       "empty": "Belum ada apa-apa. Tanyakan sesuatu dan tersimpan di perangkat ini.",

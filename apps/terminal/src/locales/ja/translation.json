@@ -2436,7 +2436,8 @@
     "resetPosition": "位置をリセット",
     "conversations": {
       "new": "新しい会話",
-      "untitled": "無題",
+      "rename": "名前を変更",
+      "nameLabel": "会話の名前",
       "history": "履歴",
       "close": "閉じる",
       "empty": "まだ何もありません。質問するとこの端末に保存されます。",

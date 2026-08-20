@@ -2436,7 +2436,8 @@
     "resetPosition": "Repor posição",
     "conversations": {
       "new": "Nova conversa",
-      "untitled": "Sem título",
+      "rename": "Renomear",
+      "nameLabel": "Nome da conversa",
       "history": "Histórico",
       "close": "Fechar",
       "empty": "Ainda nada. Pergunte algo e fica guardado neste dispositivo.",

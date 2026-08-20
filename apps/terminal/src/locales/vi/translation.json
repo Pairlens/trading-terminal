@@ -2436,7 +2436,8 @@
     "resetPosition": "Đặt lại vị trí",
     "conversations": {
       "new": "Cuộc trò chuyện mới",
-      "untitled": "Chưa đặt tên",
+      "rename": "Đổi tên",
+      "nameLabel": "Tên cuộc trò chuyện",
       "history": "Lịch sử",
       "close": "Đóng",
       "empty": "Chưa có gì. Hỏi một câu và nó được giữ trên thiết bị này.",

@@ -209,18 +209,20 @@ export interface AnalyticsEvents {
    * surface ids (`pane:chart`, `shell`), never a record id. `landed` is false
    * when the target was not on screen, which is the failure worth counting. */
   assistant_highlighted: { target: string; landed: boolean }
-  /** A conversation was started, opened from the rail, or deleted.
+  /** A conversation was started, opened from the rail, renamed or deleted.
    *
    * The question the rail exists to answer: does anyone go back? If
    * `switched` never fires while `created` does, threads are a filing
    * cabinet nobody opens and the rail is costing 176px for nothing.
-   * `count` is how many the user has, which is the other half of it: a
-   * feature that matters looks different at three threads and at thirty.
-   * Titles and message content are never captured, and cannot be:
-   * conversations are stored on the user's device and nothing here reads
-   * them. */
+   * `renamed` answers the narrower one: model-written titles are good
+   * enough most of the time, so if people are correcting them by hand
+   * often the titling prompt is the thing to fix. `count` is how many the
+   * user has, which is the other half of it: a feature that matters looks
+   * different at three threads and at thirty. Titles and message content
+   * are never captured, and cannot be: conversations are stored on the
+   * user's device and nothing here reads them. */
   assistant_conversation_action: {
-    action: 'created' | 'switched' | 'deleted'
+    action: 'created' | 'switched' | 'renamed' | 'deleted'
     count: number
     surface: 'dock' | 'mobile'
   }

@@ -2436,7 +2436,8 @@
     "resetPosition": "Réinitialiser la position",
     "conversations": {
       "new": "Nouvelle conversation",
-      "untitled": "Sans titre",
+      "rename": "Renommer",
+      "nameLabel": "Nom de la conversation",
       "history": "Historique",
       "close": "Fermer",
       "empty": "Rien pour l’instant. Posez une question, elle reste sur cet appareil.",

@@ -39,7 +39,8 @@ The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's docked
 orb, because a phone has no room for a floating window over a chart. It is the same assistant underneath: it draws on the live chart under
 the sheet, prepares orders on the same confirm cards, and asks its questions on
 the same tappable option cards. **History** in the tab's top row opens the same
-thread list the desktop rail shows, over the panel rather than beside it. Those
+thread list the desktop rail shows, over the panel rather than beside it, and a
+long press on a row gets the same rename and delete it gets on a laptop. Those
 threads are the phone's own unless you turn conversation sync on, which the rail
 offers once and Settings keeps: until then the ones on your laptop are not
 here.
