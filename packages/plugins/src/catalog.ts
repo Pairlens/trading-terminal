@@ -19,6 +19,9 @@ type BaseAsset = {
   featured?: boolean
 }
 
+// Ordered by market cap, so the first 30 entries ARE the top-30 slice the
+// starter watchlist seeds and the pair picker shows first. Alt names the
+// catalog has always carried follow, grouped by theme.
 const BASE_ASSETS: Array<BaseAsset> = [
   {
     base: 'BTC',
@@ -34,81 +37,122 @@ const BASE_ASSETS: Array<BaseAsset> = [
     rank: 2,
     featured: true,
   },
-  {
-    base: 'SOL',
-    name: 'Solana',
-    categories: ['layer1'],
-    rank: 3,
-    featured: true,
-  },
+  { base: 'XRP', name: 'XRP', categories: ['layer1'], rank: 3 },
   {
     base: 'BNB',
     name: 'BNB',
     categories: ['layer1', 'infrastructure'],
     rank: 4,
   },
-  { base: 'AVAX', name: 'Avalanche', categories: ['layer1'], rank: 5 },
-  { base: 'ADA', name: 'Cardano', categories: ['layer1'], rank: 6 },
   {
-    base: 'DOT',
-    name: 'Polkadot',
+    base: 'SOL',
+    name: 'Solana',
+    categories: ['layer1'],
+    rank: 5,
+    featured: true,
+  },
+  { base: 'DOGE', name: 'Dogecoin', categories: ['meme'], rank: 6 },
+  {
+    base: 'TRX',
+    name: 'TRON',
     categories: ['layer1', 'infrastructure'],
     rank: 7,
   },
-  {
-    base: 'MATIC',
-    name: 'Polygon',
-    categories: ['layer1', 'infrastructure'],
-    rank: 8,
-  },
-  { base: 'NEAR', name: 'NEAR Protocol', categories: ['layer1'], rank: 9 },
-  {
-    base: 'ATOM',
-    name: 'Cosmos',
-    categories: ['layer1', 'infrastructure'],
-    rank: 10,
-  },
-  { base: 'SUI', name: 'Sui', categories: ['layer1'], rank: 11 },
-  { base: 'APT', name: 'Aptos', categories: ['layer1'], rank: 12 },
-  { base: 'UNI', name: 'Uniswap', categories: ['defi'], rank: 13 },
-  { base: 'AAVE', name: 'Aave', categories: ['defi'], rank: 14 },
+  { base: 'ADA', name: 'Cardano', categories: ['layer1'], rank: 8 },
   {
     base: 'LINK',
     name: 'Chainlink',
     categories: ['defi', 'infrastructure'],
-    rank: 15,
+    rank: 9,
   },
-  { base: 'MKR', name: 'Maker', categories: ['defi'], rank: 16 },
-  { base: 'CRV', name: 'Curve', categories: ['defi'], rank: 17 },
-  { base: 'DOGE', name: 'Dogecoin', categories: ['meme'], rank: 18 },
-  { base: 'SHIB', name: 'Shiba Inu', categories: ['meme'], rank: 19 },
+  {
+    base: 'XLM',
+    name: 'Stellar',
+    categories: ['layer1', 'infrastructure'],
+    rank: 10,
+  },
+  { base: 'AVAX', name: 'Avalanche', categories: ['layer1'], rank: 11 },
+  { base: 'SUI', name: 'Sui', categories: ['layer1'], rank: 12 },
+  { base: 'BCH', name: 'Bitcoin Cash', categories: ['layer1'], rank: 13 },
+  {
+    base: 'HBAR',
+    name: 'Hedera',
+    categories: ['layer1', 'infrastructure'],
+    rank: 14,
+  },
+  { base: 'TON', name: 'Toncoin', categories: ['layer1'], rank: 15 },
+  { base: 'LTC', name: 'Litecoin', categories: ['layer1'], rank: 16 },
+  { base: 'SHIB', name: 'Shiba Inu', categories: ['meme'], rank: 17 },
+  {
+    base: 'DOT',
+    name: 'Polkadot',
+    categories: ['layer1', 'infrastructure'],
+    rank: 18,
+  },
+  { base: 'UNI', name: 'Uniswap', categories: ['defi'], rank: 19 },
   { base: 'PEPE', name: 'Pepe', categories: ['meme'], rank: 20 },
-  { base: 'WIF', name: 'dogwifhat', categories: ['meme'], rank: 21 },
-  { base: 'FET', name: 'Fetch.ai', categories: ['ai'], rank: 22 },
+  { base: 'NEAR', name: 'NEAR Protocol', categories: ['layer1'], rank: 21 },
+  { base: 'APT', name: 'Aptos', categories: ['layer1'], rank: 22 },
+  {
+    base: 'ICP',
+    name: 'Internet Computer',
+    categories: ['layer1', 'infrastructure'],
+    rank: 23,
+  },
+  {
+    base: 'ETC',
+    name: 'Ethereum Classic',
+    categories: ['layer1'],
+    rank: 24,
+  },
+  // POL, not MATIC: Polygon migrated the ticker in 2024 and the major venues
+  // delisted the old MATIC pairs, so a MATIC row would price off nothing.
+  {
+    base: 'POL',
+    name: 'Polygon',
+    categories: ['layer1', 'infrastructure'],
+    rank: 25,
+  },
+  { base: 'TAO', name: 'Bittensor', categories: ['ai'], rank: 26 },
+  { base: 'AAVE', name: 'Aave', categories: ['defi'], rank: 27 },
+  {
+    base: 'ARB',
+    name: 'Arbitrum',
+    categories: ['layer1', 'infrastructure'],
+    rank: 28,
+  },
+  {
+    base: 'ATOM',
+    name: 'Cosmos',
+    categories: ['layer1', 'infrastructure'],
+    rank: 29,
+  },
+  {
+    base: 'FIL',
+    name: 'Filecoin',
+    categories: ['infrastructure'],
+    rank: 30,
+  },
+  // ── Below the top 30 ─────────────────────────────────────────────
+  { base: 'MKR', name: 'Maker', categories: ['defi'], rank: 31 },
+  { base: 'CRV', name: 'Curve', categories: ['defi'], rank: 32 },
+  { base: 'WIF', name: 'dogwifhat', categories: ['meme'], rank: 33 },
+  { base: 'FET', name: 'Fetch.ai', categories: ['ai'], rank: 34 },
   {
     base: 'RENDER',
     name: 'Render',
     categories: ['ai', 'infrastructure'],
-    rank: 23,
+    rank: 35,
   },
   {
     base: 'AR',
     name: 'Arweave',
     categories: ['ai', 'infrastructure'],
-    rank: 24,
+    rank: 36,
   },
-  { base: 'IMX', name: 'Immutable', categories: ['gaming'], rank: 25 },
-  { base: 'GALA', name: 'Gala', categories: ['gaming'], rank: 26 },
-  { base: 'AXS', name: 'Axie Infinity', categories: ['gaming'], rank: 27 },
-  { base: 'XRP', name: 'XRP', categories: ['layer1'], rank: 28 },
-  { base: 'TON', name: 'Toncoin', categories: ['layer1'], rank: 29 },
-  {
-    base: 'TRX',
-    name: 'TRON',
-    categories: ['layer1', 'infrastructure'],
-    rank: 30,
-  },
-  { base: 'LTC', name: 'Litecoin', categories: ['layer1'], rank: 31 },
+  { base: 'IMX', name: 'Immutable', categories: ['gaming'], rank: 37 },
+  { base: 'GALA', name: 'Gala', categories: ['gaming'], rank: 38 },
+  { base: 'AXS', name: 'Axie Infinity', categories: ['gaming'], rank: 39 },
 ]
 
 // ── US stocks & ETFs ───────────────────────────────────────────────
@@ -174,6 +218,13 @@ const STOCK_ASSETS: Array<StockAsset> = [
   { symbol: 'ADBE', name: 'Adobe', sector: 'software' },
   { symbol: 'INTC', name: 'Intel', sector: 'semiconductors' },
   { symbol: 'PLTR', name: 'Palantir', sector: 'software' },
+  {
+    // Alpaca's own ticker for the class B share. The dot survives instrument-ref
+    // normalization untouched, so the watchlist row resolves like any other.
+    symbol: 'BRK.B',
+    name: 'Berkshire Hathaway',
+    sector: 'banks',
+  },
   { symbol: 'JPM', name: 'JPMorgan Chase', sector: 'banks' },
   { symbol: 'V', name: 'Visa', sector: 'payments' },
   { symbol: 'MA', name: 'Mastercard', sector: 'payments' },
@@ -185,6 +236,7 @@ const STOCK_ASSETS: Array<StockAsset> = [
   { symbol: 'PYPL', name: 'PayPal', sector: 'payments' },
   { symbol: 'SOFI', name: 'SoFi Technologies', sector: 'banks' },
   { symbol: 'LLY', name: 'Eli Lilly', sector: 'healthcare' },
+  { symbol: 'ABBV', name: 'AbbVie', sector: 'healthcare' },
   { symbol: 'UNH', name: 'UnitedHealth', sector: 'healthcare' },
   { symbol: 'JNJ', name: 'Johnson & Johnson', sector: 'healthcare' },
   { symbol: 'XOM', name: 'Exxon Mobil', sector: 'energy' },

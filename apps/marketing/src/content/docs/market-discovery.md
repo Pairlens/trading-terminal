@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 8 min read
 ---
 
@@ -154,7 +154,8 @@ all N pairs" footer, so the same pane earns its place at both widths.
 ## Watchlists
 
 The Watchlist panel holds as many named lists as you want. Two ship populated,
-Top Crypto and Top Equities, and you can create, rename, and delete your own.
+Top Crypto and Top Equities, each holding the 30 largest assets of its class by
+market cap, and you can create, rename, and delete your own.
 Rows carry live prices and flash on change.
 
 **A row saves the asset, not the ticker.** A crypto pair or an equity is stored

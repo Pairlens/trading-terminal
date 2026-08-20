@@ -9,6 +9,7 @@ import type { PersistenceAdapter, WatchlistsState } from '@pairlens/persistence'
 import {
   TOP_CRYPTO_WATCHLIST_ID,
   TOP_EQUITIES_WATCHLIST_ID,
+  createStarterLists,
 } from '@/lib/starter-watchlists'
 
 // Minimal localStorage backing — the store reads the legacy favorites key and
@@ -83,8 +84,16 @@ describe('watchlists store — starter lists', () => {
 
     const raw = localStorage.getItem('pairlens:pair-picker.assetClassMap')
     const map = JSON.parse(raw ?? '{}') as Record<string, string>
+
+    // Every symbol, not a sample: an unmapped stock ticker routes to a crypto
+    // venue, which is the failure this seeding exists to prevent.
+    for (const list of createStarterLists()) {
+      for (const entry of list.symbols) {
+        const ref = readWatchlistEntry(entry)
+        expect(map[ref.id]).toBe(ref.cls === 'stocks' ? 'stocks' : 'crypto')
+      }
+    }
     expect(map['AAPL']).toBe('stocks')
-    expect(map['SPY']).toBe('stocks')
     expect(map['BTC-USDT']).toBe('crypto')
   })
 
