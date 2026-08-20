@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/wordmark.png" alt="Pairlens" width="340" />
+<img src="docs/assets/wordmark.png" alt="Pairlens" width="520" />
 
 **The local-first AI trading terminal. Your keys. Your machine. Your rules.**
 

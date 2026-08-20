@@ -31,8 +31,8 @@ const statuePhone = await getImage({
     <img
       src="/wordmark.webp"
       alt="Pairlens"
-      width="1919"
-      height="627"
+      width="3264"
+      height="630"
       loading="eager"
       fetchpriority="high"
       decoding="async"
@@ -187,10 +187,11 @@ const statuePhone = await getImage({
     left: 0;
     right: 0;
     /* Seats the wordmark's letter band (translateY(50%)) on the statue's
-       mouth — measured against the reference composition. The image carries
-       the rainbow underline below the letters, so its seat sits lower than
-       the old text wordmark's 0.3485 to keep the caps on the same band. */
-    bottom: calc(0.315 * var(--zs));
+       mouth. The seat is the image's centre, not its letters: the artwork
+       carries the rainbow underline below the word, so the band it has to
+       land on sits slightly above centre and the seat drops to compensate.
+       Re-derived for the 5.18:1 mark (the 3.06:1 one seated at 0.315). */
+    bottom: calc(0.312 * var(--zs));
     margin: 0;
     transform: translateY(50%);
     text-align: center;

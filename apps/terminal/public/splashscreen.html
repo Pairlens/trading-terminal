@@ -23,7 +23,10 @@
         user-select: none;
       }
       img {
-        max-width: 52%;
+        /* The wordmark is 5.2:1, so width is what sets its presence on a
+           480x320 window: at the old 52% cap it read as a sticker lost in
+           the middle of the frame. 72% leaves a clear margin either side. */
+        max-width: 72%;
         max-height: 52%;
         object-fit: contain;
       }
