@@ -266,7 +266,7 @@ const config = defineConfig({
     // @tauri-apps/plugin-keychain only exists inside the Tauri desktop runtime.
     // Exclude it so Vite's dependency scanner doesn't choke in browser-only dev.
     // @pairlens/fast-financial-charts must stay unbundled: its indicator worker is created via
-    // `new URL('./indicator.worker.ts', import.meta.url)`, which breaks when the
+    // `new URL('./indicator.worker.js', import.meta.url)`, which breaks when the
     // package is prebundled into .vite/deps (the worker URL 404s and indicator
     // computation stalls silently).
     exclude: ['@tauri-apps/plugin-keychain', '@pairlens/fast-financial-charts'],
