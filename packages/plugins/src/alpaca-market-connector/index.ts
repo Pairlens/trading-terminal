@@ -31,7 +31,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ALPACA_ICON = 'https://files.alpaca.markets/webassets/favicon.ico'
+const ALPACA_ICON = '/posters/alpaca-market-connector.png'
 
 export const ALPACA_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'alpaca',

@@ -40,7 +40,7 @@ export const heliusRpcProviderManifest: PluginManifest = {
   description:
     'Solana JSON-RPC through Helius. Add your own key for a reliable node; without one it falls back to the public endpoint.',
   homepage: 'https://helius.dev',
-  icon: 'https://www.helius.dev/favicon.ico',
+  icon: '/posters/helius-rpc-provider.png',
   metadata: {
     family: 'dex',
     gradient: 'from-orange-400 to-amber-500',

@@ -55,7 +55,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://www.bybit.com/favicon.ico'
+const ICON_URL = '/posters/bybit-market-connector.png'
 
 export const BYBIT_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'bybit',

@@ -6,6 +6,7 @@ import { describe, expect, test } from 'bun:test'
 
 import { BUNDLED_POSTERS } from '../plugin-posters'
 import { pluginBrand } from '../plugin-brand'
+import { DEX_CHAINS } from '@/lib/dex/chain-catalog'
 import { BOOTSTRAP_PLUGINS } from '@/lib/plugins/bootstrap-bundle'
 
 /**
@@ -47,6 +48,43 @@ describe('bundled plugin marks', () => {
     ).map(({ manifest }) => `${manifest.id}: ${manifest.icon}`)
 
     expect(named).toEqual([])
+  })
+
+  test('no bundled mark is fetched from the public internet', () => {
+    // A bundled plugin's mark must be in the bundle. A remote favicon is a
+    // request on every store render, it is dead under the desktop CSP and
+    // offline, and it tells the venue when the store was opened.
+    const remote = BOOTSTRAP_PLUGINS.flatMap(({ manifest }) =>
+      [manifest.icon, manifest.metadata?.logoUrl]
+        .filter((src): src is string => typeof src === 'string')
+        .filter((src) => /^https?:/.test(src))
+        .map((src) => `${manifest.id}: ${src}`),
+    )
+
+    expect(remote).toEqual([])
+  })
+
+  test('every DEX chain mark is a file the terminal serves', () => {
+    // The chain rail draws chains, not plugins: EVM entries read their mark off
+    // the connector's poster, Solana has its own under /chains/. Same rule
+    // either way — in the bundle, never fetched from a logo CDN.
+    const bad = DEX_CHAINS.filter(
+      (chain) =>
+        !chain.iconUrl.startsWith('/') ||
+        !existsSync(join(PUBLIC_DIR, chain.iconUrl)),
+    ).map((chain) => `${chain.market}: ${chain.iconUrl}`)
+
+    expect(bad).toEqual([])
+  })
+
+  test('every mark a manifest names is a file the terminal serves', () => {
+    const dangling = BOOTSTRAP_PLUGINS.filter(
+      ({ manifest }) =>
+        manifest.icon?.startsWith('/') &&
+        !existsSync(join(PUBLIC_DIR, manifest.icon)),
+    ).map(({ manifest }) => `${manifest.id}: ${manifest.icon}`)
+
+    expect(dangling).toEqual([])
   })
 
   test('every poster path is a file the terminal serves', () => {

@@ -54,8 +54,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/1149.png'
+const ICON_URL = '/posters/cryptocom-market-connector.png'
 
 export const CRYPTOCOM_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'cryptocom',

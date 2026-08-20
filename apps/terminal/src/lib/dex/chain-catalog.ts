@@ -41,8 +41,10 @@ const SOLANA: DexChain = {
   displayName: 'Solana',
   abbr: 'SOL',
   geckoNetwork: 'solana',
-  iconUrl:
-    'https://coin-images.coingecko.com/coins/images/4128/small/solana.png',
+  // Served from the bundle, like every other mark. Solana is the one chain
+  // with no connector poster to read from: its connector is Jupiter, whose
+  // logo is the aggregator's, not the chain's.
+  iconUrl: '/chains/solana.png',
   nativeSymbol: 'SOL',
   quoteSymbol: 'USDC',
   explorerUrl: 'https://solscan.io',

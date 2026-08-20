@@ -27,7 +27,7 @@ export const openrouterInferenceManifest: PluginManifest = {
   description:
     'AI inference via OpenRouter: one API key for hundreds of models across providers (bring your own key)',
   homepage: 'https://openrouter.ai',
-  icon: 'https://openrouter.ai/favicon.ico',
+  icon: '/posters/openrouter-inference.png',
   metadata: { family: 'ai-byok' },
   capabilities: [
     {

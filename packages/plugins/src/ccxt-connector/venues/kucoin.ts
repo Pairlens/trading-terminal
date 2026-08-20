@@ -45,8 +45,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/311.png'
+const ICON_URL = '/posters/kucoin-market-connector.png'
 
 export const KUCOIN_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'kucoin',

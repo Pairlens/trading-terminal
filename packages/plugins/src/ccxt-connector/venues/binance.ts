@@ -52,7 +52,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL = 'https://bin.bnbstatic.com/static/images/common/favicon.ico'
+const ICON_URL = '/posters/binance-market-connector.png'
 
 export const BINANCE_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'binance',

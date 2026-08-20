@@ -55,8 +55,7 @@ import type {
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 
-const ICON_URL =
-  'https://s2.coinmarketcap.com/static/img/exchanges/64x64/513.png'
+const ICON_URL = '/posters/bitget-market-connector.png'
 
 export const BITGET_ADAPTER_INFO: MarketAdapterInfo = {
   marketId: 'bitget',

@@ -19,7 +19,7 @@ export const exaSearchManifest: PluginManifest = {
   description:
     'Neural web search grounding for AI research via the Exa API (bring your own key)',
   homepage: 'https://exa.ai',
-  icon: 'https://exa.ai/favicon.ico',
+  icon: '/posters/exa-search.png',
   metadata: { family: 'ai-byok' },
   capabilities: [
     {
