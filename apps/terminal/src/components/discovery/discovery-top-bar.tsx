@@ -11,6 +11,7 @@ import { HEADER_GROUP } from '@/components/chrome/header-chrome'
 import { LayoutToolbar } from '@/components/layout/layout-toolbar'
 import { PageHeader } from '@/components/page-header'
 import { DiscoverySectionTabs } from '@/components/discovery/discovery-section-tabs'
+import { DiscoveryVenuePicker } from '@/components/discovery/discovery-venue-picker'
 
 type DiscoveryTopBarProps = {
   sections: Array<DiscoverySection>
@@ -31,7 +32,13 @@ export function DiscoveryTopBar({
   return (
     <PageHeader
       actions={
-        <LayoutToolbar open={workspacesOpen} onOpenChange={setWorkspacesOpen} />
+        <>
+          <DiscoveryVenuePicker section={activeSection} />
+          <LayoutToolbar
+            open={workspacesOpen}
+            onOpenChange={setWorkspacesOpen}
+          />
+        </>
       }
     >
       {/* 13px/600, the same weight and size the pair chip's symbol wears on

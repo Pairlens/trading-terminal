@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 8 min read
 ---
 
@@ -114,6 +114,14 @@ your broker under a stock. Tokens and event contracts carry their venue inside
 their own identity, so there the button is a label rather than a menu. A
 Polymarket outcome does not exist on Kalshi, and the same address on another
 chain is a different asset, so there is nothing to switch to.
+
+The same button sits on the **CEX Spot** Discovery board, left of **Panes**, so
+you can switch exchange while browsing instead of opening a pair you did not
+want to look at. It is one choice: pick Binance there and the scanner, the
+movers table, the heatmap and every watchlist row price and open on Binance,
+on Discovery and on the next chart you load. The other Discovery boards do not
+carry it. Futures reads all five perp venues at once, which is the point of the
+funding matrix, and pools, contracts and stocks name their venue themselves.
 
 Turn on the recent-tickers marquee in **Settings → Appearance** if you want a
 running strip of live prices for the pairs you have been looking at.

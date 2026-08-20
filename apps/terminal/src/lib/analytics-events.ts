@@ -333,6 +333,15 @@ export interface AnalyticsEvents {
   /** Which asset-class desk traders actually work from on Discovery. */
   discovery_section_selected: { section: string }
   /**
+   * The venue a Discovery section is pointed at was changed from its bar.
+   *
+   * Answers whether the picker is used at all — the preference was only
+   * writable from a chart page before, so "does anyone switch venue while
+   * browsing" has never had an answer. `venue` is a connector id and
+   * `section` an asset class: both name our own surfaces, never the person.
+   */
+  discovery_venue_changed: { venue: string; section: string }
+  /**
    * The on-chain board could not draw a chain's pools, and why.
    *
    * The question this answers is whether the DEX Discovery board is usable in
