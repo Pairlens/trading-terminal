@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Difusi tanpa drift pada volatilitas terealisasi tahunan {{sigma}}%, dari penutupan per jam lima hari terakhir.",
+    "modelTooltip": "Difusi tanpa drift pada volatilitas terealisasi tahunan {{sigma}}%, dari penutupan lima menit sehari terakhir.",
     "referenceTooltip": "Diselesaikan pada {{source}}.",
-    "modelNote": "Model adalah difusi tanpa drift pada volatilitas terealisasi terkini. Model ini mengabaikan biaya, spread, dan kedalaman order book.",
-    "approxNote": "≈ menandai acuan yang dibaca dari jam yang memuat harga penyelesaian satu menit milik bursa.",
-    "desktopOnly": "{{venues}} memerlukan aplikasi desktop.",
     "viewFocus": "Fokus",
     "viewBoard": "Tabel",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "JUAL",
       "oddsStale": "odds sudah basi"
     },
-    "oddsStaleTooltip": "Odds dari bursa belum diperbarui, jadi edge terhadap harga langsung tidak berarti."
+    "oddsStaleTooltip": "Odds dari bursa belum diperbarui, jadi edge terhadap harga langsung tidak berarti.",
+    "referenceApproxTooltip": "Diselesaikan di {{source}}. Tanda ≈ menandai referensi yang dibaca dari jam yang memuat cetakan penyelesaian satu menit bursa."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Bursa ini tidak memberi kategori pada acaranya.",
     "venueHeading": "Bursa",
-    "desktopOnly": "desktop",
+    "desktopOnly": "Desktop",
     "venueError": "kesalahan",
     "trending": "Sedang ramai",
     "names": {

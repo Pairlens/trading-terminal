@@ -292,7 +292,8 @@ at or above its open, so the reference is that candle's open and the terminal
 reads it from your own Binance connector. Its daily contract compares one-minute
 closes at noon ET on two consecutive days; the terminal reads the hour that
 contains the reference minute, which is right to within a minute of tape rather
-than exact. Those rows mark their reference with `≈` and the footnote says why.
+than exact. Those rows mark their reference with `≈`, and hovering the number
+says why.
 
 If no connector you have installed carries the settlement pair, the row still
 runs. You lose Spot, Dist and Model, and you keep the odds, the countdown and

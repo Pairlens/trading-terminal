@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Driftfreie Diffusion bei {{sigma}}% annualisierter realisierter Volatilität, aus den Stundenschlusskursen der letzten fünf Tage.",
+    "modelTooltip": "Driftfreie Diffusion bei {{sigma}}% annualisierter realisierter Volatilität, aus dem letzten Tag der Fünf-Minuten-Schlusskurse.",
     "referenceTooltip": "Abrechnung über {{source}}.",
-    "modelNote": "Das Modell ist eine driftfreie Diffusion mit der zuletzt realisierten Volatilität. Gebühren, Spread und Ordertiefe bleiben unberücksichtigt.",
-    "approxNote": "≈ kennzeichnet eine Referenz aus der Stunde, die den Ein-Minuten-Abrechnungspreis der Börse enthält.",
-    "desktopOnly": "{{venues}} benötigt die Desktop-App.",
     "viewFocus": "Fokus",
     "viewBoard": "Tabelle",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "VERK",
       "oddsStale": "Quoten veraltet"
     },
-    "oddsStaleTooltip": "Die Quoten der Börse wurden nicht aktualisiert, ein Edge gegen einen Live-Kurs wäre bedeutungslos."
+    "oddsStaleTooltip": "Die Quoten der Börse wurden nicht aktualisiert, ein Edge gegen einen Live-Kurs wäre bedeutungslos.",
+    "referenceApproxTooltip": "Wird auf {{source}} abgerechnet. Das ≈ markiert eine Referenz aus der Stunde, die den Ein-Minuten-Abrechnungsprint der Börse enthält."
   },
   "onboarding": {
     "phase": {

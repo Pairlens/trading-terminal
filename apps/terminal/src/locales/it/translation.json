@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Diffusione senza deriva con volatilità realizzata annualizzata del {{sigma}}%, dalle chiusure orarie degli ultimi cinque giorni.",
+    "modelTooltip": "Diffusione senza deriva al {{sigma}}% di volatilità realizzata annualizzata, dall'ultimo giorno di chiusure a cinque minuti.",
     "referenceTooltip": "Liquida su {{source}}.",
-    "modelNote": "Il modello è una diffusione senza deriva alla volatilità realizzata recente. Ignora commissioni, spread e profondità del book.",
-    "approxNote": "≈ indica un riferimento letto dall'ora che contiene il prezzo di liquidazione al minuto della sede.",
-    "desktopOnly": "{{venues}} richiede l'app desktop.",
     "viewFocus": "Focus",
     "viewBoard": "Tabella",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "VEND",
       "oddsStale": "quote non aggiornate"
     },
-    "oddsStaleTooltip": "Le quote della sede non si sono aggiornate, quindi un edge contro un prezzo live non significherebbe nulla."
+    "oddsStaleTooltip": "Le quote della sede non si sono aggiornate, quindi un edge contro un prezzo live non significherebbe nulla.",
+    "referenceApproxTooltip": "Regolata su {{source}}. La ≈ segnala un riferimento letto dall'ora che contiene la stampa di regolamento di un minuto della sede."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Questa piattaforma non assegna categorie ai suoi eventi.",
     "venueHeading": "Piattaforma",
-    "desktopOnly": "desktop",
+    "desktopOnly": "Desktop",
     "venueError": "errore",
     "trending": "Di tendenza",
     "names": {

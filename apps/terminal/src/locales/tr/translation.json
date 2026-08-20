@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Son beş günün saatlik kapanışlarından hesaplanan %{{sigma}} yıllıklandırılmış gerçekleşen oynaklıkta sürüklenmesiz difüzyon.",
+    "modelTooltip": "{{sigma}}% yıllıklandırılmış gerçekleşen volatiliteyle sürüklenmesiz difüzyon, son bir günlük beş dakikalık kapanışlardan.",
     "referenceTooltip": "{{source}} üzerinden uzlaşır.",
-    "modelNote": "Model, son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyondur. Komisyonları, makası ve emir defteri derinliğini yok sayar.",
-    "approxNote": "≈ borsanın bir dakikalık uzlaşma fiyatını içeren saatten okunan referansı işaretler.",
-    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir.",
     "viewFocus": "Odak",
     "viewBoard": "Tablo",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "SATIŞ",
       "oddsStale": "oranlar eski"
     },
-    "oddsStaleTooltip": "Borsanın oranları yenilenmedi, bu yüzden canlı fiyata karşı bir edge anlamsız olurdu."
+    "oddsStaleTooltip": "Borsanın oranları yenilenmedi, bu yüzden canlı fiyata karşı bir edge anlamsız olurdu.",
+    "referenceApproxTooltip": "{{source}} üzerinden uzlaşır. ≈ işareti, borsanın bir dakikalık uzlaşma baskısını içeren saatten okunan bir referansı gösterir."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Bu borsa olaylarını kategoriye ayırmıyor.",
     "venueHeading": "Borsa",
-    "desktopOnly": "masaüstü",
+    "desktopOnly": "Masaüstü",
     "venueError": "hata",
     "trending": "Öne çıkanlar",
     "names": {

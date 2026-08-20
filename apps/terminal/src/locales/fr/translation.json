@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Diffusion sans dérive à {{sigma}}% de volatilité réalisée annualisée, calculée sur les clôtures horaires des cinq derniers jours.",
+    "modelTooltip": "Diffusion sans dérive à {{sigma}}% de volatilité réalisée annualisée, sur le dernier jour de clôtures de cinq minutes.",
     "referenceTooltip": "Règlement sur {{source}}.",
-    "modelNote": "Le modèle est une diffusion sans dérive à la volatilité réalisée récente. Il ignore les frais, le spread et la profondeur du carnet.",
-    "approxNote": "≈ signale une référence lue sur l'heure qui contient le prix de règlement à la minute de la place.",
-    "desktopOnly": "{{venues}} nécessite l'application de bureau.",
     "viewFocus": "Focus",
     "viewBoard": "Tableau",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "VENTE",
       "oddsStale": "cotes obsolètes"
     },
-    "oddsStaleTooltip": "Les cotes de la plateforme ne se sont pas actualisées, un edge face à un prix en direct n'aurait aucun sens."
+    "oddsStaleTooltip": "Les cotes de la plateforme ne se sont pas actualisées, un edge face à un prix en direct n'aurait aucun sens.",
+    "referenceApproxTooltip": "Règlement sur {{source}}. Le ≈ signale une référence lue sur l'heure contenant l'impression de règlement d'une minute de la plateforme."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Cette plateforme ne classe pas ses événements par catégorie.",
     "venueHeading": "Plateforme",
-    "desktopOnly": "bureau",
+    "desktopOnly": "Bureau",
     "venueError": "erreur",
     "trending": "Tendance",
     "names": {

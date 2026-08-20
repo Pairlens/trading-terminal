@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "최근 5일간의 시간별 종가로 구한 연율 실현 변동성 {{sigma}}%를 사용하는 드리프트 없는 확산입니다.",
+    "modelTooltip": "연율화 실현 변동성 {{sigma}}% 의 드리프트 없는 확산. 최근 하루의 5분봉 종가에서 산출.",
     "referenceTooltip": "{{source}} 기준으로 정산됩니다.",
-    "modelNote": "모델은 최근 실현 변동성을 사용하는 드리프트 없는 확산입니다. 수수료, 스프레드, 호가 깊이는 고려하지 않습니다.",
-    "approxNote": "≈는 거래소의 1분 정산가가 포함된 시간대에서 읽은 기준가를 뜻합니다.",
-    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다.",
     "viewFocus": "포커스",
     "viewBoard": "보드",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "매도",
       "oddsStale": "배당률이 오래됨"
     },
-    "oddsStaleTooltip": "거래소의 배당률이 갱신되지 않아 실시간 가격과 비교한 엣지는 의미가 없습니다."
+    "oddsStaleTooltip": "거래소의 배당률이 갱신되지 않아 실시간 가격과 비교한 엣지는 의미가 없습니다.",
+    "referenceApproxTooltip": "{{source}} 기준으로 정산됩니다. ≈ 는 거래소의 1분 정산 프린트가 포함된 시간대에서 읽은 기준가임을 뜻합니다."
   },
   "onboarding": {
     "phase": {

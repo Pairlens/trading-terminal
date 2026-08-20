@@ -714,11 +714,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Difusão sem deriva com volatilidade realizada anualizada de {{sigma}}%, a partir dos fechamentos horários dos últimos cinco dias.",
+    "modelTooltip": "Difusão sem deriva a {{sigma}}% de volatilidade realizada anualizada, do último dia de fechamentos de cinco minutos.",
     "referenceTooltip": "Liquida contra {{source}}.",
-    "modelNote": "O modelo é uma difusão sem deriva na volatilidade realizada recente. Ignora taxas, o spread e a profundidade do livro.",
-    "approxNote": "≈ marca uma referência lida da hora que contém o preço de liquidação de um minuto da casa.",
-    "desktopOnly": "{{venues}} precisa do app de desktop.",
     "viewFocus": "Foco",
     "viewBoard": "Tabela",
     "focus": {
@@ -742,7 +739,8 @@
       "printSell": "VENDA",
       "oddsStale": "odds desatualizadas"
     },
-    "oddsStaleTooltip": "As odds da corretora não foram atualizadas, então o edge contra um preço ao vivo não significaria nada."
+    "oddsStaleTooltip": "As odds da corretora não foram atualizadas, então o edge contra um preço ao vivo não significaria nada.",
+    "referenceApproxTooltip": "Liquida em {{source}}. O ≈ marca uma referência lida da hora que contém a impressão de liquidação de um minuto da corretora."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1126,7 @@
   "predictionCategories": {
     "noneBody": "Esta plataforma não classifica os eventos por categoria.",
     "venueHeading": "Plataforma",
-    "desktopOnly": "desktop",
+    "desktopOnly": "Desktop",
     "venueError": "erro",
     "trending": "Em alta",
     "names": {

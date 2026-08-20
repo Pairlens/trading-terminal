@@ -766,11 +766,8 @@
       "hourly": "1H",
       "daily": "1D"
     },
-    "modelTooltip": "Dyfuzja bez dryfu przy zannualizowanej zrealizowanej zmienności {{sigma}}%, z godzinowych zamknięć z ostatnich pięciu dni.",
+    "modelTooltip": "Dyfuzja bez dryfu przy {{sigma}}% zannualizowanej zmienności zrealizowanej, z ostatniej doby zamknięć pięciominutowych.",
     "referenceTooltip": "Rozlicza się według {{source}}.",
-    "modelNote": "Model to dyfuzja bez dryfu przy ostatniej zrealizowanej zmienności. Pomija prowizje, spread i głębokość arkusza.",
-    "approxNote": "≈ oznacza odniesienie odczytane z godziny zawierającej minutową cenę rozliczeniową giełdy.",
-    "desktopOnly": "{{venues}} wymaga aplikacji desktopowej.",
     "viewFocus": "Fokus",
     "viewBoard": "Tabela",
     "focus": {
@@ -794,7 +791,8 @@
       "printSell": "SPRZ",
       "oddsStale": "kursy nieaktualne"
     },
-    "oddsStaleTooltip": "Kursy giełdy nie odświeżyły się, więc edge wobec ceny na żywo nie miałby znaczenia."
+    "oddsStaleTooltip": "Kursy giełdy nie odświeżyły się, więc edge wobec ceny na żywo nie miałby znaczenia.",
+    "referenceApproxTooltip": "Rozliczane na {{source}}. Znak ≈ oznacza odniesienie odczytane z godziny zawierającej jednominutowy wydruk rozliczeniowy giełdy."
   },
   "onboarding": {
     "phase": {
@@ -1194,7 +1192,7 @@
   "predictionCategories": {
     "noneBody": "Ta giełda nie przypisuje wydarzeniom kategorii.",
     "venueHeading": "Giełda",
-    "desktopOnly": "desktop",
+    "desktopOnly": "Desktop",
     "venueError": "błąd",
     "trending": "Na czasie",
     "names": {
