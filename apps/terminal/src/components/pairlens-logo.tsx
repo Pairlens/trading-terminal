@@ -3,7 +3,7 @@
 import type { ImgHTMLAttributes } from 'react'
 
 /**
- * The Pairlens wordmark from /public/wordmark.webp (1919x627, transparent).
+ * The Pairlens wordmark from /public/wordmark.webp (3264x630, transparent).
  * White letters with a black outline and a spectrum underline, so it reads
  * on dark and light surfaces alike without a theme swap.
  */
