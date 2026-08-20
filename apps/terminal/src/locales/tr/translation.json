@@ -718,7 +718,31 @@
     "referenceTooltip": "{{source}} üzerinden uzlaşır.",
     "modelNote": "Model, son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyondur. Komisyonları, makası ve emir defteri derinliğini yok sayar.",
     "approxNote": "≈ borsanın bir dakikalık uzlaşma fiyatını içeren saatten okunan referansı işaretler.",
-    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir."
+    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir.",
+    "viewFocus": "Odak",
+    "viewBoard": "Tablo",
+    "focus": {
+      "assetNext": "Sıradaki",
+      "toBeat": "Aşılacak",
+      "now": "Şimdi",
+      "closesIn": "Kapanışa",
+      "settlesOn": "{{source}} üzerinden uzlaşır",
+      "model": "Model {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "{{value}}× öder",
+      "noBook": "defter yok",
+      "chartWaiting": "Akış bekleniyor",
+      "tapeLabel": "{{venue}} akışı",
+      "tapeWaiting": "İşlem bekleniyor",
+      "noWindowTitle": "Açık pencere yok",
+      "noWindowBody": "Bu varlık ve vade için şu anda işlem görmüyor. Bir sonraki pencere borsanın kendi takvimine göre açılır.",
+      "flowBought": "{{value}} alım",
+      "flowSold": "{{value}} satım",
+      "printBuy": "ALIŞ",
+      "printSell": "SATIŞ",
+      "oddsStale": "oranlar eski"
+    },
+    "oddsStaleTooltip": "Borsanın oranları yenilenmedi, bu yüzden canlı fiyata karşı bir edge anlamsız olurdu."
   },
   "onboarding": {
     "phase": {

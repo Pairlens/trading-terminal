@@ -718,7 +718,31 @@
     "referenceTooltip": "按 {{source}} 结算。",
     "modelNote": "模型采用近期已实现波动率下的无漂移扩散，未计入手续费、买卖价差和盘口深度。",
     "approxNote": "≈ 表示该基准取自包含平台一分钟结算价的那根小时线。",
-    "desktopOnly": "{{venues}} 需要桌面应用。"
+    "desktopOnly": "{{venues}} 需要桌面应用。",
+    "viewFocus": "聚焦",
+    "viewBoard": "看板",
+    "focus": {
+      "assetNext": "最近",
+      "toBeat": "目标价",
+      "now": "现价",
+      "closesIn": "剩余",
+      "settlesOn": "按 {{source}} 结算",
+      "model": "模型 {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "赔付 {{value}}×",
+      "noBook": "暂无盘口",
+      "chartWaiting": "等待成交数据",
+      "tapeLabel": "{{venue}} 资金流",
+      "tapeWaiting": "等待成交",
+      "noWindowTitle": "没有开放的窗口",
+      "noWindowBody": "该标的和周期当前没有交易。下一个窗口按交易所自己的时间表开放。",
+      "flowBought": "买入 {{value}}",
+      "flowSold": "卖出 {{value}}",
+      "printBuy": "买",
+      "printSell": "卖",
+      "oddsStale": "赔率已过期"
+    },
+    "oddsStaleTooltip": "该平台的赔率尚未刷新，与实时价格比较得出的 edge 没有意义。"
   },
   "onboarding": {
     "phase": {

@@ -718,7 +718,31 @@
     "referenceTooltip": "{{source}} 기준으로 정산됩니다.",
     "modelNote": "모델은 최근 실현 변동성을 사용하는 드리프트 없는 확산입니다. 수수료, 스프레드, 호가 깊이는 고려하지 않습니다.",
     "approxNote": "≈는 거래소의 1분 정산가가 포함된 시간대에서 읽은 기준가를 뜻합니다.",
-    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다."
+    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다.",
+    "viewFocus": "포커스",
+    "viewBoard": "보드",
+    "focus": {
+      "assetNext": "다음",
+      "toBeat": "목표가",
+      "now": "현재",
+      "closesIn": "마감까지",
+      "settlesOn": "{{source}} 기준 정산",
+      "model": "모델 {{value}}",
+      "edge": "엣지 {{value}}",
+      "payout": "{{value}}× 지급",
+      "noBook": "호가 없음",
+      "chartWaiting": "체결 데이터를 기다리는 중",
+      "tapeLabel": "{{venue}} 자금 흐름",
+      "tapeWaiting": "체결을 기다리는 중",
+      "noWindowTitle": "열린 창이 없습니다",
+      "noWindowBody": "이 자산과 기간으로 지금 거래되는 것이 없습니다. 다음 창은 거래소 일정에 따라 열립니다.",
+      "flowBought": "{{value}} 매수",
+      "flowSold": "{{value}} 매도",
+      "printBuy": "매수",
+      "printSell": "매도",
+      "oddsStale": "배당률이 오래됨"
+    },
+    "oddsStaleTooltip": "거래소의 배당률이 갱신되지 않아 실시간 가격과 비교한 엣지는 의미가 없습니다."
   },
   "onboarding": {
     "phase": {

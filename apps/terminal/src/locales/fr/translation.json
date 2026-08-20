@@ -718,7 +718,31 @@
     "referenceTooltip": "Règlement sur {{source}}.",
     "modelNote": "Le modèle est une diffusion sans dérive à la volatilité réalisée récente. Il ignore les frais, le spread et la profondeur du carnet.",
     "approxNote": "≈ signale une référence lue sur l'heure qui contient le prix de règlement à la minute de la place.",
-    "desktopOnly": "{{venues}} nécessite l'application de bureau."
+    "desktopOnly": "{{venues}} nécessite l'application de bureau.",
+    "viewFocus": "Focus",
+    "viewBoard": "Tableau",
+    "focus": {
+      "assetNext": "Suivant",
+      "toBeat": "À battre",
+      "now": "Maintenant",
+      "closesIn": "Clôture dans",
+      "settlesOn": "règlement sur {{source}}",
+      "model": "Modèle {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "paie {{value}}×",
+      "noBook": "pas de carnet",
+      "chartWaiting": "En attente du flux",
+      "tapeLabel": "Flux {{venue}}",
+      "tapeWaiting": "En attente de transactions",
+      "noWindowTitle": "Aucune fenêtre ouverte",
+      "noWindowBody": "Rien ne se négocie pour cet actif et cet horizon en ce moment. La prochaine fenêtre ouvre selon le calendrier de la plateforme.",
+      "flowBought": "{{value}} acheté",
+      "flowSold": "{{value}} vendu",
+      "printBuy": "ACHAT",
+      "printSell": "VENTE",
+      "oddsStale": "cotes obsolètes"
+    },
+    "oddsStaleTooltip": "Les cotes de la plateforme ne se sont pas actualisées, un edge face à un prix en direct n'aurait aucun sens."
   },
   "onboarding": {
     "phase": {

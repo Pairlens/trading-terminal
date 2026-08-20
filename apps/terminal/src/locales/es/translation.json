@@ -718,7 +718,31 @@
     "referenceTooltip": "Liquida contra {{source}}.",
     "modelNote": "El modelo es una difusión sin deriva con la volatilidad realizada reciente. No tiene en cuenta comisiones, el spread ni la profundidad del libro.",
     "approxNote": "≈ marca una referencia leída de la hora que contiene el precio de liquidación de un minuto del mercado.",
-    "desktopOnly": "{{venues}} necesita la app de escritorio."
+    "desktopOnly": "{{venues}} necesita la app de escritorio.",
+    "viewFocus": "Foco",
+    "viewBoard": "Tabla",
+    "focus": {
+      "assetNext": "Siguiente",
+      "toBeat": "A superar",
+      "now": "Ahora",
+      "closesIn": "Cierra en",
+      "settlesOn": "liquida en {{source}}",
+      "model": "Modelo {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "paga {{value}}×",
+      "noBook": "sin libro",
+      "chartWaiting": "Esperando la cinta",
+      "tapeLabel": "Flujo en {{venue}}",
+      "tapeWaiting": "Esperando operaciones",
+      "noWindowTitle": "Ninguna ventana abierta",
+      "noWindowBody": "Ahora mismo no se negocia nada para este activo y horizonte. La próxima ventana abre según el calendario del mercado.",
+      "flowBought": "{{value}} comprado",
+      "flowSold": "{{value}} vendido",
+      "printBuy": "COMPRA",
+      "printSell": "VENTA",
+      "oddsStale": "cuotas desactualizadas"
+    },
+    "oddsStaleTooltip": "Las cuotas del mercado no se han actualizado, así que el edge contra un precio en vivo no significaría nada."
   },
   "onboarding": {
     "phase": {

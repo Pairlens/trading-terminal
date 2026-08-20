@@ -718,7 +718,31 @@
     "referenceTooltip": "Liquida su {{source}}.",
     "modelNote": "Il modello è una diffusione senza deriva alla volatilità realizzata recente. Ignora commissioni, spread e profondità del book.",
     "approxNote": "≈ indica un riferimento letto dall'ora che contiene il prezzo di liquidazione al minuto della sede.",
-    "desktopOnly": "{{venues}} richiede l'app desktop."
+    "desktopOnly": "{{venues}} richiede l'app desktop.",
+    "viewFocus": "Focus",
+    "viewBoard": "Tabella",
+    "focus": {
+      "assetNext": "Prossima",
+      "toBeat": "Da battere",
+      "now": "Ora",
+      "closesIn": "Chiude tra",
+      "settlesOn": "regolata su {{source}}",
+      "model": "Modello {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "paga {{value}}×",
+      "noBook": "nessun book",
+      "chartWaiting": "In attesa del tape",
+      "tapeLabel": "Flusso su {{venue}}",
+      "tapeWaiting": "In attesa di scambi",
+      "noWindowTitle": "Nessuna finestra aperta",
+      "noWindowBody": "Al momento non si negozia nulla per questo asset e questo orizzonte. La prossima finestra apre secondo il calendario della sede.",
+      "flowBought": "{{value}} comprato",
+      "flowSold": "{{value}} venduto",
+      "printBuy": "ACQ",
+      "printSell": "VEND",
+      "oddsStale": "quote non aggiornate"
+    },
+    "oddsStaleTooltip": "Le quote della sede non si sono aggiornate, quindi un edge contro un prezzo live non significherebbe nulla."
   },
   "onboarding": {
     "phase": {

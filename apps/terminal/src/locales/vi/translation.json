@@ -718,7 +718,31 @@
     "referenceTooltip": "Thanh toán theo {{source}}.",
     "modelNote": "Mô hình là một khuếch tán không trôi theo biến động thực tế gần đây. Nó bỏ qua phí, chênh lệch giá mua bán và độ sâu sổ lệnh.",
     "approxNote": "≈ đánh dấu tham chiếu đọc từ khung giờ chứa giá thanh toán một phút của sàn.",
-    "desktopOnly": "{{venues}} cần ứng dụng máy tính."
+    "desktopOnly": "{{venues}} cần ứng dụng máy tính.",
+    "viewFocus": "Tiêu điểm",
+    "viewBoard": "Bảng",
+    "focus": {
+      "assetNext": "Kế tiếp",
+      "toBeat": "Mốc cần vượt",
+      "now": "Hiện tại",
+      "closesIn": "Đóng sau",
+      "settlesOn": "thanh toán theo {{source}}",
+      "model": "Mô hình {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "trả {{value}}×",
+      "noBook": "chưa có sổ lệnh",
+      "chartWaiting": "Đang chờ dữ liệu khớp lệnh",
+      "tapeLabel": "Dòng tiền trên {{venue}}",
+      "tapeWaiting": "Đang chờ khớp lệnh",
+      "noWindowTitle": "Không có cửa sổ nào mở",
+      "noWindowBody": "Hiện chưa có giao dịch nào cho tài sản và khung thời gian này. Cửa sổ kế tiếp mở theo lịch của sàn.",
+      "flowBought": "mua {{value}}",
+      "flowSold": "bán {{value}}",
+      "printBuy": "MUA",
+      "printSell": "BÁN",
+      "oddsStale": "tỷ lệ đã cũ"
+    },
+    "oddsStaleTooltip": "Tỷ lệ của sàn chưa được làm mới nên edge so với giá trực tiếp sẽ không có ý nghĩa."
   },
   "onboarding": {
     "phase": {

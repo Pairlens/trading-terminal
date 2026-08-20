@@ -718,7 +718,31 @@
     "referenceTooltip": "Diselesaikan pada {{source}}.",
     "modelNote": "Model adalah difusi tanpa drift pada volatilitas terealisasi terkini. Model ini mengabaikan biaya, spread, dan kedalaman order book.",
     "approxNote": "≈ menandai acuan yang dibaca dari jam yang memuat harga penyelesaian satu menit milik bursa.",
-    "desktopOnly": "{{venues}} memerlukan aplikasi desktop."
+    "desktopOnly": "{{venues}} memerlukan aplikasi desktop.",
+    "viewFocus": "Fokus",
+    "viewBoard": "Tabel",
+    "focus": {
+      "assetNext": "Berikutnya",
+      "toBeat": "Target",
+      "now": "Sekarang",
+      "closesIn": "Tutup dalam",
+      "settlesOn": "diselesaikan di {{source}}",
+      "model": "Model {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "bayar {{value}}×",
+      "noBook": "tanpa buku",
+      "chartWaiting": "Menunggu tape",
+      "tapeLabel": "Aliran di {{venue}}",
+      "tapeWaiting": "Menunggu transaksi",
+      "noWindowTitle": "Tidak ada jendela terbuka",
+      "noWindowBody": "Tidak ada yang diperdagangkan untuk aset dan horizon ini sekarang. Jendela berikutnya dibuka sesuai jadwal bursa.",
+      "flowBought": "{{value}} dibeli",
+      "flowSold": "{{value}} dijual",
+      "printBuy": "BELI",
+      "printSell": "JUAL",
+      "oddsStale": "odds sudah basi"
+    },
+    "oddsStaleTooltip": "Odds dari bursa belum diperbarui, jadi edge terhadap harga langsung tidak berarti."
   },
   "onboarding": {
     "phase": {

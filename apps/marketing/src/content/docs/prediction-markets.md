@@ -6,7 +6,7 @@ parent: trading
 order: 6
 eyebrow: For traders
 updated: 20 AUG 2026
-readTime: 25 min read
+readTime: 27 min read
 ---
 
 An event contract is a market on something that either happens or does not.
@@ -205,8 +205,53 @@ XRP. They are the busiest contracts either venue lists, and they are the one
 prediction product a crypto terminal can price better than the venue's own
 site, because the terminal already streams the spot market they settle against.
 
-**Crypto Up/Down** is that board. One row per live contract, sorted by what
-settles soonest, with eight columns:
+**Crypto Up/Down** has two shapes, because there are two questions and a table
+only answers one. The toggle is top right, and the pane remembers which you
+left it on.
+
+### Focus
+
+The default, and one window at a time. It answers the question people actually
+open these contracts with: is BTC going to be above 71,860 in four minutes.
+
+An asset switcher along the top swaps between BTC, ETH, SOL and XRP, or leaves
+it on **Next**, which follows whatever settles soonest. Under it: the settlement
+reference and the live price side by side with the gap between them signed in
+both dollars and percent, and a countdown with a bar underneath showing how much
+of the window has run, because "4:31 left" means one thing on a fifteen-minute
+contract and another on a daily one.
+
+The chart is the point. It draws the spot tape against the price the contract
+settles on, as a line approaching a line, tinted green above the target and red
+below. The target line is always in frame: a window whose price has run clear of
+its reference would otherwise crop out the one distance the chart is about. It
+is seeded from minute candles so it has a shape the moment it opens, then grows
+a point a second off the live tape.
+
+Both legs sit beside it as buttons, priced in cents with the payout multiple
+under each ("59¢, pays 1.69x"), and clicking one opens the event with that side
+already loaded in the ticket. The model and the edge keep their place in a strip
+under the buttons rather than a column, and below that is the flow: the spot
+prints that will decide the window, arriving one at a time.
+
+That strip carries a side and an amount and deliberately no price. Every print
+inside the last minute is within a few cents of the one before it, so a column of
+prices there is five near-identical numbers dressed up as information, and the
+settlement price is already on the card once, where it belongs. What varies, and
+what bears on the contract, is which side is pushing and how much money is behind
+it: a buy moves the tape toward Up settling, a sell toward Down. The bar at the
+top of the strip is those two sides summed over the recent tape; each row below is
+one push, sized against the largest on screen.
+
+The focused asset is the only one that gets a live subscription. The board below
+prices thirteen rows off bulk ticker snapshots on a sixty-second REST cadence,
+which is right for ranking and useless in the last minute of a fifteen-minute
+window, so swapping assets swaps a real ticker and a real trade feed with it.
+
+### Board
+
+The scanner. One row per live contract, sorted by what settles soonest, with
+eight columns:
 
 | Column        | What it is                                                         |
 | ------------- | ------------------------------------------------------------------ |
@@ -219,7 +264,7 @@ settles soonest, with eight columns:
 | **Model**     | What a plain diffusion model makes of the same window              |
 | **Edge**      | Model minus market, in probability points                          |
 
-The board shows the window that is trading, one per asset, horizon and venue.
+Both shapes show the window that is trading, one per asset, horizon and venue.
 The venues answer with a ladder of future windows and all but the first sit at
 exactly 50 cents with no book, because nobody trades a contract that opens in
 six hours. Listing them would push the live row off the top behind seven
@@ -257,9 +302,18 @@ whatever reference the venue published.
 
 The Model column is `N(d2)`: the probability spot finishes above the reference
 under a driftless lognormal walk at recent realized volatility, with volatility
-estimated from the last five days of hourly closes on the settlement pair. It
+estimated from the last day of five-minute closes on the settlement pair. It
 is closed-form arithmetic over numbers on the same row, and it is there so the
 venue's probability has something to be compared against.
+
+Five-minute closes, not hourly ones, and the choice matters more than it looks.
+Realized volatility depends on how often you sample: BTC measured hourly reads
+around 30% annualised, measured every five minutes around 46%, and every minute
+around 59%. The model scales whatever it is given down to a horizon of minutes,
+so feeding it the hourly figure understates the volatility that actually decides
+a fifteen-minute contract by roughly half, and pushes the answer that much harder
+toward 0 or 100. Five minutes is the usual compromise: at one-minute sampling the
+bid-ask bounce inflates the estimate with noise that is not volatility.
 
 It is not a recommendation and it is not a fair value. It assumes zero drift,
 constant volatility and a lognormal walk, and a fifteen-minute crypto window is
@@ -270,6 +324,14 @@ cents wide is not four points of anything.
 The column is blank rather than approximate when a leg is missing. No
 reference, no live spot or too short a volatility sample means no model, on
 that row, with the other columns still doing their job.
+
+The Edge column is withheld, rather than shown, when the venue's odds have not
+refreshed recently. Spot and the countdown come off a socket and never stop,
+while the odds arrive on a thirty-second poll that a browser parks when the tab
+is in the background. Subtracting a live model from a probability that stopped
+updating ten minutes ago produces a number that looks like a large mispricing
+and is really a comparison against a memory, so the pane says the odds are stale
+instead.
 
 Clicking any row opens that contract on the prediction terminal, with its
 book, its tape and the same guarded ticket.

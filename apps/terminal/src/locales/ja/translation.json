@@ -718,7 +718,31 @@
     "referenceTooltip": "{{source}} で決済されます。",
     "modelNote": "モデルは直近の実現ボラティリティによるドリフトなし拡散です。手数料、スプレッド、板の厚みは考慮していません。",
     "approxNote": "≈ は、取引所の1分決済値を含む時間足から読み取った基準値を示します。",
-    "desktopOnly": "{{venues}} にはデスクトップアプリが必要です。"
+    "desktopOnly": "{{venues}} にはデスクトップアプリが必要です。",
+    "viewFocus": "フォーカス",
+    "viewBoard": "ボード",
+    "focus": {
+      "assetNext": "次",
+      "toBeat": "目標価格",
+      "now": "現在",
+      "closesIn": "残り",
+      "settlesOn": "{{source}} で決済",
+      "model": "モデル {{value}}",
+      "edge": "エッジ {{value}}",
+      "payout": "{{value}}× の払い戻し",
+      "noBook": "板なし",
+      "chartWaiting": "ティックを待っています",
+      "tapeLabel": "{{venue}} のフロー",
+      "tapeWaiting": "約定を待っています",
+      "noWindowTitle": "開いているウィンドウがありません",
+      "noWindowBody": "この銘柄と期間で現在取引されているものはありません。次のウィンドウは取引所のスケジュールに従って開きます。",
+      "flowBought": "{{value}} 買い",
+      "flowSold": "{{value}} 売り",
+      "printBuy": "買",
+      "printSell": "売",
+      "oddsStale": "オッズが古い"
+    },
+    "oddsStaleTooltip": "取引所のオッズが更新されていないため、ライブ価格に対するエッジは意味を持ちません。"
   },
   "onboarding": {
     "phase": {

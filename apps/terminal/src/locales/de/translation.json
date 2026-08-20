@@ -718,7 +718,31 @@
     "referenceTooltip": "Abrechnung über {{source}}.",
     "modelNote": "Das Modell ist eine driftfreie Diffusion mit der zuletzt realisierten Volatilität. Gebühren, Spread und Ordertiefe bleiben unberücksichtigt.",
     "approxNote": "≈ kennzeichnet eine Referenz aus der Stunde, die den Ein-Minuten-Abrechnungspreis der Börse enthält.",
-    "desktopOnly": "{{venues}} benötigt die Desktop-App."
+    "desktopOnly": "{{venues}} benötigt die Desktop-App.",
+    "viewFocus": "Fokus",
+    "viewBoard": "Tabelle",
+    "focus": {
+      "assetNext": "Nächstes",
+      "toBeat": "Zu schlagen",
+      "now": "Jetzt",
+      "closesIn": "Schließt in",
+      "settlesOn": "wird auf {{source}} abgerechnet",
+      "model": "Modell {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "zahlt {{value}}×",
+      "noBook": "kein Buch",
+      "chartWaiting": "Warten auf den Tape",
+      "tapeLabel": "{{venue}} Flow",
+      "tapeWaiting": "Warten auf Prints",
+      "noWindowTitle": "Kein Fenster offen",
+      "noWindowBody": "Für dieses Asset und diesen Horizont wird gerade nichts gehandelt. Das nächste Fenster öffnet nach dem Zeitplan der Börse.",
+      "flowBought": "{{value}} gekauft",
+      "flowSold": "{{value}} verkauft",
+      "printBuy": "KAUF",
+      "printSell": "VERK",
+      "oddsStale": "Quoten veraltet"
+    },
+    "oddsStaleTooltip": "Die Quoten der Börse wurden nicht aktualisiert, ein Edge gegen einen Live-Kurs wäre bedeutungslos."
   },
   "onboarding": {
     "phase": {

@@ -718,7 +718,31 @@
     "referenceTooltip": "依 {{source}} 結算。",
     "modelNote": "模型採用近期已實現波動率下的無漂移擴散，未計入手續費、買賣價差與盤口深度。",
     "approxNote": "≈ 表示該基準取自包含平台一分鐘結算價的那根小時線。",
-    "desktopOnly": "{{venues}} 需要桌面應用程式。"
+    "desktopOnly": "{{venues}} 需要桌面應用程式。",
+    "viewFocus": "聚焦",
+    "viewBoard": "看板",
+    "focus": {
+      "assetNext": "最近",
+      "toBeat": "目標價",
+      "now": "現價",
+      "closesIn": "剩餘",
+      "settlesOn": "依 {{source}} 結算",
+      "model": "模型 {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "賠付 {{value}}×",
+      "noBook": "暫無盤口",
+      "chartWaiting": "等待成交資料",
+      "tapeLabel": "{{venue}} 資金流",
+      "tapeWaiting": "等待成交",
+      "noWindowTitle": "沒有開放的視窗",
+      "noWindowBody": "該標的與週期目前沒有交易。下一個視窗依交易所自己的時間表開放。",
+      "flowBought": "買入 {{value}}",
+      "flowSold": "賣出 {{value}}",
+      "printBuy": "買",
+      "printSell": "賣",
+      "oddsStale": "賠率已過期"
+    },
+    "oddsStaleTooltip": "該平台的賠率尚未重新整理，與即時價格比較得出的 edge 沒有意義。"
   },
   "onboarding": {
     "phase": {
