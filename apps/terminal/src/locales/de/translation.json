@@ -693,6 +693,34 @@
     "emptyBody": "Heute hat sich kein Kontrakt weit genug bewegt für eine eigene Zeile.",
     "noChangeFrom": "Nicht bewertet: {{venues}} veröffentlicht keine 24-h-Bewegung."
   },
+  "cryptoUpDown": {
+    "subtitle": "Wiederkehrende Fenster, beide Börsen",
+    "windowCount_one": "{{count}} offenes Fenster",
+    "windowCount_other": "{{count}} offene Fenster",
+    "loading": "Offene Fenster werden gelesen",
+    "noVenuesBody": "Installiere Kalshi oder Polymarket, um deren wiederkehrende Auf-oder-Ab-Kontrakte zu sehen.",
+    "emptyTitle": "Keine offenen Fenster",
+    "emptyBody": "Derzeit handelt keine der beiden Börsen einen Krypto-Auf-oder-Ab-Kontrakt.",
+    "colContract": "Kontrakt",
+    "colCloses": "Schluss",
+    "colReference": "Referenz",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Markt",
+    "colModel": "Modell",
+    "colEdge": "Vorteil",
+    "horizonAll": "Alle",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Driftfreie Diffusion bei {{sigma}}% annualisierter realisierter Volatilität, aus den Stundenschlusskursen der letzten fünf Tage.",
+    "referenceTooltip": "Abrechnung über {{source}}.",
+    "modelNote": "Das Modell ist eine driftfreie Diffusion mit der zuletzt realisierten Volatilität. Gebühren, Spread und Ordertiefe bleiben unberücksichtigt.",
+    "approxNote": "≈ kennzeichnet eine Referenz aus der Stunde, die den Ein-Minuten-Abrechnungspreis der Börse enthält.",
+    "desktopOnly": "{{venues}} benötigt die Desktop-App."
+  },
   "onboarding": {
     "phase": {
       "ready": "Bereit"
@@ -3350,6 +3378,7 @@
     "riskControls": "Risikokontrollen",
     "categories": "Kategorien",
     "eventBoard": "Event-Board",
+    "cryptoUpDown": "Krypto Auf/Ab",
     "oddsMovers": "Quoten-Movers",
     "resolvingSoon": "Kurz vor Abrechnung",
     "eventHeader": "Event-Header",
@@ -3422,6 +3451,7 @@
     "riskControls": "Dein Tageslimit für Verluste, Trade-Anzahl, Positionsgröße und Notausschalter, editierbar dort, wo der Trade passiert",
     "categories": "Jede Event-Kategorie mit einer laufenden Kontraktzahl, sodass sich das Board mit einem Klick eingrenzt",
     "eventBoard": "Laufende Event-Märkte als Karten: die Frage, Ja und Nein in Cent, Volumen, und wann sie abgerechnet werden",
+    "cryptoUpDown": "Die wiederkehrenden Auf-oder-Ab-Fenster für BTC, ETH und SOL auf Kalshi und Polymarket, bewertet gegen den Spotmarkt, auf dem sie abrechnen",
     "oddsMovers": "Die Kontrakte, deren Wahrscheinlichkeit sich heute am stärksten bewegt hat, mit der Bewegung in Punkten",
     "resolvingSoon": "Kontrakte kurz vor der Abrechnung, sortiert nach der Uhr statt nach Volumen",
     "eventHeader": "Die Frage, wann und wie sie abgerechnet wird, und die Wahrscheinlichkeit, die der Markt gerade einpreist",
@@ -4860,6 +4890,12 @@
         "tagline": "Jeder Teilnehmer bepreist, der Overround offen ausgewiesen.",
         "description": "Für ein Event mit einem Feld statt zwei Seiten: der Header mit der Teilnehmerzahl und dem Overround, ein Chart mit gestapelten Anteilen, und eine Ladder, die jeden Teilnehmer bepreist und Einsätze direkt aus der Zeile erlaubt. Der Basket summiert sich zum Overround, sodass das Abdecken des gesamten Felds sichtbar kein geschenktes Geld ist.",
         "menuLabel": "Rennen"
+      },
+      "prediction-crypto-updown": {
+        "name": "Krypto Auf/Ab",
+        "tagline": "Jedes offene Fenster, gegen den Kurs, auf dem es abrechnet.",
+        "description": "Die wiederkehrenden Krypto-Kontrakte beider Börsen in einer Tabelle: Kalshi eröffnet alle fünfzehn Minuten ein Fenster auf fünf Assets, Polymarket ein stündliches und ein tägliches auf vier. Jede Zeile trägt die Abrechnungsreferenz, den Live-Spotkurs, den Abstand dazwischen und das, was eine driftfreie Diffusion mit der zuletzt realisierten Volatilität aus der Restlaufzeit macht. So haben die Quoten etwas, woran sie gemessen werden können.",
+        "menuLabel": "Krypto Auf/Ab"
       }
     },
     "traderTypes": {

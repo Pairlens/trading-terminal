@@ -693,6 +693,34 @@
     "emptyBody": "今天没有合约变动到值得单列一行。",
     "noChangeFrom": "未参与排名：{{venues}} 不公布 24 小时变动。"
   },
+  "cryptoUpDown": {
+    "subtitle": "循环窗口，两家平台",
+    "windowCount_one": "{{count}} 个未结算窗口",
+    "windowCount_other": "{{count}} 个未结算窗口",
+    "loading": "正在读取未结算窗口",
+    "noVenuesBody": "安装 Kalshi 或 Polymarket 即可查看它们循环开出的涨跌合约。",
+    "emptyTitle": "没有未结算窗口",
+    "emptyBody": "目前两家平台都没有正在交易的加密涨跌合约。",
+    "colContract": "合约",
+    "colCloses": "结束",
+    "colReference": "基准",
+    "colSpot": "现货",
+    "colDistance": "距离",
+    "colMarket": "市场",
+    "colModel": "模型",
+    "colEdge": "价差",
+    "horizonAll": "全部",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "按最近五天小时收盘价算出的年化已实现波动率 {{sigma}}%，做无漂移扩散。",
+    "referenceTooltip": "按 {{source}} 结算。",
+    "modelNote": "模型采用近期已实现波动率下的无漂移扩散，未计入手续费、买卖价差和盘口深度。",
+    "approxNote": "≈ 表示该基准取自包含平台一分钟结算价的那根小时线。",
+    "desktopOnly": "{{venues}} 需要桌面应用。"
+  },
   "onboarding": {
     "phase": {
       "ready": "已就绪"
@@ -3350,6 +3378,7 @@
     "riskControls": "风险管控",
     "categories": "分类",
     "eventBoard": "事件看板",
+    "cryptoUpDown": "加密涨跌",
     "oddsMovers": "概率变动",
     "resolvingSoon": "即将结算",
     "eventHeader": "事件信息",
@@ -3422,6 +3451,7 @@
     "riskControls": "每日亏损上限、交易笔数、仓位规模和紧急停止开关，就在交易发生的地方直接编辑",
     "categories": "所有事件分类均附带实时合约数量，一键即可缩小看板范围",
     "eventBoard": "以卡片形式展示进行中的事件市场：问题、以美分计价的 Yes 和 No、成交量与结算时间",
+    "cryptoUpDown": "Kalshi 与 Polymarket 上循环开出的 BTC、ETH、SOL 涨跌窗口，按其结算所用的现货市场定价",
     "oddsMovers": "今天概率变动最大的合约，变动幅度以点数表示",
     "resolvingSoon": "按结算时间而非成交量排序，展示最接近结算的合约",
     "eventHeader": "问题内容、结算的时间与方式，以及市场当前定价的概率",
@@ -4860,6 +4890,12 @@
         "tagline": "每个结果都标价，超额概率也一并列明。",
         "description": "面向多个候选而非二选一的事件：头部显示结果数量与超额概率，一个堆叠份额图表，以及为每个结果标价、可直接在行内下注的阶梯。篮子的总价等于超额概率部分，所以扫光全部结果显然不是免费的钱。",
         "menuLabel": "竞猜"
+      },
+      "prediction-crypto-updown": {
+        "name": "加密涨跌",
+        "tagline": "每个未结算窗口，都对着它结算所用的价格。",
+        "description": "把两家平台循环开出的加密合约放进一张表：Kalshi 在五个币种上开十五分钟窗口，Polymarket 在四个币种上开小时和日窗口。每一行都带着结算基准、实时现货、两者之间的距离，以及近期已实现波动率下的无漂移扩散从剩余时间中得出的概率，让赔率有了可比对象。",
+        "menuLabel": "加密涨跌"
       }
     },
     "traderTypes": {

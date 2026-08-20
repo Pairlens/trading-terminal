@@ -42,6 +42,7 @@ import type {
   PredictionSlot,
   PredictionVenueConfig,
 } from '../types'
+import type { UpDownSeriesSpec } from '../crypto-updown'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -157,6 +158,106 @@ export async function browsePolymarketEvents(
   return events
 }
 
+/**
+ * Polymarket's recurring crypto up/down conveyor.
+ *
+ * Eight series, four assets × two horizons. The slugs are gamma's own and are
+ * not derivable from the asset — 'btc' and 'eth' are abbreviated, 'solana' and
+ * 'xrp' are not — which is the whole reason the slate is declared.
+ *
+ * Both horizons settle on Binance, and the venue's rules name the candle
+ * rather than a price:
+ *
+ *  - **Hourly** resolves Up when the CLOSE of the BTC/USDT 1-hour candle
+ *    beginning at the titled hour is at or above its OPEN. The open of that
+ *    candle is the reference exactly, so a terminal holding the same feed can
+ *    state the distance to it without qualification.
+ *  - **Daily** compares the 1-MINUTE closes at noon ET on two consecutive
+ *    days. The hour that begins at noon ET contains the reference minute but
+ *    is not it, so the row is marked inexact and the pane says so.
+ */
+const POLYMARKET_UPDOWN_SERIES: Array<UpDownSeriesSpec> = (
+  [
+    ['BTC', 'btc', 'BTC-USDT'],
+    ['ETH', 'eth', 'ETH-USDT'],
+    ['SOL', 'solana', 'SOL-USDT'],
+    ['XRP', 'xrp', 'XRP-USDT'],
+  ] as const
+).flatMap(([asset, slug, spotPair]) => [
+  {
+    asset,
+    spotPair,
+    horizon: 'hourly' as const,
+    settlementSource: `Binance ${spotPair.replace('-', '/')}`,
+    scope: { series_slug: `${slug}-up-or-down-hourly` },
+    windowMs: 60 * 60_000,
+    referenceBasis: 'candle-open' as const,
+    referenceTimeframe: '1h',
+    referenceExact: true,
+  },
+  {
+    asset,
+    spotPair,
+    horizon: 'daily' as const,
+    settlementSource: `Binance ${spotPair.replace('-', '/')}`,
+    scope: { series_slug: `${slug}-up-or-down-daily` },
+    windowMs: 24 * 60 * 60_000,
+    referenceBasis: 'candle-open' as const,
+    // The hour containing the venue's one-minute reference. See above.
+    referenceTimeframe: '1h',
+    referenceExact: false,
+  },
+])
+
+/**
+ * One up/down series, through the venue's own listing endpoint.
+ *
+ * Same route as the unscoped browse and for the same reason — gamma declares
+ * no `eventScopeParams`, so a series is not something `fetchEvents` can be
+ * asked for — with `series_slug` riding along in the params gamma forwards
+ * verbatim.
+ *
+ * Ordering stays the listing default (24 h volume) rather than newest. The
+ * window that is TRADING is the busiest one by a wide margin, so volume puts
+ * it on the first page; ordering by start date would return the furthest-out
+ * placeholders and leave the live contract off the board entirely.
+ */
+export async function fetchPolymarketUpDownSeries(
+  exchange: PredictionExchangeLike,
+  spec: UpDownSeriesSpec,
+  limit: number,
+): Promise<Array<Record<string, unknown>>> {
+  const list = exchange.fetchRawEventsList
+  const parseMarkets = exchange.parseEventToMarkets
+  const parseEvent = exchange.parseEvent
+  if (
+    typeof list !== 'function' ||
+    typeof parseMarkets !== 'function' ||
+    typeof parseEvent !== 'function'
+  ) {
+    return []
+  }
+
+  const raw = await list.call(exchange, {
+    ...spec.scope,
+    limit,
+    status: 'active',
+  })
+  if (!exchange.markets) {
+    exchange.markets = exchange.createSafeDictionary?.() ?? {}
+  }
+  const events: Array<Record<string, unknown>> = []
+  for (const rawEvent of raw) {
+    for (const market of parseMarkets.call(exchange, rawEvent)) {
+      const handle = market['market']
+      if (typeof handle === 'string') exchange.markets[handle] = market
+    }
+    events.push(parseEvent.call(exchange, rawEvent))
+  }
+  exchange.populateOutcomes?.()
+  return events
+}
+
 export const polymarketPredictionVenue: PredictionVenueConfig = {
   exchangeId: 'polymarket',
   marketId: 'polymarket',
@@ -196,6 +297,10 @@ export const polymarketPredictionVenue: PredictionVenueConfig = {
   // No scope selector can express an unqueried browse here, so it goes to the
   // venue's own trending listing instead — see browsePolymarketEvents.
   browseEvents: browsePolymarketEvents,
+  cryptoUpDown: {
+    series: POLYMARKET_UPDOWN_SERIES,
+    fetchSeries: fetchPolymarketUpDownSeries,
+  },
   // The book carries hundreds of levels on a liquid outcome; the depth pane
   // renders a fraction of that and the copy cost is per frame.
   orderbookDepth: 50,

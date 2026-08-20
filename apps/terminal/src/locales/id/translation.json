@@ -693,6 +693,34 @@
     "emptyBody": "Hari ini tidak ada kontrak yang bergerak cukup jauh untuk ditampilkan.",
     "noChangeFrom": "Tidak diperingkat: {{venues}} tidak mempublikasikan pergerakan 24 jam."
   },
+  "cryptoUpDown": {
+    "subtitle": "Jendela berulang, kedua bursa",
+    "windowCount_one": "{{count}} jendela terbuka",
+    "windowCount_other": "{{count}} jendela terbuka",
+    "loading": "Membaca jendela yang terbuka",
+    "noVenuesBody": "Pasang Kalshi atau Polymarket untuk melihat kontrak naik atau turun berulang mereka.",
+    "emptyTitle": "Tidak ada jendela terbuka",
+    "emptyBody": "Saat ini tidak ada bursa yang memperdagangkan kontrak kripto naik atau turun.",
+    "colContract": "Kontrak",
+    "colCloses": "Tutup",
+    "colReference": "Acuan",
+    "colSpot": "Spot",
+    "colDistance": "Jarak",
+    "colMarket": "Pasar",
+    "colModel": "Model",
+    "colEdge": "Selisih",
+    "horizonAll": "Semua",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Difusi tanpa drift pada volatilitas terealisasi tahunan {{sigma}}%, dari penutupan per jam lima hari terakhir.",
+    "referenceTooltip": "Diselesaikan pada {{source}}.",
+    "modelNote": "Model adalah difusi tanpa drift pada volatilitas terealisasi terkini. Model ini mengabaikan biaya, spread, dan kedalaman order book.",
+    "approxNote": "≈ menandai acuan yang dibaca dari jam yang memuat harga penyelesaian satu menit milik bursa.",
+    "desktopOnly": "{{venues}} memerlukan aplikasi desktop."
+  },
   "onboarding": {
     "phase": {
       "ready": "Siap"
@@ -3350,6 +3378,7 @@
     "riskControls": "Kontrol Risiko",
     "categories": "Kategori",
     "eventBoard": "Papan Acara",
+    "cryptoUpDown": "Kripto Naik/Turun",
     "oddsMovers": "Pergerakan Peluang",
     "resolvingSoon": "Segera Selesai",
     "eventHeader": "Header Acara",
@@ -3422,6 +3451,7 @@
     "riskControls": "Batas kerugian harian, jumlah trade, ukuran posisi, dan kill switch Anda, dapat diedit langsung di tempat trade terjadi",
     "categories": "Setiap kategori acara dengan jumlah kontrak aktif secara live, sehingga papan menyempit hanya dengan satu klik",
     "eventBoard": "Market acara langsung dalam bentuk kartu: pertanyaannya, Yes dan No dalam sen, volume, dan kapan diselesaikan",
+    "cryptoUpDown": "Jendela naik atau turun berulang untuk BTC, ETH, dan SOL di Kalshi dan Polymarket, dinilai terhadap pasar spot tempat kontraknya diselesaikan",
     "oddsMovers": "Kontrak yang probabilitasnya paling banyak bergerak hari ini, pergerakan dinyatakan dalam poin",
     "resolvingSoon": "Kontrak paling dekat dengan penyelesaian, diurutkan berdasarkan waktu, bukan volume",
     "eventHeader": "Pertanyaannya, kapan dan bagaimana diselesaikan, dan probabilitas yang sedang diberi harga oleh market saat ini",
@@ -4860,6 +4890,12 @@
         "tagline": "Setiap hasil diberi harga, dan overround dinyatakan.",
         "description": "Untuk acara dengan banyak peserta, bukan sekadar dua sisi: header dengan jumlah hasil dan overround, chart saham bertumpuk, dan sebuah peringkat yang memberi harga setiap hasil serta menerima stake langsung dari barisnya. Total keranjang sama persis dengan overround, jadi jelas terlihat menyapu semua hasil bukan uang gratis.",
         "menuLabel": "Balapan"
+      },
+      "prediction-crypto-updown": {
+        "name": "Kripto Naik/Turun",
+        "tagline": "Setiap jendela terbuka, terhadap harga tempatnya diselesaikan.",
+        "description": "Kontrak kripto berulang dari kedua bursa dalam satu tabel: Kalshi membuka jendela lima belas menit pada lima aset, Polymarket satu per jam dan satu per hari pada empat aset. Setiap baris memuat acuan penyelesaian, spot langsung, jarak di antara keduanya, dan hasil difusi tanpa drift pada volatilitas terealisasi terkini atas sisa waktu, sehingga peluangnya punya pembanding.",
+        "menuLabel": "Kripto Naik/Turun"
       }
     },
     "traderTypes": {

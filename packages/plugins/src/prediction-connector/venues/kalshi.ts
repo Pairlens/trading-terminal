@@ -38,9 +38,11 @@ import { createPredictionConnectorManifest } from '../manifest'
 import { createPredictionConnectorPlugin } from '../index'
 import type {
   PredictionExchangeCtor,
+  PredictionExchangeLike,
   PredictionSlot,
   PredictionVenueConfig,
 } from '../types'
+import type { UpDownSeriesSpec } from '../crypto-updown'
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type {
   PluginInstance,
@@ -87,6 +89,68 @@ export function normalizeKalshiPem(raw: string): string {
  */
 export function kalshiTradeGeoCheck(_slot: PredictionSlot): void {
   // Intentionally permissive — see the doc comment above.
+}
+
+/**
+ * Kalshi's recurring crypto up/down conveyor: the fifteen-minute series.
+ *
+ * Five assets, one window each, a new one every quarter hour. This is the
+ * whole of Kalshi's up/down slate and the exclusion is deliberate: the venue's
+ * hourly "Directional" series (`KXBTCD`, `KXSOLD`, …) reads like the same
+ * product and is not one — it is a strike LADDER, up to three hundred markets
+ * on a single question, and the nearest-the-money row of a ladder is not an
+ * up/down contract. `classifyUpDown` refuses a multi-market event anyway, so a
+ * ladder that slipped into this list would drop out rather than mislead, but
+ * it would still cost a request per browse.
+ *
+ * The target price is published on the market (`floor_strike`, echoed in
+ * `yes_sub_title` as "Target Price: $69,506.94"), so these rows need no candle
+ * read at all — the reference is exact and comes from the venue. Settlement is
+ * the average of the sixty CF Benchmarks RTI prints before the close, measured
+ * against the same average before the open.
+ */
+const KALSHI_UPDOWN_SERIES: Array<UpDownSeriesSpec> = (
+  [
+    ['BTC', 'KXBTC15M', 'BTC-USDT'],
+    ['ETH', 'KXETH15M', 'ETH-USDT'],
+    ['SOL', 'KXSOL15M', 'SOL-USDT'],
+    ['XRP', 'KXXRP15M', 'XRP-USDT'],
+    ['DOGE', 'KXDOGE15M', 'DOGE-USDT'],
+  ] as const
+).map(([asset, ticker, spotPair]) => ({
+  asset,
+  // What a terminal QUOTES beside the odds, not what Kalshi settles on: the
+  // venue settles on a CF Benchmarks index, which no exchange lists and which
+  // tracks this pair to well inside a fifteen-minute range.
+  spotPair,
+  horizon: '15m' as const,
+  settlementSource: 'CF Benchmarks RTI',
+  scope: { series_ticker: ticker },
+  windowMs: 15 * 60_000,
+  // Never reached — the strike is always published — but declared so a series
+  // that stopped publishing one degrades to a candle read rather than to a
+  // blank column.
+  referenceBasis: 'venue' as const,
+  referenceExact: true,
+}))
+
+/**
+ * One up/down series, by series ticker.
+ *
+ * `status` is deliberately NOT sent. ccxt already asks Kalshi for open events
+ * server-side (`defaultEventStatus`), and the same value survives into its
+ * client-side `applyEventFetchParams` pass where it is compared against a
+ * parsed status the events endpoint never sets — measured 2026-08-20, passing
+ * `status: 'open'` turned the one live BTC window into zero rows while the
+ * identical call without it returned it.
+ */
+export async function fetchKalshiUpDownSeries(
+  exchange: PredictionExchangeLike,
+  spec: UpDownSeriesSpec,
+  limit: number,
+): Promise<Array<Record<string, unknown>>> {
+  if (typeof exchange.fetchEvents !== 'function') return []
+  return exchange.fetchEvents({ ...spec.scope, limit })
 }
 
 export const KALSHI_ADAPTER_INFO: MarketAdapterInfo = {
@@ -168,6 +232,10 @@ export const kalshiPredictionVenue: PredictionVenueConfig = {
    * that returned nothing would read as a broken pane.
    */
   defaultEventScope: (limit) => ({ category: 'Economics', limit }),
+  cryptoUpDown: {
+    series: KALSHI_UPDOWN_SERIES,
+    fetchSeries: fetchKalshiUpDownSeries,
+  },
   /**
    * Four independent polls per open pair, against a 200 ms rate limiter.
    *

@@ -24,6 +24,11 @@ import {
   marketRules,
   outcomeChange24h,
 } from './derived'
+import {
+  UPDOWN_SERIES_LIMIT,
+  classifyUpDown,
+  openWindows,
+} from './crypto-updown'
 import type {
   Instrument,
   InstrumentPage,
@@ -64,6 +69,13 @@ export async function fetchPredictionEvents(
   ctx: PredictionEventsContext,
   query: PredictionEventsQuery,
 ): Promise<PredictionEventsResponse> {
+  // A named slate, before any scope is built: `crypto-updown` is a fan-out
+  // over the venue's declared series rather than one call with a selector, so
+  // there is nothing here for `buildScope` to express.
+  if (query.preset === 'crypto-updown') {
+    return fetchCryptoUpDownEvents(exchange, ctx)
+  }
+
   const limit = clampLimit(query.limit, DEFAULT_EVENTS_LIMIT)
   const text = query.query?.trim()
   const category = query.category?.trim()
@@ -103,6 +115,53 @@ export async function fetchPredictionEvents(
   // One persist for the whole browse rather than one per key.
   ctx.resolver.flush()
   return { market: ctx.venue.marketId, events, ts: Date.now() }
+}
+
+/**
+ * Every up/down window the venue currently has open, across its whole slate.
+ *
+ * One request per declared series, run together: the series are independent
+ * scopes and a board that waited for BTC before asking about ETH would take as
+ * long as the sum of them. A series that fails is dropped rather than failing
+ * the slate — one asset's listing being down is not a reason to blank the
+ * board, and the row simply is not there.
+ *
+ * Events that fail to classify are dropped too, silently and on purpose. A
+ * series can return a settled window, a placeholder with no book, or (if a
+ * venue reshapes a product) a ladder; none of those is an up/down row, and
+ * showing them with empty columns would be worse than showing fewer rows.
+ */
+export async function fetchCryptoUpDownEvents(
+  exchange: PredictionExchangeLike,
+  ctx: PredictionEventsContext,
+): Promise<PredictionEventsResponse> {
+  const config = ctx.venue.cryptoUpDown
+  const ts = Date.now()
+  if (!config || config.series.length === 0) {
+    return { market: ctx.venue.marketId, events: [], ts }
+  }
+
+  const settled = await Promise.allSettled(
+    config.series.map((spec) =>
+      config.fetchSeries(exchange, spec, UPDOWN_SERIES_LIMIT),
+    ),
+  )
+
+  const events: Array<PredictionEventSummary> = []
+  for (const [index, result] of settled.entries()) {
+    if (result.status !== 'fulfilled') continue
+    const spec = config.series[index]
+    for (const entry of result.value) {
+      const summary = toEventSummary(entry, ctx)
+      if (!summary) continue
+      const upDown = classifyUpDown(entry, summary, spec)
+      if (!upDown) continue
+      events.push({ ...summary, upDown })
+    }
+  }
+  // One persist for the whole slate — same reason the browse flushes once.
+  ctx.resolver.flush()
+  return { market: ctx.venue.marketId, events: openWindows(events, ts), ts }
 }
 
 /**

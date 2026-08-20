@@ -693,6 +693,34 @@
     "emptyBody": "Hôm nay không hợp đồng nào biến động đủ mạnh để có một dòng riêng.",
     "noChangeFrom": "Không xếp hạng: {{venues}} không công bố biến động 24 giờ."
   },
+  "cryptoUpDown": {
+    "subtitle": "Cửa sổ lặp lại, cả hai sàn",
+    "windowCount_one": "{{count}} cửa sổ đang mở",
+    "windowCount_other": "{{count}} cửa sổ đang mở",
+    "loading": "Đang đọc các cửa sổ đang mở",
+    "noVenuesBody": "Cài Kalshi hoặc Polymarket để xem các hợp đồng lên hoặc xuống lặp lại của họ.",
+    "emptyTitle": "Không có cửa sổ nào mở",
+    "emptyBody": "Hiện không sàn nào có hợp đồng crypto lên hoặc xuống đang giao dịch.",
+    "colContract": "Hợp đồng",
+    "colCloses": "Đóng",
+    "colReference": "Tham chiếu",
+    "colSpot": "Giao ngay",
+    "colDistance": "K.cách",
+    "colMarket": "Thị trường",
+    "colModel": "Mô hình",
+    "colEdge": "Chênh lệch",
+    "horizonAll": "Tất cả",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Khuếch tán không trôi ở mức biến động thực tế quy năm {{sigma}}%, tính từ giá đóng cửa theo giờ của năm ngày gần nhất.",
+    "referenceTooltip": "Thanh toán theo {{source}}.",
+    "modelNote": "Mô hình là một khuếch tán không trôi theo biến động thực tế gần đây. Nó bỏ qua phí, chênh lệch giá mua bán và độ sâu sổ lệnh.",
+    "approxNote": "≈ đánh dấu tham chiếu đọc từ khung giờ chứa giá thanh toán một phút của sàn.",
+    "desktopOnly": "{{venues}} cần ứng dụng máy tính."
+  },
   "onboarding": {
     "phase": {
       "ready": "Sẵn sàng"
@@ -3350,6 +3378,7 @@
     "riskControls": "Kiểm soát rủi ro",
     "categories": "Thể loại",
     "eventBoard": "Bảng sự kiện",
+    "cryptoUpDown": "Crypto Lên/Xuống",
     "oddsMovers": "Biến động tỷ lệ",
     "resolvingSoon": "Sắp tất toán",
     "eventHeader": "Tiêu đề sự kiện",
@@ -3422,6 +3451,7 @@
     "riskControls": "Hạn mức lỗ hằng ngày, số lệnh, quy mô vị thế và công tắc ngắt khẩn cấp của bạn, chỉnh sửa được ngay tại nơi giao dịch diễn ra",
     "categories": "Mọi danh mục sự kiện cùng số hợp đồng đang hoạt động, để bảng thu hẹp chỉ trong một cú nhấp",
     "eventBoard": "Các thị trường sự kiện đang mở dưới dạng thẻ: câu hỏi, Có và Không tính theo cent, khối lượng, và thời điểm tất toán",
+    "cryptoUpDown": "Các cửa sổ lên hoặc xuống lặp lại của BTC, ETH và SOL trên Kalshi và Polymarket, được định giá theo thị trường giao ngay mà chúng thanh toán",
     "oddsMovers": "Các hợp đồng có xác suất biến động mạnh nhất hôm nay, mức thay đổi tính theo điểm",
     "resolvingSoon": "Các hợp đồng gần tất toán nhất, sắp xếp theo thời gian còn lại thay vì khối lượng",
     "eventHeader": "Câu hỏi, thời điểm và cách nó tất toán, và xác suất mà thị trường đang định giá ngay lúc này",
@@ -4860,6 +4890,12 @@
         "tagline": "Mọi kết quả được định giá, và overround được nêu rõ.",
         "description": "Dành cho một sự kiện có nhiều lựa chọn thay vì chỉ hai phía: phần đầu trang với số lượng kết quả và overround, một biểu đồ cổ phần xếp chồng, và một bảng xếp hạng định giá mọi kết quả và cho đặt cược ngay từ hàng. Giỏ cược cộng lại đúng bằng overround, nên việc gom hết các lựa chọn rõ ràng không phải tiền miễn phí.",
         "menuLabel": "Đua"
+      },
+      "prediction-crypto-updown": {
+        "name": "Crypto Lên/Xuống",
+        "tagline": "Mọi cửa sổ đang mở, đối chiếu với giá nó thanh toán.",
+        "description": "Các hợp đồng crypto lặp lại của cả hai sàn trong một bảng: Kalshi mở cửa sổ mười lăm phút trên năm tài sản, Polymarket mở theo giờ và theo ngày trên bốn tài sản. Mỗi dòng có giá tham chiếu thanh toán, giá giao ngay trực tiếp, khoảng cách giữa chúng và kết quả mà một khuếch tán không trôi theo biến động thực tế gần đây rút ra từ thời gian còn lại, để tỷ lệ cược có thứ để so sánh.",
+        "menuLabel": "Crypto Lên/Xuống"
       }
     },
     "traderTypes": {

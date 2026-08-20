@@ -72,7 +72,20 @@ export {
   normalizePredictionPositions,
   type NormalizedPredictionPosition,
 } from './orders'
-export { fetchPredictionEvents, searchPredictionInstruments } from './events'
+export {
+  fetchCryptoUpDownEvents,
+  fetchPredictionEvents,
+  searchPredictionInstruments,
+} from './events'
+export {
+  UPDOWN_SERIES_LIMIT,
+  classifyUpDown,
+  openWindows,
+  sideOf,
+  type CryptoUpDownConfig,
+  type UpDownSeriesFetch,
+  type UpDownSeriesSpec,
+} from './crypto-updown'
 export * from './parser'
 
 /** Candles returned by `market-data:history` when the caller passes no limit. */
@@ -260,6 +273,9 @@ export function createPredictionConnectorPlugin(
         exchange,
         { venue, resolver },
         {
+          ...(p['preset'] === 'crypto-updown'
+            ? { preset: 'crypto-updown' as const }
+            : {}),
           ...(typeof p['eventId'] === 'string'
             ? { eventId: p['eventId'] }
             : {}),

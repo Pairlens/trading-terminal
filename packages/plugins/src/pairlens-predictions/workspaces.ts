@@ -240,9 +240,20 @@ export const PREDICTION_DISCOVERY_LAYOUT = {
       id: 'col-board',
       widthPercent: 66,
       cells: [
+        // The recurring crypto windows lead, above the general board rather
+        // than behind a tab on it. They are the busiest contracts either venue
+        // lists and the only ones a trader comes back to on a schedule — a
+        // board that made you go looking for the thing that opens every
+        // fifteen minutes would have the wrong thing on screen.
+        {
+          id: 'cell-crypto-updown',
+          heightPercent: 38,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-crypto-updown', type: 'crypto-updown' }],
+        },
         {
           id: 'cell-event-board',
-          heightPercent: 100,
+          heightPercent: 62,
           activeTabIndex: 0,
           panes: [{ id: 'pane-event-board', type: 'event-board' }],
         },
@@ -263,6 +274,62 @@ export const PREDICTION_DISCOVERY_LAYOUT = {
           heightPercent: 48,
           activeTabIndex: 0,
           panes: [{ id: 'pane-resolving-soon', type: 'resolving-soon' }],
+        },
+      ],
+    },
+  ],
+} satisfies ContributedWorkspaceLayout
+
+/**
+ * Crypto Up/Down — the board for the one prediction product that never stops.
+ *
+ * Both venues run a conveyor of "will BTC be higher at the close than it was
+ * at the open" contracts: Kalshi a fifteen-minute window on five assets,
+ * Polymarket an hourly and a daily one on four. They settle on spot crypto,
+ * which is the only prediction product this terminal can price better than the
+ * venue that lists it — the scanner puts the settlement reference and the live
+ * tape on the same row, and neither venue's own site carries both.
+ *
+ * So the scanner takes the whole left column rather than a strip of it: eight
+ * columns of numbers per row, and the comparison it exists for is BETWEEN
+ * rows, not within one. Five windows close on the same boundary and the
+ * question is which of them the market has wrong.
+ *
+ * The rail is the spot side and the venues' own movers, in that order. A
+ * watchlist beside the scanner is not decoration: the model column is only as
+ * good as the volatility behind it, and the chart the reference came from is
+ * the sanity check on both.
+ */
+export const PREDICTION_CRYPTO_UPDOWN_LAYOUT = {
+  version: 1,
+  columns: [
+    {
+      id: 'col-scanner',
+      widthPercent: 68,
+      cells: [
+        {
+          id: 'cell-crypto-updown',
+          heightPercent: 100,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-crypto-updown', type: 'crypto-updown' }],
+        },
+      ],
+    },
+    {
+      id: 'col-rail',
+      widthPercent: 32,
+      cells: [
+        {
+          id: 'cell-watchlist',
+          heightPercent: 50,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-watchlist', type: 'watchlist' }],
+        },
+        {
+          id: 'cell-odds-movers',
+          heightPercent: 50,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-odds-movers', type: 'odds-movers' }],
         },
       ],
     },
@@ -317,6 +384,24 @@ export const PREDICTIONS_WORKSPACES: Array<ContributedWorkspace> = [
     },
     tags: ['discovery', 'predictions', 'events'],
     layout: PREDICTION_DISCOVERY_LAYOUT,
+  },
+  {
+    id: 'template:prediction-crypto-updown',
+    name: 'Crypto Up/Down',
+    menuLabel: 'Crypto Up/Down',
+    context: 'discovery',
+    routeMenu: true,
+    icon: 'Timer',
+    tagline: 'Every open window, against the tape it settles on.',
+    description:
+      'The recurring crypto contracts on both venues in one table: Kalshi opens a fifteen-minute window on five assets, Polymarket an hourly and a daily one on four. Each row carries the settlement reference, live spot, the distance between them and what a driftless diffusion at recent realized volatility makes of the time remaining, so the odds have something to be compared against. Needs a prediction venue; the spot columns need any CEX connector.',
+    facets: {
+      traderTypes: ['scalper', 'day-trader', 'news-trader'],
+      assetClasses: ['predictions', 'crypto-spot'],
+      screenSizes: ['standard', 'wide'],
+    },
+    tags: ['discovery', 'predictions', 'crypto', 'short-dated'],
+    layout: PREDICTION_CRYPTO_UPDOWN_LAYOUT,
   },
   {
     id: 'template:prediction-race',

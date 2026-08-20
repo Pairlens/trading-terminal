@@ -693,6 +693,34 @@
     "emptyBody": "Aucun contrat n'a assez bougé aujourd'hui pour mériter une ligne.",
     "noChangeFrom": "Non classé : {{venues}} ne publie pas de variation sur 24 h."
   },
+  "cryptoUpDown": {
+    "subtitle": "Fenêtres récurrentes, les deux places",
+    "windowCount_one": "{{count}} fenêtre ouverte",
+    "windowCount_other": "{{count}} fenêtres ouvertes",
+    "loading": "Lecture des fenêtres ouvertes",
+    "noVenuesBody": "Installez Kalshi ou Polymarket pour voir leurs contrats récurrents hausse ou baisse.",
+    "emptyTitle": "Aucune fenêtre ouverte",
+    "emptyBody": "Aucune des deux places ne traite actuellement de contrat crypto hausse ou baisse.",
+    "colContract": "Contrat",
+    "colCloses": "Clôture",
+    "colReference": "Référence",
+    "colSpot": "Spot",
+    "colDistance": "Dist",
+    "colMarket": "Marché",
+    "colModel": "Modèle",
+    "colEdge": "Écart",
+    "horizonAll": "Toutes",
+    "horizon": {
+      "15m": "15m",
+      "hourly": "1H",
+      "daily": "1D"
+    },
+    "modelTooltip": "Diffusion sans dérive à {{sigma}}% de volatilité réalisée annualisée, calculée sur les clôtures horaires des cinq derniers jours.",
+    "referenceTooltip": "Règlement sur {{source}}.",
+    "modelNote": "Le modèle est une diffusion sans dérive à la volatilité réalisée récente. Il ignore les frais, le spread et la profondeur du carnet.",
+    "approxNote": "≈ signale une référence lue sur l'heure qui contient le prix de règlement à la minute de la place.",
+    "desktopOnly": "{{venues}} nécessite l'application de bureau."
+  },
   "onboarding": {
     "phase": {
       "ready": "Prêt"
@@ -3350,6 +3378,7 @@
     "riskControls": "Contrôles de risque",
     "categories": "Catégories",
     "eventBoard": "Tableau des événements",
+    "cryptoUpDown": "Crypto Hausse/Baisse",
     "oddsMovers": "Mouvements de cotes",
     "resolvingSoon": "Échéance proche",
     "eventHeader": "En-tête de l’événement",
@@ -3422,6 +3451,7 @@
     "riskControls": "Votre plafond de perte quotidien, le nombre de trades, la taille de position et le coupe-circuit, modifiables là où le trade a lieu",
     "categories": "Chaque catégorie d’événement avec un nombre de contrats en direct, pour que le tableau se resserre en un clic",
     "eventBoard": "Les marchés d’événements en direct sous forme de cartes : la question, Oui et Non en centimes, le volume, et quand ça se résout",
+    "cryptoUpDown": "Les fenêtres récurrentes hausse ou baisse de BTC, ETH et SOL sur Kalshi et Polymarket, valorisées face au marché spot qui les règle",
     "oddsMovers": "Les contrats dont la probabilité a le plus bougé aujourd’hui, avec le mouvement exprimé en points",
     "resolvingSoon": "Les contrats les plus proches de leur échéance, classés par l’horloge plutôt que par le volume",
     "eventHeader": "La question, quand et comment elle se résout, et la probabilité que le marché cote en ce moment",
@@ -4860,6 +4890,12 @@
         "tagline": "Chaque partant coté, l’overround affiché.",
         "description": "Pour un événement avec un peloton plutôt que deux camps : l’en-tête avec le nombre de partants et l’overround, un graphique en parts empilées, et une échelle qui cote chaque partant et permet de miser depuis la ligne. Le panier totalise l’overround, si bien que couvrir tout le peloton n’est visiblement pas de l’argent gratuit.",
         "menuLabel": "Course"
+      },
+      "prediction-crypto-updown": {
+        "name": "Crypto Hausse/Baisse",
+        "tagline": "Chaque fenêtre ouverte, face au cours qui la règle.",
+        "description": "Les contrats crypto récurrents des deux places dans un seul tableau : Kalshi ouvre une fenêtre de quinze minutes sur cinq actifs, Polymarket une horaire et une quotidienne sur quatre. Chaque ligne porte la référence de règlement, le spot en direct, l'écart entre les deux et ce qu'une diffusion sans dérive à la volatilité réalisée récente fait du temps restant, pour que les cotes aient un point de comparaison.",
+        "menuLabel": "Crypto Hausse/Baisse"
       }
     },
     "traderTypes": {

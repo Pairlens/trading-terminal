@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 20 AUG 2026
 readTime: 12 min read
 ---
 
@@ -151,6 +151,7 @@ holding) are called out in their own footnotes rather than estimated. See
 | **Event Board**       | Live events in two card shapes: binary questions with the probability large, races with every runner priced                                                  |
 | **Odds Movers**       | The events whose probability moved most today, named by their event, with the move stated in points                                                          |
 | **Resolving Soon**    | Contracts closest to settlement, sorted by the clock rather than by volume                                                                                   |
+| **Crypto Up/Down**    | The recurring BTC, ETH and SOL up-or-down windows on both venues, each against the spot price it settles on                                                  |
 
 Everything from Funding Matrix down arrives with an asset-class family, so a
 terminal with Pairlens DEX uninstalled has no Chains panel to add. These are
@@ -278,9 +279,10 @@ follows.
 
 ## Singletons
 
-Sixteen panels are singletons, one per workspace: Chart, Trade Entry,
+Seventeen panels are singletons, one per workspace: Chart, Trade Entry,
 Portfolio, Risk, Markets, Liquidity Heatmap, Recent Tickers, News, Top Coins,
-Heatmap, Chains, Pool Map, Events, Categories, Event Board, and Basket Ticket.
+Heatmap, Chains, Pool Map, Events, Categories, Event Board, Crypto Up/Down,
+and Basket Ticket.
 
 Everything else can appear as many times as you like, which is how you get four
 order books for four venues side by side.
