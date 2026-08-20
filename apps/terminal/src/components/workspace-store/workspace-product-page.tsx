@@ -9,7 +9,12 @@ import { cn } from '@pairlens/ui'
 import { Badge } from '@pairlens/ui/components/ui/badge'
 import { Button } from '@pairlens/ui/components/ui/button'
 
-import { POSTER_MORPH, SectionEyebrow, StoreAurora } from '../store/store-shell'
+import {
+  POSTER_MORPH,
+  STORE_BAR_OFFSET,
+  SectionEyebrow,
+  StoreAurora,
+} from '../store/store-shell'
 import { PluginRequirements } from './plugin-requirements'
 import { WorkspaceLayoutPreview } from './workspace-layout-preview'
 import type { TemplateDependencyReport } from '@/lib/workspace-store/dependency-analysis'
@@ -103,7 +108,13 @@ export function WorkspaceProductPage({
   return (
     <motion.div
       ref={scrollRef}
-      className="absolute inset-0 z-40 overflow-y-auto bg-card"
+      className={cn(
+        // Under the storefront's floating bar, never over it: search,
+        // the tabs and the workspace controls stay reachable while a
+        // product is open, so the sheet starts at the bar's lower edge.
+        'absolute inset-x-0 bottom-0 z-40 overflow-y-auto bg-card',
+        STORE_BAR_OFFSET,
+      )}
       // Opacity only — a transform here would skew the shared-element morph's
       // layout measurements. The hero text carries the rise instead.
       initial={{ opacity: 0 }}

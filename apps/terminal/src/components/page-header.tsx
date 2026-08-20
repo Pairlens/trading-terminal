@@ -3,6 +3,8 @@
 import { Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
+import { cn } from '@pairlens/ui'
+
 import { Kbd } from '@pairlens/ui/components/ui/kbd'
 import {
   Tooltip,
@@ -25,15 +27,32 @@ type PageHeaderProps = {
   children: ReactNode
   /** Optional right-aligned content rendered before the search button */
   actions?: ReactNode
+  /**
+   * Hover the bar over the page instead of stacking it above.
+   *
+   * For surfaces that paint their own light all the way to the top edge — the
+   * two storefronts — where a flat strip of chrome above the artwork read as
+   * a seam. The page underneath has to reserve the 44px itself and keep its
+   * own overlays clear of it; `StoreCanvas` in `components/store/store-shell`
+   * does both, and the parent has to be a positioned box.
+   */
+  floating?: boolean
 }
 
-export function PageHeader({ children, actions }: PageHeaderProps) {
+export function PageHeader({ children, actions, floating }: PageHeaderProps) {
   const { t } = useTranslation()
   const { open } = useOmniSearch()
   const searchShortcut = useKeybindingLabel('general.commandPalette')
 
   return (
-    <header className={HEADER_BAR}>
+    <header
+      className={cn(
+        HEADER_BAR,
+        // Above the scrim `StoreCanvas` fades in behind it, and above the
+        // product sheets that stop at the bar's lower edge.
+        floating && 'absolute inset-x-0 top-0 z-50',
+      )}
+    >
       {children}
       <div className="flex-1" />
       {actions}

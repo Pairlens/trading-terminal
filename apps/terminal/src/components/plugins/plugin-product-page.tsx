@@ -27,7 +27,12 @@ import {
   DropdownMenuTrigger,
 } from '@pairlens/ui/components/ui/dropdown-menu'
 
-import { POSTER_MORPH, SectionEyebrow, StoreAurora } from '../store/store-shell'
+import {
+  POSTER_MORPH,
+  STORE_BAR_OFFSET,
+  SectionEyebrow,
+  StoreAurora,
+} from '../store/store-shell'
 import { pluginBrand, pluginPosterSrc } from './plugin-brand'
 import { PluginBrandTile, PluginPosterArt } from './plugin-icon'
 import { ThemePreview } from './theme-preview'
@@ -174,7 +179,13 @@ export function PluginProductPage({
   return (
     <motion.div
       ref={scrollRef}
-      className="absolute inset-0 z-40 overflow-y-auto bg-card"
+      className={cn(
+        // Under the storefront's floating bar, never over it: search,
+        // the tabs and the workspace controls stay reachable while a
+        // product is open, so the sheet starts at the bar's lower edge.
+        'absolute inset-x-0 bottom-0 z-40 overflow-y-auto bg-card',
+        STORE_BAR_OFFSET,
+      )}
       // Opacity only — a transform here would skew the shared-element morph's
       // layout measurements. The left column carries the rise instead.
       initial={{ opacity: 0 }}
