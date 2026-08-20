@@ -199,6 +199,12 @@ type Sub = {
   timeframe: string
   callbacks: Map<number, (data: unknown) => void>
   buffer: CandleBuffer | null
+  /**
+   * Candles keys only: the REST backfill has not applied yet, so the buffer
+   * holds nothing but the frames the stream has pushed since subscribe —
+   * one forming bar, typically. See `replay` for why that matters.
+   */
+  awaitingBackfill: boolean
   /** Last frame delivered, replayed synchronously to a late joiner. */
   cached: unknown
   /** Trades keys only: delivered ids, so a reconnect snapshot cannot replay. */
@@ -303,6 +309,8 @@ export class CcxtStreamHub {
         timeframe,
         callbacks: new Map(),
         buffer: request.channel === 'candles' ? new CandleBuffer() : null,
+        awaitingBackfill:
+          request.channel === 'candles' && this.opts.backfill !== undefined,
         cached: null,
         recentTradeIds: request.channel === 'trades' ? new Set() : null,
         recentTradeIdOrder: request.channel === 'trades' ? [] : null,
@@ -444,11 +452,12 @@ export class CcxtStreamHub {
         if (!sub.running || this.destroyed) return
         sub.firstSuccessAt = null
 
-        // A close WE asked for (liveness, wake, region change) rejects every
-        // pending watch with a typed error. That is the restart working, not a
-        // fault — re-enter at once so the new socket opens without a delay.
+        // A close or an unsubscribe WE asked for rejects the pending watch
+        // with a typed error. That is our own teardown working, not a fault —
+        // re-enter at once so the socket (or the subscription) comes back
+        // without a delay. See isSelfInflictedRejection.
         if (
-          isClosedByUser(error) &&
+          isSelfInflictedRejection(error) &&
           sub.immediateReentries < MAX_IMMEDIATE_REENTRIES
         ) {
           sub.immediateReentries++
@@ -689,7 +698,7 @@ export class CcxtStreamHub {
         if (this.destroyed) return
         this.fanState.firstSuccessAt = null
         if (
-          isClosedByUser(error) &&
+          isSelfInflictedRejection(error) &&
           this.fanState.immediateReentries < MAX_IMMEDIATE_REENTRIES
         ) {
           this.fanState.immediateReentries++
@@ -969,9 +978,18 @@ export class CcxtStreamHub {
    * will not accept updates before one arrives); ticker and orderbook replay
    * their last frame. Trades deliberately do not — a replayed print would be
    * a duplicate execution in the tape.
+   *
+   * A candles key whose backfill is still in flight replays NOTHING. Its
+   * buffer holds only the bar or two the stream has pushed since subscribe,
+   * and a `snapshot` is a claim about history: the terminal seeds its chart
+   * from the first one and applies every later frame as a live tick, so a
+   * two-bar replay left the chart on two bars for the life of the stream.
+   * The pending backfill emits to every callback on the key, this one
+   * included, so the late joiner loses nothing but the head start.
    */
   private replay(sub: Sub, callback: (data: unknown) => void): void {
     if (sub.channel === 'candles') {
+      if (sub.awaitingBackfill) return
       const candles = sub.buffer?.snapshot() ?? []
       if (candles.length > 0) callback({ type: 'snapshot', candles })
       return
@@ -989,8 +1007,14 @@ export class CcxtStreamHub {
       isLive: () => this.subs.get(sub.key) === sub,
       apply: (candles) => {
         sub.buffer?.load(candles)
+        sub.awaitingBackfill = false
         const snapshot = sub.buffer?.snapshot() ?? candles
         this.emit(sub.key, { type: 'snapshot', candles: snapshot })
+      },
+      // Nothing more is coming, so stop holding late joiners back — the
+      // stream's own bars are all this key will ever have.
+      onExhausted: () => {
+        sub.awaitingBackfill = false
       },
       ...(this.opts.backfillRetryDelayMs !== undefined
         ? { retryDelayMs: this.opts.backfillRetryDelayMs }
@@ -1223,16 +1247,30 @@ export class CcxtStreamHub {
 }
 
 /**
- * `exchange.close()` sets `ExchangeClosedByUser` on every client before closing
- * it, so a pending watch rejects with a typed, distinguishable error. Matched
- * by name rather than `instanceof` — the bridge never imports ccxt's error
- * classes (that would pull the barrel into the graph) and a bundler may hand
- * out a second copy anyway.
+ * A rejection THIS driver caused, rather than a fault worth backing off from.
+ * Two shapes, both typed by ccxt and both matched by name rather than
+ * `instanceof` — the bridge never imports ccxt's error classes (that would
+ * pull the barrel into the graph) and a bundler may hand out a second copy
+ * anyway:
+ *
+ * - `ExchangeClosedByUser`: `exchange.close()` sets it on every client before
+ *   closing it (liveness, wake, region change), so every pending watch
+ *   rejects with it.
+ * - `UnsubscribeError`: `cleanUnsubscription` rejects the pending watch for a
+ *   channel whose unsubscribe the venue has just confirmed. A release
+ *   followed by a re-acquire of the SAME key inside the unsubscribe round
+ *   trip — switch timeframe and switch back, which is exactly what a user
+ *   does while comparing them — lands the confirmation on the NEW loop's
+ *   watch. Treated as a fault it cost a backoff each time, and because the
+ *   attempt counter only resets after 30 s of delivery, a few quick toggles
+ *   escalated it into a multi-second stall the user reads as a frozen chart.
+ *   Re-entering at once re-sends the SUBSCRIBE the confirmation just cleared.
  */
-function isClosedByUser(error: unknown): boolean {
+function isSelfInflictedRejection(error: unknown): boolean {
   return (
     error instanceof Error &&
     (error.name === 'ExchangeClosedByUser' ||
+      error.name === 'UnsubscribeError' ||
       error.message.includes('closedByUser'))
   )
 }

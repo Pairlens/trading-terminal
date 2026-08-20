@@ -17,6 +17,7 @@ import { sleep, waitFor } from '../../test-utils/async'
 import { CcxtStreamHub } from '../watch-driver'
 import type { ExchangeHostLike } from '../watch-driver'
 import type { CcxtExchangeLike, CcxtOhlcvRow, CcxtVenueConfig } from '../types'
+import type { Candle } from '@pairlens/shared/types'
 import type {
   WakeListener,
   WakeSource,
@@ -44,6 +45,14 @@ class ClosedByUser extends Error {
   constructor() {
     super('fake closedByUser')
     this.name = 'ExchangeClosedByUser'
+  }
+}
+
+/** What ccxt rejects a pending watch with once an unsubscribe is confirmed. */
+class UnsubscribeError extends Error {
+  constructor() {
+    super('fake multi:candle1h:BTC/USDT')
+    this.name = 'UnsubscribeError'
   }
 }
 
@@ -361,6 +370,93 @@ describe('CcxtStreamHub — subscription lifecycle', () => {
     // subscription some other consumer re-acquired under the same key.
     releaseB()
     releaseB()
+    await hub.destroy()
+  })
+
+  it('re-enters at once when our own unsubscribe rejects a live watch', async () => {
+    // Release a key and re-acquire it inside the unsubscribe round trip —
+    // switching timeframe and switching back — and the venue's confirmation
+    // lands on the NEW loop's watch. Backing off there cost a second per
+    // toggle and escalated, because the attempt counter only resets after
+    // 30s of delivery: the chart read as frozen.
+    const { hub, host, scheduled } = makeHub()
+    const seen: Array<unknown> = []
+    hub.acquire(
+      { channel: 'candles', pair: 'BTC-USDT', timeframe: '1h' },
+      '',
+      (d) => seen.push(d),
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.parked > 0)
+
+    exchange.fail(new UnsubscribeError())
+    await waitFor(() => exchange.calls.length > 1)
+    // No backoff was scheduled — the loop re-subscribed immediately.
+    expect(scheduled).toEqual([])
+
+    exchange.settle([OHLCV_ROW])
+    await waitFor(() => seen.length > 0)
+    await hub.destroy()
+  })
+
+  it('replays nothing to a late joiner while the backfill is still in flight', async () => {
+    // A `snapshot` is a claim about history, and the terminal seeds its chart
+    // from the first one it sees. Handing over a buffer holding nothing but
+    // the forming bar the stream just pushed left the chart on that one bar
+    // for the life of the subscription.
+    let resolveBackfill: (candles: Array<Candle>) => void = () => {}
+    const { hub, host } = makeHub({
+      backfill: () =>
+        new Promise<Array<Candle>>((resolve) => {
+          resolveBackfill = resolve
+        }),
+    })
+    hub.acquire(
+      { channel: 'candles', pair: 'BTC-USDT', timeframe: '1h' },
+      '',
+      () => {},
+    )
+    const exchange = await host.current()
+    await waitFor(() => exchange.calls.length > 0)
+    exchange.settle([OHLCV_ROW])
+    await sleep(5)
+
+    const late: Array<unknown> = []
+    const releaseLate = hub.acquire(
+      { channel: 'candles', pair: 'BTC-USDT', timeframe: '1h' },
+      '',
+      (d) => late.push(d),
+    )
+    expect(late).toEqual([])
+
+    // The pending backfill emits to every callback on the key, the late
+    // joiner included, so nothing is lost but the head start.
+    resolveBackfill([
+      {
+        ts: 1_699_999_000_000,
+        open: 1,
+        high: 2,
+        low: 0.5,
+        close: 1.5,
+        volume: 3,
+      },
+    ])
+    await waitFor(() => late.length > 0)
+    expect(late[0]).toEqual({
+      type: 'snapshot',
+      candles: [
+        {
+          ts: 1_699_999_000_000,
+          open: 1,
+          high: 2,
+          low: 0.5,
+          close: 1.5,
+          volume: 3,
+        },
+      ],
+    })
+
+    releaseLate()
     await hub.destroy()
   })
 

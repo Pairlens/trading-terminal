@@ -190,6 +190,38 @@ export function providerThrottleFromNetworkError(
 }
 
 /**
+ * True when a rejection came from the TRANSPORT rather than from the venue: a
+ * fetch that never produced a response (offline, DNS, connection reset, a CORS
+ * block), or ccxt's own network-layer errors.
+ *
+ * It matters wherever a rejection settles a question. The chart's availability
+ * probe asks "does this venue carry this pair", and reads a rejection as "no" —
+ * correctly, because a venue answers an unlisted market with a real HTTP error
+ * ("Instrument ID does not exist"). A transport failure carries no answer at
+ * all, and taking it for one painted "not carried by this venue" over a pair
+ * the venue lists, a verdict that outlived the hiccup because it is published
+ * to every pane through the availability store.
+ *
+ * Same judgement call as `providerThrottleFromNetworkError` above, and the
+ * same caveat: a `TypeError` from a programming mistake lands here too. Every
+ * caller treats this as "ask again later" under a bounded budget, so a wrong
+ * guess costs a delay, never a permanent wrong answer.
+ */
+export function isTransportError(e: unknown): boolean {
+  if (!(e instanceof Error)) return false
+  // An abort is the caller's own decision, never a transport failure.
+  if (e.name === 'AbortError') return false
+  // How `fetch` rejects when no response was produced.
+  if (e instanceof TypeError) return true
+  return (
+    e.name === 'NetworkError' ||
+    e.name === 'RequestTimeout' ||
+    e.name === 'ExchangeNotAvailable' ||
+    e.name === 'DDoSProtection'
+  )
+}
+
+/**
  * `Retry-After` in milliseconds. The header is either delta-seconds or an
  * HTTP date; anything else (and a date already in the past) reads as absent.
  */

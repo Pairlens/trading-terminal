@@ -5,6 +5,7 @@ import {
   GeoRestrictedError,
   assertResponseOk,
   isGeoRestrictedError,
+  isTransportError,
 } from '../errors'
 
 const capture = (fn: () => void): unknown => {
@@ -120,5 +121,42 @@ describe('isGeoRestrictedError', () => {
     expect(isGeoRestrictedError(new Error('boom'))).toBe(false)
     expect(isGeoRestrictedError(null)).toBe(false)
     expect(isGeoRestrictedError(undefined)).toBe(false)
+  })
+})
+
+describe('isTransportError', () => {
+  const named = (name: string) => {
+    const e = new Error('boom')
+    e.name = name
+    return e
+  }
+
+  it('accepts how fetch rejects when no response was produced', () => {
+    expect(isTransportError(new TypeError('Failed to fetch'))).toBe(true)
+  })
+
+  it("accepts ccxt's network-layer errors", () => {
+    expect(isTransportError(named('NetworkError'))).toBe(true)
+    expect(isTransportError(named('RequestTimeout'))).toBe(true)
+    expect(isTransportError(named('ExchangeNotAvailable'))).toBe(true)
+    expect(isTransportError(named('DDoSProtection'))).toBe(true)
+  })
+
+  it('refuses a venue answering about the market', () => {
+    // The availability probe reads this as "the venue does not list the pair",
+    // which is exactly right — the venue answered.
+    expect(isTransportError(named('BadSymbol'))).toBe(false)
+    expect(isTransportError(new Error('Instrument ID does not exist'))).toBe(
+      false,
+    )
+  })
+
+  it('refuses an abort — that is our own decision, not a failure', () => {
+    expect(isTransportError(named('AbortError'))).toBe(false)
+  })
+
+  it('refuses non-errors', () => {
+    expect(isTransportError('Failed to fetch')).toBe(false)
+    expect(isTransportError(null)).toBe(false)
   })
 })

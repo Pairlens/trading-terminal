@@ -44,6 +44,13 @@ import {
 } from '@/lib/indicators/custom-indicator-registry'
 import { useMarketData } from '@/lib/market-data-provider'
 import { clampTimeframeToVenue } from '@/lib/chart-timeframes'
+import {
+  MIN_HEALTHY_SEED_BARS,
+  mergeDeeperSnapshot,
+  shouldBackfillOlderHistory,
+  snapshotDeepensSeed,
+  viewportAfterPrepend,
+} from '@/lib/chart-seed'
 import { useNotificationStore } from '@/stores/notification-store'
 import { useCandleStream } from '@/hooks/use-candle-stream'
 import { useOrderbookStream } from '@/hooks/use-orderbook-stream'
@@ -568,6 +575,15 @@ export function useChartTerminalState(
   // Track previous cache key for saving before switching
   const prevCacheKeyRef = useRef<string | null>(null)
   const hasReceivedSnapshotRef = useRef(false)
+  /**
+   * Oldest bar the STREAM has seeded for the current key (pan-left backfill
+   * excluded — that history lives only in `seedCandles`). A later snapshot
+   * that reaches further back than this is history the chart does not have,
+   * and it re-seeds. See the reseed branch below for why that matters.
+   */
+  const seededOldestTsRef = useRef<number | null>(null)
+  /** Bars in that seed, so a reseed can tell a thin first paint from a full one. */
+  const seededBarsRef = useRef(0)
   const pendingViewportResetRef = useRef(false)
   // Pan-left history backfill bookkeeping (reset per stream).
   const backfillRef = useRef({ loading: false, exhausted: false })
@@ -595,6 +611,8 @@ export function useChartTerminalState(
     const newCacheKey = CandleCache.makeKey(market, pairKey, timeframe)
     prevCacheKeyRef.current = newCacheKey
     hasReceivedSnapshotRef.current = false
+    seededOldestTsRef.current = null
+    seededBarsRef.current = 0
 
     // Try to restore from cache for instant display
     const cached = candleCache.get(newCacheKey)
@@ -656,6 +674,8 @@ export function useChartTerminalState(
     if (!hasReceivedSnapshotRef.current) {
       hasReceivedSnapshotRef.current = true
       setSeedCandles(candles)
+      seededOldestTsRef.current = candles[0]?.ts ?? null
+      seededBarsRef.current = candles.length
       lastCandleRef.current = latest ?? null
       pendingViewportResetRef.current = true
       return
@@ -667,6 +687,33 @@ export function useChartTerminalState(
     // Replay mode freezes the live path — the chart shows historical bars
     // only. Exit resets hasReceivedSnapshotRef, forcing a full reseed here.
     if (replayActiveRef.current) return
+
+    // A snapshot reaching further back than the one we seeded from is the
+    // connector's REST backfill landing late (or a reconnect replay). Live
+    // updates never prepend, so a lower first ts can only be a snapshot.
+    //
+    // Without this branch the FIRST snapshot was final: everything after it
+    // took the incremental path below, which applies the newest bars and
+    // nothing else. That is fine when the first snapshot is a real backfill
+    // and fatal when it is not — a venue whose backfill was rate-limited
+    // leaves the terminal to promote raw stream updates into a seed
+    // (PROMOTE_UPDATES_AFTER_MS in use-candle-stream), and the chart then
+    // held one forming bar until the user switched pair or timeframe.
+    // Bars older than the snapshot are kept: they are the user's pan-left
+    // backfill, which the connector's 500-bar buffer knows nothing about.
+    const incomingOldestTs = candles[0].ts
+    if (snapshotDeepensSeed(seededOldestTsRef.current, incomingOldestTs)) {
+      const wasThinSeed = seededBarsRef.current < MIN_HEALTHY_SEED_BARS
+      seededOldestTsRef.current = incomingOldestTs
+      seededBarsRef.current = candles.length
+      setSeedCandles((prev) => mergeDeeperSnapshot(prev, candles))
+      lastCandleRef.current = latest
+      // Re-anchor only when the chart was showing a stub. A healthy chart
+      // that gains history on a reconnect keeps whatever window the user is
+      // looking at.
+      if (wasThinSeed) pendingViewportResetRef.current = true
+      return
+    }
 
     const previous = lastCandleRef.current
     if (!previous) {
@@ -1078,11 +1125,9 @@ export function useChartTerminalState(
 
   const handleChartViewportChange = useCallback(
     (viewport: { startIndex: number; endIndex: number }) => {
-      const BACKFILL_TRIGGER_BARS = 30
       const BACKFILL_BATCH = 300
       const BACKFILL_MAX_BARS = 5000
 
-      if (viewport.startIndex > BACKFILL_TRIGGER_BARS) return
       const state = backfillRef.current
       if (state.loading || state.exhausted) return
       if (!hasReceivedSnapshotRef.current) return
@@ -1099,6 +1144,7 @@ export function useChartTerminalState(
       const seeds = seedCandlesRef.current
       const oldest = seeds[0]
       if (!oldest) return
+      if (!shouldBackfillOlderHistory(seeds.length, viewport.startIndex)) return
       if (seeds.length >= BACKFILL_MAX_BARS) {
         state.exhausted = true
         return
@@ -1128,13 +1174,19 @@ export function useChartTerminalState(
             const freshOnly = fresh.filter((c) => c.ts < prevOldestTs)
             if (freshOnly.length === 0) return prev
             // Keep the user's visible time window stable across the prepend.
+            // Clamped so the window can never land past the newest bar: the
+            // shift is only the right answer while the pre-prepend window lay
+            // inside the data, and a window wider than the series (a short
+            // seed) would otherwise be pushed off the end.
+            const anchored = viewportAfterPrepend(
+              viewport,
+              freshOnly.length,
+              prev.length + freshOnly.length,
+            )
             requestAnimationFrame(() => {
               chartRef.current?.executeCommand({
                 type: 'setViewport',
-                payload: {
-                  startIndex: viewport.startIndex + freshOnly.length,
-                  endIndex: viewport.endIndex + freshOnly.length,
-                },
+                payload: anchored,
               })
             })
             return [...freshOnly, ...prev]
