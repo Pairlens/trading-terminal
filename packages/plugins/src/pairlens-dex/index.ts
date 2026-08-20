@@ -30,7 +30,10 @@ export const pairlensDexManifest: PluginManifest = {
   description:
     'On-chain surfaces: pool stats, the swap route, LP positions and the cross-chain ladder',
   homepage: 'https://pairlens.finance',
-  icon: 'https://pairlens.finance/favicon.svg',
+  // Served from the terminal bundle, not pairlens.finance: a first-party
+  // plugin's mark must render offline, on the desktop app, and inside the
+  // desktop CSP without reaching for the marketing site.
+  icon: '/logo512.png',
   metadata: { family: 'dex' },
   capabilities: [],
   config: {},

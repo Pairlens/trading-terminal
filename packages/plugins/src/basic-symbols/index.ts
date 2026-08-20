@@ -14,6 +14,7 @@ export const basicSymbolsManifest: PluginManifest = {
   author: 'Pairlens',
   description:
     'Hardcoded catalog of common crypto trading pairs for offline browsing',
+  icon: '/logo512.png',
   metadata: { family: 'core' },
   capabilities: [
     {

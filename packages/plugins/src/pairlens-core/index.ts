@@ -16,7 +16,10 @@ export const pairlensCoreManifest: PluginManifest = {
   description:
     'Core trading terminal: charts, order books, trade entry, market discovery, and watchlists',
   homepage: 'https://pairlens.finance',
-  icon: 'https://pairlens.finance/favicon.svg',
+  // Served from the terminal bundle, not pairlens.finance: a first-party
+  // plugin's mark must render offline, on the desktop app, and inside the
+  // desktop CSP without reaching for the marketing site.
+  icon: '/logo512.png',
   metadata: { family: 'core' },
   capabilities: [
     {

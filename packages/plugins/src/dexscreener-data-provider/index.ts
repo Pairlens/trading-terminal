@@ -18,6 +18,7 @@ export const dexscreenerDataProviderManifest: PluginManifest = {
   description:
     'Pool reserves and pool stats from DexScreener. Keyless and CORS-open, so both-side reserves work in a browser. No candles and no ranked pool listings: this provider supplements the others, it does not replace them.',
   homepage: 'https://dexscreener.com',
+  icon: '/posters/dexscreener-data-provider.png',
   metadata: { family: 'dex', assetClass: 'dex' },
   // Priority 7 — last in the pool-stats chain, and reached two different ways.
   //

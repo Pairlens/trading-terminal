@@ -3,9 +3,16 @@
 /**
  * Fetch high-resolution brand marks for the bundled plugins' store posters.
  *
- * For each plugin we try Clearbit's logo CDN (512px) and fall back to
+ * For each plugin we walk a source chain: an explicit OVERRIDE, the venue's
+ * CoinGecko exchange art, the site's own apple-touch-icon, and finally
  * Google's favicon service (256px). Images smaller than MIN_EDGE are
  * discarded — the store then falls back to `manifest.icon` / monograms.
+ *
+ * Clearbit's logo CDN used to lead that chain. HubSpot retired it, so the
+ * host no longer resolves at all; four marks (Alpaca and three EVM chains)
+ * silently dropped out of the map on the next bare run while their PNGs
+ * stayed on disk. Anything that reads like a general-purpose logo CDN belongs
+ * in OVERRIDES with a pinned URL instead.
  *
  * Output:
  *   apps/terminal/public/posters/<plugin-id>.png          (the images)
@@ -68,6 +75,9 @@ const DOMAINS: Record<string, string> = {
   'geckoterminal-data-provider': 'geckoterminal.com',
   'dexpaprika-data-provider': 'dexpaprika.com',
   'dexscreener-data-provider': 'dexscreener.com',
+  'coinglass-liquidations': 'coinglass.com',
+  'lifi-bridge-connector': 'li.fi',
+  'helius-rpc-provider': 'helius.dev',
   // Both prediction venues refuse direct image fetches (kalshi.com resets the
   // TLS handshake, polymarket.com sits behind bot protection), so the Google
   // favicon fallback is the one source that resolves them. It returns their
@@ -89,12 +99,41 @@ const OVERRIDES: Record<string, string> = {
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/cronos/info/logo.png',
   'jupiter-dex-connector':
     'https://cryptologos.cc/logos/jupiter-ag-jup-logo.png?v=040',
+  // Trust Wallet's Base entry is a plain blue square, not the ring-and-bar
+  // mark; base-org's avatar is the real one.
   'base-dex-connector':
-    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/base/info/logo.png',
+    'https://avatars.githubusercontent.com/u/108554348?s=512',
   'arbitrum-dex-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/arbitrum/info/logo.png',
   'bsc-dex-connector':
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/info/logo.png',
+  // Verified GitHub org avatars — the only 460px source these four publish.
+  // Alpaca's own favicon is 48px, and DexScreener's site is behind Cloudflare
+  // bot protection, so neither the apple-touch-icon nor the favicon service
+  // reaches anything large enough to clear MIN_EDGE.
+  'alpaca-market-connector':
+    'https://avatars.githubusercontent.com/u/30398729?s=512',
+  'dexscreener-data-provider':
+    'https://avatars.githubusercontent.com/u/99915600?s=512',
+  'lifi-bridge-connector':
+    'https://avatars.githubusercontent.com/u/85288935?s=512',
+  // GeckoTerminal serves no apple-touch-icon at the root; the marked-up path
+  // is where the 180px app icon lives.
+  'geckoterminal-data-provider':
+    'https://www.geckoterminal.com/images/icons/180x180.png',
+}
+
+/**
+ * Plugin ids that wear another plugin's mark. A perpetual-futures venue is
+ * the same brand as its spot venue, and shipping the mark twice under two
+ * names would be two copies of one PNG in the bundle.
+ */
+const POSTER_ALIASES: Record<string, string> = {
+  'binance-futures-market-connector': 'binance-market-connector',
+  'bybit-futures-market-connector': 'bybit-market-connector',
+  'okx-futures-market-connector': 'okx-market-connector',
+  'kucoin-futures-market-connector': 'kucoin-market-connector',
+  'kraken-futures-market-connector': 'kraken-market-connector',
 }
 
 /** CoinGecko exchange ids — resolved via their API to "large" images. */
@@ -110,10 +149,22 @@ const COINGECKO_EXCHANGES: Record<string, string> = {
   'coinbase-market-connector': 'gdax',
 }
 
-/** Pairlens's own plugins reuse the logo already shipped in public/. */
+/**
+ * Pairlens's own plugins reuse the logo already shipped in public/. Every
+ * first-party id belongs here — a Pairlens plugin has no brand to fetch, and
+ * one left out falls through to a monogram tile that reads as a third-party
+ * stub in a grid where its siblings wear the logo.
+ */
 const LOCAL_POSTERS: Record<string, string> = {
   'pairlens-core': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
+  'pairlens-predictions': '/logo512.png',
+  'pairlens-cex-futures': '/logo512.png',
+  'pairlens-dex': '/logo512.png',
+  'pairlens-equities': '/logo512.png',
+  'pairlens-community': '/logo512.png',
+  'user-indicators': '/logo512.png',
+  'basic-symbols': '/logo512.png',
 }
 
 function pngSize(buf: Uint8Array): { w: number; h: number } | null {
@@ -168,8 +219,8 @@ async function bestMark(
     if (url) sources.push(url)
   }
   sources.push(
-    `https://logo.clearbit.com/${domain}?size=512&format=png`,
     `https://${domain}/apple-touch-icon.png`,
+    `https://www.${domain}/apple-touch-icon.png`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=256`,
   )
   for (const url of sources) {
@@ -194,7 +245,9 @@ if (only.size > 0) {
   const { BUNDLED_POSTERS } = (await import(MAP_FILE)) as {
     BUNDLED_POSTERS: Record<string, string>
   }
-  Object.assign(posters, BUNDLED_POSTERS)
+  // LOCAL_POSTERS re-applied on top: this file is the source of truth for
+  // where a first-party mark lives, and the shipped map may predate an entry.
+  Object.assign(posters, BUNDLED_POSTERS, LOCAL_POSTERS)
 }
 
 for (const [id, domain] of Object.entries(DOMAINS)) {
@@ -223,6 +276,14 @@ for (const [id, domain] of Object.entries(DOMAINS)) {
   }
   posters[id] = `/posters/${file}`
   console.log(`✓ ${id} ← ${domain} (${size.w}×${size.h})`)
+}
+
+// Aliases resolve last so they pick up whatever this run wrote for the venue
+// they borrow from. An alias whose source never landed is dropped rather than
+// pointing the map at a file that is not in public/.
+for (const [id, source] of Object.entries(POSTER_ALIASES)) {
+  if (posters[source]) posters[id] = posters[source]
+  else skipped.push(`${id} (alias of ${source}, which has no poster)`)
 }
 
 if (skipped.length > 0) {
