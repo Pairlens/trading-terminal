@@ -26,6 +26,7 @@ import { tool } from 'ai'
 import { z } from 'zod'
 
 import { isPlatformRestrictedError } from '@pairlens/market-engine/errors'
+import { PREDICTION_CATEGORY_IDS } from '@pairlens/plugins/prediction-connector/categories'
 import { parseMarketRefPath } from '@pairlens/shared/market-ref'
 import type { ToolSet } from 'ai'
 import type {
@@ -41,6 +42,20 @@ import {
   TOOL_RUNNERS,
   readPredictionEvent,
 } from '@/lib/predictions/assistant-summary'
+
+/**
+ * The categories the model may filter by, as a closed enum.
+ *
+ * Free text here used to reach the venues verbatim, so a model that guessed
+ * "Finance" or "World" got an empty board from one venue and a throw from the
+ * other. The taxonomy is the same one the rail draws, and the connector
+ * translates each id into the venue's own word — see `prediction-connector/
+ * categories`.
+ */
+const PREDICTION_CATEGORY_ENUM = PREDICTION_CATEGORY_IDS as unknown as [
+  string,
+  ...Array<string>,
+]
 
 /** Events per venue a search will pull. The venues serve a page in one call. */
 const SEARCH_LIMIT = 40
@@ -246,10 +261,10 @@ export function buildPredictionTools(deps: AssistantDeps): ToolSet {
           .optional()
           .describe('Free text, e.g. "fed rate cut". Matched on event titles.'),
         category: z
-          .string()
+          .enum(PREDICTION_CATEGORY_ENUM)
           .optional()
           .describe(
-            'Category filter, e.g. Politics, Crypto, Sports, Economics. Either this or query is required by the venues.',
+            'Category filter, from the terminal own taxonomy. Each venue is sent its own word for it. Either this or query is required by the venues.',
           ),
         venues: z
           .array(z.string())

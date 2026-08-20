@@ -1074,7 +1074,25 @@
     "venueHeading": "Plateforme",
     "desktopOnly": "bureau",
     "venueError": "erreur",
-    "trending": "Tendance"
+    "trending": "Tendance",
+    "names": {
+      "esports": "Esport",
+      "sports": "Sport",
+      "mentions": "Mentions",
+      "elections": "Élections",
+      "crypto": "Crypto",
+      "climate": "Climat",
+      "health": "Santé",
+      "geopolitics": "Géopolitique",
+      "commodities": "Matières premières",
+      "transport": "Transport",
+      "economics": "Économie",
+      "financials": "Finance",
+      "companies": "Entreprises",
+      "techScience": "Tech et science",
+      "culture": "Culture",
+      "politics": "Politique"
+    }
   },
   "resolvingSoon": {
     "resolves": "Dénouement {{when}}",

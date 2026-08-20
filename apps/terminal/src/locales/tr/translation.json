@@ -1074,7 +1074,25 @@
     "venueHeading": "Borsa",
     "desktopOnly": "masaüstü",
     "venueError": "hata",
-    "trending": "Öne çıkanlar"
+    "trending": "Öne çıkanlar",
+    "names": {
+      "esports": "Espor",
+      "sports": "Spor",
+      "mentions": "Anmalar",
+      "elections": "Seçimler",
+      "crypto": "Kripto",
+      "climate": "İklim",
+      "health": "Sağlık",
+      "geopolitics": "Jeopolitik",
+      "commodities": "Emtia",
+      "transport": "Ulaşım",
+      "economics": "Ekonomi",
+      "financials": "Finans",
+      "companies": "Şirketler",
+      "techScience": "Teknoloji ve Bilim",
+      "culture": "Kültür",
+      "politics": "Siyaset"
+    }
   },
   "resolvingSoon": {
     "resolves": "Sonuçlanma {{when}}",

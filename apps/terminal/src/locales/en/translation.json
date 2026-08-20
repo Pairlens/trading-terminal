@@ -5729,7 +5729,25 @@
     "venueHeading": "Venue",
     "desktopOnly": "desktop",
     "venueError": "error",
-    "trending": "Trending"
+    "trending": "Trending",
+    "names": {
+      "esports": "Esports",
+      "sports": "Sports",
+      "mentions": "Mentions",
+      "elections": "Elections",
+      "crypto": "Crypto",
+      "climate": "Climate",
+      "health": "Health",
+      "geopolitics": "Geopolitics",
+      "commodities": "Commodities",
+      "transport": "Transport",
+      "economics": "Economics",
+      "financials": "Financials",
+      "companies": "Companies",
+      "techScience": "Tech & Science",
+      "culture": "Culture",
+      "politics": "Politics"
+    }
   },
   "eventBoard": {
     "searchPlaceholder_one": "Search 1 live market",

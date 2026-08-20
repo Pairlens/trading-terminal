@@ -23,18 +23,7 @@
  */
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Bitcoin,
-  ChartLine,
-  Flame,
-  Globe,
-  Landmark,
-  Sparkles,
-  Tag,
-  Target,
-  Trophy,
-  Vote,
-} from 'lucide-react'
+import { Vote } from 'lucide-react'
 import { cn } from '@pairlens/ui'
 import { CategoryRailSkeleton } from './prediction-skeletons'
 import type { LucideIcon } from 'lucide-react'
@@ -46,25 +35,12 @@ import {
   usePredictionVenues,
 } from '@/hooks/use-prediction-events'
 import { track } from '@/lib/analytics-events'
+import {
+  TRENDING_ICON,
+  predictionCategoryIcon,
+  predictionCategoryLabel,
+} from '@/lib/predictions/category-display'
 import { useDiscoveryFilterStore } from '@/lib/predictions/discovery-filter-store'
-
-/** Category name fragment → the icon that reads as it. */
-const CATEGORY_ICONS: Array<[RegExp, LucideIcon]> = [
-  [/politic|election|congress|senate|president/i, Landmark],
-  [/econom|inflation|fed|rate|jobs|cpi|gdp/i, ChartLine],
-  [/crypto|bitcoin|ethereum|token/i, Bitcoin],
-  [/sport|nba|nfl|soccer|football|tennis|f1/i, Trophy],
-  [/geopolit|world|war|ukraine|middle east/i, Globe],
-  [/culture|entertain|award|music|film|pop/i, Sparkles],
-  [/science|space|tech|ai/i, Target],
-]
-
-function categoryIcon(name: string): LucideIcon {
-  for (const [pattern, icon] of CATEGORY_ICONS) {
-    if (pattern.test(name)) return icon
-  }
-  return Tag
-}
 
 export function CategoriesPane() {
   const { t } = useTranslation()
@@ -123,7 +99,7 @@ export function CategoriesPane() {
         <CategoryRow
           active={category === null}
           count={pending ? null : total}
-          icon={Flame}
+          icon={TRENDING_ICON}
           label={t('predictionCategories.trending')}
           onSelect={() => {
             track('prediction_category_selected', { category: null })
@@ -134,9 +110,9 @@ export function CategoriesPane() {
           <CategoryRow
             active={category === name}
             count={count}
-            icon={categoryIcon(name)}
+            icon={predictionCategoryIcon(name)}
             key={name}
-            label={name}
+            label={predictionCategoryLabel(t, name)}
             onSelect={() => {
               const next = category === name ? null : name
               track('prediction_category_selected', { category: next })

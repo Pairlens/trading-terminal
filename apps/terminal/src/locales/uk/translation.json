@@ -1138,7 +1138,25 @@
     "venueHeading": "Майданчик",
     "desktopOnly": "десктоп",
     "venueError": "помилка",
-    "trending": "У тренді"
+    "trending": "У тренді",
+    "names": {
+      "esports": "Кіберспорт",
+      "sports": "Спорт",
+      "mentions": "Згадки",
+      "elections": "Вибори",
+      "crypto": "Криптовалюти",
+      "climate": "Клімат",
+      "health": "Здоров'я",
+      "geopolitics": "Геополітика",
+      "commodities": "Сировина",
+      "transport": "Транспорт",
+      "economics": "Економіка",
+      "financials": "Фінанси",
+      "companies": "Компанії",
+      "techScience": "Технології та наука",
+      "culture": "Культура",
+      "politics": "Політика"
+    }
   },
   "resolvingSoon": {
     "resolves": "Розрахунок {{when}}",

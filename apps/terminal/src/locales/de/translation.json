@@ -1074,7 +1074,25 @@
     "venueHeading": "Handelsplatz",
     "desktopOnly": "Desktop",
     "venueError": "Fehler",
-    "trending": "Im Trend"
+    "trending": "Im Trend",
+    "names": {
+      "esports": "Esports",
+      "sports": "Sport",
+      "mentions": "Erwähnungen",
+      "elections": "Wahlen",
+      "crypto": "Krypto",
+      "climate": "Klima",
+      "health": "Gesundheit",
+      "geopolitics": "Geopolitik",
+      "commodities": "Rohstoffe",
+      "transport": "Verkehr",
+      "economics": "Wirtschaft",
+      "financials": "Finanzmärkte",
+      "companies": "Unternehmen",
+      "techScience": "Technik & Wissenschaft",
+      "culture": "Kultur",
+      "politics": "Politik"
+    }
   },
   "resolvingSoon": {
     "resolves": "Endet {{when}}",

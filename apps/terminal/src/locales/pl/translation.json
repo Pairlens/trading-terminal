@@ -1138,7 +1138,25 @@
     "venueHeading": "Giełda",
     "desktopOnly": "desktop",
     "venueError": "błąd",
-    "trending": "Na czasie"
+    "trending": "Na czasie",
+    "names": {
+      "esports": "Esport",
+      "sports": "Sport",
+      "mentions": "Wzmianki",
+      "elections": "Wybory",
+      "crypto": "Krypto",
+      "climate": "Klimat",
+      "health": "Zdrowie",
+      "geopolitics": "Geopolityka",
+      "commodities": "Surowce",
+      "transport": "Transport",
+      "economics": "Gospodarka",
+      "financials": "Finanse",
+      "companies": "Spółki",
+      "techScience": "Technologia i nauka",
+      "culture": "Kultura",
+      "politics": "Polityka"
+    }
   },
   "resolvingSoon": {
     "resolves": "Rozstrzygnięcie {{when}}",

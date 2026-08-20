@@ -27,6 +27,7 @@ import { EventThumbnail } from '@/components/predictions/event-pieces'
 import { track } from '@/lib/analytics-events'
 import { formatCompactUsd, formatPredictionPrice } from '@/lib/format-price'
 import { formatTimeUntil } from '@/lib/format-time'
+import { predictionCategoryLabel } from '@/lib/predictions/category-display'
 import { binarySideOf } from '@/lib/predictions/event-labels'
 import { isRaceEvent, runnersOf } from '@/lib/predictions/race'
 
@@ -80,7 +81,7 @@ export default memo(function PredictionEventScreen({
           </h2>
           {event.category ? (
             <p className="mt-0.5 text-[11.5px] capitalize text-muted-foreground">
-              {event.category}
+              {predictionCategoryLabel(t, event.category)}
             </p>
           ) : null}
         </div>

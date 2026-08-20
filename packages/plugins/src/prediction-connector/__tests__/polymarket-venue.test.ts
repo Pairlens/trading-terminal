@@ -448,8 +448,9 @@ describe('polymarket events projection', () => {
       { venue: polymarketPredictionVenue, resolver: r },
       { category: 'Politics' },
     )
-    // A category IS a scope selector (`tags`), so this path keeps fetchEvents.
-    expect(scope?.['tags']).toEqual(['Politics'])
+    // A category IS a scope selector (`tags`), so this path keeps fetchEvents
+    // — carrying gamma's SLUG for the chip, not the chip's own label.
+    expect(scope?.['tags']).toEqual(['politics'])
     expect(scope?.['sort']).toBeUndefined()
   })
 })

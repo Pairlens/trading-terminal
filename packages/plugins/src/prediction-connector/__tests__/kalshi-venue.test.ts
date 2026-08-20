@@ -13,12 +13,16 @@
 
 import { describe, expect, it } from 'bun:test'
 import {
+  KALSHI_BROWSE_CATEGORIES,
   KALSHI_NO_SUFFIX,
   KALSHI_TIMEFRAMES,
+  browseKalshiEvents,
   createKalshiMarketConnectorPlugin,
+  interleavePages,
   kalshiMarketConnectorManifest,
   kalshiPredictionVenue,
   normalizeKalshiPem,
+  searchEntryToRawEvent,
 } from '../venues/kalshi'
 import { buildPredictionOrderCall } from '../orders'
 import { fetchPredictionEvents } from '../events'
@@ -449,5 +453,210 @@ describe('kalshi timeframe gate', () => {
     } finally {
       await plugin.destroy?.()
     }
+  })
+})
+
+// ── The cold open ────────────────────────────────────────────────────────
+//
+// The board used to open on one hardcoded category, which cost 60 requests and
+// 26 seconds and put exactly one chip on the category rail. It opens on
+// Kalshi's own ranked feed now, fanned across categories. Two things have to
+// hold for that to be an improvement rather than a different bug: the merge
+// must not let live sport crowd every thin category off the board, and the
+// search feed's payload must translate into the raw event shape ccxt parses.
+//
+// The entry below is copied off `/v1/search/series?category=Economics` on
+// 2026-08-20, trimmed to the fields the adapter reads.
+
+const SEARCH_ENTRY = {
+  type: 'contract',
+  recent_volume: 403_538,
+  series_ticker: 'KXFEDDECISION',
+  event_ticker: 'KXFEDDECISION-26SEP',
+  event_title: 'Fed decision in September?',
+  event_subtitle: 'On Sep 16, 2026',
+  category: 'Economics',
+  total_volume: 11_214_720,
+  markets: [
+    {
+      ticker: 'KXFEDDECISION-26SEP-H0',
+      yes_subtitle: 'Fed maintains rate',
+      no_subtitle: '',
+      title: '',
+      yes_bid_dollars: '0.7200',
+      yes_ask_dollars: '0.7300',
+      last_price_dollars: '0.7300',
+      previous_price_dollars: '0.7100',
+      volume: 8_913_021,
+      close_ts: '2026-09-16T17:59:00Z',
+      open_ts: '2025-09-29T14:00:00Z',
+      expected_expiration_ts: '2026-09-16T18:05:00Z',
+      result: '',
+    },
+  ],
+}
+
+function firstMarket(raw: Record<string, unknown>): Record<string, unknown> {
+  const markets = raw['markets'] as Array<Record<string, unknown>>
+  return markets[0] ?? {}
+}
+
+describe('kalshi search-entry adapter', () => {
+  it('translates the feed payload into the raw event shape ccxt parses', () => {
+    const raw = searchEntryToRawEvent(SEARCH_ENTRY)
+    expect(raw['event_ticker']).toBe('KXFEDDECISION-26SEP')
+    expect(raw['title']).toBe('Fed decision in September?')
+    expect(raw['sub_title']).toBe('On Sep 16, 2026')
+    expect(raw['category']).toBe('Economics')
+
+    const market = firstMarket(raw)
+    expect(market['ticker']).toBe('KXFEDDECISION-26SEP-H0')
+    // The ticker is the pair key on a passthrough venue, so getting this wrong
+    // is a browse whose every row charts nothing.
+    expect(market['event_ticker']).toBe('KXFEDDECISION-26SEP')
+    expect(market['yes_sub_title']).toBe('Fed maintains rate')
+    expect(market['close_time']).toBe('2026-09-16T17:59:00Z')
+    expect(market['open_time']).toBe('2025-09-29T14:00:00Z')
+    expect(market['expiration_time']).toBe('2026-09-16T18:05:00Z')
+    // Prices need no translation: the feed already uses the `*_dollars` names
+    // `parseMarket` and `marketChange24h` read.
+    expect(market['last_price_dollars']).toBe('0.7300')
+    expect(market['previous_price_dollars']).toBe('0.7100')
+  })
+
+  it('synthesises a status, because the feed states only a result', () => {
+    // Without one `parseEvent` reports every browsed event as inactive, and a
+    // board of closed-looking events is worse than no board.
+    const open = searchEntryToRawEvent(SEARCH_ENTRY)
+    expect(firstMarket(open)['status']).toBe('active')
+
+    const settled = searchEntryToRawEvent({
+      ...SEARCH_ENTRY,
+      markets: [{ ...SEARCH_ENTRY.markets[0], result: 'yes' }],
+    })
+    expect(firstMarket(settled)['status']).toBe('settled')
+  })
+
+  it('survives an entry with nothing in it', () => {
+    const raw = searchEntryToRawEvent({})
+    expect(raw['markets']).toEqual([])
+    expect(raw['title']).toBe('')
+  })
+})
+
+describe('kalshi cold-open merge', () => {
+  const entry = (category: string, rank: number, volume: number) => ({
+    event_ticker: `${category}-${rank}`,
+    category,
+    recent_volume: volume,
+  })
+
+  it('takes one from every category before a second from any', () => {
+    // A live tennis match trades four million contracts a day and a Health
+    // event trades a few hundred. Concatenating and sorting by volume would
+    // put five sports rows on the board and no Health row at all, which is the
+    // one-chip rail this replaced.
+    const pages = [
+      [
+        entry('Sports', 1, 4_000_000),
+        entry('Sports', 2, 3_000_000),
+        entry('Sports', 3, 2_000_000),
+      ],
+      [entry('Health', 1, 300), entry('Health', 2, 200)],
+      [entry('World', 1, 90)],
+    ]
+    const merged = interleavePages(pages, 4)
+    expect(merged.map((e) => e['event_ticker'])).toEqual([
+      'Sports-1',
+      'Health-1',
+      'World-1',
+      'Sports-2',
+    ])
+  })
+
+  it('orders each round by the venue own volume', () => {
+    const pages = [[entry('Health', 1, 300)], [entry('Sports', 1, 4_000_000)]]
+    expect(interleavePages(pages, 2).map((e) => e['category'])).toEqual([
+      'Sports',
+      'Health',
+    ])
+  })
+
+  it('honours the limit and tolerates empty pages', () => {
+    const pages = [[], [entry('World', 1, 5)], []]
+    expect(interleavePages(pages, 10)).toHaveLength(1)
+    expect(interleavePages([], 10)).toEqual([])
+  })
+})
+
+describe('kalshi cold-open browse', () => {
+  function searchExchange(
+    reply: (params: Record<string, unknown>) => unknown,
+  ): {
+    exchange: ReturnType<typeof fakeExchange>
+    calls: Array<Record<string, unknown>>
+  } {
+    const calls: Array<Record<string, unknown>> = []
+    const exchange = fakeExchange({
+      parseEvent: (event) => event,
+    }) as ReturnType<typeof fakeExchange> & Record<string, unknown>
+    exchange['electionsPublicGetSearchSeries'] = async (
+      params: Record<string, unknown>,
+    ) => {
+      calls.push(params)
+      return reply(params)
+    }
+    return { exchange, calls }
+  }
+
+  it('asks every category for its own busiest events', async () => {
+    const { exchange, calls } = searchExchange(() => ({
+      current_page: [SEARCH_ENTRY],
+    }))
+
+    const events = await browseKalshiEvents(exchange, 40)
+
+    expect(calls).toHaveLength(KALSHI_BROWSE_CATEGORIES.length)
+    expect(calls.map((c) => c['category']).sort()).toEqual(
+      [...KALSHI_BROWSE_CATEGORIES].sort(),
+    )
+    // 40 events over sixteen categories is three each, floored at two.
+    expect(calls[0]?.['page_size']).toBe(3)
+    expect(events).toHaveLength(KALSHI_BROWSE_CATEGORIES.length)
+  })
+
+  it('never asks for fewer than two, so a thin category still reaches the rail', async () => {
+    const { exchange, calls } = searchExchange(() => ({ current_page: [] }))
+    await browseKalshiEvents(exchange, 1)
+    expect(calls[0]?.['page_size']).toBe(2)
+  })
+
+  it('keeps the board when one category refuses', async () => {
+    const { exchange } = searchExchange((params) => {
+      if (params['category'] === 'Sports') throw new Error('502')
+      return { current_page: [SEARCH_ENTRY] }
+    })
+
+    const events = await browseKalshiEvents(exchange, 40)
+
+    expect(events).toHaveLength(KALSHI_BROWSE_CATEGORIES.length - 1)
+  })
+
+  it('reports the failure when nothing answered at all', async () => {
+    // An empty board and a broken host look identical to a reader, so a browse
+    // where every category refused has to say so rather than return nothing.
+    const { exchange } = searchExchange(() => {
+      throw new Error('elections host is down')
+    })
+
+    await expect(browseKalshiEvents(exchange, 40)).rejects.toThrow(
+      'elections host is down',
+    )
+  })
+
+  it('refuses clearly when the endpoint is not on the exchange', async () => {
+    await expect(browseKalshiEvents(fakeExchange({}), 40)).rejects.toThrow(
+      'browsable event listing',
+    )
   })
 })
