@@ -1192,7 +1192,6 @@
   "predictionCategories": {
     "noneBody": "Ta giełda nie przypisuje wydarzeniom kategorii.",
     "venueHeading": "Giełda",
-    "desktopOnly": "Desktop",
     "venueError": "błąd",
     "trending": "Na czasie",
     "names": {
@@ -1455,7 +1454,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} przy {{offset}}",
       "waitDuration": "Czekaj {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Regulamin",

@@ -389,7 +389,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} at {{offset}}",
       "waitDuration": "Wait {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Terms & Conditions",
@@ -5747,7 +5748,6 @@
   "predictionCategories": {
     "noneBody": "This venue does not tag its events by category.",
     "venueHeading": "Venue",
-    "desktopOnly": "Desktop",
     "venueError": "error",
     "trending": "Trending",
     "names": {

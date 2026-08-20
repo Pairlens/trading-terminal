@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Cette plateforme ne classe pas ses événements par catégorie.",
     "venueHeading": "Plateforme",
-    "desktopOnly": "Bureau",
     "venueError": "erreur",
     "trending": "Tendance",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} à {{offset}}",
       "waitDuration": "Attente {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Bureau"
   },
   "legal": {
     "terms": "Conditions générales",

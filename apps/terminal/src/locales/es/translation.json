@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Este mercado no etiqueta sus eventos por categoría.",
     "venueHeading": "Plataforma",
-    "desktopOnly": "Escritorio",
     "venueError": "error",
     "trending": "Tendencia",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} en {{offset}}",
       "waitDuration": "Esperar {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Escritorio"
   },
   "legal": {
     "terms": "Términos y Condiciones",

@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Diese Handelsplattform vergibt keine Kategorien für ihre Ereignisse.",
     "venueHeading": "Handelsplatz",
-    "desktopOnly": "Desktop",
     "venueError": "Fehler",
     "trending": "Im Trend",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop-Loss {{percent}}",
       "sizeAtOffset": "{{size}} bei {{offset}}",
       "waitDuration": "Warten {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Nutzungsbedingungen",

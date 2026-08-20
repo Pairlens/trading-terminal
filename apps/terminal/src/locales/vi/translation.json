@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Sàn này không gắn danh mục cho các sự kiện của mình.",
     "venueHeading": "Sàn",
-    "desktopOnly": "Máy tính",
     "venueError": "lỗi",
     "trending": "Nổi bật",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Cắt lỗ {{percent}}",
       "sizeAtOffset": "{{size}} tại {{offset}}",
       "waitDuration": "Chờ {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Máy tính"
   },
   "legal": {
     "terms": "Điều khoản và Điều kiện",

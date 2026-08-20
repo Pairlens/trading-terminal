@@ -1192,7 +1192,6 @@
   "predictionCategories": {
     "noneBody": "Цей майданчик не присвоює подіям категорії.",
     "venueHeading": "Майданчик",
-    "desktopOnly": "Десктоп",
     "venueError": "помилка",
     "trending": "У тренді",
     "names": {
@@ -1455,7 +1454,8 @@
       "stopLossPercent": "Стоп-лосс {{percent}}",
       "sizeAtOffset": "{{size}} на {{offset}}",
       "waitDuration": "Пауза {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Десктоп"
   },
   "legal": {
     "terms": "Умови використання",

@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Esta plataforma não classifica os eventos por categoria.",
     "venueHeading": "Plataforma",
-    "desktopOnly": "Desktop",
     "venueError": "erro",
     "trending": "Em alta",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Stop loss {{percent}}",
       "sizeAtOffset": "{{size}} a {{offset}}",
       "waitDuration": "Aguardar {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Desktop"
   },
   "legal": {
     "terms": "Termos e Condições",

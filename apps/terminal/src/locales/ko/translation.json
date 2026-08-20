@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "이 거래소는 이벤트에 카테고리를 붙이지 않습니다.",
     "venueHeading": "거래소",
-    "desktopOnly": "데스크톱",
     "venueError": "오류",
     "trending": "인기",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "손절 {{percent}}",
       "sizeAtOffset": "{{offset}}에 {{size}}",
       "waitDuration": "{{duration}} 대기"
-    }
+    },
+    "desktopOnlyBadge": "데스크톱"
   },
   "legal": {
     "terms": "이용약관",

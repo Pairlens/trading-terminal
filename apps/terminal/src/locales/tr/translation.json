@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "Bu borsa olaylarını kategoriye ayırmıyor.",
     "venueHeading": "Borsa",
-    "desktopOnly": "Masaüstü",
     "venueError": "hata",
     "trending": "Öne çıkanlar",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "Zarar durdur {{percent}}",
       "sizeAtOffset": "{{offset}} konumunda {{size}}",
       "waitDuration": "Bekle {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "Masaüstü"
   },
   "legal": {
     "terms": "Şartlar ve Koşullar",

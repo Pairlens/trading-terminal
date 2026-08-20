@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "這個平台沒有為事件劃分分類。",
     "venueHeading": "平台",
-    "desktopOnly": "桌面版",
     "venueError": "錯誤",
     "trending": "熱門",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "停損 {{percent}}",
       "sizeAtOffset": "{{size}}（{{offset}}）",
       "waitDuration": "等待 {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "桌面版"
   },
   "legal": {
     "terms": "服務條款",

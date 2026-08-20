@@ -1,11 +1,10 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { useMemo, useState } from 'react'
-import { ChevronDown, Monitor, Search } from 'lucide-react'
+import { ChevronDown, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
-import { Badge } from '@pairlens/ui/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +26,7 @@ import { isVenueBoundClass } from '@pairlens/shared/market-ref'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { AssetClass } from '@pairlens/market-engine'
 import type { MarketOption } from '@/hooks/use-available-markets'
+import { DesktopOnlyBadge } from '@/components/venues/desktop-only-badge'
 import {
   HEADER_CHIP,
   HEADER_CHIP_MUTED,
@@ -318,15 +318,7 @@ function MarketRadioItem({
             history, so a browser build cannot read it at all. Say
             so before the click rather than after. Desktop reaches
             every venue, so the mark never appears there. */}
-        {option.desktopOnly && (
-          <Badge
-            variant="outline"
-            className="ml-auto h-4 gap-1 px-1.5 text-[10px] text-muted-foreground"
-          >
-            <Monitor />
-            Desktop
-          </Badge>
-        )}
+        {option.desktopOnly && <DesktopOnlyBadge className="ml-auto" />}
       </span>
     </DropdownMenuRadioItem>
   )

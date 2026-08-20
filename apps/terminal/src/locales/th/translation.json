@@ -1126,7 +1126,6 @@
   "predictionCategories": {
     "noneBody": "แพลตฟอร์มนี้ไม่ได้จัดหมวดหมู่ให้กับอีเวนต์",
     "venueHeading": "แพลตฟอร์ม",
-    "desktopOnly": "เดสก์ท็อป",
     "venueError": "ผิดพลาด",
     "trending": "มาแรง",
     "names": {
@@ -1389,7 +1388,8 @@
       "stopLossPercent": "ตัดขาดทุน {{percent}}",
       "sizeAtOffset": "{{size}} ที่ {{offset}}",
       "waitDuration": "รอ {{duration}}"
-    }
+    },
+    "desktopOnlyBadge": "เดสก์ท็อป"
   },
   "legal": {
     "terms": "ข้อกำหนดและเงื่อนไข",
