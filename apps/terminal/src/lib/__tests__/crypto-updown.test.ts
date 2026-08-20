@@ -16,6 +16,7 @@
 import { describe, expect, it } from 'bun:test'
 
 import {
+  MAX_QUOTE_AGE_MS,
   collectUpDownRows,
   formatWindowCountdown,
   modelUpProbability,
@@ -130,9 +131,9 @@ describe('modelUpProbability', () => {
 })
 
 describe('realizedVolatility', () => {
-  const bars = (closes: Array<number>): Array<Candle> =>
+  const bars = (closes: Array<number>, step = HOUR): Array<Candle> =>
     closes.map((close, i) => ({
-      ts: i * HOUR,
+      ts: i * step,
       open: close,
       high: close,
       low: close,
@@ -158,6 +159,38 @@ describe('realizedVolatility', () => {
 
   it('refuses a sample too short to mean anything', () => {
     expect(realizedVolatility(bars([100, 101, 102]))).toBeUndefined()
+  })
+
+  it('reads the annualisation off the bars instead of assuming an hour', () => {
+    // The coupling this replaced: a hardcoded 8,760 that was correct only for
+    // hourly candles, with nothing to say so. Volatility is a function of
+    // sampling frequency, so the SAME per-bar moves annualise to a bigger
+    // number the finer the bars are — twelve times as many 5m bars in a year
+    // means sqrt(12) times the sigma.
+    const closes = [100]
+    for (let i = 1; i < 100; i++) {
+      closes.push(i % 2 === 1 ? closes[i - 1] * 1.01 : closes[i - 1] / 1.01)
+    }
+    const hourly = realizedVolatility(bars(closes))!
+    const fiveMinute = realizedVolatility(bars(closes, HOUR / 12))!
+    expect(fiveMinute / hourly).toBeCloseTo(Math.sqrt(12), 4)
+    expect(fiveMinute).toBeCloseTo(Math.log(1.01) * Math.sqrt(365 * 24 * 12), 2)
+  })
+
+  it('survives a gap in the series rather than annualising off it', () => {
+    // One missing bar in a venue's history would drag a MEAN spacing upward and
+    // quietly understate sigma. The median does not move.
+    const closes = [100]
+    for (let i = 1; i < 100; i++) {
+      closes.push(i % 2 === 1 ? closes[i - 1] * 1.01 : closes[i - 1] / 1.01)
+    }
+    const withGap = bars(closes).map((candle, i) =>
+      i >= 50 ? { ...candle, ts: candle.ts + 6 * HOUR } : candle,
+    )
+    expect(realizedVolatility(withGap)).toBeCloseTo(
+      realizedVolatility(bars(closes))!,
+      6,
+    )
   })
 })
 
@@ -316,6 +349,52 @@ describe('priceRow', () => {
     const priced = priceRow(rowFor(), undefined, candles, 'ready')
     expect(priced.modelUp).toBeUndefined()
     expect(priced.edge).toBeUndefined()
+  })
+
+  it('treats an unstated quote age as fresh', () => {
+    // Every caller without a poll behind it (the CLI, a test, the assistant's
+    // tools) passes nothing and must keep the edge.
+    const priced = priceRow(
+      rowFor({ referenceBasis: 'venue', referencePrice: 100 }),
+      101,
+      candles,
+      'ready',
+    )
+    expect(priced.quoteStale).toBeUndefined()
+    expect(priced.edge).toBeDefined()
+  })
+
+  it('keeps the edge through a quote age inside one missed poll', () => {
+    const priced = priceRow(
+      rowFor({ referenceBasis: 'venue', referencePrice: 100 }),
+      101,
+      candles,
+      'ready',
+      MAX_QUOTE_AGE_MS - 1,
+    )
+    expect(priced.quoteStale).toBeUndefined()
+    expect(priced.edge).toBeDefined()
+  })
+
+  it('WITHHOLDS the edge once the venue quote has gone stale', () => {
+    // The bug this exists for: React Query parks `refetchInterval` while the
+    // document is hidden and the sockets behind spot do not park with it, so a
+    // backgrounded tab came back with a live price against a ten-minute-old
+    // probability. Subtracting those produced a seventy-point edge on the
+    // busiest contract Polymarket lists.
+    const priced = priceRow(
+      rowFor({ referenceBasis: 'venue', referencePrice: 100 }),
+      101,
+      candles,
+      'ready',
+      MAX_QUOTE_AGE_MS + 1,
+    )
+    expect(priced.quoteStale).toBe(true)
+    expect(priced.edge).toBeUndefined()
+    // The model is built entirely from live inputs, so it survives — and so
+    // does the venue's own last number. Only the comparison is withdrawn.
+    expect(priced.modelUp).toBeDefined()
+    expect(priced.marketUp).toBe(0.6)
   })
 })
 

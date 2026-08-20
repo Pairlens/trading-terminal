@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Pilih pool",
     "noPoolBody": "Pilih pool di peta, lalu uang yang melewatinya muncul di sini, per lima menit.",
-    "loadingTitle": "Memuat swap",
-    "loadingBody": "Mengambil swap terbaru pada pool ini.",
     "emptyTitle": "Belum ada swap",
     "emptyBody": "Belakangan tidak ada yang melewati pool ini, jadi tidak ada arus untuk dihitung bersih.",
     "netHour": "{{value}} satu jam terakhir",
     "bucketTooltip": "{{buy}} dibeli, {{sell}} dijual",
     "axisNote": "Beli dikurangi jual per 5 menit. Likuiditas yang ditambah atau ditarik LP tidak ada di feed ini.",
     "biggestLabel": "Swap terbesar",
-    "waitingTitle": "Menunggu peta pool",
-    "waitingBody": "Pool di chain ini masih dimuat. Aliran muncul begitu satu pool dipilih.",
     "unavailableTitle": "Pool belum bisa diambil",
     "swapsUnavailableTitle": "Swap tidak tersedia saat ini",
-    "swapsUnavailableBody": "Penyedia data on-chain tidak mengembalikan swap pool ini. Biasanya pulih dengan sendirinya."
+    "swapsUnavailableBody": "Penyedia data on-chain tidak mengembalikan swap pool ini. Biasanya pulih dengan sendirinya.",
+    "loadingLabel": "Memuat swap",
+    "pacedNote": "Menunggu peta mengurutkan pool di chain ini.",
+    "pacedNotePool": "Membaca swap lewat {{pool}}. Penyedia membatasi permintaan, jadi butuh beberapa detik."
   },
   "lpPanes": {
     "venueFallback": "chain ini",
@@ -719,7 +718,31 @@
     "referenceTooltip": "Diselesaikan pada {{source}}.",
     "modelNote": "Model adalah difusi tanpa drift pada volatilitas terealisasi terkini. Model ini mengabaikan biaya, spread, dan kedalaman order book.",
     "approxNote": "≈ menandai acuan yang dibaca dari jam yang memuat harga penyelesaian satu menit milik bursa.",
-    "desktopOnly": "{{venues}} memerlukan aplikasi desktop."
+    "desktopOnly": "{{venues}} memerlukan aplikasi desktop.",
+    "viewFocus": "Fokus",
+    "viewBoard": "Tabel",
+    "focus": {
+      "assetNext": "Berikutnya",
+      "toBeat": "Target",
+      "now": "Sekarang",
+      "closesIn": "Tutup dalam",
+      "settlesOn": "diselesaikan di {{source}}",
+      "model": "Model {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "bayar {{value}}×",
+      "noBook": "tanpa buku",
+      "chartWaiting": "Menunggu tape",
+      "tapeLabel": "Aliran di {{venue}}",
+      "tapeWaiting": "Menunggu transaksi",
+      "noWindowTitle": "Tidak ada jendela terbuka",
+      "noWindowBody": "Tidak ada yang diperdagangkan untuk aset dan horizon ini sekarang. Jendela berikutnya dibuka sesuai jadwal bursa.",
+      "flowBought": "{{value}} dibeli",
+      "flowSold": "{{value}} dijual",
+      "printBuy": "BELI",
+      "printSell": "JUAL",
+      "oddsStale": "odds sudah basi"
+    },
+    "oddsStaleTooltip": "Odds dari bursa belum diperbarui, jadi edge terhadap harga langsung tidak berarti."
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "Mencoba lagi",
     "retry": "Coba lagi",
     "retryingBody": "Penyedia data sedang menolak permintaan. Akan dicoba lagi otomatis.",
-    "unavailableBody": "Penyedia data pool tidak dapat dihubungi. Coba lagi sebentar."
+    "unavailableBody": "Penyedia data pool tidak dapat dihubungi. Coba lagi sebentar.",
+    "loadingLabel": "Memuat pool di chain ini",
+    "pacedNote": "Mengurutkan pool. Penyedia data on-chain punya batas kuota, jadi pembacaan pertama butuh beberapa detik.",
+    "pacedNoteChain": "Mengurutkan pool di {{chain}}. Penyedia data on-chain punya batas kuota, jadi pembacaan pertama butuh beberapa detik.",
+    "deepening": "memuat pool lainnya",
+    "refreshing": "menyegarkan"
   },
   "poolStats": {
     "notOnChainTitle": "Bukan pasangan on-chain",

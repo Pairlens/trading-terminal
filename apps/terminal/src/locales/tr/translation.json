@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Bir havuz seçin",
     "noPoolBody": "Haritadan bir havuz seçin, içinden geçen para burada beşer dakikalık dilimlerle görünsün.",
-    "loadingTitle": "Takaslar yükleniyor",
-    "loadingBody": "Bu havuzun son takasları getiriliyor.",
     "emptyTitle": "Henüz takas yok",
     "emptyBody": "Son dönemde bu havuzdan hiçbir işlem geçmedi, dolayısıyla netleştirilecek akış yok.",
     "netHour": "son bir saatte {{value}}",
     "bucketTooltip": "{{buy}} alım, {{sell}} satım",
     "axisNote": "5 dakikada bir alımlar eksi satımlar. LP'lerin eklediği veya çektiği likidite bu akışta yok.",
     "biggestLabel": "En büyük takaslar",
-    "waitingTitle": "Harita bekleniyor",
-    "waitingBody": "Zincirin havuzları hâlâ yükleniyor. Bir havuz seçilince akış burada belirir.",
     "unavailableTitle": "Şu anda havuzlar alınamıyor",
     "swapsUnavailableTitle": "Takaslar şu anda kullanılamıyor",
-    "swapsUnavailableBody": "Zincir üstü veri sağlayıcısı bu havuzun takaslarını döndürmedi. Genellikle kendiliğinden düzelir."
+    "swapsUnavailableBody": "Zincir üstü veri sağlayıcısı bu havuzun takaslarını döndürmedi. Genellikle kendiliğinden düzelir.",
+    "loadingLabel": "Takaslar yükleniyor",
+    "pacedNote": "Haritanın bu zincirin havuzlarını sıralaması bekleniyor.",
+    "pacedNotePool": "{{pool}} üzerinden geçen takaslar okunuyor. Sağlayıcı istekleri sınırlıyor, birkaç saniye sürer."
   },
   "lpPanes": {
     "venueFallback": "bu zincir",
@@ -719,7 +718,31 @@
     "referenceTooltip": "{{source}} üzerinden uzlaşır.",
     "modelNote": "Model, son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyondur. Komisyonları, makası ve emir defteri derinliğini yok sayar.",
     "approxNote": "≈ borsanın bir dakikalık uzlaşma fiyatını içeren saatten okunan referansı işaretler.",
-    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir."
+    "desktopOnly": "{{venues}} masaüstü uygulamasını gerektirir.",
+    "viewFocus": "Odak",
+    "viewBoard": "Tablo",
+    "focus": {
+      "assetNext": "Sıradaki",
+      "toBeat": "Aşılacak",
+      "now": "Şimdi",
+      "closesIn": "Kapanışa",
+      "settlesOn": "{{source}} üzerinden uzlaşır",
+      "model": "Model {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "{{value}}× öder",
+      "noBook": "defter yok",
+      "chartWaiting": "Akış bekleniyor",
+      "tapeLabel": "{{venue}} akışı",
+      "tapeWaiting": "İşlem bekleniyor",
+      "noWindowTitle": "Açık pencere yok",
+      "noWindowBody": "Bu varlık ve vade için şu anda işlem görmüyor. Bir sonraki pencere borsanın kendi takvimine göre açılır.",
+      "flowBought": "{{value}} alım",
+      "flowSold": "{{value}} satım",
+      "printBuy": "ALIŞ",
+      "printSell": "SATIŞ",
+      "oddsStale": "oranlar eski"
+    },
+    "oddsStaleTooltip": "Borsanın oranları yenilenmedi, bu yüzden canlı fiyata karşı bir edge anlamsız olurdu."
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "Yeniden deneniyor",
     "retry": "Yeniden dene",
     "retryingBody": "Sağlayıcı şu anda istekleri reddediyor. Kendiliğinden yeniden deneniyor.",
-    "unavailableBody": "Havuz veri sağlayıcısına ulaşılamadı. Birazdan tekrar deneyin."
+    "unavailableBody": "Havuz veri sağlayıcısına ulaşılamadı. Birazdan tekrar deneyin.",
+    "loadingLabel": "Bu zincirin havuzları yükleniyor",
+    "pacedNote": "Havuzlar sıralanıyor. Zincir üstü veri sağlayıcısı sınırlı olduğu için ilk okuma birkaç saniye sürer.",
+    "pacedNoteChain": "{{chain}} üzerindeki havuzlar sıralanıyor. Zincir üstü veri sağlayıcısı sınırlı olduğu için ilk okuma birkaç saniye sürer.",
+    "deepening": "daha fazla havuz yükleniyor",
+    "refreshing": "yenileniyor"
   },
   "poolStats": {
     "notOnChainTitle": "Zincir üstü bir parite değil",

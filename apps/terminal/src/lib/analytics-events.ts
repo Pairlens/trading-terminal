@@ -437,7 +437,21 @@ export interface AnalyticsEvents {
     venue: string
     horizon: string
     hasModel: boolean
+    /** Which shape the click came from: 'focus' or 'board'. */
+    view: string
   }
+  /** The pane has two shapes and only one can be the default. This is the
+   * question that decides which: does anyone switch, and in which direction.
+   * A board that is never switched away from means the focus card is not worth
+   * its build; a focus card nobody leaves means the scanner belongs behind a
+   * link rather than a toggle. `view` is the shape switched TO, and it names
+   * our own surface and nothing about the contract. */
+  prediction_updown_view_changed: { view: string }
+  /** Whether the asset switcher is used at all, which is the one interaction
+   * the focus card adds over a static pane — and the one that costs a ticker
+   * and a trade subscription each time. Asset is a public ticker on a public
+   * contract slate, carries no position and no size. */
+  prediction_updown_asset_selected: { asset: string; horizon: string }
 
   // ── Alerts & notifications ────────────────────────────────────────
   alert_created: { kind: string }

@@ -28,6 +28,7 @@ import type { PoolTrade } from '@pairlens/shared/instrument-types'
 
 import { PaneEmpty } from '@/components/panes/pane-primitives'
 import { DexPaneHeader } from '@/components/dex/dex-pane-primitives'
+import { LiquidityFlowSkeleton } from '@/components/dex/dex-skeletons'
 import {
   DISCOVERY_POOL_LISTING,
   usePoolListing,
@@ -90,14 +91,13 @@ export function LiquidityFlowPane() {
   )
 
   if (!pool) {
+    // A chart-shaped placeholder rather than a sentence about the pane beside
+    // this one. The map now seeds a selection off its FIRST page instead of
+    // waiting for the whole depth walk, so this state lasts a beat rather than
+    // the ten seconds it used to — and what follows it is this exact layout
+    // with real bars in it, so nothing moves when the tape lands.
     if (listing.isLoading || listing.retrying) {
-      return (
-        <PaneEmpty
-          icon={Waves}
-          title={t('liquidityFlow.waitingTitle')}
-          body={t('liquidityFlow.waitingBody')}
-        />
-      )
+      return <LiquidityFlowSkeleton />
     }
     return (
       <PaneEmpty
@@ -141,35 +141,35 @@ export function LiquidityFlowPane() {
         }
       />
 
-      {trades.length === 0 ? (
-        // Three outcomes, three sentences. "No swaps yet" was being shown for
-        // all of them, which on a rate-limited provider told the reader a pool
-        // doing eight figures a day had gone quiet — the one reading of an
-        // empty flow chart that is never recoverable by waiting.
+      {trades.length === 0 && !error && (isLoading || retrying) ? (
+        <LiquidityFlowSkeleton poolName={pool.name} />
+      ) : trades.length === 0 ? (
+        // Two outcomes, two sentences, and the loading one has already been
+        // taken by the skeleton above. "No swaps yet" used to be shown for all
+        // three, which on a rate-limited provider told the reader a pool doing
+        // eight figures a day had gone quiet — the one reading of an empty flow
+        // chart that is never recoverable by waiting.
         //
         // The failure OUTRANKS the retry, and that ordering is the whole
         // point. This tape polls every fifteen seconds and a refused cycle
-        // takes longer than that to give up, so a pane that showed "loading"
+        // takes longer than that to give up, so a pane that drew a skeleton
         // whenever an attempt was in flight would spend its whole life
-        // claiming to load and never once say what was wrong. Loading is only
-        // honest before the first failure.
+        // claiming to load and never once say what was wrong. The skeleton is
+        // only honest before the first failure, which is what the `!error`
+        // guard on it says.
         <PaneEmpty
           icon={Waves}
           title={
             error
               ? t('liquidityFlow.swapsUnavailableTitle')
-              : isLoading || retrying
-                ? t('liquidityFlow.loadingTitle')
-                : t('liquidityFlow.emptyTitle')
+              : t('liquidityFlow.emptyTitle')
           }
           body={
             error
               ? throttled
                 ? error
                 : t('liquidityFlow.swapsUnavailableBody')
-              : isLoading || retrying
-                ? t('liquidityFlow.loadingBody')
-                : t('liquidityFlow.emptyBody')
+              : t('liquidityFlow.emptyBody')
           }
         />
       ) : (

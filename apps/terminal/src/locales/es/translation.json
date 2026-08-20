@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Elige un pool",
     "noPoolBody": "Selecciona un pool en el mapa y aquí aparece el dinero que lo cruza, en tramos de cinco minutos.",
-    "loadingTitle": "Cargando swaps",
-    "loadingBody": "Obteniendo los swaps recientes de este pool.",
     "emptyTitle": "Aún sin swaps",
     "emptyBody": "No se ha operado nada por este pool últimamente, así que no hay flujo que netear.",
     "netHour": "{{value}} en la última hora",
     "bucketTooltip": "{{buy}} comprados, {{sell}} vendidos",
     "axisNote": "Compras menos ventas cada 5 minutos. La liquidez que los LP añaden o retiran no está en este feed.",
     "biggestLabel": "Swaps más grandes",
-    "waitingTitle": "Esperando al mapa",
-    "waitingBody": "Los pools de la cadena siguen cargando. El flujo aparece en cuanto se selecciona uno.",
     "unavailableTitle": "Pools no disponibles ahora mismo",
     "swapsUnavailableTitle": "Swaps no disponibles ahora mismo",
-    "swapsUnavailableBody": "El proveedor de datos on-chain no devolvió los swaps de este pool. Suele resolverse solo."
+    "swapsUnavailableBody": "El proveedor de datos on-chain no devolvió los swaps de este pool. Suele resolverse solo.",
+    "loadingLabel": "Cargando swaps",
+    "pacedNote": "Esperando a que el mapa ordene los pools de esta cadena.",
+    "pacedNotePool": "Leyendo los swaps de {{pool}}. El proveedor limita las peticiones, así que tarda unos segundos."
   },
   "lpPanes": {
     "venueFallback": "esta cadena",
@@ -719,7 +718,31 @@
     "referenceTooltip": "Liquida contra {{source}}.",
     "modelNote": "El modelo es una difusión sin deriva con la volatilidad realizada reciente. No tiene en cuenta comisiones, el spread ni la profundidad del libro.",
     "approxNote": "≈ marca una referencia leída de la hora que contiene el precio de liquidación de un minuto del mercado.",
-    "desktopOnly": "{{venues}} necesita la app de escritorio."
+    "desktopOnly": "{{venues}} necesita la app de escritorio.",
+    "viewFocus": "Foco",
+    "viewBoard": "Tabla",
+    "focus": {
+      "assetNext": "Siguiente",
+      "toBeat": "A superar",
+      "now": "Ahora",
+      "closesIn": "Cierra en",
+      "settlesOn": "liquida en {{source}}",
+      "model": "Modelo {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "paga {{value}}×",
+      "noBook": "sin libro",
+      "chartWaiting": "Esperando la cinta",
+      "tapeLabel": "Flujo en {{venue}}",
+      "tapeWaiting": "Esperando operaciones",
+      "noWindowTitle": "Ninguna ventana abierta",
+      "noWindowBody": "Ahora mismo no se negocia nada para este activo y horizonte. La próxima ventana abre según el calendario del mercado.",
+      "flowBought": "{{value}} comprado",
+      "flowSold": "{{value}} vendido",
+      "printBuy": "COMPRA",
+      "printSell": "VENTA",
+      "oddsStale": "cuotas desactualizadas"
+    },
+    "oddsStaleTooltip": "Las cuotas del mercado no se han actualizado, así que el edge contra un precio en vivo no significaría nada."
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "Volviendo a preguntar",
     "retry": "Reintentar",
     "retryingBody": "El proveedor está rechazando peticiones ahora mismo. Se reintenta solo.",
-    "unavailableBody": "No se pudo contactar con el proveedor de datos de pools. Inténtalo en un momento."
+    "unavailableBody": "No se pudo contactar con el proveedor de datos de pools. Inténtalo en un momento.",
+    "loadingLabel": "Cargando los pools de esta cadena",
+    "pacedNote": "Ordenando pools. El proveedor de datos on-chain está limitado, así que la primera lectura tarda unos segundos.",
+    "pacedNoteChain": "Ordenando pools en {{chain}}. El proveedor de datos on-chain está limitado, así que la primera lectura tarda unos segundos.",
+    "deepening": "cargando más pools",
+    "refreshing": "actualizando"
   },
   "poolStats": {
     "notOnChainTitle": "No es un par on-chain",

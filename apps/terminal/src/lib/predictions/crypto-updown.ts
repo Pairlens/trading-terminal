@@ -34,14 +34,64 @@ import type {
 } from '@pairlens/shared/instrument-types'
 import type { Candle } from '@pairlens/shared/types'
 
-/** Bars of hourly history behind the volatility estimate. */
-export const VOL_SAMPLE_BARS = 120
+/**
+ * Timeframe the settlement history is read at, and the sampling frequency the
+ * volatility estimate inherits from it.
+ *
+ * Five minutes, not an hour, and the difference is not cosmetic. Realized
+ * volatility is a function of how often you SAMPLE, and BTC's is roughly 30%
+ * annualised measured hourly, 46% measured at five minutes and 59% measured at
+ * one. The model then scales whichever number it was given down to a horizon of
+ * MINUTES by sqrt(tau) — so feeding it the hourly figure for a window with three
+ * minutes left understates the vol that decides the contract by about half, and
+ * `N(d2)` is pushed that much harder toward 0 or 1. On a real window that was
+ * the difference between a model saying 0.2c and one saying 3c: overconfidence,
+ * always in the direction of whichever side is currently winning.
+ *
+ * Five minutes rather than one is the standard compromise in the realized-vol
+ * literature and it is the right one here: at one-minute sampling the bid-ask
+ * bounce inflates the estimate with microstructure noise that is not diffusion,
+ * and this number is presented to someone about to trade against it.
+ *
+ * The reference reading is unaffected. Polymarket settles its hourly contract on
+ * the open of the 1h candle at `opensMs`, and the open of the 5m candle starting
+ * at the same instant IS that number.
+ */
+export const SETTLEMENT_TIMEFRAME = '5m'
+
+/**
+ * Bars of settlement history behind the reference and the volatility estimate.
+ *
+ * Three hundred five-minute bars is just over 25 hours, which is set by the
+ * REFERENCE rather than by the volatility: a Polymarket daily window that just
+ * opened names a candle 24 hours back, and a sample that cannot reach it leaves
+ * the row without a distance column. The volatility gets a 299-return sample out
+ * of the same fetch.
+ */
+export const VOL_SAMPLE_BARS = 300
+
+/**
+ * How old the venue's quote may be before the edge stops being computed.
+ *
+ * The edge is the ONE number here that mixes two clocks: a model built from
+ * live spot against a probability that arrived on a thirty-second poll. Spot
+ * and the countdown come off a socket and never stop; the poll does — React
+ * Query parks `refetchInterval` while the document is hidden, so a tab left in
+ * the background comes back with a price that has moved a full percent and a
+ * probability from ten minutes ago. Subtracting those two produced a
+ * seventy-point edge on the busiest contract Polymarket lists, which is not a
+ * mispricing, it is us comparing a number to a memory.
+ *
+ * The model itself stays: it is honest, every input to it is live. Only the
+ * comparison is withdrawn, and the pane says why rather than blanking a cell.
+ *
+ * Seventy-five seconds is two poll cycles plus jitter, so a single missed
+ * refetch never trips it and a genuinely parked poller always does.
+ */
+export const MAX_QUOTE_AGE_MS = 75_000
 
 /** Milliseconds in a year, for the diffusion model's time-to-expiry. */
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000
-
-/** Hourly bars in a year, for annualising an hourly standard deviation. */
-const BARS_PER_YEAR = 365 * 24
 
 export type UpDownReferenceState =
   /** The venue published the number. */
@@ -78,6 +128,12 @@ export type UpDownRow = {
   edge?: number
   /** Annualised realized volatility behind `modelUp`. */
   sigma?: number
+  /**
+   * The venue's quote is older than `MAX_QUOTE_AGE_MS`, so `edge` is withheld.
+   * `marketUp` is still the venue's own last number and still worth showing;
+   * what it is no longer worth is subtracting from something live.
+   */
+  quoteStale?: boolean
 }
 
 /**
@@ -168,14 +224,21 @@ export function priceRow(
   spot: number | undefined,
   candles: Array<Candle> | undefined,
   candlesState: 'pending' | 'ready' | 'unavailable',
+  /**
+   * How long ago the venue's quote landed. Omitted means "assume fresh", which
+   * is what every caller without a poll behind it wants.
+   */
+  quoteAgeMs?: number,
 ): UpDownRow {
   const reference = resolveReference(row, candles, candlesState)
   const sigma = candles ? realizedVolatility(candles) : undefined
+  const quoteStale = quoteAgeMs !== undefined && quoteAgeMs > MAX_QUOTE_AGE_MS
   const priced: UpDownRow = {
     ...row,
     ...reference,
     ...(spot !== undefined ? { spot } : {}),
     ...(sigma !== undefined ? { sigma } : {}),
+    ...(quoteStale ? { quoteStale: true } : {}),
   }
 
   if (
@@ -196,7 +259,9 @@ export function priceRow(
     ...priced,
     drift: priced.spot / priced.reference - 1,
     ...(modelUp !== undefined ? { modelUp } : {}),
-    ...(modelUp !== undefined && priced.marketUp !== undefined
+    // The model minus a quote we know is stale is the one output that would be
+    // confidently wrong rather than merely late. See MAX_QUOTE_AGE_MS.
+    ...(modelUp !== undefined && priced.marketUp !== undefined && !quoteStale
       ? { edge: modelUp - priced.marketUp }
       : {}),
   }
@@ -230,13 +295,23 @@ function resolveReference(
 }
 
 /**
- * Annualised realized volatility from hourly closes.
+ * Annualised realized volatility from a series of closes.
  *
  * The population standard deviation of log returns, scaled by the square root
  * of bars per year. Deliberately plain: an EWMA or a GARCH fit would be a
  * better forecast and a worse thing to put behind a number a user is asked to
  * trade against, because neither can be checked by eye against the chart in
  * the next pane.
+ *
+ * The annualisation factor is READ OFF THE CANDLES rather than declared, and
+ * that is the fix for a silent coupling that made this function quietly wrong.
+ * It used to multiply by a hardcoded 8,760 — correct only for hourly bars, with
+ * nothing to say so and nothing to break if a caller handed it anything else.
+ * Volatility is a function of sampling frequency, so the same tape sampled at
+ * five minutes reads about 50% higher than at an hour; a constant that has to
+ * agree with a timeframe chosen in a different file is a constant that will
+ * eventually disagree with it. The bar spacing is in the data, so it is taken
+ * from there, via the MEDIAN gap so one missing bar cannot skew it.
  *
  * Returns undefined rather than zero on a short or flat sample. Zero
  * volatility makes the model answer 0 or 1 with total confidence, which is the
@@ -245,17 +320,32 @@ function resolveReference(
 export function realizedVolatility(candles: Array<Candle>): number | undefined {
   if (candles.length < 24) return undefined
   const returns: Array<number> = []
+  const gaps: Array<number> = []
   for (let i = 1; i < candles.length; i++) {
     const previous = candles[i - 1].close
     const current = candles[i].close
     if (previous > 0 && current > 0) returns.push(Math.log(current / previous))
+    const gap = candles[i].ts - candles[i - 1].ts
+    if (gap > 0) gaps.push(gap)
   }
-  if (returns.length < 20) return undefined
+  if (returns.length < 20 || gaps.length === 0) return undefined
+  const intervalMs = median(gaps)
+  if (!(intervalMs > 0)) return undefined
+
   const mean = returns.reduce((sum, r) => sum + r, 0) / returns.length
   const variance =
     returns.reduce((sum, r) => sum + (r - mean) ** 2, 0) / returns.length
-  const sigma = Math.sqrt(variance * BARS_PER_YEAR)
+  const sigma = Math.sqrt(variance * (YEAR_MS / intervalMs))
   return sigma > 0 ? sigma : undefined
+}
+
+/** Median of a non-empty list. Copies rather than sorting the caller's array. */
+function median(values: Array<number>): number {
+  const sorted = values.slice().sort((a, b) => a - b)
+  const middle = Math.floor(sorted.length / 2)
+  return sorted.length % 2 === 0
+    ? (sorted[middle - 1] + sorted[middle]) / 2
+    : sorted[middle]
 }
 
 /**

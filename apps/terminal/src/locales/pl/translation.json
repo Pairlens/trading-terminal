@@ -533,19 +533,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Wybierz pulę",
     "noPoolBody": "Wskaż pulę na mapie, a pieniądz, który przez nią przechodzi, pojawi się tutaj w pięciominutowych odcinkach.",
-    "loadingTitle": "Wczytywanie swapów",
-    "loadingBody": "Pobieranie ostatnich swapów tej puli.",
     "emptyTitle": "Brak swapów",
     "emptyBody": "Ostatnio nic nie przeszło przez tę pulę, więc nie ma przepływu do zbilansowania.",
     "netHour": "{{value}} w ostatniej godzinie",
     "bucketTooltip": "kupiono {{buy}}, sprzedano {{sell}}",
     "axisNote": "Kupno minus sprzedaż co 5 minut. Płynność dodana lub wycofana przez LP nie znajduje się w tym strumieniu.",
     "biggestLabel": "Największe swapy",
-    "waitingTitle": "Czekam na mapę pul",
-    "waitingBody": "Pule tego łańcucha wciąż się ładują. Przepływ pojawi się po wybraniu puli.",
     "unavailableTitle": "Pule chwilowo niedostępne",
     "swapsUnavailableTitle": "Swapy chwilowo niedostępne",
-    "swapsUnavailableBody": "Dostawca danych on-chain nie zwrócił swapów tej puli. Zwykle wraca to samo z siebie."
+    "swapsUnavailableBody": "Dostawca danych on-chain nie zwrócił swapów tej puli. Zwykle wraca to samo z siebie.",
+    "loadingLabel": "Ładowanie swapów",
+    "pacedNote": "Czekamy, aż mapa uszereguje pule tego łańcucha.",
+    "pacedNotePool": "Odczytywanie swapów w {{pool}}. Dostawca ogranicza liczbę zapytań, to potrwa kilka sekund."
   },
   "lpPanes": {
     "venueFallback": "ten łańcuch",
@@ -771,7 +770,31 @@
     "referenceTooltip": "Rozlicza się według {{source}}.",
     "modelNote": "Model to dyfuzja bez dryfu przy ostatniej zrealizowanej zmienności. Pomija prowizje, spread i głębokość arkusza.",
     "approxNote": "≈ oznacza odniesienie odczytane z godziny zawierającej minutową cenę rozliczeniową giełdy.",
-    "desktopOnly": "{{venues}} wymaga aplikacji desktopowej."
+    "desktopOnly": "{{venues}} wymaga aplikacji desktopowej.",
+    "viewFocus": "Fokus",
+    "viewBoard": "Tabela",
+    "focus": {
+      "assetNext": "Następne",
+      "toBeat": "Do pobicia",
+      "now": "Teraz",
+      "closesIn": "Zamknięcie za",
+      "settlesOn": "rozliczane na {{source}}",
+      "model": "Model {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "płaci {{value}}×",
+      "noBook": "brak księgi",
+      "chartWaiting": "Czekamy na taśmę",
+      "tapeLabel": "Przepływ na {{venue}}",
+      "tapeWaiting": "Czekamy na transakcje",
+      "noWindowTitle": "Brak otwartego okna",
+      "noWindowBody": "Nic nie jest teraz notowane dla tego aktywa i horyzontu. Kolejne okno otwiera się zgodnie z harmonogramem giełdy.",
+      "flowBought": "kupiono {{value}}",
+      "flowSold": "sprzedano {{value}}",
+      "printBuy": "KUP",
+      "printSell": "SPRZ",
+      "oddsStale": "kursy nieaktualne"
+    },
+    "oddsStaleTooltip": "Kursy giełdy nie odświeżyły się, więc edge wobec ceny na żywo nie miałby znaczenia."
   },
   "onboarding": {
     "phase": {
@@ -1128,7 +1151,12 @@
     "retryingTitle": "Ponawiam",
     "retry": "Spróbuj ponownie",
     "retryingBody": "Dostawca odrzuca teraz żądania. Ponawiamy automatycznie.",
-    "unavailableBody": "Nie udało się połączyć z dostawcą danych o pulach. Spróbuj za chwilę."
+    "unavailableBody": "Nie udało się połączyć z dostawcą danych o pulach. Spróbuj za chwilę.",
+    "loadingLabel": "Ładowanie puli tego łańcucha",
+    "pacedNote": "Porządkowanie puli. Dostawca danych on-chain ma limity, więc pierwszy odczyt trwa kilka sekund.",
+    "pacedNoteChain": "Porządkowanie puli w sieci {{chain}}. Dostawca danych on-chain ma limity, więc pierwszy odczyt trwa kilka sekund.",
+    "deepening": "trwa ładowanie kolejnych puli",
+    "refreshing": "odświeżanie"
   },
   "poolStats": {
     "notOnChainTitle": "To nie jest para on-chain",

@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "풀 선택",
     "noPoolBody": "맵에서 풀을 고르면 그 풀을 통과한 자금이 5분 단위로 여기에 표시됩니다.",
-    "loadingTitle": "스왑 불러오는 중",
-    "loadingBody": "이 풀의 최근 스왑을 가져오고 있습니다.",
     "emptyTitle": "아직 스왑 없음",
     "emptyBody": "최근 이 풀에서 체결된 거래가 없어 상계할 흐름이 없습니다.",
     "netHour": "최근 1시간 {{value}}",
     "bucketTooltip": "매수 {{buy}}, 매도 {{sell}}",
     "axisNote": "5분당 매수에서 매도를 뺀 값입니다. LP가 넣거나 뺀 유동성은 이 피드에 포함되지 않습니다.",
     "biggestLabel": "최대 스왑",
-    "waitingTitle": "맵을 기다리는 중",
-    "waitingBody": "체인의 풀을 불러오고 있습니다. 풀을 고르면 흐름이 표시됩니다.",
     "unavailableTitle": "지금은 풀을 불러올 수 없음",
     "swapsUnavailableTitle": "지금은 스왑을 가져올 수 없습니다",
-    "swapsUnavailableBody": "온체인 데이터 제공자가 이 풀의 스왑을 반환하지 않았습니다. 대개 저절로 복구됩니다."
+    "swapsUnavailableBody": "온체인 데이터 제공자가 이 풀의 스왑을 반환하지 않았습니다. 대개 저절로 복구됩니다.",
+    "loadingLabel": "스왑을 불러오는 중",
+    "pacedNote": "맵이 이 체인의 풀을 정렬하기를 기다리는 중입니다.",
+    "pacedNotePool": "{{pool}}을 지나는 스왑을 읽는 중입니다. 제공자가 요청을 제한해 몇 초가 걸립니다."
   },
   "lpPanes": {
     "venueFallback": "이 체인",
@@ -719,7 +718,31 @@
     "referenceTooltip": "{{source}} 기준으로 정산됩니다.",
     "modelNote": "모델은 최근 실현 변동성을 사용하는 드리프트 없는 확산입니다. 수수료, 스프레드, 호가 깊이는 고려하지 않습니다.",
     "approxNote": "≈는 거래소의 1분 정산가가 포함된 시간대에서 읽은 기준가를 뜻합니다.",
-    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다."
+    "desktopOnly": "{{venues}}에는 데스크톱 앱이 필요합니다.",
+    "viewFocus": "포커스",
+    "viewBoard": "보드",
+    "focus": {
+      "assetNext": "다음",
+      "toBeat": "목표가",
+      "now": "현재",
+      "closesIn": "마감까지",
+      "settlesOn": "{{source}} 기준 정산",
+      "model": "모델 {{value}}",
+      "edge": "엣지 {{value}}",
+      "payout": "{{value}}× 지급",
+      "noBook": "호가 없음",
+      "chartWaiting": "체결 데이터를 기다리는 중",
+      "tapeLabel": "{{venue}} 자금 흐름",
+      "tapeWaiting": "체결을 기다리는 중",
+      "noWindowTitle": "열린 창이 없습니다",
+      "noWindowBody": "이 자산과 기간으로 지금 거래되는 것이 없습니다. 다음 창은 거래소 일정에 따라 열립니다.",
+      "flowBought": "{{value}} 매수",
+      "flowSold": "{{value}} 매도",
+      "printBuy": "매수",
+      "printSell": "매도",
+      "oddsStale": "배당률이 오래됨"
+    },
+    "oddsStaleTooltip": "거래소의 배당률이 갱신되지 않아 실시간 가격과 비교한 엣지는 의미가 없습니다."
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "다시 시도 중",
     "retry": "다시 시도",
     "retryingBody": "제공자가 지금 요청을 거부하고 있습니다. 자동으로 다시 시도합니다.",
-    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요."
+    "unavailableBody": "풀 데이터 제공자에 연결하지 못했습니다. 잠시 후 다시 시도하세요.",
+    "loadingLabel": "이 체인의 풀을 불러오는 중",
+    "pacedNote": "풀을 정렬하는 중입니다. 온체인 데이터 제공자에 요청 제한이 있어 첫 조회에 몇 초가 걸립니다.",
+    "pacedNoteChain": "{{chain}}의 풀을 정렬하는 중입니다. 온체인 데이터 제공자에 요청 제한이 있어 첫 조회에 몇 초가 걸립니다.",
+    "deepening": "풀을 더 불러오는 중",
+    "refreshing": "새로고침 중"
   },
   "poolStats": {
     "notOnChainTitle": "온체인 페어가 아님",

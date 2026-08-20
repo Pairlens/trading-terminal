@@ -151,7 +151,7 @@ holding) are called out in their own footnotes rather than estimated. See
 | **Event Board**       | Live events in two card shapes: binary questions with the probability large, races with every runner priced                                                  |
 | **Odds Movers**       | The events whose probability moved most today, named by their event, with the move stated in points                                                          |
 | **Resolving Soon**    | Contracts closest to settlement, sorted by the clock rather than by volume                                                                                   |
-| **Crypto Up/Down**    | The recurring BTC, ETH and SOL up-or-down windows on both venues, each against the spot price it settles on                                                  |
+| **Crypto Up/Down**    | One short-dated window watched live against the price it settles on, or the whole slate as a scanner. Toggle top right                                       |
 
 Everything from Funding Matrix down arrives with an asset-class family, so a
 terminal with Pairlens DEX uninstalled has no Chains panel to add. These are
@@ -188,6 +188,13 @@ clicked. Pool Detail paints the map row's own figures the moment you select a
 pool and swaps them for live pool state as soon as it lands; when the on-chain
 data provider is rate limiting, both panes say so rather than drawing a pool
 that has gone quiet.
+
+The three panes share one metered provider, so the board loads in a deliberate
+order: the selected pool's state and swaps are fetched ahead of the chain
+rail's background sweep, the Pool Map seeds its selection from the first page
+of the ranking rather than the whole three-page walk, and the last ranking is
+kept locally so a revisit paints before the network answers. See
+[DEX and wallets](/docs/dex-trading) for the detail.
 
 ## News and sentiment
 

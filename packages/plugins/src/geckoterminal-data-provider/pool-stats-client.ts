@@ -13,6 +13,7 @@
  */
 import { notePool, resolvePool } from './pool-resolver'
 import { geckoFetch as fetch } from './rate-limiter'
+import type { RequestPriority } from './rate-limiter'
 import type { PoolStats } from '@pairlens/shared/instrument-types'
 
 const API_BASE = 'https://api.geckoterminal.com/api/v2'
@@ -149,11 +150,16 @@ export async function fetchPoolStats(
   pair: string,
   network: string,
   poolAddress?: string,
+  priority: RequestPriority = 'normal',
 ): Promise<PoolStats | null> {
   const address = poolAddress || (await resolvePool(pair, network))?.address
   if (!address) return null
 
-  const res = await fetch(`${API_BASE}/networks/${network}/pools/${address}`)
+  const res = await fetch(
+    `${API_BASE}/networks/${network}/pools/${address}`,
+    undefined,
+    priority,
+  )
   if (!res.ok) {
     throw new Error(`GeckoTerminal pool ${address}: HTTP ${res.status}`)
   }

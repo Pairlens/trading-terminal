@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "プールを選択",
     "noPoolBody": "マップでプールを選ぶと、そこを通った資金が5分刻みでここに表示されます。",
-    "loadingTitle": "スワップを読み込み中",
-    "loadingBody": "このプールの直近スワップを取得しています。",
     "emptyTitle": "スワップはまだありません",
     "emptyBody": "最近このプールで約定がないため、相殺する流れがありません。",
     "netHour": "直近1時間で {{value}}",
     "bucketTooltip": "買い {{buy}}、売り {{sell}}",
     "axisNote": "5分ごとの買い引く売り。LPによる流動性の追加や引き出しはこのフィードに含まれません。",
     "biggestLabel": "最大のスワップ",
-    "waitingTitle": "マップを待機中",
-    "waitingBody": "チェーンのプールを読み込んでいます。プールを選ぶとフローが表示されます。",
     "unavailableTitle": "現在プールを取得できません",
     "swapsUnavailableTitle": "現在スワップを取得できません",
-    "swapsUnavailableBody": "オンチェーンのデータプロバイダーがこのプールのスワップを返しませんでした。通常はしばらくすると復旧します。"
+    "swapsUnavailableBody": "オンチェーンのデータプロバイダーがこのプールのスワップを返しませんでした。通常はしばらくすると復旧します。",
+    "loadingLabel": "スワップを読み込み中",
+    "pacedNote": "マップがこのチェーンのプールをランキングするのを待っています。",
+    "pacedNotePool": "{{pool}} を通るスワップを読み込んでいます。プロバイダーがリクエストを制限しているため、数秒かかります。"
   },
   "lpPanes": {
     "venueFallback": "このチェーン",
@@ -719,7 +718,31 @@
     "referenceTooltip": "{{source}} で決済されます。",
     "modelNote": "モデルは直近の実現ボラティリティによるドリフトなし拡散です。手数料、スプレッド、板の厚みは考慮していません。",
     "approxNote": "≈ は、取引所の1分決済値を含む時間足から読み取った基準値を示します。",
-    "desktopOnly": "{{venues}} にはデスクトップアプリが必要です。"
+    "desktopOnly": "{{venues}} にはデスクトップアプリが必要です。",
+    "viewFocus": "フォーカス",
+    "viewBoard": "ボード",
+    "focus": {
+      "assetNext": "次",
+      "toBeat": "目標価格",
+      "now": "現在",
+      "closesIn": "残り",
+      "settlesOn": "{{source}} で決済",
+      "model": "モデル {{value}}",
+      "edge": "エッジ {{value}}",
+      "payout": "{{value}}× の払い戻し",
+      "noBook": "板なし",
+      "chartWaiting": "ティックを待っています",
+      "tapeLabel": "{{venue}} のフロー",
+      "tapeWaiting": "約定を待っています",
+      "noWindowTitle": "開いているウィンドウがありません",
+      "noWindowBody": "この銘柄と期間で現在取引されているものはありません。次のウィンドウは取引所のスケジュールに従って開きます。",
+      "flowBought": "{{value}} 買い",
+      "flowSold": "{{value}} 売り",
+      "printBuy": "買",
+      "printSell": "売",
+      "oddsStale": "オッズが古い"
+    },
+    "oddsStaleTooltip": "取引所のオッズが更新されていないため、ライブ価格に対するエッジは意味を持ちません。"
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "再試行中",
     "retry": "再試行",
     "retryingBody": "プロバイダーが現在リクエストを拒否しています。自動で再試行します。",
-    "unavailableBody": "プール情報の提供元に接続できませんでした。しばらくしてからお試しください。"
+    "unavailableBody": "プール情報の提供元に接続できませんでした。しばらくしてからお試しください。",
+    "loadingLabel": "このチェーンのプールを読み込み中",
+    "pacedNote": "プールをランキング中です。オンチェーンのデータプロバイダーにはレート制限があるため、最初の読み込みに数秒かかります。",
+    "pacedNoteChain": "{{chain}} のプールをランキング中です。オンチェーンのデータプロバイダーにはレート制限があるため、最初の読み込みに数秒かかります。",
+    "deepening": "他のプールを読み込み中",
+    "refreshing": "更新中"
   },
   "poolStats": {
     "notOnChainTitle": "オンチェーンのペアではありません",

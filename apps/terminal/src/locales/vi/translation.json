@@ -489,19 +489,18 @@
   "liquidityFlow": {
     "noPoolTitle": "Chọn một pool",
     "noPoolBody": "Chọn pool trên bản đồ, dòng tiền đi qua nó sẽ hiện ở đây theo từng năm phút.",
-    "loadingTitle": "Đang tải swap",
-    "loadingBody": "Đang lấy các swap gần đây của pool này.",
     "emptyTitle": "Chưa có swap",
     "emptyBody": "Gần đây không có giao dịch nào qua pool này, nên không có dòng tiền để bù trừ.",
     "netHour": "{{value}} trong một giờ qua",
     "bucketTooltip": "mua {{buy}}, bán {{sell}}",
     "axisNote": "Mua trừ bán mỗi 5 phút. Thanh khoản do LP thêm vào hay rút ra không nằm trong luồng này.",
     "biggestLabel": "Swap lớn nhất",
-    "waitingTitle": "Đang chờ bản đồ pool",
-    "waitingBody": "Các pool của chuỗi vẫn đang tải. Dòng tiền hiện ra ngay khi chọn một pool.",
     "unavailableTitle": "Hiện chưa lấy được pool",
     "swapsUnavailableTitle": "Hiện chưa lấy được swap",
-    "swapsUnavailableBody": "Nhà cung cấp dữ liệu on-chain không trả về swap của pool này. Thường sẽ tự khôi phục."
+    "swapsUnavailableBody": "Nhà cung cấp dữ liệu on-chain không trả về swap của pool này. Thường sẽ tự khôi phục.",
+    "loadingLabel": "Đang tải giao dịch swap",
+    "pacedNote": "Đang chờ bản đồ xếp hạng pool của chuỗi này.",
+    "pacedNotePool": "Đang đọc các swap qua {{pool}}. Nhà cung cấp giới hạn yêu cầu nên mất vài giây."
   },
   "lpPanes": {
     "venueFallback": "chuỗi này",
@@ -719,7 +718,31 @@
     "referenceTooltip": "Thanh toán theo {{source}}.",
     "modelNote": "Mô hình là một khuếch tán không trôi theo biến động thực tế gần đây. Nó bỏ qua phí, chênh lệch giá mua bán và độ sâu sổ lệnh.",
     "approxNote": "≈ đánh dấu tham chiếu đọc từ khung giờ chứa giá thanh toán một phút của sàn.",
-    "desktopOnly": "{{venues}} cần ứng dụng máy tính."
+    "desktopOnly": "{{venues}} cần ứng dụng máy tính.",
+    "viewFocus": "Tiêu điểm",
+    "viewBoard": "Bảng",
+    "focus": {
+      "assetNext": "Kế tiếp",
+      "toBeat": "Mốc cần vượt",
+      "now": "Hiện tại",
+      "closesIn": "Đóng sau",
+      "settlesOn": "thanh toán theo {{source}}",
+      "model": "Mô hình {{value}}",
+      "edge": "Edge {{value}}",
+      "payout": "trả {{value}}×",
+      "noBook": "chưa có sổ lệnh",
+      "chartWaiting": "Đang chờ dữ liệu khớp lệnh",
+      "tapeLabel": "Dòng tiền trên {{venue}}",
+      "tapeWaiting": "Đang chờ khớp lệnh",
+      "noWindowTitle": "Không có cửa sổ nào mở",
+      "noWindowBody": "Hiện chưa có giao dịch nào cho tài sản và khung thời gian này. Cửa sổ kế tiếp mở theo lịch của sàn.",
+      "flowBought": "mua {{value}}",
+      "flowSold": "bán {{value}}",
+      "printBuy": "MUA",
+      "printSell": "BÁN",
+      "oddsStale": "tỷ lệ đã cũ"
+    },
+    "oddsStaleTooltip": "Tỷ lệ của sàn chưa được làm mới nên edge so với giá trực tiếp sẽ không có ý nghĩa."
   },
   "onboarding": {
     "phase": {
@@ -1068,7 +1091,12 @@
     "retryingTitle": "Đang thử lại",
     "retry": "Thử lại",
     "retryingBody": "Nhà cung cấp đang từ chối yêu cầu. Hệ thống tự thử lại.",
-    "unavailableBody": "Không kết nối được tới nguồn dữ liệu pool. Hãy thử lại sau giây lát."
+    "unavailableBody": "Không kết nối được tới nguồn dữ liệu pool. Hãy thử lại sau giây lát.",
+    "loadingLabel": "Đang tải các pool của chuỗi này",
+    "pacedNote": "Đang xếp hạng pool. Nhà cung cấp dữ liệu on-chain có giới hạn nên lần đọc đầu mất vài giây.",
+    "pacedNoteChain": "Đang xếp hạng pool trên {{chain}}. Nhà cung cấp dữ liệu on-chain có giới hạn nên lần đọc đầu mất vài giây.",
+    "deepening": "đang tải thêm pool",
+    "refreshing": "đang làm mới"
   },
   "poolStats": {
     "notOnChainTitle": "Không phải cặp on-chain",

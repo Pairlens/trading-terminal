@@ -11,10 +11,26 @@
  * time — which is the wrong shape entirely, because the trade is a comparison:
  * five windows close on the same boundary and only one of them is mispriced.
  *
- * The row is the comparison. Reference, spot, the distance between them, what
- * the market pays for Up, and what a driftless diffusion at recent realized
- * volatility makes of the same window. Neither venue can draw that row — they
- * do not carry the spot market their own contracts settle against.
+ * TWO shapes, because there are two questions and a table only answers one.
+ *
+ * **Focus** is the default and it is one window: an asset switcher, the
+ * settlement reference against the live tape drawn as a line approaching a
+ * line, a countdown with the window's own progress under it, both legs as
+ * buttons priced in cents, and the spot prints that will decide it arriving one
+ * at a time. That is the question people actually open these contracts with —
+ * "is BTC going to be above 71,860 in four minutes" — and it has no comparison
+ * in it at all.
+ *
+ * **Board** is the scanner, unchanged, and it is the comparison: thirteen
+ * windows, reference, spot, distance, what the market pays for Up, and what a
+ * driftless diffusion at recent realized volatility makes of the same window.
+ *
+ * Neither venue can draw either one, for the same reason: they do not carry the
+ * spot market their own contracts settle against. What Focus adds over Board is
+ * that its tape is genuinely live — the scanner prices thirteen rows off bulk
+ * ticker snapshots on a sixty-second REST cadence, which is right for ranking
+ * and useless in the last minute of a fifteen-minute window, so the focused
+ * asset alone gets a real ticker subscription and a real trade feed.
  *
  * Three things the pane refuses to do, all for the same reason:
  *
@@ -37,6 +53,7 @@ import { cn } from '@pairlens/ui'
 import { OddsMoversSkeleton } from './prediction-skeletons'
 import type { UpDownRow } from '@/lib/predictions/crypto-updown'
 import type { PredictionUpDownHorizon } from '@pairlens/shared/instrument-types'
+import { UpDownFocusCard } from '@/components/predictions/updown-focus-card'
 import {
   PaneEmpty,
   PaneErrorBanner,
@@ -62,6 +79,8 @@ import {
   spotPairsOf,
   urgencyOf,
 } from '@/lib/predictions/crypto-updown'
+import { focusAssets, pickFocusRow } from '@/lib/predictions/updown-focus'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 
 /**
  * The countdown is the point of the board, so it ticks per second.
@@ -81,13 +100,21 @@ export function CryptoUpDownPane() {
   const quotes = useBulkTickerQuotes()
   const [horizon, setHorizon] = useState<PredictionUpDownHorizon | null>(null)
   const [now, setNow] = useState(() => Date.now())
+  // Persisted, because which of the two questions someone reads this pane for
+  // is a standing preference rather than a per-visit one, and a board rebuilt
+  // from a workspace should come back the way it was left.
+  const [view, setView] = usePersistedState<'focus' | 'board'>(
+    'updown-view',
+    'focus',
+  )
+  const [asset, setAsset] = useState<string | null>(null)
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), TICK_MS)
     return () => clearInterval(id)
   }, [])
 
-  const { data, isLoading } = useCryptoUpDownWindows(venues)
+  const { data, isLoading, dataUpdatedAt } = useCryptoUpDownWindows(venues)
 
   const rows = useMemo(
     () => collectUpDownRows(data ?? [], now),
@@ -109,15 +136,36 @@ export function CryptoUpDownPane() {
             quotes.get(row.meta.spotPair)?.price,
             history?.candles,
             history?.state ?? 'pending',
+            // Ticks every second with `now`, which is what makes a parked poll
+            // visible: spot and the clock keep moving, and the age of the
+            // quote they are being compared against moves with them.
+            dataUpdatedAt > 0 ? now - dataUpdatedAt : undefined,
           )
         }),
-    [rows, horizon, histories, quotes],
+    [rows, horizon, histories, quotes, dataUpdatedAt, now],
+  )
+
+  const assets = useMemo(() => focusAssets(priced), [priced])
+  // Falls back rather than latching: an asset whose last window just closed and
+  // whose next one has not been listed yet would otherwise leave the card empty
+  // with a chip still selected. Null means "whatever closes next", which is
+  // also the right first thing to show someone who has not chosen.
+  const activeAsset = asset !== null && assets.includes(asset) ? asset : null
+  const focusRow = useMemo(
+    () => pickFocusRow(priced, activeAsset, horizon),
+    [priced, activeAsset, horizon],
   )
 
   const results = data ?? []
   const errors = results.filter((r) => r.error)
   const desktopOnly = results.filter((r) => r.desktopOnly).map((r) => r.label)
-  const inexact = priced.some((row) => !row.meta.referenceExact)
+  // Scoped to what is on screen. The approximation note explains a "≈" the
+  // reader can see, so on the focus card it is about that one contract and on
+  // the board it is about any row that carries the mark.
+  const inexact =
+    view === 'focus'
+      ? focusRow !== null && !focusRow.meta.referenceExact
+      : priced.some((row) => !row.meta.referenceExact)
 
   if (venues.length === 0) {
     return (
@@ -147,11 +195,53 @@ export function CryptoUpDownPane() {
         {t('cryptoUpDown.windowCount', { count: priced.length })}
       </PaneHeaderMetric>
 
-      <HorizonFilter onChange={setHorizon} value={horizon} />
+      <div className="flex shrink-0 items-center justify-between gap-2 pb-1.5">
+        <div className="flex min-w-0 items-center gap-2">
+          {view === 'focus' && assets.length > 1 ? (
+            <>
+              <AssetSwitcher
+                assets={assets}
+                onChange={(next) => {
+                  setAsset(next)
+                  // Null is "whatever closes next" and is the default, so it is
+                  // reported as its own value rather than dropped: someone
+                  // returning to the default is a use of the switcher too.
+                  track('prediction_updown_asset_selected', {
+                    asset: next ?? 'next',
+                    horizon: horizon ?? 'all',
+                  })
+                }}
+                value={activeAsset}
+              />
+              {/* Two filters in one row, and they are not the same kind of
+                  thing: one picks the asset, the other picks the window. With
+                  nothing between them the row reads as nine chips of one
+                  control and the boundary has to be worked out. */}
+              <span
+                aria-hidden="true"
+                className="h-3 w-px shrink-0 bg-(--pane-rule)"
+              />
+            </>
+          ) : null}
+          <HorizonFilter onChange={setHorizon} value={horizon} />
+        </div>
+        <ViewToggle
+          onChange={(next) => {
+            setView(next)
+            track('prediction_updown_view_changed', { view: next })
+          }}
+          value={view}
+        />
+      </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div
+        className={cn(
+          'flex min-h-0 flex-1 flex-col',
+          view === 'board' && 'overflow-y-auto',
+        )}
+      >
         {errors.length > 0 && (
-          <div className="flex flex-col gap-1.5 pb-2">
+          <div className="flex shrink-0 flex-col gap-1.5 pb-2">
             {errors.map((result) => (
               <PaneErrorBanner
                 key={`err:${result.market}`}
@@ -168,6 +258,22 @@ export function CryptoUpDownPane() {
             icon={Timer}
             title={t('cryptoUpDown.emptyTitle')}
           />
+        ) : view === 'focus' ? (
+          focusRow === null ? (
+            <PaneEmpty
+              body={t('cryptoUpDown.focus.noWindowBody')}
+              icon={Timer}
+              title={t('cryptoUpDown.focus.noWindowTitle')}
+            />
+          ) : (
+            <>
+              <FocusHeading row={focusRow} />
+              {/* Keyed on the window, so a settled contract rolling into the
+                  next one gets a fresh chart and a fresh subscription rather
+                  than a line that steps across the boundary. */}
+              <UpDownFocusCard key={focusRow.key} now={now} row={focusRow} />
+            </>
+          )
         ) : (
           <table className="w-full text-[11px]">
             <thead>
@@ -191,6 +297,7 @@ export function CryptoUpDownPane() {
                       venue: row.venue,
                       horizon: row.meta.horizon,
                       hasModel: row.modelUp !== undefined,
+                      view: 'board',
                     })
                     select.openEvent({ venue: row.venue, event: row.event })
                   }}
@@ -204,6 +311,7 @@ export function CryptoUpDownPane() {
 
       <Footnote
         desktopOnly={desktopOnly}
+        focus={view === 'focus'}
         hasRows={priced.length > 0}
         inexact={inexact}
       />
@@ -212,6 +320,114 @@ export function CryptoUpDownPane() {
 }
 
 // ── Pieces ────────────────────────────────────────────────────────────
+
+/**
+ * Which shape the pane is in.
+ *
+ * Two words rather than an icon pair: the difference between them is what they
+ * ANSWER, not how they look, and a chart glyph beside a table glyph says the
+ * second thing.
+ */
+function ViewToggle({
+  value,
+  onChange,
+}: {
+  value: 'focus' | 'board'
+  onChange: (next: 'focus' | 'board') => void
+}) {
+  const { t } = useTranslation()
+  const options: Array<['focus' | 'board', string]> = [
+    ['focus', t('cryptoUpDown.viewFocus')],
+    ['board', t('cryptoUpDown.viewBoard')],
+  ]
+  return (
+    <div className="flex shrink-0 gap-0.5 rounded-md bg-muted/50 p-0.5">
+      {options.map(([option, label]) => (
+        <button
+          aria-pressed={option === value}
+          className={cn(
+            'rounded-[5px] px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider transition-colors',
+            option === value
+              ? 'bg-card text-foreground'
+              : 'text-muted-foreground hover:text-foreground',
+          )}
+          key={option}
+          onClick={() => onChange(option)}
+          type="button"
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+/**
+ * The asset the focus card is watching.
+ *
+ * `null` is a real option and the default: "whatever closes next", which is the
+ * right thing to show someone who has not chosen and the right thing to fall
+ * back to when a chosen asset's window settles before its successor is listed.
+ */
+function AssetSwitcher({
+  assets,
+  value,
+  onChange,
+}: {
+  assets: Array<string>
+  value: string | null
+  onChange: (next: string | null) => void
+}) {
+  const { t } = useTranslation()
+  return (
+    <div className="flex min-w-0 shrink items-center gap-0.5 overflow-x-auto">
+      <button
+        aria-pressed={value === null}
+        className={cn(assetChipClass, value === null && assetChipActiveClass)}
+        onClick={() => onChange(null)}
+        type="button"
+      >
+        {t('cryptoUpDown.focus.assetNext')}
+      </button>
+      {assets.map((asset) => (
+        <button
+          aria-pressed={asset === value}
+          className={cn(
+            assetChipClass,
+            asset === value && assetChipActiveClass,
+          )}
+          key={asset}
+          onClick={() => onChange(asset)}
+          type="button"
+        >
+          {asset}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+const assetChipClass =
+  'shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground'
+const assetChipActiveClass = 'bg-accent text-foreground'
+
+/** Which contract is on screen, in the venues' own words. */
+function FocusHeading({ row }: { row: UpDownRow }) {
+  const { t } = useTranslation()
+  return (
+    <div className="flex shrink-0 items-baseline gap-1.5 pb-1">
+      <span className="font-mono text-[12px] font-semibold">
+        {row.meta.asset}
+      </span>
+      <span className="rounded-sm bg-muted/60 px-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+        {t(`cryptoUpDown.horizon.${row.meta.horizon}`)}
+      </span>
+      <span className="truncate text-[10px] text-muted-foreground">
+        {row.venueLabel}
+      </span>
+    </div>
+  )
+}
 
 function HorizonFilter({
   value,
@@ -232,7 +448,7 @@ function HorizonFilter({
     ),
   ]
   return (
-    <div className="flex shrink-0 gap-1 pb-1.5">
+    <div className="flex shrink-0 gap-1">
       {options.map(([option, label]) => (
         <button
           className={cn(
@@ -353,6 +569,9 @@ function Row({ row, onOpen }: { row: UpDownRow; onOpen: () => void }) {
               ? 'text-up'
               : 'text-down',
         )}
+        // Same withholding as the focus card's strip, and the same reason it
+        // has to be sayable: a dash here otherwise reads as "no edge".
+        title={row.quoteStale ? t('cryptoUpDown.oddsStaleTooltip') : undefined}
       >
         {row.edge === undefined ? '–' : formatEdgePoints(row.edge)}
       </td>
@@ -378,16 +597,19 @@ function Footnote({
   hasRows,
   inexact,
   desktopOnly,
+  focus,
 }: {
   hasRows: boolean
   inexact: boolean
   desktopOnly: Array<string>
+  /** Focus draws one window, so the board's column-wide caveats do not apply. */
+  focus: boolean
 }) {
   const { t } = useTranslation()
   if (!hasRows && desktopOnly.length === 0) return null
   return (
     <PaneFootnote className="flex-col items-start gap-0.5 leading-relaxed">
-      {hasRows && <span>{t('cryptoUpDown.modelNote')}</span>}
+      {hasRows && !focus && <span>{t('cryptoUpDown.modelNote')}</span>}
       {inexact && <span>{t('cryptoUpDown.approxNote')}</span>}
       {desktopOnly.length > 0 && (
         <span>
