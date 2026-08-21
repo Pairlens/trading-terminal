@@ -5597,6 +5597,12 @@
       "sections": {
         "channelsFib": "Channels & Fibonacci",
         "annotate": "Annotate"
+      },
+      "inspect": {
+        "label": "Bar details",
+        "close": "Hide crosshair",
+        "hint": "Touch and hold to read any bar",
+        "volume": "Vol {{value}}"
       }
     },
     "drawing": {

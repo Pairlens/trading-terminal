@@ -4,7 +4,7 @@ description: 16 chart types, up to 11 timeframes, four price-scale modes, bar re
 group: traders
 order: 1
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 8 min read
 ---
 
@@ -94,6 +94,13 @@ types are still there, one scroll down, and whichever you pick is remembered.
 Three modes. **Normal** follows the pointer freely. **Magnet** snaps to the
 nearest OHLC value, which is what you want while drawing levels off wicks.
 **Hidden** removes it entirely for a clean screenshot.
+
+**On a phone the crosshair is something you ask for.** There is no pointer to
+follow, so you touch and hold the plot and one comes up under your finger, with
+the bar's OHLC in place of the live price. Magnet and Normal mean the same
+thing there as here. Hidden does not apply: a crosshair you held a finger down
+for did not arrive by accident. See
+[the mobile terminal](/docs/mobile-terminal#the-chart).
 
 ### Price scale
 

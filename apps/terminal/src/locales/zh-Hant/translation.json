@@ -6224,7 +6224,13 @@
       "crosshairMode": "十字游標：{{mode}}",
       "indicatorsActive_one": "指標，使用中 {{count}} 個",
       "indicatorsActive_other": "指標，使用中 {{count}} 個",
-      "removeIndicator": "移除{{name}}"
+      "removeIndicator": "移除{{name}}",
+      "inspect": {
+        "label": "K 線詳情",
+        "close": "隱藏十字游標",
+        "hint": "長按即可查看任一根 K 線",
+        "volume": "量 {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "放置繪圖",

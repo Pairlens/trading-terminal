@@ -6224,7 +6224,13 @@
       "crosshairMode": "Mira: {{mode}}",
       "indicatorsActive_one": "Indicadores, {{count}} ativo",
       "indicatorsActive_other": "Indicadores, {{count}} ativos",
-      "removeIndicator": "Remover {{name}}"
+      "removeIndicator": "Remover {{name}}",
+      "inspect": {
+        "label": "Detalhes da vela",
+        "close": "Ocultar a mira",
+        "hint": "Toque e segure para ler qualquer vela",
+        "volume": "Vol {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Posicionar desenho",

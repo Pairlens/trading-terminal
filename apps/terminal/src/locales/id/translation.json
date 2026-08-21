@@ -6224,7 +6224,13 @@
       "crosshairMode": "Crosshair: {{mode}}",
       "indicatorsActive_one": "Indikator, {{count}} aktif",
       "indicatorsActive_other": "Indikator, {{count}} aktif",
-      "removeIndicator": "Hapus {{name}}"
+      "removeIndicator": "Hapus {{name}}",
+      "inspect": {
+        "label": "Detail bar",
+        "close": "Sembunyikan crosshair",
+        "hint": "Sentuh dan tahan untuk membaca bar mana pun",
+        "volume": "Vol {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Tempatkan gambar",

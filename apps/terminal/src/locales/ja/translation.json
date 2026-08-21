@@ -6224,7 +6224,13 @@
       "crosshairMode": "十字線：{{mode}}",
       "indicatorsActive_one": "インジケーター、{{count}}件使用中",
       "indicatorsActive_other": "インジケーター、{{count}}件使用中",
-      "removeIndicator": "{{name}}を削除"
+      "removeIndicator": "{{name}}を削除",
+      "inspect": {
+        "label": "足の詳細",
+        "close": "十字線を隠す",
+        "hint": "長押しで任意の足を読む",
+        "volume": "出来高 {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "描画を配置",

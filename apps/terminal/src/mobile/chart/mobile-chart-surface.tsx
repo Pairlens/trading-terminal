@@ -296,7 +296,9 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
 
   return (
     <div
-      className="absolute inset-x-0 overflow-hidden"
+      // `pl-chart-zone`: nothing in this band is text to be selected, and a
+      // long press on it is a crosshair (see mobile.css).
+      className="pl-chart-zone absolute inset-x-0 overflow-hidden"
       style={{
         top: 'var(--pl-chart-top)',
         bottom: 'var(--pl-tabbar-total)',
@@ -365,7 +367,10 @@ const MobileChartSurfaceInner = memo(function MobileChartSurfaceInner({
       {/* Price + timeframe chip, 8px under the chart top. Both track the
           sheet's live position through `--pl-sheet-dock` / `--pl-sheet-expand`
           rather than through props — see mobile-sheet.tsx. */}
-      <div className="pointer-events-none absolute inset-x-4 top-2 z-20 flex items-start justify-between gap-3">
+      {/* `pl-chart-hud` is the stand-down hook: this row holds the LIVE price,
+          and the inspect crosshair fades it out for as long as it is up so the
+          chart never shows two prices at once. */}
+      <div className="pl-chart-hud pointer-events-none absolute inset-x-4 top-2 z-20 flex items-start justify-between gap-3">
         <PriceReadout />
         {/* The corner carries one chip on most markets and two on an event
             contract. The interval picker is dropped in the odds view and only

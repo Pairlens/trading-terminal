@@ -6224,7 +6224,13 @@
       "crosshairMode": "十字光标：{{mode}}",
       "indicatorsActive_one": "指标，已启用 {{count}} 个",
       "indicatorsActive_other": "指标，已启用 {{count}} 个",
-      "removeIndicator": "移除{{name}}"
+      "removeIndicator": "移除{{name}}",
+      "inspect": {
+        "label": "K 线详情",
+        "close": "隐藏十字光标",
+        "hint": "长按可查看任意 K 线",
+        "volume": "量 {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "放置绘图",
