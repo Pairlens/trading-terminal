@@ -14,6 +14,11 @@ import { ClientRouter } from 'astro:transitions'
 import Analytics from '@vercel/analytics/astro'
 import CookieBanner from '@/components/CookieBanner.astro'
 import { SITE } from '@/lib/site'
+// Imported rather than referenced from public/: vercel.json caches the
+// public brand assets for a day, so an icon swapped in place would keep
+// serving the old mark to everyone who visited yesterday. The hash in this
+// URL moves with the file.
+import icon from '@/assets/icon.png'
 
 interface Props {
   title: string
@@ -117,7 +122,8 @@ const jsonLdArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
         ],
       })}
     />
-    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="icon" href={icon.src} type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href={icon.src} />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#161719" />
 

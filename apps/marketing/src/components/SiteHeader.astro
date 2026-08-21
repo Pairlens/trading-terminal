@@ -5,7 +5,7 @@
 // own bar (components/docs/DocsHeader.astro) instead of this component.
 import { NAV, SITE } from '@/lib/site'
 import { getRepoStars } from '@/lib/github'
-import wordmark from '@/assets/wordmark.webp'
+import mark from '@/assets/mark.webp'
 
 const stars = await getRepoStars()
 ---
@@ -15,10 +15,10 @@ const stars = await getRepoStars()
     <div class="pl-hdr-pill" data-nav-loc="header">
       <a href="/" class="pl-hdr-brand" aria-label="Pairlens home">
         <img
-          src={wordmark.src}
+          src={mark.src}
           alt={SITE.name}
-          width={wordmark.width}
-          height={wordmark.height}
+          width={mark.width}
+          height={mark.height}
           loading="eager"
           decoding="async"
           draggable="false"
