@@ -9,6 +9,7 @@
 import { Image, getImage } from 'astro:assets'
 import { SITE } from '@/lib/site'
 import zeusLens from '@/assets/zeus-lens.png'
+import wordmark from '@/assets/wordmark.webp'
 
 /** Logo files live in `public/browsers/` (vendor marks, via browser-logos). */
 const BROWSERS = ['chrome', 'safari', 'edge', 'firefox', 'opera']
@@ -29,10 +30,10 @@ const statuePhone = await getImage({
 
   <h1 class="zhero-word" data-par="-34">
     <img
-      src="/wordmark.webp"
+      src={wordmark.src}
       alt="Pairlens"
-      width="3264"
-      height="630"
+      width={wordmark.width}
+      height={wordmark.height}
       loading="eager"
       fetchpriority="high"
       decoding="async"

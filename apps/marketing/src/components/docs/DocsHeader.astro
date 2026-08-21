@@ -6,6 +6,7 @@
 // the sidebar (264px) and the TOC (220px) columns exactly.
 import { APP_NAV, SITE } from '@/lib/site'
 import { getRepoStars } from '@/lib/github'
+import wordmark from '@/assets/wordmark.webp'
 
 interface Props {
   /** Which APP_NAV entry is highlighted. */
@@ -35,10 +36,10 @@ const cellRule = 'color-mix(in oklch, var(--border) 70%, transparent)'
         aria-label="Pairlens home"
       >
         <img
-          src="/wordmark.webp"
+          src={wordmark.src}
           alt="Pairlens"
-          width="3264"
-          height="630"
+          width={wordmark.width}
+          height={wordmark.height}
           class="block h-[26px] w-auto shrink-0 select-none"
           loading="eager"
           decoding="async"
