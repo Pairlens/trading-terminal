@@ -23,6 +23,8 @@
     "./pairlens-predictions/workspaces": "./src/pairlens-predictions/workspaces.ts",
     "./pairlens-cex-futures": "./src/pairlens-cex-futures/index.ts",
     "./pairlens-cex-futures/workspaces": "./src/pairlens-cex-futures/workspaces.ts",
+    "./pairlens-nfts": "./src/pairlens-nfts/index.ts",
+    "./pairlens-nfts/workspaces": "./src/pairlens-nfts/workspaces.ts",
     "./pairlens-dex": "./src/pairlens-dex/index.ts",
     "./pairlens-dex/workspaces": "./src/pairlens-dex/workspaces.ts",
     "./pairlens-equities": "./src/pairlens-equities/index.ts",

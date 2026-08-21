@@ -28,6 +28,7 @@ export type AssetClass =
   | 'dex'
   | 'equities'
   | 'predictions'
+  | 'nfts'
   | 'multi-asset'
 
 /** Roughly how wide the layout wants to be (derived from column count). */

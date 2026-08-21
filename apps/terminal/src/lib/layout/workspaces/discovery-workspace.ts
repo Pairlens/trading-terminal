@@ -29,6 +29,7 @@ import { INSTRUMENT_CLASSES } from '@pairlens/shared/market-ref'
 import { PERPS_DISCOVERY_LAYOUT } from '@pairlens/plugins/pairlens-cex-futures/workspaces'
 import { PREDICTION_DISCOVERY_LAYOUT } from '@pairlens/plugins/pairlens-predictions/workspaces'
 import { DEX_DISCOVERY_LAYOUT } from '@pairlens/plugins/pairlens-dex/workspaces'
+import { NFT_DISCOVERY_LAYOUT } from '@pairlens/plugins/pairlens-nfts/workspaces'
 import { EQUITIES_DISCOVERY_LAYOUT } from '@pairlens/plugins/pairlens-equities/workspaces'
 import { DISCOVERY_HOME } from './discovery-presets'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
@@ -43,6 +44,7 @@ const DEFAULT_BOARDS: Record<InstrumentClass, TerminalLayout> = {
   dex: DEX_DISCOVERY_LAYOUT,
   stocks: EQUITIES_DISCOVERY_LAYOUT,
   prediction: PREDICTION_DISCOVERY_LAYOUT,
+  nft: NFT_DISCOVERY_LAYOUT,
 }
 
 export function discoveryStorageKeyFor(cls: InstrumentClass): string {

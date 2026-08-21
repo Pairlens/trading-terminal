@@ -18,6 +18,7 @@ import { INSTRUMENT_CLASSES } from '@pairlens/shared/market-ref'
 import { PERPS_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-cex-futures/workspaces'
 import { PREDICTION_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-predictions/workspaces'
 import { DEX_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-dex/workspaces'
+import { NFT_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-nfts/workspaces'
 import { EQUITIES_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-equities/workspaces'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
@@ -74,6 +75,12 @@ export const DISCOVERY_SECTIONS: ReadonlyArray<DiscoverySection> = [
     labelKey: 'discovery.sections.prediction',
     icon: 'Vote',
     templateId: PREDICTION_DISCOVERY_TEMPLATE_ID,
+  },
+  {
+    id: 'nft',
+    labelKey: 'discovery.sections.nft',
+    icon: 'Gem',
+    templateId: NFT_DISCOVERY_TEMPLATE_ID,
   },
 ]
 

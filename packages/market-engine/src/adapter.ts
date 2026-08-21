@@ -19,6 +19,7 @@ export type AssetClass =
   | 'stocks'
   | 'prediction'
   | 'dex'
+  | 'nft'
 
 export type WalletChain = 'solana' | 'ethereum' | 'bitcoin'
 

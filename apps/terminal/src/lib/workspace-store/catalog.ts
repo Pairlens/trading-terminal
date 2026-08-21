@@ -91,6 +91,7 @@ export const ASSET_CLASSES: Array<AssetClass> = [
   'dex',
   'equities',
   'predictions',
+  'nfts',
   'multi-asset',
 ]
 
@@ -103,6 +104,7 @@ export const ASSET_CLASS_META: Record<
   dex: { label: 'DEX', description: 'On-chain / decentralised' },
   equities: { label: 'Equities', description: 'Stocks & ETFs' },
   predictions: { label: 'Predictions', description: 'Event contracts' },
+  nfts: { label: 'NFTs', description: 'Collections and items' },
   'multi-asset': { label: 'Multi-Asset', description: 'Mixed markets' },
 }
 
@@ -1132,6 +1134,7 @@ export const STORE_ASSET_CLASS_FOR: Record<InstrumentClass, AssetClass> = {
   dex: 'dex',
   stocks: 'equities',
   prediction: 'predictions',
+  nft: 'nfts',
 }
 
 /**

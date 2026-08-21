@@ -19,6 +19,10 @@ export {
   createPairlensDexPlugin,
 } from './pairlens-dex/index.ts'
 export {
+  pairlensNftsManifest,
+  createPairlensNftsPlugin,
+} from './pairlens-nfts/index.ts'
+export {
   pairlensEquitiesManifest,
   createPairlensEquitiesPlugin,
 } from './pairlens-equities/index.ts'

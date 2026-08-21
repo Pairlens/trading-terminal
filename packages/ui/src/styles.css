@@ -64,6 +64,7 @@
   --asset-dex: oklch(0.56 0.2 324);
   --asset-stocks: oklch(0.52 0.14 158);
   --asset-prediction: oklch(0.55 0.13 215);
+  --asset-nft: oklch(0.58 0.16 20);
 
   /* Section identity — one hue per rail destination, spent on the spine that
      marks the section you are in. Same idea as the asset-class hues above and
@@ -189,6 +190,7 @@
   --asset-dex: oklch(0.76 0.16 322);
   --asset-stocks: oklch(0.76 0.14 160);
   --asset-prediction: oklch(0.78 0.11 213);
+  --asset-nft: oklch(0.79 0.14 22);
 
   /* Section identity — the same ten hues, lifted for a charcoal ground */
   --section-plugins: oklch(0.76 0.15 20);
@@ -300,6 +302,7 @@
   --color-asset-dex: var(--asset-dex);
   --color-asset-stocks: var(--asset-stocks);
   --color-asset-prediction: var(--asset-prediction);
+  --color-asset-nft: var(--asset-nft);
   --color-magic-1: var(--magic-1);
   --color-magic-2: var(--magic-2);
   --color-magic-3: var(--magic-3);
