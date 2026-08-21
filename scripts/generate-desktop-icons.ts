@@ -31,6 +31,7 @@ import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { writeFileSync } from 'node:fs'
+import { squircleMask } from './lib/squircle.ts'
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const iconsDir = join(repoRoot, 'apps/desktop/src-tauri/icons')
@@ -52,55 +53,6 @@ function loadSharp() {
 }
 
 const sharp = loadSharp()
-
-// ---------------------------------------------------------------------------
-// Squircle
-// ---------------------------------------------------------------------------
-
-// Rounded rectangle whose corners follow a superellipse quarter-arc instead of
-// a circular one — straight edges (Windows 11 house style) with the continuous
-// curvature that makes the corner read as a squircle rather than a filleted
-// box. RADIUS_RATIO is the corner radius as a fraction of the edge; EXPONENT
-// is the superellipse `n` (2 would be a plain circular arc, higher pushes the
-// curve out towards the square corner).
-const RADIUS_RATIO = 0.225
-const EXPONENT = 4.5
-const ARC_STEPS = 96
-
-function squirclePath(size: number): string {
-  const r = size * RADIUS_RATIO
-  // Top-left corner arc, from the left edge (0, r) round to the top edge (r, 0).
-  const corner: Array<[number, number]> = []
-  for (let i = 0; i <= ARC_STEPS; i++) {
-    const t = (i / ARC_STEPS) * (Math.PI / 2)
-    const x = r - r * Math.cos(t) ** (2 / EXPONENT)
-    const y = r - r * Math.sin(t) ** (2 / EXPONENT)
-    corner.push([x, y])
-  }
-
-  const n = (v: number) => Number(v.toFixed(3))
-  const pts: Array<[number, number]> = []
-  // Clockwise: TL arc, top edge, TR arc, right edge, BR arc, bottom, BL arc.
-  for (const [x, y] of corner) pts.push([x, y])
-  for (const [x, y] of [...corner].reverse()) pts.push([size - x, y])
-  for (const [x, y] of corner) pts.push([size - x, size - y])
-  for (const [x, y] of [...corner].reverse()) pts.push([x, size - y])
-
-  const [first, ...rest] = pts
-  return (
-    `M ${n(first[0])} ${n(first[1])} ` +
-    rest.map(([x, y]) => `L ${n(x)} ${n(y)}`).join(' ') +
-    ' Z'
-  )
-}
-
-function squircleMask(size: number): Buffer {
-  return Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
-      `<path d="${squirclePath(size)}" fill="#ffffff"/>` +
-      `</svg>`,
-  )
-}
 
 // ---------------------------------------------------------------------------
 // ICO container (sharp cannot write .ico)
@@ -190,6 +142,10 @@ const PANEL_BOTTOM = '#000000'
 const PAPER = '#ffffff'
 const PAPER_EDGE = '#f4f1ee'
 
+// The wordmark's cut on the 164px installer panels. It is 5.18:1, so it can
+// run closer to the panel edge than a squarer mark and still read.
+const WIDE_ART_WIDTH = 144
+
 const MASTER = 1024
 
 // Windows/Linux PNG sizes that Tauri (and the MSIX tile set) consume.
@@ -260,8 +216,9 @@ async function main() {
   writeFileSync(join(iconsDir, 'icon.ico'), ico)
   written.push(`icon.ico (${ICO_SIZES.join(', ')})`)
 
-  // 3. Installer branding.
-  const wideLogo = join(repoRoot, 'apps/terminal/public/logo.svg')
+  // 3. Installer branding. The wide art is the wordmark: these panels are
+  //    brand art rather than app icons, so they carry the word, not the mark.
+  const wideLogo = join(repoRoot, 'apps/terminal/public/wordmark.webp')
   const markPng = await scaled(256)
 
   // WiX banner, 493x58. WixUI paints the dialog title in black at roughly
@@ -298,7 +255,7 @@ async function main() {
   // WiX dialog, 493x312. WixUI puts the welcome/exit text at x>=180, so the
   // dark art panel stops at the conventional 164px.
   const dialogArt = await sharp(wideLogo, { density: 400 })
-    .resize({ width: 136, fit: 'inside' })
+    .resize({ width: WIDE_ART_WIDTH, fit: 'inside' })
     .toBuffer()
   const dialogArtMeta = await sharp(dialogArt).metadata()
   const dialog = sharp({
@@ -329,7 +286,7 @@ async function main() {
   // NSIS MUI2 welcome/finish sidebar, 164x314 — page text is drawn to the
   // right of it, so this one can go fully dark.
   const sidebarArt = await sharp(wideLogo, { density: 400 })
-    .resize({ width: 136, fit: 'inside' })
+    .resize({ width: WIDE_ART_WIDTH, fit: 'inside' })
     .toBuffer()
   const sidebarArtMeta = await sharp(sidebarArt).metadata()
   const sidebar = sharp({
