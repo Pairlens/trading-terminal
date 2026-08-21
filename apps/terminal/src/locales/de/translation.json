@@ -6224,7 +6224,13 @@
       "crosshairMode": "Fadenkreuz: {{mode}}",
       "indicatorsActive_one": "Indikatoren, {{count}} aktiv",
       "indicatorsActive_other": "Indikatoren, {{count}} aktiv",
-      "removeIndicator": "{{name}} entfernen"
+      "removeIndicator": "{{name}} entfernen",
+      "inspect": {
+        "label": "Kerzendetails",
+        "close": "Fadenkreuz ausblenden",
+        "hint": "Gedrückt halten, um eine Kerze zu lesen",
+        "volume": "Vol. {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Zeichnung platzieren",

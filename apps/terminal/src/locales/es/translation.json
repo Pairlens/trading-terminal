@@ -6224,7 +6224,13 @@
       "crosshairMode": "Cursor: {{mode}}",
       "indicatorsActive_one": "Indicadores, {{count}} activo",
       "indicatorsActive_other": "Indicadores, {{count}} activos",
-      "removeIndicator": "Quitar {{name}}"
+      "removeIndicator": "Quitar {{name}}",
+      "inspect": {
+        "label": "Detalles de la vela",
+        "close": "Ocultar la cruz",
+        "hint": "Mantén pulsado para leer cualquier vela",
+        "volume": "Vol {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Colocar dibujo",

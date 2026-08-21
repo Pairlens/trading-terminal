@@ -6224,7 +6224,13 @@
       "crosshairMode": "Mirino: {{mode}}",
       "indicatorsActive_one": "Indicatori, {{count}} attivo",
       "indicatorsActive_other": "Indicatori, {{count}} attivi",
-      "removeIndicator": "Rimuovi {{name}}"
+      "removeIndicator": "Rimuovi {{name}}",
+      "inspect": {
+        "label": "Dettagli della candela",
+        "close": "Nascondi il mirino",
+        "hint": "Tieni premuto per leggere una candela",
+        "volume": "Vol {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Posiziona disegno",

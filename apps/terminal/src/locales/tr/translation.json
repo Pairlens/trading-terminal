@@ -6224,7 +6224,13 @@
       "crosshairMode": "İmleç: {{mode}}",
       "indicatorsActive_one": "Göstergeler, {{count}} aktif",
       "indicatorsActive_other": "Göstergeler, {{count}} aktif",
-      "removeIndicator": "{{name}} kaldır"
+      "removeIndicator": "{{name}} kaldır",
+      "inspect": {
+        "label": "Mum ayrıntıları",
+        "close": "Nişangahı gizle",
+        "hint": "Bir mumu okumak için basılı tutun",
+        "volume": "Hac. {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Çizimi yerleştir",

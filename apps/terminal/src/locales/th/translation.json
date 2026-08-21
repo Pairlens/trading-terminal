@@ -6224,7 +6224,13 @@
       "crosshairMode": "เส้นกากบาท: {{mode}}",
       "indicatorsActive_one": "อินดิเคเตอร์ ใช้งานอยู่ {{count}} รายการ",
       "indicatorsActive_other": "อินดิเคเตอร์ ใช้งานอยู่ {{count}} รายการ",
-      "removeIndicator": "นำ {{name}} ออก"
+      "removeIndicator": "นำ {{name}} ออก",
+      "inspect": {
+        "label": "รายละเอียดแท่งเทียน",
+        "close": "ซ่อนเส้นเล็ง",
+        "hint": "แตะค้างไว้เพื่ออ่านแท่งเทียน",
+        "volume": "ปริมาณ {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "วางภาพวาด",

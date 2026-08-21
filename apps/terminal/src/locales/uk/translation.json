@@ -6346,7 +6346,13 @@
       "indicatorsActive_few": "Індикатори, {{count}} активних",
       "indicatorsActive_many": "Індикатори, {{count}} активних",
       "indicatorsActive_other": "Індикатори, {{count}} активних",
-      "removeIndicator": "Прибрати {{name}}"
+      "removeIndicator": "Прибрати {{name}}",
+      "inspect": {
+        "label": "Дані свічки",
+        "close": "Сховати перехрестя",
+        "hint": "Натисніть і утримуйте, щоб прочитати свічку",
+        "volume": "Об. {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Розміщення малюнка",

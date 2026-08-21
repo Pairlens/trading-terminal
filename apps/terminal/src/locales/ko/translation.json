@@ -6224,7 +6224,13 @@
       "crosshairMode": "십자선: {{mode}}",
       "indicatorsActive_one": "지표, {{count}}개 활성",
       "indicatorsActive_other": "지표, {{count}}개 활성",
-      "removeIndicator": "{{name}} 제거"
+      "removeIndicator": "{{name}} 제거",
+      "inspect": {
+        "label": "봉 상세",
+        "close": "십자선 숨기기",
+        "hint": "길게 눌러 원하는 봉을 확인하세요",
+        "volume": "거래량 {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "그리기 배치",

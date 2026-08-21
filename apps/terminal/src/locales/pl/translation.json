@@ -6346,7 +6346,13 @@
       "indicatorsActive_few": "Wskaźniki, {{count}} aktywne",
       "indicatorsActive_many": "Wskaźniki, {{count}} aktywnych",
       "indicatorsActive_other": "Wskaźniki, {{count}} aktywnych",
-      "removeIndicator": "Usuń {{name}}"
+      "removeIndicator": "Usuń {{name}}",
+      "inspect": {
+        "label": "Szczegóły świecy",
+        "close": "Ukryj celownik",
+        "hint": "Naciśnij i przytrzymaj, aby odczytać świecę",
+        "volume": "Wol. {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Umieść rysunek",

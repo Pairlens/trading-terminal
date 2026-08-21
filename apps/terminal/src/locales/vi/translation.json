@@ -6224,7 +6224,13 @@
       "crosshairMode": "Con trỏ chữ thập: {{mode}}",
       "indicatorsActive_one": "Chỉ báo, {{count}} đang hoạt động",
       "indicatorsActive_other": "Chỉ báo, {{count}} đang hoạt động",
-      "removeIndicator": "Gỡ {{name}}"
+      "removeIndicator": "Gỡ {{name}}",
+      "inspect": {
+        "label": "Chi tiết nến",
+        "close": "Ẩn chữ thập",
+        "hint": "Chạm và giữ để xem bất kỳ cây nến nào",
+        "volume": "KL {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Đặt hình vẽ",
