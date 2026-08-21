@@ -41,6 +41,7 @@ import { providerLabel } from '@/lib/dex/pool-stats-merge'
 import { usePoolStats } from '@/hooks/use-pool-stats'
 import { usePriceImpactTiers } from '@/hooks/use-price-impact-tiers'
 import { dexChain } from '@/lib/dex/chain-catalog'
+import { formatPoolAge } from '@/lib/dex/pool-age'
 import {
   impactBarFraction,
   impactTier,
@@ -194,7 +195,7 @@ function PoolStatsPaneInner({
           />
           <StatCell
             label={t('poolStats.poolAge')}
-            value={poolAge(stats.createdAt, t)}
+            value={formatPoolAge(stats.createdAt, t) ?? '—'}
             sub={stats.name}
           />
         </div>
@@ -291,18 +292,4 @@ function ImpactRow({ tier }: { tier: ImpactTierRow }) {
       </span>
     </div>
   )
-}
-
-/** Pool age in whole months, or days while it is younger than one. */
-function poolAge(
-  createdAt: string | null,
-  t: (key: string, opts?: Record<string, unknown>) => string,
-): string {
-  if (!createdAt) return '—'
-  const created = Date.parse(createdAt)
-  if (!Number.isFinite(created)) return '—'
-  const days = Math.floor((Date.now() - created) / 86_400_000)
-  if (days < 1) return t('poolStats.ageToday')
-  if (days < 31) return t('poolStats.ageDays', { count: days })
-  return t('poolStats.ageMonths', { count: Math.floor(days / 30) })
 }

@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 21 AUG 2026
+updated: 22 AUG 2026
 readTime: 12 min read
 ---
 
@@ -142,7 +142,7 @@ holding) are called out in their own footnotes rather than estimated. See
 | **Chains**            | Every chain the terminal knows, with gas, liquidity and a day's volume beside it                                                                             |
 | **Pool Map**          | A treemap of the chain's top pools, sized by volume and tinted by the day's move, with a ranked list behind it                                               |
 | **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it                                                              |
-| **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                                                                           |
+| **Pool Detail**       | The selected pool at a glance: both tokens, the day and the hour, liquidity, reserves, impact, age, pressure and its latest swaps, one click from its chart  |
 | **Session**           | Where the trading day is right now, from the broker's own calendar, holidays and half days included                                                          |
 | **Earnings Calendar** | Who reports today, split before the bell and after the close, with the consensus EPS and an IPO tab                                                          |
 | **Economic Calendar** | Forward US macro releases by the clock, compiled from the agencies' own publication schedules                                                                |
