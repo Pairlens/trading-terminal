@@ -28,12 +28,18 @@
 //   * apps/marketing/public/favicon.ico                the root-probe fallback
 //   * apps/marketing/src/assets/icon.png               imported, so its URL is hashed
 //   * apps/marketing/src/assets/mark.webp              navbar mark, no panel
+//   * apps/desktop/src-tauri/icons/ios/*               opaque, full bleed
+//   * apps/desktop/src-tauri/icons/android/*           adaptive + legacy launcher
 //
 // macOS note: .icns is NOT full bleed. The system draws app icons at about
 // 80% of the tile with the rest transparent, so the artwork carries its own
 // rounded corners and its own margin. Shipping a full-bleed square there is
 // the classic way to end up with an icon visibly larger than its neighbours
 // in the Dock.
+//
+// The ios/ and android/ sets are here even though no configured Tauri bundle
+// target reads them yet, because a mobile target added later would otherwise
+// ship whatever brand was current the day `tauri icon` last ran.
 
 import { createRequire } from 'node:module'
 import { dirname, join } from 'node:path'
@@ -48,6 +54,8 @@ const iconsDir = join(repoRoot, 'apps/desktop/src-tauri/icons')
 const terminalPublic = join(repoRoot, 'apps/terminal/public')
 const marketingPublic = join(repoRoot, 'apps/marketing/public')
 const marketingAssets = join(repoRoot, 'apps/marketing/src/assets')
+const iosDir = join(iconsDir, 'ios')
+const androidDir = join(iconsDir, 'android')
 
 // sharp lives in apps/marketing; resolve it from that workspace so the root
 // package.json does not need a duplicate dependency.
@@ -285,12 +293,141 @@ async function main() {
     `${navMarkMeta.width}x${navMarkMeta.height} transparent`,
   )
 
+  // 8. iOS. Full bleed and OPAQUE: iOS masks the icon itself, and App Store
+  //    review rejects an icon with an alpha channel outright. The set Tauri
+  //    generated carried one on every file, so this is a fix as well as a
+  //    brand swap. The `-1` files are the iPad entries at the same pixel
+  //    size, which is why they are byte-identical to their twins.
+  const IOS_ICONS: Array<[string, number]> = [
+    ['AppIcon-20x20@1x.png', 20],
+    ['AppIcon-20x20@2x.png', 40],
+    ['AppIcon-20x20@2x-1.png', 40],
+    ['AppIcon-20x20@3x.png', 60],
+    ['AppIcon-29x29@1x.png', 29],
+    ['AppIcon-29x29@2x.png', 58],
+    ['AppIcon-29x29@2x-1.png', 58],
+    ['AppIcon-29x29@3x.png', 87],
+    ['AppIcon-40x40@1x.png', 40],
+    ['AppIcon-40x40@2x.png', 80],
+    ['AppIcon-40x40@2x-1.png', 80],
+    ['AppIcon-40x40@3x.png', 120],
+    ['AppIcon-60x60@2x.png', 120],
+    ['AppIcon-60x60@3x.png', 180],
+    ['AppIcon-76x76@1x.png', 76],
+    ['AppIcon-76x76@2x.png', 152],
+    ['AppIcon-83.5x83.5@2x.png', 167],
+    ['AppIcon-512@2x.png', 1024],
+  ]
+  for (const [file, size] of IOS_ICONS) {
+    const png = await sharp(await square(size))
+      .removeAlpha()
+      .png({ compressionLevel: 9 })
+      .toBuffer()
+    writeFileSync(join(iosDir, file), png)
+  }
+  written.push(`ios/ (${IOS_ICONS.length} files, opaque, 20..1024)`)
+
+  // 9. Android. The adaptive foreground is a 108dp drawable of which only the
+  //    centre 72dp survives the launcher's mask, so the mark is sized against
+  //    what the user sees rather than against the drawable: MASKABLE_MARK of
+  //    the visible 72dp, which is 45% of the 108dp canvas. Sizing it to the
+  //    safe circle instead would technically fit (57% clears the diagonal
+  //    bound) but puts the glyph hard against the mask edge, and reads a
+  //    third heavier than the same icon does on the web. The background is a
+  //    flat colour resource, so the foreground ships on transparency and the
+  //    panel comes from values/ic_launcher_background.xml.
+  const ADAPTIVE_SAFE = 72 / 108
+  const ADAPTIVE_MARK = MASKABLE_MARK * ADAPTIVE_SAFE
+  // Legacy pre-API-26 launcher icons at 48dp, and the round variant for
+  //    launchers that asked for one. Tauri emitted 49px for hdpi, which is
+  //    neither the 72px the bucket calls for nor anything else; corrected.
+  const DENSITIES: Array<[string, number, number]> = [
+    // dir, legacy edge (48dp), adaptive foreground edge (108dp)
+    ['mipmap-mdpi', 48, 108],
+    ['mipmap-hdpi', 72, 162],
+    ['mipmap-xhdpi', 96, 216],
+    ['mipmap-xxhdpi', 144, 324],
+    ['mipmap-xxxhdpi', 192, 432],
+  ]
+
+  const circleMask = (size: number) =>
+    Buffer.from(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+        `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="#ffffff"/>` +
+        `</svg>`,
+    )
+
+  /** The mark centred on `edge`, at `frac` of the width, over `background`. */
+  const markOn = async (
+    edge: number,
+    frac: number,
+    background: string | { r: number; g: number; b: number; alpha: number },
+  ) => {
+    const markW = Math.round(edge * frac)
+    const mark = await sharp(markSource)
+      .resize({ width: markW, kernel: 'lanczos3' })
+      .png()
+      .toBuffer()
+    const meta = await sharp(mark).metadata()
+    return sharp({
+      create: { width: edge, height: edge, channels: 4, background },
+    })
+      .composite([
+        {
+          input: mark,
+          left: Math.round((edge - markW) / 2),
+          top: Math.round((edge - (meta.height ?? 0)) / 2),
+        },
+      ])
+      .png({ compressionLevel: 9 })
+      .toBuffer()
+  }
+
+  const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 }
+  for (const [dir, legacy, adaptive] of DENSITIES) {
+    const target = join(androidDir, dir)
+    mkdirSync(target, { recursive: true })
+
+    // Foreground layer: mark only, on transparency.
+    writeFileSync(
+      join(target, 'ic_launcher_foreground.png'),
+      await markOn(adaptive, ADAPTIVE_MARK, TRANSPARENT),
+    )
+
+    // Legacy square, squircle-cut the same way every other platform is.
+    writeFileSync(join(target, 'ic_launcher.png'), await rounded(legacy))
+
+    // Legacy round. The panel is a full circle, and the mark keeps the PWA
+    // maskable's 68% so the two read at the same weight side by side.
+    const round = await sharp(await markOn(legacy, MASKABLE_MARK, PANEL))
+      .composite([{ input: circleMask(legacy), blend: 'dest-in' }])
+      .png({ compressionLevel: 9 })
+      .toBuffer()
+    writeFileSync(join(target, 'ic_launcher_round.png'), round)
+  }
+  written.push(
+    `android/ (${DENSITIES.length} densities x 3, adaptive mark at ` +
+      `${Math.round(ADAPTIVE_MARK * 100)}% of canvas = ` +
+      `${Math.round(MASKABLE_MARK * 100)}% of the visible area)`,
+  )
+
+  // The adaptive background is a colour resource, not a bitmap. Tauri seeds
+  // it white, which puts the one white icon in a brand that is black
+  // everywhere else.
+  writeFileSync(
+    join(androidDir, 'values/ic_launcher_background.xml'),
+    '<?xml version="1.0" encoding="utf-8"?>\n' +
+      '<resources>\n' +
+      `  <color name="ic_launcher_background">${PANEL}</color>\n` +
+      '</resources>\n',
+  )
+  written.push(`android/values/ic_launcher_background.xml (${PANEL})`)
+
   console.log(`Wrote ${written.length} files:`)
   for (const line of written) console.log(`  ${line}`)
   console.log(
-    '\nUntouched by design: the Windows/Linux set and the installer bitmaps' +
-      '\n(generate-desktop-icons.ts owns those), and icons/ios + icons/android,' +
-      '\nwhich no configured Tauri bundle target reads.',
+    '\nUntouched by design: the Windows/Linux set and the installer bitmaps.' +
+      '\ngenerate-desktop-icons.ts owns those.',
   )
 }
 
