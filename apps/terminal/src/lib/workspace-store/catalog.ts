@@ -173,6 +173,15 @@ const PANES_NEEDING_PAIR = new Set([
   'company',
   'insider-activity',
   'your-position',
+  'nft-collection-header',
+  'nft-book',
+  'nft-listings',
+  'nft-offers',
+  'nft-sales',
+  'nft-items',
+  'nft-traits',
+  'nft-ticket',
+  'nft-holdings',
 ])
 
 const PANES_NEEDING_WALLET = new Set([
@@ -187,6 +196,8 @@ const PANES_NEEDING_WALLET = new Set([
   'route-bridge',
   'in-flight',
   'your-position',
+  'nft-ticket',
+  'nft-holdings',
 ])
 
 type CellSpec = { h: number; panes: Array<string> }

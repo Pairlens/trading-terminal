@@ -19,6 +19,10 @@ export {
   createPairlensDexPlugin,
 } from './pairlens-dex/index.ts'
 export {
+  coingeckoNftManifest,
+  createCoingeckoNftPlugin,
+} from './coingecko-nft-provider/index.ts'
+export {
   pairlensNftsManifest,
   createPairlensNftsPlugin,
 } from './pairlens-nfts/index.ts'

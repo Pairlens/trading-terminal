@@ -150,8 +150,19 @@ export type NftOffer = {
   orderId?: string
 }
 
-/** A print on the tape. */
+/**
+ * A print on the tape.
+ *
+ * Carries its own collection identity because the tape is read two ways: scoped
+ * to one collection on a trade board, where the identity is redundant, and
+ * market-wide on the Discovery board, where a row that cannot name what sold is
+ * a price with nothing attached to it. Optional rather than required, because a
+ * collection-scoped provider response genuinely does not repeat it per row.
+ */
 export type NftSale = {
+  chain?: NftChain
+  contract?: string
+  collectionName?: string
   tokenId: string
   name?: string
   imageUrl?: string
@@ -285,6 +296,7 @@ export type NftHolding = {
 export type NftReadAction =
   | 'collections'
   | 'collection'
+  | 'book'
   | 'listings'
   | 'offers'
   | 'sales'
