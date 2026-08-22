@@ -12,7 +12,6 @@ import {
 
 import { StreamThrottle } from '@pairlens/market-engine'
 import { feedEventTs, latencyMonitor } from '@pairlens/market-engine/latency'
-import { isTokenAddress } from '@pairlens/shared/market-ref'
 import { TIMEFRAMES, isTimeframe } from '@pairlens/shared/timeframe'
 import { usePairlens } from './pairlens-provider'
 import { getCountrySetting } from './region-settings'
@@ -54,7 +53,7 @@ import {
   orderNotionalUsd,
   priceUsdFor,
 } from '@/lib/risk/position-size'
-import { normalizePairKey } from '@/lib/pairs'
+import { isNftPairKey, normalizePairKey } from '@/lib/pairs'
 import { resolveSolanaRpcEndpoint } from '@/lib/dex/solana-rpc'
 import { contractSizeFor } from '@/lib/futures/contract-size'
 import {
@@ -99,20 +98,12 @@ export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
  * found no quote leg, and refused. The chart lost the same way, to a pool
  * resolver that answered an empty array rather than throwing.
  *
- * This is NOT a guess about the symbol's shape. It reads a guarantee the id
- * rules enforce on the way in: `normalizeInstrumentId('dex', …)` always emits
- * `{address}-{QUOTE}` and `toInstrumentRef`'s dex arm defaults the quote to
- * USDC precisely so the pool resolvers have one, while the `nft` arm emits a
- * bare contract and never adds a leg. A bare token address is therefore a
- * collection, and an address with a quote leg is a token, by construction.
- *
- * Returns undefined for everything else, which the resolver reads as "do not
- * filter": every venue that does not share its market id with another class
- * resolves exactly as it always did.
+ * Undefined for everything else, which the resolver reads as "do not filter":
+ * every venue that does not share its market id with another class resolves
+ * exactly as it always did.
  */
 function assetClassFor(pair: string): string | undefined {
-  if (!pair) return undefined
-  return isTokenAddress(pair) && !pair.includes('-') ? 'nft' : undefined
+  return isNftPairKey(pair) ? 'nft' : undefined
 }
 
 const WARMUP_TTL_MS = 15_000

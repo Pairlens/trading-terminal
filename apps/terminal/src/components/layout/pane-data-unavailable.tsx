@@ -12,6 +12,7 @@ import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 import { usePairAvailabilityStore } from '@/stores/pair-availability-store'
 import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
 import { isOpaqueTitle, shortenId } from '@/lib/predictions/event-labels'
+import { isNftPairKey } from '@/lib/pairs'
 
 /**
  * Graceful empty state shown when a connector carries no data for the active
@@ -66,7 +67,11 @@ export function PaneDataUnavailable({
   // It is the OpenSea key not being configured, and "try another connector
   // that lists it" sends someone hunting for a venue when the fix is a field
   // in the Plugin Store.
-  const isNft = current?.assetClasses.includes('nft') ?? false
+  //
+  // Read off the KEY, not the venue's declared classes: an NFT chain is also a
+  // DEX chain, so the venue entry for 'ethereum' carries both and could never
+  // separate a collection from a token.
+  const isNft = isNftPairKey(pairKey)
 
   // Same class only, and skip venues this build cannot reach, or the recovery
   // just moves the wall: "AAPL is not on Alpaca, try Binance" was offered, and
