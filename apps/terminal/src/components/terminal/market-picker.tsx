@@ -52,6 +52,7 @@ const ASSET_CLASS_ORDER: Array<AssetClass> = [
   'dex',
   'stocks',
   'prediction',
+  'nft',
 ]
 
 export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
@@ -60,6 +61,7 @@ export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
   dex: 'DEX',
   stocks: 'Stocks',
   prediction: 'Predictions',
+  nft: 'NFTs',
 }
 
 /** Venue mark, falling back to nothing when the connector ships no icon. */

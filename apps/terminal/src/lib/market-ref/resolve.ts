@@ -239,3 +239,59 @@ export function resolveMarketRefOrNull(
   const result = resolveMarketRef(inst, ctx)
   return result.ok ? result.ref : null
 }
+
+/**
+ * Whether a chart sitting on `market` has to be moved off it, and where to.
+ *
+ * The chart terminal has always carried a correction for a venue that went
+ * away under it — a connector disabled in the Plugin Store while its chart was
+ * open. It read the venue table alone, and that table answers two different
+ * questions with the same silence: "this venue is gone" and "this venue has
+ * not activated yet". Connectors activate one at a time and publish as they
+ * go, so during boot every venue below the one currently activating is absent
+ * from a list that is already non-empty.
+ *
+ * The desktop chart route never noticed, because it refuses to mount until the
+ * venue in its URL is in the table. The phone mounts on the first connector
+ * that publishes, so it ran the correction against a half-filled list: a link
+ * to `/dex/jupiter/<mint>-USDC` had its venue swapped for the user's preferred
+ * CEX, `useMobileRouteSync` wrote that back into the address, and the pair
+ * route then refused a Solana mint on OKX.
+ *
+ * Two rules, and the second one is `resolveMarketRef`'s own:
+ *
+ * 1. Absence only counts once every connector has had its turn. `settled` is
+ *    the caller's `pluginsReady`, which flips after the bootstrap activation
+ *    loop rather than during it.
+ * 2. A venue-bound class is never substituted. A token IS its chain plus
+ *    address and an outcome IS its venue plus market id, so moving the venue
+ *    does not re-price the instrument, it names a different one. When such a
+ *    venue really is missing the honest answer is the refusal the surfaces
+ *    already render (`venue-missing`, and the phone's "only exists on ..."),
+ *    never another venue's tape under the same address.
+ *
+ * Returns the venue to move to, or null to stay put.
+ */
+export function correctStaleMarket(input: {
+  market: string
+  /**
+   * What the chart is drawing, when something above owns the answer (the
+   * chart route's URL, the mobile shell's focus). Undefined means "not
+   * stated", which only costs rule 2 — a caller that cannot name the class
+   * keeps the old behaviour.
+   */
+  cls: InstrumentRef['cls'] | undefined
+  /**
+   * The venue table. Structural rather than `MarketOption`, because presence
+   * is the whole question here and the chart terminal holds a narrower row.
+   */
+  markets: ReadonlyArray<{ value: string }>
+  defaultMarket: string
+  /** Every bundled connector has activated. Until then absence proves nothing. */
+  settled: boolean
+}): string | null {
+  if (!input.settled || input.markets.length === 0) return null
+  if (input.markets.some((m) => m.value === input.market)) return null
+  if (input.cls && isVenueBoundClass(input.cls)) return null
+  return input.defaultMarket === input.market ? null : input.defaultMarket
+}

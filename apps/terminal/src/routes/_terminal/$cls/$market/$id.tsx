@@ -371,6 +371,7 @@ function ChartTerminalContent({
       markets={markets}
       defaultMarket={defaultMarket}
       marketOverride={marketRef.market}
+      instrumentClass={marketRef.cls}
       onMarketChange={handleMarketChange}
     >
       {/* The workspace follows the ASSET CLASS: each class persists its own

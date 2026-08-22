@@ -30,6 +30,7 @@ import { PERPS_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-cex-futures/wo
 import { PREDICTION_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-predictions/workspaces'
 import { DEX_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-dex/workspaces'
 import { MEMECOIN_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-memecoins/workspaces'
+import { NFT_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-nfts/workspaces'
 import { EQUITIES_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-equities/workspaces'
 import { PRESET_DEFAULT } from '../presets'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
@@ -44,6 +45,7 @@ const DEFAULT_PRESETS: Record<InstrumentClass, TerminalLayout> = {
   memecoin: MEMECOIN_TERMINAL_LAYOUT,
   stocks: EQUITIES_TERMINAL_LAYOUT,
   prediction: PREDICTION_TERMINAL_LAYOUT,
+  nft: NFT_TERMINAL_LAYOUT,
 }
 
 function storageKeyFor(cls: InstrumentClass): string {

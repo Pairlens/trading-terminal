@@ -4,7 +4,7 @@ description: Connect a venue, place an order that goes straight to the exchange,
 group: traders
 order: 3
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 22 AUG 2026
 readTime: 3 min read
 ---
 
@@ -30,9 +30,11 @@ anything.
 - **[Positions and portfolio](/docs/positions-and-portfolio).** Open orders,
   fills, balances, allocation, and the guardrail readout.
 - **[Perpetual futures](/docs/cex-futures).** Leverage, reduce-only orders and
-  contract sizing on three futures venues.
+  contract sizing on five futures venues.
 - **[US equities](/docs/equities).** Stocks and ETFs through Alpaca, on a
   session clock the broker publishes.
+- **[NFT collections](/docs/nft-trading).** A collection as a book: sweep the
+  ask ladder, bid the whole set, list a token you own.
 
 ## The golden rule
 

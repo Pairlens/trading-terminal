@@ -1045,12 +1045,19 @@
     "emptyTitle": "Chưa chọn pool",
     "emptyBody": "Chọn một pool từ bản đồ để xem thanh khoản, khối lượng và dòng tiền, chỉ cách biểu đồ một cú nhấp.",
     "change24h": "{{value}} 24h",
+    "change1h": "{{value}} 1 giờ",
+    "priceInQuote": "Giá theo {{symbol}}",
     "liquidity": "Thanh khoản",
     "volume24h": "Khối lượng 24h",
+    "volume1h": "Khối lượng 1 giờ",
     "turnover": "KL / TK",
     "turnoverValue": "{{value}}×",
     "trades24h": "Giao dịch 24h",
+    "tradesSplit": "{{buys}} lệnh mua · {{sells}} lệnh bán",
     "feeTier": "Bậc phí",
+    "fdv": "FDV",
+    "poolAge": "Tuổi pool",
+    "reserves": "Dự trữ",
     "loading": "Đang tải trạng thái pool.",
     "openChart": "Mở biểu đồ và swap",
     "venueChain": "{{venue}} · {{chain}}",
@@ -1058,6 +1065,10 @@
     "pressure1h": "Áp lực mua / bán 1 giờ",
     "buysValue": "Mua {{value}}",
     "sellsValue": "Bán {{value}}",
+    "flow24h": "Khối lượng mua / bán 24 giờ",
+    "swaps": "Swap gần đây",
+    "openPool": "Mở pool trên trình khám phá chuỗi",
+    "openWallet": "Mở ví trên trình khám phá chuỗi",
     "filledBy": "Chỗ trống do {{provider}} bổ sung",
     "waitingTitle": "Đang chờ bản đồ pool",
     "waitingBody": "Các pool của chuỗi vẫn đang tải. Pool sâu nhất sẽ tự mở ở đây.",
@@ -3463,6 +3474,21 @@
     "level1": "Level 1",
     "company": "Công ty",
     "yourPosition": "Vị thế của bạn",
+    "nftChains": "Chuỗi",
+    "nftCollections": "Bộ sưu tập",
+    "nftOverview": "Thị trường NFT",
+    "nftMovers": "Biến động giá sàn",
+    "nftMints": "Mới & đang mint",
+    "nftTape": "Giao dịch cá voi",
+    "nftCollectionHeader": "Bộ sưu tập",
+    "nftBook": "Bảng giá",
+    "nftListings": "Niêm yết",
+    "nftOffers": "Chào mua",
+    "nftSales": "Giao dịch",
+    "nftItems": "Vật phẩm",
+    "nftTraits": "Thuộc tính",
+    "nftTicket": "Phiếu lệnh NFT",
+    "nftHoldings": "Vật phẩm của tôi",
     "memeNew": "Mint mới",
     "memeGraduating": "Sắp tốt nghiệp",
     "memeGraduated": "Đã tốt nghiệp",
@@ -3543,6 +3569,21 @@
     "level1": "Giá mua và giá bán kèm khối lượng, chênh lệch, biên độ trong ngày, và một dòng trạng thái khi sàn tạm dừng giao dịch",
     "company": "Định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo, và quan điểm của các nhà phân tích, trong một panel",
     "yourPosition": "Những gì bạn đang nắm giữ ở mã này: số lượng, giá vốn, giá đánh dấu, và cả lợi nhuận trong ngày lẫn lợi nhuận chưa thực hiện",
+    "nftChains": "Lọc mọi panel NFT về một chuỗi, kèm tỷ trọng khối lượng 24h của từng chuỗi.",
+    "nftCollections": "Bộ sưu tập xếp hạng theo khối lượng, biến động giá sàn, lượt bán hoặc vốn hóa.",
+    "nftOverview": "Khối lượng, vốn hóa, lượt bán NFT toàn thị trường và phân chia theo sàn.",
+    "nftMovers": "Các bộ sưu tập có giá sàn tăng và giảm mạnh nhất trong 24 giờ qua.",
+    "nftMints": "Các bộ sưu tập vừa triển khai và đang có khối lượng đầu tiên.",
+    "nftTape": "Các giao dịch giá trị lớn ngay khi khớp, trên mọi bộ sưu tập được lập chỉ mục.",
+    "nftCollectionHeader": "Giá sàn, khối lượng, nguồn cung, người giữ và tỷ lệ nguồn cung đang niêm yết.",
+    "nftBook": "Niêm yết và chào mua bộ sưu tập dưới dạng bảng giá hai chiều với độ sâu thật.",
+    "nftListings": "Phía bán: mọi vật phẩm đang niêm yết, rẻ nhất lên đầu.",
+    "nftOffers": "Phía mua: chào mua theo bộ sưu tập, thuộc tính và token, kèm khối lượng khớp được.",
+    "nftSales": "Dòng khớp lệnh của bộ sưu tập này, mới nhất lên đầu.",
+    "nftItems": "Duyệt token của bộ sưu tập kèm giá bán và độ hiếm.",
+    "nftTraits": "Mọi giá trị thuộc tính, số token mang nó và độ hiếm tương ứng. Giá sàn theo từng thuộc tính xuất hiện khi nhà cung cấp công bố.",
+    "nftTicket": "Mua giá sàn, quét, chào mua, niêm yết một vật phẩm hoặc chấp nhận giá mua.",
+    "nftHoldings": "Những gì ví này đang giữ trong bộ sưu tập, kèm giá vốn và giá mark.",
     "memeNew": "Token được mint trong vài giờ qua, mới nhất lên đầu, kèm số holder và dòng tiền sớm.",
     "memeGraduating": "Token đang leo đường cong bonding, xếp theo mức độ gần với việc chuyển sang một pool thật.",
     "memeGraduated": "Token đã đi hết đường cong và nay giao dịch trên pool AMM, mới nhất lên đầu.",
@@ -3625,7 +3666,8 @@
       "predictionDescription": "Một kết quả sự kiện chỉ giao dịch trên một sàn, nên không còn nơi nào khác để thử. Có thể sàn chỉ từ chối một yêu cầu.",
       "retry": "Thử lại",
       "desktopOnlyTitle": "Sàn này cần ứng dụng máy tính",
-      "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính."
+      "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính.",
+      "nftDescription": "Không nhà cung cấp nào trả về chuỗi giá sàn cho bộ sưu tập này. Thêm khóa OpenSea trong plugin OpenSea: biểu đồ, bảng giá và dòng khớp lệnh đều đến từ đó."
     },
     "paneCredentials": {
       "sealedTitle": "Mở khóa để tải dữ liệu {{venue}}",
@@ -3722,6 +3764,7 @@
       "prediction": "Dự đoán",
       "moveLeft": "Chuyển sang trái",
       "moveRight": "Chuyển sang phải",
+      "nft": "NFT",
       "memecoin": "Memecoin"
     }
   },
@@ -3738,6 +3781,8 @@
     "dexDescription": "Một lệnh hoán đổi với pool thanh khoản, ký bằng chính ví của bạn. Chuỗi nơi nó diễn ra cũng là một phần của thứ bạn giao dịch.",
     "stocksDescription": "Cổ phiếu qua công ty môi giới, theo lịch của chính sàn. Áp dụng giờ giao dịch, tạm ngừng và quy tắc thanh toán.",
     "predictionDescription": "Hợp đồng về câu trả lời cho một câu hỏi. Trả 1 $ nếu đúng và không gì cả nếu sai.",
+    "nft": "NFT",
+    "nftDescription": "Một bộ sưu tập token không thể thay thế. Giá sàn là giá bán rẻ nhất, chào mua là phía mua, và một vị thế là một token cụ thể.",
     "memecoin": "MEME",
     "memecoinDescription": "Token launchpad trên một đường cong bonding, và những đồng vốn hóa lớn đã tốt nghiệp từ đó. Định giá theo vốn hóa, giao dịch qua một bộ tổng hợp DEX."
   },
@@ -4226,6 +4271,18 @@
         "title": "Pairlens Cổ phiếu",
         "description": "Bề mặt cổ phiếu: đồng hồ phiên, báo giá Level 1, dữ liệu cơ bản công ty và lịch báo cáo lợi nhuận"
       },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "Các bề mặt NFT: bảng xếp hạng bộ sưu tập, bảng giá niêm yết và chào mua, lưới vật phẩm và dòng khớp lệnh bán, cùng các board chứa chúng."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Bộ sưu tập NFT, sổ lệnh, dòng khớp lệnh và thực thi lệnh Seaport trên sáu chuỗi. Thêm khóa OpenSea của riêng bạn: miễn phí và cấp ngay lập tức."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Giá sàn, khối lượng, nguồn cung và người giữ, không cần khóa, cho mọi bộ sưu tập đã lập chỉ mục. Nguồn dự phòng giúp một board NFT nguội có dữ liệu thật."
+      },
       "pairlens-memecoins": {
         "title": "Pairlens Memecoins",
         "description": "Các mặt của launchpad: mint mới, tiến độ đường cong bonding, tốt nghiệp, và những đồng vốn hóa lớn sống lâu hơn cả chúng"
@@ -4271,6 +4328,10 @@
       "cexFutures": {
         "label": "Hợp đồng tương lai crypto",
         "description": "Các sàn hợp đồng tương lai vĩnh cửu cho vị thế crypto có đòn bẩy."
+      },
+      "nfts": {
+        "label": "NFT",
+        "description": "Xếp hạng bộ sưu tập, sổ niêm yết và chào mua, cùng thực thi trên sàn NFT"
       },
       "memes": {
         "label": "Memecoin",
@@ -4982,6 +5043,30 @@
         "description": "Các hợp đồng crypto lặp lại của cả hai sàn trong một bảng: Kalshi mở cửa sổ mười lăm phút trên năm tài sản, Polymarket mở theo giờ và theo ngày trên bốn tài sản. Mỗi dòng có giá tham chiếu thanh toán, giá giao ngay trực tiếp, khoảng cách giữa chúng và kết quả mà một khuếch tán không trôi theo biến động thực tế gần đây rút ra từ thời gian còn lại, để tỷ lệ cược có thứ để so sánh.",
         "menuLabel": "Crypto Lên/Xuống"
       },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "Mặc định",
+        "tagline": "Một bộ sưu tập như một sổ lệnh, không phải phòng trưng bày.",
+        "description": "Biểu đồ giá sàn nằm trên bảng giá hai chiều, với niêm yết và chào mua bộ sưu tập là độ sâu thật. Dòng khớp lệnh, lưới vật phẩm và giá sàn theo thuộc tính dùng chung các tab bên dưới."
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "Chọn token, không phải giá sàn.",
+        "description": "Lưới vật phẩm rộng hết cỡ với giá sàn theo thuộc tính bên cạnh, để mua một token cụ thể thay vì thứ rẻ nhất."
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "Mặc định",
+        "tagline": "Thứ gì đang biến động trên các thị trường NFT.",
+        "description": "Bộ sưu tập xếp theo khối lượng với biến động giá sàn bên cạnh, bộ lọc chuỗi, tổng quan toàn thị trường, các đợt mint mới và dòng giao dịch cá voi."
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Flow",
+        "tagline": "Dòng khớp lệnh, rộng hết cỡ.",
+        "description": "Giao dịch cá voi trên mọi bộ sưu tập được lập chỉ mục, kèm biến động giá sàn và bảng xếp hạng bên cạnh."
+      },
       "memecoin-discovery": {
         "name": "Khám phá memecoin",
         "tagline": "Bốn cột, mỗi cột một giai đoạn của đường cong.",
@@ -5049,6 +5134,9 @@
       },
       "multi-asset": {
         "label": "Đa Tài Sản"
+      },
+      "nfts": {
+        "label": "NFT"
       },
       "memecoins": {
         "label": "Memecoin"
@@ -6019,6 +6107,10 @@
         "label": "Sự kiện",
         "description": "Duyệt các sự kiện của thị trường dự đoán và kết quả của chúng"
       },
+      "nft": {
+        "label": "Thị trường NFT",
+        "description": "Xếp hạng bộ sưu tập, giá sàn, niêm yết, chào mua và dòng khớp lệnh"
+      },
       "launchpad": {
         "label": "Token launchpad",
         "description": "Token vừa mint, tiến độ đường cong bonding, tốt nghiệp và memecoin vốn hóa lớn"
@@ -6278,7 +6370,13 @@
       "crosshairMode": "Con trỏ chữ thập: {{mode}}",
       "indicatorsActive_one": "Chỉ báo, {{count}} đang hoạt động",
       "indicatorsActive_other": "Chỉ báo, {{count}} đang hoạt động",
-      "removeIndicator": "Gỡ {{name}}"
+      "removeIndicator": "Gỡ {{name}}",
+      "inspect": {
+        "label": "Chi tiết nến",
+        "close": "Ẩn chữ thập",
+        "hint": "Chạm và giữ để xem bất kỳ cây nến nào",
+        "volume": "KL {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Đặt hình vẽ",
@@ -6380,7 +6478,8 @@
       "predictions": "dự đoán",
       "filterPredictions": "Dự đoán",
       "futures": "futures",
-      "filterFutures": "Futures"
+      "filterFutures": "Futures",
+      "nfts": "NFT"
     }
   },
   "events": {
@@ -6470,6 +6569,285 @@
     "mark": "Giá tham chiếu",
     "marketValue": "Giá trị thị trường",
     "dayChange": "Hôm nay"
+  },
+  "nft": {
+    "noProviderTitle": "Chưa có nhà cung cấp dữ liệu NFT",
+    "noProviderBody": "Không plugin đã cài nào đọc được bộ sưu tập NFT. Hãy cài một nhà cung cấp từ Plugin Store để lấp đầy bảng này.",
+    "browseProviders": "Duyệt nhà cung cấp",
+    "throttledTitle": "Đang bị giới hạn",
+    "unavailableTitle": "Nhà cung cấp không khả dụng",
+    "unavailableBody": "Nhà cung cấp dữ liệu NFT không trả lời. Thường sẽ hoạt động lại ở lần làm mới sau.",
+    "providerLabel": "Dữ liệu NFT",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "Khác"
+    },
+    "needsKeyTitle": "Thêm khóa OpenSea",
+    "needsKeyBody": "Bảng xếp hạng, bảng giá và dòng khớp lệnh đến từ OpenSea, nơi cần khóa API. Khóa miễn phí và được cấp ngay lập tức. Thêm khóa của bạn trong plugin OpenSea.",
+    "addKeyAction": "Mở Plugin Store"
+  },
+  "nftChains": {
+    "subtitle": "Chuỗi",
+    "subtitleShare": "Tỷ trọng khối lượng 24h",
+    "loadingLabel": "Đang đọc khối lượng thị trường theo chuỗi",
+    "emptyTitle": "Không có chuỗi nào",
+    "emptyBody": "Nhà cung cấp đã cài không nêu chuỗi nào nó phục vụ được."
+  },
+  "nftCollections": {
+    "searchPlaceholder": "Tìm bộ sưu tập",
+    "countMetric_one": "{{count}} bộ sưu tập",
+    "loadingLabel": "Đang đọc xếp hạng bộ sưu tập",
+    "verified": "Bộ sưu tập đã xác minh",
+    "emptyTitle": "Không có bộ sưu tập",
+    "emptyBody": "Nhà cung cấp không xếp hạng gì trên chuỗi này. Hãy thử chuỗi khác ở thanh bên.",
+    "noMatchTitle": "Không có kết quả",
+    "noMatchBody": "Không bộ sưu tập nào trên trang này khớp tìm kiếm của bạn. Tìm kiếm chỉ thu hẹp trang đã xếp hạng, không phải cả chuỗi.",
+    "columns": {
+      "collection": "Bộ sưu tập",
+      "floor": "Giá sàn",
+      "change": "24h",
+      "volume": "Khối lượng",
+      "sales": "Lượt bán",
+      "listed": "Niêm yết",
+      "holders": "Người giữ"
+    },
+    "countMetric_other": "{{count}} bộ sưu tập"
+  },
+  "nftOverview": {
+    "subtitle": "24h qua, mọi chuỗi",
+    "loadingLabel": "Đang đọc tổng thị trường",
+    "volume": "Khối lượng",
+    "marketCap": "Vốn hóa",
+    "sales": "Lượt bán",
+    "traders": "Trader",
+    "emptyTitle": "Không có tổng thị trường",
+    "emptyBody": "Nhà cung cấp không công bố số liệu toàn thị trường."
+  },
+  "nftMovers": {
+    "subtitle": "Biến động giá sàn, 24h",
+    "gainers": "Tăng",
+    "losers": "Giảm",
+    "loadingLabel": "Đang đọc biến động giá sàn",
+    "emptyTitle": "Không có biến động giá sàn",
+    "emptyGainersBody": "Không bộ sưu tập nào trên chuỗi này có giá sàn cao hơn hôm qua.",
+    "emptyLosersBody": "Không bộ sưu tập nào trên chuỗi này có giá sàn thấp hơn hôm qua."
+  },
+  "nftMints": {
+    "subtitle": "Triển khai mới nhất",
+    "loadingLabel": "Đang đọc các đợt triển khai gần đây",
+    "emptyTitle": "Không có đợt mint gần đây",
+    "emptyBody": "Nhà cung cấp không liệt kê bộ sưu tập nào vừa triển khai trên chuỗi này.",
+    "columns": {
+      "collection": "Bộ sưu tập",
+      "age": "Tuổi",
+      "floor": "Giá sàn",
+      "volume": "Khối lượng",
+      "supply": "Nguồn cung"
+    }
+  },
+  "nftTape": {
+    "allSizes": "Tất cả",
+    "allMetric": "Mọi giao dịch",
+    "aboveMetric": "Giao dịch trên {{value}}",
+    "loadingLabel": "Đang đọc dòng khớp lệnh",
+    "partiesHint": "Người bán, rồi người mua",
+    "emptyTitle": "Không có giao dịch",
+    "emptyBody": "Nhà cung cấp không báo giao dịch nào trên chuỗi này.",
+    "belowThresholdTitle": "Không có giao dịch lớn vậy",
+    "belowThresholdBody": "Không giao dịch nào vượt {{value}} trong khoảng thời gian nhà cung cấp phục vụ. Hạ ngưỡng quy mô phía trên để xem phần còn lại của dòng khớp lệnh.",
+    "columns": {
+      "time": "Thời gian",
+      "item": "Vật phẩm",
+      "price": "Giá",
+      "venue": "Sàn",
+      "parties": "Bán, mua"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem giá sàn, nguồn cung và người giữ.",
+    "emptyTitle": "Chưa có gì để hiển thị",
+    "emptyBody": "Nhà cung cấp này không trả về trạng thái nào cho bộ sưu tập.",
+    "loadingLabel": "Đang đọc bộ sưu tập",
+    "verified": "Bộ sưu tập đã xác minh",
+    "floor": "Giá sàn",
+    "volume24h": "Khối lượng 24h",
+    "marketCap": "Vốn hóa",
+    "supply": "Nguồn cung",
+    "holders": "Người giữ",
+    "listed": "Niêm yết",
+    "listedValue": "{{percent}}% ({{listed}})",
+    "topOffer": "Chào mua cao nhất",
+    "royalty": "Phí bản quyền"
+  },
+  "nftBook": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem cả hai phía sổ lệnh của nó.",
+    "emptyTitle": "Không có sổ lệnh",
+    "emptyBody": "Hiện không có gì niêm yết và không có chào mua nào cho bộ sưu tập này.",
+    "loadingLabel": "Đang đọc cả hai phía sổ lệnh",
+    "asOf": "Đọc lúc {{when}}",
+    "mid": "Giá giữa",
+    "spread": "{{amount}} ({{percent}}%)",
+    "bidQuantity_one": "1x",
+    "bidQuantity_other": "{{count}}x",
+    "collectionWide": "Bất kỳ",
+    "depthSummary": "{{asks}} niêm yết, {{bids}} chào mua",
+    "columns": {
+      "price": "Giá",
+      "item": "Vật phẩm",
+      "rank": "Hạng",
+      "venue": "Sàn"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem những gì đang rao bán.",
+    "emptyTitle": "Chưa niêm yết gì",
+    "emptyBody": "Hiện không token nào trong bộ sưu tập này được rao bán.",
+    "loadingLabel": "Đang đọc danh sách niêm yết",
+    "count_one": "1 niêm yết",
+    "count_other": "{{count}} niêm yết",
+    "footnote": "Giá sàn {{floor}}",
+    "columns": {
+      "item": "Vật phẩm",
+      "price": "Giá",
+      "rank": "Hạng",
+      "venue": "Sàn",
+      "expires": "Hết hạn"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem người mua đang chào giá bao nhiêu.",
+    "emptyTitle": "Không có chào mua",
+    "emptyBody": "Hiện chưa ai chào mua bộ sưu tập này.",
+    "loadingLabel": "Đang đọc các chào mua",
+    "topBid": "Giá mua cao nhất {{price}}",
+    "footnote": "Tổng {{value}} đang chào mua",
+    "scopeCollection": "Bộ sưu tập",
+    "columns": {
+      "price": "Giá",
+      "quantity": "Số lượng",
+      "value": "Giá trị",
+      "scope": "Phạm vi",
+      "venue": "Sàn",
+      "bidder": "Người chào mua",
+      "expires": "Hết hạn"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem những gì đã khớp.",
+    "emptyTitle": "Không có giao dịch",
+    "emptyBody": "Nhà cung cấp này không có lượt khớp gần đây cho bộ sưu tập.",
+    "loadingLabel": "Đang đọc dòng khớp lệnh",
+    "prints_one": "1 lượt khớp",
+    "prints_other": "{{count}} lượt khớp",
+    "footnote_one": "1 lượt khớp, TB {{average}}",
+    "footnote_other": "{{count}} lượt khớp, TB {{average}}",
+    "columns": {
+      "time": "Thời gian",
+      "item": "Vật phẩm",
+      "price": "Giá",
+      "venue": "Sàn",
+      "buyer": "Người mua",
+      "seller": "Người bán"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để duyệt token của nó.",
+    "emptyTitle": "Không có vật phẩm",
+    "emptyBody": "Nhà cung cấp này không trả về token nào cho bộ sưu tập.",
+    "loadingLabel": "Đang đọc các vật phẩm",
+    "count_one": "1 vật phẩm",
+    "count_other": "{{count}} vật phẩm",
+    "unlisted": "Chưa niêm yết",
+    "footnote": "{{listed}} trong {{shown}} đang hiển thị đã niêm yết"
+  },
+  "nftTraits": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem thuộc tính của nó đáng giá bao nhiêu.",
+    "emptyTitle": "Không có giá sàn thuộc tính",
+    "emptyBody": "Nhà cung cấp này không công bố giá theo từng thuộc tính cho bộ sưu tập.",
+    "loadingLabel": "Đang đọc giá sàn theo thuộc tính",
+    "groupCount_one": "1 thuộc tính",
+    "groupCount_other": "{{count}} thuộc tính",
+    "footnote": "{{priced}} trong {{total}} giá trị thuộc tính có giá sàn",
+    "columns": {
+      "value": "Giá trị",
+      "count": "Số lượng",
+      "floor": "Giá sàn",
+      "listed": "Niêm yết"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để giao dịch.",
+    "emptyTitle": "Không có nhà cung cấp",
+    "emptyBody": "Cài một nhà cung cấp thị trường NFT để giao dịch bộ sưu tập.",
+    "quantity": "Số vật phẩm",
+    "price": "Giá {{currency}}",
+    "token": "Token",
+    "tokenPlaceholder": "Chọn token bạn sở hữu",
+    "notional": "Tổng",
+    "notionalUsd": "Tổng (USD)",
+    "averagePrice": "Giá khớp TB",
+    "royalty": "Phí bản quyền",
+    "royaltyValue": "{{percent}}% ({{amount}})",
+    "thinBook_one": "Sổ lệnh thiếu 1 vật phẩm so với khối lượng này.",
+    "thinBook_other": "Sổ lệnh thiếu {{count}} vật phẩm so với khối lượng này.",
+    "placing": "Đang đặt lệnh…",
+    "placedBody_one": "1 vật phẩm trên {{collection}}.",
+    "placedBody_other": "{{count}} vật phẩm trên {{collection}}.",
+    "intents": {
+      "sweep": "Quét",
+      "offer": "Chào mua",
+      "list": "Niêm yết",
+      "accept": "Chấp nhận"
+    },
+    "mapping": {
+      "sweep": "Mua thị trường. Lấy các mức niêm yết rẻ nhất, mỗi vật phẩm một lệnh.",
+      "offer": "Mua giới hạn. Một chào mua cả bộ sưu tập mà bất kỳ người giữ nào cũng khớp được.",
+      "list": "Bán giới hạn một token bạn sở hữu, theo giá của bạn.",
+      "accept": "Bán thị trường một token bạn sở hữu, vào mức chào mua tốt nhất đang treo."
+    },
+    "placed": {
+      "sweep": "Đã gửi lệnh quét",
+      "offer": "Đã gửi chào mua",
+      "list": "Đã gửi niêm yết",
+      "accept": "Đã gửi lệnh bán"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "Chưa chọn bộ sưu tập",
+    "noPairBody": "Chọn một bộ sưu tập để xem ví của bạn đang giữ gì trong đó.",
+    "emptyTitle": "Không giữ gì",
+    "emptyBody": "Ví này không sở hữu token nào trong bộ sưu tập.",
+    "loadingLabel": "Đang đọc số nắm giữ của bạn",
+    "footnote_one": "Đang giữ 1, {{value}} theo giá mua",
+    "footnote_other": "Đang giữ {{count}}, {{value}} theo giá mua",
+    "columns": {
+      "item": "Vật phẩm",
+      "acquired": "Ngày mua",
+      "basis": "Giá vốn",
+      "mark": "Giá mark",
+      "pnl": "PnL"
+    }
   },
   "memecoins": {
     "loading": "Đang đọc các launchpad",

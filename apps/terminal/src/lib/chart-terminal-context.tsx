@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { createContext, useContext, useMemo } from 'react'
 import type { ReactNode } from 'react'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import { CompareFeeds } from '@/components/terminal/compare-feeds'
 import { useChartTerminalState } from '@/hooks/use-chart-terminal-state'
@@ -134,6 +135,13 @@ type ChartTerminalProviderProps = {
   stateScope?: string
   /** Venue owned from above (the chart route's URL) — see the same options. */
   marketOverride?: string
+  /**
+   * Asset class owned from above, for the shells that read it off an address.
+   * See `useChartTerminalState`'s option of the same name: it exists so the
+   * stale-venue correction never substitutes a venue that is half of the
+   * instrument's identity.
+   */
+  instrumentClass?: InstrumentClass
   onMarketChange?: (market: string) => void
   children: ReactNode
 }
@@ -145,6 +153,7 @@ export function ChartTerminalProvider({
   defaultTimeframe,
   stateScope,
   marketOverride,
+  instrumentClass,
   onMarketChange,
   children,
 }: ChartTerminalProviderProps) {
@@ -154,6 +163,7 @@ export function ChartTerminalProvider({
     defaultTimeframe,
     scope: stateScope,
     marketOverride,
+    instrumentClass,
     onMarketChange,
   })
 

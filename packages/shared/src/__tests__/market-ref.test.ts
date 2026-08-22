@@ -148,9 +148,10 @@ describe('serialization round-trips', () => {
    */
   test('venue-bound membership is exactly the address-shaped classes', () => {
     const bound = INSTRUMENT_CLASSES.filter(isVenueBoundClass)
-    // A token IS its chain plus address, and a prediction outcome IS its venue
-    // plus market id. The other three name an asset that many venues list.
-    expect(bound).toEqual(['dex', 'memecoin', 'prediction'])
+    // A token IS its chain plus address, a prediction outcome IS its venue
+    // plus market id, and an NFT collection IS its chain plus contract. The
+    // other three name an asset that many venues list.
+    expect(bound).toEqual(['dex', 'memecoin', 'prediction', 'nft'])
   })
 
   /**
@@ -431,5 +432,73 @@ describe('watchlist keys drop the venue, except where it is identity', () => {
         toWatchlistRef({ cls: 'prediction', market: 'kalshi', id: 'KX-T53' }),
       ),
     ).toBe('prediction:kalshi:KX-T53')
+  })
+})
+
+describe('the nft arm', () => {
+  test('folds an EVM contract down, never up', () => {
+    // The default rule upper-cases, which destroys an address's checksum
+    // casing. This arm is the inverse and that is the whole point of it.
+    expect(
+      normalizeInstrumentId(
+        'nft',
+        '0xBd3531dA5CF5857e7CfAA92426877b022e612cf8',
+      ),
+    ).toBe('0xbd3531da5cf5857e7cfaa92426877b022e612cf8')
+  })
+
+  test('leaves a base58 collection key untouched', () => {
+    const mint = 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'
+    expect(normalizeInstrumentId('nft', mint)).toBe(mint)
+  })
+
+  test('lower-cases a marketplace slug rather than shouting it', () => {
+    expect(normalizeInstrumentId('nft', 'PudgyPenguins')).toBe('pudgypenguins')
+  })
+
+  test('is venue-bound, because the chain is part of what the asset IS', () => {
+    expect(isVenueBoundClass('nft')).toBe(true)
+  })
+
+  test('round-trips through a URL path', () => {
+    const ref = {
+      cls: 'nft' as const,
+      market: 'base',
+      id: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+    }
+    expect(parseMarketRefPath(marketRefToPath(ref))).toEqual(ref)
+  })
+
+  test('keeps the same contract on two chains apart', () => {
+    const a = marketRefToPath({ cls: 'nft', market: 'ethereum', id: '0xabc' })
+    const b = marketRefToPath({ cls: 'nft', market: 'base', id: '0xabc' })
+    expect(a).not.toBe(b)
+  })
+
+  test('builds a ref from a collection row, chain and address', () => {
+    expect(
+      toInstrumentRef({
+        kind: 'nft-collection',
+        symbol: 'PPG',
+        market: 'opensea',
+        chain: 'Ethereum',
+        address: '0xBd3531dA5CF5857e7CfAA92426877b022e612cf8',
+      }),
+    ).toEqual({
+      cls: 'nft',
+      market: 'ethereum',
+      id: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+    })
+  })
+
+  test('refuses a collection row with no chain, rather than guessing one', () => {
+    expect(
+      toInstrumentRef({
+        kind: 'nft-collection',
+        symbol: 'PPG',
+        market: 'opensea',
+        address: '0xabc',
+      }),
+    ).toBeNull()
   })
 })

@@ -14,6 +14,7 @@ import type { PluginInstance } from '@pairlens/plugin-system'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 
 import type { PluginStateResponse } from '@/lib/api'
+import { missingConfigHint } from '@/lib/plugins/config-requirements'
 import { api, queryKeys } from '@/lib/api'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
 import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
@@ -148,6 +149,7 @@ export function MarketConnectors() {
       <div className="space-y-2">
         {connectors.map((connector) => {
           const active = connector.status === 'active'
+          const configHint = missingConfigHint(connector.manifest)
           const busy = busyId === connector.manifest.id
 
           const canTrade = connector.manifest.capabilities.some(
@@ -174,7 +176,20 @@ export function MarketConnectors() {
                   <span className="text-sm font-medium">
                     {pluginTitle(connector.manifest)}
                   </span>
-                  {active && (
+                  {/* A connector enabled but missing its own required
+                      config is not connected, and saying so is worth more
+                      than a green tick: OpenSea is the first market connector
+                      whose DATA needs a key, so "Connected" would have
+                      promised a board that answers 401 on every read. */}
+                  {active && configHint && (
+                    <Badge
+                      variant="outline"
+                      className="h-4 gap-1 border-amber-500/30 bg-amber-500/10 px-1.5 text-[9px] text-amber-700 dark:text-amber-400"
+                    >
+                      {configHint}
+                    </Badge>
+                  )}
+                  {active && !configHint && (
                     <Badge
                       variant="outline"
                       className="h-4 gap-1 border-emerald-500/30 bg-emerald-500/10 px-1.5 text-[9px] text-emerald-700 dark:text-emerald-400"

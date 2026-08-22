@@ -22,6 +22,7 @@ export type PluginFamilyId =
   | 'memes'
   | 'equities'
   | 'predictions'
+  | 'nfts'
 
 export type PluginFamilyMeta = {
   id: PluginFamilyId
@@ -96,17 +97,24 @@ export const PLUGIN_FAMILIES: Array<PluginFamilyMeta> = [
     required: false,
   },
   {
+    id: 'nfts',
+    labelKey: 'pluginStore.families.nfts.label',
+    descriptionKey: 'pluginStore.families.nfts.description',
+    order: 8,
+    required: false,
+  },
+  {
     id: 'ai-byok',
     labelKey: 'pluginStore.families.aiByok.label',
     descriptionKey: 'pluginStore.families.aiByok.description',
-    order: 8,
+    order: 9,
     required: false,
   },
   {
     id: 'themes',
     labelKey: 'pluginStore.families.themes.label',
     descriptionKey: 'pluginStore.families.themes.description',
-    order: 9,
+    order: 10,
     required: false,
   },
 ]
@@ -150,6 +158,7 @@ export function pluginFamilyOf(
   if (assetClass === 'memecoin') return 'memes'
   if (assetClass === 'prediction') return 'predictions'
   if (assetClass === 'stocks') return 'equities'
+  if (assetClass === 'nft') return 'nfts'
   if (assetClass === 'dex') return 'dex'
   if (assetClass === 'crypto-spot') return 'cex-spot'
   if (assetClass === 'crypto-perp') return 'cex-futures'

@@ -45,6 +45,7 @@ export type InstrumentClass =
   | 'memecoin'
   | 'stocks'
   | 'prediction'
+  | 'nft'
 
 export const INSTRUMENT_CLASSES: ReadonlyArray<InstrumentClass> = [
   'spot',
@@ -53,17 +54,22 @@ export const INSTRUMENT_CLASSES: ReadonlyArray<InstrumentClass> = [
   'memecoin',
   'stocks',
   'prediction',
+  'nft',
 ]
 
 /**
  * Classes whose venue is part of the instrument's identity rather than a
  * routing choice. A token on Base and the same address on Arbitrum are two
  * different assets; BTC-USDT on OKX and on Gate are one asset on two tapes.
+ * For `nft` the bound venue is the CHAIN rather than a marketplace: the same
+ * art deployed to Ethereum and to Base is two collections with two floors,
+ * while OpenSea and Blur are two tapes for one of them.
  */
 const VENUE_BOUND: ReadonlyArray<InstrumentClass> = [
   'dex',
   'memecoin',
   'prediction',
+  'nft',
 ]
 
 export function isVenueBoundClass(cls: InstrumentClass): boolean {
@@ -106,6 +112,7 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   memecoin: 'memecoin',
   stocks: 'stocks',
   prediction: 'prediction',
+  nft: 'nft',
   // AssetClass, as connectors declare it
   'crypto-spot': 'spot',
   'crypto-perp': 'perp',
@@ -114,6 +121,7 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   'cex-derivative': 'perp',
   token: 'dex',
   equity: 'stocks',
+  'nft-collection': 'nft',
   // Drifted spellings seen in the wild
   crypto: 'spot',
   equities: 'stocks',
@@ -122,6 +130,7 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   predictions: 'prediction',
   memecoins: 'memecoin',
   memes: 'memecoin',
+  nfts: 'nft',
 }
 
 /** The class a raw asset-class/kind string names, or undefined if unknown. */
@@ -198,6 +207,18 @@ export function normalizeInstrumentId(
 ): string {
   const trimmed = raw.trim()
   if (cls === 'prediction') return trimmed
+  if (cls === 'nft') {
+    // A collection is addressed by its contract, and where a chain has no
+    // contract to point at (Solana collections are keyed by the venue's own
+    // slug) by that slug. Neither may be upper-cased: an EVM address loses its
+    // checksum casing, base58 becomes a different string entirely, and a slug
+    // is lower-case by convention at every marketplace that mints one. So this
+    // arm folds DOWN rather than up, which is the inverse of the default rule
+    // and the reason it cannot share it.
+    if (isEvmAddress(trimmed)) return trimmed.toLowerCase()
+    if (isSolanaAddress(trimmed)) return trimmed
+    return trimmed.toLowerCase()
+  }
   if (cls === 'dex' || cls === 'memecoin') {
     // A dex id is `base-quote` where the base is normally an ADDRESS, so the
     // two legs cannot share one rule. Separators are canonicalized first,
@@ -359,6 +380,17 @@ export function toInstrumentRef(inst: {
         id: normalizeInstrumentId(cls, `${inst.address}-${quote}`),
       }
     }
+    case 'nft':
+      // Venue-bound on the CHAIN, not on the marketplace. A collection is its
+      // chain plus its contract; OpenSea and Blur are two tapes for one asset,
+      // and which one fills an order is a routing decision made at order time,
+      // exactly as a swap picks a pool.
+      if (!inst.chain || !inst.address) return null
+      return {
+        cls,
+        market: inst.chain.toLowerCase(),
+        id: normalizeInstrumentId(cls, inst.address),
+      }
     case 'prediction':
       // Venue-bound like a token, but keyed by the CONNECTOR's own pair key
       // rather than by `marketId + outcome`. Those two are the catalog's

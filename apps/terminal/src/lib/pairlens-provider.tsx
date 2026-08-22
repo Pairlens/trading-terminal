@@ -365,6 +365,83 @@ const FIRST_PARTY_COMPONENTS: Record<
       })),
     ),
   },
+  'pairlens-nfts': {
+    'nft-chains': lazyChunk(() =>
+      import('@/components/nft/nft-chains-pane').then((m) => ({
+        default: m.NftChainsPane,
+      })),
+    ),
+    'nft-collections': lazyChunk(() =>
+      import('@/components/nft/nft-collections-pane').then((m) => ({
+        default: m.NftCollectionsPane,
+      })),
+    ),
+    'nft-overview': lazyChunk(() =>
+      import('@/components/nft/nft-overview-pane').then((m) => ({
+        default: m.NftOverviewPane,
+      })),
+    ),
+    'nft-movers': lazyChunk(() =>
+      import('@/components/nft/nft-movers-pane').then((m) => ({
+        default: m.NftMoversPane,
+      })),
+    ),
+    'nft-mints': lazyChunk(() =>
+      import('@/components/nft/nft-mints-pane').then((m) => ({
+        default: m.NftMintsPane,
+      })),
+    ),
+    'nft-tape': lazyChunk(() =>
+      import('@/components/nft/nft-tape-pane').then((m) => ({
+        default: m.NftTapePane,
+      })),
+    ),
+    'nft-collection-header': lazyChunk(() =>
+      import('@/components/nft/nft-collection-header-pane').then((m) => ({
+        default: m.NftCollectionHeaderPane,
+      })),
+    ),
+    'nft-book': lazyChunk(() =>
+      import('@/components/nft/nft-book-pane').then((m) => ({
+        default: m.NftBookPane,
+      })),
+    ),
+    'nft-listings': lazyChunk(() =>
+      import('@/components/nft/nft-listings-pane').then((m) => ({
+        default: m.NftListingsPane,
+      })),
+    ),
+    'nft-offers': lazyChunk(() =>
+      import('@/components/nft/nft-offers-pane').then((m) => ({
+        default: m.NftOffersPane,
+      })),
+    ),
+    'nft-sales': lazyChunk(() =>
+      import('@/components/nft/nft-sales-pane').then((m) => ({
+        default: m.NftSalesPane,
+      })),
+    ),
+    'nft-items': lazyChunk(() =>
+      import('@/components/nft/nft-items-pane').then((m) => ({
+        default: m.NftItemsPane,
+      })),
+    ),
+    'nft-traits': lazyChunk(() =>
+      import('@/components/nft/nft-traits-pane').then((m) => ({
+        default: m.NftTraitsPane,
+      })),
+    ),
+    'nft-ticket': lazyChunk(() =>
+      import('@/components/nft/nft-ticket-pane').then((m) => ({
+        default: m.NftTicketPane,
+      })),
+    ),
+    'nft-holdings': lazyChunk(() =>
+      import('@/components/nft/nft-holdings-pane').then((m) => ({
+        default: m.NftHoldingsPane,
+      })),
+    ),
+  },
   'pairlens-dex': {
     chains: lazyChunk(() =>
       import('@/components/dex/chains-pane').then((m) => ({

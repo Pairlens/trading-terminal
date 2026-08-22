@@ -4,8 +4,9 @@
  * What each asset class LOOKS like — one table, read by every surface that
  * names a class.
  *
- * Spot, perps, on-chain pools, launchpad tokens, equities and event contracts
- * behave like six different products: they settle differently, they carry different risk, and
+ * Spot, perps, on-chain pools, launchpad tokens, equities, event contracts and
+ * NFT collections behave like seven different products: they settle
+ * differently, they carry different risk, and
  * an order means a different thing on each. The terminal used to leave that
  * distinction implicit in the symbol's shape ('BTC-USDT' vs 'AAPL'), which is
  * a rule you have to already know to read. So each class gets a fixed hue, a
@@ -27,7 +28,7 @@
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
 export type AssetClassVisual = {
-  /** Short badge label: SPOT, PERP, DEX, STOCK, EVENT. */
+  /** Short badge label: SPOT, PERP, DEX, STOCK, EVENT, NFT. */
   labelKey: string
   /**
    * The class spelled out, for tooltips and screen readers. Deliberately the
@@ -102,6 +103,16 @@ export const ASSET_CLASS_VISUALS: Readonly<
     bg: 'bg-asset-stocks/12',
     border: 'border-asset-stocks/30',
     activeBg: 'bg-asset-stocks/15',
+  },
+  nft: {
+    labelKey: 'assetClass.nft',
+    nameKey: 'discovery.sections.nft',
+    descriptionKey: 'assetClass.nftDescription',
+    icon: 'Gem',
+    text: 'text-asset-nft',
+    bg: 'bg-asset-nft/12',
+    border: 'border-asset-nft/30',
+    activeBg: 'bg-asset-nft/15',
   },
   prediction: {
     labelKey: 'assetClass.prediction',

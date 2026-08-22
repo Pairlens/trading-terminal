@@ -50,7 +50,7 @@ import { Timer } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 
-import { OddsMoversSkeleton } from './prediction-skeletons'
+import { UpDownBoardSkeleton, UpDownFocusSkeleton } from './updown-skeletons'
 import type { UpDownRow } from '@/lib/predictions/crypto-updown'
 import type { PredictionUpDownHorizon } from '@pairlens/shared/instrument-types'
 import { UpDownFocusCard } from '@/components/predictions/updown-focus-card'
@@ -60,7 +60,7 @@ import {
   Th,
 } from '@/components/panes/pane-primitives'
 import { PaneHeaderMetric } from '@/components/layout/pane-header-slot'
-import { SkeletonStatus } from '@/components/panes/pane-skeletons'
+import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
   useCryptoUpDownWindows,
   useSpotHistories,
@@ -168,42 +168,43 @@ export function CryptoUpDownPane() {
     )
   }
 
-  if (isLoading && priced.length === 0) {
-    return (
-      <div aria-busy className="flex h-full flex-col">
-        <PaneHeaderMetric>{t('cryptoUpDown.subtitle')}</PaneHeaderMetric>
-        <div className="min-h-0 flex-1 overflow-hidden">
-          <SkeletonStatus label={t('cryptoUpDown.loading')} />
-          <OddsMoversSkeleton />
-        </div>
-      </div>
-    )
-  }
+  // The pane keeps its own shape while it waits: the header, both filters and
+  // the view toggle are furniture rather than answers, so they are drawn for
+  // real and only the body below them is a skeleton. They work, too — someone
+  // who opens on Board and wants Focus should not have to wait for two venues
+  // to reply before the toggle appears.
+  const loading = isLoading && priced.length === 0
 
   return (
-    <div className="flex h-full flex-col">
+    <div aria-busy={loading} className="flex h-full flex-col">
       <PaneHeaderMetric>
-        {t('cryptoUpDown.windowCount', { count: priced.length })}
+        {loading
+          ? t('cryptoUpDown.subtitle')
+          : t('cryptoUpDown.windowCount', { count: priced.length })}
       </PaneHeaderMetric>
 
       <div className="flex shrink-0 items-center justify-between gap-2 pb-1.5">
         <div className="flex min-w-0 items-center gap-2">
-          {view === 'focus' && assets.length > 1 ? (
+          {view === 'focus' && (loading || assets.length > 1) ? (
             <>
-              <AssetSwitcher
-                assets={assets}
-                onChange={(next) => {
-                  setAsset(next)
-                  // Null is "whatever closes next" and is the default, so it is
-                  // reported as its own value rather than dropped: someone
-                  // returning to the default is a use of the switcher too.
-                  track('prediction_updown_asset_selected', {
-                    asset: next ?? 'next',
-                    horizon: horizon ?? 'all',
-                  })
-                }}
-                value={activeAsset}
-              />
+              {loading ? (
+                <AssetSwitcherSkeleton />
+              ) : (
+                <AssetSwitcher
+                  assets={assets}
+                  onChange={(next) => {
+                    setAsset(next)
+                    // Null is "whatever closes next" and is the default, so it
+                    // is reported as its own value rather than dropped: someone
+                    // returning to the default is a use of the switcher too.
+                    track('prediction_updown_asset_selected', {
+                      asset: next ?? 'next',
+                      horizon: horizon ?? 'all',
+                    })
+                  }}
+                  value={activeAsset}
+                />
+              )}
               {/* Two filters in one row, and they are not the same kind of
                   thing: one picks the asset, the other picks the window. With
                   nothing between them the row reads as nine chips of one
@@ -243,7 +244,16 @@ export function CryptoUpDownPane() {
           </div>
         )}
 
-        {priced.length === 0 ? (
+        {loading ? (
+          <>
+            <SkeletonStatus label={t('cryptoUpDown.loading')} />
+            {view === 'focus' ? (
+              <UpDownFocusSkeleton />
+            ) : (
+              <UpDownBoardSkeleton />
+            )}
+          </>
+        ) : priced.length === 0 ? (
           <PaneEmpty
             body={t('cryptoUpDown.emptyBody')}
             icon={Timer}
@@ -394,6 +404,30 @@ function AssetSwitcher({
 const assetChipClass =
   'shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground'
 const assetChipActiveClass = 'bg-accent text-foreground'
+
+/**
+ * The switcher before the venues have said which assets they are listing.
+ *
+ * "Next" is real and already selected, because it is the default and it does
+ * not name an asset — it is the row the card will open on whatever comes back.
+ * The chips beside it are ghosts at the real chip width, so the row does not
+ * grow under the reader when four tickers land in it.
+ */
+function AssetSwitcherSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div className="flex min-w-0 shrink items-center gap-0.5">
+      <span className={cn(assetChipClass, assetChipActiveClass)}>
+        {t('cryptoUpDown.focus.assetNext')}
+      </span>
+      {[0, 1, 2, 3].map((index) => (
+        <span className="px-1.5 py-0.5" key={index}>
+          <Shimmer className="h-2.5 w-6" delayIndex={index} />
+        </span>
+      ))}
+    </div>
+  )
+}
 
 /** Which contract is on screen, in the venues' own words. */
 function FocusHeading({ row }: { row: UpDownRow }) {

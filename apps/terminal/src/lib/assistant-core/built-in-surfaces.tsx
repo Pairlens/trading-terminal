@@ -61,6 +61,7 @@ const CLASS_NAMES: Record<MarketRef['cls'], string> = {
   memecoin: 'launchpad memecoin',
   stocks: 'US equities',
   prediction: 'prediction market',
+  nft: 'NFT collection',
 }
 
 function RouteSurface() {

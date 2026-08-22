@@ -68,13 +68,13 @@ Beyond that default, each class carries its own named boards in the
 <kbd>⌘⇧L</kbd> menu, Research on spot, Carry and Risk on perps, Liquidity and
 Cross-Chain on-chain, Company on stocks, Race on predictions.
 
-On Discovery those layouts are the tabs beside the title, each in its asset
-class's own colour, and you can drag them into the order you work in. Only one
-of the boards is a list of pairs: futures opens on funding and basis, DEX on
-chains and pools, memecoins on four columns of launchpad tokens, equities on
-the session and the calendars, predictions on the event board. Full details in
-[panels](/docs/panels), and the layout model in
-[workspaces](/docs/workspaces).
+On Discovery those layouts are the tabs beside the Pairlens wordmark, each in
+its asset class's own colour, and you can drag them into the order you work
+in. Only one of the boards is a list of pairs: futures opens on funding and
+basis, DEX on chains and pools, memecoins on four columns of launchpad tokens,
+NFTs on chains and collections, equities on the session and the calendars,
+predictions on the event board. Full details in [panels](/docs/panels), and
+the layout model in [workspaces](/docs/workspaces).
 
 ## Every screen is built the same way
 

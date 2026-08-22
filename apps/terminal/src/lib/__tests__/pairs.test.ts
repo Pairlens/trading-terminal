@@ -1,7 +1,13 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 import { describe, expect, test } from 'bun:test'
-import { isPerpPairKey, normalizePairKey, splitPairAssets } from '../pairs'
+import {
+  isDexPairKey,
+  isNftPairKey,
+  isPerpPairKey,
+  normalizePairKey,
+  splitPairAssets,
+} from '../pairs'
 
 const USDT = '0xdac17f958d2ee523a2206206994597c13d831ec7'
 const WSOL = 'So11111111111111111111111111111111111111112'
@@ -134,5 +140,61 @@ describe('isPerpPairKey', () => {
 
   test('four segments is not a perpetual either', () => {
     expect(isPerpPairKey('BTC-USDT-USDT-USDT')).toBe(false)
+  })
+})
+
+describe('isNftPairKey', () => {
+  test('a bare contract is a collection', () => {
+    expect(isNftPairKey('0xbd3531da5cf5857e7cfaa92426877b022e612cf8')).toBe(
+      true,
+    )
+  })
+
+  test('a contract with a quote leg is a token, not a collection', () => {
+    // The dex id rule always emits one, and `toInstrumentRef` defaults it to
+    // USDC precisely so the pool resolvers have something to split on. That
+    // guarantee is what makes this test a reading rather than a guess.
+    expect(
+      isNftPairKey('0xdac17f958d2ee523a2206206994597c13d831ec7-USDC'),
+    ).toBe(false)
+  })
+
+  test('a base58 mint with no leg is a collection', () => {
+    expect(isNftPairKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263')).toBe(
+      true,
+    )
+  })
+
+  test('an ordinary pair is not a collection', () => {
+    expect(isNftPairKey('BTC-USDT')).toBe(false)
+    expect(isNftPairKey('AAPL')).toBe(false)
+  })
+})
+
+describe('isDexPairKey', () => {
+  test('an address with a quote leg is a token', () => {
+    expect(
+      isDexPairKey('0xdac17f958d2ee523a2206206994597c13d831ec7-USDC'),
+    ).toBe(true)
+  })
+
+  test('a bare address is a collection, not a token', () => {
+    expect(isDexPairKey('0xbd3531da5cf5857e7cfaa92426877b022e612cf8')).toBe(
+      false,
+    )
+  })
+
+  test('the two are exhaustive over addresses and overlap nowhere', () => {
+    const collection = '0xbd3531da5cf5857e7cfaa92426877b022e612cf8'
+    const token = '0xdac17f958d2ee523a2206206994597c13d831ec7-USDC'
+    expect(isNftPairKey(collection) && isDexPairKey(collection)).toBe(false)
+    expect(isNftPairKey(token) && isDexPairKey(token)).toBe(false)
+    expect(isNftPairKey(collection) || isDexPairKey(collection)).toBe(true)
+    expect(isNftPairKey(token) || isDexPairKey(token)).toBe(true)
+  })
+
+  test('an ordinary pair is neither', () => {
+    expect(isDexPairKey('BTC-USDT')).toBe(false)
+    expect(isNftPairKey('BTC-USDT')).toBe(false)
   })
 })

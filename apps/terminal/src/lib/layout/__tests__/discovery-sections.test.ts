@@ -135,7 +135,7 @@ describe('discoveryWorkspaceFor', () => {
     // A section that renders the same price table five times is the bug these
     // boards exist to fix, so each one names the pane its class actually
     // shops with: spot by what moved, perps by cost of carry, DEX by pool,
-    // stocks by calendar, predictions by event.
+    // stocks by calendar, predictions by event, NFTs by collection.
     //
     // Spot browses by `movers`, not by the full `markets` catalog. A crypto
     // trader opening the home board is asking what is running today, not for
@@ -148,6 +148,7 @@ describe('discoveryWorkspaceFor', () => {
       memecoin: 'meme-new',
       stocks: 'earnings-calendar',
       prediction: 'event-board',
+      nft: 'nft-collections',
     }
     for (const cls of INSTRUMENT_CLASSES) {
       const types = paneTypes(discoveryWorkspaceFor(cls).defaultPreset)
@@ -292,6 +293,7 @@ describe('discovery sections', () => {
       'perp',
       'memecoin',
       'stocks',
+      'nft',
     ])
     expect(ordered.length).toBe(sections.length)
   })

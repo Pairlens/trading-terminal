@@ -4,8 +4,8 @@ description: Every term Pairlens uses with a specific meaning, from capabilities
 group: reference
 order: 1
 eyebrow: Reference
-updated: 19 AUG 2026
-readTime: 6 min read
+updated: 22 AUG 2026
+readTime: 7 min read
 ---
 
 Terms that mean something particular in Pairlens, and the market terms the docs
@@ -23,7 +23,7 @@ sees exchange credentials and is never in the order path.
 
 **Assistant.** The one AI chat in the terminal, docked at the bottom right or in
 the left nav rail, your choice, and mounted above every page. Its loop runs
-client-side over 110 tools, and its conversations are kept on your device unless
+client-side over 113 tools, and its conversations are kept on your device unless
 you turn their sync on. It can propose trades. It cannot execute them unattended.
 See [the AI assistant](/docs/ai-copilot).
 
@@ -103,8 +103,8 @@ local storage under one data key, wrapped by each protector you enrol. On
 desktop, credentials live in the OS keychain instead. See
 [the security model](/docs/security-model).
 
-**Venue.** An exchange, broker, event exchange, or on-chain aggregator. Twenty
-ship in the box, plus the on-chain connectors.
+**Venue.** An exchange, broker, event exchange, NFT marketplace, or on-chain
+aggregator. Twenty-three ship in the box, plus the on-chain connectors.
 
 **Workspace.** A saved arrangement of panes, with variables that bind them to a
 pair, venue, and account. See [workspaces](/docs/workspaces).
@@ -132,6 +132,11 @@ quoted in cents, so 53¢ reads as a 53% chance. See
 [prediction markets](/docs/prediction-markets).
 
 **Fill.** A completed execution. Partial fills are normal on limit orders.
+
+**Floor price.** The cheapest current ask across an NFT collection. It is what
+somebody is asking, not what a holder can get, which is why Pairlens marks
+holdings against the top offer instead. See
+[NFT collections](/docs/nft-trading).
 
 **Funding rate.** The periodic payment between longs and shorts on a
 [perpetual](/docs/cex-futures) that keeps its price pinned near spot. Positive
@@ -212,9 +217,21 @@ design.
 **Spread.** Best ask minus best bid. As a percentage, the cost of changing your
 mind, and the fastest comparison of liquidity across venues.
 
+**Sweep.** Buying the N cheapest listings in an NFT collection in one order. A
+market buy sized in items, priced from the ask ladder rather than from the
+floor, because five items deep can cost well over five times the first one.
+
 **Tick size.** The smallest price increment a venue accepts.
 
+**Top offer.** The best standing collection-wide bid on an NFT collection: the
+price a holder can sell any token into right now. The one number on that board
+a holder can actually act on.
+
 **Touch.** The best bid and best ask: the top of the book.
+
+**Trait floor.** The cheapest ask among the tokens carrying one trait value. On
+a mature collection this is where pricing actually happens, and the collection
+floor is only a headline.
 
 **Wall.** A level holding much more size than its neighbours. Real until it is
 cancelled, which is why the [liquidity heatmap](/docs/depth-and-liquidity) beats

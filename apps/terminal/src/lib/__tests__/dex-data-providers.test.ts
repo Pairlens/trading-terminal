@@ -17,6 +17,7 @@ import { BOOTSTRAP_PLUGINS } from '../plugins/bootstrap-bundle'
 import type { PluginManifest } from '@pairlens/plugin-system/types'
 
 import { pluginBrand } from '@/components/plugins/plugin-brand'
+import { DEX_CHAINS } from '@/lib/dex/chain-catalog'
 
 const PROVIDER_IDS = [
   'geckoterminal-data-provider',
@@ -66,6 +67,65 @@ describe('DEX data providers', () => {
       // Not the derived-initials fallback: these are named integrations.
       expect(brand.tint, id).toBeTruthy()
     }
+  })
+})
+
+describe('on-chain candle history', () => {
+  /**
+   * Why the pool panes ask for candles with `allowWildcardProvider`.
+   *
+   * The strict venue probe only accepts a plugin that NAMES the market, which
+   * is what keeps a pool provider from answering "does Bitvavo carry this
+   * pair?" on a CEX. For an on-chain token there is no such plugin at all,
+   * GeckoTerminal declares `*`, so under the strict rule every pool sparkline
+   * in the app resolved nothing and settled on the flat "no history" line.
+   *
+   * This test used to say no plugin names a chain here at all, and warned that
+   * the day one did, the widening would stop being load-bearing. That day
+   * came: the NFT connector names the same chains, because a collection lives
+   * on one. The widening IS still load-bearing, and the reason is narrower
+   * than "nobody names a chain" was: nobody serving the DEX asset class names
+   * one. That is the invariant asserted now, and the probe filters candidates
+   * by asset class so a token never resolves onto a collection provider.
+   */
+  it('is served by a wildcard provider and by no chain-named DEX plugin', () => {
+    const historyMarketsByClass = BOOTSTRAP_PLUGINS.flatMap((p) =>
+      p.manifest.capabilities
+        .filter((c) => c.id === 'market-data:history')
+        .flatMap((c) =>
+          c.markets.map((market) => ({
+            market,
+            assetClass: p.manifest.metadata?.['assetClass'],
+          })),
+        ),
+    )
+    expect(historyMarketsByClass.map((m) => m.market)).toContain('*')
+
+    // A chain named by a plugin of a DIFFERENT class is fine and expected;
+    // one named by a DEX plugin would make the widening dead code.
+    const dexNamed = historyMarketsByClass.filter(
+      (m) => m.assetClass === 'dex' || m.assetClass === undefined,
+    )
+    for (const chain of DEX_CHAINS) {
+      expect(
+        dexNamed.map((m) => m.market),
+        chain.market,
+      ).not.toContain(chain.market)
+    }
+  })
+
+  it('lets an NFT connector name the same chains without stealing them', () => {
+    // The regression this pair of rules exists to prevent: OpenSea declares
+    // history on 'ethereum', so the strict probe would have picked it for a
+    // pool sparkline and asked a collection provider about an ERC-20.
+    const nftHistoryMarkets = BOOTSTRAP_PLUGINS.filter(
+      (p) => p.manifest.metadata?.['assetClass'] === 'nft',
+    ).flatMap((p) =>
+      p.manifest.capabilities
+        .filter((c) => c.id === 'market-data:history')
+        .flatMap((c) => c.markets),
+    )
+    expect(nftHistoryMarkets).toContain('ethereum')
   })
 })
 

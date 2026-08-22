@@ -421,6 +421,36 @@ export interface AnalyticsEvents {
    * dead column on the busiest board in the product. Carries our own category
    * vocabulary, never an event title or a venue's raw tag; null clears back
    * to Trending. */
+  /** The NFT Discovery chain rail, used. NFT data is chain-scoped at every
+   * provider, so this is the one signal that says whether the multi-chain
+   * story is worth its column or whether the whole class is Ethereum with a
+   * long tail. The chain slug names our own surface, never a collection. */
+  nft_chain_selected: { chain: string }
+  /** A ranking axis picked on the collections table. Five axes ship; this is
+   * how we learn whether traders rank by volume, by floor move or by
+   * something we guessed wrong about. */
+  nft_ranking_sort_selected: { sort: string }
+  /** A collection opened from any NFT Discovery pane. `source` names the pane
+   * our own way (rankings, movers, mints, tape), which answers which of the
+   * five surfaces on that board is actually finding things. Never carries the
+   * collection: an NFT holding is a public on-chain position and naming it
+   * beside a session is more identifying than a ticker. */
+  nft_collection_opened: { source: string }
+  /** The ladder, read. The whole feature rests on the claim that a collection
+   * is a book rather than a gallery, and this is the only signal that tests
+   * it: if the items grid is opened ten times for every ladder interaction,
+   * the claim is wrong and the board should be rearranged. `side` says which
+   * half was engaged. */
+  nft_ladder_engaged: { side: 'ask' | 'bid' }
+  /** An NFT ticket submitted, by intent. The four intents are genuinely
+   * different products (a sweep is a market order, a collection offer is a
+   * resting bid), and they cost different amounts to support, so we need to
+   * know which ones are used before investing further. `size` is an item
+   * count, which is not a financial exposure; no price, no collection. */
+  nft_order_submitted: {
+    intent: 'sweep' | 'offer' | 'list' | 'accept'
+    size: number
+  }
   prediction_category_selected: { category: string | null }
   /** The full field opened from a race card — answers whether a four-runner
    * preview is the right depth or the cards should carry more rows. The count
@@ -571,6 +601,14 @@ export interface AnalyticsEvents {
    * carries which contract.
    */
   mobile_prediction_chart_view: { view: 'odds' | 'candles' }
+  /**
+   * The chart's inspect crosshair was raised by a press and hold. The gesture
+   * is invisible by nature, so this is the only number that says whether the
+   * hint found anyone: a flat line means people are still panning around
+   * looking for a price. `timeframe` says which charts get read rather than
+   * watched — it names a control of ours, never a market.
+   */
+  mobile_chart_inspected: { timeframe: string }
 }
 
 /**

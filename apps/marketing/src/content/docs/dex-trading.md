@@ -81,11 +81,26 @@ moves price.
 
 **Pool Detail** is the selected pool at a glance, one click from its chart and
 a swap, and the board selects its busiest pool on open so the pane never sits
-empty. It carries the price impact of a $10k swap from a real aggregator quote
-and an hour of buy against sell pressure summed from the same trades feed the
-flow pane reads. It shows only what the provider actually published, so
-turnover collapses without a liquidity figure and the fee tier collapses on a
-venue that labels none, rather than filling the space with dashes.
+empty. The two tokens lead, then the price with the day's move and the hour's,
+a trend line over the last 24 hourly closes, and the numbers: liquidity, volume
+over the day and the hour, turnover, the trade count split into buys and sells,
+the price impact of a $10k swap from a real aggregator quote, the fee tier, FDV,
+how old the pool is, and both reserves in token units. On a pool quoted in
+something other than a dollar it also prices the base in that quote, because
+that is the denominator the chain itself trades in. Under that sits an hour of
+buy against sell pressure and the pool's most recent swaps over a dollar, both
+off the same trades feed the flow pane reads, so the two panes can never
+disagree. The dollar floor is on those twelve rows only: the pressure bar sums
+every swap, and the On-chain Trades pane on the pair board lists every swap.
+A busy Solana pool takes hundreds of sub-cent arbitrage probes a minute, and
+unfiltered they were the whole list. The
+pool's own address links to the chain explorer.
+
+All of it comes from reads the board is already making: the pane adds no request
+of its own beyond its trend line. It shows only what the provider actually
+published, so turnover collapses without a liquidity figure, the fee tier
+collapses on a venue that labels none, and the reserves collapse where nobody
+measured them, rather than filling the space with dashes.
 
 ### How the board loads
 

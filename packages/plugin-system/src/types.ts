@@ -36,11 +36,27 @@ export type PluginContext = {
   timeframe: string
   mode: 'paper' | 'live'
   country: string // ISO 3166-1 alpha-2 code, e.g. 'US', 'DE', 'JP'
+  /**
+   * Which KIND of market this call is about, when the caller knows.
+   *
+   * A market id alone stopped being enough once two asset classes started
+   * sharing one: 'ethereum' is a DEX venue AND an NFT venue, and both declare
+   * `trading:orders` on it. Without this, the higher-priority DEX connector
+   * wins every NFT order and rejects it as an invalid pair, and because
+   * `trading:orders` is side-effecting the manager never walks past it.
+   *
+   * Optional, and absent means "do not filter". Every existing caller passes
+   * nothing and resolves exactly as it did before; only a caller that knows
+   * its class narrows the field.
+   */
+  assetClass?: string
 }
 
 export type CapabilityQuery = {
   capability: CapabilityId
   market?: string
+  /** See `PluginContext.assetClass`. Absent means "do not filter". */
+  assetClass?: string
 }
 
 export type ResolvedPlugin = {

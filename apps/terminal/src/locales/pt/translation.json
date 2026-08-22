@@ -1045,12 +1045,19 @@
     "emptyTitle": "Nenhuma pool selecionada",
     "emptyBody": "Escolha uma pool no mapa para ver liquidez, volume e fluxo, a um clique do gráfico.",
     "change24h": "{{value}} 24h",
+    "change1h": "{{value}} 1h",
+    "priceInQuote": "Preço em {{symbol}}",
     "liquidity": "Liquidez",
     "volume24h": "Volume 24h",
+    "volume1h": "Volume 1h",
     "turnover": "Vol / liq",
     "turnoverValue": "{{value}}×",
     "trades24h": "Negócios 24h",
+    "tradesSplit": "{{buys}} compras · {{sells}} vendas",
     "feeTier": "Faixa de taxa",
+    "fdv": "FDV",
+    "poolAge": "Idade do pool",
+    "reserves": "Reservas",
     "loading": "Carregando o estado da pool.",
     "openChart": "Abrir gráfico e fazer swap",
     "venueChain": "{{venue}} · {{chain}}",
@@ -1058,6 +1065,10 @@
     "pressure1h": "Pressão compra / venda 1h",
     "buysValue": "{{value}} compras",
     "sellsValue": "{{value}} vendas",
+    "flow24h": "Volume de compra / venda 24h",
+    "swaps": "Swaps recentes",
+    "openPool": "Abrir o pool no explorador da rede",
+    "openWallet": "Abrir a carteira no explorador da rede",
     "filledBy": "Lacunas preenchidas por {{provider}}",
     "waitingTitle": "À espera do mapa",
     "waitingBody": "Os pools da rede ainda estão a carregar. O mais líquido abre aqui sozinho.",
@@ -3463,6 +3474,21 @@
     "level1": "Level 1",
     "company": "Empresa",
     "yourPosition": "Sua Posição",
+    "nftChains": "Blockchains",
+    "nftCollections": "Coleções",
+    "nftOverview": "Mercado NFT",
+    "nftMovers": "Movers de Piso",
+    "nftMints": "Novas e em Mint",
+    "nftTape": "Vendas de Baleia",
+    "nftCollectionHeader": "Coleção",
+    "nftBook": "Escada",
+    "nftListings": "Listagens",
+    "nftOffers": "Ofertas",
+    "nftSales": "Vendas",
+    "nftItems": "Itens",
+    "nftTraits": "Atributos",
+    "nftTicket": "Ticket NFT",
+    "nftHoldings": "Meus Itens",
     "memeNew": "Novos mints",
     "memeGraduating": "Graduando",
     "memeGraduated": "Graduados",
@@ -3543,6 +3569,21 @@
     "level1": "Compra e venda com seus tamanhos, o spread, a faixa do dia e uma linha de status quando a bolsa interrompe a negociação",
     "company": "Valuation, crescimento, margens, o próximo catalisador e onde os analistas estão, em um só painel",
     "yourPosition": "O que você tem neste símbolo: quantidade, custo, marcação, e o lucro tanto do dia quanto o aberto",
+    "nftChains": "Filtre todos os painéis NFT por uma blockchain, com a fatia de cada uma no volume 24h.",
+    "nftCollections": "Coleções ranqueadas por volume, movimento do piso, vendas ou capitalização.",
+    "nftOverview": "Volume, capitalização e vendas de NFT em todo o mercado, e a divisão por marketplace.",
+    "nftMovers": "As maiores altas e baixas de piso das últimas 24 horas.",
+    "nftMints": "Coleções lançadas há pouco que já registram o primeiro volume.",
+    "nftTape": "Vendas de alto valor conforme acontecem, em todas as coleções indexadas.",
+    "nftCollectionHeader": "Piso, volume, supply, holders e a fatia do supply que está listada.",
+    "nftBook": "Listagens e ofertas de coleção como uma escada de dois lados com profundidade real.",
+    "nftListings": "O lado da venda: cada item listado, do mais barato ao mais caro.",
+    "nftOffers": "O lado da compra: ofertas de coleção, de atributo e de token, com tamanho executável.",
+    "nftSales": "A fita desta coleção, do negócio mais recente ao mais antigo.",
+    "nftItems": "Navegue pelos tokens da coleção com seus preços de venda e sua raridade.",
+    "nftTraits": "Cada valor de atributo com quantos tokens o carregam e o quanto isso os torna raros. Os pisos por atributo chegam quando um provedor os publica.",
+    "nftTicket": "Compre o piso, faça um sweep, envie uma oferta, liste um item ou aceite uma compra.",
+    "nftHoldings": "O que esta carteira tem na coleção, com custo de aquisição e marcação.",
     "memeNew": "Tokens mintados nas últimas horas, os mais novos primeiro, com holders e o fluxo inicial.",
     "memeGraduating": "Tokens subindo uma curva de bonding, ordenados por quão perto estão de migrar para uma pool de verdade.",
     "memeGraduated": "Tokens que completaram a curva e agora negociam numa pool AMM, os mais recentes primeiro.",
@@ -3625,7 +3666,8 @@
       "predictionDescription": "Um resultado de evento é negociado em apenas uma plataforma, então não há outro lugar para tentar. A plataforma pode ter apenas recusado uma requisição.",
       "retry": "Tentar novamente",
       "desktopOnlyTitle": "Esta plataforma exige o app para desktop",
-      "desktopOnlyDescription": "Sua API recusa origens de navegador, então os dados de mercado deste par só são acessíveis no app para desktop."
+      "desktopOnlyDescription": "Sua API recusa origens de navegador, então os dados de mercado deste par só são acessíveis no app para desktop.",
+      "nftDescription": "Nenhum provedor devolveu uma série de preço de piso para esta coleção. Adicione uma chave OpenSea no plugin da OpenSea: o gráfico, a escada e a fita vêm todos de lá."
     },
     "paneCredentials": {
       "sealedTitle": "Desbloqueie para carregar os dados da {{venue}}",
@@ -3722,6 +3764,7 @@
       "prediction": "Previsões",
       "moveLeft": "Mover para a esquerda",
       "moveRight": "Mover para a direita",
+      "nft": "NFTs",
       "memecoin": "Memecoins"
     }
   },
@@ -3738,6 +3781,8 @@
     "dexDescription": "Um swap contra um pool de liquidez, assinado pela sua própria carteira. A rede onde acontece faz parte do que você negocia.",
     "stocksDescription": "Ações via corretora, no calendário da própria bolsa. Valem horários, interrupções e regras de liquidação.",
     "predictionDescription": "Um contrato sobre a resposta a uma pergunta. Paga US$ 1 se a resposta estiver certa e nada se não estiver.",
+    "nft": "NFT",
+    "nftDescription": "Uma coleção de tokens não fungíveis. O piso é a venda mais barata, as ofertas são o lado da compra, e uma posição é um token específico.",
     "memecoin": "MEME",
     "memecoinDescription": "Tokens de launchpad numa curva de bonding, e as grandes capitalizações que saíram de uma. Cotados por capitalização, negociados por um agregador DEX."
   },
@@ -4226,6 +4271,18 @@
         "title": "Pairlens Ações",
         "description": "Funcionalidades de ações: o relógio da sessão, cotações Level 1, fundamentos da empresa e o calendário de resultados"
       },
+      "pairlens-nfts": {
+        "title": "Pairlens NFTs",
+        "description": "As funcionalidades de NFT: rankings de coleções, a escada de listagens e ofertas, a grade de itens e a fita de vendas, além dos painéis onde ficam."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Coleções NFT, o livro, a fita e execução de ordens Seaport em seis blockchains. Adicione a sua própria chave OpenSea: são gratuitas e emitidas na hora."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Preço de piso, volume, supply e holders sem chave, para qualquer coleção indexada. O recurso reserva que dá a um painel NFT frio algo real para mostrar."
+      },
       "pairlens-memecoins": {
         "title": "Pairlens Memecoins",
         "description": "Superfícies de launchpad: novos mints, progresso da curva de bonding, graduações e as grandes capitalizações que sobreviveram a elas"
@@ -4271,6 +4328,10 @@
       "cexFutures": {
         "label": "Futuros de cripto",
         "description": "Plataformas de futuros perpétuos para posições cripto alavancadas."
+      },
+      "nfts": {
+        "label": "NFTs",
+        "description": "Ranking de coleções, o livro de listagens e ofertas, e execução nos marketplaces."
       },
       "memes": {
         "label": "Memecoins",
@@ -4982,6 +5043,30 @@
         "description": "Os contratos cripto recorrentes das duas casas em uma tabela: a Kalshi abre uma janela de quinze minutos em cinco ativos e a Polymarket uma por hora e uma por dia em quatro. Cada linha traz a referência de liquidação, o spot ao vivo, a distância entre os dois e o que uma difusão sem deriva na volatilidade realizada recente faz do tempo restante, para que as probabilidades tenham com o que ser comparadas.",
         "menuLabel": "Cripto Sobe/Desce"
       },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "Padrão",
+        "tagline": "Uma coleção como livro de ofertas, não como galeria.",
+        "description": "O gráfico do piso sobre uma escada de dois lados, com listagens e ofertas de coleção como profundidade real. A fita de vendas, a grade de itens e os pisos por atributo dividem as abas abaixo."
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Colecionador",
+        "tagline": "Escolha o token, não o piso.",
+        "description": "A grade de itens em toda a largura, com os pisos por atributo ao lado, para comprar um token específico em vez do que estiver mais barato."
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "Padrão",
+        "tagline": "O que está se movendo nos mercados de NFT.",
+        "description": "Coleções ranqueadas por volume com os movimentos de piso ao lado, um filtro de blockchain, a visão geral do mercado, os mints novos e a fita das baleias."
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Fluxo",
+        "tagline": "A fita, em toda a largura.",
+        "description": "Vendas de baleia em todas as coleções indexadas, com os movers de piso e a tabela de ranking ao lado."
+      },
       "memecoin-discovery": {
         "name": "Descoberta de memecoins",
         "tagline": "Quatro colunas, uma para cada etapa da curva.",
@@ -5049,6 +5134,9 @@
       },
       "multi-asset": {
         "label": "Multi-Asset"
+      },
+      "nfts": {
+        "label": "NFTs"
       },
       "memecoins": {
         "label": "Memecoins"
@@ -6019,6 +6107,10 @@
         "label": "Eventos",
         "description": "Explorar eventos de mercados de previsão e seus resultados"
       },
+      "nft": {
+        "label": "Mercados NFT",
+        "description": "Ranking de coleções, preços de piso, listagens, ofertas e a fita de vendas"
+      },
       "launchpad": {
         "label": "Tokens de launchpad",
         "description": "Tokens recém-mintados, progresso da curva de bonding, graduações e memecoins de grande capitalização"
@@ -6278,7 +6370,13 @@
       "crosshairMode": "Mira: {{mode}}",
       "indicatorsActive_one": "Indicadores, {{count}} ativo",
       "indicatorsActive_other": "Indicadores, {{count}} ativos",
-      "removeIndicator": "Remover {{name}}"
+      "removeIndicator": "Remover {{name}}",
+      "inspect": {
+        "label": "Detalhes da vela",
+        "close": "Ocultar a mira",
+        "hint": "Toque e segure para ler qualquer vela",
+        "volume": "Vol {{value}}"
+      }
     },
     "drawing": {
       "placementLabel": "Posicionar desenho",
@@ -6380,7 +6478,8 @@
       "predictions": "previsões",
       "filterPredictions": "Previsões",
       "futures": "futuros",
-      "filterFutures": "Futuros"
+      "filterFutures": "Futuros",
+      "nfts": "NFTs"
     }
   },
   "events": {
@@ -6470,6 +6569,285 @@
     "mark": "Preço de referência",
     "marketValue": "Valor de mercado",
     "dayChange": "Hoje"
+  },
+  "nft": {
+    "noProviderTitle": "Nenhum provedor de dados NFT",
+    "noProviderBody": "Nada instalado consegue ler coleções NFT. Instale um provedor pela loja de plugins para preencher este painel.",
+    "browseProviders": "Ver provedores",
+    "throttledTitle": "Limite de requisições",
+    "unavailableTitle": "Provedor indisponível",
+    "unavailableBody": "O provedor de dados NFT não respondeu. Ele costuma se recuperar na próxima atualização.",
+    "providerLabel": "Dados NFT",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "Outro"
+    },
+    "needsKeyTitle": "Adicione uma chave da OpenSea",
+    "needsKeyBody": "Os rankings, a escada e a fita vêm da OpenSea, que precisa de uma chave de API. São gratuitas e emitidas na hora. Adicione a sua no plugin da OpenSea.",
+    "addKeyAction": "Abrir o Plugin Store"
+  },
+  "nftChains": {
+    "subtitle": "Blockchain",
+    "subtitleShare": "Fatia do volume 24h",
+    "loadingLabel": "Lendo o volume de mercado por blockchain",
+    "emptyTitle": "Nenhuma blockchain disponível",
+    "emptyBody": "O provedor instalado não informa nenhuma blockchain que consiga atender."
+  },
+  "nftCollections": {
+    "searchPlaceholder": "Pesquisar coleções",
+    "countMetric_one": "{{count}} coleção",
+    "loadingLabel": "Lendo o ranking de coleções",
+    "verified": "Coleção verificada",
+    "emptyTitle": "Nenhuma coleção",
+    "emptyBody": "O provedor não ranqueou nada nesta blockchain. Tente outra na barra.",
+    "noMatchTitle": "Nenhum resultado",
+    "noMatchBody": "Nenhuma coleção desta página corresponde à sua busca. A busca filtra a página ranqueada, não a blockchain inteira.",
+    "columns": {
+      "collection": "Coleção",
+      "floor": "Piso",
+      "change": "24h",
+      "volume": "Volume",
+      "sales": "Vendas",
+      "listed": "Listado",
+      "holders": "Holders"
+    },
+    "countMetric_other": "{{count}} coleções"
+  },
+  "nftOverview": {
+    "subtitle": "Últimas 24h, todas as blockchains",
+    "loadingLabel": "Lendo os totais do mercado",
+    "volume": "Volume",
+    "marketCap": "Capitalização",
+    "sales": "Vendas",
+    "traders": "Traders",
+    "emptyTitle": "Sem totais de mercado",
+    "emptyBody": "O provedor não publica números de todo o mercado."
+  },
+  "nftMovers": {
+    "subtitle": "Movimento do piso, 24h",
+    "gainers": "Altas",
+    "losers": "Baixas",
+    "loadingLabel": "Lendo os movimentos de piso",
+    "emptyTitle": "Sem movimentos de piso",
+    "emptyGainersBody": "Nenhuma coleção desta blockchain está com o piso mais alto do que ontem.",
+    "emptyLosersBody": "Nenhuma coleção desta blockchain está com o piso mais baixo do que ontem."
+  },
+  "nftMints": {
+    "subtitle": "Lançamentos mais recentes",
+    "loadingLabel": "Lendo os lançamentos recentes",
+    "emptyTitle": "Nenhum mint recente",
+    "emptyBody": "O provedor não lista nenhuma coleção lançada recentemente nesta blockchain.",
+    "columns": {
+      "collection": "Coleção",
+      "age": "Idade",
+      "floor": "Piso",
+      "volume": "Volume",
+      "supply": "Supply"
+    }
+  },
+  "nftTape": {
+    "allSizes": "Todas",
+    "allMetric": "Todas as vendas",
+    "aboveMetric": "Vendas acima de {{value}}",
+    "loadingLabel": "Lendo a fita de vendas",
+    "partiesHint": "Vendedor, depois comprador",
+    "emptyTitle": "Nenhuma venda",
+    "emptyBody": "O provedor não reportou nenhuma venda nesta blockchain.",
+    "belowThresholdTitle": "Nada desse tamanho",
+    "belowThresholdBody": "Nenhuma venda passou de {{value}} na janela que o provedor cobre. Baixe o tamanho mínimo acima para ver o resto da fita.",
+    "columns": {
+      "time": "Hora",
+      "item": "Item",
+      "price": "Preço",
+      "venue": "Plataforma",
+      "parties": "Vendedor, comprador"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver o piso, o supply e os holders.",
+    "emptyTitle": "Ainda não há o que mostrar",
+    "emptyBody": "Este provedor não retornou nenhum estado para a coleção.",
+    "loadingLabel": "Lendo a coleção",
+    "verified": "Coleção verificada",
+    "floor": "Piso",
+    "volume24h": "Volume 24h",
+    "marketCap": "Capitalização",
+    "supply": "Supply",
+    "holders": "Holders",
+    "listed": "Listado",
+    "listedValue": "{{percent}}% ({{listed}})",
+    "topOffer": "Melhor oferta",
+    "royalty": "Royalties"
+  },
+  "nftBook": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver os dois lados do livro dela.",
+    "emptyTitle": "Sem livro",
+    "emptyBody": "Nesta coleção não há nada listado nem nenhuma oferta de compra agora.",
+    "loadingLabel": "Lendo os dois lados do livro",
+    "asOf": "Lido {{when}}",
+    "mid": "Meio",
+    "spread": "{{amount}} ({{percent}}%)",
+    "bidQuantity_one": "1x",
+    "bidQuantity_other": "{{count}}x",
+    "collectionWide": "Qualquer",
+    "depthSummary": "{{asks}} listados, {{bids}} com oferta",
+    "columns": {
+      "price": "Preço",
+      "item": "Item",
+      "rank": "Raridade",
+      "venue": "Plataforma"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver o que está à venda.",
+    "emptyTitle": "Nada listado",
+    "emptyBody": "Nenhum token desta coleção está à venda agora.",
+    "loadingLabel": "Lendo as listagens",
+    "count_one": "1 listado",
+    "count_other": "{{count}} listados",
+    "footnote": "Piso {{floor}}",
+    "columns": {
+      "item": "Item",
+      "price": "Preço",
+      "rank": "Raridade",
+      "venue": "Plataforma",
+      "expires": "Expira"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver o que os compradores estão oferecendo.",
+    "emptyTitle": "Nenhuma oferta",
+    "emptyBody": "Ninguém está oferecendo por esta coleção agora.",
+    "loadingLabel": "Lendo as ofertas",
+    "topBid": "Melhor compra {{price}}",
+    "footnote": "{{value}} ofertados no total",
+    "scopeCollection": "Coleção",
+    "columns": {
+      "price": "Preço",
+      "quantity": "Qtd",
+      "value": "Valor",
+      "scope": "Escopo",
+      "venue": "Plataforma",
+      "bidder": "Ofertante",
+      "expires": "Expira"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver o que já foi executado.",
+    "emptyTitle": "Nenhuma venda",
+    "emptyBody": "Este provedor não tem negócios recentes para a coleção.",
+    "loadingLabel": "Lendo a fita",
+    "prints_one": "1 negócio",
+    "prints_other": "{{count}} negócios",
+    "footnote_one": "1 negócio, média de {{average}}",
+    "footnote_other": "{{count}} negócios, média de {{average}}",
+    "columns": {
+      "time": "Hora",
+      "item": "Item",
+      "price": "Preço",
+      "venue": "Plataforma",
+      "buyer": "Comprador",
+      "seller": "Vendedor"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para navegar pelos tokens dela.",
+    "emptyTitle": "Nenhum item",
+    "emptyBody": "Este provedor não retornou nenhum token para a coleção.",
+    "loadingLabel": "Lendo os itens",
+    "count_one": "1 item",
+    "count_other": "{{count}} itens",
+    "unlisted": "Não listado",
+    "footnote": "{{listed}} dos {{shown}} exibidos estão listados"
+  },
+  "nftTraits": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver quanto valem os atributos dela.",
+    "emptyTitle": "Sem pisos por atributo",
+    "emptyBody": "Este provedor não publica preços por atributo para a coleção.",
+    "loadingLabel": "Lendo os pisos por atributo",
+    "groupCount_one": "1 atributo",
+    "groupCount_other": "{{count}} atributos",
+    "footnote": "{{priced}} de {{total}} valores de atributo têm piso",
+    "columns": {
+      "value": "Valor",
+      "count": "Qtd",
+      "floor": "Piso",
+      "listed": "Listado"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para negociá-la.",
+    "emptyTitle": "Nenhum provedor",
+    "emptyBody": "Instale um provedor de mercado NFT para negociar coleções.",
+    "quantity": "Itens",
+    "price": "Preço {{currency}}",
+    "token": "Token",
+    "tokenPlaceholder": "Escolha um token que você tem",
+    "notional": "Total",
+    "notionalUsd": "Total (USD)",
+    "averagePrice": "Preço médio",
+    "royalty": "Royalties",
+    "royaltyValue": "{{percent}}% ({{amount}})",
+    "thinBook_one": "Falta 1 item no livro para este tamanho.",
+    "thinBook_other": "Faltam {{count}} itens no livro para este tamanho.",
+    "placing": "Enviando…",
+    "placedBody_one": "1 item em {{collection}}.",
+    "placedBody_other": "{{count}} itens em {{collection}}.",
+    "intents": {
+      "sweep": "Sweep",
+      "offer": "Oferta",
+      "list": "Listar",
+      "accept": "Aceitar"
+    },
+    "mapping": {
+      "sweep": "Compra a mercado. Pega as listagens mais baratas, uma ordem por item.",
+      "offer": "Compra limitada. Uma oferta de coleção que qualquer holder pode aceitar.",
+      "list": "Venda limitada de um token que você tem, ao seu preço.",
+      "accept": "Venda a mercado de um token que você tem, contra a melhor oferta de compra."
+    },
+    "placed": {
+      "sweep": "Sweep enviado",
+      "offer": "Oferta enviada",
+      "list": "Listagem enviada",
+      "accept": "Venda enviada"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "Nenhuma coleção selecionada",
+    "noPairBody": "Escolha uma coleção para ver o que sua carteira tem nela.",
+    "emptyTitle": "Nada na carteira",
+    "emptyBody": "Esta carteira não tem nenhum token da coleção.",
+    "loadingLabel": "Lendo suas posições",
+    "footnote_one": "1 item, {{value}} na compra",
+    "footnote_other": "{{count}} itens, {{value}} na compra",
+    "columns": {
+      "item": "Item",
+      "acquired": "Adquirido",
+      "basis": "Custo",
+      "mark": "Marcação",
+      "pnl": "PnL"
+    }
   },
   "memecoins": {
     "loading": "Lendo os launchpads",

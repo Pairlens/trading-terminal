@@ -4,12 +4,13 @@ description: What Pairlens is, a source-available, local-first, AI-native crypto
 group: get-started
 order: 1
 eyebrow: Get started
-updated: 19 AUG 2026
-readTime: 3 min read
+updated: 22 AUG 2026
+readTime: 4 min read
 ---
 
 Pairlens is a source-available, local-first, AI-native trading terminal for
-crypto spot markets, US equities, and prediction markets. Deterministic
+crypto spot markets, US equities, prediction markets, and NFT collections.
+Deterministic
 strategies generate signals, an AI assistant provides contextual analysis, and
 risk guardrails you configure are enforced by the order path itself. The AI
 augments your decisions. It never overrides your risk limits.
@@ -24,9 +25,9 @@ word for it.
 ## No lock-in, anywhere
 
 Pairlens is not tied to one exchange, one broker, or one country. Connectors
-for 14 centralized spot exchanges, three perpetual futures venues, a US
-equities broker, two prediction markets, and DEXs on Solana and five EVM chains
-ship in the box. Use whichever venues work
+for 14 centralized spot exchanges, five perpetual futures venues, a US equities
+broker, two prediction markets, OpenSea for NFT collections, and DEXs on Solana
+and five EVM chains ship in the box. Use whichever venues work
 where you live, switch between them freely, or run several side by side. Your
 accounts stay yours and your data stays on your machine. If you ever leave,
 there is nothing to cancel and nothing to export from our servers, because
@@ -46,6 +47,11 @@ anything leaves your machine.
 cents, with the same chart, book, and ticket as everything else. See
 [prediction markets](/docs/prediction-markets).
 
+**NFT collections.** A collection as a book rather than a gallery: listings are
+the ask ladder, collection offers are a real bid ladder, sales are the tape,
+and a sweep is a market buy sized in items. See
+[NFT collections](/docs/nft-trading).
+
 **Python.** Write indicators and strategies in real Python with numpy, running
 locally in an embedded runtime. See
 [custom indicators](/docs/custom-python-indicators).
@@ -58,7 +64,7 @@ conditions; [alerts](/docs/alerts-notifications) watch price levels, percent
 moves, signals, and candle closes.
 
 **AI.** One [assistant](/docs/ai-copilot), docked in the corner or in the nav
-rail and mounted above every page, with 110 tools over markets, charts, your portfolio, scripts, bots and
+rail and mounted above every page, with 113 tools over markets, charts, your portfolio, scripts, bots and
 automation, plus sourced [research reports](/docs/research-reports) on demand.
 Bring your own provider key or subscribe to hosted Intelligence.
 
@@ -80,8 +86,9 @@ and native windows, and it is the strongest home for live-trading secrets.
 connector plugins. There is no intermediate data server.
 
 **Connector plugins.** The only code that talks to exchange WebSockets and REST
-APIs. 14 spot CEXs, three perpetual futures venues, a US equities broker, two
-prediction markets, DEX connectors and a cross-chain bridge ship in the box.
+APIs. 14 spot CEXs, five perpetual futures venues, a US equities broker, two
+prediction markets, OpenSea, DEX connectors and a cross-chain bridge ship in
+the box.
 
 **Strategy engine.** Pure TypeScript math: EMA, ATR, breakout, pullback,
 mean-reversion, regime detection. No I/O, no network.

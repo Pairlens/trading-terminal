@@ -34,12 +34,12 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-
 import {
   marketRefToPath,
   normalizeInstrumentId,
   parseMarketRefPath,
 } from '@pairlens/shared/market-ref'
+import { isDesktopOnlyClass } from './lib/desktop-only-classes'
 
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
 import {
@@ -132,6 +132,18 @@ export function useMobileRouteSync(): void {
     reconciledPathRef.current = pathname
 
     const routed = marketRefFromPath(pathname)
+    if (routed && isDesktopOnlyClass(routed.cls)) {
+      // Same rule as the prefix list below: only for a session that STARTED on
+      // a phone, so a desktop browser dragged under 768px keeps its address and
+      // widening back restores the exact screen.
+      if (getInitialViewportMode() === 'desktop') return
+      if (handledRef.current === pathname) return
+      handledRef.current = pathname
+      toast.info(t('mobile.shell.desktopOnlyRoute'))
+      void navigate({ to: canonicalPath, replace: true })
+      return
+    }
+
     if (routed) {
       handledRef.current = null
       // Which side is the newer fact. The rule, and what reading it backwards

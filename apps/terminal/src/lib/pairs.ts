@@ -90,3 +90,38 @@ export function splitPairAssets(
 export function isPerpPairKey(pairKey: string): boolean {
   return Boolean(splitPairAssets(normalizePairKey(pairKey)).settle)
 }
+
+/**
+ * Whether a pair key names an NFT COLLECTION rather than a token.
+ *
+ * Both live on the same chains, so the market id cannot separate them and the
+ * capability resolver would otherwise hand an NFT order to a swap router. This
+ * is not a guess about the key's shape: it reads a guarantee the id rules
+ * enforce on the way in. `normalizeInstrumentId('dex', …)` always emits
+ * `{address}-{QUOTE}`, and `toInstrumentRef`'s dex arm defaults the quote to
+ * USDC precisely so the pool resolvers have one to split on, while the `nft`
+ * arm emits a bare contract and never adds a leg.
+ *
+ * Lives here rather than in each caller so the chart's empty state, the
+ * capability context and anything that comes later cannot drift apart about
+ * what an NFT key looks like.
+ */
+export function isNftPairKey(pairKey: string): boolean {
+  const trimmed = pairKey.trim()
+  return isTokenAddress(trimmed) && !trimmed.includes('-')
+}
+
+/**
+ * Whether a pair key names an on-chain TOKEN.
+ *
+ * The other half of the same guarantee `isNftPairKey` reads: a dex id is an
+ * address with a quote leg, a collection is an address without one. Worth
+ * naming rather than writing as a negation at each call site, because the two
+ * are only exhaustive over addresses and a plain 'BTC-USDT' is neither.
+ */
+export function isDexPairKey(pairKey: string): boolean {
+  const trimmed = pairKey.trim()
+  const at = trimmed.lastIndexOf('-')
+  if (at <= 0) return false
+  return isTokenAddress(trimmed.slice(0, at))
+}

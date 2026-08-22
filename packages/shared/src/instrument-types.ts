@@ -30,6 +30,7 @@ export type InstrumentKind =
   | 'token'
   | 'equity'
   | 'prediction'
+  | 'nft-collection'
 
 type InstrumentCommon = {
   id: string // 'okx:BTC-USDT'
@@ -121,12 +122,35 @@ export type PredictionInstrument = InstrumentCommon & {
   status?: 'open' | 'closed' | 'resolved'
 }
 
+/**
+ * An NFT collection, keyed `chain + contract`. The instrument is the
+ * COLLECTION, never one token: a floor is a collection-level price, and a
+ * single token is a position in it the way one share is a position in a
+ * ticker. Individual tokens travel as `NftItem` (see `nft-types.ts`).
+ */
+export type NftCollectionInstrument = InstrumentCommon & {
+  kind: 'nft-collection'
+  /** Chain slug — also the venue segment of the collection's URL. */
+  chain: string
+  /** Contract address, or the marketplace's own slug where a chain has none. */
+  address: string
+  /** The marketplace slug, when one exists. Display and deep links only. */
+  slug?: string
+  /** Settlement currency ticker the floor is quoted in: ETH, SOL, MATIC. */
+  priceCurrency?: string
+  imageUrl?: string
+  floorPrice?: number
+  totalSupply?: number
+  verified?: boolean
+}
+
 export type Instrument =
   | CexPairInstrument
   | CexDerivativeInstrument
   | TokenInstrument
   | EquityInstrument
   | PredictionInstrument
+  | NftCollectionInstrument
 
 /**
  * The dedupe/merge key for discovery results: identity, never bare symbol.
@@ -151,6 +175,8 @@ export function instrumentIdentityKey(inst: Instrument): string {
       return `equity:${inst.symbol}:${inst.mic ?? ''}`
     case 'prediction':
       return `prediction:${inst.market}:${inst.predictionMarketId}:${inst.outcome}`
+    case 'nft-collection':
+      return `nft:${inst.chain}:${inst.address.toLowerCase()}`
     case 'cex-pair':
       return `pair:${inst.symbol}`
   }

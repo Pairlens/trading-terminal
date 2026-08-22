@@ -38,6 +38,7 @@ export const FIRST_PARTY_PLUGIN_IDS: ReadonlySet<string> = new Set([
   'pairlens-dex',
   'pairlens-memecoins',
   'pairlens-equities',
+  'pairlens-nfts',
 ])
 
 /** The one rule that turns (plugin, panel) into a saved-layout pane type. */

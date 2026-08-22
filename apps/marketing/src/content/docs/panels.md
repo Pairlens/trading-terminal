@@ -145,7 +145,7 @@ holding) are called out in their own footnotes rather than estimated. See
 | **Chains**            | Every chain the terminal knows, with gas, liquidity and a day's volume beside it                                                                             |
 | **Pool Map**          | A treemap of the chain's top pools, sized by volume and tinted by the day's move, with a ranked list behind it                                               |
 | **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it                                                              |
-| **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                                                                           |
+| **Pool Detail**       | The selected pool at a glance: both tokens, the day and the hour, liquidity, reserves, impact, age, pressure and its latest swaps, one click from its chart  |
 | **New Mints**         | Launchpad tokens minted in the last few hours, newest first, with holders and early flow                                                                     |
 | **Graduating**        | Tokens climbing a bonding curve, ranked by how close they are to migrating to a real pool                                                                    |
 | **Graduated**         | Tokens that completed the curve and now trade on an AMM pool, most recent first                                                                              |

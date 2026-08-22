@@ -4,8 +4,8 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 20 AUG 2026
-readTime: 11 min read
+updated: 22 AUG 2026
+readTime: 12 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
@@ -27,7 +27,7 @@ connections, your sockets or your watchlist.
 | **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair, bringing its venue with it |
 | **Trade**     | Order entry, with the order book above it                                                                          |
 | **Chart**     | The chart on its own, with the drawing toolbar                                                                     |
-| **Assistant** | The full assistant, same 110 tools and same confirm cards as the desktop                                           |
+| **Assistant** | The full assistant, same 113 tools and same confirm cards as the desktop                                           |
 | **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L                                          |
 
 The chart is underneath all five and never unmounts. The other four are bottom
@@ -68,6 +68,24 @@ is part of what they are, the chip loses its caret and reads as a label.
 The **avatar** opens Settings, which is a screen rather than a tab.
 
 ## The chart
+
+**Touch and hold to read any bar.** A chart engine draws its crosshair from a
+mouse it can see moving, and a phone has none, so the price at a given moment
+used to be the one thing a phone chart could not tell you. Hold a finger on the
+plot for a moment and a crosshair comes up under it: the bar's open, high, low
+and close where the live price normally sits, its own move in percent, its
+volume, a price tag in the price scale and the date on the time axis.
+
+Drag without lifting and it scrubs along the series, one bar at a time, while
+the chart stays exactly where it is. Let go and the crosshair stays put, so you
+can read it with your hand out of the way. From there a tap anywhere on the
+plot moves it again, no hold needed. Close it with the ✕ on the readout, or
+pinch to zoom and it steps aside for you.
+
+It follows the crosshair chip in the toolbar: in Magnet the line rides the
+closes, in Free it floats wherever you put it. Switching pair, venue or
+timeframe takes it down, because the bars underneath are no longer the bars it
+was placed on.
 
 **Timeframes** live on a chip beside the price. Four are pinned by default
 (1m, 1h, 1D, 1W) and the rest are one tap further down. Long-press any of them
@@ -239,14 +257,22 @@ chart rather than something broken. Those are workspaces and the workspace
 store, bots, workflows, notification rules, the Python indicator workbench, and
 the plugin store.
 
+[NFT collections](/docs/nft-trading) are on that list too, and the reason is
+worth stating rather than hiding. The class is the ladder, the traits and
+the sweep ticket, and half of that on a 402px screen would be a worse answer
+than an honest redirect. So a `/nft/...` link opens the same toast and lands you
+on the chart. A desktop browser dragged under 768px keeps its URL, so widening
+back restores the exact board.
+
 Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures,
 and Kraken Futures) serve no CORS headers, so no browser can reach them, phone
 included. They are listed in the venue picker under **Needs the desktop app**
 rather than hidden, whenever they serve the market you are looking at, so you
-can see what you are missing. The other fourteen
-work, Polymarket plus the Binance, ByBit and OKX futures venues included, so
-[event contracts](/docs/prediction-markets) and
-[perpetual futures](/docs/cex-futures) both trade from a phone.
+can see what you are missing. The other fifteen
+work in a browser, Polymarket plus the Binance, ByBit and OKX futures venues
+included, so [event contracts](/docs/prediction-markets) and
+[perpetual futures](/docs/cex-futures) both trade from a phone. OpenSea is a
+browser venue too, but it has no phone surface yet, for the reason above.
 
 The desktop's Prediction Discovery workspace is a pane layout, so it stays on
 the desktop grid. The phone carries the part that matters, the event board

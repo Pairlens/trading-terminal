@@ -27,6 +27,18 @@ export {
   createMemecoinDataProviderPlugin,
 } from './memecoin-data-provider/index.ts'
 export {
+  openSeaNftManifest,
+  createOpenSeaNftPlugin,
+} from './opensea-nft-connector/index.ts'
+export {
+  coingeckoNftManifest,
+  createCoingeckoNftPlugin,
+} from './coingecko-nft-provider/index.ts'
+export {
+  pairlensNftsManifest,
+  createPairlensNftsPlugin,
+} from './pairlens-nfts/index.ts'
+export {
   pairlensEquitiesManifest,
   createPairlensEquitiesPlugin,
 } from './pairlens-equities/index.ts'

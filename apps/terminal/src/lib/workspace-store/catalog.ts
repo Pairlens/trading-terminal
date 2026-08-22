@@ -92,6 +92,7 @@ export const ASSET_CLASSES: Array<AssetClass> = [
   'memecoins',
   'equities',
   'predictions',
+  'nfts',
   'multi-asset',
 ]
 
@@ -105,6 +106,7 @@ export const ASSET_CLASS_META: Record<
   memecoins: { label: 'Memecoins', description: 'Launchpad tokens' },
   equities: { label: 'Equities', description: 'Stocks & ETFs' },
   predictions: { label: 'Predictions', description: 'Event contracts' },
+  nfts: { label: 'NFTs', description: 'Collections and items' },
   'multi-asset': { label: 'Multi-Asset', description: 'Mixed markets' },
 }
 
@@ -176,6 +178,15 @@ const PANES_NEEDING_PAIR = new Set([
   'company',
   'insider-activity',
   'your-position',
+  'nft-collection-header',
+  'nft-book',
+  'nft-listings',
+  'nft-offers',
+  'nft-sales',
+  'nft-items',
+  'nft-traits',
+  'nft-ticket',
+  'nft-holdings',
 ])
 
 const PANES_NEEDING_WALLET = new Set([
@@ -190,6 +201,8 @@ const PANES_NEEDING_WALLET = new Set([
   'route-bridge',
   'in-flight',
   'your-position',
+  'nft-ticket',
+  'nft-holdings',
 ])
 
 type CellSpec = { h: number; panes: Array<string> }
@@ -1138,6 +1151,7 @@ export const STORE_ASSET_CLASS_FOR: Record<InstrumentClass, AssetClass> = {
   memecoin: 'memecoins',
   stocks: 'equities',
   prediction: 'predictions',
+  nft: 'nfts',
 }
 
 /**

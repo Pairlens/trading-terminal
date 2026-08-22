@@ -1,10 +1,10 @@
 ---
 title: The AI assistant
-description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 110 tools over markets, charts, portfolio, scripts, bots, workflows, alerts and workspaces, three personas, and a hard boundary at your risk limits.
+description: One assistant for the whole terminal, in the nav rail, a strip under your panes or floating over them, in a window you can drag anywhere. 113 tools over markets, charts, portfolio, scripts, bots, workflows, alerts and workspaces, three personas, and a hard boundary at your risk limits.
 group: traders
 order: 4
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 14 min read
 ---
 
@@ -220,7 +220,7 @@ against Groq, OpenAI, Anthropic or OpenRouter.
 
 ## What it can do
 
-110 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
+113 tools. One turn runs up to 28 tool-calling steps, which is enough to read the
 chart, pull two more timeframes, write a strategy, backtest it and deploy it
 without coming back to you in between.
 
@@ -281,7 +281,7 @@ are learning why a setup is a setup.
 percentages, one sentence per insight. Best when you already know what you are
 looking at and want numbers.
 
-The persona changes how it writes, not what it can do. All 110 tools are
+The persona changes how it writes, not what it can do. All 113 tools are
 available in every mode, and the safety rules below hold identically in all
 three.
 
@@ -428,7 +428,7 @@ and never sees your exchange credentials. See
 
 ## Related
 
-- [Assistant tool reference](/docs/copilot-tools) for all 110 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 113 tools
 - [Research reports](/docs/research-reports) for the long-form sourced write-up
 - [AI providers](/docs/ai-providers) for keys, plans, and credits
 - [Risk guardrails](/docs/risk-guardrails) for the limits the AI cannot move

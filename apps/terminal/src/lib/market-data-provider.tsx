@@ -53,7 +53,7 @@ import {
   orderNotionalUsd,
   priceUsdFor,
 } from '@/lib/risk/position-size'
-import { normalizePairKey } from '@/lib/pairs'
+import { isDexPairKey, isNftPairKey, normalizePairKey } from '@/lib/pairs'
 import { resolveSolanaRpcEndpoint } from '@/lib/dex/solana-rpc'
 import { contractSizeFor } from '@/lib/futures/contract-size'
 import {
@@ -86,6 +86,28 @@ export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
 // waiting for the user to complete the switch. Long enough to cover
 // hover-then-decide, short enough that hovering the whole dropdown doesn't
 // pin a dozen venue connections.
+/**
+ * Which asset class a pair key is about, when the market id alone cannot say.
+ *
+ * A market id used to be enough. It stopped being enough when NFTs arrived:
+ * 'ethereum' is a DEX venue AND an NFT venue, both declare `trading:orders`
+ * and `market-data:candles` on it, and the capability resolver keys on the
+ * market alone. The DEX connector is the higher priority, and `trading:orders`
+ * is side-effecting so there is no walk to a runner-up, which meant every NFT
+ * order was handed to a swap router that split the contract address on a dash,
+ * found no quote leg, and refused. The chart lost the same way, to a pool
+ * resolver that answered an empty array rather than throwing.
+ *
+ * Undefined for everything else, which the resolver reads as "do not filter":
+ * every venue that does not share its market id with another class resolves
+ * exactly as it always did.
+ */
+function assetClassFor(pair: string): string | undefined {
+  if (isNftPairKey(pair)) return 'nft'
+  if (isDexPairKey(pair)) return 'dex'
+  return undefined
+}
+
 const WARMUP_TTL_MS = 15_000
 /** Speculative streams open at once — hover sweeps must not fan out. */
 const MAX_CONCURRENT_WARMUPS = 3
@@ -222,12 +244,19 @@ type MarketDataContextValue = {
    * question is whether this venue carries this pair, so an answer from
    * anywhere else is worse than no answer. Returns null when the venue
    * declares no history capability of its own, meaning it can't be asked.
+   *
+   * `allowWildcardProvider` widens that to a provider that declares every
+   * market, and is for the one case where the strict reading has no answer at
+   * all: a DEX chain has no connector publishing candles, so the pool data
+   * provider IS the venue there. It still resolves one plugin and still never
+   * walks a fallback chain.
    */
   probeVenueHistory: (
     market: string,
     pair: string,
     timeframe: string,
     limit: number,
+    options?: { allowWildcardProvider?: boolean },
   ) => Promise<Array<Candle>> | null
   placeOrder: (params: Record<string, unknown>) => Promise<OrderResult>
   /**
@@ -1319,6 +1348,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
             pair,
             timeframe,
             country: getCountrySetting(),
+            assetClass: assetClassFor(pair),
           })
           return pluginManager.subscribe(
             'market-data:candles',
@@ -1353,6 +1383,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:ticker',
@@ -1389,6 +1420,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:orderbook',
@@ -1430,6 +1462,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:trades',
@@ -1559,6 +1592,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         pair,
         timeframe,
         country: getCountrySetting(),
+        assetClass: assetClassFor(pair),
       })
       const result = await pluginManager.execute('market-data:history', {
         pair,
@@ -1577,6 +1611,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       pair: string,
       requestedTimeframe: string,
       limit: number,
+      options?: { allowWildcardProvider?: boolean },
     ): Promise<Array<Candle>> | null => {
       // Clamped like every other egress. This probe decides whether a pair is
       // published as UNLISTED, so asking a venue for an interval it does not
@@ -1589,13 +1624,33 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       // filling a chart, wrong for asking a venue about itself: GeckoTerminal
       // declares market-data:history for '*' and would gladly answer "does
       // Bitvavo carry BTC-USDT?" on Bitvavo's behalf.
-      const plugin = pluginManager
-        .getPluginsForCapability('market-data:history', market)
-        .find((p) =>
+      const candidates = pluginManager.getPluginsForCapability(
+        'market-data:history',
+        market,
+      )
+      // A chain is shared by two asset classes now, so naming the market is no
+      // longer enough to prove a plugin is talking about the same thing: the
+      // NFT connector names 'ethereum' too, and asked about a token it would
+      // answer about a collection that does not exist. Same rule as the
+      // capability resolver's, and unstamped plugins stay eligible.
+      const wantedClass = assetClassFor(pair)
+      const eligible = wantedClass
+        ? candidates.filter((p) => {
+            const declared = p.manifest.metadata?.['assetClass']
+            return typeof declared !== 'string' || declared === wantedClass
+          })
+        : candidates
+      const plugin =
+        eligible.find((p) =>
           p.manifest.capabilities.some(
             (c) => c.id === 'market-data:history' && c.markets.includes(market),
           ),
-        )
+        ) ??
+        // A chain, not a venue: nothing declares `jupiter` or `base` for
+        // history, and the DEX data provider that declares '*' is the only
+        // source there is. Opt-in, because on a CEX the same widening would
+        // answer "does Bitvavo carry this pair?" out of GeckoTerminal.
+        (options?.allowWildcardProvider ? eligible[0] : undefined)
       if (!plugin) return null
 
       // A locally-built context rather than setContext(): this runs alongside
@@ -1731,7 +1786,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           }
         }
 
-        pluginManager.setContext({ market, country: getCountrySetting() })
+        pluginManager.setContext({
+          market,
+          country: getCountrySetting(),
+          assetClass: assetClassFor(String(params['pair'] ?? '')),
+        })
         // Idempotency key — generated once per logical order so a retried or
         // double-clicked submit can't execute twice at the exchange. 32
         // alphanumeric chars fits every connector's client-order-id field.

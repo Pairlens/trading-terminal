@@ -40,6 +40,18 @@ import {
   memecoinDataProviderManifest,
 } from '@pairlens/plugins/memecoin-data-provider'
 import {
+  createPairlensNftsPlugin,
+  pairlensNftsManifest,
+} from '@pairlens/plugins/pairlens-nfts'
+import {
+  coingeckoNftManifest,
+  createCoingeckoNftPlugin,
+} from '@pairlens/plugins/coingecko-nft-provider'
+import {
+  createOpenSeaNftPlugin,
+  openSeaNftManifest,
+} from '@pairlens/plugins/opensea-nft-connector'
+import {
   createPairlensEquitiesPlugin,
   pairlensEquitiesManifest,
 } from '@pairlens/plugins/pairlens-equities'
@@ -276,6 +288,7 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
     manifest: pairlensMemecoinsManifest,
     factory: createPairlensMemecoinsPlugin,
   },
+  { manifest: pairlensNftsManifest, factory: createPairlensNftsPlugin },
   { manifest: pairlensEquitiesManifest, factory: createPairlensEquitiesPlugin },
 ]
 
@@ -483,6 +496,20 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
   },
 ]
 
+/**
+ * NFT data providers + marketplace connectors.
+ *
+ * Ordered so the keyless one is registered after the keyed one: OpenSea is
+ * priority 5 and answers everything once a key is configured, CoinGecko is
+ * priority 6 and answers a collection's headline numbers with no key at all.
+ * The resolver reads priority, not registration order, but keeping the list in
+ * the same order as the ladder is what makes the ladder readable.
+ */
+export const BOOTSTRAP_NFT_PLUGINS: Array<BootstrapPlugin> = [
+  { manifest: openSeaNftManifest, factory: createOpenSeaNftPlugin },
+  { manifest: coingeckoNftManifest, factory: createCoingeckoNftPlugin },
+]
+
 /** All bootstrap plugins combined. */
 export const BOOTSTRAP_PLUGINS: Array<BootstrapPlugin> = [
   ...BOOTSTRAP_CORE_PLUGINS,
@@ -491,6 +518,7 @@ export const BOOTSTRAP_PLUGINS: Array<BootstrapPlugin> = [
   ...BOOTSTRAP_THEME_PLUGINS,
   ...BOOTSTRAP_MARKET_CONNECTOR_PLUGINS,
   ...BOOTSTRAP_DEX_PLUGINS,
+  ...BOOTSTRAP_NFT_PLUGINS,
 ]
 
 /** Set of plugin IDs included in the bootstrap bundle. */

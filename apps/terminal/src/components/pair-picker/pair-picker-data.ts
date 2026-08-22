@@ -5,6 +5,7 @@ import {
   Brain,
   Flame,
   Gamepad2,
+  Gem,
   Landmark,
   Layers,
   LayoutGrid,
@@ -39,6 +40,7 @@ export type AssetClassFilter =
   | 'prediction'
   | 'crypto-perp'
   | 'dex'
+  | 'nft'
 
 export interface AssetClassTab {
   id: AssetClassFilter
@@ -57,6 +59,7 @@ export const ASSET_CLASSES: Array<AssetClassTab> = [
   { id: 'dex', label: 'DEX', icon: Flame },
   { id: 'stocks', label: 'Stocks', icon: TrendingUp },
   { id: 'prediction', label: 'Predictions', icon: Vote },
+  { id: 'nft', label: 'NFTs', icon: Gem },
 ]
 
 /**
@@ -77,6 +80,7 @@ export const ASSET_CLASS_FILTER_FOR: Record<InstrumentClass, AssetClassFilter> =
     memecoin: 'dex',
     stocks: 'stocks',
     prediction: 'prediction',
+    nft: 'nft',
   }
 
 export type PairCategory =
