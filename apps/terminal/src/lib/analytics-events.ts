@@ -342,6 +342,19 @@ export interface AnalyticsEvents {
   /** Which asset-class desk traders actually work from on Discovery. */
   discovery_section_selected: { section: string }
   /**
+   * A memecoin board row was opened, and from WHICH of the four columns.
+   *
+   * The one question the board cannot answer without an event. Visiting the
+   * section is already covered by `discovery_section_selected`; what that
+   * cannot say is whether people actually trade the launches or only ever open
+   * the graduated names, and those two answers point at very different next
+   * features. `stage` is our own product surface, never the token: no symbol,
+   * no mint, no size.
+   */
+  memecoin_row_opened: {
+    stage: 'new' | 'graduating' | 'graduated' | 'legendary'
+  }
+  /**
    * The venue a Discovery section is pointed at was changed from its bar.
    *
    * Answers whether the picker is used at all — the preference was only

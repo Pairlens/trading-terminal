@@ -16,6 +16,7 @@ const SECTION_NAMES: Record<DiscoverySectionId, string> = {
   spot: 'spot crypto',
   perp: 'perpetual futures',
   dex: 'on-chain DEX tokens',
+  memecoin: 'launchpad memecoins',
   stocks: 'US equities',
   prediction: 'prediction markets',
   nft: 'NFT collections',

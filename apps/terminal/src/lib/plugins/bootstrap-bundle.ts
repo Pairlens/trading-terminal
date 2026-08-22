@@ -32,6 +32,14 @@ import {
   pairlensDexManifest,
 } from '@pairlens/plugins/pairlens-dex'
 import {
+  createPairlensMemecoinsPlugin,
+  pairlensMemecoinsManifest,
+} from '@pairlens/plugins/pairlens-memecoins'
+import {
+  createMemecoinDataProviderPlugin,
+  memecoinDataProviderManifest,
+} from '@pairlens/plugins/memecoin-data-provider'
+import {
   createPairlensNftsPlugin,
   pairlensNftsManifest,
 } from '@pairlens/plugins/pairlens-nfts'
@@ -274,6 +282,12 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
   // layouts arrange already ships in pairlens-core, so what belongs to the
   // family is the arrangement. Same generic activation pass as the two above.
   { manifest: pairlensDexManifest, factory: createPairlensDexPlugin },
+  // Memecoins carry their OWN panes rather than arranging core ones, because
+  // a launchpad column has no equivalent anywhere else in the terminal.
+  {
+    manifest: pairlensMemecoinsManifest,
+    factory: createPairlensMemecoinsPlugin,
+  },
   { manifest: pairlensNftsManifest, factory: createPairlensNftsPlugin },
   { manifest: pairlensEquitiesManifest, factory: createPairlensEquitiesPlugin },
 ]
@@ -333,6 +347,13 @@ export const BOOTSTRAP_DEX_PLUGINS: Array<BootstrapPlugin> = [
   {
     manifest: dexscreenerDataProviderManifest,
     factory: createDexscreenerDataProviderPlugin,
+  },
+  // The launchpad feed. Grouped with the DEX providers because it reads the
+  // same chain and is uninstalled by the same kind of user, but it belongs to
+  // the `memes` family: dropping DEX must not take the memecoin board with it.
+  {
+    manifest: memecoinDataProviderManifest,
+    factory: createMemecoinDataProviderPlugin,
   },
   // Solana's node, as a capability. Ordered ahead of the Jupiter connector on
   // purpose: the connector is provisioned with whatever `rpc:solana` resolves

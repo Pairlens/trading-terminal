@@ -3488,7 +3488,14 @@
     "nftItems": "Item",
     "nftTraits": "Trait",
     "nftTicket": "Tiket NFT",
-    "nftHoldings": "Item Saya"
+    "nftHoldings": "Item Saya",
+    "memeNew": "Mint Baru",
+    "memeGraduating": "Hampir Lulus",
+    "memeGraduated": "Sudah Lulus",
+    "memeLegendary": "Legendaris",
+    "memeTokenStats": "Statistik Token",
+    "memeFlow": "Aliran Beli/Jual",
+    "memeSafety": "Keamanan Token"
   },
   "paneDescriptions": {
     "insiderActivity": "Laporan Form 4 terbaru: siapa di dalam perusahaan yang membeli atau menjual, berapa banyak, dan di harga berapa",
@@ -3576,7 +3583,14 @@
     "nftItems": "Jelajahi token koleksi ini beserta harga ask dan kelangkaannya.",
     "nftTraits": "Setiap nilai trait dengan berapa token yang memilikinya dan seberapa langka jadinya. Floor per trait muncul saat penyedia mempublikasikannya.",
     "nftTicket": "Beli di floor, sweep, ajukan penawaran, listing item, atau terima bid.",
-    "nftHoldings": "Yang dipegang dompet ini di koleksi tersebut, lengkap dengan modal dan mark."
+    "nftHoldings": "Yang dipegang dompet ini di koleksi tersebut, lengkap dengan modal dan mark.",
+    "memeNew": "Token yang di-mint dalam beberapa jam terakhir, terbaru di atas, lengkap dengan jumlah holder dan aliran awal.",
+    "memeGraduating": "Token yang sedang menaiki bonding curve, diurutkan dari yang paling dekat bermigrasi ke pool sungguhan.",
+    "memeGraduated": "Token yang sudah menyelesaikan curve dan kini diperdagangkan di pool AMM, paling baru di atas.",
+    "memeLegendary": "Memecoin berkapitalisasi besar dari semua chain, diurutkan menurut kapitalisasi pasar.",
+    "memeTokenStats": "Kapitalisasi pasar, FDV, likuiditas, holder, dan progres bonding curve token yang sedang aktif.",
+    "memeFlow": "Beli lawan jual di empat rentang waktu, beserta pergerakan harga dan volume di baliknya.",
+    "memeSafety": "Otoritas mint dan freeze, konsentrasi holder, dan riwayat deployer."
   },
   "multiPrice": {
     "venue": "Bursa",
@@ -3750,7 +3764,8 @@
       "prediction": "Prediksi",
       "moveLeft": "Pindahkan ke kiri",
       "moveRight": "Pindahkan ke kanan",
-      "nft": "NFT"
+      "nft": "NFT",
+      "memecoin": "Memecoin"
     }
   },
   "assetClass": {
@@ -3767,7 +3782,9 @@
     "stocksDescription": "Saham lewat broker, mengikuti kalender bursa itu sendiri. Berlaku jam perdagangan, penghentian, dan aturan penyelesaian.",
     "predictionDescription": "Kontrak atas jawaban sebuah pertanyaan. Membayar $1 jika jawabannya benar dan nol jika salah.",
     "nft": "NFT",
-    "nftDescription": "Koleksi token non-fungible. Floor adalah ask termurah, penawaran adalah sisi bid, dan satu posisi adalah satu token tertentu."
+    "nftDescription": "Koleksi token non-fungible. Floor adalah ask termurah, penawaran adalah sisi bid, dan satu posisi adalah satu token tertentu.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Token launchpad di atas bonding curve, dan kapitalisasi besar yang lulus dari salah satunya. Dihargai lewat kapitalisasi pasar, diperdagangkan lewat agregator DEX."
   },
   "pluginStore": {
     "registryOffline": "Registri plugin sedang offline. Hanya menampilkan plugin yang terpasang.",
@@ -4265,6 +4282,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "Harga floor, volume, suplai, dan pemegang tanpa kunci, untuk koleksi apa pun yang terindeks. Cadangan yang membuat board NFT dingin punya isi nyata."
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Permukaan launchpad: mint baru, progres bonding curve, kelulusan, dan kapitalisasi besar yang bertahan lebih lama"
+      },
+      "memecoin-data-provider": {
+        "title": "Feed Memecoin",
+        "description": "Token launchpad dari sumber publik tanpa kunci: mint baru dan progres bonding curve dari Jupiter, memecoin berkapitalisasi besar dari CoinGecko. Tanpa API key dan tanpa server milik kami: setiap permintaan dihitung pada browser yang mengirimnya."
       }
     },
     "families": {
@@ -4307,6 +4332,10 @@
       "nfts": {
         "label": "NFT",
         "description": "Peringkat koleksi, order book listing dan penawaran, serta eksekusi di marketplace"
+      },
+      "memes": {
+        "label": "Memecoin",
+        "description": "Papan launchpad dan feed tanpa kunci di belakangnya"
       }
     },
     "familyToggleAria": "Aktifkan atau nonaktifkan semua plugin {{family}}",
@@ -5037,6 +5066,24 @@
         "menuLabel": "Aliran",
         "tagline": "Pita transaksi, selebar layar.",
         "description": "Penjualan whale dari seluruh koleksi terindeks, dengan pergerakan floor dan tabel peringkat di sampingnya."
+      },
+      "memecoin-discovery": {
+        "name": "Penjelajahan Memecoin",
+        "tagline": "Empat kolom, satu untuk tiap tahap curve.",
+        "description": "Papan launchpad: yang di-mint dalam satu jam terakhir, yang menaiki bonding curve lengkap dengan progres menuju ambang kelulusan, yang sudah pindah ke pool sungguhan, dan kapitalisasi besar yang selamat dari siklusnya sendiri. Tiap baris membawa kapitalisasi pasar, likuiditas, dan beli lawan jual, dan mengeklik satu baris membuka grafik serta tiket swap-nya.",
+        "menuLabel": "Default"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal Memecoin",
+        "tagline": "Kapitalisasi pasar, aliran, dan siapa yang masih bisa mint.",
+        "description": "Tata letak memecoin bawaan: grafik di atas strip aliran yang menjajarkan beli lawan jual di empat rentang waktu, suplai dan jumlah holder di tengah, audit deployer di bawahnya, dan tiket swap di kanan. Tanpa order book: bonding curve memang tidak punya.",
+        "menuLabel": "Default"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper Memecoin",
+        "tagline": "Curve di kiri, tiket di kanan.",
+        "description": "Dibuat untuk menggarap peluncuran: mint baru dan tangga kelulusan tetap di layar sementara grafik, strip aliran, dan tiket swap mengisi sisanya. Panel keamanan duduk di bawah tiket, karena otoritas mint adalah hal terakhir yang layak dicek sebelum order.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5090,6 +5137,9 @@
       },
       "nfts": {
         "label": "NFT"
+      },
+      "memecoins": {
+        "label": "Memecoin"
       }
     },
     "screenSizes": {
@@ -6060,6 +6110,10 @@
       "nft": {
         "label": "Market NFT",
         "description": "Peringkat koleksi, harga floor, listing, penawaran, dan pita penjualan"
+      },
+      "launchpad": {
+        "label": "Token Launchpad",
+        "description": "Token yang baru di-mint, progres bonding curve, kelulusan, dan memecoin berkapitalisasi besar"
       }
     },
     "domains": {
@@ -6793,6 +6847,87 @@
       "basis": "Modal",
       "mark": "Mark",
       "pnl": "PnL"
+    }
+  },
+  "memecoins": {
+    "loading": "Membaca launchpad",
+    "retrying": "Mencoba lagi",
+    "unavailableBody": "Feed launchpad tidak menjawab. Ia akan mencoba lagi sendiri.",
+    "unknown": "Tidak diketahui",
+    "curveUnknown": "Tidak ada bonding curve, atau launchpad tanpa ambang yang dipublikasikan",
+    "openChart": "Buka {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Kap.",
+      "age": "Usia",
+      "curve": "Curve",
+      "since": "Sejak",
+      "change24h": "24j",
+      "change": "Perubahan",
+      "flow": "Beli/Jual",
+      "volume": "Vol 24j"
+    },
+    "new": {
+      "title": "Mint Baru",
+      "footnote": "Di-mint dalam 6 jam terakhir. Jumlah holder ada di sebelah ticker.",
+      "emptyTitle": "Belum ada yang di-mint",
+      "emptyBody": "Token baru muncul di sini beberapa detik setelah transaksi pertamanya."
+    },
+    "graduating": {
+      "title": "Hampir Lulus",
+      "footnote": "Progres curve menuju migrasi. Tanda tilde berarti perkiraan.",
+      "emptyTitle": "Belum ada yang dekat lulus",
+      "emptyBody": "Token muncul di sini setelah menempuh sepertiga bonding curve-nya."
+    },
+    "graduated": {
+      "title": "Sudah Lulus",
+      "footnote": "Menyelesaikan curve dan pindah ke pool AMM, 7 hari terakhir.",
+      "emptyTitle": "Belum ada kelulusan terbaru",
+      "emptyBody": "Token yang menyelesaikan bonding curve-nya mendarat di sini."
+    },
+    "legendary": {
+      "title": "Legendaris",
+      "footnote": "Kapitalisasi pasar dari CoinGecko, masing-masing dibuka di chain dengan likuiditas terdalam.",
+      "emptyTitle": "Tidak ada kapitalisasi besar untuk ditampilkan",
+      "emptyBody": "Peringkat kapitalisasi pasar tidak menjawab. Ia akan mencoba lagi sendiri."
+    },
+    "token": {
+      "emptyTitle": "Bukan token launchpad",
+      "emptyBody": "Feed launchpad tidak punya apa pun tentang alamat ini. Bisa jadi ia diperdagangkan di bursa yang tidak dicakup papan ini."
+    },
+    "stats": {
+      "marketCap": "Kapitalisasi pasar",
+      "fdv": "FDV",
+      "liquidity": "Likuiditas",
+      "holders": "Holder",
+      "launchpad": "Launchpad",
+      "curve": "Curve",
+      "graduated": "Sudah lulus",
+      "organicScore": "Skor organik",
+      "footnote": "Kapitalisasi pasar memakai suplai beredar; FDV memakai suplai total."
+    },
+    "flow": {
+      "window": "Rentang",
+      "volume": "Volume",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Yang dihitung transaksi, bukan trader. Volume menjumlahkan kedua sisi.",
+      "emptyTitle": "Belum ada transaksi",
+      "emptyBody": "Aliran muncul begitu token punya swap pertamanya."
+    },
+    "safety": {
+      "mintAuthority": "Otoritas mint",
+      "freezeAuthority": "Otoritas freeze",
+      "topHolders": "Holder terbesar",
+      "devMints": "Mint dari deployer",
+      "devMigrations": "{{count}} sudah lulus",
+      "revoked": "Dicabut",
+      "live": "Aktif",
+      "footnote": "Tidak diketahui bukan berarti aman. Audit yang tidak ada tidak berkata apa pun soal token ini.",
+      "emptyTitle": "Tidak ada audit yang dipublikasikan",
+      "emptyBody": "Sumber ini tidak mempublikasikan otoritas mint maupun freeze untuk token ini. Perlakukan itu sebagai tidak diketahui, bukan aman."
     }
   }
 }

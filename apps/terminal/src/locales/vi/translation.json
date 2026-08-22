@@ -3488,7 +3488,14 @@
     "nftItems": "Vật phẩm",
     "nftTraits": "Thuộc tính",
     "nftTicket": "Phiếu lệnh NFT",
-    "nftHoldings": "Vật phẩm của tôi"
+    "nftHoldings": "Vật phẩm của tôi",
+    "memeNew": "Mint mới",
+    "memeGraduating": "Sắp tốt nghiệp",
+    "memeGraduated": "Đã tốt nghiệp",
+    "memeLegendary": "Huyền thoại",
+    "memeTokenStats": "Thống kê token",
+    "memeFlow": "Dòng mua/bán",
+    "memeSafety": "An toàn token"
   },
   "paneDescriptions": {
     "insiderActivity": "Các báo cáo Form 4 gần đây: ai trong công ty đã mua hay bán, bao nhiêu và ở giá nào",
@@ -3576,7 +3583,14 @@
     "nftItems": "Duyệt token của bộ sưu tập kèm giá bán và độ hiếm.",
     "nftTraits": "Mọi giá trị thuộc tính, số token mang nó và độ hiếm tương ứng. Giá sàn theo từng thuộc tính xuất hiện khi nhà cung cấp công bố.",
     "nftTicket": "Mua giá sàn, quét, chào mua, niêm yết một vật phẩm hoặc chấp nhận giá mua.",
-    "nftHoldings": "Những gì ví này đang giữ trong bộ sưu tập, kèm giá vốn và giá mark."
+    "nftHoldings": "Những gì ví này đang giữ trong bộ sưu tập, kèm giá vốn và giá mark.",
+    "memeNew": "Token được mint trong vài giờ qua, mới nhất lên đầu, kèm số holder và dòng tiền sớm.",
+    "memeGraduating": "Token đang leo đường cong bonding, xếp theo mức độ gần với việc chuyển sang một pool thật.",
+    "memeGraduated": "Token đã đi hết đường cong và nay giao dịch trên pool AMM, mới nhất lên đầu.",
+    "memeLegendary": "Memecoin vốn hóa lớn trên mọi chuỗi, xếp theo vốn hóa.",
+    "memeTokenStats": "Vốn hóa, FDV, thanh khoản, holder và tiến độ đường cong bonding của token đang xem.",
+    "memeFlow": "Mua so với bán trên bốn khung thời gian, kèm mức biến động và khối lượng đằng sau mỗi khung.",
+    "memeSafety": "Quyền mint và quyền đóng băng, mức tập trung của holder, và lịch sử của người deploy."
   },
   "multiPrice": {
     "venue": "Sàn",
@@ -3750,7 +3764,8 @@
       "prediction": "Dự đoán",
       "moveLeft": "Chuyển sang trái",
       "moveRight": "Chuyển sang phải",
-      "nft": "NFT"
+      "nft": "NFT",
+      "memecoin": "Memecoin"
     }
   },
   "assetClass": {
@@ -3767,7 +3782,9 @@
     "stocksDescription": "Cổ phiếu qua công ty môi giới, theo lịch của chính sàn. Áp dụng giờ giao dịch, tạm ngừng và quy tắc thanh toán.",
     "predictionDescription": "Hợp đồng về câu trả lời cho một câu hỏi. Trả 1 $ nếu đúng và không gì cả nếu sai.",
     "nft": "NFT",
-    "nftDescription": "Một bộ sưu tập token không thể thay thế. Giá sàn là giá bán rẻ nhất, chào mua là phía mua, và một vị thế là một token cụ thể."
+    "nftDescription": "Một bộ sưu tập token không thể thay thế. Giá sàn là giá bán rẻ nhất, chào mua là phía mua, và một vị thế là một token cụ thể.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Token launchpad trên một đường cong bonding, và những đồng vốn hóa lớn đã tốt nghiệp từ đó. Định giá theo vốn hóa, giao dịch qua một bộ tổng hợp DEX."
   },
   "pluginStore": {
     "registryOffline": "Registry plugin ngoại tuyến. Chỉ hiển thị các plugin đã cài đặt.",
@@ -4265,6 +4282,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "Giá sàn, khối lượng, nguồn cung và người giữ, không cần khóa, cho mọi bộ sưu tập đã lập chỉ mục. Nguồn dự phòng giúp một board NFT nguội có dữ liệu thật."
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Các mặt của launchpad: mint mới, tiến độ đường cong bonding, tốt nghiệp, và những đồng vốn hóa lớn sống lâu hơn cả chúng"
+      },
+      "memecoin-data-provider": {
+        "title": "Nguồn dữ liệu memecoin",
+        "description": "Token launchpad từ các nguồn công khai không cần khóa: mint mới và tiến độ đường cong bonding từ Jupiter, memecoin vốn hóa lớn từ CoinGecko. Không API key và không có máy chủ nào của chúng tôi: mỗi yêu cầu được tính vào chính trình duyệt đã gửi nó."
       }
     },
     "families": {
@@ -4307,6 +4332,10 @@
       "nfts": {
         "label": "NFT",
         "description": "Xếp hạng bộ sưu tập, sổ niêm yết và chào mua, cùng thực thi trên sàn NFT"
+      },
+      "memes": {
+        "label": "Memecoin",
+        "description": "Các bảng launchpad và nguồn dữ liệu không cần khóa đứng sau chúng"
       }
     },
     "familyToggleAria": "Bật hoặc tắt tất cả plugin {{family}}",
@@ -5037,6 +5066,24 @@
         "menuLabel": "Flow",
         "tagline": "Dòng khớp lệnh, rộng hết cỡ.",
         "description": "Giao dịch cá voi trên mọi bộ sưu tập được lập chỉ mục, kèm biến động giá sàn và bảng xếp hạng bên cạnh."
+      },
+      "memecoin-discovery": {
+        "name": "Khám phá memecoin",
+        "tagline": "Bốn cột, mỗi cột một giai đoạn của đường cong.",
+        "description": "Bảng launchpad: mint trong một giờ qua, đang leo đường cong bonding kèm tiến độ tới ngưỡng tốt nghiệp, đã chuyển sang pool thật, và những đồng vốn hóa lớn sống qua chu kỳ của chính mình. Mỗi dòng mang vốn hóa, thanh khoản và mua so với bán, bấm vào một dòng là mở biểu đồ và phiếu swap của nó.",
+        "menuLabel": "Mặc định"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal memecoin",
+        "tagline": "Vốn hóa, dòng tiền, và ai còn quyền mint.",
+        "description": "Bố cục memecoin mặc định: biểu đồ nằm trên dải dòng tiền đặt mua cạnh bán trên bốn khung thời gian, nguồn cung và số holder ở giữa, phần kiểm tra người deploy bên dưới, và phiếu swap bên phải. Không có sổ lệnh: đường cong bonding vốn không có sổ lệnh.",
+        "menuLabel": "Mặc định"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper memecoin",
+        "tagline": "Đường cong bên trái, phiếu lệnh bên phải.",
+        "description": "Dựng để đánh các đợt ra mắt: mint mới và bậc thang tốt nghiệp luôn ở trên màn hình trong khi biểu đồ, dải dòng tiền và phiếu swap lấp phần còn lại. Bảng an toàn nằm dưới phiếu lệnh, vì quyền mint là thứ đáng xem cuối cùng trước khi đặt lệnh.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5090,6 +5137,9 @@
       },
       "nfts": {
         "label": "NFT"
+      },
+      "memecoins": {
+        "label": "Memecoin"
       }
     },
     "screenSizes": {
@@ -6060,6 +6110,10 @@
       "nft": {
         "label": "Thị trường NFT",
         "description": "Xếp hạng bộ sưu tập, giá sàn, niêm yết, chào mua và dòng khớp lệnh"
+      },
+      "launchpad": {
+        "label": "Token launchpad",
+        "description": "Token vừa mint, tiến độ đường cong bonding, tốt nghiệp và memecoin vốn hóa lớn"
       }
     },
     "domains": {
@@ -6793,6 +6847,87 @@
       "basis": "Giá vốn",
       "mark": "Giá mark",
       "pnl": "PnL"
+    }
+  },
+  "memecoins": {
+    "loading": "Đang đọc các launchpad",
+    "retrying": "Đang thử lại",
+    "unavailableBody": "Nguồn dữ liệu launchpad không trả lời. Nó sẽ tự thử lại.",
+    "unknown": "Không rõ",
+    "curveUnknown": "Không có đường cong bonding, hoặc launchpad không công bố ngưỡng",
+    "openChart": "Mở {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Vốn hóa",
+      "age": "Tuổi",
+      "curve": "Đường cong",
+      "since": "Đã qua",
+      "change24h": "24h",
+      "change": "Biến động",
+      "flow": "Mua/Bán",
+      "volume": "KL 24h"
+    },
+    "new": {
+      "title": "Mint mới",
+      "footnote": "Mint trong 6 giờ qua. Số holder nằm cạnh mã token.",
+      "emptyTitle": "Chưa có gì được mint",
+      "emptyBody": "Token mới xuất hiện ở đây vài giây sau giao dịch đầu tiên."
+    },
+    "graduating": {
+      "title": "Sắp tốt nghiệp",
+      "footnote": "Tiến độ đường cong tới lúc chuyển pool. Dấu ngã nghĩa là ước tính.",
+      "emptyTitle": "Chưa có gì gần tốt nghiệp",
+      "emptyBody": "Token xuất hiện ở đây khi đã đi được một phần ba đường cong bonding."
+    },
+    "graduated": {
+      "title": "Đã tốt nghiệp",
+      "footnote": "Đi hết đường cong và chuyển sang pool AMM, 7 ngày qua.",
+      "emptyTitle": "Chưa có đợt tốt nghiệp nào gần đây",
+      "emptyBody": "Token đi hết đường cong bonding sẽ rơi vào đây."
+    },
+    "legendary": {
+      "title": "Huyền thoại",
+      "footnote": "Vốn hóa từ CoinGecko, mỗi đồng mở trên chuỗi có thanh khoản sâu nhất.",
+      "emptyTitle": "Không có đồng vốn hóa lớn nào để hiện",
+      "emptyBody": "Bảng xếp hạng theo vốn hóa không trả lời. Nó sẽ tự thử lại."
+    },
+    "token": {
+      "emptyTitle": "Không phải token launchpad",
+      "emptyBody": "Nguồn dữ liệu launchpad không có gì về địa chỉ này. Có thể nó giao dịch ở một sàn mà bảng này không bao phủ."
+    },
+    "stats": {
+      "marketCap": "Vốn hóa",
+      "fdv": "FDV",
+      "liquidity": "Thanh khoản",
+      "holders": "Holder",
+      "launchpad": "Launchpad",
+      "curve": "Đường cong",
+      "graduated": "Đã tốt nghiệp",
+      "organicScore": "Điểm hữu cơ",
+      "footnote": "Vốn hóa dùng nguồn cung lưu hành; FDV dùng tổng nguồn cung."
+    },
+    "flow": {
+      "window": "Khung",
+      "volume": "Khối lượng",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Đếm là số giao dịch, không phải số người. Khối lượng gộp cả hai chiều.",
+      "emptyTitle": "Chưa có giao dịch",
+      "emptyBody": "Dòng tiền xuất hiện ngay khi token có cú swap đầu tiên."
+    },
+    "safety": {
+      "mintAuthority": "Quyền mint",
+      "freezeAuthority": "Quyền đóng băng",
+      "topHolders": "Holder lớn nhất",
+      "devMints": "Số mint của người deploy",
+      "devMigrations": "{{count}} đã tốt nghiệp",
+      "revoked": "Đã thu hồi",
+      "live": "Còn hiệu lực",
+      "footnote": "Không rõ không có nghĩa là an toàn. Thiếu kiểm tra thì không nói lên điều gì về token.",
+      "emptyTitle": "Chưa công bố kiểm tra",
+      "emptyBody": "Nguồn này không công bố quyền mint hay quyền đóng băng của token. Hãy coi đó là không rõ, không phải là an toàn."
     }
   }
 }

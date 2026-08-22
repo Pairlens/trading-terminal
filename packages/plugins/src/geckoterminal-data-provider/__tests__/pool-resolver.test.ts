@@ -14,8 +14,21 @@ function stubFetchRoutes(routes: Array<{ match: string; json: unknown }>): {
   calls: Array<Captured>
 } {
   const calls: Array<Captured> = []
+  const offline = globalThis.fetch
   globalThis.fetch = mock(async (url: unknown) => {
     const u = String(url)
+    // Only this provider's own host is recorded, and only it is served.
+    //
+    // A stub installed on `globalThis.fetch` catches EVERYTHING, including
+    // work another test file started and never tore down: a connector built
+    // elsewhere schedules a markets load, that test ends, and the load lands
+    // here. Measured, nine such requests from KuCoin, MEXC, Gate and OKX
+    // arrived inside this file's window, which made `toHaveLength(1)` read 10
+    // and looked like a bug in the resolver. Counting only the host under test
+    // is what makes these assertions mean what they say.
+    if (!u.includes('api.geckoterminal.com')) {
+      return (offline as (input: unknown) => Promise<Response>)(url)
+    }
     calls.push({ url: u })
     const route = routes.find((r) => u.includes(r.match))
     if (!route) return new Response('not found', { status: 404 })

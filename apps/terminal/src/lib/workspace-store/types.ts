@@ -26,6 +26,7 @@ export type AssetClass =
   | 'crypto-spot'
   | 'crypto-perp'
   | 'dex'
+  | 'memecoins'
   | 'equities'
   | 'predictions'
   | 'nfts'

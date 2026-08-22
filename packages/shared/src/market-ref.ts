@@ -31,11 +31,18 @@
  * `InstrumentKind` on the instrument), chosen because the URL is a public
  * surface and `/crypto-spot/okx/BTC-USDT` is not a URL anyone wants to read.
  * `normalizeInstrumentClass` is the single table that keeps all three in step.
+ *
+ * `memecoin` is a token, the same way `dex` is, and it routes through the same
+ * connectors. It is a separate class because the two are different products to
+ * trade: a memecoin desk is read in market cap, curve progress, holder count
+ * and buy/sell counts, and a pool desk is read in reserves, fee tier and price
+ * impact. One class would have forced one page shape onto both.
  */
 export type InstrumentClass =
   | 'spot'
   | 'perp'
   | 'dex'
+  | 'memecoin'
   | 'stocks'
   | 'prediction'
   | 'nft'
@@ -44,6 +51,7 @@ export const INSTRUMENT_CLASSES: ReadonlyArray<InstrumentClass> = [
   'spot',
   'perp',
   'dex',
+  'memecoin',
   'stocks',
   'prediction',
   'nft',
@@ -57,7 +65,12 @@ export const INSTRUMENT_CLASSES: ReadonlyArray<InstrumentClass> = [
  * art deployed to Ethereum and to Base is two collections with two floors,
  * while OpenSea and Blur are two tapes for one of them.
  */
-const VENUE_BOUND: ReadonlyArray<InstrumentClass> = ['dex', 'prediction', 'nft']
+const VENUE_BOUND: ReadonlyArray<InstrumentClass> = [
+  'dex',
+  'memecoin',
+  'prediction',
+  'nft',
+]
 
 export function isVenueBoundClass(cls: InstrumentClass): boolean {
   return VENUE_BOUND.includes(cls)
@@ -96,6 +109,7 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   spot: 'spot',
   perp: 'perp',
   dex: 'dex',
+  memecoin: 'memecoin',
   stocks: 'stocks',
   prediction: 'prediction',
   nft: 'nft',
@@ -114,6 +128,8 @@ const CLASS_ALIASES: Readonly<Record<string, InstrumentClass>> = {
   stock: 'stocks',
   // PluginFamilyId / workspace-store facet spelling
   predictions: 'prediction',
+  memecoins: 'memecoin',
+  memes: 'memecoin',
   nfts: 'nft',
 }
 
@@ -126,6 +142,20 @@ export function normalizeInstrumentClass(
 }
 
 /**
+ * Classes a venue serves for free by serving another. One entry: a memecoin
+ * IS a token, so every connector that swaps tokens can swap memecoins, and
+ * asking each of them to restate that in its manifest would be six manifests
+ * agreeing about one fact. The implication runs one way on purpose — a DEX
+ * connector serves memecoins, a memecoin-only venue would not thereby serve
+ * every pool.
+ */
+const IMPLIED_CLASSES: Readonly<
+  Partial<Record<InstrumentClass, ReadonlyArray<InstrumentClass>>>
+> = {
+  dex: ['memecoin'],
+}
+
+/**
  * Whether a venue serves a class, normalizing BOTH sides. Callers hold
  * `MarketAdapterInfo.assetClasses`, which is `AssetClass[]`, and comparing it
  * to a slug without normalizing is the exact bug described above.
@@ -134,7 +164,13 @@ export function marketServesClass(
   assetClasses: ReadonlyArray<string>,
   cls: InstrumentClass,
 ): boolean {
-  return assetClasses.some((a) => normalizeInstrumentClass(a) === cls)
+  return assetClasses.some((a) => {
+    const declared = normalizeInstrumentClass(a)
+    if (declared === cls) return true
+    return declared
+      ? (IMPLIED_CLASSES[declared]?.includes(cls) ?? false)
+      : false
+  })
 }
 
 // ── Id normalization ─────────────────────────────────────────────────
@@ -183,7 +219,7 @@ export function normalizeInstrumentId(
     if (isSolanaAddress(trimmed)) return trimmed
     return trimmed.toLowerCase()
   }
-  if (cls === 'dex') {
+  if (cls === 'dex' || cls === 'memecoin') {
     // A dex id is `base-quote` where the base is normally an ADDRESS, so the
     // two legs cannot share one rule. Separators are canonicalized first,
     // which is safe because no address of either chain contains one, then the

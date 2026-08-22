@@ -3578,7 +3578,14 @@
     "nftItems": "Przedmioty",
     "nftTraits": "Cechy",
     "nftTicket": "Ticket NFT",
-    "nftHoldings": "Moje przedmioty"
+    "nftHoldings": "Moje przedmioty",
+    "memeNew": "Nowe minty",
+    "memeGraduating": "Graduują",
+    "memeGraduated": "Po graduacji",
+    "memeLegendary": "Legendarne",
+    "memeTokenStats": "Statystyki tokena",
+    "memeFlow": "Przepływ kup./sprz.",
+    "memeSafety": "Bezpieczeństwo tokena"
   },
   "paneDescriptions": {
     "insiderActivity": "Najnowsze zgłoszenia Form 4: kto w spółce kupował lub sprzedawał, ile i po jakiej cenie",
@@ -3666,7 +3673,14 @@
     "nftItems": "Przeglądaj tokeny kolekcji wraz z ich cenami sprzedaży i rzadkością.",
     "nftTraits": "Każda wartość cechy z liczbą tokenów, które ją mają, i wynikającą z tego rzadkością. Floor dla cechy pojawia się, gdy dostawca go opublikuje.",
     "nftTicket": "Kup floor, zrób sweep, złóż ofertę, wystaw przedmiot lub przyjmij ofertę kupna.",
-    "nftHoldings": "Co ten portfel posiada w kolekcji, wraz z kosztem zakupu i ceną mark."
+    "nftHoldings": "Co ten portfel posiada w kolekcji, wraz z kosztem zakupu i ceną mark.",
+    "memeNew": "Tokeny zmintowane w ostatnich godzinach, najnowsze na górze, z liczbą holderów i wczesnym przepływem.",
+    "memeGraduating": "Tokeny wspinające się po krzywej bondingu, uszeregowane według tego, jak blisko są migracji do prawdziwej puli.",
+    "memeGraduated": "Tokeny, które przeszły całą krzywą i handlują teraz w puli AMM, najświeższe na górze.",
+    "memeLegendary": "Memecoiny o dużej kapitalizacji ze wszystkich łańcuchów, uszeregowane według kapitalizacji.",
+    "memeTokenStats": "Kapitalizacja, FDV, płynność, holderzy i postęp krzywej bondingu aktywnego tokena.",
+    "memeFlow": "Kupna przeciw sprzedażom na czterech horyzontach, wraz ze zmianą ceny i wolumenem za każdym z nich.",
+    "memeSafety": "Prawo mintowania i zamrażania, koncentracja holderów oraz historia deployera."
   },
   "multiPrice": {
     "venue": "Giełda",
@@ -3840,7 +3854,8 @@
       "prediction": "Prognozy",
       "moveLeft": "Przesuń w lewo",
       "moveRight": "Przesuń w prawo",
-      "nft": "NFT"
+      "nft": "NFT",
+      "memecoin": "Memecoiny"
     }
   },
   "assetClass": {
@@ -3857,7 +3872,9 @@
     "stocksDescription": "Akcje przez brokera, według kalendarza samej giełdy. Obowiązują godziny, zawieszenia i zasady rozliczeń.",
     "predictionDescription": "Kontrakt na odpowiedź na pytanie. Płaci 1 $, jeśli odpowiedź jest trafna, i nic, jeśli nie.",
     "nft": "NFT",
-    "nftDescription": "Kolekcja tokenów niewymienialnych. Floor to najtańsza oferta sprzedaży, oferty to strona kupna, a pozycja to jeden konkretny token."
+    "nftDescription": "Kolekcja tokenów niewymienialnych. Floor to najtańsza oferta sprzedaży, oferty to strona kupna, a pozycja to jeden konkretny token.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Tokeny z launchpadów na krzywej bondingu i te duże kapitalizacje, które z takiej krzywej wyszły. Wyceniane kapitalizacją, handlowane przez agregator DEX."
   },
   "pluginStore": {
     "registryOffline": "Rejestr wtyczek jest offline. Wyświetlane są tylko zainstalowane wtyczki.",
@@ -4359,6 +4376,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "Floor, wolumen, podaż i posiadacze bez klucza, dla każdej zindeksowanej kolekcji. Zapas, dzięki któremu zimny pulpit NFT ma co pokazać."
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Powierzchnie launchpadów: nowe minty, postęp krzywej bondingu, graduacje i duże kapitalizacje, które je przetrwały"
+      },
+      "memecoin-data-provider": {
+        "title": "Kanał memecoinów",
+        "description": "Tokeny z launchpadów z publicznych źródeł bez kluczy: nowe minty i postęp krzywej bondingu z Jupiter, memecoiny o dużej kapitalizacji z CoinGecko. Bez API key i bez naszego serwera: każde zapytanie liczy się przeglądarce, która je wysłała."
       }
     },
     "families": {
@@ -4401,6 +4426,10 @@
       "nfts": {
         "label": "NFT",
         "description": "Rankingi kolekcji, księga wystawionych przedmiotów i ofert oraz egzekucja na giełdach"
+      },
+      "memes": {
+        "label": "Memecoiny",
+        "description": "Tablice launchpadów i bezkluczowy kanał danych za nimi"
       }
     },
     "familyToggleAria": "Włącz lub wyłącz wszystkie wtyczki {{family}}",
@@ -5139,6 +5168,24 @@
         "menuLabel": "Flow",
         "tagline": "Wstęga na całą szerokość.",
         "description": "Sprzedaże wielorybów ze wszystkich zaindeksowanych kolekcji, a obok ruchy floora i tabela rankingowa."
+      },
+      "memecoin-discovery": {
+        "name": "Odkrywanie memecoinów",
+        "tagline": "Cztery kolumny, po jednej na każdy etap krzywej.",
+        "description": "Tablica launchpadu: zmintowane w ostatniej godzinie, wspinające się po krzywej bondingu wraz z postępem do progu graduacji, przeniesione do prawdziwej puli oraz duże kapitalizacje, które przetrwały swój cykl. Każdy wiersz niesie kapitalizację, płynność i kupna przeciw sprzedażom, a kliknięcie otwiera wykres tokena i zlecenie swapu.",
+        "menuLabel": "Domyślny"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal memecoinów",
+        "tagline": "Kapitalizacja, przepływ i kto wciąż może mintować.",
+        "description": "Domyślny układ dla memecoinów: wykres nad paskiem przepływu, który zestawia kupna ze sprzedażami na czterech horyzontach, podaż i liczba holderów pośrodku, audyt deployera pod spodem, a zlecenie swapu po prawej. Bez arkusza zleceń: krzywa bondingu go nie ma.",
+        "menuLabel": "Domyślny"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper memecoinów",
+        "tagline": "Krzywa po lewej, zlecenie po prawej.",
+        "description": "Zbudowany do grania launchy: nowe minty i drabina graduacji zostają na ekranie, a wykres, pasek przepływu i zlecenie swapu wypełniają resztę. Panel bezpieczeństwa siedzi pod zleceniem, bo prawo mintowania to ostatnia rzecz, którą warto sprawdzić przed zleceniem.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5192,6 +5239,9 @@
       },
       "nfts": {
         "label": "NFT"
+      },
+      "memecoins": {
+        "label": "Memecoiny"
       }
     },
     "screenSizes": {
@@ -6172,6 +6222,10 @@
       "nft": {
         "label": "Rynki NFT",
         "description": "Rankingi kolekcji, ceny floor, wystawione przedmioty, oferty i wstęga sprzedaży"
+      },
+      "launchpad": {
+        "label": "Tokeny z launchpadów",
+        "description": "Świeżo zmintowane tokeny, postęp krzywej bondingu, graduacje i memecoiny o dużej kapitalizacji"
       }
     },
     "domains": {
@@ -6939,6 +6993,87 @@
       "basis": "Koszt",
       "mark": "Mark",
       "pnl": "PnL"
+    }
+  },
+  "memecoins": {
+    "loading": "Czytanie launchpadów",
+    "retrying": "Ponawianie",
+    "unavailableBody": "Kanał launchpadu nie odpowiedział. Spróbuje ponownie sam.",
+    "unknown": "Nieznane",
+    "curveUnknown": "Brak krzywej bondingu albo launchpad bez opublikowanego progu",
+    "openChart": "Otwórz {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Kap.",
+      "age": "Wiek",
+      "curve": "Krzywa",
+      "since": "Od",
+      "change24h": "24h",
+      "change": "Zmiana",
+      "flow": "Kup./Sprz.",
+      "volume": "Wol 24h"
+    },
+    "new": {
+      "title": "Nowe minty",
+      "footnote": "Zmintowane w ostatnich 6 godzinach. Liczba holderów obok tickera.",
+      "emptyTitle": "Nic jeszcze nie zmintowano",
+      "emptyBody": "Nowe tokeny pojawiają się tu w kilka sekund po pierwszej transakcji."
+    },
+    "graduating": {
+      "title": "Graduują",
+      "footnote": "Postęp krzywej do migracji. Tylda oznacza szacunek.",
+      "emptyTitle": "Nic blisko graduacji",
+      "emptyBody": "Tokeny pojawiają się tu, gdy przejdą jedną trzecią swojej krzywej bondingu."
+    },
+    "graduated": {
+      "title": "Po graduacji",
+      "footnote": "Przeszły krzywą i trafiły do puli AMM, ostatnie 7 dni.",
+      "emptyTitle": "Brak świeżych graduacji",
+      "emptyBody": "Tokeny, które kończą swoją krzywą bondingu, lądują tutaj."
+    },
+    "legendary": {
+      "title": "Legendarne",
+      "footnote": "Kapitalizacja z CoinGecko, każda otwierana na łańcuchu o największej płynności.",
+      "emptyTitle": "Brak dużych kapitalizacji do pokazania",
+      "emptyBody": "Ranking kapitalizacji nie odpowiedział. Spróbuje ponownie sam."
+    },
+    "token": {
+      "emptyTitle": "To nie jest token z launchpadu",
+      "emptyBody": "Kanał launchpadu nie ma nic o tym adresie. Może handlować na giełdzie, której ta tablica nie obejmuje."
+    },
+    "stats": {
+      "marketCap": "Kapitalizacja",
+      "fdv": "FDV",
+      "liquidity": "Płynność",
+      "holders": "Holderzy",
+      "launchpad": "Launchpad",
+      "curve": "Krzywa",
+      "graduated": "Po graduacji",
+      "organicScore": "Wynik organiczny",
+      "footnote": "Kapitalizacja liczy podaż w obiegu; FDV liczy podaż całkowitą."
+    },
+    "flow": {
+      "window": "Okno",
+      "volume": "Wolumen",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Liczone są transakcje, nie traderzy. Wolumen bierze obie strony razem.",
+      "emptyTitle": "Brak transakcji",
+      "emptyBody": "Przepływ pojawia się, gdy token zaliczy pierwszy swap."
+    },
+    "safety": {
+      "mintAuthority": "Prawo mintowania",
+      "freezeAuthority": "Prawo zamrażania",
+      "topHolders": "Najwięksi holderzy",
+      "devMints": "Minty deployera",
+      "devMigrations": "{{count}} po graduacji",
+      "revoked": "Cofnięte",
+      "live": "Aktywne",
+      "footnote": "Nieznane to nie to samo co bezpieczne. Brak audytu nie mówi o tokenie nic.",
+      "emptyTitle": "Brak opublikowanego audytu",
+      "emptyBody": "To źródło nie opublikowało dla tokena ani prawa mintowania, ani prawa zamrażania. Potraktuj to jako nieznane, nie jako bezpieczne."
     }
   }
 }

@@ -194,7 +194,17 @@ class CcxtVenueRuntime {
 
   /** Everything this venue holds open: sockets, timers, ccxt instances. */
   async destroy(): Promise<void> {
-    await Promise.all([this.hub.destroy(), this.trading.destroy()])
+    // `dispose` sets its flag synchronously, before it awaits anything. That
+    // ordering is the point: the markets provider schedules refreshes behind
+    // `.then`, so a continuation already queued would otherwise fire during
+    // the teardown below and reach the venue after the connector is gone. It
+    // then drains whatever load is already in flight, bounded, because ccxt
+    // owns that promise and it cannot be cancelled.
+    await Promise.all([
+      this.markets.dispose(),
+      this.hub.destroy(),
+      this.trading.destroy(),
+    ])
   }
 
   /**

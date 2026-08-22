@@ -20,6 +20,7 @@ export type CapabilityId =
   | 'market-data:history'
   | 'market-data:events'
   | 'market-data:pool-stats'
+  | 'market-data:launchpad'
   | 'market-data:nft'
   | 'market-data:session'
   | 'market-data:funding'

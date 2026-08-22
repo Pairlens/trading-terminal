@@ -49,6 +49,8 @@ export const BUNDLED_POSTERS: Record<string, string> = {
   'pairlens-community': '/logo512.png',
   'pairlens-core': '/logo512.png',
   'pairlens-dex': '/logo512.png',
+  'pairlens-memecoins': '/logo512.png',
+  'memecoin-data-provider': '/logo512.png',
   'pairlens-equities': '/logo512.png',
   'pairlens-intelligence': '/logo512.png',
   'pairlens-predictions': '/logo512.png',

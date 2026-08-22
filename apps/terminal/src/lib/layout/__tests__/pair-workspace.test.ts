@@ -90,6 +90,7 @@ describe('pairWorkspaceFor', () => {
         'trade-entry',
       ],
       dex: ['chart', 'trade-entry'],
+      memecoin: ['chart', 'trade-entry', 'meme-token-stats', 'meme-flow'],
       // NFTs chart through the ORDINARY chart pane: a floor over time is a
       // candle series like any other, so the board keeps drawings, indicators
       // and the timeframe control rather than reinventing them. Its trading

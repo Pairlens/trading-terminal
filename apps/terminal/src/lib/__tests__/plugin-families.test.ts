@@ -66,18 +66,18 @@ describe('VITE_PAIRLENS_DISABLED_FAMILIES parsing', () => {
   })
 
   test('unknown ids are ignored with a single warning', () => {
-    // 'memes' and 'commodities' are reserved-but-unshipped family ids. When
-    // one of them becomes real, swap in another — the case being pinned is
-    // that a typo or a stale deployment variable is warned about once and
-    // then ignored, never that it silently disables a family that exists.
+    // Neither 'commodities' nor 'bonds' is a family. When one of them becomes
+    // real, swap in another — the case being pinned is that a typo or a stale
+    // deployment variable is warned about once and then ignored, never that it
+    // silently disables a family that exists.
     const warnings: Array<string> = []
-    const excluded = parseDisabledFamilies('memes,commodities,dex', (m) =>
+    const excluded = parseDisabledFamilies('commodities,bonds,dex', (m) =>
       warnings.push(m),
     )
     expect([...excluded]).toEqual(['dex'])
     expect(warnings).toHaveLength(1)
-    expect(warnings[0]).toContain('memes')
     expect(warnings[0]).toContain('commodities')
+    expect(warnings[0]).toContain('bonds')
   })
 
   test('the futures family is real and excludable', () => {

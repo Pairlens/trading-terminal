@@ -13,6 +13,9 @@ On-chain markets work like any other market in Pairlens. Same chart, same
 ticket, same guardrails. What changes is where the order goes and what secret
 signs it.
 
+Launchpad tokens have their own class and their own board. If you are here for
+memecoins specifically, see [memecoins](/docs/memecoins).
+
 ## Supported chains
 
 **Solana**, routed through Jupiter.

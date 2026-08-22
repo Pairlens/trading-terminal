@@ -73,6 +73,11 @@ export const ASSET_CLASS_FILTER_FOR: Record<InstrumentClass, AssetClassFilter> =
     spot: 'crypto',
     perp: 'crypto-perp',
     dex: 'dex',
+    // A memecoin instrument is catalogued by its connector as `dex` — the
+    // class splits the DESK, not the discovery catalog — so the picker opens
+    // on the chip that will actually match rows. A `memecoin` chip here would
+    // filter for a class no instrument carries and land on an empty list.
+    memecoin: 'dex',
     stocks: 'stocks',
     prediction: 'prediction',
     nft: 'nft',
@@ -311,7 +316,11 @@ export function pairEntryForRef(
   ref: InstrumentRef,
   bySymbol: Map<string, PairEntry>,
 ): PairEntry | null {
-  if (ref.cls === 'dex') {
+  // `memecoin` alongside `dex`: the two arms share one id grammar
+  // (`address-QUOTE`), one directory and one venue binding. Gating on `dex`
+  // alone left a memecoin's header, watchlist row and recents entry showing
+  // the raw 44-character mint instead of its ticker.
+  if (ref.cls === 'dex' || ref.cls === 'memecoin') {
     if (!ref.market) return null
     const [address, quote] = splitDexId(ref.id)
     const pinned = lookupDisplayToken(ref.market, address)
@@ -322,6 +331,8 @@ export function pairEntryForRef(
       name: pinned.name ?? pinned.symbol,
       base: pinned.symbol,
       quote,
+      // The picker's own filter vocabulary, where a memecoin is catalogued
+      // as `dex` — see ASSET_CLASS_FILTER_FOR above.
       assetClass: 'dex',
       categories: [],
       rank: Number.MAX_SAFE_INTEGER,

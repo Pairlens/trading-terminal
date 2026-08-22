@@ -155,6 +155,12 @@ export function trimMarkets(
  * must not await, so the cached table is read into memory once (asynchronously,
  * on the first touch) and applied synchronously from then on.
  */
+/**
+ * How long `dispose` waits for an in-flight markets load before abandoning it.
+ * Short enough that switching venue stays instant.
+ */
+const DISPOSE_DRAIN_MS = 2_000
+
 export class CcxtMarketsProvider {
   private cached: CachedMarkets | null = null
   private loading: Promise<CachedMarkets | null> | null = null
@@ -166,6 +172,20 @@ export class CcxtMarketsProvider {
   /** True while `appliedTo` holds stand-in markets rather than the real table. */
   private synthetic = false
   private seeds = new Map<string, CcxtMarketSeed>()
+  /**
+   * Set by `dispose`. Every deferred continuation below checks it before
+   * reaching the network.
+   *
+   * The whole class is built on fire-and-forget refreshes (`void this.refresh`
+   * inside a `.then`), which is right for the product: a subscribe must return
+   * synchronously and the table catches up. What was missing is a way to say
+   * "stop". Without it a destroyed connector still called its venue: tearing
+   * down a Bitget plugin left `loadMarkets(true)` scheduled, and two live
+   * requests to api.bitget.com went out afterwards. In a test that is a fetch
+   * escaping into the next file's stub; in the terminal it is a venue the user
+   * has disconnected still being talked to.
+   */
+  private disposed = false
 
   constructor(
     private readonly exchangeId: string,
@@ -182,6 +202,35 @@ export class CcxtMarketsProvider {
 
   private get key(): string {
     return `${this.exchangeId}:v${MARKETS_SCHEMA_VERSION}`
+  }
+
+  /**
+   * Stop scheduling work, and resolve once whatever is already running has
+   * settled. Idempotent.
+   *
+   * Two halves, because they solve different problems. The flag stops NEW
+   * refreshes: continuations queued behind the storage read would otherwise
+   * reach the venue after the connector is gone. Awaiting `ready` covers the
+   * other half, an `exchange.loadMarkets(true)` that is already mid-flight.
+   * That one cannot be cancelled at all, because ccxt owns the promise and
+   * issues several requests inside it, so the only way to know it is finished
+   * is to wait for it.
+   *
+   * Bounded, on the same reasoning as the `exchange.close()` race in
+   * `exchange-host.ts`: teardown runs when a user switches venue, and a slow
+   * venue must not hold that up. Past the bound the load is abandoned, which
+   * is the pre-existing behaviour and no worse than it was.
+   */
+  async dispose(timeoutMs: number = DISPOSE_DRAIN_MS): Promise<void> {
+    this.disposed = true
+    const pending = this.ready
+    this.refreshingFor = null
+    this.ready = null
+    if (!pending) return
+    await Promise.race([
+      pending.catch(() => {}),
+      new Promise<void>((resolve) => setTimeout(resolve, timeoutMs)),
+    ])
   }
 
   /** In-memory table, if the cache has already been read. */
@@ -241,7 +290,7 @@ export class CcxtMarketsProvider {
       this.appliedTo = exchange
       this.synthetic = false
       this.seeds.clear()
-      if (Date.now() - cached.savedAt > this.ttlMs) {
+      if (!this.disposed && Date.now() - cached.savedAt > this.ttlMs) {
         void this.refresh(exchange).catch(() => {})
       }
       return 'cache'
@@ -254,6 +303,9 @@ export class CcxtMarketsProvider {
     // synchronous either way.
     void this.prefetch()
       .then((stored) => {
+        // The await above is where a dispose lands: this continuation runs on
+        // a later tick, long after the connector may have been torn down.
+        if (this.disposed) return
         if (stored && stored.markets.length > 0) {
           this.applyPrefetched(exchange, stored)
         } else {
@@ -328,7 +380,7 @@ export class CcxtMarketsProvider {
         this.synthetic = false
         this.seeds.clear()
       }
-      if (Date.now() - cached.savedAt > this.ttlMs) {
+      if (!this.disposed && Date.now() - cached.savedAt > this.ttlMs) {
         void this.refresh(exchange).catch(() => {})
       }
       return
@@ -348,6 +400,9 @@ export class CcxtMarketsProvider {
    * to a no-op and leave the stand-in table in place.
    */
   private refresh(exchange: CcxtExchangeLike): Promise<void> {
+    // The last gate before the wire. Guarding only the callers would leave a
+    // refresh already queued behind an await free to fire.
+    if (this.disposed) return Promise.resolve()
     if (this.ready && this.refreshingFor === exchange) return this.ready
     this.refreshingFor = exchange
     // Initialized before the IIFE so the `finally` can compare against it —
@@ -357,6 +412,11 @@ export class CcxtMarketsProvider {
     run = (async () => {
       try {
         await exchange.loadMarkets(true)
+        // Disposed while the load was in flight. The requests are already
+        // spent and cannot be recalled, but the RESULT is another matter:
+        // adopting it would write a retired connector's table into storage and
+        // mark a discarded exchange instance as carrying real markets.
+        if (this.disposed) return
         const markets = exchange.markets
         if (!markets) return
         // A load superseded by a rebuilt instance's own refresh still caches

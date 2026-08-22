@@ -328,6 +328,43 @@ const FIRST_PARTY_COMPONENTS: Record<
       })),
     ),
   },
+  'pairlens-memecoins': {
+    'meme-new': lazyChunk(() =>
+      import('@/components/memecoins/launchpad-column-pane').then((m) => ({
+        default: m.MemeNewPane,
+      })),
+    ),
+    'meme-graduating': lazyChunk(() =>
+      import('@/components/memecoins/launchpad-column-pane').then((m) => ({
+        default: m.MemeGraduatingPane,
+      })),
+    ),
+    'meme-graduated': lazyChunk(() =>
+      import('@/components/memecoins/launchpad-column-pane').then((m) => ({
+        default: m.MemeGraduatedPane,
+      })),
+    ),
+    'meme-legendary': lazyChunk(() =>
+      import('@/components/memecoins/launchpad-column-pane').then((m) => ({
+        default: m.MemeLegendaryPane,
+      })),
+    ),
+    'meme-token-stats': lazyChunk(() =>
+      import('@/components/memecoins/memecoin-token-panes').then((m) => ({
+        default: m.MemeTokenStatsPane,
+      })),
+    ),
+    'meme-flow': lazyChunk(() =>
+      import('@/components/memecoins/memecoin-token-panes').then((m) => ({
+        default: m.MemeFlowPane,
+      })),
+    ),
+    'meme-safety': lazyChunk(() =>
+      import('@/components/memecoins/memecoin-token-panes').then((m) => ({
+        default: m.MemeSafetyPane,
+      })),
+    ),
+  },
   'pairlens-nfts': {
     'nft-chains': lazyChunk(() =>
       import('@/components/nft/nft-chains-pane').then((m) => ({

@@ -4,7 +4,7 @@ description: Add venues, AI providers, panels, indicators, and themes from the P
 group: traders
 order: 9
 eyebrow: For traders
-updated: 17 AUG 2026
+updated: 22 AUG 2026
 readTime: 7 min read
 ---
 
@@ -82,7 +82,8 @@ app. The same pattern works for any class: **Crypto Futures** is Pairlens CEX
 Futures plus Binance, KuCoin and Kraken perpetuals; **Equities** is Alpaca plus
 Pairlens Equities, which ships the stock layouts; **On-Chain DEX** is the chain
 connectors plus the LI.FI bridge, the Helius Solana RPC provider, the DEX data
-providers and Pairlens DEX, which ships the on-chain layouts. The Installed
+providers and Pairlens DEX, which ships the on-chain layouts; **Memecoins** is
+the Memecoin Feed and Pairlens Memecoins, which ships the launchpad board. The Installed
 tab's family groups tell you exactly which plugins are in each one.
 
 If you only want them out of the way rather than gone, the family switch on the
@@ -100,6 +101,7 @@ that way rather than listing sixty-odd entries alphabetically.
 | **Crypto Exchanges**   | The 14 centralized spot venues                                                                                        |
 | **Crypto Futures**     | Binance, KuCoin and Kraken perpetuals, the positions panel, the perps desk, Coinglass Liquidations                    |
 | **On-Chain DEX**       | Swap venues, the LI.FI bridge, the Solana RPC provider, DEX data providers, and Pairlens DEX for the on-chain layouts |
+| **Memecoins**          | The keyless launchpad feed and Pairlens Memecoins for the four-column board and the memecoin layouts                  |
 | **Equities**           | Alpaca, and Pairlens Equities for the stock layouts                                                                   |
 | **Prediction Markets** | Kalshi, Polymarket, the event panels, the prediction layouts                                                          |
 | **AI Providers**       | Bring-your-own-key models and web search                                                                              |

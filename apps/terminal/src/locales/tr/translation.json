@@ -3488,7 +3488,14 @@
     "nftItems": "Öğeler",
     "nftTraits": "Özellikler",
     "nftTicket": "NFT İşlem Paneli",
-    "nftHoldings": "Öğelerim"
+    "nftHoldings": "Öğelerim",
+    "memeNew": "Yeni Mintler",
+    "memeGraduating": "Mezun Oluyor",
+    "memeGraduated": "Mezun Oldu",
+    "memeLegendary": "Efsaneler",
+    "memeTokenStats": "Token İstatistiği",
+    "memeFlow": "Alım/Satım Akışı",
+    "memeSafety": "Token Güvenliği"
   },
   "paneDescriptions": {
     "insiderActivity": "Son Form 4 bildirimleri: şirket içinden kim aldı ya da sattı, ne kadar ve hangi fiyattan",
@@ -3576,7 +3583,14 @@
     "nftItems": "Koleksiyonun token'larına satış fiyatları ve nadirlikleriyle göz at.",
     "nftTraits": "Her özellik değeri, kaç token'ın taşıdığı ve bunun onları ne kadar nadir yaptığıyla birlikte. Özellik bazlı tabanlar, bir sağlayıcı yayımladığında gelir.",
     "nftTicket": "Tabanı al, süpür, teklif ver, bir öğe listele veya bir teklifi kabul et.",
-    "nftHoldings": "Bu cüzdanın koleksiyonda tuttukları, maliyet ve işaret fiyatıyla birlikte."
+    "nftHoldings": "Bu cüzdanın koleksiyonda tuttukları, maliyet ve işaret fiyatıyla birlikte.",
+    "memeNew": "Son birkaç saatte mintlenen tokenlar, en yenisi üstte, holder sayısı ve erken akışla birlikte.",
+    "memeGraduating": "Bonding eğrisini tırmanan tokenlar, gerçek bir havuza geçmeye ne kadar yakın olduklarına göre sıralanır.",
+    "memeGraduated": "Eğrisini tamamlayıp artık bir AMM havuzunda işlem gören tokenlar, en yenisi üstte.",
+    "memeLegendary": "Tüm zincirlerdeki yüksek piyasa değerli memecoinler, piyasa değerine göre sıralanır.",
+    "memeTokenStats": "Aktif tokenın piyasa değeri, FDV, likidite, holder sayısı ve bonding eğrisi ilerlemesi.",
+    "memeFlow": "Dört zaman aralığında alımlara karşı satımlar, her birinin arkasındaki fiyat hareketi ve işlem hacmiyle.",
+    "memeSafety": "Mint ve freeze yetkisi, holder yoğunlaşması ve dağıtıcının geçmişi."
   },
   "multiPrice": {
     "venue": "Borsa",
@@ -3750,7 +3764,8 @@
       "prediction": "Tahminler",
       "moveLeft": "Sola taşı",
       "moveRight": "Sağa taşı",
-      "nft": "NFT'ler"
+      "nft": "NFT'ler",
+      "memecoin": "Memecoinler"
     }
   },
   "assetClass": {
@@ -3767,7 +3782,9 @@
     "stocksDescription": "Bir aracı kurum üzerinden hisse; borsanın kendi takvimine tabidir. Seans saatleri, durdurmalar ve takas kuralları geçerlidir.",
     "predictionDescription": "Bir sorunun cevabı üzerine sözleşme. Cevap doğruysa 1 $ öder, değilse hiçbir şey.",
     "nft": "NFT",
-    "nftDescription": "Değiştirilemez token'lardan oluşan bir koleksiyon. Taban en ucuz satış, teklifler alış tarafı, ve bir pozisyon tek bir token'dır."
+    "nftDescription": "Değiştirilemez token'lardan oluşan bir koleksiyon. Taban en ucuz satış, teklifler alış tarafı, ve bir pozisyon tek bir token'dır.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Bonding eğrisi üzerindeki launchpad tokenları ve bir eğriden mezun olmuş yüksek piyasa değerli coinler. Piyasa değeriyle fiyatlanır, bir DEX toplayıcısı üzerinden işlem görür."
   },
   "pluginStore": {
     "registryOffline": "Eklenti kayıt defteri çevrimdışı. Yalnızca kurulu eklentiler gösteriliyor.",
@@ -4265,6 +4282,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "Anahtarsız taban fiyat, hacim, arz ve sahipler; dizine alınmış her koleksiyon için. Soğuk bir NFT panosuna gösterecek gerçek bir şey veren yedek."
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Launchpad yüzeyleri: yeni mintler, bonding eğrisi ilerlemesi, mezuniyetler ve onlardan uzun yaşayan yüksek piyasa değerli coinler"
+      },
+      "memecoin-data-provider": {
+        "title": "Memecoin Akışı",
+        "description": "Anahtarsız açık kaynaklardan launchpad tokenları: yeni mintler ve bonding eğrisi ilerlemesi Jupiter'dan, yüksek piyasa değerli memecoinler CoinGecko'dan. API key yok, bize ait sunucu da yok: her istek onu gönderen tarayıcının hesabına yazılır."
       }
     },
     "families": {
@@ -4307,6 +4332,10 @@
       "nfts": {
         "label": "NFT'ler",
         "description": "Koleksiyon sıralamaları, listeleme ve teklif defteri, ve pazar yerinde emir iletimi"
+      },
+      "memes": {
+        "label": "Memecoinler",
+        "description": "Launchpad panoları ve arkalarındaki anahtarsız akış"
       }
     },
     "familyToggleAria": "Tüm {{family}} eklentilerini etkinleştir veya devre dışı bırak",
@@ -5037,6 +5066,24 @@
         "menuLabel": "Akış",
         "tagline": "İşlem akışı, tam genişlikte.",
         "description": "İndekslenen tüm koleksiyonlardaki balina satışları, yanında taban hareketleri ve sıralama tablosu."
+      },
+      "memecoin-discovery": {
+        "name": "Memecoin Keşfi",
+        "tagline": "Dört sütun, eğrinin her aşaması için bir tane.",
+        "description": "Launchpad panosu: son bir saatte mintlenenler, mezuniyet eşiğine kalan ilerlemeyle bonding eğrisini tırmananlar, gerçek bir havuza geçenler ve kendi döngüsünden sağ çıkan yüksek piyasa değerli coinler. Her satırda piyasa değeri, likidite ve alımlara karşı satımlar var; bir satıra tıklamak onun grafiğini ve bir takas emrini açar.",
+        "menuLabel": "Varsayılan"
+      },
+      "memecoin-terminal": {
+        "name": "Memecoin Terminali",
+        "tagline": "Piyasa değeri, akış ve kimin hâlâ mintleyebildiği.",
+        "description": "Varsayılan memecoin düzeni: alımları dört zaman aralığında satımlarla karşılaştıran akış şeridinin üstünde bir grafik, ortada arz ve holder sayısı, altında dağıtıcı denetimi, sağda takas emri. Emir defteri yok: bir bonding eğrisinde emir defteri olmaz.",
+        "menuLabel": "Varsayılan"
+      },
+      "memecoin-sniper": {
+        "name": "Memecoin Sniper",
+        "tagline": "Eğri solda, emir sağda.",
+        "description": "Lansmanları çalışmak için kuruldu: yeni mintler ve mezuniyet merdiveni ekranda kalırken grafik, akış şeridi ve takas emri geri kalanı doldurur. Güvenlik paneli emrin altında durur, çünkü emir vermeden önce bakılacak son şey mint yetkisidir.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5090,6 +5137,9 @@
       },
       "nfts": {
         "label": "NFT'ler"
+      },
+      "memecoins": {
+        "label": "Memecoinler"
       }
     },
     "screenSizes": {
@@ -6060,6 +6110,10 @@
       "nft": {
         "label": "NFT Piyasaları",
         "description": "Koleksiyon sıralamaları, taban fiyatlar, listelemeler, teklifler ve satış akışı"
+      },
+      "launchpad": {
+        "label": "Launchpad Tokenları",
+        "description": "Yeni mintlenen tokenlar, bonding eğrisi ilerlemesi, mezuniyetler ve yüksek piyasa değerli memecoinler"
       }
     },
     "domains": {
@@ -6793,6 +6847,87 @@
       "basis": "Maliyet",
       "mark": "İşaret",
       "pnl": "K/Z"
+    }
+  },
+  "memecoins": {
+    "loading": "Launchpad'ler okunuyor",
+    "retrying": "Yeniden deneniyor",
+    "unavailableBody": "Launchpad akışı yanıt vermedi. Kendi kendine yeniden deneyecek.",
+    "unknown": "Bilinmiyor",
+    "curveUnknown": "Bonding eğrisi yok ya da eşiğini yayımlamayan bir launchpad",
+    "openChart": "{{symbol}} aç",
+    "columns": {
+      "token": "Token",
+      "mcap": "P. değeri",
+      "age": "Yaş",
+      "curve": "Eğri",
+      "since": "Süre",
+      "change24h": "24s",
+      "change": "Değişim",
+      "flow": "Alım/Satım",
+      "volume": "Hac 24s"
+    },
+    "new": {
+      "title": "Yeni Mintler",
+      "footnote": "Son 6 saatte mintlendi. Holder sayısı sembolün yanında.",
+      "emptyTitle": "Henüz mintlenen yok",
+      "emptyBody": "Yeni tokenlar ilk işlemlerinden saniyeler sonra burada belirir."
+    },
+    "graduating": {
+      "title": "Mezun Oluyor",
+      "footnote": "Geçişe kalan eğri ilerlemesi. Tilde işareti tahmini gösterir.",
+      "emptyTitle": "Mezuniyete yakın bir şey yok",
+      "emptyBody": "Tokenlar bonding eğrisinin üçte birini tırmandıklarında burada belirir."
+    },
+    "graduated": {
+      "title": "Mezun Oldu",
+      "footnote": "Eğriyi tamamlayıp bir AMM havuzuna geçti, son 7 gün.",
+      "emptyTitle": "Yakın zamanda mezuniyet yok",
+      "emptyBody": "Bonding eğrisini tamamlayan tokenlar buraya düşer."
+    },
+    "legendary": {
+      "title": "Efsaneler",
+      "footnote": "Piyasa değerleri CoinGecko’dan; her biri en derin likiditeye sahip zincirde açılır.",
+      "emptyTitle": "Gösterilecek yüksek piyasa değerli coin yok",
+      "emptyBody": "Piyasa değeri sıralaması yanıt vermedi. Kendi kendine yeniden deneyecek."
+    },
+    "token": {
+      "emptyTitle": "Launchpad tokenı değil",
+      "emptyBody": "Launchpad akışında bu adresle ilgili hiçbir şey yok. Bu panonun kapsamadığı bir borsada işlem görüyor olabilir."
+    },
+    "stats": {
+      "marketCap": "Piyasa değeri",
+      "fdv": "FDV",
+      "liquidity": "Likidite",
+      "holders": "Holder",
+      "launchpad": "Launchpad",
+      "curve": "Eğri",
+      "graduated": "Mezun oldu",
+      "organicScore": "Organik skor",
+      "footnote": "Piyasa değeri dolaşımdaki arzı, FDV toplam arzı kullanır."
+    },
+    "flow": {
+      "window": "Aralık",
+      "volume": "Hacim",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Sayılan işlemlerdir, yatırımcılar değil. Hacim iki tarafı birden alır.",
+      "emptyTitle": "Henüz işlem yok",
+      "emptyBody": "Token ilk takasını yaptığı anda akış belirir."
+    },
+    "safety": {
+      "mintAuthority": "Mint yetkisi",
+      "freezeAuthority": "Freeze yetkisi",
+      "topHolders": "En büyük holderlar",
+      "devMints": "Dağıtıcının mintleri",
+      "devMigrations": "{{count}} mezun oldu",
+      "revoked": "Kaldırıldı",
+      "live": "Aktif",
+      "footnote": "Bilinmiyor, güvenli demek değildir. Denetimin olmaması token hakkında hiçbir şey söylemez.",
+      "emptyTitle": "Yayımlanmış denetim yok",
+      "emptyBody": "Bu kaynak token için ne mint ne de freeze yetkisi yayımladı. Bunu güvenli değil, bilinmiyor olarak ele al."
     }
   }
 }

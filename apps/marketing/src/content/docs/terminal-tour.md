@@ -4,7 +4,7 @@ description: The left nav, the workspace grid, the pair header, and the search p
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 8 min read
 ---
 
@@ -70,8 +70,9 @@ Cross-Chain on-chain, Company on stocks, Race on predictions.
 
 On Discovery those layouts are the tabs beside the Pairlens wordmark, each in
 its asset class's own colour, and you can drag them into the order you work
-in. Only one of the five boards is a list of pairs: futures opens on funding
-and basis, DEX on chains and pools, equities on the session and the calendars,
+in. Only one of the boards is a list of pairs: futures opens on funding and
+basis, DEX on chains and pools, memecoins on four columns of launchpad tokens,
+NFTs on chains and collections, equities on the session and the calendars,
 predictions on the event board. Full details in [panels](/docs/panels), and
 the layout model in [workspaces](/docs/workspaces).
 
@@ -97,8 +98,8 @@ shows stream health, and turns to **Reconnecting** if a socket goes quiet, for
 instance after your laptop wakes from sleep.
 
 Right beside the symbol is a coloured badge naming what you are actually
-trading: **SPOT**, **PERP**, **DEX**, **STOCK** or **EVENT**. The five classes
-settle differently and an order means a different thing on each, so the badge
+trading: **SPOT**, **PERP**, **DEX**, **MEME**, **STOCK** or **EVENT**. The
+classes settle differently and an order means a different thing on each, so the badge
 says which rather than leaving it encoded in the shape of the ticker. Three of
 them add the detail that changes the answer: a pool names its chain (DEX ·
 Solana), a stock names the session when it is outside regular hours (STOCK ·
@@ -107,7 +108,7 @@ Pre-market), an event says whether it is a two-sided question or a field (EVENT
 
 Each class keeps its colour everywhere it appears: the Discovery tabs, the
 markets scanner chips and the pair-picker filters on the phone all use the same
-five. On a narrow window the badge collapses to its icon so the ticker keeps
+palette. On a narrow window the badge collapses to its icon so the ticker keeps
 its characters.
 
 The venue button beside it lists only the venues that can serve what you are

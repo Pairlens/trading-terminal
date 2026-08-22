@@ -41,8 +41,10 @@ describe('family table', () => {
   test('isPluginFamilyId accepts only declared ids', () => {
     expect(isPluginFamilyId('predictions')).toBe(true)
     expect(isPluginFamilyId('cex-futures')).toBe(true)
-    // Reserved but not shipped yet.
-    expect(isPluginFamilyId('memes')).toBe(false)
+    expect(isPluginFamilyId('memes')).toBe(true)
+    // Not a family, and not reserved as one either. Swap it if commodities
+    // ever ship: the point of the case is an id shaped like a real one.
+    expect(isPluginFamilyId('commodities')).toBe(false)
     expect(isPluginFamilyId(undefined)).toBe(false)
     expect(isPluginFamilyId(3)).toBe(false)
   })
@@ -61,7 +63,7 @@ describe('pluginFamilyOf', () => {
 
   test('a bogus declared family falls through to the shape rules', () => {
     const bogus = manifest({
-      metadata: { family: 'memes', assetClass: 'dex' },
+      metadata: { family: 'commodities', assetClass: 'dex' },
     })
     expect(pluginFamilyOf(bogus)).toBe('dex')
   })

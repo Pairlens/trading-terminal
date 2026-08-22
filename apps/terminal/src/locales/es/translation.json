@@ -3488,7 +3488,14 @@
     "nftItems": "Artículos",
     "nftTraits": "Rasgos",
     "nftTicket": "Ticket NFT",
-    "nftHoldings": "Mis artículos"
+    "nftHoldings": "Mis artículos",
+    "memeNew": "Nuevos mints",
+    "memeGraduating": "Graduándose",
+    "memeGraduated": "Graduados",
+    "memeLegendary": "Legendarios",
+    "memeTokenStats": "Datos del token",
+    "memeFlow": "Flujo compra/venta",
+    "memeSafety": "Seguridad del token"
   },
   "paneDescriptions": {
     "insiderActivity": "Declaraciones Form 4 recientes: quién dentro de la empresa compró o vendió, cuánto y a qué precio",
@@ -3576,7 +3583,14 @@
     "nftItems": "Explora los tokens de la colección con su precio de venta y su rareza.",
     "nftTraits": "Cada valor de rasgo con cuántos tokens lo llevan y lo raro que eso los hace. Los suelos por rasgo llegan cuando un proveedor los publica.",
     "nftTicket": "Compra el suelo, barre listados, oferta, lista un artículo o acepta la mejor oferta.",
-    "nftHoldings": "Lo que esta wallet tiene en la colección, con su coste y su marcado."
+    "nftHoldings": "Lo que esta wallet tiene en la colección, con su coste y su marcado.",
+    "memeNew": "Tokens minteados en las últimas horas, los más nuevos primero, con holders y flujo temprano.",
+    "memeGraduating": "Tokens subiendo por una curva de bonding, ordenados por lo cerca que están de migrar a un pool real.",
+    "memeGraduated": "Tokens que completaron su curva y ya cotizan en un pool AMM, los más recientes primero.",
+    "memeLegendary": "Memecoins de gran capitalización en todas las cadenas, ordenadas por capitalización.",
+    "memeTokenStats": "Capitalización, FDV, liquidez, holders y avance de la curva de bonding del token activo.",
+    "memeFlow": "Compras contra ventas en cuatro horizontes, con la variación y el volumen negociado detrás de cada uno.",
+    "memeSafety": "Autoridad de mint y de congelación, concentración de holders e historial del deployer."
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -3750,7 +3764,8 @@
       "prediction": "Predicciones",
       "moveLeft": "Mover a la izquierda",
       "moveRight": "Mover a la derecha",
-      "nft": "NFTs"
+      "nft": "NFTs",
+      "memecoin": "Memecoins"
     }
   },
   "assetClass": {
@@ -3767,7 +3782,9 @@
     "stocksDescription": "Acciones a través de un bróker, con el calendario de la bolsa. Aplican horarios, suspensiones y reglas de liquidación.",
     "predictionDescription": "Un contrato sobre la respuesta a una pregunta. Paga 1 $ si la respuesta es correcta y nada si no lo es.",
     "nft": "NFT",
-    "nftDescription": "Una colección de tokens no fungibles. El suelo es la venta más barata, las ofertas son el lado de la compra, y una posición es un token concreto."
+    "nftDescription": "Una colección de tokens no fungibles. El suelo es la venta más barata, las ofertas son el lado de la compra, y una posición es un token concreto.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Tokens de launchpad sobre una curva de bonding, y las grandes capitalizaciones que salieron de una. Se cotizan por capitalización y se negocian a través de un agregador DEX."
   },
   "pluginStore": {
     "registryOffline": "El registro de plugins está sin conexión. Mostrando solo plugins instalados.",
@@ -4265,6 +4282,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "Precio suelo, volumen, suministro y holders sin clave, para cualquier colección indexada. El respaldo que le da algo real a un tablero NFT en frío."
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Superficies de launchpad: nuevos mints, avance de la curva de bonding, graduaciones y las grandes capitalizaciones que las sobrevivieron"
+      },
+      "memecoin-data-provider": {
+        "title": "Feed de memecoins",
+        "description": "Tokens de launchpad desde fuentes públicas sin clave: nuevos mints y avance de la curva de bonding desde Jupiter, memecoins de gran capitalización desde CoinGecko. Sin API key y sin ningún servidor nuestro: cada petición se cuenta contra el navegador que la hizo."
       }
     },
     "families": {
@@ -4307,6 +4332,10 @@
       "nfts": {
         "label": "NFTs",
         "description": "Rankings de colecciones, el libro de listados y ofertas, y ejecución en las plataformas"
+      },
+      "memes": {
+        "label": "Memecoins",
+        "description": "Tableros de launchpad y el feed sin claves que hay detrás"
       }
     },
     "familyToggleAria": "Activar o desactivar todos los plugins de {{family}}",
@@ -5037,6 +5066,24 @@
         "menuLabel": "Flujo",
         "tagline": "La cinta, a todo el ancho.",
         "description": "Ventas de ballenas en todas las colecciones indexadas, con los movers de suelo y la tabla de rankings al lado."
+      },
+      "memecoin-discovery": {
+        "name": "Descubrimiento de memecoins",
+        "tagline": "Cuatro columnas, una por cada etapa de la curva.",
+        "description": "El tablero del launchpad: minteados en la última hora, subiendo por la curva de bonding con el avance hacia el umbral de graduación, migrados a un pool real, y las grandes capitalizaciones que sobrevivieron a su ciclo. Cada fila lleva capitalización, liquidez y compras contra ventas, y al hacer clic en una se abre su gráfico y un ticket de swap.",
+        "menuLabel": "Predeterminado"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal de memecoins",
+        "tagline": "Capitalización, flujo y quién puede seguir minteando.",
+        "description": "El layout de memecoins por defecto: un gráfico sobre la tira de flujo que pone compras contra ventas en cuatro horizontes, el suministro y el número de holders en el centro, la auditoría del deployer debajo y un ticket de swap a la derecha. Sin libro de órdenes: una curva de bonding no tiene.",
+        "menuLabel": "Predeterminado"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper de memecoins",
+        "tagline": "La curva a la izquierda, el ticket a la derecha.",
+        "description": "Pensado para trabajar lanzamientos: los nuevos mints y la escalera de graduación quedan en pantalla mientras el gráfico, la tira de flujo y el ticket de swap ocupan el resto. El panel de seguridad va bajo el ticket, porque la autoridad de mint es lo último que conviene mirar antes de una orden.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5090,6 +5137,9 @@
       },
       "nfts": {
         "label": "NFTs"
+      },
+      "memecoins": {
+        "label": "Memecoins"
       }
     },
     "screenSizes": {
@@ -6060,6 +6110,10 @@
       "nft": {
         "label": "Mercados NFT",
         "description": "Rankings de colecciones, precios suelo, listados, ofertas y la cinta de ventas"
+      },
+      "launchpad": {
+        "label": "Tokens de launchpad",
+        "description": "Tokens recién minteados, avance de la curva de bonding, graduaciones y memecoins de gran capitalización"
       }
     },
     "domains": {
@@ -6793,6 +6847,87 @@
       "basis": "Coste",
       "mark": "Marcado",
       "pnl": "PnL"
+    }
+  },
+  "memecoins": {
+    "loading": "Leyendo los launchpads",
+    "retrying": "Reintentando",
+    "unavailableBody": "El feed del launchpad no respondió. Volverá a intentarlo solo.",
+    "unknown": "Desconocido",
+    "curveUnknown": "Sin curva de bonding, o un launchpad sin umbral publicado",
+    "openChart": "Abrir {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Cap.",
+      "age": "Edad",
+      "curve": "Curva",
+      "since": "Desde",
+      "change24h": "24h",
+      "change": "Var.",
+      "flow": "Compr./Vent.",
+      "volume": "Vol 24h"
+    },
+    "new": {
+      "title": "Nuevos mints",
+      "footnote": "Minteados en las últimas 6 horas. El número de holders va junto al ticker.",
+      "emptyTitle": "Nada minteado todavía",
+      "emptyBody": "Los tokens nuevos aparecen aquí a los pocos segundos de su primera operación."
+    },
+    "graduating": {
+      "title": "Graduándose",
+      "footnote": "Avance de la curva hacia la migración. La tilde marca una estimación.",
+      "emptyTitle": "Nada cerca de graduarse",
+      "emptyBody": "Los tokens aparecen aquí cuando llevan un tercio de su curva de bonding."
+    },
+    "graduated": {
+      "title": "Graduados",
+      "footnote": "Completaron la curva y pasaron a un pool AMM, últimos 7 días.",
+      "emptyTitle": "Sin graduaciones recientes",
+      "emptyBody": "Los tokens que completan su curva de bonding aterrizan aquí."
+    },
+    "legendary": {
+      "title": "Legendarios",
+      "footnote": "Capitalización de CoinGecko; cada una se abre en la cadena donde más liquidez tiene.",
+      "emptyTitle": "Nada de gran capitalización que mostrar",
+      "emptyBody": "El ranking por capitalización no respondió. Volverá a intentarlo solo."
+    },
+    "token": {
+      "emptyTitle": "No es un token de launchpad",
+      "emptyBody": "El feed del launchpad no tiene nada sobre esta dirección. Puede que opere en un lugar que este tablero no cubre."
+    },
+    "stats": {
+      "marketCap": "Capitalización",
+      "fdv": "FDV",
+      "liquidity": "Liquidez",
+      "holders": "Holders",
+      "launchpad": "Launchpad",
+      "curve": "Curva",
+      "graduated": "Graduado",
+      "organicScore": "Puntuación orgánica",
+      "footnote": "La capitalización usa el suministro circulante; el FDV usa el suministro total."
+    },
+    "flow": {
+      "window": "Ventana",
+      "volume": "Volumen",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Los recuentos son operaciones, no traders. El volumen suma los dos lados.",
+      "emptyTitle": "Aún sin operaciones",
+      "emptyBody": "El flujo aparece en cuanto el token tiene su primer swap."
+    },
+    "safety": {
+      "mintAuthority": "Autoridad de mint",
+      "freezeAuthority": "Autoridad de congelación",
+      "topHolders": "Mayores holders",
+      "devMints": "Mints del deployer",
+      "devMigrations": "{{count}} graduados",
+      "revoked": "Revocada",
+      "live": "Activa",
+      "footnote": "Desconocido no es seguro. Que falte la auditoría no dice nada del token.",
+      "emptyTitle": "Sin auditoría publicada",
+      "emptyBody": "Esta fuente no publicó autoridad de mint ni de congelación para el token. Trátalo como desconocido, no como seguro."
     }
   }
 }

@@ -3488,7 +3488,14 @@
     "nftItems": "アイテム",
     "nftTraits": "属性",
     "nftTicket": "NFTチケット",
-    "nftHoldings": "保有アイテム"
+    "nftHoldings": "保有アイテム",
+    "memeNew": "新規ミント",
+    "memeGraduating": "卒業間近",
+    "memeGraduated": "卒業済み",
+    "memeLegendary": "レジェンド",
+    "memeTokenStats": "トークン統計",
+    "memeFlow": "売買フロー",
+    "memeSafety": "トークン安全性"
   },
   "paneDescriptions": {
     "insiderActivity": "直近のForm 4届出。社内の誰が、どれだけ、いくらで買ったか売ったか",
@@ -3576,7 +3583,14 @@
     "nftItems": "コレクションのトークンを、売り気配とレア度とともに一覧。",
     "nftTraits": "すべての属性値について、該当するトークン数とそのレア度を表示。属性ごとのフロアは、提供元が公開した時点で表示されます。",
     "nftTicket": "フロアを買う、スイープする、オファーを出す、アイテムを出品する、買い注文に応じる。",
-    "nftHoldings": "このウォレットがコレクション内で保有する内容を、取得価格とマーク価格とともに表示。"
+    "nftHoldings": "このウォレットがコレクション内で保有する内容を、取得価格とマーク価格とともに表示。",
+    "memeNew": "直近数時間にミントされたトークン。新しい順に、ホルダー数と初期のフローを添えて表示します。",
+    "memeGraduating": "ボンディングカーブを上っているトークンを、本物のプールへの移行までの近さで並べます。",
+    "memeGraduated": "カーブを走り切り、いま AMM プールで取引されているトークン。新しい順です。",
+    "memeLegendary": "あらゆるチェーンの大型ミームコインを時価総額順に並べます。",
+    "memeTokenStats": "アクティブなトークンの時価総額、FDV、流動性、ホルダー数、ボンディングカーブの進捗。",
+    "memeFlow": "4 つの時間軸での買いと売りの対比。それぞれの値動きと出来高も添えます。",
+    "memeSafety": "ミント権限とフリーズ権限、ホルダーの集中度、デプロイヤーの履歴。"
   },
   "multiPrice": {
     "venue": "取引所",
@@ -3750,7 +3764,8 @@
       "prediction": "予測市場",
       "moveLeft": "左に移動",
       "moveRight": "右に移動",
-      "nft": "NFT"
+      "nft": "NFT",
+      "memecoin": "ミームコイン"
     }
   },
   "assetClass": {
@@ -3767,7 +3782,9 @@
     "stocksDescription": "ブローカー経由の株式で、取引所自身のカレンダーに従います。取引時間、売買停止、決済ルールが適用されます。",
     "predictionDescription": "ある問いの答えに対する契約です。答えが正しければ 1 ドル、外れれば何も支払われません。",
     "nft": "NFT",
-    "nftDescription": "非代替性トークンのコレクションです。フロアは最も安い売り気配、オファーが買い側で、ポジションは特定の1トークンを指します。"
+    "nftDescription": "非代替性トークンのコレクションです。フロアは最も安い売り気配、オファーが買い側で、ポジションは特定の1トークンを指します。",
+    "memecoin": "MEME",
+    "memecoinDescription": "ボンディングカーブに乗った Launchpad トークンと、そこを卒業した大型銘柄。時価総額で値付けされ、DEX アグリゲーター経由で取引します。"
   },
   "pluginStore": {
     "registryOffline": "プラグインレジストリはオフラインです。インストール済みのプラグインのみ表示しています。",
@@ -4265,6 +4282,14 @@
       "coingecko-nft-provider": {
         "title": "CoinGecko NFT",
         "description": "キー不要のフロア価格、出来高、発行数、保有者数を、インデックス済みのどのコレクションでも。冷えた NFT ボードに実データを出すフォールバックです。"
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens ミームコイン",
+        "description": "Launchpad の各面：新規ミント、ボンディングカーブの進捗、卒業、そしてそれらより長く生き残った大型銘柄"
+      },
+      "memecoin-data-provider": {
+        "title": "ミームコインフィード",
+        "description": "キー不要の公開ソースから取る Launchpad トークン。新規ミントとボンディングカーブの進捗は Jupiter から、大型ミームコインは CoinGecko から。API key も当社のサーバーも不要で、リクエストはすべて発行したブラウザ側で計上されます。"
       }
     },
     "families": {
@@ -4307,6 +4332,10 @@
       "nfts": {
         "label": "NFT",
         "description": "コレクションのランキング、出品とオファーの板、マーケットプレイスでの執行。"
+      },
+      "memes": {
+        "label": "ミームコイン",
+        "description": "Launchpad のボードと、その裏で動くキー不要のフィード"
       }
     },
     "familyToggleAria": "{{family}}のプラグインをすべて有効または無効にする",
@@ -5037,6 +5066,24 @@
         "menuLabel": "フロー",
         "tagline": "約定履歴を全幅で。",
         "description": "インデックス済みの全コレクションの大口約定を、フロア変動とランキング表と並べて表示。"
+      },
+      "memecoin-discovery": {
+        "name": "ミームコイン探索",
+        "tagline": "4 列、カーブの各段階にひとつずつ。",
+        "description": "Launchpad のボードです。直近 1 時間にミントされたもの、卒業しきい値までの進捗つきでボンディングカーブを上っているもの、本物のプールへ移行したもの、そして自分のサイクルを生き延びた大型銘柄。どの行にも時価総額、流動性、買いと売りの対比が乗り、行をクリックするとチャートとスワップチケットが開きます。",
+        "menuLabel": "デフォルト"
+      },
+      "memecoin-terminal": {
+        "name": "ミームコインターミナル",
+        "tagline": "時価総額、フロー、そして誰がまだミントできるか。",
+        "description": "ミームコインの既定レイアウト。上にチャート、その下に 4 つの時間軸で買いと売りを並べるフローストリップ、中央に供給量とホルダー数、その下にデプロイヤー監査、右にスワップチケット。板はありません。ボンディングカーブに板は存在しないからです。",
+        "menuLabel": "デフォルト"
+      },
+      "memecoin-sniper": {
+        "name": "ミームコインスナイパー",
+        "tagline": "左にカーブ、右にチケット。",
+        "description": "ローンチを張るための構成です。新規ミントと卒業ラダーを画面に残したまま、チャート、フローストリップ、スワップチケットが残りを埋めます。安全性パネルはチケットの下。発注前に最後に見るべきものがミント権限だからです。",
+        "menuLabel": "スナイパー"
       }
     },
     "traderTypes": {
@@ -5090,6 +5137,9 @@
       },
       "nfts": {
         "label": "NFT"
+      },
+      "memecoins": {
+        "label": "ミームコイン"
       }
     },
     "screenSizes": {
@@ -6060,6 +6110,10 @@
       "nft": {
         "label": "NFTマーケット",
         "description": "コレクションのランキング、フロア価格、出品、オファー、約定履歴"
+      },
+      "launchpad": {
+        "label": "Launchpad トークン",
+        "description": "ミントされたばかりのトークン、ボンディングカーブの進捗、卒業、大型ミームコイン"
       }
     },
     "domains": {
@@ -6793,6 +6847,87 @@
       "basis": "取得価格",
       "mark": "マーク価格",
       "pnl": "損益"
+    }
+  },
+  "memecoins": {
+    "loading": "Launchpad を読み込み中",
+    "retrying": "再試行中",
+    "unavailableBody": "Launchpad のフィードが応答しませんでした。自動で再試行します。",
+    "unknown": "不明",
+    "curveUnknown": "ボンディングカーブがないか、しきい値を公開していない Launchpad です",
+    "openChart": "{{symbol}} を開く",
+    "columns": {
+      "token": "トークン",
+      "mcap": "時価総額",
+      "age": "経過",
+      "curve": "カーブ",
+      "since": "卒業後",
+      "change24h": "24時間",
+      "change": "変動",
+      "flow": "買/売",
+      "volume": "出来高24時間"
+    },
+    "new": {
+      "title": "新規ミント",
+      "footnote": "直近 6 時間にミントされたもの。ホルダー数はティッカーの隣です。",
+      "emptyTitle": "まだミントがありません",
+      "emptyBody": "新しいトークンは最初の約定から数秒でここに現れます。"
+    },
+    "graduating": {
+      "title": "卒業間近",
+      "footnote": "移行までのカーブ進捗。チルダは推定値を表します。",
+      "emptyTitle": "卒業が近いものはありません",
+      "emptyBody": "ボンディングカーブを 3 分の 1 まで上ったトークンがここに現れます。"
+    },
+    "graduated": {
+      "title": "卒業済み",
+      "footnote": "カーブを走り切り AMM プールへ移行したもの、直近 7 日間。",
+      "emptyTitle": "最近の卒業はありません",
+      "emptyBody": "ボンディングカーブを走り切ったトークンがここに落ちてきます。"
+    },
+    "legendary": {
+      "title": "レジェンド",
+      "footnote": "時価総額は CoinGecko。各銘柄は流動性が最も厚いチェーンで開きます。",
+      "emptyTitle": "表示できる大型銘柄がありません",
+      "emptyBody": "時価総額ランキングが応答しませんでした。自動で再試行します。"
+    },
+    "token": {
+      "emptyTitle": "Launchpad トークンではありません",
+      "emptyBody": "Launchpad のフィードにこのアドレスの情報はありません。このボードが扱っていない取引の場にあるのかもしれません。"
+    },
+    "stats": {
+      "marketCap": "時価総額",
+      "fdv": "FDV",
+      "liquidity": "流動性",
+      "holders": "ホルダー数",
+      "launchpad": "Launchpad",
+      "curve": "カーブ",
+      "graduated": "卒業済み",
+      "organicScore": "オーガニックスコア",
+      "footnote": "時価総額は流通供給量、FDV は総供給量で計算します。"
+    },
+    "flow": {
+      "window": "期間",
+      "volume": "出来高",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "数えているのは取引の件数で、人数ではありません。出来高は両サイドの合計です。",
+      "emptyTitle": "まだ約定がありません",
+      "emptyBody": "最初のスワップが入るとフローが現れます。"
+    },
+    "safety": {
+      "mintAuthority": "ミント権限",
+      "freezeAuthority": "フリーズ権限",
+      "topHolders": "上位ホルダー",
+      "devMints": "デプロイヤーのミント数",
+      "devMigrations": "{{count}} 件が卒業",
+      "revoked": "放棄済み",
+      "live": "有効",
+      "footnote": "不明は安全ではありません。監査がないことは、このトークンについて何も語りません。",
+      "emptyTitle": "監査は未公開です",
+      "emptyBody": "このソースはトークンのミント権限もフリーズ権限も公開していません。安全ではなく、不明として扱ってください。"
     }
   }
 }

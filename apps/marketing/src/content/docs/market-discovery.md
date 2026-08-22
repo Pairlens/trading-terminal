@@ -29,10 +29,10 @@ The first five sit on the same index and the same search, so a token you find
 in one is findable in the others. The Discovery boards are the other half of
 the problem: search answers "where is the thing I already named", and a board
 answers "what should I be looking at". Each asset class gets its own, ranked by
-what matters there, funding and basis on perps, turnover on pools, the calendar
-on stocks, the clock and the odds move on event contracts, the floor and how
-much supply is listed against it on NFT collections. See
-[workspaces](/docs/workspaces).
+what matters there, funding and basis on perps, turnover on pools, curve
+progress on memecoins, the calendar on stocks, the clock and the odds move on
+event contracts, the floor and how much supply is listed against it on NFT
+collections. See [workspaces](/docs/workspaces).
 
 The **CEX Spot** board carries a venue button on its bar, left of **Panes**.
 Spot rows are priced and opened on whichever exchange you last chose, and that
