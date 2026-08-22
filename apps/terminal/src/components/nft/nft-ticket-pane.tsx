@@ -34,6 +34,13 @@ import { ShoppingBasket } from 'lucide-react'
 
 import { cn } from '@pairlens/ui'
 import { Input } from '@pairlens/ui/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@pairlens/ui/components/ui/select'
 
 import type { NftChain, NftListing } from '@pairlens/shared/nft-types'
 import { PANE_FOOTNOTE, PaneEmpty } from '@/components/panes/pane-primitives'
@@ -302,18 +309,18 @@ function NftTicketInner({
 
         {wantsToken && (
           <Field label={t('nftTicket.token')}>
-            <select
-              className="h-7 w-full rounded-md bg-muted/40 px-2 font-mono text-[11.5px]"
-              onChange={(event) => setTokenId(event.target.value)}
-              value={tokenId}
-            >
-              <option value="">{t('nftTicket.tokenPlaceholder')}</option>
-              {holdings.map((holding) => (
-                <option key={holding.tokenId} value={holding.tokenId}>
-                  {formatTokenId(holding.tokenId)}
-                </option>
-              ))}
-            </select>
+            <Select onValueChange={setTokenId} value={tokenId}>
+              <SelectTrigger className="h-7 w-full rounded-md border-transparent bg-muted/40 px-2 font-mono text-[11.5px]">
+                <SelectValue placeholder={t('nftTicket.tokenPlaceholder')} />
+              </SelectTrigger>
+              <SelectContent>
+                {holdings.map((holding) => (
+                  <SelectItem key={holding.tokenId} value={holding.tokenId}>
+                    {formatTokenId(holding.tokenId)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
         )}
       </div>

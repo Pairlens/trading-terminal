@@ -43,7 +43,7 @@ import {
 } from './collections-client'
 import { openSeaFetch, unsupported } from './http'
 import { asArray, asObject, asString } from './parsers'
-import { clearSlugCache } from './slug-resolver'
+import { clearSlugCache, resolveSlug } from './slug-resolver'
 import { fetchCandles, fetchSeries } from './series-client'
 import { executeNftOrder } from './trading'
 import { CHAIN_CURRENCY, isTradableChain, OPENSEA_CHAIN } from './types'
@@ -366,9 +366,8 @@ export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance
         }
       }
 
-      const { resolveSlug } = await import('./slug-resolver')
-      const slug = await resolveSlug(requireKey(), chain, contract)
       const key = requireKey()
+      const slug = await resolveSlug(key, chain, contract)
       const p = params.params
       return executeNftOrder(
         {
