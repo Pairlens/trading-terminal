@@ -48,7 +48,12 @@ export function NftOverviewPane() {
     return all.slice(0, MAX_SEGMENTS)
   }, [overview])
 
-  if (phase === 'unsupported' || phase === 'failed' || phase === 'empty') {
+  if (
+    phase === 'unsupported' ||
+    phase === 'needsKey' ||
+    phase === 'failed' ||
+    phase === 'empty'
+  ) {
     return (
       <NftPaneFallback
         emptyBody={t('nftOverview.emptyBody')}

@@ -3641,7 +3641,8 @@
       "predictionDescription": "Bir olay sonucu yalnızca tek bir platformda işlem görür, dolayısıyla denenecek başka yer yoktur. Platform yalnızca tek bir isteği reddetmiş olabilir.",
       "retry": "Tekrar dene",
       "desktopOnlyTitle": "Bu platform masaüstü uygulaması gerektirir",
-      "desktopOnlyDescription": "API'si tarayıcı kaynaklarını reddeder; bu çiftin piyasa verilerine yalnızca masaüstü sürümünden erişilebilir."
+      "desktopOnlyDescription": "API'si tarayıcı kaynaklarını reddeder; bu çiftin piyasa verilerine yalnızca masaüstü sürümünden erişilebilir.",
+      "nftDescription": "Hiçbir sağlayıcı bu koleksiyon için taban fiyat serisi döndürmedi. OpenSea eklentisine bir OpenSea anahtarı ekle: grafik, sıralama tablosu ve işlem akışı hepsi oradan gelir."
     },
     "paneCredentials": {
       "sealedTitle": "{{venue}} verilerini yüklemek için kilidi açın",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Koleksiyon ara",
-    "countMetric": "{{count}} koleksiyon",
     "countMetric_one": "{{count}} koleksiyon",
     "loadingLabel": "Koleksiyon sıralamaları okunuyor",
     "verified": "Doğrulanmış koleksiyon",
@@ -6558,7 +6558,8 @@
       "sales": "Satış",
       "listed": "Listede",
       "holders": "Sahip"
-    }
+    },
+    "countMetric_other": "{{count}} koleksiyon"
   },
   "nftOverview": {
     "subtitle": "Son 24s, tüm zincirler",

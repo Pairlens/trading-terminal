@@ -3641,7 +3641,8 @@
       "predictionDescription": "Ein Ereignisergebnis wird nur auf einer Handelsplattform gehandelt, es gibt also nichts anderes zu versuchen. Vielleicht hat die Plattform nur eine einzelne Anfrage abgelehnt.",
       "retry": "Erneut versuchen",
       "desktopOnlyTitle": "Diese Handelsplattform benötigt die Desktop-App",
-      "desktopOnlyDescription": "Ihre API lehnt Browser-Ursprünge ab, daher sind Marktdaten für dieses Paar nur im Desktop-Build erreichbar."
+      "desktopOnlyDescription": "Ihre API lehnt Browser-Ursprünge ab, daher sind Marktdaten für dieses Paar nur im Desktop-Build erreichbar.",
+      "nftDescription": "Kein Provider hat eine Floor-Serie für diese Kollektion geliefert. Hinterlege einen OpenSea-Key im OpenSea-Plugin: Chart, Ladder und Tape kommen alle von dort."
     },
     "paneCredentials": {
       "sealedTitle": "Entsperren, um {{venue}}-Daten zu laden",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Kollektionen suchen",
-    "countMetric": "{{count}} Kollektionen",
     "countMetric_one": "{{count}} Kollektion",
     "loadingLabel": "Kollektions-Rankings werden gelesen",
     "verified": "Verifizierte Kollektion",
@@ -6558,7 +6558,8 @@
       "sales": "Verkäufe",
       "listed": "Gelistet",
       "holders": "Holder"
-    }
+    },
+    "countMetric_other": "{{count}} Kollektionen"
   },
   "nftOverview": {
     "subtitle": "Letzte 24h, alle Chains",

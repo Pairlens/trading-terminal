@@ -156,17 +156,27 @@ export function useNftProviders(): Array<PluginInstance> {
   )
 }
 
-/** The chains an installed provider can actually answer for. */
+/**
+ * The chains an installed provider can actually answer for.
+ *
+ * Read off `metadata.chains`, NOT off the capability's `markets`. The NFT
+ * capability declares a wildcard there on purpose: the plugin manager resolves
+ * on the terminal's current venue rather than on the chain a call names in its
+ * params, so a chain-scoped declaration made the whole Discovery board resolve
+ * to nothing whenever the chart happened to be sitting on a CEX pair. The
+ * chains a provider covers are still a real fact, so they are declared
+ * separately instead of being inferred from a routing field that no longer
+ * carries them.
+ */
 export function useNftChains(): Array<NftChain> {
   const providers = useNftProviders()
   return useMemo(() => {
     const chains = new Set<NftChain>()
     for (const plugin of providers) {
-      for (const capability of plugin.manifest.capabilities ?? []) {
-        if (capability.id !== 'market-data:nft') continue
-        for (const market of capability.markets ?? []) {
-          if (market !== '*') chains.add(market as NftChain)
-        }
+      const declared = plugin.manifest.metadata?.['chains']
+      if (!Array.isArray(declared)) continue
+      for (const chain of declared) {
+        if (typeof chain === 'string') chains.add(chain as NftChain)
       }
     }
     return [...chains]

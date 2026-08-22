@@ -3641,7 +3641,8 @@
       "predictionDescription": "イベントの結果は 1 つの取引所でのみ取引されるため、ほかに試せる場所はありません。取引所が 1 回のリクエストを拒否しただけの可能性もあります。",
       "retry": "再試行",
       "desktopOnlyTitle": "この取引所にはデスクトップアプリが必要です",
-      "desktopOnlyDescription": "その API はブラウザからのオリジンを拒否するため、このペアの市場データはデスクトップ版からのみ利用できます。"
+      "desktopOnlyDescription": "その API はブラウザからのオリジンを拒否するため、このペアの市場データはデスクトップ版からのみ利用できます。",
+      "nftDescription": "このコレクションのフロア系列を返したプロバイダーがありません。OpenSea プラグインで OpenSea キーを追加してください。チャート、ラダー、約定履歴はすべてそこから取得されます。"
     },
     "paneCredentials": {
       "sealedTitle": "{{venue}} のデータを読み込むにはロックを解除してください",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "コレクションを検索",
-    "countMetric": "コレクション {{count}} 件",
     "countMetric_one": "コレクション {{count}} 件",
     "loadingLabel": "コレクションのランキングを読み込み中",
     "verified": "認証済みコレクション",
@@ -6558,7 +6558,8 @@
       "sales": "約定数",
       "listed": "出品率",
       "holders": "保有者"
-    }
+    },
+    "countMetric_other": "コレクション {{count}} 件"
   },
   "nftOverview": {
     "subtitle": "直近24時間・全チェーン",

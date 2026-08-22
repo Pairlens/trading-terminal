@@ -47,7 +47,12 @@ export function NftMintsPane() {
   })
   const phase = nftPanePhase(status, collections.length > 0)
 
-  if (phase === 'unsupported' || phase === 'failed' || phase === 'empty') {
+  if (
+    phase === 'unsupported' ||
+    phase === 'needsKey' ||
+    phase === 'failed' ||
+    phase === 'empty'
+  ) {
     return (
       <NftPaneFallback
         emptyBody={t('nftMints.emptyBody')}

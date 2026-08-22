@@ -123,7 +123,7 @@ export function NftCollectionsPane() {
 
       <NftErrorBanner phase={phase} status={status} />
 
-      {phase === 'unsupported' || phase === 'failed' ? (
+      {phase === 'unsupported' || phase === 'needsKey' || phase === 'failed' ? (
         <NftPaneFallback
           emptyBody={t('nftCollections.emptyBody')}
           emptyTitle={t('nftCollections.emptyTitle')}

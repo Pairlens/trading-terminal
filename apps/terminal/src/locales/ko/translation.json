@@ -3641,7 +3641,8 @@
       "predictionDescription": "이벤트 결과는 한 거래소에서만 거래되므로 다른 곳에서 시도할 수 없습니다. 거래소가 요청 한 건만 거부했을 수도 있습니다.",
       "retry": "다시 시도",
       "desktopOnlyTitle": "이 거래소는 데스크톱 앱이 필요합니다",
-      "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다."
+      "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다.",
+      "nftDescription": "이 컬렉션의 바닥가 시계열을 반환한 프로바이더가 없습니다. OpenSea 플러그인에서 OpenSea 키를 추가하세요. 차트와 래더, 체결 내역이 모두 여기에서 옵니다."
     },
     "paneCredentials": {
       "sealedTitle": "{{venue}} 데이터를 불러오려면 잠금을 해제하세요",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "컬렉션 검색",
-    "countMetric": "컬렉션 {{count}}개",
     "countMetric_one": "컬렉션 {{count}}개",
     "loadingLabel": "컬렉션 순위를 읽는 중",
     "verified": "인증된 컬렉션",
@@ -6558,7 +6558,8 @@
       "sales": "체결 수",
       "listed": "매물",
       "holders": "홀더"
-    }
+    },
+    "countMetric_other": "컬렉션 {{count}}개"
   },
   "nftOverview": {
     "subtitle": "최근 24시간, 전체 체인",

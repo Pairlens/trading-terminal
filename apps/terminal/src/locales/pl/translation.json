@@ -3731,7 +3731,8 @@
       "predictionDescription": "Wynik wydarzenia jest notowany tylko na jednej giełdzie, więc nie ma gdzie indziej próbować. Możliwe, że giełda odrzuciła tylko jedno żądanie.",
       "retry": "Spróbuj ponownie",
       "desktopOnlyTitle": "Ta giełda wymaga aplikacji desktopowej",
-      "desktopOnlyDescription": "Jej API odrzuca żądania z przeglądarki, więc dane rynkowe tej pary są dostępne tylko w wersji desktopowej."
+      "desktopOnlyDescription": "Jej API odrzuca żądania z przeglądarki, więc dane rynkowe tej pary są dostępne tylko w wersji desktopowej.",
+      "nftDescription": "Żaden dostawca nie zwrócił serii floor dla tej kolekcji. Dodaj klucz OpenSea we wtyczce OpenSea: wykres, drabinka i wstęga pochodzą właśnie stamtąd."
     },
     "paneCredentials": {
       "sealedTitle": "Odblokuj, aby wczytać dane {{venue}}",
@@ -6668,8 +6669,9 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Szukaj kolekcji",
-    "countMetric": "{{count}} kolekcji",
     "countMetric_one": "{{count}} kolekcja",
+    "countMetric_few": "{{count}} kolekcje",
+    "countMetric_many": "{{count}} kolekcji",
     "loadingLabel": "Odczytywanie rankingu kolekcji",
     "verified": "Zweryfikowana kolekcja",
     "emptyTitle": "Brak kolekcji",
@@ -6684,7 +6686,8 @@
       "sales": "Sprzedaże",
       "listed": "Wystawione",
       "holders": "Posiadacze"
-    }
+    },
+    "countMetric_other": "{{count}} kolekcji"
   },
   "nftOverview": {
     "subtitle": "Ostatnie 24h, wszystkie blockchainy",

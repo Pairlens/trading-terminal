@@ -3641,7 +3641,8 @@
       "predictionDescription": "Un résultat d'événement ne se négocie que sur une plateforme : il n'y a nulle part ailleurs où essayer. La plateforme a peut-être simplement refusé une requête.",
       "retry": "Réessayer",
       "desktopOnlyTitle": "Cette plateforme nécessite l'application de bureau",
-      "desktopOnlyDescription": "Son API refuse les origines navigateur : les données de marché de cette paire ne sont accessibles que depuis la version bureau."
+      "desktopOnlyDescription": "Son API refuse les origines navigateur : les données de marché de cette paire ne sont accessibles que depuis la version bureau.",
+      "nftDescription": "Aucun fournisseur n'a renvoyé de série de prix plancher pour cette collection. Ajoutez une clé OpenSea dans le plugin OpenSea : le graphique, l'échelle et le fil des ventes en viennent tous."
     },
     "paneCredentials": {
       "sealedTitle": "Déverrouillez pour charger les données {{venue}}",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Rechercher des collections",
-    "countMetric": "{{count}} collections",
     "countMetric_one": "{{count}} collection",
     "loadingLabel": "Chargement des classements de collections",
     "verified": "Collection vérifiée",
@@ -6558,7 +6558,8 @@
       "sales": "Ventes",
       "listed": "En vente",
       "holders": "Détenteurs"
-    }
+    },
+    "countMetric_other": "{{count}} collections"
   },
   "nftOverview": {
     "subtitle": "24 h, toutes chaînes",

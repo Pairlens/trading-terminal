@@ -73,6 +73,7 @@ export const openSeaNftManifest: PluginManifest = {
     assetClass: 'nft',
     family: 'nfts',
     timeframes: OPENSEA_TIMEFRAMES,
+    chains: OPENSEA_MARKETS,
     gradient: 'from-sky-400 to-blue-600',
     abbr: 'OS',
     walletChain: 'ethereum',
@@ -81,7 +82,14 @@ export const openSeaNftManifest: PluginManifest = {
     {
       id: 'market-data:nft',
       singleton: false,
-      markets: OPENSEA_MARKETS,
+      // A WILDCARD, unlike every other capability here, and the difference is
+      // load-bearing. The plugin manager resolves on the TERMINAL's current
+      // venue, not on the chain a call names in its params, so a Discovery
+      // board read while the chart sits on OKX resolves against 'okx' and
+      // finds nothing. The DEX data providers are wildcards for exactly this
+      // reason. The chain travels in `params.market` and this connector reads
+      // it there; `metadata.chains` is what a chain picker enumerates.
+      markets: ['*'],
       priority: 5,
       streaming: false,
     },

@@ -3641,7 +3641,8 @@
       "predictionDescription": "Một kết quả sự kiện chỉ giao dịch trên một sàn, nên không còn nơi nào khác để thử. Có thể sàn chỉ từ chối một yêu cầu.",
       "retry": "Thử lại",
       "desktopOnlyTitle": "Sàn này cần ứng dụng máy tính",
-      "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính."
+      "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính.",
+      "nftDescription": "Không nhà cung cấp nào trả về chuỗi giá sàn cho bộ sưu tập này. Thêm khóa OpenSea trong plugin OpenSea: biểu đồ, bảng giá và dòng khớp lệnh đều đến từ đó."
     },
     "paneCredentials": {
       "sealedTitle": "Mở khóa để tải dữ liệu {{venue}}",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Tìm bộ sưu tập",
-    "countMetric": "{{count}} bộ sưu tập",
     "countMetric_one": "{{count}} bộ sưu tập",
     "loadingLabel": "Đang đọc xếp hạng bộ sưu tập",
     "verified": "Bộ sưu tập đã xác minh",
@@ -6558,7 +6558,8 @@
       "sales": "Lượt bán",
       "listed": "Niêm yết",
       "holders": "Người giữ"
-    }
+    },
+    "countMetric_other": "{{count}} bộ sưu tập"
   },
   "nftOverview": {
     "subtitle": "24h qua, mọi chuỗi",

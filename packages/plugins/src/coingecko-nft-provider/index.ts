@@ -83,6 +83,7 @@ export const coingeckoNftManifest: PluginManifest = {
   metadata: {
     assetClass: 'nft',
     family: 'nfts',
+    chains: ['ethereum', 'base', 'polygon', 'arbitrum', 'optimism', 'solana'],
     gradient: 'from-lime-400 to-green-500',
     abbr: 'CG',
   },
@@ -90,7 +91,10 @@ export const coingeckoNftManifest: PluginManifest = {
     {
       id: 'market-data:nft',
       singleton: false,
-      markets: ['ethereum', 'base', 'polygon', 'arbitrum', 'optimism', 'solana'],
+      // Wildcard for the same reason OpenSea's is: the manager resolves on
+      // the terminal's current venue, and the chain this provider is being
+      // asked about travels in `params.market`.
+      markets: ['*'],
       // One behind OpenSea. This is the provider of last resort, not a peer.
       priority: 6,
       streaming: false,

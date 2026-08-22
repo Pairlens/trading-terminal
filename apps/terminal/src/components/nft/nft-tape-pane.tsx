@@ -108,7 +108,7 @@ export function NftTapePane() {
 
       <NftErrorBanner phase={phase} status={status} />
 
-      {phase === 'unsupported' || phase === 'failed' ? (
+      {phase === 'unsupported' || phase === 'needsKey' || phase === 'failed' ? (
         <NftPaneFallback
           emptyBody={t('nftTape.emptyBody')}
           emptyTitle={t('nftTape.emptyTitle')}

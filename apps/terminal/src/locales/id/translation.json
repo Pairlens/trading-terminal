@@ -3641,7 +3641,8 @@
       "predictionDescription": "Sebuah hasil acara hanya diperdagangkan di satu bursa, jadi tidak ada tempat lain untuk dicoba. Bursa mungkin hanya menolak satu permintaan.",
       "retry": "Coba lagi",
       "desktopOnlyTitle": "Bursa ini memerlukan aplikasi desktop",
-      "desktopOnlyDescription": "API-nya menolak origin browser, sehingga data pasar untuk pasangan ini hanya bisa diakses dari versi desktop."
+      "desktopOnlyDescription": "API-nya menolak origin browser, sehingga data pasar untuk pasangan ini hanya bisa diakses dari versi desktop.",
+      "nftDescription": "Tidak ada provider yang mengembalikan seri harga floor untuk koleksi ini. Tambahkan kunci OpenSea di plugin OpenSea: chart, tangga, dan pita semuanya berasal dari sana."
     },
     "paneCredentials": {
       "sealedTitle": "Buka kunci untuk memuat data {{venue}}",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Cari koleksi",
-    "countMetric": "{{count}} koleksi",
     "countMetric_one": "{{count}} koleksi",
     "loadingLabel": "Membaca peringkat koleksi",
     "verified": "Koleksi terverifikasi",
@@ -6558,7 +6558,8 @@
       "sales": "Penjualan",
       "listed": "Terdaftar",
       "holders": "Pemegang"
-    }
+    },
+    "countMetric_other": "{{count}} koleksi"
   },
   "nftOverview": {
     "subtitle": "24j terakhir, semua chain",

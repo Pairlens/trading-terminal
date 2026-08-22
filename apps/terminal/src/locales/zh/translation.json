@@ -3641,7 +3641,8 @@
       "predictionDescription": "事件结果只在一个平台交易，因此没有别处可试。该平台可能只是拒绝了一次请求。",
       "retry": "重试",
       "desktopOnlyTitle": "该平台需要桌面应用",
-      "desktopOnlyDescription": "其 API 拒绝浏览器来源，因此该交易对的行情数据只能通过桌面版获取。"
+      "desktopOnlyDescription": "其 API 拒绝浏览器来源，因此该交易对的行情数据只能通过桌面版获取。",
+      "nftDescription": "没有任何提供方返回该系列的地板价序列。请在 OpenSea 插件中添加 OpenSea 密钥：图表、阶梯和成交明细都来自这里。"
     },
     "paneCredentials": {
       "sealedTitle": "解锁以加载 {{venue}} 数据",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "搜索系列",
-    "countMetric": "{{count}} 个系列",
     "countMetric_one": "{{count}} 个系列",
     "loadingLabel": "正在读取系列排名",
     "verified": "已认证系列",
@@ -6558,7 +6558,8 @@
       "sales": "成交笔数",
       "listed": "已挂单",
       "holders": "持有者"
-    }
+    },
+    "countMetric_other": "{{count}} 个系列"
   },
   "nftOverview": {
     "subtitle": "近 24 小时，全部链",

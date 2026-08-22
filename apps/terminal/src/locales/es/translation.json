@@ -3641,7 +3641,8 @@
       "predictionDescription": "Un resultado de evento se negocia en una sola plataforma, así que no hay otro sitio donde intentarlo. Puede que la plataforma solo haya rechazado una petición.",
       "retry": "Reintentar",
       "desktopOnlyTitle": "Esta plataforma requiere la app de escritorio",
-      "desktopOnlyDescription": "Su API rechaza los orígenes del navegador, así que los datos de mercado de este par solo son accesibles desde la app de escritorio."
+      "desktopOnlyDescription": "Su API rechaza los orígenes del navegador, así que los datos de mercado de este par solo son accesibles desde la app de escritorio.",
+      "nftDescription": "Ningún proveedor devolvió una serie de precio suelo para esta colección. Añade una clave de OpenSea en el plugin de OpenSea: el gráfico, la escalera y la cinta salen todos de ahí."
     },
     "paneCredentials": {
       "sealedTitle": "Desbloquea para cargar los datos de {{venue}}",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Buscar colecciones",
-    "countMetric": "{{count}} colecciones",
     "countMetric_one": "{{count}} colección",
     "loadingLabel": "Leyendo el ranking de colecciones",
     "verified": "Colección verificada",
@@ -6558,7 +6558,8 @@
       "sales": "Ventas",
       "listed": "Listado",
       "holders": "Holders"
-    }
+    },
+    "countMetric_other": "{{count}} colecciones"
   },
   "nftOverview": {
     "subtitle": "Últimas 24h, todas las cadenas",
