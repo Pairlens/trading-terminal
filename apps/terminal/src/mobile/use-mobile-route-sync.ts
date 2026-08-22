@@ -41,7 +41,6 @@ import {
 } from '@pairlens/shared/market-ref'
 import { isDesktopOnlyClass } from './lib/desktop-only-classes'
 
-
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
 import {
   consumePairAdoptionSuppression,

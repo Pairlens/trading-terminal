@@ -31,9 +31,13 @@
  *      confirm it.
  *   6. The money is bounded. A buy spends at most what the caller authorised,
  *      computed LOCALLY by summing the listing's own signed consideration, and
- *      never the `value` the API echoed back. A sweep is capped in total, not
- *      just per item. An offer's exposure is the offer amount itself, which is
- *      built here. A sale checks the floor the caller set, when they set one.
+ *      never the `value` the API echoed back. A market buy REQUIRES that
+ *      authorisation: it is a per-item ceiling, it caps the sweep per listing
+ *      and in total, and without one there is no number the user agreed to, so
+ *      the order is refused rather than sent at whatever the book has become.
+ *      An offer's exposure is the offer amount itself, which is built here. A
+ *      sale checks the floor the caller set, when they set one, and refuses a
+ *      fee split that leaves the seller a token share of their own sale.
  *   7. `ownerOf` (or the ERC-1155 `balanceOf`) says the wallet holds the token
  *      it is about to sell. A marketplace would reject a listing from a
  *      non-owner anyway; refusing here costs no gas and says why.
@@ -174,6 +178,14 @@ export type NftOrderResult = {
   success: boolean
   orderId?: string
   error?: string
+  /**
+   * Items actually filled, on the paths that fill rather than post. A sweep
+   * takes the listings the book really had, which can be fewer than `size`, and
+   * a caller that reports its own input count tells the user they bought items
+   * nobody sold them. Absent on the two paths that post a resting order, where
+   * nothing has filled yet.
+   */
+  filled?: number
 }
 
 function fail(error: string): NftOrderResult {
@@ -270,6 +282,16 @@ export async function executeNftOrder(
   }
   if (params.type === 'limit' && priceWei === null) {
     return fail('A limit order needs a price')
+  }
+  // A sweep with no ceiling is a blank cheque against a book that moves. The
+  // caller quoted a ladder to somebody and that quote is the authorisation, so
+  // it has to arrive here as a per-item bound: without it there is no number to
+  // compare the re-fetched listings against, and a book that ran away between
+  // the quote and the confirm would be bought at whatever it now costs.
+  if (params.side === 'buy' && params.type === 'market' && priceWei === null) {
+    return fail(
+      'A sweep needs a maximum price per item. Nothing was fetched and nothing was sent.',
+    )
   }
   if (params.side === 'sell' && tokenId === null) {
     return fail('Selling needs the token id of the item to sell')
@@ -397,7 +419,8 @@ type CheckedListing = {
   seaport: SeaportDeployment
   /** Native currency this fill costs, summed from the maker's own order. */
   cost: bigint
-  identifier: string | null
+  /** The token this listing offers, taken off the maker's signed order. */
+  identifier: bigint
 }
 
 /**
@@ -409,6 +432,13 @@ type CheckedListing = {
  */
 async function sweep(run: OrderRun): Promise<NftOrderResult> {
   const { ctx, size } = run
+  // Refused at the entry point already. Repeated here because this function is
+  // the one that spends, and a later caller reaching it with no bound must fail
+  // closed rather than inherit the entry point's memory.
+  const ceiling = run.priceWei
+  if (ceiling === null) {
+    return fail('A sweep needs a maximum price per item')
+  }
   const path =
     run.tokenId !== null
       ? `/listings/collection/${encodeURIComponent(ctx.slug)}/nfts/${run.tokenId}/best`
@@ -427,12 +457,11 @@ async function sweep(run: OrderRun): Promise<NftOrderResult> {
     checked.push(result.listing)
   }
 
-  // The spend cap. With a per-item ceiling the caller set it; without one the
-  // quote IS the authorisation, and the transaction below is anchored to the
-  // same numbers this total was summed from.
+  // The spend cap, in total this time. Each listing was already held under the
+  // ceiling one at a time, and this is the same bound applied to the basket, so
+  // a book that re-priced between the quote and the confirm cannot be swept.
   const quoted = checked.reduce((sum, item) => sum + item.cost, 0n)
-  const authorised =
-    run.priceWei !== null ? run.priceWei * BigInt(checked.length) : quoted
+  const authorised = ceiling * BigInt(checked.length)
   if (quoted > authorised) {
     return fail(
       `Refusing to buy: the cheapest ${checked.length} listing(s) total more than the price you authorised`,
@@ -479,16 +508,48 @@ async function sweep(run: OrderRun): Promise<NftOrderResult> {
     }
   }
 
-  if (hashes.length === 0) {
+  return sweepResult({
+    hashes,
+    available: checked.length,
+    size,
+    shortfall,
+  })
+}
+
+/**
+ * What a finished sweep reports, counted rather than assumed.
+ *
+ * `filled` is the number of listings that actually settled, and it is the ONLY
+ * honest count for a ticket to show. A thin book shrinks the sweep silently
+ * (the listings are sliced to what OpenSea had), so a caller echoing its own
+ * input would tell somebody who swept ten and got three that they bought ten.
+ * A partial sweep is still a success, because money moved and tokens arrived,
+ * but it carries the count and the reason it stopped.
+ */
+export function sweepResult(opts: {
+  hashes: Array<string>
+  /** Listings that passed every check, which can be fewer than `size`. */
+  available: number
+  size: number
+  /** Why the run stopped early, when it did. */
+  shortfall: string | null
+}): NftOrderResult {
+  const { hashes, available, size, shortfall } = opts
+  const filled = hashes.length
+  if (filled === 0) {
     return fail(shortfall ?? 'No listing could be filled')
   }
-  // A partial sweep is a success with a reason attached: items were bought, and
-  // the ticket has to be able to say both how many and why it stopped.
+  const reason =
+    shortfall ??
+    (available < size
+      ? `OpenSea had only ${available} listing(s) of the ${size} asked for`
+      : 'The sweep stopped early')
   return {
     success: true,
+    filled,
     orderId: hashes.join(','),
-    ...(shortfall
-      ? { error: `Filled ${hashes.length} of ${calls.length}. ${shortfall}` }
+    ...(filled < size
+      ? { error: `Filled ${filled} of ${size}. ${reason}` }
       : {}),
   }
 }
@@ -570,19 +631,22 @@ function checkListing(
   if (totals.native <= 0n) {
     return { error: 'Refusing to buy: the listing prices the item at zero' }
   }
-  if (run.priceWei !== null && totals.native > run.priceWei) {
+  // No ceiling means no authorisation, and an unauthorised spend is a refusal
+  // rather than a pass. The entry point already refuses this, so reaching it
+  // here would mean a new caller skipped the front door.
+  if (run.priceWei === null) {
+    return {
+      error: 'Refusing to buy: this sweep carries no maximum price per item',
+    }
+  }
+  if (totals.native > run.priceWei) {
     return {
       error: 'Refusing to buy: a listing costs more than the price you set',
     }
   }
 
   return {
-    listing: {
-      hash,
-      seaport,
-      cost: totals.native,
-      identifier: identifier.toString(),
-    },
+    listing: { hash, seaport, cost: totals.native, identifier },
   }
 }
 
@@ -619,7 +683,14 @@ async function buildFill(
       },
     },
   )
-  return encodeFulfilment(run, bundle, response, item.seaport, item.cost)
+  return encodeFulfilment(
+    run,
+    bundle,
+    response,
+    item.seaport,
+    item.cost,
+    item.identifier,
+  )
 }
 
 /** Shared by the buy path and the accept-an-offer path. */
@@ -629,6 +700,8 @@ async function encodeFulfilment(
   response: Record<string, unknown>,
   seaport: SeaportDeployment,
   localValue: bigint,
+  /** The token this fill is about, decided here rather than by the response. */
+  identifier: bigint,
 ): Promise<
   | { call: { to: `0x${string}`; data: `0x${string}`; value: bigint } }
   | { error: string }
@@ -666,6 +739,7 @@ async function encodeFulfilment(
     inputData: tx['input_data'],
     seaport,
     fulfiller: run.wallet,
+    identifier,
   })
   if ('error' in planned) return { error: planned.error }
 
@@ -1263,6 +1337,18 @@ export function checkListingOrder(opts: {
       error: 'Refusing to sign: the order pays the seller nothing',
     }
   }
+  // The total was checked against the asked price, and the seller's share was
+  // checked against zero, which between them still allow any split at all: a
+  // response naming itself for 99.99% of a 10 ETH sale passes both. So the take
+  // is bounded on the sell side by the same ceiling the offer side uses. Fees
+  // here are marketplace plus creator, and both are paid in full below it.
+  const feeTake = totals.native - toSeller
+  const feeBps = (feeTake * 10_000n) / totals.native
+  if (feeBps > BigInt(MAX_FEE_BPS)) {
+    return {
+      error: `Refusing to sign: the order routes ${feeBps} bps of the sale away from you, past the ${MAX_FEE_BPS} bps ceiling`,
+    }
+  }
 
   const startTime = toUint(message['startTime'])
   const endTime = toUint(message['endTime'])
@@ -1418,6 +1504,9 @@ async function acceptBestOffer(run: OrderRun): Promise<NftOrderResult> {
   const best = pickBestOffer(run, offers, tokenId)
   if ('error' in best) return fail(best.error)
 
+  // Both sides of this comparison are per item now: the floor the caller set is
+  // what one token must fetch, and `proceeds` is what one token fetches out of
+  // this bid.
   if (run.priceWei !== null && best.proceeds < run.priceWei) {
     return fail(
       'Refusing to sell: the best standing offer is below the floor you set',
@@ -1448,8 +1537,17 @@ async function acceptBestOffer(run: OrderRun): Promise<NftOrderResult> {
   )
   // Accepting a bid moves WETH toward the seller, so the transaction carries no
   // value at all. Computing it locally here means a response that asks for one
-  // is a refusal rather than a surprise debit.
-  const built = await encodeFulfilment(run, bundle, response, best.seaport, 0n)
+  // is a refusal rather than a surprise debit. The token id goes with it: a
+  // collection offer resolves against criteria, and the resolver that decides
+  // WHICH of this wallet's tokens leaves is anchored to the one chosen here.
+  const built = await encodeFulfilment(
+    run,
+    bundle,
+    response,
+    best.seaport,
+    0n,
+    tokenId,
+  )
   if ('error' in built) return fail(built.error)
 
   const operator = operatorForConduitKey(OPENSEA_CONDUIT_KEY, best.seaport)
@@ -1491,18 +1589,22 @@ async function acceptBestOffer(run: OrderRun): Promise<NftOrderResult> {
   if (receipt.status !== 'success') {
     return fail(`The sale reverted on-chain (tx ${hash})`)
   }
-  return { success: true, orderId: hash }
+  return { success: true, orderId: hash, filled: 1 }
 }
 
 type CheckedOffer = {
   hash: string
   seaport: SeaportDeployment
-  /** WETH the seller receives, before the fees deducted inside the order. */
+  /**
+   * WETH the seller receives FOR ONE ITEM, before the fees deducted inside the
+   * order. A collection offer for N items carries the total for all N, so this
+   * is that total divided by the quantity the offer itself asks for.
+   */
   proceeds: bigint
 }
 
 /**
- * The best bid this token can actually be sold into.
+ * The best bid this token can actually be sold into, priced PER ITEM.
  *
  * A trait offer is skipped rather than attempted: its criteria root names a
  * subset nobody can reproduce client-side, so there is no way to confirm the
@@ -1558,8 +1660,18 @@ export function pickBestOffer(
     if (!Array.isArray(offerItems) || offerItems.length !== 1) continue
     const item = offerItems[0] as Record<string, unknown>
     if (Number(toUint(item['itemType']) ?? -1n) !== ITEM_TYPE.ERC20) continue
-    const proceeds = toUint(item['startAmount'])
-    if (proceeds === null || proceeds <= 0n) continue
+    const total = toUint(item['startAmount'])
+    if (total === null || total <= 0n) continue
+
+    // What the bidder pays is the total for the WHOLE offer, so a five-item bid
+    // prices per item only after the division, the same way `parsers.ts` prices
+    // the bid ladder. Taken as a per-item number, the total ranks a cheap bulk
+    // bid above a richer single one and then clears the floor the seller set
+    // with money that is never paid for the one token leaving the wallet.
+    const wanted = offeredQuantity(parameters as Record<string, unknown>)
+    if (wanted === null || wanted < 1n) continue
+    const proceeds = total / wanted
+    if (proceeds <= 0n) continue
 
     if (!best || proceeds > best.proceeds) {
       best = { hash, seaport, proceeds }
@@ -1572,6 +1684,39 @@ export function pickBestOffer(
     }
   }
   return best
+}
+
+/**
+ * How many items an offer asks for, off the offer's own signed parameters.
+ *
+ * The NFT side of a collection offer sits in the consideration, and its
+ * `startAmount` is the count the bidder will take. That number is covered by
+ * the bidder's signature, which is why it is preferred to `remaining_quantity`:
+ * a partially filled offer still prices at the ratio it was signed at, and the
+ * remaining count would divide the total by too small a number. An offer whose
+ * quantity cannot be read is not priced here at all, so the caller skips it
+ * rather than guessing at what one item is worth.
+ */
+export function offeredQuantity(
+  parameters: Record<string, unknown>,
+): bigint | null {
+  const consideration = parameters['consideration']
+  if (!Array.isArray(consideration)) return null
+  for (const raw of consideration) {
+    if (!raw || typeof raw !== 'object') continue
+    const item = raw as Record<string, unknown>
+    const itemType = Number(toUint(item['itemType']) ?? -1n)
+    if (
+      itemType !== ITEM_TYPE.ERC721 &&
+      itemType !== ITEM_TYPE.ERC1155 &&
+      itemType !== ITEM_TYPE.ERC721_WITH_CRITERIA &&
+      itemType !== ITEM_TYPE.ERC1155_WITH_CRITERIA
+    ) {
+      continue
+    }
+    return toUint(item['startAmount'])
+  }
+  return null
 }
 
 /**

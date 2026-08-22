@@ -189,7 +189,7 @@ Beyond the default, each class carries its own named boards in the same menu:
 | DEX         | **Liquidity** for the LP side of the pool, with the manage panel beside it; **Cross-Chain** for the same token priced per chain, with the bridge quote and in-flight transfers beside it |
 | Equities    | **Company**, the ticker read as a business rather than a price, with its insider filings under it                                                                                        |
 | Predictions | **Race**, for a field of a hundred rather than a handful: the outcome ladder gets the whole strip and the basket ticket sits beside it                                                   |
-| NFT         | **Collector**, for picking a token rather than the floor: the items grid at full width with the trait breakdown in its own column, and the ticket still there                                 |
+| NFT         | **Collector**, for picking a token rather than the floor: the items grid at full width with the trait breakdown in its own column, and the ticket still there                            |
 
 The **Workspaces** menu follows the same rule as the defaults: on a prediction
 market it suggests layouts built for prediction markets, not a spot execution

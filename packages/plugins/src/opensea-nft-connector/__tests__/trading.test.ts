@@ -30,6 +30,7 @@ import {
   OPENSEA_CONDUIT,
   OPENSEA_CONDUIT_KEY,
   SEAPORT_DEPLOYMENTS,
+  anchorCriteriaResolvers,
   considerationTotals,
   decimalToWei,
   operatorForConduitKey,
@@ -44,7 +45,9 @@ import {
   encodedCovers,
   executeNftOrder,
   findOrderComponents,
+  offeredQuantity,
   pickBestOffer,
+  sweepResult,
   valueAgrees,
 } from '../trading'
 import type { NftOrderContext, NftOrderParams } from '../trading'
@@ -210,11 +213,14 @@ function makeContext(
   return { ctx, keyReads: () => keyReads }
 }
 
+// A market buy carries the ceiling the ticket quoted. The fixtures list at
+// 1 ETH, so 1 is the ceiling every one of them sits exactly on.
 const BUY_MARKET: NftOrderParams = {
   action: 'place',
   side: 'buy',
   type: 'market',
   size: 1,
+  price: 1,
 }
 
 // ── The stubbed chain ──────────────────────────────────────────────────
@@ -369,6 +375,7 @@ describe('planFulfillCall pins the function and forces the recipient', () => {
       inputData: { newOwner: WALLET },
       seaport: DEFAULT_SEAPORT,
       fulfiller: WALLET,
+      identifier: 42n,
     })
     expect('error' in planned && planned.error).toContain('unrecognised')
   })
@@ -379,6 +386,7 @@ describe('planFulfillCall pins the function and forces the recipient', () => {
       inputData: { order: {}, fulfillerConduitKey: `0x${'ab'.repeat(32)}` },
       seaport: DEFAULT_SEAPORT,
       fulfiller: WALLET,
+      identifier: 42n,
     })
     expect('error' in planned && planned.error).toContain('conduit')
   })
@@ -394,6 +402,7 @@ describe('planFulfillCall pins the function and forces the recipient', () => {
       },
       seaport: DEFAULT_SEAPORT,
       fulfiller: WALLET,
+      identifier: 42n,
     })
     expect('error' in planned).toBe(false)
     if ('plan' in planned) {
@@ -409,6 +418,7 @@ describe('planFulfillCall pins the function and forces the recipient', () => {
       inputData: { fulfillerConduitKey: ZERO_HASH, order: { marker: true } },
       seaport: DEFAULT_SEAPORT,
       fulfiller: WALLET,
+      identifier: 42n,
     })
     expect('plan' in planned).toBe(true)
     if ('plan' in planned) {
@@ -468,7 +478,14 @@ describe('executeNftOrder refuses before it fetches anything', () => {
   it('refuses a limit order with no price, and a sell with no token id', async () => {
     const { ctx, keyReads } = makeContext(noRoutes)
     expect(
-      (await executeNftOrder(ctx, { ...BUY_MARKET, type: 'limit' })).error,
+      (
+        await executeNftOrder(ctx, {
+          action: 'place',
+          side: 'buy',
+          type: 'limit',
+          size: 1,
+        })
+      ).error,
     ).toContain('needs a price')
     expect(
       (
@@ -790,6 +807,66 @@ describe('checkListingOrder rebuilds the order rather than trusting it', () => {
     )
   })
 
+  it('refuses a split that leaves the seller a token share of their own sale', () => {
+    // The total is the 1 ETH that was asked for and the seller is paid
+    // something, which is every check this order used to face. Almost all of it
+    // still goes somewhere else.
+    const checked = checkListingOrder({
+      ...base,
+      message: listingMessage({
+        consideration: [
+          {
+            itemType: ITEM_TYPE.NATIVE,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: (ONE_ETH / 1000n).toString(),
+            endAmount: (ONE_ETH / 1000n).toString(),
+            recipient: WALLET,
+          },
+          {
+            itemType: ITEM_TYPE.NATIVE,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: (ONE_ETH - ONE_ETH / 1000n).toString(),
+            endAmount: (ONE_ETH - ONE_ETH / 1000n).toString(),
+            recipient: OTHER_WALLET,
+          },
+        ],
+      }),
+    })
+    expect('error' in checked && checked.error).toContain(
+      `past the ${MAX_FEE_BPS} bps ceiling`,
+    )
+  })
+
+  it('signs a schedule sitting exactly on the ceiling', () => {
+    const fee = (ONE_ETH * BigInt(MAX_FEE_BPS)) / 10_000n
+    const checked = checkListingOrder({
+      ...base,
+      message: listingMessage({
+        consideration: [
+          {
+            itemType: ITEM_TYPE.NATIVE,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: (ONE_ETH - fee).toString(),
+            endAmount: (ONE_ETH - fee).toString(),
+            recipient: WALLET,
+          },
+          {
+            itemType: ITEM_TYPE.NATIVE,
+            token: '0x0000000000000000000000000000000000000000',
+            identifierOrCriteria: '0',
+            startAmount: fee.toString(),
+            endAmount: fee.toString(),
+            recipient: OPENSEA_FEES,
+          },
+        ],
+      }),
+    })
+    expect('components' in checked).toBe(true)
+  })
+
   it('refuses a stale counter and an unknown conduit', () => {
     const staleCounter = checkListingOrder({
       ...base,
@@ -872,7 +949,12 @@ describe('the listing path refuses a token the wallet does not hold', () => {
 
 function offerFixture(
   overrides: {
+    /** The WETH the bidder pays for the WHOLE offer, as the wire carries it. */
     proceeds?: bigint
+    /** Items the bid covers. A collection offer is routinely for several. */
+    quantity?: number
+    /** Drop the NFT consideration leg, leaving the offer unpriceable. */
+    noConsideration?: boolean
     contract?: string
     encoded?: string | null
     traits?: unknown
@@ -881,6 +963,7 @@ function offerFixture(
   } = {},
 ) {
   const proceeds = overrides.proceeds ?? ONE_ETH / 2n
+  const quantity = overrides.quantity ?? 1
   return {
     order_hash: '0xoffer',
     chain: 'ethereum',
@@ -896,9 +979,21 @@ function offerFixture(
             endAmount: proceeds.toString(),
           },
         ],
+        consideration: overrides.noConsideration
+          ? []
+          : [
+              {
+                itemType: ITEM_TYPE.ERC721_WITH_CRITERIA,
+                token: overrides.contract ?? DOODLES,
+                identifierOrCriteria: '0',
+                startAmount: String(quantity),
+                endAmount: String(quantity),
+                recipient: OTHER_WALLET,
+              },
+            ],
       },
     },
-    remaining_quantity: 1,
+    remaining_quantity: quantity,
     criteria: {
       collection: { slug: 'doodles-official' },
       contract: { address: overrides.contract ?? DOODLES },
@@ -1060,5 +1155,282 @@ describe('the collection offer refuses an absurd fee schedule', () => {
     })
     expect(result.error).toContain(OTHER_COLLECTION)
     expect(keyReads()).toBe(0)
+  })
+})
+
+// ── 8. The money bugs the signing-path review found ────────────────────
+
+describe('a market buy carries the ceiling the ticket showed', () => {
+  it('refuses a sweep with no ceiling at all, before it fetches anything', async () => {
+    const { ctx, keyReads } = makeContext((path) => {
+      throw new Error(`unexpected request to ${path}`)
+    })
+    const { price: _quoted, ...noCeiling } = BUY_MARKET
+    const result = await executeNftOrder(ctx, noCeiling)
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('maximum price per item')
+    expect(keyReads()).toBe(0)
+  })
+
+  it('refuses a book that re-priced between the quote and the confirm', async () => {
+    // The ticket quoted 1.0 / 1.02 / 1.05 and sent the priciest of the three
+    // plus a percent. By the time the button was held those listings were
+    // taken, and the cheapest three are now five times the money.
+    const { ctx, keyReads } = makeContext((path) => {
+      if (path.startsWith('/listings/collection/')) {
+        return {
+          listings: [
+            listingFixture({ total: 4_900_000_000_000_000_000n }),
+            listingFixture({ total: 5_000_000_000_000_000_000n }),
+            listingFixture({ total: 5_100_000_000_000_000_000n }),
+          ],
+        }
+      }
+      throw new Error(`unexpected request to ${path}`)
+    })
+    const result = await executeNftOrder(ctx, {
+      ...BUY_MARKET,
+      size: 3,
+      price: 1.0605,
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('more than the price you set')
+    expect(keyReads()).toBe(0)
+  })
+
+  it('still sweeps the ladder its ceiling was quoted from', async () => {
+    stubRpc(() => GOOD_CONDUIT)
+    const costs = [
+      1_000_000_000_000_000_000n,
+      1_020_000_000_000_000_000n,
+      1_050_000_000_000_000_000n,
+    ]
+    let fills = 0
+    const { ctx, keyReads } = makeContext((path) => {
+      if (path.startsWith('/listings/collection/')) {
+        return { listings: costs.map((total) => listingFixture({ total })) }
+      }
+      if (path === '/listings/fulfillment_data') {
+        const value = costs[fills] ?? 0n
+        fills += 1
+        return fulfilmentFixture(value)
+      }
+      throw new Error(`unexpected request to ${path}`)
+    })
+    const result = await executeNftOrder(ctx, {
+      ...BUY_MARKET,
+      size: 3,
+      price: 1.0605,
+    })
+    // Every listing sits under the per-item ceiling and the basket under the
+    // total, so the run reaches the key and stops there.
+    expect(result.error).toBe('Wallet private key not found')
+    expect(keyReads()).toBe(1)
+    expect(fills).toBe(3)
+  })
+})
+
+describe('criteria resolvers name the token the caller chose', () => {
+  const resolver = (identifier: unknown) => ({
+    orderIndex: 0,
+    side: 0,
+    index: 0,
+    identifier,
+    criteriaProof: [],
+  })
+
+  it('refuses a resolver pointing at another token in the same collection', () => {
+    // The wallet holds the floor Doodle and a grail. The user picked the floor;
+    // the response resolves the grail, whose criteria root is 0 so Seaport
+    // would never check a proof.
+    const anchored = anchorCriteriaResolvers([resolver(17)], 4021n)
+    expect('error' in anchored && anchored.error).toContain('#17')
+  })
+
+  it('re-encodes the identifier from its own bigint', () => {
+    const anchored = anchorCriteriaResolvers([resolver('4021')], 4021n)
+    expect('resolvers' in anchored).toBe(true)
+    if ('resolvers' in anchored) {
+      expect(anchored.resolvers).toHaveLength(1)
+      expect(anchored.resolvers[0].identifier).toBe(4021n)
+      expect(anchored.resolvers[0].criteriaProof).toEqual([])
+    }
+  })
+
+  it('refuses a resolver when the order names no token, and allows none', () => {
+    const unanchored = anchorCriteriaResolvers([resolver(17)], null)
+    expect('error' in unanchored && unanchored.error).toContain(
+      'no token to anchor it to',
+    )
+    expect(anchorCriteriaResolvers([], null)).toEqual({ resolvers: [] })
+    expect('error' in anchorCriteriaResolvers('nonsense', 1n)).toBe(true)
+  })
+
+  it('carries the refusal through planFulfillCall', () => {
+    const planned = planFulfillCall({
+      functionSignature: 'fulfillAdvancedOrder((..),(..)[],bytes32,address)',
+      inputData: {
+        advancedOrder: {},
+        criteriaResolvers: [resolver(17)],
+        fulfillerConduitKey: ZERO_HASH,
+        recipient: WALLET,
+      },
+      seaport: DEFAULT_SEAPORT,
+      fulfiller: WALLET,
+      identifier: 4021n,
+    })
+    expect('error' in planned && planned.error).toContain('#17')
+  })
+
+  it('refuses the sale rather than ship a token the user did not pick', async () => {
+    stubRpc((method) => {
+      if (method === 'eth_call') return ownerOfResult(WALLET)
+      if (method === 'eth_chainId') return '0x1'
+      return '0x'
+    })
+    const { ctx, keyReads } = makeContext((path) => {
+      if (path.startsWith('/offers/collection/')) {
+        return { offers: [offerFixture({ proceeds: 3n * ONE_ETH })] }
+      }
+      if (path === '/offers/fulfillment_data') {
+        return {
+          fulfillment_data: {
+            transaction: {
+              function: 'fulfillAdvancedOrder((..),(..)[],bytes32,address)',
+              chain: 1,
+              to: DEFAULT_SEAPORT.address,
+              value: '0',
+              input_data: {
+                advancedOrder: {},
+                criteriaResolvers: [resolver(17)],
+                fulfillerConduitKey: OPENSEA_CONDUIT_KEY,
+                recipient: WALLET,
+              },
+            },
+          },
+        }
+      }
+      throw new Error(`unexpected request to ${path}`)
+    })
+    const result = await executeNftOrder(ctx, {
+      action: 'place',
+      side: 'sell',
+      type: 'market',
+      size: 1,
+      tokenId: '4021',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('#17')
+    expect(keyReads()).toBe(0)
+  })
+})
+
+describe('a multi-item offer prices per item, never in total', () => {
+  const run = { contract: DOODLES as `0x${string}`, chainSlug: 'ethereum' }
+
+  it('ranks a single 2 ETH bid above a five-item 5 ETH one', () => {
+    const best = pickBestOffer(
+      run,
+      [
+        offerFixture({ proceeds: 5n * ONE_ETH, quantity: 5 }),
+        offerFixture({ proceeds: 2n * ONE_ETH, quantity: 1 }),
+      ],
+      42n,
+    )
+    expect('proceeds' in best && best.proceeds).toBe(2n * ONE_ETH)
+  })
+
+  it('skips an offer whose quantity cannot be read', () => {
+    const unpriceable = pickBestOffer(
+      run,
+      [offerFixture({ noConsideration: true })],
+      42n,
+    )
+    expect('error' in unpriceable).toBe(true)
+    expect(offeredQuantity({ consideration: [] })).toBeNull()
+    expect(
+      offeredQuantity({
+        consideration: [
+          {
+            itemType: ITEM_TYPE.ERC1155_WITH_CRITERIA,
+            startAmount: '5',
+          },
+        ],
+      }),
+    ).toBe(5n)
+  })
+
+  it('holds the floor against a bulk bid whose TOTAL would clear it', async () => {
+    // Five items for 5 ETH is 1 ETH a token. Read as a total it beats a 4 ETH
+    // floor and sells one Doodle for a quarter of what the seller demanded.
+    const { ctx, keyReads } = makeContext((path) => {
+      if (path.startsWith('/offers/collection/')) {
+        return {
+          offers: [offerFixture({ proceeds: 5n * ONE_ETH, quantity: 5 })],
+        }
+      }
+      throw new Error(`unexpected request to ${path}`)
+    })
+    const result = await executeNftOrder(ctx, {
+      action: 'place',
+      side: 'sell',
+      type: 'market',
+      size: 1,
+      price: 4,
+      tokenId: '42',
+    })
+    expect(result.success).toBe(false)
+    expect(result.error).toContain('below the floor you set')
+    expect(keyReads()).toBe(0)
+  })
+})
+
+describe('a short sweep reports what it filled', () => {
+  it('counts the fills rather than the size it was handed', () => {
+    const short = sweepResult({
+      hashes: ['0x1', '0x2', '0x3'],
+      available: 3,
+      size: 10,
+      shortfall: null,
+    })
+    expect(short.success).toBe(true)
+    expect(short.filled).toBe(3)
+    expect(short.error).toContain('Filled 3 of 10')
+    expect(short.error).toContain('only 3 listing(s)')
+  })
+
+  it('keeps the on-chain reason when a fill reverted mid-run', () => {
+    const stopped = sweepResult({
+      hashes: ['0x1'],
+      available: 3,
+      size: 3,
+      shortfall: 'A fill reverted on-chain (tx 0x2)',
+    })
+    expect(stopped.filled).toBe(1)
+    expect(stopped.error).toContain('reverted on-chain')
+  })
+
+  it('says nothing extra when the whole sweep filled', () => {
+    const full = sweepResult({
+      hashes: ['0x1', '0x2'],
+      available: 2,
+      size: 2,
+      shortfall: null,
+    })
+    expect(full.filled).toBe(2)
+    expect(full.error).toBeUndefined()
+    expect(full.orderId).toBe('0x1,0x2')
+  })
+
+  it('is a refusal when nothing filled at all', () => {
+    const none = sweepResult({
+      hashes: [],
+      available: 1,
+      size: 1,
+      shortfall: 'A fill failed to send',
+    })
+    expect(none.success).toBe(false)
+    expect(none.filled).toBeUndefined()
+    expect(none.error).toBe('A fill failed to send')
   })
 })

@@ -154,8 +154,11 @@ any N tokens in the set. **List item** is a limit sell of one token you own.
 Sizes are item counts and they are whole numbers, because an NFT is
 indivisible. A sweep is priced off the ladder rather than off the floor, so the
 summary shows the total and the realised average: five items when the floor is
-one listing deep costs the sum of five asks, not five times the floor. See
-[NFT collections](/docs/nft-trading).
+one listing deep costs the sum of five asks, not five times the floor. Both
+market intents send the price they quoted you as a bound (a ceiling per item on
+the sweep, a floor on the accept), so a book that moved between the quote and
+the confirm is refused instead of bought, and a short sweep reports the items
+it actually filled. See [NFT collections](/docs/nft-trading).
 
 ## Watching the order
 

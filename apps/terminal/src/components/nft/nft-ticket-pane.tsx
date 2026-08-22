@@ -174,8 +174,15 @@ function NftTicketInner({
     () => [...(book?.asks ?? [])].sort((a, b) => a.price - b.price),
     [book],
   )
+  // Collection-wide bids only. A trait or single-token offer can sit at the top
+  // of the book and the connector will still refuse to sell into it (its
+  // criteria cannot be confirmed client-side), so quoting one would price the
+  // accept against a bid this ticket can never take, and the floor derived from
+  // it would block the bid it actually can.
   const bestBid = useMemo(() => {
-    const bids = [...(book?.bids ?? [])].sort((a, b) => b.price - a.price)
+    const bids = (book?.bids ?? [])
+      .filter((bid) => !bid.trait && !bid.tokenId)
+      .sort((a, b) => b.price - a.price)
     return bids[0] ?? null
   }, [book])
 

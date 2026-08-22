@@ -97,8 +97,14 @@ export type NftCollectionSummary = {
   listedCount?: number
   /** Completed sales in the trailing 24h. */
   sales24h?: number
-  /** Creator fee as a fraction of sale price (0.05 = 5%). */
-  royaltyBps?: number
+  /**
+   * Creator fee as a FRACTION of sale price: 0.025 is a 2.5% royalty.
+   *
+   * A rate, not basis points. It was called `royaltyBps` while carrying a
+   * fraction, and both consumers read the name rather than the doc: the header
+   * divided by 100 again and rendered every royalty as 0.00%.
+   */
+  royaltyRate?: number
   verified?: boolean
   description?: string
   /** Unix ms the collection's first token was minted, when known. */

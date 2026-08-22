@@ -22,10 +22,7 @@
 import { create } from 'zustand'
 
 import { normalizeInstrumentId } from '@pairlens/shared/market-ref'
-import type {
-  NftChain,
-  NftCollectionSummary,
-} from '@pairlens/shared/nft-types'
+import type { NftChain, NftCollectionSummary } from '@pairlens/shared/nft-types'
 
 import { STORAGE_PREFIX } from '@/hooks/use-persisted-state'
 
@@ -154,6 +151,8 @@ export function useNftDirectoryEntry(
   contract: string | undefined,
 ): NftDirectoryEntry | null {
   return useNftDirectoryStore((s) =>
-    chain && contract ? (s.entries[nftDirectoryKey(chain, contract)] ?? null) : null,
+    chain && contract
+      ? (s.entries[nftDirectoryKey(chain, contract)] ?? null)
+      : null,
   )
 }

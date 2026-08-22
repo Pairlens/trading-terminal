@@ -281,6 +281,19 @@ floor is one listing deep costs the sum of five asks, and quoting five times
 the floor would understate the trade by whatever shape the book is in. The
 summary shows the realised average next to the total for the same reason.
 
+A market order carries the price it quoted you. The ticket sends the priciest
+ask in the set it walked, plus one percent, as a ceiling per item, and the
+connector holds every listing and the whole basket under it. Accepting a bid
+sends the same bound as a floor. The book cache is twenty seconds deep, which
+is long enough for three listings quoted at 3 ETH to be taken and replaced by
+three at 15, and a market order with no ceiling would buy those instead. An
+order that reaches the connector without one is refused rather than sent.
+
+A sweep reports what it filled. The book can be thinner than it looked, and a
+fill can revert halfway down the list, so the confirmation names the number of
+items that actually settled and why the run stopped, never the number you
+typed.
+
 Royalties are paid by default. Creator fees come back from OpenSea in basis
 points and are carried into the order, and the connector caps the total
 marketplace-plus-creator fee an order will accept rather than signing whatever

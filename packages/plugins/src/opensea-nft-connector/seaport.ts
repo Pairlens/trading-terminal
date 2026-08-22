@@ -38,10 +38,11 @@
  * the same reason `swap-executor` accepts router calldata it cannot decode:
  * Seaport verifies the maker's own signature over the order before it moves
  * anything, so calldata that does not correspond to a real signed order simply
- * reverts. What a caller CAN steer is the target, the value and the recipient,
- * and all three are decided here instead: the target must be a pinned Seaport,
- * the value is summed from the listing's own consideration, and the recipient is
- * forced to the signer.
+ * reverts. What a caller CAN steer is the target, the value, the recipient and
+ * the criteria resolvers, and all four are decided here instead: the target must
+ * be a pinned Seaport, the value is summed from the listing's own consideration,
+ * the recipient is forced to the signer, and every resolver's identifier is
+ * forced to the token the caller chose.
  */
 import type { NftChain } from '@pairlens/shared/nft-types'
 
@@ -675,22 +676,107 @@ export type FulfillPlan = {
   args: ReadonlyArray<unknown>
 }
 
+/** One entry of `fulfillAdvancedOrder`'s `criteriaResolvers` argument. */
+export type CriteriaResolver = {
+  orderIndex: bigint
+  side: number
+  index: bigint
+  identifier: bigint
+  criteriaProof: ReadonlyArray<`0x${string}`>
+}
+
+/**
+ * Rebuild the criteria resolvers around the token the caller chose.
+ *
+ * A resolver is what tells Seaport WHICH token a criteria item resolves to, and
+ * a collection offer's criteria root is 0, which makes Seaport skip proof
+ * verification entirely and accept any identifier handed to it. So a response
+ * that returns a resolver naming a different token in the same collection is
+ * asking to sell a different NFT for the same money, and every other check in
+ * the connector would still pass. The identifier is therefore ours, never
+ * theirs: it must equal the token the caller named, and what gets encoded is the
+ * local bigint rather than the value that arrived.
+ */
+export function anchorCriteriaResolvers(
+  value: unknown,
+  identifier: bigint | null,
+): { resolvers: Array<CriteriaResolver> } | { error: string } {
+  if (!Array.isArray(value)) {
+    return { error: 'Refusing to send: the fulfilment criteria are unreadable' }
+  }
+  if (value.length === 0) return { resolvers: [] }
+  if (identifier === null) {
+    return {
+      error:
+        'Refusing to send: the fulfilment resolves a criteria item, but this order names no token to anchor it to',
+    }
+  }
+  const resolvers: Array<CriteriaResolver> = []
+  for (const raw of value) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      return { error: 'Refusing to send: a criteria resolver is malformed' }
+    }
+    const entry = raw as Record<string, unknown>
+    const named = toUint(entry['identifier'])
+    if (named === null || named !== identifier) {
+      return {
+        error: `Refusing to send: the fulfilment resolves to token #${String(entry['identifier'])}, not the #${identifier} you chose`,
+      }
+    }
+    const orderIndex = toUint(entry['orderIndex'])
+    const index = toUint(entry['index'])
+    const side = toUint(entry['side'])
+    if (orderIndex === null || index === null || side === null) {
+      return { error: 'Refusing to send: a criteria resolver is malformed' }
+    }
+    const proofRaw = entry['criteriaProof']
+    const proof: Array<`0x${string}`> = []
+    if (proofRaw !== undefined && proofRaw !== null) {
+      if (!Array.isArray(proofRaw)) {
+        return {
+          error: 'Refusing to send: a criteria proof is not a list of hashes',
+        }
+      }
+      for (const node of proofRaw) {
+        if (!isBytes32(node)) {
+          return {
+            error: 'Refusing to send: a criteria proof carries a non-hash node',
+          }
+        }
+        proof.push(node)
+      }
+    }
+    resolvers.push({
+      orderIndex,
+      side: Number(side),
+      index,
+      // The token the caller chose, re-encoded from our own bigint.
+      identifier,
+      criteriaProof: proof,
+    })
+  }
+  return { resolvers }
+}
+
 /**
  * Turn a fulfilment response into an encodable call, or say why it will not be.
  *
  * The signature string is split on `(` exactly as OpenSea's own docs do, then
- * matched against the allowlist. `recipient` is overwritten with the signer and
+ * matched against the allowlist. `recipient` is overwritten with the signer,
+ * `criteriaResolvers` is anchored to the token the caller chose, and
  * `fulfillerConduitKey` is checked against the two keys whose operator we know,
- * because those are the two fields that decide where the asset lands and who is
- * allowed to move it.
+ * because those are the fields that decide which asset moves, where it lands
+ * and who is allowed to move it.
  */
 export function planFulfillCall(opts: {
   functionSignature: unknown
   inputData: unknown
   seaport: SeaportDeployment
   fulfiller: `0x${string}`
+  /** The token this order is about, or null when it names no single token. */
+  identifier: bigint | null
 }): { plan: FulfillPlan; operator: `0x${string}` } | { error: string } {
-  const { functionSignature, inputData, seaport, fulfiller } = opts
+  const { functionSignature, inputData, seaport, fulfiller, identifier } = opts
   if (typeof functionSignature !== 'string' || functionSignature.length === 0) {
     return { error: 'OpenSea returned no fulfilment function' }
   }
@@ -736,6 +822,12 @@ export function planFulfillCall(opts: {
       return {
         error: `Refusing to send: the fulfilment is missing '${name}'`,
       }
+    }
+    if (name === 'criteriaResolvers') {
+      const anchored = anchorCriteriaResolvers(input[name], identifier)
+      if ('error' in anchored) return { error: anchored.error }
+      args.push(anchored.resolvers)
+      continue
     }
     args.push(input[name])
   }

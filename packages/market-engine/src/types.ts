@@ -156,6 +156,14 @@ export type OrderResult = {
   success: boolean
   orderId?: string
   error?: string
+  /**
+   * Units actually filled, when the connector knows and the number can differ
+   * from the size it was handed. An NFT sweep is N sequential fills over a book
+   * that can be thinner than the ticket showed, so a caller reporting its own
+   * input count would claim items nobody sold. Optional: a venue that fills or
+   * rests the whole order leaves it unset.
+   */
+  filled?: number
 }
 
 export type InstrumentFilter = {
