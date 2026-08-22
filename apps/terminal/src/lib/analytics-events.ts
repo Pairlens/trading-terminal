@@ -558,6 +558,14 @@ export interface AnalyticsEvents {
    * carries which contract.
    */
   mobile_prediction_chart_view: { view: 'odds' | 'candles' }
+  /**
+   * The chart's inspect crosshair was raised by a press and hold. The gesture
+   * is invisible by nature, so this is the only number that says whether the
+   * hint found anyone: a flat line means people are still panning around
+   * looking for a price. `timeframe` says which charts get read rather than
+   * watched — it names a control of ours, never a market.
+   */
+  mobile_chart_inspected: { timeframe: string }
 }
 
 /**

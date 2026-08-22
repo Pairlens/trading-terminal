@@ -17,6 +17,7 @@ import { BOOTSTRAP_PLUGINS } from '../plugins/bootstrap-bundle'
 import type { PluginManifest } from '@pairlens/plugin-system/types'
 
 import { pluginBrand } from '@/components/plugins/plugin-brand'
+import { DEX_CHAINS } from '@/lib/dex/chain-catalog'
 
 const PROVIDER_IDS = [
   'geckoterminal-data-provider',
@@ -65,6 +66,31 @@ describe('DEX data providers', () => {
       expect(brand.mono.length, id).toBeGreaterThan(0)
       // Not the derived-initials fallback: these are named integrations.
       expect(brand.tint, id).toBeTruthy()
+    }
+  })
+})
+
+describe('on-chain candle history', () => {
+  /**
+   * Why the pool panes ask for candles with `allowWildcardProvider`.
+   *
+   * The strict venue probe only accepts a plugin that NAMES the market, which
+   * is what keeps a pool provider from answering "does Bitvavo carry this
+   * pair?" on a CEX. On a chain there is no such plugin at all — GeckoTerminal
+   * declares `*` — so under the strict rule every pool sparkline in the app
+   * resolved nothing and settled on the flat "no history" line. If a connector
+   * ever does declare a chain here, the widening stops being load-bearing and
+   * this test is where that shows up.
+   */
+  it('is served by a wildcard provider and by no chain-named plugin', () => {
+    const historyMarkets = BOOTSTRAP_PLUGINS.flatMap((p) =>
+      p.manifest.capabilities
+        .filter((c) => c.id === 'market-data:history')
+        .flatMap((c) => c.markets),
+    )
+    expect(historyMarkets).toContain('*')
+    for (const chain of DEX_CHAINS) {
+      expect(historyMarkets, chain.market).not.toContain(chain.market)
     }
   })
 })

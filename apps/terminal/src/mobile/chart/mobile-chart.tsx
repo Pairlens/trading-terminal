@@ -16,12 +16,15 @@
  * The chart NEVER unmounts for the life of a mobile session. Panels layer over
  * it; the co-pilot draws on it while its own sheet covers two thirds of it.
  */
-import { Suspense, memo, useMemo, useRef } from 'react'
+import { Suspense, memo, useCallback, useMemo, useRef } from 'react'
 import { FastFinancialChart } from '@pairlens/fast-financial-charts/react'
 
 import { CHART_TIME_AXIS_HEIGHT } from '../lib/mobile-geometry'
 import { useMobileFocus } from '../mobile-focus-context'
 import { isPlaceableTool } from './drawing-placement'
+import { InspectHint, useInspectHint } from './inspect-hint'
+import { ChartInspector } from './chart-inspector'
+import { useChartInspect } from './use-chart-inspect'
 import { useChartActions, useChartConfig } from '@/lib/chart-terminal-context'
 import { usePairlensChartTheme } from '@/hooks/use-chart-theme'
 import { useIsPredictionPair } from '@/hooks/use-prediction-pair'
@@ -30,6 +33,7 @@ import {
   formatPredictionChartPrice,
 } from '@/lib/format-price'
 import { lazyChunk } from '@/lib/lazy-chunk'
+import { track } from '@/lib/analytics-events'
 
 /**
  * Lazy because it pulls the drawing-tool catalog in for its labels. By the
@@ -143,6 +147,30 @@ export const MobileChart = memo(function MobileChart({
   const { focusedPair, focusedVenue } = useMobileFocus()
   const predictionPrices = useIsPredictionPair(focusedPair, focusedVenue)
 
+  /**
+   * Press and hold to read a bar.
+   *
+   * Gated on the same `band === 'full'` as placement, and off while a drawing
+   * tool is armed — that tool's own reticle owns the finger, and two
+   * crosshairs on one chart is one too many. Nothing here is mounted unless
+   * the hold succeeds, so the cost of the feature on a chart nobody touches is
+   * four pointer listeners.
+   */
+  const hint = useInspectHint()
+  const inspectable = band === 'full' && !isPlaceableTool(activeTool)
+  const retireHint = hint.retire
+  const onArm = useCallback(() => {
+    // From the gesture, never from the state change (see lib/haptics).
+    track('mobile_chart_inspected', { timeframe: chartTimeframe })
+    retireHint()
+  }, [chartTimeframe, retireHint])
+  const inspect = useChartInspect({
+    enabled: inspectable,
+    frameRef,
+    onArm,
+    resetKey: `${focusedVenue}:${focusedPair}:${chartTimeframe}`,
+  })
+
   const localization = useMemo(
     () => ({
       priceFormatter: predictionPrices
@@ -220,6 +248,26 @@ export const MobileChart = memo(function MobileChart({
           />
         </Suspense>
       ) : null}
+
+      {/* Reading with a finger. Mounted only once a hold has landed, so the
+          chart carries no extra layer, no extra subscription and no extra
+          paint until somebody asks a question of it.
+
+          Statically imported, unlike the placement layer above: that one pulls
+          the whole drawing-tool catalog in for its labels, this one imports
+          nothing the shell does not already have. Behind `lazyChunk` it cost
+          ~300ms between the hold landing and the crosshair appearing — on the
+          one gesture whose entire promise is that it answers immediately. */}
+      {inspect.armed ? (
+        <ChartInspector
+          frameRef={frameRef}
+          onDismiss={inspect.dismiss}
+          priceAxisWidth={PRICE_AXIS_WIDTH}
+          store={inspect.store}
+        />
+      ) : null}
+
+      {inspectable && hint.visible && !inspect.armed ? <InspectHint /> : null}
     </div>
   )
 })

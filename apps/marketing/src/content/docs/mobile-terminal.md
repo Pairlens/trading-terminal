@@ -4,8 +4,8 @@ description: The Pairlens Mobile Trading Terminal. The same URL below 768px, wit
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 20 AUG 2026
-readTime: 11 min read
+updated: 22 AUG 2026
+readTime: 12 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
@@ -68,6 +68,24 @@ is part of what they are, the chip loses its caret and reads as a label.
 The **avatar** opens Settings, which is a screen rather than a tab.
 
 ## The chart
+
+**Touch and hold to read any bar.** A chart engine draws its crosshair from a
+mouse it can see moving, and a phone has none, so the price at a given moment
+used to be the one thing a phone chart could not tell you. Hold a finger on the
+plot for a moment and a crosshair comes up under it: the bar's open, high, low
+and close where the live price normally sits, its own move in percent, its
+volume, a price tag in the price scale and the date on the time axis.
+
+Drag without lifting and it scrubs along the series, one bar at a time, while
+the chart stays exactly where it is. Let go and the crosshair stays put, so you
+can read it with your hand out of the way. From there a tap anywhere on the
+plot moves it again, no hold needed. Close it with the ✕ on the readout, or
+pinch to zoom and it steps aside for you.
+
+It follows the crosshair chip in the toolbar: in Magnet the line rides the
+closes, in Free it floats wherever you put it. Switching pair, venue or
+timeframe takes it down, because the bars underneath are no longer the bars it
+was placed on.
 
 **Timeframes** live on a chip beside the price. Four are pinned by default
 (1m, 1h, 1D, 1W) and the rest are one tap further down. Long-press any of them

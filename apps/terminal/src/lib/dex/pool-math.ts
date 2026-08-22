@@ -463,30 +463,6 @@ export function sumFlowSince(
   return { buyUsd, sellUsd }
 }
 
-/** How many chart tokens the swatch palette cycles through. */
-export const SWATCH_TONE_COUNT = 5
-
-/**
- * A stable colour slot for a pool, 1..5, derived from its address.
- *
- * The detail pane's 28px badge. Token logos are the obvious thing to put there
- * and the wrong one: no provider on this path publishes a logo URL for a pool's
- * base token, so the pane would be drawing a broken image on every chain but
- * the two that happen to resolve. A deterministic swatch is honest, never
- * fails to load, and still gives the pane a fixed visual anchor per pool.
- *
- * FNV-1a, because it has to be the same colour on every reload and across
- * machines; `Math.random` or an insertion index would repaint on refresh.
- */
-export function swatchIndexFor(seed: string): number {
-  let hash = 0x811c9dc5
-  for (let i = 0; i < seed.length; i++) {
-    hash ^= seed.charCodeAt(i)
-    hash = Math.imul(hash, 0x01000193) >>> 0
-  }
-  return (hash % SWATCH_TONE_COUNT) + 1
-}
-
 /** Largest absolute net in a bucket set, for scaling the bars. */
 export function peakAbsNet(buckets: Array<FlowBucket>): number {
   let peak = 0

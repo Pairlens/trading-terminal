@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 6
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 27 min read
 ---
 
@@ -274,6 +274,12 @@ one of 15m, 1H or 1D.
 Rows come from a thirty-second fetch, and the clock filters them on every
 tick rather than on every fetch: a fifteen-minute window expires while the
 board is on screen.
+
+While the venues are still answering, the pane draws the shape you are about to
+read instead of a spinner. Focus ghosts its two stats, its chart and both legs;
+Board ghosts its rows under the real column headers. The horizon chips and the
+view toggle are live the whole time, so you can pick a shape before the first
+window lands.
 
 ### Where the reference comes from
 

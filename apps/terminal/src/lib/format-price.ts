@@ -75,6 +75,22 @@ export function formatPrice(price: number): string {
 }
 
 /**
+ * The same price, denominated in a token rather than in dollars.
+ *
+ * For a pool quoted in something that is not a dollar: a Solana map is mostly
+ * SOL-quoted pairs, and "1 NVDA = 0.0₆2873 SOL" is the number that chain
+ * actually trades in. It is `formatPrice` without the currency, and it matters
+ * that it is not `formatAmount`, which falls back to `toPrecision` and renders
+ * a micro-price as `2.873e-7`.
+ */
+export function formatTokenPrice(price: number): string {
+  if (!Number.isFinite(price) || price <= 0) return '0'
+  // The dollar sign is the only difference, and stripping it keeps the two
+  // functions from drifting apart over the four branches above.
+  return formatPrice(price).replace('$', '')
+}
+
+/**
  * Format a price for the chart Y-axis / crosshair (no $ prefix, more decimals).
  */
 export function formatChartPrice(price: number): string {
@@ -192,6 +208,11 @@ export function formatValue(symbol: string, v: number): string {
  * Format an asset amount with compact K/M notation (no currency symbol).
  */
 export function formatAmount(v: number): string {
+  // Billions and trillions are not an edge case here: a memecoin supply runs to
+  // ten figures routinely, and without these two branches a pool reserve read
+  // "6843.77M", which is a number nobody can size at a glance.
+  if (v >= 1_000_000_000_000) return `${(v / 1_000_000_000_000).toFixed(2)}T`
+  if (v >= 1_000_000_000) return `${(v / 1_000_000_000).toFixed(2)}B`
   if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(2)}M`
   if (v >= 1_000) return `${(v / 1_000).toFixed(2)}K`
   if (v >= 1) return v.toFixed(4)

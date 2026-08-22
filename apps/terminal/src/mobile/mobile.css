@@ -641,6 +641,69 @@
     pointer-events: none;
   }
 
+  /* ── Reading a bar with a finger ───────────────────────────────────
+     The chart band is a control surface, not a document. A long press over it
+     used to raise the text-selection loupe and iOS's copy callout — the
+     gesture a trader reaches for to read a price was answered by selecting the
+     price as if it were prose. Nothing in this zone is prose: the chart is a
+     canvas, the readout is a live number, the toolbar is buttons. Article text
+     lives in the news reader and the assistant, both of which are sheets
+     mounted outside it and keep their selection.
+
+     The zone is the whole band on purpose (chart, readout, event strip,
+     overlays, toolbar) — a press that starts on the chart and drifts onto the
+     readout is one gesture, and half a rule would let it select there. */
+  .pl-chart-zone {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* The live readout stands down while the crosshair is up (see
+     chart-inspector.tsx). Two prices on one chart — the last trade in the
+     corner and the bar under the finger — is the one thing that makes a
+     crosshair harder to read than no crosshair. `pointer-events` goes with the
+     opacity, and it has to name the children too: the timeframe chip inside
+     opts back in with `pointer-events-auto`, so a chip faded to nothing would
+     still have opened its popover. */
+  .pl-chart-hud {
+    transition: opacity 140ms ease-out;
+  }
+
+  html.pl-chart-inspecting .pl-chart-hud {
+    opacity: 0;
+  }
+
+  html.pl-chart-inspecting .pl-chart-hud,
+  html.pl-chart-inspecting .pl-chart-hud * {
+    pointer-events: none;
+  }
+
+  /* The two axis tags: price in the gutter, date on the time axis. Filled
+     rather than outlined, because they sit ON the axis labels they are
+     temporarily replacing and have to win against them.
+
+     `--primary` and not the chart's own ink, here and on the hairlines this
+     class sits beside: the crosshair layer is PORTALED to the body, where
+     `--pl-chart-fg` resolves to the pre-mount fallback rather than to the value
+     chart-paint wrote on `.pl-mobile-root` (see the Paint block above). It is
+     the colour the placement reticle draws in too, which is right — both are
+     "the phone is pointing at something". */
+  .pl-xh-tag {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-radius: 5px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    padding-inline: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
   /* The price readout, tracking the sheet.
 
      The hero and the compact line are both in the DOM (see price-readout.tsx)
@@ -1379,4 +1442,13 @@ html[data-viewport='mobile'] body {
    Belt and braces over the engine's preventDefault. */
 html[data-viewport='mobile'] .pl-chart-band {
   touch-action: pan-x pan-y;
+}
+
+/* While the crosshair is up the band owns every touch on it: a scrub is a
+   drag that must not be handed to the browser as a pan halfway through. The
+   value is read at touchstart, so this arms the NEXT gesture rather than the
+   one that raised the crosshair — which is the one that needs it, since that
+   one starts as a hold and never asks the compositor for anything. */
+html[data-viewport='mobile'].pl-chart-inspecting .pl-chart-band {
+  touch-action: none;
 }
