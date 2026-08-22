@@ -113,6 +113,15 @@ describe('bitget 2h history folds from 1h', () => {
       expect(candles[1]?.ts).toBe(t0 + 2 * HOUR)
       expect(candles[1]?.close).toBe(104)
     } finally {
+      // Tear the plugin down BEFORE handing `fetch` back.
+      //
+      // `execute` leaves a ccxt `loadMarkets()` in flight, and the destroy in
+      // `afterEach` runs AFTER this block. In that gap the stub is gone, so
+      // those requests go out over the real network: two live calls to
+      // api.bitget.com per run, landing late enough to be recorded by the next
+      // test file's stub. That is what made an unrelated GeckoTerminal
+      // resolver test count three requests where it makes one.
+      while (openPlugins.length > 0) await openPlugins.pop()?.destroy?.()
       globalThis.fetch = original
     }
   })

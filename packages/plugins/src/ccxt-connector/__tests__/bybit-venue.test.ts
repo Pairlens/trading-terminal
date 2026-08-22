@@ -41,9 +41,23 @@ describe('bybit manifest', () => {
       assetClass: 'crypto-spot',
       abbr: 'BB',
       gradient: 'from-orange-500 to-orange-600',
-      logoUrl: 'https://www.bybit.com/favicon.ico',
       triggerOrders: true,
+      // Stamped by the manifest factory, and load-bearing: a deployment that
+      // excludes `cex-spot` must drop this connector with the family.
+      family: 'cex-spot',
     })
+
+    // The mark is served from our own bundle rather than the venue's site.
+    // Asserted as a SHAPE rather than as the exact filename, because the
+    // literal URL is what made this test rot: it pinned
+    // `https://www.bybit.com/favicon.ico` and kept passing right up until the
+    // marks moved to self-hosted posters, at which point it had been excluded
+    // from CI long enough that nobody saw it go red. What actually matters is
+    // that the icon resolves offline, inside the desktop CSP, and without
+    // reaching a third party.
+    const logoUrl = bybitMarketConnectorManifest.metadata?.['logoUrl']
+    expect(logoUrl).toBe(bybitMarketConnectorManifest.icon)
+    expect(logoUrl).toMatch(/^\/posters\//)
     // ByBit reaches the browser directly — no desktop gate, in either half.
     expect(bybitMarketConnectorManifest.metadata?.['requiresDesktop']).toBe(
       undefined,

@@ -10,7 +10,7 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc --project tsconfig.json --noEmit",
-    "test": "bun test src/__tests__"
+    "test": "bun test --preload ./src/test-utils/offline.ts src"
   },
   "private": true,
   "exports": {
@@ -25,6 +25,9 @@
     "./pairlens-cex-futures/workspaces": "./src/pairlens-cex-futures/workspaces.ts",
     "./pairlens-dex": "./src/pairlens-dex/index.ts",
     "./pairlens-dex/workspaces": "./src/pairlens-dex/workspaces.ts",
+    "./pairlens-memecoins": "./src/pairlens-memecoins/index.ts",
+    "./pairlens-memecoins/workspaces": "./src/pairlens-memecoins/workspaces.ts",
+    "./memecoin-data-provider": "./src/memecoin-data-provider/index.ts",
     "./pairlens-equities": "./src/pairlens-equities/index.ts",
     "./pairlens-equities/workspaces": "./src/pairlens-equities/workspaces.ts",
     "./basic-symbols": "./src/basic-symbols/index.ts",

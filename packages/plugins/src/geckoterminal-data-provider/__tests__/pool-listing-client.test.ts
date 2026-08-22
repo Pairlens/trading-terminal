@@ -204,9 +204,19 @@ describe('fetchTopPools — one request per chain per minute', () => {
 
   const stub = (impl: (url: string) => Promise<Response>) => {
     const calls: Array<string> = []
+    const offline = globalThis.fetch
     globalThis.fetch = mock(async (url: unknown) => {
-      calls.push(String(url))
-      return impl(String(url))
+      const u = String(url)
+      // This provider's host only. A stub on `globalThis.fetch` also catches
+      // work another test file started and never tore down, and these
+      // assertions count requests: a foreign markets load landing here reads
+      // as this client having made an extra call. See the same note in
+      // `pool-resolver.test.ts`.
+      if (!u.includes('api.geckoterminal.com')) {
+        return (offline as (input: unknown) => Promise<Response>)(url)
+      }
+      calls.push(u)
+      return impl(u)
     }) as unknown as typeof fetch
     return calls
   }
@@ -319,9 +329,19 @@ describe('fetchTopPools — volume ranking', () => {
 
   const stub = (impl: (url: string) => Promise<Response>) => {
     const calls: Array<string> = []
+    const offline = globalThis.fetch
     globalThis.fetch = mock(async (url: unknown) => {
-      calls.push(String(url))
-      return impl(String(url))
+      const u = String(url)
+      // This provider's host only. A stub on `globalThis.fetch` also catches
+      // work another test file started and never tore down, and these
+      // assertions count requests: a foreign markets load landing here reads
+      // as this client having made an extra call. See the same note in
+      // `pool-resolver.test.ts`.
+      if (!u.includes('api.geckoterminal.com')) {
+        return (offline as (input: unknown) => Promise<Response>)(url)
+      }
+      calls.push(u)
+      return impl(u)
     }) as unknown as typeof fetch
     return calls
   }
