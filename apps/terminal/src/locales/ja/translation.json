@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens 株式",
         "description": "株式の機能：セッションクロック、Level 1気配、企業ファンダメンタルズ、決算カレンダー"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT の機能：コレクションのランキング、出品とオファーのラダー、アイテムグリッド、約定履歴、そしてそれらが載るボード。"
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "6 チェーンにわたる NFT コレクション、板、約定履歴、Seaport の注文執行。自分の OpenSea キーを追加してください。無料で即時発行されます。"
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "キー不要のフロア価格、出来高、発行数、保有者数を、インデックス済みのどのコレクションでも。冷えた NFT ボードに実データを出すフォールバックです。"
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "その他"
     },
     "needsKeyTitle": "OpenSeaのキーを追加",
-    "needsKeyBody": "NFTのランキング、ラダー、約定履歴はOpenSeaから取得しており、APIキーが必要です。無料で、その場ですぐ発行されます。",
-    "addKeyAction": "キーを追加"
+    "needsKeyBody": "ランキング、ラダー、約定履歴は OpenSea から取得され、API キーが必要です。無料で即時発行されます。OpenSea プラグインで自分のキーを追加してください。",
+    "addKeyAction": "プラグインストアを開く"
   },
   "nftChains": {
     "subtitle": "チェーン",

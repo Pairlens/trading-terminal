@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Azioni",
         "description": "Superfici azionarie: l'orologio di sessione, le quotazioni Level 1, i fondamentali aziendali e il calendario degli utili"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "Le superfici NFT: le classifiche delle collezioni, la scala di inserzioni e offerte, la griglia degli oggetti e il nastro delle vendite, insieme alle dashboard che le ospitano."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Collezioni NFT, il book, il nastro e l'esecuzione degli ordini Seaport su sei chain. Aggiungi la tua chiave OpenSea: sono gratuite e vengono emesse subito."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Floor, volume, supply e possessori senza chiave, per qualunque collezione indicizzata. Il fallback che dà a una dashboard NFT fredda qualcosa di reale da mostrare."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Altro"
     },
     "needsKeyTitle": "Aggiungi una chiave OpenSea",
-    "needsKeyBody": "Le classifiche NFT, la scala e il nastro arrivano da OpenSea, che richiede una chiave API. Sono gratuite e rilasciate all'istante.",
-    "addKeyAction": "Aggiungi la chiave"
+    "needsKeyBody": "Le classifiche, la scala e il nastro arrivano da OpenSea, che richiede una chiave API. Sono gratuite e vengono emesse subito. Aggiungi la tua nel plugin OpenSea.",
+    "addKeyAction": "Apri il Plugin Store"
   },
   "nftChains": {
     "subtitle": "Blockchain",

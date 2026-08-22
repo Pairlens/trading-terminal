@@ -103,15 +103,24 @@ export async function openSeaFetch<T>(
  * The key is missing, wrong or revoked.
  *
  * Its own type because it is the one failure with a fix the user can act on,
- * and a pane that says "add your OpenSea key in Accounts" is worth ten that say
- * "request failed". Everything else that goes wrong here is either a throttle
- * or a reason to try the next provider.
+ * and a pane that names where to paste a key is worth ten that say "request
+ * failed". The key is plugin CONFIG, not a trading credential, so it is edited
+ * on the plugin rather than under Accounts. Everything else that goes wrong
+ * here is either a throttle or a reason to try the next provider.
  */
 export class MissingKeyError extends Error {
   readonly __openSeaMissingKey = true
+  /**
+   * The cross-bundle sentinel the terminal reads. Duck-typed rather than
+   * `instanceof`, because this class is minted inside a plugin bundle and read
+   * in the app, and the two do not share a class identity across that seam.
+   */
+  readonly __nftNeedsKey = true
+  /** The generic marker the plugin manager passes through unwrapped. */
+  readonly __actionable = true
   constructor() {
     super(
-      'OpenSea rejected the API key. Add or update it in Accounts, then reload the board.',
+      'OpenSea rejected the API key. Add or update it on the OpenSea plugin in the Plugin Store, then reload the board.',
     )
     this.name = 'MissingKeyError'
   }

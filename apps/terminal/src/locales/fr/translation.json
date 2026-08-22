@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Actions",
         "description": "Surfaces actions : l’horloge de séance, les cotations Level 1, les fondamentaux d’entreprise et le calendrier des résultats"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFTs",
+        "description": "Les surfaces NFT : classements de collections, l'échelle des mises en vente et des offres, la grille d'objets et le fil des ventes, avec les tableaux qui les accueillent."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Collections NFT, le carnet, le fil des ventes et l'exécution d'ordres Seaport sur six blockchains. Ajoutez votre propre clé OpenSea : elles sont gratuites et délivrées immédiatement."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Prix plancher, volume, supply et détenteurs sans clé, pour toute collection indexée. Le repli qui donne à un tableau NFT froid quelque chose de réel à montrer."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Autre"
     },
     "needsKeyTitle": "Ajoutez une clé OpenSea",
-    "needsKeyBody": "Les classements NFT, l'échelle et le fil des transactions viennent d'OpenSea, qui exige une clé API. Elles sont gratuites et délivrées immédiatement.",
-    "addKeyAction": "Ajouter la clé"
+    "needsKeyBody": "Les classements, l'échelle et le fil des ventes viennent d'OpenSea, qui exige une clé d'API. Elles sont gratuites et délivrées immédiatement. Ajoutez la vôtre dans le plugin OpenSea.",
+    "addKeyAction": "Ouvrir le Plugin Store"
   },
   "nftChains": {
     "subtitle": "Chaîne",

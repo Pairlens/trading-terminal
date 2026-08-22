@@ -108,7 +108,7 @@ export type NftQueryState = {
 function isMissingKey(error: unknown): boolean {
   return (
     error instanceof Error &&
-    (error as { __openSeaMissingKey?: boolean }).__openSeaMissingKey === true
+    (error as { __nftNeedsKey?: boolean }).__nftNeedsKey === true
   )
 }
 

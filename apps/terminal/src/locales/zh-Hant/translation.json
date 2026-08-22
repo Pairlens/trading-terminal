@@ -3462,7 +3462,22 @@
     "sessionClock": "交易時鐘",
     "level1": "Level 1",
     "company": "公司資訊",
-    "yourPosition": "持倉明細"
+    "yourPosition": "持倉明細",
+    "nftChains": "區塊鏈",
+    "nftCollections": "系列排行",
+    "nftOverview": "NFT 市場",
+    "nftMovers": "地板價漲跌",
+    "nftMints": "新發行與鑄造",
+    "nftTape": "大額成交",
+    "nftCollectionHeader": "系列",
+    "nftBook": "階梯",
+    "nftListings": "掛售",
+    "nftOffers": "出價",
+    "nftSales": "成交",
+    "nftItems": "物品",
+    "nftTraits": "屬性",
+    "nftTicket": "NFT 下單",
+    "nftHoldings": "我的物品"
   },
   "paneDescriptions": {
     "insiderActivity": "最近的 Form 4 申報：公司內部人買了還是賣了、買賣多少、成交價多少",
@@ -3535,7 +3550,22 @@
     "sessionClock": "用一行顯示交易日狀態的時鐘，盤後下單不會再讓你措手不及",
     "level1": "買賣報價及其掛單量、價差、當日區間，以及交易所宣布停牌時的狀態列",
     "company": "估值、成長率、利潤率、下一個催化劑，以及分析師的看法，全部集中在一個面板",
-    "yourPosition": "你在這個標的上的持倉：數量、成本、標記價格，以及當日與持倉浮動損益"
+    "yourPosition": "你在這個標的上的持倉：數量、成本、標記價格，以及當日與持倉浮動損益",
+    "nftChains": "把所有 NFT 面板篩選到單一條鏈，並顯示各鏈的 24 小時成交額占比。",
+    "nftCollections": "依成交額、地板價變動、成交筆數或市值排列系列。",
+    "nftOverview": "全市場的 NFT 成交額、市值、成交筆數，以及各交易平台的占比。",
+    "nftMovers": "過去 24 小時地板價漲幅與跌幅最大的系列。",
+    "nftMints": "近期部署、剛開始出現成交的系列。",
+    "nftTape": "所有已收錄系列的大額成交，成交即顯示。",
+    "nftCollectionHeader": "地板價、成交額、發行量、持有者，以及掛售占比。",
+    "nftBook": "把掛售與系列出價排成雙邊階梯，帶有真實深度。",
+    "nftListings": "賣方一側：所有掛售的物品，最便宜的在前。",
+    "nftOffers": "買方一側：系列、屬性與單一代幣的出價，含可成交數量。",
+    "nftSales": "這個系列的成交明細，最新一筆在前。",
+    "nftItems": "瀏覽這個系列的代幣，含賣價與稀有度。",
+    "nftTraits": "每個屬性值有多少代幣帶有它，以及因此有多稀有。資料提供方公布後，各屬性的地板價才會出現。",
+    "nftTicket": "買下地板價、掃貨、出價、掛售物品或接受出價。",
+    "nftHoldings": "這個錢包在該系列裡持有什麼，含成本與標記價。"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -3707,7 +3737,8 @@
       "stocks": "股票",
       "prediction": "預測市場",
       "moveLeft": "左移",
-      "moveRight": "右移"
+      "moveRight": "右移",
+      "nft": "NFT"
     }
   },
   "assetClass": {
@@ -3722,7 +3753,9 @@
     "perpDescription": "對價格的槓桿合約，沒有到期日。多空之間支付資金費率，使其貼近現貨。",
     "dexDescription": "與流動性池進行的兌換，由你自己的錢包簽名。發生在哪條鏈上，也是你所交易的一部分。",
     "stocksDescription": "透過券商買賣股票，遵循交易所自己的行事曆。適用交易時段、暫停交易與交割規則。",
-    "predictionDescription": "對某個問題答案的合約。答對支付 1 美元，答錯則一無所得。"
+    "predictionDescription": "對某個問題答案的合約。答對支付 1 美元，答錯則一無所得。",
+    "nft": "NFT",
+    "nftDescription": "一個非同質化代幣的系列。地板價是最便宜的賣價，出價是買方一側，而一個部位就是某一個特定代幣。"
   },
   "pluginStore": {
     "registryOffline": "外掛登錄庫目前離線，僅顯示已安裝的外掛。",
@@ -4208,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens 股票",
         "description": "股票功能：交易時鐘、Level 1 報價、公司基本面與財報日曆"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT 相關功能：系列排行、掛售與出價階梯、物品網格和成交明細，以及承載它們的看板。"
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "六條鏈上的 NFT 系列、盤口、成交明細以及 Seaport 下單執行。加入你自己的 OpenSea 金鑰：免費且即時核發。"
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "無需金鑰即可取得任何已收錄系列的地板價、成交額、發行量與持有者。它是讓空白 NFT 看板有真實數據可看的備援來源。"
       }
     },
     "families": {
@@ -4246,6 +4291,10 @@
       "cexFutures": {
         "label": "加密期貨",
         "description": "永續合約交易所，用於帶槓桿的加密貨幣部位。"
+      },
+      "nfts": {
+        "label": "NFT",
+        "description": "系列排行、掛售與出價盤口，以及交易平台下單。"
       }
     },
     "familyToggleAria": "啟用或停用所有{{family}}外掛",
@@ -4952,6 +5001,30 @@
         "tagline": "每個未結算視窗，都對著它結算所用的價格。",
         "description": "把兩家平台循環開出的加密合約放進一張表：Kalshi 在五個幣種上開十五分鐘視窗，Polymarket 在四個幣種上開小時與日視窗。每一列都帶著結算基準、即時現貨、兩者之間的距離，以及近期已實現波動率下的無漂移擴散從剩餘時間得出的機率，讓賠率有了可比對象。",
         "menuLabel": "加密漲跌"
+      },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "預設",
+        "tagline": "把系列當成盤口，而不是畫廊。",
+        "description": "地板價圖表下方是雙邊階梯，掛售與系列出價構成真實深度。成交明細、物品清單與屬性地板價共用下方的分頁。"
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "挑代幣，而不是挑地板價。",
+        "description": "物品清單佔滿寬度，旁邊是屬性地板價，用來買下某一個特定代幣，而不是隨便買最便宜的那個。"
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "預設",
+        "tagline": "NFT 市場上正在變動的東西。",
+        "description": "依成交額排列的系列，旁邊是地板價變動，還有鏈別篩選、全市場概況、最新鑄造與大額成交明細。"
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Flow",
+        "tagline": "成交明細，佔滿整個寬度。",
+        "description": "所有已收錄系列的大額成交，旁邊是地板價漲跌與排行表。"
       }
     },
     "traderTypes": {
@@ -5002,6 +5075,9 @@
       },
       "multi-asset": {
         "label": "多資產"
+      },
+      "nfts": {
+        "label": "NFT"
       }
     },
     "screenSizes": {
@@ -5968,6 +6044,10 @@
       "events": {
         "label": "事件",
         "description": "瀏覽預測市場的事件及其結果"
+      },
+      "nft": {
+        "label": "NFT 市場",
+        "description": "系列排行、地板價、掛售、出價與成交明細"
       }
     },
     "domains": {
@@ -6332,7 +6412,8 @@
       "predictions": "預測",
       "filterPredictions": "預測",
       "futures": "期貨",
-      "filterFutures": "期貨"
+      "filterFutures": "期貨",
+      "nfts": "NFT"
     }
   },
   "events": {
@@ -6422,5 +6503,284 @@
     "mark": "參考價",
     "marketValue": "市值",
     "dayChange": "今日"
+  },
+  "nft": {
+    "noProviderTitle": "沒有 NFT 資料提供方",
+    "noProviderBody": "已安裝的外掛都無法讀取 NFT 系列。請從外掛商店安裝一個提供方來填滿這個看板。",
+    "browseProviders": "瀏覽提供方",
+    "throttledTitle": "已達請求上限",
+    "unavailableTitle": "提供方無法使用",
+    "unavailableBody": "NFT 資料提供方沒有回應，通常在下次重新整理時就會恢復。",
+    "providerLabel": "NFT 資料",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "其他"
+    },
+    "needsKeyTitle": "新增 OpenSea 金鑰",
+    "needsKeyBody": "排行、階梯與成交明細來自 OpenSea，需要 API 金鑰。金鑰免費且即時核發。請在 OpenSea 外掛中加入你自己的金鑰。",
+    "addKeyAction": "開啟外掛商店"
+  },
+  "nftChains": {
+    "subtitle": "鏈",
+    "subtitleShare": "24 小時成交額占比",
+    "loadingLabel": "正在讀取各鏈成交額",
+    "emptyTitle": "沒有可用的鏈",
+    "emptyBody": "已安裝的提供方沒有指明它能服務哪條鏈。"
+  },
+  "nftCollections": {
+    "searchPlaceholder": "搜尋系列",
+    "countMetric": "{{count}} 個系列",
+    "countMetric_one": "{{count}} 個系列",
+    "loadingLabel": "正在讀取系列排行",
+    "verified": "已驗證系列",
+    "emptyTitle": "沒有系列",
+    "emptyBody": "提供方在這條鏈上沒有排出任何系列。在側欄換一條鏈試試。",
+    "noMatchTitle": "沒有符合的結果",
+    "noMatchBody": "這一頁沒有符合搜尋條件的系列。搜尋只縮小已排行的這一頁，不是整條鏈。",
+    "columns": {
+      "collection": "系列",
+      "floor": "地板價",
+      "change": "24 小時",
+      "volume": "成交額",
+      "sales": "成交筆數",
+      "listed": "掛售",
+      "holders": "持有者"
+    }
+  },
+  "nftOverview": {
+    "subtitle": "過去 24 小時，所有鏈",
+    "loadingLabel": "正在讀取市場總量",
+    "volume": "成交額",
+    "marketCap": "市值",
+    "sales": "成交筆數",
+    "traders": "交易者",
+    "emptyTitle": "沒有市場總量",
+    "emptyBody": "提供方沒有公布全市場的數據。"
+  },
+  "nftMovers": {
+    "subtitle": "地板價變動，24 小時",
+    "gainers": "漲幅榜",
+    "losers": "跌幅榜",
+    "loadingLabel": "正在讀取地板價變動",
+    "emptyTitle": "沒有地板價變動",
+    "emptyGainersBody": "這條鏈上沒有系列的地板價比昨天更高。",
+    "emptyLosersBody": "這條鏈上沒有系列的地板價比昨天更低。"
+  },
+  "nftMints": {
+    "subtitle": "最新部署",
+    "loadingLabel": "正在讀取近期部署",
+    "emptyTitle": "近期沒有新鑄造",
+    "emptyBody": "提供方在這條鏈上沒有列出近期部署的系列。",
+    "columns": {
+      "collection": "系列",
+      "age": "上線時間",
+      "floor": "地板價",
+      "volume": "成交額",
+      "supply": "發行量"
+    }
+  },
+  "nftTape": {
+    "allSizes": "全部",
+    "allMetric": "所有成交",
+    "aboveMetric": "高於 {{value}} 的成交",
+    "loadingLabel": "正在讀取成交明細",
+    "partiesHint": "先賣方，後買方",
+    "emptyTitle": "沒有成交",
+    "emptyBody": "提供方回報這條鏈上沒有任何成交。",
+    "belowThresholdTitle": "沒有這麼大的成交",
+    "belowThresholdBody": "在提供方涵蓋的時間範圍內，沒有成交達到 {{value}}。調低上方的金額門檻即可看到其餘成交。",
+    "columns": {
+      "time": "時間",
+      "item": "物品",
+      "price": "價格",
+      "venue": "平台",
+      "parties": "賣方、買方"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看它的地板價、發行量與持有者。",
+    "emptyTitle": "暫時沒有內容",
+    "emptyBody": "這個提供方沒有回傳該系列的狀態。",
+    "loadingLabel": "正在讀取系列資料",
+    "verified": "已驗證系列",
+    "floor": "地板價",
+    "volume24h": "24 小時成交額",
+    "marketCap": "市值",
+    "supply": "發行量",
+    "holders": "持有者",
+    "listed": "掛售",
+    "listedValue": "{{percent}}%（{{listed}}）",
+    "topOffer": "最高出價",
+    "royalty": "版稅"
+  },
+  "nftBook": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看盤口的兩側。",
+    "emptyTitle": "沒有盤口",
+    "emptyBody": "這個系列目前沒有任何掛售，也沒有任何出價。",
+    "loadingLabel": "正在讀取盤口兩側",
+    "asOf": "讀取於 {{when}}",
+    "mid": "中間價",
+    "spread": "{{amount}}（{{percent}}%）",
+    "bidQuantity_one": "1 件",
+    "bidQuantity_other": "{{count}} 件",
+    "collectionWide": "不限",
+    "depthSummary": "掛售 {{asks}}，出價 {{bids}}",
+    "columns": {
+      "price": "價格",
+      "item": "物品",
+      "rank": "排名",
+      "venue": "平台"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看賣方掛出什麼。",
+    "emptyTitle": "沒有掛售",
+    "emptyBody": "這個系列目前沒有任何代幣在出售。",
+    "loadingLabel": "正在讀取掛售",
+    "count_one": "掛售 1 件",
+    "count_other": "掛售 {{count}} 件",
+    "footnote": "地板價 {{floor}}",
+    "columns": {
+      "item": "物品",
+      "price": "價格",
+      "rank": "排名",
+      "venue": "平台",
+      "expires": "到期"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看買方出多少價。",
+    "emptyTitle": "沒有出價",
+    "emptyBody": "目前沒有人對這個系列出價。",
+    "loadingLabel": "正在讀取出價",
+    "topBid": "最高出價 {{price}}",
+    "footnote": "出價總額 {{value}}",
+    "scopeCollection": "整個系列",
+    "columns": {
+      "price": "價格",
+      "quantity": "數量",
+      "value": "金額",
+      "scope": "範圍",
+      "venue": "平台",
+      "bidder": "出價者",
+      "expires": "到期"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看已經成交的部分。",
+    "emptyTitle": "沒有成交",
+    "emptyBody": "這個提供方沒有該系列的近期成交。",
+    "loadingLabel": "正在讀取成交明細",
+    "prints_one": "1 筆成交",
+    "prints_other": "{{count}} 筆成交",
+    "footnote_one": "1 筆成交，平均 {{average}}",
+    "footnote_other": "{{count}} 筆成交，平均 {{average}}",
+    "columns": {
+      "time": "時間",
+      "item": "物品",
+      "price": "價格",
+      "venue": "平台",
+      "buyer": "買方",
+      "seller": "賣方"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可瀏覽它的代幣。",
+    "emptyTitle": "沒有物品",
+    "emptyBody": "這個提供方沒有回傳該系列的任何代幣。",
+    "loadingLabel": "正在讀取物品",
+    "count_one": "1 件物品",
+    "count_other": "{{count}} 件物品",
+    "unlisted": "未掛售",
+    "footnote": "顯示的 {{shown}} 件中有 {{listed}} 件掛售"
+  },
+  "nftTraits": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看它的屬性值多少錢。",
+    "emptyTitle": "沒有屬性地板價",
+    "emptyBody": "這個提供方沒有公布該系列各屬性的價格。",
+    "loadingLabel": "正在讀取屬性地板價",
+    "groupCount_one": "1 個屬性",
+    "groupCount_other": "{{count}} 個屬性",
+    "footnote": "{{total}} 個屬性值中有 {{priced}} 個有地板價",
+    "columns": {
+      "value": "屬性值",
+      "count": "數量",
+      "floor": "地板價",
+      "listed": "掛售"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列即可交易。",
+    "emptyTitle": "沒有提供方",
+    "emptyBody": "安裝 NFT 市場提供方即可交易系列。",
+    "quantity": "物品數量",
+    "price": "價格 {{currency}}",
+    "token": "代幣",
+    "tokenPlaceholder": "選擇你持有的代幣",
+    "notional": "總計",
+    "notionalUsd": "總計（美元）",
+    "averagePrice": "平均成交價",
+    "royalty": "版稅",
+    "royaltyValue": "{{percent}}%（{{amount}}）",
+    "thinBook_one": "盤口比這個數量少 1 件。",
+    "thinBook_other": "盤口比這個數量少 {{count}} 件。",
+    "placing": "下單中…",
+    "placedBody_one": "{{collection}} 上 1 件物品。",
+    "placedBody_other": "{{collection}} 上 {{count}} 件物品。",
+    "intents": {
+      "sweep": "掃貨",
+      "offer": "出價",
+      "list": "掛售",
+      "accept": "接受出價"
+    },
+    "mapping": {
+      "sweep": "市價買入。從最便宜的掛售依序買進，每件物品一筆委託。",
+      "offer": "限價買入。針對整個系列的出價，任何持有者都能成交。",
+      "list": "以你的價格限價賣出你持有的代幣。",
+      "accept": "把你持有的代幣市價賣給目前最高的出價。"
+    },
+    "placed": {
+      "sweep": "掃貨已送出",
+      "offer": "出價已送出",
+      "list": "掛售已送出",
+      "accept": "賣出已送出"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "尚未選擇系列",
+    "noPairBody": "選擇一個系列，即可查看你的錢包在其中持有什麼。",
+    "emptyTitle": "沒有持有",
+    "emptyBody": "這個錢包在該系列中沒有任何代幣。",
+    "loadingLabel": "正在讀取你的持有",
+    "footnote_one": "持有 1 件，依出價計 {{value}}",
+    "footnote_other": "持有 {{count}} 件，依出價計 {{value}}",
+    "columns": {
+      "item": "物品",
+      "acquired": "取得時間",
+      "basis": "成本",
+      "mark": "標記價",
+      "pnl": "損益"
+    }
   }
 }

@@ -33,6 +33,27 @@ function isRetryableProviderError(err: unknown): boolean {
   )
 }
 
+/**
+ * A failure the USER can act on, rather than one the caller can retry.
+ *
+ * Same shape as the throttle passthrough above and the same argument: wrapping
+ * it erases the only thing that made it useful. A provider refusing because no
+ * API key is configured is not "this data does not exist", it is "paste a key
+ * and this works", and a pane that renders the wrapped
+ * `All candidates for capability 'x' failed` tells someone to wait for a
+ * recovery that cannot come.
+ *
+ * Duck-typed for the same reason: the marker is set inside a plugin bundle and
+ * read here, and plugin-system does not depend on the packages that mint it.
+ */
+function isActionableProviderError(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    (err as { __actionable?: unknown }).__actionable === true
+  )
+}
+
 const DEFAULT_CONTEXT: PluginContext = {
   pair: '',
   market: '',
@@ -193,6 +214,7 @@ export class PluginManager {
 
     let primaryError: unknown
     let retryable: unknown
+    let actionable: unknown
     for (const candidate of chain) {
       try {
         return await candidate.execute(executeParams)
@@ -200,6 +222,9 @@ export class PluginManager {
         if (primaryError === undefined) primaryError = err
         if (retryable === undefined && isRetryableProviderError(err)) {
           retryable = err
+        }
+        if (actionable === undefined && isActionableProviderError(err)) {
+          actionable = err
         }
         // Continue to next fallback
       }
@@ -212,6 +237,11 @@ export class PluginManager {
     // permanent verdict ("this venue does not carry this pair", "no pools on
     // this chain") silently stopped seeing one.
     if (retryable !== undefined) throw retryable
+
+    // An actionable refusal outranks the primary's error for the same reason a
+    // throttle does: it is the one failure in the walk with a fix attached, and
+    // the primary may simply be the provider that is not configured.
+    if (actionable !== undefined) throw actionable
 
     // The PRIMARY's failure, not the last one walked. The last candidate is
     // usually the lowest-priority provider, which is the one most likely to

@@ -126,9 +126,18 @@ type CoinGeckoNft = {
  * act on rather than "request failed".
  */
 function unsupported(action: string): never {
-  throw new Error(
-    `CoinGecko serves collection state only, not '${action}'. Add an OpenSea key in Accounts for the book, the tape and history.`,
-  )
+  const error = new Error(
+    `CoinGecko serves collection state only, not '${action}'. An OpenSea key unlocks the book, the tape and history.`,
+  ) as Error & { __nftNeedsKey?: boolean; __actionable?: boolean }
+  // The same sentinel OpenSea's own missing-key refusal carries. When this
+  // provider is the only one answering, the board is not broken and it is not
+  // empty: it is unconfigured, and the pane that says so is the one whose
+  // advice the reader can act on.
+  error.__nftNeedsKey = true
+  // The generic marker: the plugin manager rethrows an actionable refusal
+  // unwrapped instead of burying it in "all candidates failed".
+  error.__actionable = true
+  throw error
 }
 
 async function fetchCollection(

@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens 股票",
         "description": "股票功能：交易时钟、Level 1 报价、公司基本面与财报日历"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT 相关功能：系列排行、挂单与出价阶梯、单品网格和成交明细，以及承载它们的看板。"
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "六条链上的 NFT 系列、盘口、成交明细以及 Seaport 下单执行。添加你自己的 OpenSea 密钥：免费且即时签发。"
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "无需密钥即可获取任意已收录系列的地板价、成交额、供应量和持有者。它是让空白 NFT 看板有真实数据可看的兜底来源。"
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "其他"
     },
     "needsKeyTitle": "添加 OpenSea 密钥",
-    "needsKeyBody": "NFT 排名、阶梯和成交明细来自 OpenSea，需要 API 密钥。密钥免费，申请即发。",
-    "addKeyAction": "添加密钥"
+    "needsKeyBody": "排行、阶梯和成交明细来自 OpenSea，需要 API 密钥。密钥免费且即时签发。请在 OpenSea 插件中添加你自己的密钥。",
+    "addKeyAction": "打开插件商店"
   },
   "nftChains": {
     "subtitle": "链",

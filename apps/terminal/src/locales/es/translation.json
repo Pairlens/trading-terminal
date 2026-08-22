@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Acciones",
         "description": "Superficies de acciones: el reloj de sesión, cotizaciones Level 1, fundamentales de la empresa y el calendario de resultados"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFTs",
+        "description": "Las superficies NFT: rankings de colecciones, la escalera de listados y ofertas, la cuadrícula de artículos y la cinta de ventas, más los tableros donde viven."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Colecciones NFT, el libro, la cinta y ejecución de órdenes Seaport en seis blockchains. Añade tu propia clave de OpenSea: son gratuitas y se emiten al instante."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Precio suelo, volumen, suministro y holders sin clave, para cualquier colección indexada. El respaldo que le da algo real a un tablero NFT en frío."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Otro"
     },
     "needsKeyTitle": "Añade una clave de OpenSea",
-    "needsKeyBody": "Los rankings NFT, la escalera y la cinta vienen de OpenSea, que necesita una clave API. Son gratuitas y se emiten al instante.",
-    "addKeyAction": "Añadir la clave"
+    "needsKeyBody": "Los rankings, la escalera y la cinta vienen de OpenSea, que necesita una clave de API. Son gratuitas y se emiten al instante. Añade la tuya en el plugin de OpenSea.",
+    "addKeyAction": "Abrir la Tienda de Plugins"
   },
   "nftChains": {
     "subtitle": "Cadena",

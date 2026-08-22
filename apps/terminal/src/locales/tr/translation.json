@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Hisse",
         "description": "Hisse yüzeyleri: seans saati, Level 1 kotasyonları, şirket temelleri ve kazanç takvimi"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT yüzeyleri: koleksiyon sıralamaları, listeleme ve teklif sıralaması, öğe ızgarası ve satış akışı, bunları taşıyan panolarla birlikte."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Altı zincirde NFT koleksiyonları, emir defteri, işlem akışı ve Seaport emir gerçekleştirme. Kendi OpenSea anahtarını ekle: ücretsiz ve anında verilir."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Anahtarsız taban fiyat, hacim, arz ve sahipler; dizine alınmış her koleksiyon için. Soğuk bir NFT panosuna gösterecek gerçek bir şey veren yedek."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Diğer"
     },
     "needsKeyTitle": "Bir OpenSea anahtarı ekleyin",
-    "needsKeyBody": "NFT sıralamaları, defter ve işlem akışı OpenSea'den gelir; OpenSea bir API anahtarı ister. Anahtarlar ücretsizdir ve anında verilir.",
-    "addKeyAction": "Anahtarı ekle"
+    "needsKeyBody": "Sıralamalar, sıralama tablosu ve işlem akışı OpenSea'den gelir ve API anahtarı gerekir. Anahtarlar ücretsiz ve anında verilir. Kendi anahtarını OpenSea eklentisine ekle.",
+    "addKeyAction": "Eklenti Mağazası'nı aç"
   },
   "nftChains": {
     "subtitle": "Zincir",

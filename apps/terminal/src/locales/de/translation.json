@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Aktien",
         "description": "Aktien-Oberflächen: die Marktuhr, Level-1-Kurse, Unternehmens-Fundamentaldaten und der Earnings-Kalender"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFTs",
+        "description": "Die NFT-Oberflächen: Kollektions-Rankings, die Ladder aus Listings und Geboten, das Items-Grid und das Verkaufs-Tape, samt der Boards, auf denen sie sitzen."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "NFT-Kollektionen, das Buch, das Tape und Seaport-Orderausführung über sechs Chains. Hinterlege deinen eigenen OpenSea-Key: kostenlos und sofort ausgestellt."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Floor-Preis, Volumen, Supply und Holder ohne Key, für jede indexierte Kollektion. Der Fallback, der einem kalten NFT-Board etwas Echtes zeigt."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Sonstige"
     },
     "needsKeyTitle": "OpenSea-Key hinzufügen",
-    "needsKeyBody": "NFT-Rankings, Ladder und Tape kommen von OpenSea, das einen API-Key braucht. Er ist kostenlos und wird sofort ausgestellt.",
-    "addKeyAction": "Key hinzufügen"
+    "needsKeyBody": "Rankings, Ladder und Tape kommen von OpenSea, das einen API-Key braucht. Er ist kostenlos und wird sofort ausgestellt. Hinterlege deinen im OpenSea-Plugin.",
+    "addKeyAction": "Plugin Store öffnen"
   },
   "nftChains": {
     "subtitle": "Chain",

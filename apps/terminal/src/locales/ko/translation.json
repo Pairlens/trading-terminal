@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens 주식",
         "description": "주식 기능: 세션 시계, Level 1 호가, 기업 펀더멘털, 실적 캘린더"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT 화면: 컬렉션 순위, 매물과 오퍼 래더, 아이템 그리드, 체결 내역, 그리고 이들이 놓이는 보드까지."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "여섯 개 체인의 NFT 컬렉션, 호가창, 체결 내역, Seaport 주문 실행. 본인 OpenSea 키를 추가하세요. 무료이며 즉시 발급됩니다."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "키 없이 색인된 모든 컬렉션의 바닥가, 거래대금, 발행량, 홀더를 제공합니다. 비어 있는 NFT 보드에 실제 값을 채워 주는 대체 공급자입니다."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "기타"
     },
     "needsKeyTitle": "OpenSea 키를 추가하세요",
-    "needsKeyBody": "NFT 순위와 래더, 체결 내역은 OpenSea에서 오며 API 키가 필요합니다. 무료이고 즉시 발급됩니다.",
-    "addKeyAction": "키 추가"
+    "needsKeyBody": "순위와 래더, 체결 내역은 API 키가 필요한 OpenSea에서 옵니다. 키는 무료이며 즉시 발급됩니다. OpenSea 플러그인에서 본인 키를 추가하세요.",
+    "addKeyAction": "플러그인 스토어 열기"
   },
   "nftChains": {
     "subtitle": "체인",

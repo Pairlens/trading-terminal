@@ -4241,6 +4241,18 @@
       "pairlens-equities": {
         "title": "Pairlens Saham",
         "description": "Permukaan saham: jam sesi, kuotasi Level 1, fundamental perusahaan dan kalender earnings"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "Permukaan NFT: peringkat koleksi, tangga listing dan penawaran, grid item dan pita penjualan, beserta board tempatnya berada."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "Koleksi NFT, buku pesanan, pita penjualan, dan eksekusi order Seaport di enam chain. Tambahkan kunci OpenSea-mu sendiri: gratis dan terbit seketika."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Harga floor, volume, suplai, dan pemegang tanpa kunci, untuk koleksi apa pun yang terindeks. Cadangan yang membuat board NFT dingin punya isi nyata."
       }
     },
     "families": {
@@ -6518,8 +6530,8 @@
       "unknown": "Lainnya"
     },
     "needsKeyTitle": "Tambahkan kunci OpenSea",
-    "needsKeyBody": "Peringkat NFT, tangga, dan pita transaksi berasal dari OpenSea, yang butuh API key. Key-nya gratis dan langsung terbit.",
-    "addKeyAction": "Tambahkan key"
+    "needsKeyBody": "Peringkat, tangga, dan pita berasal dari OpenSea, yang butuh kunci API. Kuncinya gratis dan terbit seketika. Tambahkan milikmu di plugin OpenSea.",
+    "addKeyAction": "Buka Plugin Store"
   },
   "nftChains": {
     "subtitle": "Chain",

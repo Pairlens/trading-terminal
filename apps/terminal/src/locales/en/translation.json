@@ -2663,7 +2663,8 @@
       "predictionDescription": "An event outcome trades on one venue only, so there is nowhere else to try. The venue may simply have refused a single request.",
       "retry": "Try again",
       "desktopOnlyTitle": "This venue needs the desktop app",
-      "desktopOnlyDescription": "Its API refuses browser origins, so market data for this pair is only reachable from the desktop build."
+      "desktopOnlyDescription": "Its API refuses browser origins, so market data for this pair is only reachable from the desktop build.",
+      "nftDescription": "No provider returned a floor series for this collection. Add an OpenSea key on the OpenSea plugin: the chart, the ladder and the tape all come from it."
     },
     "paneCredentials": {
       "sealedTitle": "Unlock to load {{venue}} data",
@@ -6530,8 +6531,8 @@
       "unknown": "Other"
     },
     "needsKeyTitle": "Add an OpenSea key",
-    "needsKeyBody": "NFT rankings, the ladder and the tape come from OpenSea, which needs an API key. They are free and issued instantly.",
-    "addKeyAction": "Add the key"
+    "needsKeyBody": "Rankings, the ladder and the tape come from OpenSea, which needs an API key. They are free and issued instantly. Add yours on the OpenSea plugin.",
+    "addKeyAction": "Open the Plugin Store"
   },
   "nftChains": {
     "subtitle": "Chain",
@@ -6542,7 +6543,6 @@
   },
   "nftCollections": {
     "searchPlaceholder": "Search collections",
-    "countMetric": "{{count}} collections",
     "countMetric_one": "{{count}} collection",
     "loadingLabel": "Reading collection rankings",
     "verified": "Verified collection",
@@ -6558,7 +6558,8 @@
       "sales": "Sales",
       "listed": "Listed",
       "holders": "Holders"
-    }
+    },
+    "countMetric_other": "{{count}} collections"
   },
   "nftOverview": {
     "subtitle": "Last 24h, all chains",
