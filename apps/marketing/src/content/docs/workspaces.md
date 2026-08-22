@@ -4,8 +4,8 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 20 AUG 2026
-readTime: 12 min read
+updated: 22 AUG 2026
+readTime: 13 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth

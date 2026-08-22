@@ -25,7 +25,7 @@ mounted above the routed content, so it is the same assistant on a chart, on
 the bots page and in the script workbench. Its threads are kept in the client's
 own storage, and reach the App Server only for a user who has turned the
 `assistant` sync domain on, which ships off.
-The agentic loop runs client-side over 110 tools: market data, research, chart
+The agentic loop runs client-side over 113 tools: market data, research, chart
 control, portfolio reads, watchlists and alerts, Python scripts and backtests,
 bots, workflows, navigation, and two trading tools. One turn runs up to 28
 tool-calling steps. The App Server, when you use one, is nothing but an
@@ -147,7 +147,7 @@ which one is driving. See [risk guardrails](/docs/risk-guardrails).
 
 ## Where to next
 
-- [Assistant tool reference](/docs/copilot-tools) for all 110 tools
+- [Assistant tool reference](/docs/copilot-tools) for all 113 tools
 - [CLI reference](/docs/cli-reference) for every flag
 - [The MCP tool surface](/docs/chart-mcp) for chart control
 - [Plugin SDK](/docs/plugin-sdk) to add a surface of your own

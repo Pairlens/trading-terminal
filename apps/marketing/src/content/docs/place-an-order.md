@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 2
 eyebrow: For traders
-updated: 17 AUG 2026
-readTime: 7 min read
+updated: 22 AUG 2026
+readTime: 8 min read
 ---
 
 The Trade Entry panel is the order ticket. Add it to any workspace, or use a
@@ -142,6 +142,20 @@ estimated liquidation price. Leverage is applied per order and never remembered
 between sessions. Reduce-only shrinks an open position and refuses to open the
 opposite side, which is what makes closing safe. See
 [perpetual futures](/docs/cex-futures).
+
+## NFT collections
+
+For a collection the ticket offers four intents and prints the ordinary order
+each one is, right under the tabs. **Sweep N** is a market buy that takes the N
+cheapest listings. **Make offer** is a limit buy: a collection offer good for
+any N tokens in the set. **List item** is a limit sell of one token you own.
+**Accept bid** is a market sell into the best standing collection offer.
+
+Sizes are item counts and they are whole numbers, because an NFT is
+indivisible. A sweep is priced off the ladder rather than off the floor, so the
+summary shows the total and the realised average: five items when the floor is
+one listing deep costs the sum of five asks, not five times the floor. See
+[NFT collections](/docs/nft-trading).
 
 ## Watching the order
 

@@ -40,6 +40,10 @@ import {
   createCoingeckoNftPlugin,
 } from '@pairlens/plugins/coingecko-nft-provider'
 import {
+  createOpenSeaNftPlugin,
+  openSeaNftManifest,
+} from '@pairlens/plugins/opensea-nft-connector'
+import {
   createPairlensEquitiesPlugin,
   pairlensEquitiesManifest,
 } from '@pairlens/plugins/pairlens-equities'
@@ -481,6 +485,7 @@ export const BOOTSTRAP_MARKET_CONNECTOR_PLUGINS: Array<BootstrapPlugin> = [
  * the same order as the ladder is what makes the ladder readable.
  */
 export const BOOTSTRAP_NFT_PLUGINS: Array<BootstrapPlugin> = [
+  { manifest: openSeaNftManifest, factory: createOpenSeaNftPlugin },
   { manifest: coingeckoNftManifest, factory: createCoingeckoNftPlugin },
 ]
 
