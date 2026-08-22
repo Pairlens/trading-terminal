@@ -3462,7 +3462,22 @@
     "sessionClock": "Seans Saati",
     "level1": "Level 1",
     "company": "Şirket",
-    "yourPosition": "Pozisyonunuz"
+    "yourPosition": "Pozisyonunuz",
+    "nftChains": "Zincirler",
+    "nftCollections": "Koleksiyonlar",
+    "nftOverview": "NFT Piyasası",
+    "nftMovers": "Taban Hareketleri",
+    "nftMints": "Yeni ve Basımda",
+    "nftTape": "Balina Satışları",
+    "nftCollectionHeader": "Koleksiyon",
+    "nftBook": "Sıralama",
+    "nftListings": "Listelemeler",
+    "nftOffers": "Teklifler",
+    "nftSales": "Satışlar",
+    "nftItems": "Öğeler",
+    "nftTraits": "Özellikler",
+    "nftTicket": "NFT İşlem Paneli",
+    "nftHoldings": "Öğelerim"
   },
   "paneDescriptions": {
     "insiderActivity": "Son Form 4 bildirimleri: şirket içinden kim aldı ya da sattı, ne kadar ve hangi fiyattan",
@@ -3535,7 +3550,22 @@
     "sessionClock": "İşlem günü için tek satırlık bir saat, böylece mesai dışı bir emir asla sürpriz olmaz",
     "level1": "Alış ve satış kotasyonları ile miktarları, makas, günün aralığı ve borsa işlemi durdurduğunda bir durum satırı",
     "company": "Değerleme, büyüme, marjlar, bir sonraki katalizör, ve analistlerin nerede durduğu, tek bir panoda",
-    "yourPosition": "Bu sembolde elinde tuttuğun: miktar, maliyet, işaret fiyatı, ve hem günlük hem açık kâr"
+    "yourPosition": "Bu sembolde elinde tuttuğun: miktar, maliyet, işaret fiyatı, ve hem günlük hem açık kâr",
+    "nftChains": "Her NFT panosunu tek bir zincire göre filtrele; her zincirin 24s hacimdeki payıyla birlikte.",
+    "nftCollections": "Hacme, taban hareketine, satışlara veya piyasa değerine göre sıralanmış koleksiyonlar.",
+    "nftOverview": "Piyasa geneli NFT hacmi, piyasa değeri, satışlar ve pazar yerlerine göre dağılım.",
+    "nftMovers": "Son 24 saatte tabanı en çok yükselen ve en çok düşen koleksiyonlar.",
+    "nftMints": "Yeni yayına alınmış ve ilk hacmini gören koleksiyonlar.",
+    "nftTape": "İndekslenen tüm koleksiyonlarda, gerçekleştikçe yüksek tutarlı satışlar.",
+    "nftCollectionHeader": "Taban, hacim, arz, sahipler ve arzın listedeki payı.",
+    "nftBook": "Listelemeler ve koleksiyon teklifleri, gerçek derinliğe sahip çift taraflı bir sıralama olarak.",
+    "nftListings": "Satış tarafı: listelenen her öğe, en ucuzu önce.",
+    "nftOffers": "Alış tarafı: gerçekleştirilebilir büyüklükle koleksiyon, özellik ve token teklifleri.",
+    "nftSales": "Bu koleksiyonun işlem akışı, en yeni işlem önce.",
+    "nftItems": "Koleksiyonun token'larına satış fiyatları ve nadirlikleriyle göz at.",
+    "nftTraits": "Her özellik değeri, kaç token'ın taşıdığı ve bunun onları ne kadar nadir yaptığıyla birlikte. Özellik bazlı tabanlar, bir sağlayıcı yayımladığında gelir.",
+    "nftTicket": "Tabanı al, süpür, teklif ver, bir öğe listele veya bir teklifi kabul et.",
+    "nftHoldings": "Bu cüzdanın koleksiyonda tuttukları, maliyet ve işaret fiyatıyla birlikte."
   },
   "multiPrice": {
     "venue": "Borsa",
@@ -3707,7 +3737,8 @@
       "stocks": "Hisse Senetleri",
       "prediction": "Tahminler",
       "moveLeft": "Sola taşı",
-      "moveRight": "Sağa taşı"
+      "moveRight": "Sağa taşı",
+      "nft": "NFT'ler"
     }
   },
   "assetClass": {
@@ -3722,7 +3753,9 @@
     "perpDescription": "Fiyat üzerine kaldıraçlı, vadesi olmayan bir sözleşme. Uzun ve kısa taraflar spota yakın tutmak için birbirine fonlama öder.",
     "dexDescription": "Bir likidite havuzuna karşı takas; imzayı kendi cüzdanın atar. Hangi zincirde olduğu da işlem ettiğin şeyin parçasıdır.",
     "stocksDescription": "Bir aracı kurum üzerinden hisse; borsanın kendi takvimine tabidir. Seans saatleri, durdurmalar ve takas kuralları geçerlidir.",
-    "predictionDescription": "Bir sorunun cevabı üzerine sözleşme. Cevap doğruysa 1 $ öder, değilse hiçbir şey."
+    "predictionDescription": "Bir sorunun cevabı üzerine sözleşme. Cevap doğruysa 1 $ öder, değilse hiçbir şey.",
+    "nft": "NFT",
+    "nftDescription": "Değiştirilemez token'lardan oluşan bir koleksiyon. Taban en ucuz satış, teklifler alış tarafı, ve bir pozisyon tek bir token'dır."
   },
   "pluginStore": {
     "registryOffline": "Eklenti kayıt defteri çevrimdışı. Yalnızca kurulu eklentiler gösteriliyor.",
@@ -4246,6 +4279,10 @@
       "cexFutures": {
         "label": "Kripto vadeli işlemler",
         "description": "Kaldıraçlı kripto pozisyonları için sürekli vadeli işlem borsaları."
+      },
+      "nfts": {
+        "label": "NFT'ler",
+        "description": "Koleksiyon sıralamaları, listeleme ve teklif defteri, ve pazar yerinde emir iletimi"
       }
     },
     "familyToggleAria": "Tüm {{family}} eklentilerini etkinleştir veya devre dışı bırak",
@@ -4952,6 +4989,30 @@
         "tagline": "Her açık pencere, uzlaştığı fiyata karşı.",
         "description": "İki borsanın yinelenen kripto sözleşmeleri tek tabloda: Kalshi beş varlıkta on beş dakikalık, Polymarket dört varlıkta saatlik ve günlük pencere açar. Her satırda uzlaşma referansı, canlı spot, aradaki mesafe ve son gerçekleşen oynaklıkta sürüklenmesiz bir difüzyonun kalan süreden çıkardığı olasılık yer alır; böylece oranların karşılaştırılacağı bir şey olur.",
         "menuLabel": "Kripto Yukarı/Aşağı"
+      },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "Varsayılan",
+        "tagline": "Bir koleksiyon, galeri değil defter olarak.",
+        "description": "Çift taraflı bir sıralamanın üzerinde taban grafiği; listelemeler ve koleksiyon teklifleri gerçek derinlik olarak. Satış akışı, öğe ızgarası ve özellik tabanları aşağıdaki sekmeleri paylaşır."
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "Tabanı değil, token'ı seç.",
+        "description": "Tam genişlikte öğe ızgarası, yanında özellik tabanları; en ucuz olanı değil, belirli bir token'ı almak için."
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "Varsayılan",
+        "tagline": "NFT piyasalarında ne hareket ediyor.",
+        "description": "Hacme göre sıralanmış koleksiyonlar, yanlarında taban hareketleri, bir zincir filtresi, piyasa geneli özet, yeni basımlar ve balina akışı."
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Akış",
+        "tagline": "İşlem akışı, tam genişlikte.",
+        "description": "İndekslenen tüm koleksiyonlardaki balina satışları, yanında taban hareketleri ve sıralama tablosu."
       }
     },
     "traderTypes": {
@@ -5002,6 +5063,9 @@
       },
       "multi-asset": {
         "label": "Çoklu Varlık"
+      },
+      "nfts": {
+        "label": "NFT'ler"
       }
     },
     "screenSizes": {
@@ -5968,6 +6032,10 @@
       "events": {
         "label": "Olaylar",
         "description": "Tahmin piyasası olaylarını ve sonuçlarını görüntüle"
+      },
+      "nft": {
+        "label": "NFT Piyasaları",
+        "description": "Koleksiyon sıralamaları, taban fiyatlar, listelemeler, teklifler ve satış akışı"
       }
     },
     "domains": {
@@ -6332,7 +6400,8 @@
       "predictions": "tahmin",
       "filterPredictions": "Tahminler",
       "futures": "vadeli",
-      "filterFutures": "Vadeli"
+      "filterFutures": "Vadeli",
+      "nfts": "NFT'ler"
     }
   },
   "events": {
@@ -6422,5 +6491,284 @@
     "mark": "Güncel fiyat",
     "marketValue": "Piyasa değeri",
     "dayChange": "Bugün"
+  },
+  "nft": {
+    "noProviderTitle": "NFT veri sağlayıcısı yok",
+    "noProviderBody": "Kurulu hiçbir eklenti NFT koleksiyonlarını okuyamıyor. Bu panoyu doldurmak için Eklenti Mağazası'ndan bir sağlayıcı kurun.",
+    "browseProviders": "Sağlayıcılara göz at",
+    "throttledTitle": "Hız sınırında",
+    "unavailableTitle": "Sağlayıcı kullanılamıyor",
+    "unavailableBody": "NFT veri sağlayıcısı yanıt vermedi. Genellikle bir sonraki yenilemede kendine gelir.",
+    "providerLabel": "NFT verisi",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "Diğer"
+    },
+    "needsKeyTitle": "Bir OpenSea anahtarı ekleyin",
+    "needsKeyBody": "NFT sıralamaları, defter ve işlem akışı OpenSea'den gelir; OpenSea bir API anahtarı ister. Anahtarlar ücretsizdir ve anında verilir.",
+    "addKeyAction": "Anahtarı ekle"
+  },
+  "nftChains": {
+    "subtitle": "Zincir",
+    "subtitleShare": "24s hacim payı",
+    "loadingLabel": "Zincire göre piyasa hacmi okunuyor",
+    "emptyTitle": "Kullanılabilir zincir yok",
+    "emptyBody": "Kurulu sağlayıcı hizmet verebileceği bir zincir bildirmiyor."
+  },
+  "nftCollections": {
+    "searchPlaceholder": "Koleksiyon ara",
+    "countMetric": "{{count}} koleksiyon",
+    "countMetric_one": "{{count}} koleksiyon",
+    "loadingLabel": "Koleksiyon sıralamaları okunuyor",
+    "verified": "Doğrulanmış koleksiyon",
+    "emptyTitle": "Koleksiyon yok",
+    "emptyBody": "Sağlayıcı bu zincirde hiçbir şey sıralamadı. Raydan başka bir zincir deneyin.",
+    "noMatchTitle": "Eşleşme yok",
+    "noMatchBody": "Bu sayfadaki hiçbir koleksiyon aramanızla eşleşmiyor. Arama, tüm zinciri değil sıralanan sayfayı daraltır.",
+    "columns": {
+      "collection": "Koleksiyon",
+      "floor": "Taban",
+      "change": "24s",
+      "volume": "Hacim",
+      "sales": "Satış",
+      "listed": "Listede",
+      "holders": "Sahip"
+    }
+  },
+  "nftOverview": {
+    "subtitle": "Son 24s, tüm zincirler",
+    "loadingLabel": "Piyasa toplamları okunuyor",
+    "volume": "Hacim",
+    "marketCap": "Piyasa değeri",
+    "sales": "Satışlar",
+    "traders": "İşlemciler",
+    "emptyTitle": "Piyasa toplamı yok",
+    "emptyBody": "Sağlayıcı piyasa geneli rakamlar yayımlamıyor."
+  },
+  "nftMovers": {
+    "subtitle": "Taban hareketi, 24s",
+    "gainers": "Yükselenler",
+    "losers": "Düşenler",
+    "loadingLabel": "Taban hareketleri okunuyor",
+    "emptyTitle": "Taban hareketi yok",
+    "emptyGainersBody": "Bu zincirde tabanı dünkünden yüksek olan bir koleksiyon yok.",
+    "emptyLosersBody": "Bu zincirde tabanı dünkünden düşük olan bir koleksiyon yok."
+  },
+  "nftMints": {
+    "subtitle": "En yeni yayına alınanlar",
+    "loadingLabel": "Son yayına alınanlar okunuyor",
+    "emptyTitle": "Yeni basım yok",
+    "emptyBody": "Sağlayıcı bu zincirde yakın zamanda yayına alınmış koleksiyon listelemiyor.",
+    "columns": {
+      "collection": "Koleksiyon",
+      "age": "Yaş",
+      "floor": "Taban",
+      "volume": "Hacim",
+      "supply": "Arz"
+    }
+  },
+  "nftTape": {
+    "allSizes": "Tümü",
+    "allMetric": "Her satış",
+    "aboveMetric": "{{value}} üzeri satışlar",
+    "loadingLabel": "Satış akışı okunuyor",
+    "partiesHint": "Önce satıcı, sonra alıcı",
+    "emptyTitle": "Satış yok",
+    "emptyBody": "Sağlayıcı bu zincirde satış bildirmedi.",
+    "belowThresholdTitle": "O büyüklükte bir şey yok",
+    "belowThresholdBody": "Sağlayıcının sunduğu pencerede {{value}} tutarını aşan satış olmadı. Akışın geri kalanını görmek için yukarıdaki büyüklük eşiğini düşürün.",
+    "columns": {
+      "time": "Saat",
+      "item": "Öğe",
+      "price": "Fiyat",
+      "venue": "Borsa",
+      "parties": "Satıcı, alıcı"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Tabanını, arzını ve sahiplerini görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Henüz gösterilecek bir şey yok",
+    "emptyBody": "Bu sağlayıcı koleksiyon için durum döndürmedi.",
+    "loadingLabel": "Koleksiyon okunuyor",
+    "verified": "Doğrulanmış koleksiyon",
+    "floor": "Taban",
+    "volume24h": "24s hacim",
+    "marketCap": "Piyasa değeri",
+    "supply": "Arz",
+    "holders": "Sahipler",
+    "listed": "Listede",
+    "listedValue": "%{{percent}} ({{listed}})",
+    "topOffer": "En yüksek teklif",
+    "royalty": "Telif"
+  },
+  "nftBook": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Defterinin iki tarafını da görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Defter yok",
+    "emptyBody": "Şu anda bu koleksiyonda listelenen de teklif verilen de yok.",
+    "loadingLabel": "Defterin iki tarafı okunuyor",
+    "asOf": "{{when}} okundu",
+    "mid": "Orta",
+    "spread": "{{amount}} (%{{percent}})",
+    "bidQuantity_one": "1x",
+    "bidQuantity_other": "{{count}}x",
+    "collectionWide": "Herhangi",
+    "depthSummary": "{{asks}} listede, {{bids}} için teklif var",
+    "columns": {
+      "price": "Fiyat",
+      "item": "Öğe",
+      "rank": "Sıra",
+      "venue": "Borsa"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Satış tarafında ne olduğunu görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Listelenen yok",
+    "emptyBody": "Bu koleksiyonda şu anda satılık token yok.",
+    "loadingLabel": "Listelemeler okunuyor",
+    "count_one": "1 listede",
+    "count_other": "{{count}} listede",
+    "footnote": "Taban {{floor}}",
+    "columns": {
+      "item": "Öğe",
+      "price": "Fiyat",
+      "rank": "Sıra",
+      "venue": "Borsa",
+      "expires": "Bitiş"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Alıcıların ne teklif ettiğini görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Teklif yok",
+    "emptyBody": "Şu anda bu koleksiyona teklif veren yok.",
+    "loadingLabel": "Teklifler okunuyor",
+    "topBid": "En yüksek teklif {{price}}",
+    "footnote": "Toplam {{value}} teklif var",
+    "scopeCollection": "Koleksiyon",
+    "columns": {
+      "price": "Fiyat",
+      "quantity": "Adet",
+      "value": "Değer",
+      "scope": "Kapsam",
+      "venue": "Borsa",
+      "bidder": "Teklif veren",
+      "expires": "Bitiş"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Nelerin gerçekleştiğini görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Satış yok",
+    "emptyBody": "Bu sağlayıcının koleksiyon için yakın zamanlı işlemi yok.",
+    "loadingLabel": "İşlem akışı okunuyor",
+    "prints_one": "1 işlem",
+    "prints_other": "{{count}} işlem",
+    "footnote_one": "1 işlem, ortalama {{average}}",
+    "footnote_other": "{{count}} işlem, ortalama {{average}}",
+    "columns": {
+      "time": "Saat",
+      "item": "Öğe",
+      "price": "Fiyat",
+      "venue": "Borsa",
+      "buyer": "Alıcı",
+      "seller": "Satıcı"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Token'larına göz atmak için bir koleksiyon seçin.",
+    "emptyTitle": "Öğe yok",
+    "emptyBody": "Bu sağlayıcı koleksiyon için token döndürmedi.",
+    "loadingLabel": "Öğeler okunuyor",
+    "count_one": "1 öğe",
+    "count_other": "{{count}} öğe",
+    "unlisted": "Listede yok",
+    "footnote": "Gösterilen {{shown}} öğenin {{listed}} tanesi listede"
+  },
+  "nftTraits": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Özelliklerinin ne değerde olduğunu görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Özellik tabanı yok",
+    "emptyBody": "Bu sağlayıcı koleksiyon için özellik bazlı fiyatlama yayımlamıyor.",
+    "loadingLabel": "Özellik tabanları okunuyor",
+    "groupCount_one": "1 özellik",
+    "groupCount_other": "{{count}} özellik",
+    "footnote": "{{total}} özellik değerinin {{priced}} tanesinin tabanı var",
+    "columns": {
+      "value": "Değer",
+      "count": "Adet",
+      "floor": "Taban",
+      "listed": "Listede"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "İşlem yapmak için bir koleksiyon seçin.",
+    "emptyTitle": "Sağlayıcı yok",
+    "emptyBody": "Koleksiyonlarda işlem yapmak için bir NFT piyasa sağlayıcısı kurun.",
+    "quantity": "Öğe",
+    "price": "Fiyat {{currency}}",
+    "token": "Token",
+    "tokenPlaceholder": "Sahip olduğunuz bir token seçin",
+    "notional": "Toplam",
+    "notionalUsd": "Toplam (USD)",
+    "averagePrice": "Ort. gerçekleşme",
+    "royalty": "Telif",
+    "royaltyValue": "%{{percent}} ({{amount}})",
+    "thinBook_one": "Defter bu büyüklük için 1 öğe eksik.",
+    "thinBook_other": "Defter bu büyüklük için {{count}} öğe eksik.",
+    "placing": "Gönderiliyor…",
+    "placedBody_one": "{{collection}} üzerinde 1 öğe.",
+    "placedBody_other": "{{collection}} üzerinde {{count}} öğe.",
+    "intents": {
+      "sweep": "Süpür",
+      "offer": "Teklif",
+      "list": "Listele",
+      "accept": "Kabul"
+    },
+    "mapping": {
+      "sweep": "Piyasa alımı. En ucuz listelemeleri alır, öğe başına bir emir.",
+      "offer": "Limit alım. Herhangi bir sahibin karşılayabileceği bir koleksiyon teklifi.",
+      "list": "Sahip olduğunuz bir token'ın kendi fiyatınızdan limitli satışı.",
+      "accept": "Sahip olduğunuz bir token'ın en iyi açık teklife piyasa satışı."
+    },
+    "placed": {
+      "sweep": "Süpürme gönderildi",
+      "offer": "Teklif gönderildi",
+      "list": "Listeleme gönderildi",
+      "accept": "Satış gönderildi"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "Seçili koleksiyon yok",
+    "noPairBody": "Cüzdanınızın bu koleksiyonda neler tuttuğunu görmek için bir koleksiyon seçin.",
+    "emptyTitle": "Elde tutulan yok",
+    "emptyBody": "Bu cüzdanın koleksiyonda token'ı yok.",
+    "loadingLabel": "Varlıklarınız okunuyor",
+    "footnote_one": "1 adet, alışta {{value}}",
+    "footnote_other": "{{count}} adet, alışta {{value}}",
+    "columns": {
+      "item": "Öğe",
+      "acquired": "Alındı",
+      "basis": "Maliyet",
+      "mark": "İşaret",
+      "pnl": "K/Z"
+    }
   }
 }

@@ -3462,7 +3462,22 @@
     "sessionClock": "セッションクロック",
     "level1": "Level 1",
     "company": "企業情報",
-    "yourPosition": "保有ポジション"
+    "yourPosition": "保有ポジション",
+    "nftChains": "チェーン",
+    "nftCollections": "コレクション",
+    "nftOverview": "NFT市場",
+    "nftMovers": "フロア変動",
+    "nftMints": "新規ミント",
+    "nftTape": "大口約定",
+    "nftCollectionHeader": "コレクション",
+    "nftBook": "ラダー",
+    "nftListings": "出品",
+    "nftOffers": "オファー",
+    "nftSales": "約定履歴",
+    "nftItems": "アイテム",
+    "nftTraits": "属性",
+    "nftTicket": "NFTチケット",
+    "nftHoldings": "保有アイテム"
   },
   "paneDescriptions": {
     "insiderActivity": "直近のForm 4届出。社内の誰が、どれだけ、いくらで買ったか売ったか",
@@ -3535,7 +3550,22 @@
     "sessionClock": "取引日の状態を1行で示すクロックで、時間外の注文で驚くことがなくなります",
     "level1": "気配値と数量、スプレッド、当日レンジ、そして取引所が売買を停止したときの状態行",
     "company": "バリュエーション、成長率、利益率、次のカタリスト、そしてアナリストの見立てを1つのペインに集約",
-    "yourPosition": "この銘柄であなたが保有するもの：数量、コスト、マーク価格、そして当日と保有全体の損益"
+    "yourPosition": "この銘柄であなたが保有するもの：数量、コスト、マーク価格、そして当日と保有全体の損益",
+    "nftChains": "すべてのNFTペインを1つのチェーンに絞り込み、各チェーンの24時間出来高シェアも表示。",
+    "nftCollections": "出来高、フロア変動、約定数、時価総額でコレクションを順位付け。",
+    "nftOverview": "NFT市場全体の出来高、時価総額、約定数と、マーケットプレイス別の内訳。",
+    "nftMovers": "直近24時間でフロアが最も上昇・下落したコレクション。",
+    "nftMints": "最近デプロイされ、最初の出来高が付き始めたコレクション。",
+    "nftTape": "インデックス済みの全コレクションから、高額な約定をその都度表示。",
+    "nftCollectionHeader": "フロア、出来高、発行数、保有者数、発行数に対する出品率。",
+    "nftBook": "出品とコレクションオファーを、実際の板の厚みを持つ両サイドのラダーで表示。",
+    "nftListings": "売り側：出品中の全アイテムを安い順に表示。",
+    "nftOffers": "買い側：コレクション、属性、トークン単位のオファーを約定可能な数量とともに表示。",
+    "nftSales": "このコレクションの約定履歴。最新の約定が先頭。",
+    "nftItems": "コレクションのトークンを、売り気配とレア度とともに一覧。",
+    "nftTraits": "すべての属性値について、該当するトークン数とそのレア度を表示。属性ごとのフロアは、提供元が公開した時点で表示されます。",
+    "nftTicket": "フロアを買う、スイープする、オファーを出す、アイテムを出品する、買い注文に応じる。",
+    "nftHoldings": "このウォレットがコレクション内で保有する内容を、取得価格とマーク価格とともに表示。"
   },
   "multiPrice": {
     "venue": "取引所",
@@ -3707,7 +3737,8 @@
       "stocks": "株式",
       "prediction": "予測市場",
       "moveLeft": "左に移動",
-      "moveRight": "右に移動"
+      "moveRight": "右に移動",
+      "nft": "NFT"
     }
   },
   "assetClass": {
@@ -3722,7 +3753,9 @@
     "perpDescription": "価格に対するレバレッジ契約で、満期はありません。ロングとショートがファンディングを支払い合い、現物に近い価格を保ちます。",
     "dexDescription": "流動性プールに対するスワップで、署名するのはあなた自身のウォレットです。どのチェーンで起きるかも取引の一部です。",
     "stocksDescription": "ブローカー経由の株式で、取引所自身のカレンダーに従います。取引時間、売買停止、決済ルールが適用されます。",
-    "predictionDescription": "ある問いの答えに対する契約です。答えが正しければ 1 ドル、外れれば何も支払われません。"
+    "predictionDescription": "ある問いの答えに対する契約です。答えが正しければ 1 ドル、外れれば何も支払われません。",
+    "nft": "NFT",
+    "nftDescription": "非代替性トークンのコレクションです。フロアは最も安い売り気配、オファーが買い側で、ポジションは特定の1トークンを指します。"
   },
   "pluginStore": {
     "registryOffline": "プラグインレジストリはオフラインです。インストール済みのプラグインのみ表示しています。",
@@ -4246,6 +4279,10 @@
       "cexFutures": {
         "label": "暗号資産先物",
         "description": "レバレッジを使った暗号資産ポジション向けの無期限先物取引所。"
+      },
+      "nfts": {
+        "label": "NFT",
+        "description": "コレクションのランキング、出品とオファーの板、マーケットプレイスでの執行。"
       }
     },
     "familyToggleAria": "{{family}}のプラグインをすべて有効または無効にする",
@@ -4952,6 +4989,30 @@
         "tagline": "すべての未決済枠を、決済に使われる価格と並べて。",
         "description": "両取引所で繰り返し建つ暗号資産契約を一つの表に。Kalshi は5銘柄に15分枠を、Polymarket は4銘柄に1時間枠と1日枠を建てます。各行には決済基準値、リアルタイムの現物価格、その乖離、そして直近の実現ボラティリティによるドリフトなし拡散が残り時間から導く確率が並ぶので、オッズに比較対象ができます。",
         "menuLabel": "暗号資産アップ/ダウン"
+      },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "デフォルト",
+        "tagline": "コレクションをギャラリーではなく板として。",
+        "description": "フロアチャートの下に両サイドのラダーを置き、出品とコレクションオファーを実際の板の厚みとして表示。約定履歴、アイテム一覧、属性フロアは下のタブで切り替えます。"
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "フロアではなく、トークンを選ぶ。",
+        "description": "アイテム一覧を全幅で表示し、その横に属性フロア。ただ安いものではなく、特定の1トークンを買うための構成です。"
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "デフォルト",
+        "tagline": "NFT市場で今動いているもの。",
+        "description": "出来高順のコレクション一覧とその横にフロア変動、チェーンフィルター、市場全体の概況、新規ミント、大口約定。"
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "フロー",
+        "tagline": "約定履歴を全幅で。",
+        "description": "インデックス済みの全コレクションの大口約定を、フロア変動とランキング表と並べて表示。"
       }
     },
     "traderTypes": {
@@ -5002,6 +5063,9 @@
       },
       "multi-asset": {
         "label": "マルチアセット"
+      },
+      "nfts": {
+        "label": "NFT"
       }
     },
     "screenSizes": {
@@ -5968,6 +6032,10 @@
       "events": {
         "label": "イベント",
         "description": "予測市場のイベントと結果を閲覧"
+      },
+      "nft": {
+        "label": "NFTマーケット",
+        "description": "コレクションのランキング、フロア価格、出品、オファー、約定履歴"
       }
     },
     "domains": {
@@ -6332,7 +6400,8 @@
       "predictions": "予測",
       "filterPredictions": "予測",
       "futures": "先物",
-      "filterFutures": "先物"
+      "filterFutures": "先物",
+      "nfts": "NFT"
     }
   },
   "events": {
@@ -6422,5 +6491,284 @@
     "mark": "評価価格",
     "marketValue": "評価額",
     "dayChange": "本日"
+  },
+  "nft": {
+    "noProviderTitle": "NFTデータプロバイダーがありません",
+    "noProviderBody": "NFTコレクションを読み取れるプラグインがありません。プラグインストアからプロバイダーを追加すると、このボードが埋まります。",
+    "browseProviders": "プロバイダーを見る",
+    "throttledTitle": "レート制限中です",
+    "unavailableTitle": "プロバイダーを利用できません",
+    "unavailableBody": "NFTデータプロバイダーが応答しませんでした。通常は次回の更新で復旧します。",
+    "providerLabel": "NFTデータ",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "その他"
+    },
+    "needsKeyTitle": "OpenSeaのキーを追加",
+    "needsKeyBody": "NFTのランキング、ラダー、約定履歴はOpenSeaから取得しており、APIキーが必要です。無料で、その場ですぐ発行されます。",
+    "addKeyAction": "キーを追加"
+  },
+  "nftChains": {
+    "subtitle": "チェーン",
+    "subtitleShare": "24時間出来高シェア",
+    "loadingLabel": "チェーン別の出来高を読み込み中",
+    "emptyTitle": "利用できるチェーンがありません",
+    "emptyBody": "インストール済みのプロバイダーは、対応するチェーンを提示していません。"
+  },
+  "nftCollections": {
+    "searchPlaceholder": "コレクションを検索",
+    "countMetric": "コレクション {{count}} 件",
+    "countMetric_one": "コレクション {{count}} 件",
+    "loadingLabel": "コレクションのランキングを読み込み中",
+    "verified": "認証済みコレクション",
+    "emptyTitle": "コレクションがありません",
+    "emptyBody": "このチェーンではプロバイダーが何も順位付けしていません。レールで別のチェーンを試してください。",
+    "noMatchTitle": "該当なし",
+    "noMatchBody": "このページ内に一致するコレクションはありません。検索が絞り込むのは表示中のランキングページだけで、チェーン全体ではありません。",
+    "columns": {
+      "collection": "コレクション",
+      "floor": "フロア",
+      "change": "24時間",
+      "volume": "出来高",
+      "sales": "約定数",
+      "listed": "出品率",
+      "holders": "保有者"
+    }
+  },
+  "nftOverview": {
+    "subtitle": "直近24時間・全チェーン",
+    "loadingLabel": "市場全体の集計を読み込み中",
+    "volume": "出来高",
+    "marketCap": "時価総額",
+    "sales": "約定数",
+    "traders": "トレーダー数",
+    "emptyTitle": "市場全体の集計がありません",
+    "emptyBody": "このプロバイダーは市場全体の数値を公開していません。"
+  },
+  "nftMovers": {
+    "subtitle": "フロア変動・24時間",
+    "gainers": "上昇",
+    "losers": "下落",
+    "loadingLabel": "フロアの変動を読み込み中",
+    "emptyTitle": "フロアの変動がありません",
+    "emptyGainersBody": "このチェーンで、昨日よりフロアが上がったコレクションはありません。",
+    "emptyLosersBody": "このチェーンで、昨日よりフロアが下がったコレクションはありません。"
+  },
+  "nftMints": {
+    "subtitle": "最新のデプロイ",
+    "loadingLabel": "最近のデプロイを読み込み中",
+    "emptyTitle": "最近のミントはありません",
+    "emptyBody": "このチェーンでは、最近デプロイされたコレクションをプロバイダーが返していません。",
+    "columns": {
+      "collection": "コレクション",
+      "age": "経過",
+      "floor": "フロア",
+      "volume": "出来高",
+      "supply": "発行数"
+    }
+  },
+  "nftTape": {
+    "allSizes": "すべて",
+    "allMetric": "すべての約定",
+    "aboveMetric": "{{value}} 超の約定",
+    "loadingLabel": "約定履歴を読み込み中",
+    "partiesHint": "売り手、次に買い手",
+    "emptyTitle": "約定がありません",
+    "emptyBody": "このチェーンでは、プロバイダーが約定を報告していません。",
+    "belowThresholdTitle": "その規模の約定なし",
+    "belowThresholdBody": "プロバイダーが返す期間内に {{value}} を超えた約定はありません。上のサイズ下限を下げると、残りの約定履歴も表示されます。",
+    "columns": {
+      "time": "時刻",
+      "item": "アイテム",
+      "price": "価格",
+      "venue": "取引所",
+      "parties": "売り手・買い手"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、フロア、発行数、保有者数を確認できます。",
+    "emptyTitle": "まだ表示できるものがありません",
+    "emptyBody": "このプロバイダーは、コレクションの状態を返しませんでした。",
+    "loadingLabel": "コレクションを読み込み中",
+    "verified": "認証済みコレクション",
+    "floor": "フロア",
+    "volume24h": "24時間出来高",
+    "marketCap": "時価総額",
+    "supply": "発行数",
+    "holders": "保有者数",
+    "listed": "出品率",
+    "listedValue": "{{percent}}%（{{listed}}）",
+    "topOffer": "最高オファー",
+    "royalty": "ロイヤリティ"
+  },
+  "nftBook": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、板の両サイドを確認できます。",
+    "emptyTitle": "板がありません",
+    "emptyBody": "このコレクションには現在、出品も買い注文もありません。",
+    "loadingLabel": "板の両サイドを読み込み中",
+    "asOf": "取得 {{when}}",
+    "mid": "仲値",
+    "spread": "{{amount}}（{{percent}}%）",
+    "bidQuantity_one": "×1",
+    "bidQuantity_other": "×{{count}}",
+    "collectionWide": "全体",
+    "depthSummary": "出品 {{asks}}、買い注文 {{bids}}",
+    "columns": {
+      "price": "価格",
+      "item": "アイテム",
+      "rank": "順位",
+      "venue": "取引所"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、売り側に何が出ているかを確認できます。",
+    "emptyTitle": "出品がありません",
+    "emptyBody": "このコレクションには現在、売りに出ているトークンがありません。",
+    "loadingLabel": "出品を読み込み中",
+    "count_one": "出品 1 件",
+    "count_other": "出品 {{count}} 件",
+    "footnote": "フロア {{floor}}",
+    "columns": {
+      "item": "アイテム",
+      "price": "価格",
+      "rank": "順位",
+      "venue": "取引所",
+      "expires": "期限"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、買い手が出している買値を確認できます。",
+    "emptyTitle": "オファーがありません",
+    "emptyBody": "このコレクションには現在、買い注文がありません。",
+    "loadingLabel": "オファーを読み込み中",
+    "topBid": "最高買値 {{price}}",
+    "footnote": "買い注文の合計 {{value}}",
+    "scopeCollection": "コレクション",
+    "columns": {
+      "price": "価格",
+      "quantity": "数量",
+      "value": "金額",
+      "scope": "対象",
+      "venue": "取引所",
+      "bidder": "入札者",
+      "expires": "期限"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、成立した約定を確認できます。",
+    "emptyTitle": "約定がありません",
+    "emptyBody": "このプロバイダーには、コレクションの直近の約定がありません。",
+    "loadingLabel": "約定履歴を読み込み中",
+    "prints_one": "約定 1 件",
+    "prints_other": "約定 {{count}} 件",
+    "footnote_one": "約定 1 件、平均 {{average}}",
+    "footnote_other": "約定 {{count}} 件、平均 {{average}}",
+    "columns": {
+      "time": "時刻",
+      "item": "アイテム",
+      "price": "価格",
+      "venue": "取引所",
+      "buyer": "買い手",
+      "seller": "売り手"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、そのトークンを一覧できます。",
+    "emptyTitle": "アイテムがありません",
+    "emptyBody": "このプロバイダーは、コレクションのトークンを返しませんでした。",
+    "loadingLabel": "アイテムを読み込み中",
+    "count_one": "アイテム 1 件",
+    "count_other": "アイテム {{count}} 件",
+    "unlisted": "未出品",
+    "footnote": "表示中 {{shown}} 件のうち {{listed}} 件が出品中"
+  },
+  "nftTraits": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、各属性の価値を確認できます。",
+    "emptyTitle": "属性フロアがありません",
+    "emptyBody": "このプロバイダーは、コレクションの属性別価格を公開していません。",
+    "loadingLabel": "属性フロアを読み込み中",
+    "groupCount_one": "属性 1 件",
+    "groupCount_other": "属性 {{count}} 件",
+    "footnote": "属性値 {{total}} 件のうち {{priced}} 件にフロアがあります",
+    "columns": {
+      "value": "属性値",
+      "count": "該当数",
+      "floor": "フロア",
+      "listed": "出品数"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと取引できます。",
+    "emptyTitle": "プロバイダーがありません",
+    "emptyBody": "コレクションを取引するには、NFTマーケットのプロバイダーをインストールしてください。",
+    "quantity": "アイテム数",
+    "price": "価格 {{currency}}",
+    "token": "トークン",
+    "tokenPlaceholder": "保有トークンを選択",
+    "notional": "合計",
+    "notionalUsd": "合計（USD）",
+    "averagePrice": "平均約定価格",
+    "royalty": "ロイヤリティ",
+    "royaltyValue": "{{percent}}%（{{amount}}）",
+    "thinBook_one": "板はこの数量に 1 件足りません。",
+    "thinBook_other": "板はこの数量に {{count}} 件足りません。",
+    "placing": "発注中…",
+    "placedBody_one": "{{collection}} で 1 件。",
+    "placedBody_other": "{{collection}} で {{count}} 件。",
+    "intents": {
+      "sweep": "スイープ",
+      "offer": "オファー",
+      "list": "出品",
+      "accept": "売却"
+    },
+    "mapping": {
+      "sweep": "成行買い。安い出品から順に、アイテムごとに1件ずつ注文します。",
+      "offer": "指値買い。どの保有者でも応じられるコレクションオファーです。",
+      "list": "保有トークンを、自分で決めた価格で指値売りします。",
+      "accept": "保有トークンを、最良の買い注文に対して成行売りします。"
+    },
+    "placed": {
+      "sweep": "スイープを送信しました",
+      "offer": "オファーを送信しました",
+      "list": "出品を送信しました",
+      "accept": "売却を送信しました"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "コレクションが未選択です",
+    "noPairBody": "コレクションを選ぶと、ウォレットの保有内容を確認できます。",
+    "emptyTitle": "保有なし",
+    "emptyBody": "このウォレットは、コレクション内のトークンを保有していません。",
+    "loadingLabel": "保有内容を読み込み中",
+    "footnote_one": "保有 1 件、買値評価 {{value}}",
+    "footnote_other": "保有 {{count}} 件、買値評価 {{value}}",
+    "columns": {
+      "item": "アイテム",
+      "acquired": "取得日",
+      "basis": "取得価格",
+      "mark": "マーク価格",
+      "pnl": "損益"
+    }
   }
 }

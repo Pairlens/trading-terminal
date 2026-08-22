@@ -3263,6 +3263,18 @@
       "pairlens-equities": {
         "title": "Pairlens Equities",
         "description": "Stock surfaces: the session clock, Level 1 quotes, company fundamentals and the earnings calendar"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFTs",
+        "description": "The NFT surfaces: collection rankings, the listings and offers ladder, the items grid and the sales tape, plus the boards they sit on."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "NFT collections, the book, the tape and Seaport order execution across six chains. Add your own OpenSea key: they are free and issued instantly."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "Keyless floor price, volume, supply and holders for any indexed collection. The fallback that gives a cold NFT board something real to show."
       }
     },
     "families": {
