@@ -256,6 +256,7 @@ export const MiniPriceChart = memo(function MiniPriceChart({
   className,
   historyWindow,
   tone,
+  allowWildcardProvider,
 }: {
   /** Venue to price the trend against — already resolved for the asset class. */
   market: string | undefined
@@ -269,6 +270,12 @@ export const MiniPriceChart = memo(function MiniPriceChart({
    * the line earns its space by showing the arc the day cannot.
    */
   historyWindow?: SparklineWindow
+  /**
+   * Let a provider that declares every market draw this line. See
+   * `SparklineOptions` — a DEX pool is the only caller that needs it, and the
+   * only one where the strict probe has nothing to resolve.
+   */
+  allowWildcardProvider?: boolean
 }) {
   const [inView, setInView] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -290,7 +297,9 @@ export const MiniPriceChart = memo(function MiniPriceChart({
 
   useEffect(() => () => observerRef.current?.disconnect(), [])
 
-  const { values, state } = useSparkline(market, pair, inView, historyWindow)
+  const { values, state } = useSparkline(market, pair, inView, historyWindow, {
+    allowWildcardProvider: allowWildcardProvider ?? false,
+  })
   return (
     <MiniPriceChartView
       ref={observe}

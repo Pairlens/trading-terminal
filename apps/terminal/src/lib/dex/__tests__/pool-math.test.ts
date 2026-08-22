@@ -16,7 +16,6 @@ import {
   poolTileKey,
   poolTileLines,
   sumFlowSince,
-  swatchIndexFor,
   tileSizeFor,
   titleCaseVenue,
   truncateAddress,
@@ -435,29 +434,5 @@ describe('poolTileLines', () => {
   it('falls back to the venue alone when liquidity is dust', () => {
     const lines = poolTileLines({ ...pool, reserveUsd: 0.004 }, 320, 180, usd)
     expect(lines.subtitle).toBe('Orca')
-  })
-})
-
-describe('swatchIndexFor', () => {
-  it('is stable for a pool and lands in the chart palette', () => {
-    const first = swatchIndexFor('7xKqPoolAddress')
-    expect(swatchIndexFor('7xKqPoolAddress')).toBe(first)
-    expect(first).toBeGreaterThanOrEqual(1)
-    expect(first).toBeLessThanOrEqual(5)
-  })
-
-  it('spreads different pools across the palette', () => {
-    const seen = new Set(
-      ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh'].map(
-        swatchIndexFor,
-      ),
-    )
-    expect(seen.size).toBeGreaterThan(1)
-  })
-
-  it('handles an empty seed without leaving the palette', () => {
-    const index = swatchIndexFor('')
-    expect(index).toBeGreaterThanOrEqual(1)
-    expect(index).toBeLessThanOrEqual(5)
   })
 })

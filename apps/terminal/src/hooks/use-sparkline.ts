@@ -17,6 +17,19 @@ const LIMIT = 24
 /** The window a caller can ask for instead of the default day. */
 export type SparklineWindow = { timeframe: string; limit: number }
 
+export type SparklineOptions = {
+  /**
+   * Let a provider that declares every market answer for this one.
+   *
+   * Off by default and on for exactly one caller: a DEX pool. No connector
+   * publishes candles for `jupiter` or `base`, so the strict venue probe
+   * resolves nothing at all there and the line settles flat on every pool in
+   * the app. On a CEX the same widening would have a pool data provider answer
+   * on a venue's behalf, which is the question the probe exists to refuse.
+   */
+  allowWildcardProvider?: boolean
+}
+
 /**
  * A month of daily closes, for a row whose subject moves over weeks rather
  * than hours. A prediction outcome is the case: its 24h change is already a
@@ -94,6 +107,7 @@ export function useSparkline(
   pair: string | undefined,
   enabled = true,
   historyWindow: SparklineWindow = DAY_WINDOW,
+  options?: SparklineOptions,
 ): SparklineResult {
   const { probeVenueHistory } = useMarketData()
   const [settled, setSettled] = useState(false)
@@ -122,6 +136,10 @@ export function useSparkline(
       pair,
       historyWindow.timeframe,
       historyWindow.limit,
+      // Two callers asking the same pair under different resolution rules can
+      // get two different answers — one a line, one nothing — so they are two
+      // cache entries rather than whichever landed first.
+      options?.allowWildcardProvider ? 'any' : 'venue',
     ],
     queryFn: async ({ signal }) => {
       await acquireSlot()
@@ -132,12 +150,14 @@ export function useSparkline(
         // from one venue, so its trend line must too — and `fetchHistory`
         // would walk the chain to a wildcard provider, which for a pair the
         // venue does not list means a CORS-blocked round trip per row before
-        // arriving at the same "no chart".
+        // arriving at the same "no chart". `allowWildcardProvider` widens WHO
+        // may answer for the market; it never adds a second attempt.
         const request = probeVenueHistory(
           market!,
           pair!,
           historyWindow.timeframe,
           historyWindow.limit,
+          { allowWildcardProvider: options?.allowWildcardProvider ?? false },
         )
         if (!request) return NO_VALUES
         const candles = await request
