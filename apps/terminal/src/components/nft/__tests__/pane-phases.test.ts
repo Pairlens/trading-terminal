@@ -16,9 +16,9 @@
  * render test, in the same spirit as `board-chrome.test.ts`: the mistake is
  * visible in the text and invisible in a passing render.
  */
-import { describe, expect, test } from 'bun:test'
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
+import { describe, expect, test } from 'bun:test'
 
 const PANE_DIR = join(import.meta.dir, '..')
 

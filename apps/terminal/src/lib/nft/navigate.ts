@@ -17,10 +17,7 @@
 import { useCallback } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 
-import type {
-  NftChain,
-  NftCollectionSummary,
-} from '@pairlens/shared/nft-types'
+import type { NftChain, NftCollectionSummary } from '@pairlens/shared/nft-types'
 
 import { registerNftCollection } from '@/stores/nft-directory-store'
 

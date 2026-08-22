@@ -17,7 +17,10 @@ const RAW = {
   name: 'Pudgy Penguins',
   symbol: 'PPG',
   native_currency_symbol: 'eth',
-  image: { small: 'https://example.test/s.jpg', small_2x: 'https://example.test/2x.jpg' },
+  image: {
+    small: 'https://example.test/s.jpg',
+    small_2x: 'https://example.test/2x.jpg',
+  },
   floor_price: { native_currency: 4.04, usd: 12_100 },
   market_cap: { native_currency: 36_360, usd: 108_900_000 },
   volume_24h: { native_currency: 120.5, usd: 361_000 },

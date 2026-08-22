@@ -34,13 +34,13 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { isDesktopOnlyClass } from './lib/desktop-only-classes'
-
 import {
   marketRefToPath,
   normalizeInstrumentId,
   parseMarketRefPath,
 } from '@pairlens/shared/market-ref'
+import { isDesktopOnlyClass } from './lib/desktop-only-classes'
+
 
 import { useMobileActions, useMobileFocus } from './mobile-focus-context'
 import {

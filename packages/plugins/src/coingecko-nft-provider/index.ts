@@ -39,10 +39,7 @@ import type {
   PluginInstance,
   PluginManifest,
 } from '@pairlens/plugin-system/types'
-import type {
-  NftChain,
-  NftCollectionSummary,
-} from '@pairlens/shared/nft-types'
+import type { NftChain, NftCollectionSummary } from '@pairlens/shared/nft-types'
 
 const PROVIDER = 'coingecko'
 const API_BASE = 'https://api.coingecko.com/api/v3'

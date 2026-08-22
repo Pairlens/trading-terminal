@@ -23,6 +23,17 @@
  * floor would understate the trade by whatever the book is shaped like. The
  * summary shows the realised average alongside the total for the same reason.
  *
+ * THE TICKET SENDS THE CEILING IT SHOWED. A market order carries a bound, not
+ * just a size: the priciest ask in the swept set on a buy, the best bid on a
+ * sell, each nudged by `MARKET_BOUND_TOLERANCE` so a book that ticked while the
+ * confirm button was held still fills. The book pane caches for twenty seconds,
+ * which is long enough for the three listings quoted at 3.07 to be taken and
+ * replaced by three at 15, and a market order with no bound would buy those
+ * instead. The bound is per item, so a steep ladder stays inside it and a
+ * re-priced book does not. Without one the connector refuses the order outright,
+ * which is the right answer: the number the user agreed to is the only number
+ * anybody may spend.
+ *
  * Everything goes out through the shared guarded `placeOrder`: the risk limits,
  * the vault gate and the lock screen all live inside it, and a pane that
  * reached a connector directly would be outside every one of them.
@@ -79,6 +90,18 @@ const INTENT_ORDER: Record<
 }
 
 const INTENTS: Array<NftIntent> = ['sweep', 'offer', 'list', 'accept']
+
+/**
+ * How far a market order's bound sits from the price the ticket quoted, as a
+ * fraction.
+ *
+ * It exists because the quote is a float in ETH and the connector re-derives
+ * every price in wei from the maker's own order, and because a live book moves
+ * a little between the render and the confirm. One percent absorbs both and
+ * still refuses the case this bound is for: a book that re-priced by multiples
+ * while the ticket sat on screen.
+ */
+const MARKET_BOUND_TOLERANCE = 0.01
 
 const INTENT_LABEL_KEYS: Record<NftIntent, string> = {
   sweep: 'nftTicket.intents.sweep',
@@ -208,17 +231,23 @@ function NftTicketInner({
     limitPrice,
   })
 
+  // A limit order is priced by its field; a market order is bounded by the
+  // ladder it was quoted from. Either way the connector receives one number,
+  // and a market order that cannot produce one is not submittable at all.
+  const orderPrice = wantsPrice ? limitPrice : quote.bound
+
   const canSubmit =
     !submitting &&
     Boolean(wallet) &&
     count > 0 &&
-    (!wantsPrice || (limitPrice !== null && limitPrice > 0)) &&
+    orderPrice !== null &&
+    orderPrice > 0 &&
     (!wantsToken || tokenId.length > 0) &&
     (intent !== 'sweep' || asks.length > 0) &&
     (intent !== 'accept' || bestBid !== null)
 
   const submit = async () => {
-    if (!canSubmit || !wallet) return
+    if (!canSubmit || !wallet || orderPrice === null) return
     setSubmitting(true)
     try {
       const result = await placeOrder({
@@ -228,7 +257,7 @@ function NftTicketInner({
         type,
         // Item counts, whole. The venue counts tokens, never fractions.
         size: String(count),
-        ...(limitPrice !== null ? { price: String(limitPrice) } : {}),
+        price: String(orderPrice),
         // Which token a sell names. A collection-wide buy carries none.
         ...(wantsToken && tokenId ? { tokenId } : {}),
         walletId: wallet.id,
@@ -236,11 +265,18 @@ function NftTicketInner({
       })
 
       if (result.success) {
+        // What the venue actually filled, never what this ticket asked for. A
+        // sweep of ten against a book three deep buys three, and saying ten
+        // would be the ticket inventing a trade out of its own input.
+        const done = result.filled ?? count
+        const body = t('nftTicket.placedBody', {
+          count: done,
+          collection: collection?.name ?? contract,
+        })
         toast.success(t(INTENT_PLACED_KEYS[intent]), {
-          description: t('nftTicket.placedBody', {
-            count,
-            collection: collection?.name ?? contract,
-          }),
+          // A short fill carries its reason from the connector, in the same
+          // untranslated voice every other venue refusal reaches this pane in.
+          description: result.error ? `${body} ${result.error}` : body,
         })
         if (wantsQuantity) setQuantity('1')
         if (wantsPrice) setPrice('')
@@ -352,15 +388,17 @@ function NftTicketInner({
         <SummaryRow
           label={t('nftTicket.royalty')}
           value={
-            collection?.royaltyBps == null
+            collection?.royaltyRate == null
               ? NFT_NO_VALUE
               : t('nftTicket.royaltyValue', {
-                  percent: (collection.royaltyBps / 100).toFixed(2),
+                  // A rate, not basis points: 0.025 IS 2.5%, so the percent is
+                  // one multiplication and the amount is none at all.
+                  percent: (collection.royaltyRate * 100).toFixed(2),
                   amount:
                     quote.notional === null
                       ? NFT_NO_VALUE
                       : formatNftPrice(
-                          quote.notional * (collection.royaltyBps / 10_000),
+                          quote.notional * collection.royaltyRate,
                           currency,
                         ),
                 })
@@ -445,35 +483,59 @@ function quoteOrder({
   bestBidPrice: number | null
   count: number
   limitPrice: number | null
-}): { notional: number | null; average: number | null; shortfall: number } {
-  if (count <= 0) return { notional: null, average: null, shortfall: 0 }
+}): {
+  notional: number | null
+  average: number | null
+  shortfall: number
+  /**
+   * The per-item bound a market order carries: a ceiling on a buy, a floor on a
+   * sell. Null on the limit intents, where the price field is the bound.
+   */
+  bound: number | null
+} {
+  if (count <= 0)
+    return { notional: null, average: null, shortfall: 0, bound: null }
 
   if (intent === 'sweep') {
     const taken = asks.slice(0, count)
     if (taken.length === 0)
-      return { notional: null, average: null, shortfall: count }
+      return { notional: null, average: null, shortfall: count, bound: null }
     const notional = taken.reduce((sum, listing) => sum + listing.price, 0)
+    // The priciest ask in the set, not the average: the connector holds every
+    // single listing under the bound as well as the basket, and an average
+    // would refuse the top of the very ladder this quote just walked.
+    const worst = taken.reduce(
+      (high, listing) => Math.max(high, listing.price),
+      0,
+    )
     return {
       notional,
       average: notional / taken.length,
       shortfall: count - taken.length,
+      bound: worst > 0 ? worst * (1 + MARKET_BOUND_TOLERANCE) : null,
     }
   }
 
   if (intent === 'accept') {
     return bestBidPrice === null
-      ? { notional: null, average: null, shortfall: 1 }
-      : { notional: bestBidPrice, average: bestBidPrice, shortfall: 0 }
+      ? { notional: null, average: null, shortfall: 1, bound: null }
+      : {
+          notional: bestBidPrice,
+          average: bestBidPrice,
+          shortfall: 0,
+          bound: bestBidPrice * (1 - MARKET_BOUND_TOLERANCE),
+        }
   }
 
   // Both limit intents are priced by the field, which is the whole point of a
   // limit: the book does not get to decide what it costs.
   if (limitPrice === null)
-    return { notional: null, average: null, shortfall: 0 }
+    return { notional: null, average: null, shortfall: 0, bound: null }
   const units = intent === 'offer' ? count : 1
   return {
     notional: limitPrice * units,
     average: limitPrice,
     shortfall: 0,
+    bound: null,
   }
 }
