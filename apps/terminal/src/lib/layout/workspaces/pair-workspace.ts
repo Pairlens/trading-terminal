@@ -29,6 +29,7 @@ import { INSTRUMENT_CLASSES } from '@pairlens/shared/market-ref'
 import { PERPS_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-cex-futures/workspaces'
 import { PREDICTION_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-predictions/workspaces'
 import { DEX_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-dex/workspaces'
+import { MEMECOIN_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-memecoins/workspaces'
 import { EQUITIES_TERMINAL_LAYOUT } from '@pairlens/plugins/pairlens-equities/workspaces'
 import { PRESET_DEFAULT } from '../presets'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
@@ -40,6 +41,7 @@ const DEFAULT_PRESETS: Record<InstrumentClass, TerminalLayout> = {
   spot: PRESET_DEFAULT,
   perp: PERPS_TERMINAL_LAYOUT,
   dex: DEX_TERMINAL_LAYOUT,
+  memecoin: MEMECOIN_TERMINAL_LAYOUT,
   stocks: EQUITIES_TERMINAL_LAYOUT,
   prediction: PREDICTION_TERMINAL_LAYOUT,
 }

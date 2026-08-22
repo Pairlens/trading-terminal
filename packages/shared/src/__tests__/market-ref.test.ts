@@ -3,6 +3,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import {
+  INSTRUMENT_CLASSES,
   formatInstrumentRef,
   formatMarketRef,
   isVenueBoundClass,
@@ -131,6 +132,25 @@ describe('serialization round-trips', () => {
     expect(parseInstrumentRef(`dex:base:${addr}`)).toEqual(token)
     expect(isVenueBoundClass('dex')).toBe(true)
     expect(isVenueBoundClass('spot')).toBe(false)
+  })
+
+  /**
+   * Every venue-bound class, asserted by name rather than by spot check.
+   *
+   * `isVenueBoundClass` is not a convenience: it is the predicate that decides
+   * whether a venue may be SUBSTITUTED for the one an address names. The
+   * mobile shell's venue correction keys off it, and a class missing from the
+   * list gets its venue silently rewritten to the user's preferred exchange,
+   * which lands the reader on "this market only exists on OKX" for a token
+   * that never traded there. So membership is pinned per class, and the
+   * negative half is pinned too: a class wrongly ADDED here can never be
+   * re-routed at all.
+   */
+  test('venue-bound membership is exactly the address-shaped classes', () => {
+    const bound = INSTRUMENT_CLASSES.filter(isVenueBoundClass)
+    // A token IS its chain plus address, and a prediction outcome IS its venue
+    // plus market id. The other three name an asset that many venues list.
+    expect(bound).toEqual(['dex', 'memecoin', 'prediction'])
   })
 
   /**

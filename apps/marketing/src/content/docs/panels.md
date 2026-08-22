@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 21 AUG 2026
+updated: 22 AUG 2026
 readTime: 12 min read
 ---
 
@@ -97,6 +97,9 @@ magnitude. See [perpetual futures](/docs/cex-futures#reading-the-risk).
 | **Manage Liquidity**     | Collect fees, remove part of a range or add to it, each behind a card that states exactly what will be signed         |
 | **Bridge Route**         | A live cross-chain quote: what lands, the floor under it, the bridge fee, the source gas, and which bridge carries it |
 | **In Flight**            | Transfers still crossing, each with the stage it is waiting on and both transactions linked                           |
+| **Token Stats**          | Market cap, FDV, liquidity, holders and bonding-curve progress. See [memecoins](/docs/memecoins)                      |
+| **Buy / Sell Flow**      | Buys against sells at 5m, 1h, 6h and 24h, each with the move and the traded volume behind it                          |
+| **Token Safety**         | Mint and freeze authority, holder concentration, and how many tokens the deployer has launched before                 |
 
 Trading panels get their own page: see
 [positions and portfolio](/docs/positions-and-portfolio).
@@ -143,6 +146,10 @@ holding) are called out in their own footnotes rather than estimated. See
 | **Pool Map**          | A treemap of the chain's top pools, sized by volume and tinted by the day's move, with a ranked list behind it                                               |
 | **Liquidity Flow**    | Net taker flow through the pool in five-minute buckets, with the biggest single swaps beside it                                                              |
 | **Pool Detail**       | The selected pool at a glance, one click from its chart and a swap                                                                                           |
+| **New Mints**         | Launchpad tokens minted in the last few hours, newest first, with holders and early flow                                                                     |
+| **Graduating**        | Tokens climbing a bonding curve, ranked by how close they are to migrating to a real pool                                                                    |
+| **Graduated**         | Tokens that completed the curve and now trade on an AMM pool, most recent first                                                                              |
+| **Legendary**         | Large-cap memecoins across every chain, ranked by market cap. See [memecoins](/docs/memecoins)                                                               |
 | **Session**           | Where the trading day is right now, from the broker's own calendar, holidays and half days included                                                          |
 | **Earnings Calendar** | Who reports today, split before the bell and after the close, with the consensus EPS and an IPO tab                                                          |
 | **Economic Calendar** | Forward US macro releases by the clock, compiled from the agencies' own publication schedules                                                                |

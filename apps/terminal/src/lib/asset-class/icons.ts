@@ -9,6 +9,7 @@
  */
 import {
   Bitcoin,
+  Dog,
   Flame,
   Layers,
   LayoutGrid,
@@ -24,6 +25,7 @@ const BY_NAME: Record<string, LucideIcon> = {
   Bitcoin,
   Layers,
   Flame,
+  Dog,
   TrendingUp,
   Vote,
 }

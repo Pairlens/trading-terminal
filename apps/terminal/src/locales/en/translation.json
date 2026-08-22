@@ -2356,7 +2356,14 @@
     "level1": "Level 1",
     "company": "Company",
     "insiderActivity": "Insider Activity",
-    "yourPosition": "Your Position"
+    "yourPosition": "Your Position",
+    "memeNew": "New Mints",
+    "memeGraduating": "Graduating",
+    "memeGraduated": "Graduated",
+    "memeLegendary": "Legendary",
+    "memeTokenStats": "Token Stats",
+    "memeFlow": "Buy / Sell Flow",
+    "memeSafety": "Token Safety"
   },
   "paneDescriptions": {
     "markets": "Browse all available trading pairs across exchanges",
@@ -2429,7 +2436,14 @@
     "level1": "Bid, ask and sizes, the spread, the day's range, and a halt row when the tape calls one",
     "company": "Valuation, growth, margins, the next catalyst and where the analysts sit, in one pane",
     "insiderActivity": "Recent Form 4 filings: who inside the company bought or sold, how much, and at what price",
-    "yourPosition": "What you hold in this symbol: quantity, cost, mark, and both the day and the open profit"
+    "yourPosition": "What you hold in this symbol: quantity, cost, mark, and both the day and the open profit",
+    "memeNew": "Tokens minted in the last few hours, newest first, with holders and early flow.",
+    "memeGraduating": "Tokens climbing a bonding curve, ranked by how close they are to migrating to a real pool.",
+    "memeGraduated": "Tokens that completed their curve and now trade on an AMM pool, most recent first.",
+    "memeLegendary": "Large-cap memecoins across every chain, ranked by market cap.",
+    "memeTokenStats": "Market cap, FDV, liquidity, holders and bonding-curve progress for the active token.",
+    "memeFlow": "Buys against sells at four horizons, with the move and the traded volume behind each.",
+    "memeSafety": "Mint and freeze authority, holder concentration, and the deployer's history."
   },
   "venueLadder": {
     "emptyTitle": "No venue to compare",
@@ -2729,7 +2743,8 @@
       "stocks": "Equities",
       "prediction": "Predictions",
       "moveLeft": "Move left",
-      "moveRight": "Move right"
+      "moveRight": "Move right",
+      "memecoin": "Memecoins"
     }
   },
   "assetClass": {
@@ -2744,7 +2759,9 @@
     "perpDescription": "A leveraged contract on the price, with no expiry date. Longs and shorts pay each other funding to keep it near spot.",
     "dexDescription": "A swap against a liquidity pool, signed by your own wallet. The chain it happens on is part of what you are trading.",
     "stocksDescription": "Shares through a broker, on the exchange’s own calendar. Hours, halts and settlement rules apply.",
-    "predictionDescription": "A contract on the answer to a question. It pays $1 if the answer is right and nothing if it is not."
+    "predictionDescription": "A contract on the answer to a question. It pays $1 if the answer is right and nothing if it is not.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Launchpad tokens on a bonding curve, and the large caps that graduated from one. Priced in market cap, traded through a DEX aggregator."
   },
   "pluginStore": {
     "registryOffline": "Plugin registry is offline. Showing installed plugins only.",
@@ -3230,6 +3247,14 @@
       "pairlens-equities": {
         "title": "Pairlens Equities",
         "description": "Stock surfaces: the session clock, Level 1 quotes, company fundamentals and the earnings calendar"
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Launchpad surfaces: new mints, bonding-curve progress, graduations and the large caps that outlived them"
+      },
+      "memecoin-data-provider": {
+        "title": "Memecoin Feed",
+        "description": "Launchpad tokens from keyless public sources: new mints and bonding-curve progress from Jupiter, large-cap memecoins from CoinGecko. No API key and no server of ours: every request is metered against the browser that made it."
       }
     },
     "families": {
@@ -3268,6 +3293,10 @@
       "cexFutures": {
         "label": "Crypto Futures",
         "description": "Perpetual futures venues for leveraged crypto positions."
+      },
+      "memes": {
+        "label": "Memecoins",
+        "description": "Launchpad boards and the keyless feed behind them"
       }
     },
     "familyToggleAria": "Enable or disable all {{family}} plugins",
@@ -3974,6 +4003,24 @@
         "tagline": "Every open window, against the tape it settles on.",
         "description": "The recurring crypto contracts on both venues in one table: Kalshi opens a fifteen-minute window on five assets, Polymarket an hourly and a daily one on four. Each row carries the settlement reference, live spot, the distance between them and what a driftless diffusion at recent realized volatility makes of the time remaining, so the odds have something to be compared against.",
         "menuLabel": "Crypto Up/Down"
+      },
+      "memecoin-discovery": {
+        "name": "Memecoin Discovery",
+        "tagline": "Four columns, one for each stage of the curve.",
+        "description": "The launchpad board: minted in the last hour, climbing the bonding curve with progress against the graduation threshold, migrated to a real pool, and the large caps that outlived their cycle. Every row carries market cap, liquidity, and buys against sells, and clicking one opens its chart and a swap ticket.",
+        "menuLabel": "Default"
+      },
+      "memecoin-terminal": {
+        "name": "Memecoin Terminal",
+        "tagline": "Market cap, flow, and who can still mint.",
+        "description": "The default memecoin layout: a chart over the flow strip that puts buys against sells at four horizons, supply and holder count in the middle, the deployer audit under it, and a swap ticket on the right. No order book: a bonding curve does not have one.",
+        "menuLabel": "Default"
+      },
+      "memecoin-sniper": {
+        "name": "Memecoin Sniper",
+        "tagline": "The curve on the left, the ticket on the right.",
+        "description": "Built for working launches: new mints and the graduating ladder stay on screen while the chart, the flow strip and the swap ticket fill the rest. The safety panel sits under the ticket, because the mint authority is the last thing worth checking before an order.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -4015,6 +4062,9 @@
       },
       "dex": {
         "label": "DEX"
+      },
+      "memecoins": {
+        "label": "Memecoins"
       },
       "equities": {
         "label": "Equities"
@@ -5286,6 +5336,10 @@
         "label": "Pool Stats",
         "description": "AMM pool state, its swaps, and a chain's ranked pools"
       },
+      "launchpad": {
+        "label": "Launchpad Tokens",
+        "description": "Newly minted tokens, bonding-curve progress, graduations and large-cap memecoins"
+      },
       "candles": {
         "label": "Candles",
         "description": "Live OHLCV candle streams for charts and signals"
@@ -6416,5 +6470,86 @@
     "mark": "Mark",
     "marketValue": "Market value",
     "dayChange": "Today"
+  },
+  "memecoins": {
+    "loading": "Reading the launchpads",
+    "retrying": "Retrying",
+    "unavailableBody": "The launchpad feed did not answer. It will retry on its own.",
+    "unknown": "Unknown",
+    "curveUnknown": "No bonding curve, or a launchpad with no published threshold",
+    "openChart": "Open {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "MCap",
+      "age": "Age",
+      "curve": "Curve",
+      "since": "Since",
+      "change24h": "24h",
+      "change": "Move",
+      "flow": "Buys / Sells",
+      "volume": "24h Vol"
+    },
+    "new": {
+      "title": "New Mints",
+      "footnote": "Minted in the last 6 hours. Holder count beside the ticker.",
+      "emptyTitle": "Nothing minted yet",
+      "emptyBody": "New tokens appear here within seconds of their first trade."
+    },
+    "graduating": {
+      "title": "Graduating",
+      "footnote": "Curve progress toward migration. A tilde marks an estimate.",
+      "emptyTitle": "Nothing close to graduating",
+      "emptyBody": "Tokens appear here once they are a third of the way up their bonding curve."
+    },
+    "graduated": {
+      "title": "Graduated",
+      "footnote": "Completed the curve and moved to an AMM pool, last 7 days.",
+      "emptyTitle": "No recent graduations",
+      "emptyBody": "Tokens that complete their bonding curve land here."
+    },
+    "legendary": {
+      "title": "Legendary",
+      "footnote": "Market caps from CoinGecko, each opened on the chain it trades deepest.",
+      "emptyTitle": "No large caps to show",
+      "emptyBody": "The market-cap ranking did not answer. It will retry on its own."
+    },
+    "token": {
+      "emptyTitle": "Not a launchpad token",
+      "emptyBody": "The launchpad feed has nothing on this address. It may trade on a venue this board does not cover."
+    },
+    "stats": {
+      "marketCap": "Market cap",
+      "fdv": "FDV",
+      "liquidity": "Liquidity",
+      "holders": "Holders",
+      "launchpad": "Launchpad",
+      "curve": "Curve",
+      "graduated": "Graduated",
+      "organicScore": "Organic score",
+      "footnote": "Market cap uses circulating supply; FDV uses total supply."
+    },
+    "flow": {
+      "window": "Window",
+      "volume": "Volume",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Counts are trades, not traders. Volume is both sides together.",
+      "emptyTitle": "No trades yet",
+      "emptyBody": "Flow appears once the token has its first swap."
+    },
+    "safety": {
+      "mintAuthority": "Mint authority",
+      "freezeAuthority": "Freeze authority",
+      "topHolders": "Top holders",
+      "devMints": "Deployer mints",
+      "devMigrations": "{{count}} graduated",
+      "revoked": "Revoked",
+      "live": "Live",
+      "footnote": "Unknown is not safe. A missing audit says nothing about the token.",
+      "emptyTitle": "No audit published",
+      "emptyBody": "This source published no mint or freeze authority for the token. Treat that as unknown, not as safe."
+    }
   }
 }

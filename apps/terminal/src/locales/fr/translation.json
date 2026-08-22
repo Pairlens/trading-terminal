@@ -3462,7 +3462,14 @@
     "sessionClock": "Horloge de séance",
     "level1": "Level 1",
     "company": "Entreprise",
-    "yourPosition": "Votre position"
+    "yourPosition": "Votre position",
+    "memeNew": "Nouveaux mints",
+    "memeGraduating": "En graduation",
+    "memeGraduated": "Gradués",
+    "memeLegendary": "Légendaires",
+    "memeTokenStats": "Stats du token",
+    "memeFlow": "Flux achats/ventes",
+    "memeSafety": "Sécurité du token"
   },
   "paneDescriptions": {
     "insiderActivity": "Déclarations Form 4 récentes : qui a acheté ou vendu dans l'entreprise, combien et à quel prix",
@@ -3535,7 +3542,14 @@
     "sessionClock": "Une horloge en une ligne pour la journée de trading, pour qu’un ticket hors séance ne soit jamais une surprise",
     "level1": "Achat et vente avec leurs tailles, le spread, l'amplitude du jour, et une ligne de statut quand la cotation est suspendue",
     "company": "Valorisation, croissance, marges, le prochain catalyseur et où se situent les analystes, dans un seul panneau",
-    "yourPosition": "Ce que vous détenez sur ce symbole : quantité, coût, prix de marquage, et le P&L du jour comme celui en position ouverte"
+    "yourPosition": "Ce que vous détenez sur ce symbole : quantité, coût, prix de marquage, et le P&L du jour comme celui en position ouverte",
+    "memeNew": "Tokens mintés dans les dernières heures, les plus récents en premier, avec les holders et le flux initial.",
+    "memeGraduating": "Tokens qui montent une courbe de bonding, classés selon leur proximité de la migration vers un vrai pool.",
+    "memeGraduated": "Tokens qui ont terminé leur courbe et se négocient désormais sur un pool AMM, les plus récents en premier.",
+    "memeLegendary": "Memecoins à grosse capitalisation sur toutes les chaînes, classées par capitalisation.",
+    "memeTokenStats": "Capitalisation, FDV, liquidité, holders et progression de la courbe de bonding du token actif.",
+    "memeFlow": "Achats contre ventes sur quatre horizons, avec la variation et le volume traité derrière chacun.",
+    "memeSafety": "Autorité de mint et de gel, concentration des holders et historique du deployer."
   },
   "multiPrice": {
     "venue": "Exchange",
@@ -3707,7 +3721,8 @@
       "stocks": "Actions",
       "prediction": "Prédictions",
       "moveLeft": "Déplacer vers la gauche",
-      "moveRight": "Déplacer vers la droite"
+      "moveRight": "Déplacer vers la droite",
+      "memecoin": "Memecoins"
     }
   },
   "assetClass": {
@@ -3722,7 +3737,9 @@
     "perpDescription": "Un contrat à effet de levier sur le prix, sans échéance. Longs et shorts se versent un financement pour le maintenir près du spot.",
     "dexDescription": "Un swap contre un pool de liquidité, signé par votre propre wallet. La chaîne où il a lieu fait partie de ce que vous négociez.",
     "stocksDescription": "Des actions via un courtier, au calendrier de la bourse. Horaires, suspensions et règles de règlement s’appliquent.",
-    "predictionDescription": "Un contrat sur la réponse à une question. Il paie 1 $ si la réponse est juste, rien sinon."
+    "predictionDescription": "Un contrat sur la réponse à une question. Il paie 1 $ si la réponse est juste, rien sinon.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Des tokens de launchpad sur une courbe de bonding, et les grosses capitalisations qui en sont sorties. Cotés en capitalisation, négociés via un agrégateur DEX."
   },
   "pluginStore": {
     "registryOffline": "Le registre de plugins est hors ligne. Affichage des plugins installés uniquement.",
@@ -4208,6 +4225,14 @@
       "pairlens-equities": {
         "title": "Pairlens Actions",
         "description": "Surfaces actions : l’horloge de séance, les cotations Level 1, les fondamentaux d’entreprise et le calendrier des résultats"
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Surfaces de launchpad : nouveaux mints, progression de la courbe de bonding, graduations et les grosses capitalisations qui leur ont survécu"
+      },
+      "memecoin-data-provider": {
+        "title": "Flux memecoins",
+        "description": "Tokens de launchpad depuis des sources publiques sans clé : nouveaux mints et progression de la courbe de bonding via Jupiter, memecoins à grosse capitalisation via CoinGecko. Pas de clé API et aucun serveur à nous : chaque requête est comptée sur le navigateur qui l’a émise."
       }
     },
     "families": {
@@ -4246,6 +4271,10 @@
       "cexFutures": {
         "label": "Futures crypto",
         "description": "Plateformes de futures perpétuels pour des positions crypto avec levier."
+      },
+      "memes": {
+        "label": "Memecoins",
+        "description": "Tableaux de launchpad et le flux sans clé qui les alimente"
       }
     },
     "familyToggleAria": "Activer ou désactiver tous les plugins {{family}}",
@@ -4952,6 +4981,24 @@
         "tagline": "Chaque fenêtre ouverte, face au cours qui la règle.",
         "description": "Les contrats crypto récurrents des deux places dans un seul tableau : Kalshi ouvre une fenêtre de quinze minutes sur cinq actifs, Polymarket une horaire et une quotidienne sur quatre. Chaque ligne porte la référence de règlement, le spot en direct, l'écart entre les deux et ce qu'une diffusion sans dérive à la volatilité réalisée récente fait du temps restant, pour que les cotes aient un point de comparaison.",
         "menuLabel": "Crypto Hausse/Baisse"
+      },
+      "memecoin-discovery": {
+        "name": "Découverte memecoins",
+        "tagline": "Quatre colonnes, une par étape de la courbe.",
+        "description": "Le tableau du launchpad : mintés dans la dernière heure, en train de monter la courbe de bonding avec la progression vers le seuil de graduation, migrés vers un vrai pool, et les grosses capitalisations qui ont survécu à leur cycle. Chaque ligne porte la capitalisation, la liquidité et les achats contre les ventes, et un clic ouvre son graphique et un ticket de swap.",
+        "menuLabel": "Par défaut"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal memecoins",
+        "tagline": "Capitalisation, flux, et qui peut encore minter.",
+        "description": "La disposition memecoin par défaut : un graphique au-dessus de la bande de flux qui oppose achats et ventes sur quatre horizons, l’offre et le nombre de holders au milieu, l’audit du deployer en dessous, et un ticket de swap à droite. Pas de carnet d’ordres : une courbe de bonding n’en a pas.",
+        "menuLabel": "Par défaut"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper memecoins",
+        "tagline": "La courbe à gauche, le ticket à droite.",
+        "description": "Conçu pour travailler les lancements : les nouveaux mints et l’échelle de graduation restent à l’écran pendant que le graphique, la bande de flux et le ticket de swap occupent le reste. Le panneau de sécurité passe sous le ticket, parce que l’autorité de mint est la dernière chose à vérifier avant un ordre.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5002,6 +5049,9 @@
       },
       "multi-asset": {
         "label": "Multi-actifs"
+      },
+      "memecoins": {
+        "label": "Memecoins"
       }
     },
     "screenSizes": {
@@ -5968,6 +6018,10 @@
       "events": {
         "label": "Événements",
         "description": "Parcourir les événements des marchés de prédiction et leurs issues"
+      },
+      "launchpad": {
+        "label": "Tokens de launchpad",
+        "description": "Tokens fraîchement mintés, progression de la courbe de bonding, graduations et memecoins à grosse capitalisation"
       }
     },
     "domains": {
@@ -6416,5 +6470,86 @@
     "mark": "Cours de référence",
     "marketValue": "Valeur de marché",
     "dayChange": "Aujourd'hui"
+  },
+  "memecoins": {
+    "loading": "Lecture des launchpads",
+    "retrying": "Nouvel essai",
+    "unavailableBody": "Le flux du launchpad n’a pas répondu. Il réessaiera tout seul.",
+    "unknown": "Inconnu",
+    "curveUnknown": "Pas de courbe de bonding, ou un launchpad sans seuil publié",
+    "openChart": "Ouvrir {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Cap.",
+      "age": "Âge",
+      "curve": "Courbe",
+      "since": "Depuis",
+      "change24h": "24h",
+      "change": "Var.",
+      "flow": "Ach./Vent.",
+      "volume": "Vol 24h"
+    },
+    "new": {
+      "title": "Nouveaux mints",
+      "footnote": "Mintés dans les 6 dernières heures. Le nombre de holders est à côté du ticker.",
+      "emptyTitle": "Rien de minté pour l’instant",
+      "emptyBody": "Les nouveaux tokens apparaissent ici quelques secondes après leur première transaction."
+    },
+    "graduating": {
+      "title": "En graduation",
+      "footnote": "Progression de la courbe vers la migration. Un tilde signale une estimation.",
+      "emptyTitle": "Rien de proche de la graduation",
+      "emptyBody": "Les tokens apparaissent ici une fois arrivés au tiers de leur courbe de bonding."
+    },
+    "graduated": {
+      "title": "Gradués",
+      "footnote": "Courbe terminée et passage sur un pool AMM, 7 derniers jours.",
+      "emptyTitle": "Aucune graduation récente",
+      "emptyBody": "Les tokens qui terminent leur courbe de bonding atterrissent ici."
+    },
+    "legendary": {
+      "title": "Légendaires",
+      "footnote": "Capitalisation de CoinGecko, chacune ouverte sur la chaîne la plus liquide.",
+      "emptyTitle": "Aucune grosse capitalisation à afficher",
+      "emptyBody": "Le classement par capitalisation n’a pas répondu. Il réessaiera tout seul."
+    },
+    "token": {
+      "emptyTitle": "Pas un token de launchpad",
+      "emptyBody": "Le flux du launchpad n’a rien sur cette adresse. Elle se négocie peut-être sur une plateforme que ce tableau ne couvre pas."
+    },
+    "stats": {
+      "marketCap": "Capitalisation",
+      "fdv": "FDV",
+      "liquidity": "Liquidité",
+      "holders": "Holders",
+      "launchpad": "Launchpad",
+      "curve": "Courbe",
+      "graduated": "Gradué",
+      "organicScore": "Score organique",
+      "footnote": "La capitalisation utilise l’offre en circulation ; le FDV utilise l’offre totale."
+    },
+    "flow": {
+      "window": "Fenêtre",
+      "volume": "Volume",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Les compteurs comptent des transactions, pas des traders. Le volume additionne les deux côtés.",
+      "emptyTitle": "Aucune transaction",
+      "emptyBody": "Le flux apparaît dès que le token a son premier swap."
+    },
+    "safety": {
+      "mintAuthority": "Autorité de mint",
+      "freezeAuthority": "Autorité de gel",
+      "topHolders": "Principaux holders",
+      "devMints": "Mints du deployer",
+      "devMigrations": "{{count}} gradués",
+      "revoked": "Révoquée",
+      "live": "Active",
+      "footnote": "Inconnu n’est pas sûr. Un audit manquant ne dit rien sur le token.",
+      "emptyTitle": "Aucun audit publié",
+      "emptyBody": "Cette source n’a publié ni autorité de mint ni autorité de gel pour ce token. Traitez cela comme inconnu, pas comme sûr."
+    }
   }
 }

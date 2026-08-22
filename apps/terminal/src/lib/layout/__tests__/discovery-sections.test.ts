@@ -145,6 +145,7 @@ describe('discoveryWorkspaceFor', () => {
       spot: 'movers',
       perp: 'funding-matrix',
       dex: 'pool-map',
+      memecoin: 'meme-new',
       stocks: 'earnings-calendar',
       prediction: 'event-board',
     }
@@ -278,7 +279,9 @@ describe('discovery sections', () => {
     // Names a section that no longer exists, repeats one, and omits the rest.
     const ordered = orderSections(sections, [
       'prediction',
-      'memecoins',
+      // A section id that has never existed. Deliberately not a near-miss of a
+      // real one: the case is about an id being dropped, not about spelling.
+      'commodities',
       'prediction',
       'dex',
     ])
@@ -287,6 +290,7 @@ describe('discovery sections', () => {
       'dex',
       'spot',
       'perp',
+      'memecoin',
       'stocks',
     ])
     expect(ordered.length).toBe(sections.length)

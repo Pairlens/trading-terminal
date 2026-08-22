@@ -18,6 +18,7 @@ import { INSTRUMENT_CLASSES } from '@pairlens/shared/market-ref'
 import { PERPS_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-cex-futures/workspaces'
 import { PREDICTION_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-predictions/workspaces'
 import { DEX_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-dex/workspaces'
+import { MEMECOIN_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-memecoins/workspaces'
 import { EQUITIES_DISCOVERY_TEMPLATE_ID } from '@pairlens/plugins/pairlens-equities/workspaces'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
@@ -62,6 +63,12 @@ export const DISCOVERY_SECTIONS: ReadonlyArray<DiscoverySection> = [
     labelKey: 'discovery.sections.dex',
     icon: 'Flame',
     templateId: DEX_DISCOVERY_TEMPLATE_ID,
+  },
+  {
+    id: 'memecoin',
+    labelKey: 'discovery.sections.memecoin',
+    icon: 'Dog',
+    templateId: MEMECOIN_DISCOVERY_TEMPLATE_ID,
   },
   {
     id: 'stocks',

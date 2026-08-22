@@ -164,6 +164,8 @@ const PAIRLENS_MONO: Record<string, string> = {
   'pairlens-predictions': 'PRD',
   'pairlens-cex-futures': 'PRP',
   'pairlens-dex': 'DEX',
+  'pairlens-memecoins': 'MEME',
+  'memecoin-data-provider': 'MEME',
   'pairlens-equities': 'EQ',
   'pairlens-community': 'CMY',
   'user-indicators': 'PY',

@@ -90,6 +90,7 @@ describe('pairWorkspaceFor', () => {
         'trade-entry',
       ],
       dex: ['chart', 'trade-entry'],
+      memecoin: ['chart', 'trade-entry', 'meme-token-stats', 'meme-flow'],
       stocks: ['chart', 'positions', 'trade-entry', 'symbol-news'],
     }
     for (const cls of INSTRUMENT_CLASSES) {

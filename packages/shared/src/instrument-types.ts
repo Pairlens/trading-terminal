@@ -1613,3 +1613,123 @@ export type BridgeExecutionResult = {
   quote?: BridgeQuote
   error?: string
 }
+
+// ── Launchpad tokens (`market-data:launchpad`) ───────────────────────
+//
+// The memecoin desk's own contract. It is deliberately NOT `PoolStats`: a
+// pool is read in reserves, fee tier and price impact, and a launchpad token
+// is read in market cap, how far up the bonding curve it is, who is buying,
+// and whether the deployer can still mint. Sharing one type would have forced
+// every field of each onto the other as null.
+//
+// Client-only: nothing here crosses the App Server, so this block has no
+// mirror in that repo.
+
+/** Where a token sits in its life, which is also which column it lands in. */
+export type LaunchpadStage =
+  /** Minted recently, still early on its bonding curve. */
+  | 'new'
+  /** On a curve and close enough to completion to be worth watching. */
+  | 'graduating'
+  /** Curve completed, now trading on a real AMM pool. */
+  | 'graduated'
+  /** A large cap that outlived its cycle. Chain-agnostic. */
+  | 'legendary'
+
+/** The reads a launchpad provider answers. One per column, plus a lookup. */
+export type LaunchpadAction = LaunchpadStage | 'token'
+
+/** Buys against sells over one window. */
+export type LaunchpadFlow = {
+  buys: number
+  sells: number
+  buyVolumeUsd: number
+  sellVolumeUsd: number
+  /**
+   * Both sides together.
+   *
+   * Explicit rather than derived, because not every source splits by side. A
+   * market-cap ranking publishes one traded-volume figure and no split at all,
+   * and stuffing that into `buyVolumeUsd` to avoid adding a field is the kind
+   * of quiet mislabel that survives for years.
+   */
+  volumeUsd: number
+  /** Distinct traders, when the source counts them. */
+  traders: number | null
+  /** Percent move over the window, already in percent (not a ratio). */
+  priceChangePercent: number | null
+}
+
+/** The four windows every row carries, so a column can sort on any of them. */
+export type LaunchpadFlowWindow = 'm5' | 'h1' | 'h6' | 'h24'
+
+/**
+ * What the deployer can still do to holders. Every field is nullable and null
+ * means UNKNOWN, never safe: a missing audit must not paint a green check.
+ */
+export type LaunchpadAudit = {
+  mintAuthorityDisabled: boolean | null
+  freezeAuthorityDisabled: boolean | null
+  /** Share of supply held by the top holders, 0..1. */
+  topHoldersPercent: number | null
+  /** How many tokens this deployer has minted before. */
+  devMints: number | null
+  /** How many of those reached graduation. */
+  devMigrations: number | null
+}
+
+export type LaunchpadSocials = {
+  twitter: string | null
+  telegram: string | null
+  website: string | null
+}
+
+/** One row on a memecoin column. */
+export type LaunchpadToken = {
+  /** Chain plus address IS the identity, the same way a pool's is. */
+  chain: string
+  address: string
+  symbol: string
+  name: string
+  iconUrl: string | null
+  decimals: number | null
+  priceUsd: number | null
+  marketCapUsd: number | null
+  fdvUsd: number | null
+  liquidityUsd: number | null
+  holders: number | null
+  /** The launchpad that minted it ('pump.fun', 'letsbonk.fun'), or null. */
+  launchpad: string | null
+  /** ISO 8601, when the mint happened. */
+  createdAt: string | null
+  /** ISO 8601, when the curve completed. Null while still on the curve. */
+  graduatedAt: string | null
+  /**
+   * How far up the bonding curve, 0..1. Null is honest and common: a token
+   * that never had a curve, or one whose launchpad we hold no threshold for.
+   * A null here must render as "unknown", never as 0%.
+   */
+  curveProgress: number | null
+  /**
+   * The source's own bot-filtered interest score, 0..100, or null. Comparable
+   * only within one source, which is why it travels beside the source id.
+   */
+  organicScore: number | null
+  /** On the source's own verified list. */
+  verified: boolean
+  audit: LaunchpadAudit | null
+  flow: Partial<Record<LaunchpadFlowWindow, LaunchpadFlow>>
+  socials: LaunchpadSocials
+  stage: LaunchpadStage
+  /** Which provider answered, so a merged list stays attributable. */
+  source: string
+}
+
+/** What a column read returns. */
+export type LaunchpadListing = {
+  stage: LaunchpadStage
+  tokens: Array<LaunchpadToken>
+  /** ISO 8601 of the read, so a snapshot can age itself. */
+  fetchedAt: string
+  source: string
+}

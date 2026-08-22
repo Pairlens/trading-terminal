@@ -4,8 +4,8 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 20 AUG 2026
-readTime: 12 min read
+updated: 22 AUG 2026
+readTime: 13 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -77,18 +77,18 @@ every other panel in that column keeps at least the height it declares.
 ## Discovery is one board per asset class
 
 Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
-**CEX Futures**, **DEX**, **Equities**, **Predictions**. Each tab is a full
-workspace of its own. Rearrange the futures board and the spot board has not
+**CEX Futures**, **DEX**, **Memecoins**, **Equities**, **Predictions**. Each
+tab is a full workspace of its own. Rearrange the futures board and the spot board has not
 moved, and each one remembers its own arrangement between sessions.
 
 Every class has one fixed colour, and it is the same colour the badge beside
 the pair symbol wears on the trade page (see
 [terminal tour](/docs/terminal-tour)). Amber is spot, violet is perps, magenta
-is on-chain, green is equities, cyan is event contracts. Pick a tab here and
-the pair you open from it is badged in the colour you clicked.
+is on-chain, red is memecoins, green is equities, cyan is event contracts. Pick
+a tab here and the pair you open from it is badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
-and none of the five opens on an A-to-Z list of pairs.
+and not one of them opens on an A-to-Z list of pairs.
 
 **CEX Spot** opens on what moved and why: a market pulse strip over the movers
 table over the sector tape, the news wire beside them, and your watchlist in
@@ -109,6 +109,13 @@ fifth time.
 **DEX** is chain first, then pool: a chain rail on the left, pools ranked by
 volume against the liquidity backing them in the middle over the flow chart,
 and the selected pool's detail on the right.
+
+**Memecoins** is four columns, one per stage of a token's life: **New Mints**
+minted in the last few hours, **Graduating** climbing a bonding curve with
+progress against the threshold that migrates them, **Graduated** already
+trading on an AMM pool, and **Legendary** the large caps that outlived their
+cycle. Equal widths, because which stage deserves your attention is your call.
+Full details in [memecoins](/docs/memecoins).
 
 **Equities** is built around the calendar rather than the tape. The session
 state leads, the earnings calendar sits under it and macro releases under
@@ -154,6 +161,14 @@ ticket.
 synthetic. In its place: the chart over **Pool Stats**, the on-chain tape
 beside it, and the swap ticket above the aggregator **Route**, so the slippage
 on the ticket has a cause you can read.
+
+**Memecoin Terminal** is not the DEX board with a different name. A pool desk
+reads reserves, fee tier and price impact; a memecoin desk reads market cap,
+who is buying, and whether the deployer can still mint. So the chart sits over
+**Buy / Sell Flow**, with **Token Stats** and **Token Safety** in the middle
+column and the swap ticket on the right. **Memecoin Sniper** keeps the New and
+Graduating columns on screen beside the chart, for working launches without
+leaving the board.
 
 **Equities Terminal** leads with the session clock, because extended hours
 change what the ticket will accept rather than just a label on it. Level 1

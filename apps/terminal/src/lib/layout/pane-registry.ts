@@ -36,6 +36,7 @@ export const FIRST_PARTY_PLUGIN_IDS: ReadonlySet<string> = new Set([
   'pairlens-predictions',
   'pairlens-cex-futures',
   'pairlens-dex',
+  'pairlens-memecoins',
   'pairlens-equities',
 ])
 

@@ -11,10 +11,6 @@
 
 import type { PluginManifest } from './plugin-types'
 
-/**
- * Reserved for later expansion (declare here when they ship, not before):
- * 'memes' (meme-coin surfaces).
- */
 export type PluginFamilyId =
   | 'core'
   | 'intelligence'
@@ -23,6 +19,7 @@ export type PluginFamilyId =
   | 'cex-spot'
   | 'cex-futures'
   | 'dex'
+  | 'memes'
   | 'equities'
   | 'predictions'
 
@@ -78,31 +75,38 @@ export const PLUGIN_FAMILIES: Array<PluginFamilyMeta> = [
     required: false,
   },
   {
+    id: 'memes',
+    labelKey: 'pluginStore.families.memes.label',
+    descriptionKey: 'pluginStore.families.memes.description',
+    order: 5,
+    required: false,
+  },
+  {
     id: 'equities',
     labelKey: 'pluginStore.families.equities.label',
     descriptionKey: 'pluginStore.families.equities.description',
-    order: 5,
+    order: 6,
     required: false,
   },
   {
     id: 'predictions',
     labelKey: 'pluginStore.families.predictions.label',
     descriptionKey: 'pluginStore.families.predictions.description',
-    order: 6,
+    order: 7,
     required: false,
   },
   {
     id: 'ai-byok',
     labelKey: 'pluginStore.families.aiByok.label',
     descriptionKey: 'pluginStore.families.aiByok.description',
-    order: 7,
+    order: 8,
     required: false,
   },
   {
     id: 'themes',
     labelKey: 'pluginStore.families.themes.label',
     descriptionKey: 'pluginStore.families.themes.description',
-    order: 8,
+    order: 9,
     required: false,
   },
 ]
@@ -143,6 +147,7 @@ export function pluginFamilyOf(
     return 'ai-byok'
   }
   const assetClass = manifest.metadata?.['assetClass']
+  if (assetClass === 'memecoin') return 'memes'
   if (assetClass === 'prediction') return 'predictions'
   if (assetClass === 'stocks') return 'equities'
   if (assetClass === 'dex') return 'dex'

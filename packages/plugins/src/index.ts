@@ -19,6 +19,14 @@ export {
   createPairlensDexPlugin,
 } from './pairlens-dex/index.ts'
 export {
+  pairlensMemecoinsManifest,
+  createPairlensMemecoinsPlugin,
+} from './pairlens-memecoins/index.ts'
+export {
+  memecoinDataProviderManifest,
+  createMemecoinDataProviderPlugin,
+} from './memecoin-data-provider/index.ts'
+export {
   pairlensEquitiesManifest,
   createPairlensEquitiesPlugin,
 } from './pairlens-equities/index.ts'

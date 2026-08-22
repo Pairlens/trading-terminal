@@ -4,8 +4,8 @@
  * What each asset class LOOKS like — one table, read by every surface that
  * names a class.
  *
- * Spot, perps, on-chain pools, equities and event contracts behave like five
- * different products: they settle differently, they carry different risk, and
+ * Spot, perps, on-chain pools, launchpad tokens, equities and event contracts
+ * behave like six different products: they settle differently, they carry different risk, and
  * an order means a different thing on each. The terminal used to leave that
  * distinction implicit in the symbol's shape ('BTC-USDT' vs 'AAPL'), which is
  * a rule you have to already know to read. So each class gets a fixed hue, a
@@ -82,6 +82,16 @@ export const ASSET_CLASS_VISUALS: Readonly<
     bg: 'bg-asset-dex/12',
     border: 'border-asset-dex/30',
     activeBg: 'bg-asset-dex/15',
+  },
+  memecoin: {
+    labelKey: 'assetClass.memecoin',
+    nameKey: 'discovery.sections.memecoin',
+    descriptionKey: 'assetClass.memecoinDescription',
+    icon: 'Dog',
+    text: 'text-asset-memecoin',
+    bg: 'bg-asset-memecoin/12',
+    border: 'border-asset-memecoin/30',
+    activeBg: 'bg-asset-memecoin/15',
   },
   stocks: {
     labelKey: 'assetClass.stocks',

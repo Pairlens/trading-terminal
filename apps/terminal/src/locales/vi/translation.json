@@ -3462,7 +3462,14 @@
     "sessionClock": "Đồng hồ phiên",
     "level1": "Level 1",
     "company": "Công ty",
-    "yourPosition": "Vị thế của bạn"
+    "yourPosition": "Vị thế của bạn",
+    "memeNew": "Mint mới",
+    "memeGraduating": "Sắp tốt nghiệp",
+    "memeGraduated": "Đã tốt nghiệp",
+    "memeLegendary": "Huyền thoại",
+    "memeTokenStats": "Thống kê token",
+    "memeFlow": "Dòng mua/bán",
+    "memeSafety": "An toàn token"
   },
   "paneDescriptions": {
     "insiderActivity": "Các báo cáo Form 4 gần đây: ai trong công ty đã mua hay bán, bao nhiêu và ở giá nào",
@@ -3535,7 +3542,14 @@
     "sessionClock": "Một chiếc đồng hồ một dòng cho phiên giao dịch, để một lệnh ngoài giờ không bao giờ là một bất ngờ",
     "level1": "Giá mua và giá bán kèm khối lượng, chênh lệch, biên độ trong ngày, và một dòng trạng thái khi sàn tạm dừng giao dịch",
     "company": "Định giá, tăng trưởng, biên lợi nhuận, chất xúc tác tiếp theo, và quan điểm của các nhà phân tích, trong một panel",
-    "yourPosition": "Những gì bạn đang nắm giữ ở mã này: số lượng, giá vốn, giá đánh dấu, và cả lợi nhuận trong ngày lẫn lợi nhuận chưa thực hiện"
+    "yourPosition": "Những gì bạn đang nắm giữ ở mã này: số lượng, giá vốn, giá đánh dấu, và cả lợi nhuận trong ngày lẫn lợi nhuận chưa thực hiện",
+    "memeNew": "Token được mint trong vài giờ qua, mới nhất lên đầu, kèm số holder và dòng tiền sớm.",
+    "memeGraduating": "Token đang leo đường cong bonding, xếp theo mức độ gần với việc chuyển sang một pool thật.",
+    "memeGraduated": "Token đã đi hết đường cong và nay giao dịch trên pool AMM, mới nhất lên đầu.",
+    "memeLegendary": "Memecoin vốn hóa lớn trên mọi chuỗi, xếp theo vốn hóa.",
+    "memeTokenStats": "Vốn hóa, FDV, thanh khoản, holder và tiến độ đường cong bonding của token đang xem.",
+    "memeFlow": "Mua so với bán trên bốn khung thời gian, kèm mức biến động và khối lượng đằng sau mỗi khung.",
+    "memeSafety": "Quyền mint và quyền đóng băng, mức tập trung của holder, và lịch sử của người deploy."
   },
   "multiPrice": {
     "venue": "Sàn",
@@ -3707,7 +3721,8 @@
       "stocks": "Cổ phiếu",
       "prediction": "Dự đoán",
       "moveLeft": "Chuyển sang trái",
-      "moveRight": "Chuyển sang phải"
+      "moveRight": "Chuyển sang phải",
+      "memecoin": "Memecoin"
     }
   },
   "assetClass": {
@@ -3722,7 +3737,9 @@
     "perpDescription": "Hợp đồng đòn bẩy theo giá, không có ngày đáo hạn. Bên mua và bên bán trả funding cho nhau để giữ giá sát spot.",
     "dexDescription": "Một lệnh hoán đổi với pool thanh khoản, ký bằng chính ví của bạn. Chuỗi nơi nó diễn ra cũng là một phần của thứ bạn giao dịch.",
     "stocksDescription": "Cổ phiếu qua công ty môi giới, theo lịch của chính sàn. Áp dụng giờ giao dịch, tạm ngừng và quy tắc thanh toán.",
-    "predictionDescription": "Hợp đồng về câu trả lời cho một câu hỏi. Trả 1 $ nếu đúng và không gì cả nếu sai."
+    "predictionDescription": "Hợp đồng về câu trả lời cho một câu hỏi. Trả 1 $ nếu đúng và không gì cả nếu sai.",
+    "memecoin": "MEME",
+    "memecoinDescription": "Token launchpad trên một đường cong bonding, và những đồng vốn hóa lớn đã tốt nghiệp từ đó. Định giá theo vốn hóa, giao dịch qua một bộ tổng hợp DEX."
   },
   "pluginStore": {
     "registryOffline": "Registry plugin ngoại tuyến. Chỉ hiển thị các plugin đã cài đặt.",
@@ -4208,6 +4225,14 @@
       "pairlens-equities": {
         "title": "Pairlens Cổ phiếu",
         "description": "Bề mặt cổ phiếu: đồng hồ phiên, báo giá Level 1, dữ liệu cơ bản công ty và lịch báo cáo lợi nhuận"
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens Memecoins",
+        "description": "Các mặt của launchpad: mint mới, tiến độ đường cong bonding, tốt nghiệp, và những đồng vốn hóa lớn sống lâu hơn cả chúng"
+      },
+      "memecoin-data-provider": {
+        "title": "Nguồn dữ liệu memecoin",
+        "description": "Token launchpad từ các nguồn công khai không cần khóa: mint mới và tiến độ đường cong bonding từ Jupiter, memecoin vốn hóa lớn từ CoinGecko. Không API key và không có máy chủ nào của chúng tôi: mỗi yêu cầu được tính vào chính trình duyệt đã gửi nó."
       }
     },
     "families": {
@@ -4246,6 +4271,10 @@
       "cexFutures": {
         "label": "Hợp đồng tương lai crypto",
         "description": "Các sàn hợp đồng tương lai vĩnh cửu cho vị thế crypto có đòn bẩy."
+      },
+      "memes": {
+        "label": "Memecoin",
+        "description": "Các bảng launchpad và nguồn dữ liệu không cần khóa đứng sau chúng"
       }
     },
     "familyToggleAria": "Bật hoặc tắt tất cả plugin {{family}}",
@@ -4952,6 +4981,24 @@
         "tagline": "Mọi cửa sổ đang mở, đối chiếu với giá nó thanh toán.",
         "description": "Các hợp đồng crypto lặp lại của cả hai sàn trong một bảng: Kalshi mở cửa sổ mười lăm phút trên năm tài sản, Polymarket mở theo giờ và theo ngày trên bốn tài sản. Mỗi dòng có giá tham chiếu thanh toán, giá giao ngay trực tiếp, khoảng cách giữa chúng và kết quả mà một khuếch tán không trôi theo biến động thực tế gần đây rút ra từ thời gian còn lại, để tỷ lệ cược có thứ để so sánh.",
         "menuLabel": "Crypto Lên/Xuống"
+      },
+      "memecoin-discovery": {
+        "name": "Khám phá memecoin",
+        "tagline": "Bốn cột, mỗi cột một giai đoạn của đường cong.",
+        "description": "Bảng launchpad: mint trong một giờ qua, đang leo đường cong bonding kèm tiến độ tới ngưỡng tốt nghiệp, đã chuyển sang pool thật, và những đồng vốn hóa lớn sống qua chu kỳ của chính mình. Mỗi dòng mang vốn hóa, thanh khoản và mua so với bán, bấm vào một dòng là mở biểu đồ và phiếu swap của nó.",
+        "menuLabel": "Mặc định"
+      },
+      "memecoin-terminal": {
+        "name": "Terminal memecoin",
+        "tagline": "Vốn hóa, dòng tiền, và ai còn quyền mint.",
+        "description": "Bố cục memecoin mặc định: biểu đồ nằm trên dải dòng tiền đặt mua cạnh bán trên bốn khung thời gian, nguồn cung và số holder ở giữa, phần kiểm tra người deploy bên dưới, và phiếu swap bên phải. Không có sổ lệnh: đường cong bonding vốn không có sổ lệnh.",
+        "menuLabel": "Mặc định"
+      },
+      "memecoin-sniper": {
+        "name": "Sniper memecoin",
+        "tagline": "Đường cong bên trái, phiếu lệnh bên phải.",
+        "description": "Dựng để đánh các đợt ra mắt: mint mới và bậc thang tốt nghiệp luôn ở trên màn hình trong khi biểu đồ, dải dòng tiền và phiếu swap lấp phần còn lại. Bảng an toàn nằm dưới phiếu lệnh, vì quyền mint là thứ đáng xem cuối cùng trước khi đặt lệnh.",
+        "menuLabel": "Sniper"
       }
     },
     "traderTypes": {
@@ -5002,6 +5049,9 @@
       },
       "multi-asset": {
         "label": "Đa Tài Sản"
+      },
+      "memecoins": {
+        "label": "Memecoin"
       }
     },
     "screenSizes": {
@@ -5968,6 +6018,10 @@
       "events": {
         "label": "Sự kiện",
         "description": "Duyệt các sự kiện của thị trường dự đoán và kết quả của chúng"
+      },
+      "launchpad": {
+        "label": "Token launchpad",
+        "description": "Token vừa mint, tiến độ đường cong bonding, tốt nghiệp và memecoin vốn hóa lớn"
       }
     },
     "domains": {
@@ -6416,5 +6470,86 @@
     "mark": "Giá tham chiếu",
     "marketValue": "Giá trị thị trường",
     "dayChange": "Hôm nay"
+  },
+  "memecoins": {
+    "loading": "Đang đọc các launchpad",
+    "retrying": "Đang thử lại",
+    "unavailableBody": "Nguồn dữ liệu launchpad không trả lời. Nó sẽ tự thử lại.",
+    "unknown": "Không rõ",
+    "curveUnknown": "Không có đường cong bonding, hoặc launchpad không công bố ngưỡng",
+    "openChart": "Mở {{symbol}}",
+    "columns": {
+      "token": "Token",
+      "mcap": "Vốn hóa",
+      "age": "Tuổi",
+      "curve": "Đường cong",
+      "since": "Đã qua",
+      "change24h": "24h",
+      "change": "Biến động",
+      "flow": "Mua/Bán",
+      "volume": "KL 24h"
+    },
+    "new": {
+      "title": "Mint mới",
+      "footnote": "Mint trong 6 giờ qua. Số holder nằm cạnh mã token.",
+      "emptyTitle": "Chưa có gì được mint",
+      "emptyBody": "Token mới xuất hiện ở đây vài giây sau giao dịch đầu tiên."
+    },
+    "graduating": {
+      "title": "Sắp tốt nghiệp",
+      "footnote": "Tiến độ đường cong tới lúc chuyển pool. Dấu ngã nghĩa là ước tính.",
+      "emptyTitle": "Chưa có gì gần tốt nghiệp",
+      "emptyBody": "Token xuất hiện ở đây khi đã đi được một phần ba đường cong bonding."
+    },
+    "graduated": {
+      "title": "Đã tốt nghiệp",
+      "footnote": "Đi hết đường cong và chuyển sang pool AMM, 7 ngày qua.",
+      "emptyTitle": "Chưa có đợt tốt nghiệp nào gần đây",
+      "emptyBody": "Token đi hết đường cong bonding sẽ rơi vào đây."
+    },
+    "legendary": {
+      "title": "Huyền thoại",
+      "footnote": "Vốn hóa từ CoinGecko, mỗi đồng mở trên chuỗi có thanh khoản sâu nhất.",
+      "emptyTitle": "Không có đồng vốn hóa lớn nào để hiện",
+      "emptyBody": "Bảng xếp hạng theo vốn hóa không trả lời. Nó sẽ tự thử lại."
+    },
+    "token": {
+      "emptyTitle": "Không phải token launchpad",
+      "emptyBody": "Nguồn dữ liệu launchpad không có gì về địa chỉ này. Có thể nó giao dịch ở một sàn mà bảng này không bao phủ."
+    },
+    "stats": {
+      "marketCap": "Vốn hóa",
+      "fdv": "FDV",
+      "liquidity": "Thanh khoản",
+      "holders": "Holder",
+      "launchpad": "Launchpad",
+      "curve": "Đường cong",
+      "graduated": "Đã tốt nghiệp",
+      "organicScore": "Điểm hữu cơ",
+      "footnote": "Vốn hóa dùng nguồn cung lưu hành; FDV dùng tổng nguồn cung."
+    },
+    "flow": {
+      "window": "Khung",
+      "volume": "Khối lượng",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "Đếm là số giao dịch, không phải số người. Khối lượng gộp cả hai chiều.",
+      "emptyTitle": "Chưa có giao dịch",
+      "emptyBody": "Dòng tiền xuất hiện ngay khi token có cú swap đầu tiên."
+    },
+    "safety": {
+      "mintAuthority": "Quyền mint",
+      "freezeAuthority": "Quyền đóng băng",
+      "topHolders": "Holder lớn nhất",
+      "devMints": "Số mint của người deploy",
+      "devMigrations": "{{count}} đã tốt nghiệp",
+      "revoked": "Đã thu hồi",
+      "live": "Còn hiệu lực",
+      "footnote": "Không rõ không có nghĩa là an toàn. Thiếu kiểm tra thì không nói lên điều gì về token.",
+      "emptyTitle": "Chưa công bố kiểm tra",
+      "emptyBody": "Nguồn này không công bố quyền mint hay quyền đóng băng của token. Hãy coi đó là không rõ, không phải là an toàn."
+    }
   }
 }

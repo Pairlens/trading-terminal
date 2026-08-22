@@ -79,6 +79,15 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     description: "AMM pool state, its swaps, and a chain's ranked pools",
   },
   {
+    id: 'market-data:launchpad',
+    label: 'Launchpad Tokens',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description:
+      'Newly minted tokens, bonding-curve progress, graduations and large-cap memecoins',
+  },
+  {
     id: 'market-data:session',
     label: 'Session Calendar',
     domain: 'market-data',

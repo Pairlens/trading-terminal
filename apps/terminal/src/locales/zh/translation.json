@@ -3462,7 +3462,14 @@
     "sessionClock": "交易时钟",
     "level1": "Level 1",
     "company": "公司信息",
-    "yourPosition": "持仓明细"
+    "yourPosition": "持仓明细",
+    "memeNew": "新铸造",
+    "memeGraduating": "毕业中",
+    "memeGraduated": "已毕业",
+    "memeLegendary": "传奇",
+    "memeTokenStats": "代币统计",
+    "memeFlow": "买卖流向",
+    "memeSafety": "代币安全"
   },
   "paneDescriptions": {
     "insiderActivity": "最近的 Form 4 申报：公司内部人买了还是卖了、买卖多少、成交价多少",
@@ -3535,7 +3542,14 @@
     "sessionClock": "用一行显示交易日状态的时钟，盘后下单不会再让你措手不及",
     "level1": "买卖报价及其挂单量、点差、当日区间，以及交易所宣布停牌时的状态行",
     "company": "估值、增长率、利润率、下一个催化剂，以及分析师的看法，全部集中在一个面板",
-    "yourPosition": "你在这个标的上的持仓：数量、成本、标记价格，以及当日与持仓浮动盈亏"
+    "yourPosition": "你在这个标的上的持仓：数量、成本、标记价格，以及当日与持仓浮动盈亏",
+    "memeNew": "最近几小时内铸造的代币，最新的在前，附带持币人数与早期资金流向。",
+    "memeGraduating": "正沿绑定曲线上行的代币，按距离迁移到真实池子的远近排序。",
+    "memeGraduated": "已走完曲线、现在在 AMM 池子里交易的代币，最近的在前。",
+    "memeLegendary": "各条链上的大市值迷因币，按市值排序。",
+    "memeTokenStats": "当前代币的市值、FDV、流动性、持币人数与绑定曲线进度。",
+    "memeFlow": "四个时间窗口下的买入与卖出对比，附上各自的涨跌与成交额。",
+    "memeSafety": "铸造权限与冻结权限、持币集中度，以及部署者的历史。"
   },
   "multiPrice": {
     "venue": "交易所",
@@ -3707,7 +3721,8 @@
       "stocks": "股票",
       "prediction": "预测市场",
       "moveLeft": "左移",
-      "moveRight": "右移"
+      "moveRight": "右移",
+      "memecoin": "迷因币"
     }
   },
   "assetClass": {
@@ -3722,7 +3737,9 @@
     "perpDescription": "对价格的杠杆合约，没有到期日。多空之间支付资金费率，使其贴近现货。",
     "dexDescription": "与流动性池进行的兑换，由你自己的钱包签名。发生在哪条链上，也是你所交易的一部分。",
     "stocksDescription": "通过券商买卖股票，遵循交易所自己的日历。适用交易时段、停牌和结算规则。",
-    "predictionDescription": "对某个问题答案的合约。答对支付 1 美元，答错则一无所得。"
+    "predictionDescription": "对某个问题答案的合约。答对支付 1 美元，答错则一无所得。",
+    "memecoin": "MEME",
+    "memecoinDescription": "沿绑定曲线发行的 Launchpad 代币，以及从曲线上毕业出来的大市值币。以市值计价，通过 DEX 聚合器交易。"
   },
   "pluginStore": {
     "registryOffline": "插件注册表离线。仅显示已安装的插件。",
@@ -4208,6 +4225,14 @@
       "pairlens-equities": {
         "title": "Pairlens 股票",
         "description": "股票功能：交易时钟、Level 1 报价、公司基本面与财报日历"
+      },
+      "pairlens-memecoins": {
+        "title": "Pairlens 迷因币",
+        "description": "Launchpad 面板：新铸造、绑定曲线进度、毕业，以及活得更久的大市值币"
+      },
+      "memecoin-data-provider": {
+        "title": "迷因币数据源",
+        "description": "来自免密钥公开数据源的 Launchpad 代币：新铸造与绑定曲线进度来自 Jupiter，大市值迷因币来自 CoinGecko。不需要 API key，也不经过我们的服务器：每一次请求都计在发起它的浏览器上。"
       }
     },
     "families": {
@@ -4246,6 +4271,10 @@
       "cexFutures": {
         "label": "加密期货",
         "description": "永续合约交易所，用于带杠杆的加密货币仓位。"
+      },
+      "memes": {
+        "label": "迷因币",
+        "description": "Launchpad 看板，以及背后那个免密钥数据源"
       }
     },
     "familyToggleAria": "启用或停用所有{{family}}插件",
@@ -4952,6 +4981,24 @@
         "tagline": "每个未结算窗口，都对着它结算所用的价格。",
         "description": "把两家平台循环开出的加密合约放进一张表：Kalshi 在五个币种上开十五分钟窗口，Polymarket 在四个币种上开小时和日窗口。每一行都带着结算基准、实时现货、两者之间的距离，以及近期已实现波动率下的无漂移扩散从剩余时间中得出的概率，让赔率有了可比对象。",
         "menuLabel": "加密涨跌"
+      },
+      "memecoin-discovery": {
+        "name": "迷因币发现",
+        "tagline": "四列，对应曲线的四个阶段。",
+        "description": "Launchpad 看板：过去一小时内铸造的、正沿绑定曲线上行并显示距毕业阈值进度的、已迁移到真实池子的，以及熬过自己那轮周期的大市值币。每一行都带市值、流动性和买卖对比，点开一行就打开它的图表和一张兑换单。",
+        "menuLabel": "默认"
+      },
+      "memecoin-terminal": {
+        "name": "迷因币终端",
+        "tagline": "市值、资金流向，以及谁还能继续铸造。",
+        "description": "默认的迷因币布局：图表在上，下面是把四个时间窗口的买入与卖出并排的流向条，中间是供应量与持币人数，再往下是部署者审计，右侧是兑换单。没有订单簿：绑定曲线本来就没有。",
+        "menuLabel": "默认"
+      },
+      "memecoin-sniper": {
+        "name": "迷因币狙击",
+        "tagline": "曲线在左，下单在右。",
+        "description": "为盯盘打新而做：新铸造和毕业阶梯始终留在屏幕上，图表、流向条和兑换单占满其余空间。安全面板放在兑换单下方，因为下单前最后该看的就是铸造权限。",
+        "menuLabel": "狙击"
       }
     },
     "traderTypes": {
@@ -5002,6 +5049,9 @@
       },
       "multi-asset": {
         "label": "多资产"
+      },
+      "memecoins": {
+        "label": "迷因币"
       }
     },
     "screenSizes": {
@@ -5968,6 +6018,10 @@
       "events": {
         "label": "事件",
         "description": "浏览预测市场的事件及其结果"
+      },
+      "launchpad": {
+        "label": "Launchpad 代币",
+        "description": "新铸造的代币、绑定曲线进度、毕业，以及大市值迷因币"
       }
     },
     "domains": {
@@ -6416,5 +6470,86 @@
     "mark": "参考价",
     "marketValue": "市值",
     "dayChange": "今日"
+  },
+  "memecoins": {
+    "loading": "正在读取 Launchpad",
+    "retrying": "重试中",
+    "unavailableBody": "Launchpad 数据源没有响应。它会自己重试。",
+    "unknown": "未知",
+    "curveUnknown": "没有绑定曲线，或者该 Launchpad 未公布阈值",
+    "openChart": "打开 {{symbol}}",
+    "columns": {
+      "token": "代币",
+      "mcap": "市值",
+      "age": "年龄",
+      "curve": "曲线",
+      "since": "毕业后",
+      "change24h": "24小时",
+      "change": "涨跌",
+      "flow": "买/卖",
+      "volume": "24小时成交额"
+    },
+    "new": {
+      "title": "新铸造",
+      "footnote": "过去 6 小时内铸造。持币人数在代号旁边。",
+      "emptyTitle": "还没有新铸造",
+      "emptyBody": "新代币会在第一笔成交后几秒内出现在这里。"
+    },
+    "graduating": {
+      "title": "毕业中",
+      "footnote": "距离迁移的曲线进度。波浪号表示这是估算值。",
+      "emptyTitle": "还没有接近毕业的",
+      "emptyBody": "代币走完绑定曲线三分之一后会出现在这里。"
+    },
+    "graduated": {
+      "title": "已毕业",
+      "footnote": "走完曲线并迁到 AMM 池子，最近 7 天。",
+      "emptyTitle": "最近没有毕业的",
+      "emptyBody": "走完绑定曲线的代币会落到这里。"
+    },
+    "legendary": {
+      "title": "传奇",
+      "footnote": "市值来自 CoinGecko，每个代币在流动性最深的链上打开。",
+      "emptyTitle": "没有大市值币可显示",
+      "emptyBody": "市值排行没有响应。它会自己重试。"
+    },
+    "token": {
+      "emptyTitle": "不是 Launchpad 代币",
+      "emptyBody": "Launchpad 数据源上没有这个地址。它可能在本看板未覆盖的场所交易。"
+    },
+    "stats": {
+      "marketCap": "市值",
+      "fdv": "FDV",
+      "liquidity": "流动性",
+      "holders": "持币人数",
+      "launchpad": "Launchpad",
+      "curve": "曲线",
+      "graduated": "已毕业",
+      "organicScore": "自然度评分",
+      "footnote": "市值使用流通供应量；FDV 使用总供应量。"
+    },
+    "flow": {
+      "window": "窗口",
+      "volume": "成交额",
+      "m5": "5m",
+      "h1": "1h",
+      "h6": "6h",
+      "h24": "24h",
+      "footnote": "计的是笔数，不是人数。成交额把买卖两边加在一起。",
+      "emptyTitle": "还没有成交",
+      "emptyBody": "代币有了第一笔兑换后，流向就会出现。"
+    },
+    "safety": {
+      "mintAuthority": "铸造权限",
+      "freezeAuthority": "冻结权限",
+      "topHolders": "前几大持币者",
+      "devMints": "部署者铸造数",
+      "devMigrations": "{{count}} 个已毕业",
+      "revoked": "已放弃",
+      "live": "仍生效",
+      "footnote": "未知不等于安全。缺少审计信息，说明不了这个代币任何事。",
+      "emptyTitle": "未公布审计",
+      "emptyBody": "该数据源没有公布这个代币的铸造权限或冻结权限。请当作未知，而不是安全。"
+    }
   }
 }

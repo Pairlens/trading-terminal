@@ -58,6 +58,7 @@ const CLASS_NAMES: Record<MarketRef['cls'], string> = {
   spot: 'spot crypto',
   perp: 'perpetual futures',
   dex: 'on-chain DEX',
+  memecoin: 'launchpad memecoin',
   stocks: 'US equities',
   prediction: 'prediction market',
 }
