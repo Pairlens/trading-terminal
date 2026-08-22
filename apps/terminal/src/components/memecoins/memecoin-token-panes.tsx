@@ -38,9 +38,14 @@ import {
   ChangeCell,
   CurveBar,
   FlowBar,
+  StatLine,
   formatCount,
   formatMcap,
 } from '@/components/memecoins/memecoin-pane-primitives'
+import {
+  FlowTableSkeleton,
+  StatLinesSkeleton,
+} from '@/components/memecoins/memecoin-skeletons'
 import { useLaunchpadToken } from '@/hooks/use-launchpad'
 import { usePanePair } from '@/lib/layout/pane-context'
 import { registerDisplayToken } from '@/stores/token-directory-store'
@@ -96,15 +101,35 @@ function useToken(): {
 function PaneFrame({
   title,
   state,
+  skeleton,
   children,
 }: {
   title: string
   state: ReturnType<typeof useToken>
+  /**
+   * This pane's own shape, with the figures taken out.
+   *
+   * Passed in rather than drawn here: a list of stats and a four-row table are
+   * different shapes, and one generic placeholder standing in for both would
+   * reflow whichever it guessed wrong. The frame owns WHEN a skeleton shows,
+   * the pane owns what it looks like.
+   */
+  skeleton: React.ReactNode
   children: (token: LaunchpadToken) => React.ReactNode
 }) {
   const { t } = useTranslation()
   if (!state.bound) return <PanePairPicker />
-  if (state.isLoading) return <SkeletonStatus label={t('memecoins.loading')} />
+  if (state.isLoading) {
+    // No paced note here, unlike the four board columns. All three panes read
+    // ONE lookup, so the explanation would be printed three times in one
+    // column for a single request. The columns each own their own read.
+    return (
+      <div aria-busy className="flex h-full flex-col">
+        <SkeletonStatus label={t('memecoins.loading')} />
+        {skeleton}
+      </div>
+    )
+  }
   if (!state.token) {
     return (
       <div className="flex h-full flex-col">
@@ -128,33 +153,41 @@ function PaneFrame({
   return <div className="flex h-full flex-col">{children(state.token)}</div>
 }
 
-/** One label-and-value line. The board's third surface is not used here. */
-function StatLine({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 py-[3px]">
-      <span className="truncate text-[11px] text-muted-foreground">
-        {label}
-      </span>
-      <span className="shrink-0 font-mono text-[11px] tabular-nums">
-        {children}
-      </span>
-    </div>
-  )
-}
-
 // ── Token Stats ──────────────────────────────────────────────────────
+
+/**
+ * The lines Token Stats always carries.
+ *
+ * Launchpad and organic score are absent from the list on purpose: both are
+ * conditional on the answer (an EVM token has neither), so ghosting them would
+ * promise two rows that then vanish. The five below are drawn unconditionally
+ * by the real pane, so they are the honest shape to hold.
+ */
+const STATS_SKELETON_KEYS: ReadonlyArray<string> = [
+  'memecoins.stats.marketCap',
+  'memecoins.stats.fdv',
+  'memecoins.stats.liquidity',
+  'memecoins.stats.holders',
+  'memecoins.stats.curve',
+]
+
+/** Market caps are wide, holder counts are not. */
+const STATS_VALUE_WIDTHS = ['w-14', 'w-14', 'w-12', 'w-8', 'w-[74px]']
 
 export function MemeTokenStatsPane() {
   const { t } = useTranslation()
   const state = useToken()
   return (
-    <PaneFrame title={t('panes.memeTokenStats')} state={state}>
+    <PaneFrame
+      title={t('panes.memeTokenStats')}
+      state={state}
+      skeleton={
+        <StatLinesSkeleton
+          labels={STATS_SKELETON_KEYS.map((key) => t(key))}
+          valueWidths={STATS_VALUE_WIDTHS}
+        />
+      }
+    >
       {(token) => (
         <>
           <div className="min-h-0 flex-1 overflow-y-auto">
@@ -213,7 +246,31 @@ export function MemeFlowPane() {
   const { t } = useTranslation()
   const state = useToken()
   return (
-    <PaneFrame title={t('panes.memeFlow')} state={state}>
+    <PaneFrame
+      title={t('panes.memeFlow')}
+      state={state}
+      // The real table, headers and window labels included. Both are the
+      // pane's own structure rather than anything the feed decides.
+      skeleton={
+        <div className="min-h-0 flex-1">
+          <table className={cn('w-full', PANE_TABLE_BODY)}>
+            <thead>
+              <tr>
+                <Th>{t('memecoins.flow.window')}</Th>
+                <Th align="right">{t('memecoins.columns.change')}</Th>
+                <Th align="right">{t('memecoins.flow.volume')}</Th>
+                <Th align="right">{t('memecoins.columns.flow')}</Th>
+              </tr>
+            </thead>
+            <tbody>
+              <FlowTableSkeleton
+                windowLabels={WINDOWS.map((w) => t(w.labelKey))}
+              />
+            </tbody>
+          </table>
+        </div>
+      }
+    >
       {(token) => {
         const populated = WINDOWS.filter((w) => token.flow[w.id])
         if (populated.length === 0) {
@@ -306,11 +363,33 @@ function SafetyLine({
   )
 }
 
+/**
+ * The three audit lines every source is asked for. Deployer mints is left out
+ * for the same reason the launchpad line is: it only exists when the source
+ * published one.
+ */
+const SAFETY_SKELETON_KEYS: ReadonlyArray<string> = [
+  'memecoins.safety.mintAuthority',
+  'memecoins.safety.freezeAuthority',
+  'memecoins.safety.topHolders',
+]
+
+const SAFETY_VALUE_WIDTHS = ['w-12', 'w-12', 'w-8']
+
 export function MemeSafetyPane() {
   const { t } = useTranslation()
   const state = useToken()
   return (
-    <PaneFrame title={t('panes.memeSafety')} state={state}>
+    <PaneFrame
+      title={t('panes.memeSafety')}
+      state={state}
+      skeleton={
+        <StatLinesSkeleton
+          labels={SAFETY_SKELETON_KEYS.map((key) => t(key))}
+          valueWidths={SAFETY_VALUE_WIDTHS}
+        />
+      }
+    >
       {(token) => {
         const audit = token.audit
         if (!audit) {

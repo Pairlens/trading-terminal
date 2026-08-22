@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Đang đọc các launchpad",
     "retrying": "Đang thử lại",
+    "pacedNote": "Nguồn công khai không cần khóa, trong hạn mức miễn phí. Tải lại sẽ bắt đầu lại từ đầu.",
     "unavailableBody": "Nguồn dữ liệu launchpad không trả lời. Nó sẽ tự thử lại.",
     "unknown": "Không rõ",
     "curveUnknown": "Không có đường cong bonding, hoặc launchpad không công bố ngưỡng",

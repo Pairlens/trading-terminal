@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Launchpad'ler okunuyor",
     "retrying": "Yeniden deneniyor",
+    "pacedNote": "Anahtarsız açık kaynaklar, ücretsiz limitleri içinde sıralanıyor. Yenilemek baştan başlatır.",
     "unavailableBody": "Launchpad akışı yanıt vermedi. Kendi kendine yeniden deneyecek.",
     "unknown": "Bilinmiyor",
     "curveUnknown": "Bonding eğrisi yok ya da eşiğini yayımlamayan bir launchpad",

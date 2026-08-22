@@ -178,6 +178,12 @@ Both columns cache their last answer locally, so re-opening the board paints
 immediately and then refreshes, and a throttled feed leaves the previous list on
 screen rather than emptying the column.
 
+A genuinely cold board draws its own shape while it waits: real headers, real
+labels, and a placeholder where each figure will land, so nothing moves when the
+answer arrives. If it is still waiting after a few seconds you get a line saying
+why, because the fix people reach for is a reload and a reload is the one thing
+that makes it slower. It throws the paced queue away and starts from cold.
+
 ### Swapping the feed
 
 The board reads its data through a plugin capability rather than a hardcoded

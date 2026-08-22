@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Launchpad를 읽는 중",
     "retrying": "다시 시도 중",
+    "pacedNote": "키가 필요 없는 공개 피드를 무료 한도에 맞춰 읽는 중입니다. 새로고침하면 처음부터 다시 시작됩니다.",
     "unavailableBody": "Launchpad 피드가 응답하지 않았습니다. 알아서 다시 시도합니다.",
     "unknown": "알 수 없음",
     "curveUnknown": "본딩 커브가 없거나, 임계치를 공개하지 않는 Launchpad입니다",

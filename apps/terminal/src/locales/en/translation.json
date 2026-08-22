@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Reading the launchpads",
     "retrying": "Retrying",
+    "pacedNote": "Keyless public feeds, paced inside their free limits. Reloading starts over.",
     "unavailableBody": "The launchpad feed did not answer. It will retry on its own.",
     "unknown": "Unknown",
     "curveUnknown": "No bonding curve, or a launchpad with no published threshold",

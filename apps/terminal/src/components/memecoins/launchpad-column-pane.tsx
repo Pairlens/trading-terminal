@@ -53,6 +53,10 @@ import {
 } from '@/components/panes/pane-primitives'
 import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
+  LaunchpadGhostRows,
+  MemecoinPacedNote,
+} from '@/components/memecoins/memecoin-skeletons'
+import {
   ChangeCell,
   CurveBar,
   FlowBar,
@@ -68,6 +72,7 @@ import {
   turnoverMultiples,
 } from '@/lib/launchpad-turnover'
 import { useLaunchpadColumn } from '@/hooks/use-launchpad'
+import { useSlowLoad } from '@/hooks/use-slow-load'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { registerDisplayToken } from '@/stores/token-directory-store'
 
@@ -167,6 +172,7 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
     useLaunchpadColumn(stage)
   // Only the two columns that show an elapsed time need a ticking clock.
   const now = useTick(stage === 'new' || stage === 'graduated')
+  const slow = useSlowLoad(isLoading)
 
   const rows = useMemo(() => tokens, [tokens])
   // Only Legendary spends a cell on this: the other three columns rank tokens
@@ -228,7 +234,12 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
           />
         ) : null}
 
-        {rows.length > 0 ? (
+        {/* The table itself is drawn from the first frame, headers and all.
+            They are furniture rather than data, and a column that renders
+            nothing until its feed answers reads as the empty state it also
+            uses for "nothing is minting" — then rebuilds itself under the
+            reader when the rows land. */}
+        {isLoading || rows.length > 0 ? (
           <table className={cn('w-full', PANE_TABLE_BODY)}>
             <thead>
               <tr>
@@ -279,19 +290,25 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
               </tr>
             </thead>
             <tbody>
-              {rows.map((token) => (
-                <LaunchpadRow
-                  key={turnoverKey(token)}
-                  token={token}
-                  stage={stage}
-                  now={now}
-                  turnoverMultiple={turnover.get(turnoverKey(token)) ?? null}
-                />
-              ))}
+              {isLoading ? (
+                <LaunchpadGhostRows stage={stage} />
+              ) : (
+                rows.map((token) => (
+                  <LaunchpadRow
+                    key={turnoverKey(token)}
+                    token={token}
+                    stage={stage}
+                    now={now}
+                    turnoverMultiple={turnover.get(turnoverKey(token)) ?? null}
+                  />
+                ))
+              )}
             </tbody>
           </table>
         ) : null}
       </div>
+
+      <MemecoinPacedNote show={isLoading && slow} />
     </div>
   )
 }
