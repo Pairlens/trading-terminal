@@ -195,6 +195,19 @@ describe('memecoin-data-provider', () => {
     expect(FEED!.manifest.metadata?.['family']).toBe('memes')
   })
 
+  it('carries no asset-class stamp, or it filters itself out of its own board', () => {
+    // This shipped stamped `memecoin` and cost the trade board all three of
+    // its panes. The resolver's class dimension exists to break a tie between
+    // two plugins declaring one capability on one market id; it is not a
+    // label. `market-data:launchpad` has no tie to break, and the terminal
+    // derives the query's class from the PAIR KEY — a memecoin key is
+    // `{address}-{QUOTE}`, indistinguishable from a DEX one, so every memecoin
+    // board asks with `assetClass: 'dex'` and a `memecoin` stamp never
+    // matched. The chart painted from the DEX connector while every pane
+    // beside it reported no plugin found.
+    expect(FEED!.manifest.metadata?.['assetClass']).toBeUndefined()
+  })
+
   it('declares no panels — the panes live with the family plugin', () => {
     expect(FEED!.manifest.contributes?.panels ?? []).toEqual([])
   })

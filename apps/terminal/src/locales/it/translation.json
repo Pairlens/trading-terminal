@@ -6865,29 +6865,26 @@
       "change24h": "24h",
       "change": "Var.",
       "flow": "Acq./Vend.",
-      "volume": "Vol 24h"
+      "volume": "Vol 24h",
+      "turnoverHint": "Volume rispetto alla capitalizzazione, misurato sulla mediana di questa colonna."
     },
     "new": {
       "title": "Nuovi mint",
-      "footnote": "Mintati nelle ultime 6 ore. Il numero di holder è accanto al ticker.",
       "emptyTitle": "Ancora nessun mint",
       "emptyBody": "I token nuovi compaiono qui pochi secondi dopo il loro primo scambio."
     },
     "graduating": {
       "title": "In graduazione",
-      "footnote": "Avanzamento della curva verso la migrazione. La tilde indica una stima.",
       "emptyTitle": "Niente vicino alla graduazione",
       "emptyBody": "I token compaiono qui una volta arrivati a un terzo della loro curva di bonding."
     },
     "graduated": {
       "title": "Graduati",
-      "footnote": "Curva completata e passaggio su una pool AMM, ultimi 7 giorni.",
       "emptyTitle": "Nessuna graduazione recente",
       "emptyBody": "I token che completano la loro curva di bonding atterrano qui."
     },
     "legendary": {
       "title": "Leggendarie",
-      "footnote": "Capitalizzazione da CoinGecko, ciascuna aperta sulla chain con più liquidità.",
       "emptyTitle": "Nessuna grande capitalizzazione da mostrare",
       "emptyBody": "La classifica per capitalizzazione non ha risposto. Riproverà da sola."
     },

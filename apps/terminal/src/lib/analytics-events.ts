@@ -350,9 +350,17 @@ export interface AnalyticsEvents {
    * the graduated names, and those two answers point at very different next
    * features. `stage` is our own product surface, never the token: no symbol,
    * no mint, no size.
+   *
+   * `chain` rides along for one decision. Legendary rows open on six different
+   * chains, and their trade panes are served by a different source than the
+   * Solana ones, with less to say on it (no holders, no audit). Whether that
+   * half of the board is worth deepening is a question about how often anyone
+   * opens an EVM row, and nothing else we collect can answer it. A chain id is
+   * a public network name, not a token and not a wallet.
    */
   memecoin_row_opened: {
     stage: 'new' | 'graduating' | 'graduated' | 'legendary'
+    chain: string
   }
   /**
    * The venue a Discovery section is pointed at was changed from its bar.

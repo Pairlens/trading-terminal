@@ -32,16 +32,23 @@ export const PANE_TABLE_BODY = 'font-mono text-[11px] tabular-nums'
 export function Th({
   children,
   align = 'left',
+  className,
+  title,
 }: {
   children: React.ReactNode
   align?: 'left' | 'right'
+  /** For the one thing a header sometimes needs: `whitespace-nowrap`. */
+  className?: string
+  title?: string
 }) {
   return (
     <th
+      title={title}
       className={cn(
         'pb-1.5 pr-3 last:pr-0',
         PANE_COLUMN_HEADER,
         align === 'right' ? 'text-right' : 'text-left',
+        className,
       )}
     >
       {children}

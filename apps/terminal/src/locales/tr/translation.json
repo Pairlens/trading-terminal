@@ -6865,29 +6865,26 @@
       "change24h": "24s",
       "change": "Değişim",
       "flow": "Alım/Satım",
-      "volume": "Hac 24s"
+      "volume": "Hac 24s",
+      "turnoverHint": "Piyasa değerine göre hacim, bu sütunun medyanına kıyasla."
     },
     "new": {
       "title": "Yeni Mintler",
-      "footnote": "Son 6 saatte mintlendi. Holder sayısı sembolün yanında.",
       "emptyTitle": "Henüz mintlenen yok",
       "emptyBody": "Yeni tokenlar ilk işlemlerinden saniyeler sonra burada belirir."
     },
     "graduating": {
       "title": "Mezun Oluyor",
-      "footnote": "Geçişe kalan eğri ilerlemesi. Tilde işareti tahmini gösterir.",
       "emptyTitle": "Mezuniyete yakın bir şey yok",
       "emptyBody": "Tokenlar bonding eğrisinin üçte birini tırmandıklarında burada belirir."
     },
     "graduated": {
       "title": "Mezun Oldu",
-      "footnote": "Eğriyi tamamlayıp bir AMM havuzuna geçti, son 7 gün.",
       "emptyTitle": "Yakın zamanda mezuniyet yok",
       "emptyBody": "Bonding eğrisini tamamlayan tokenlar buraya düşer."
     },
     "legendary": {
       "title": "Efsaneler",
-      "footnote": "Piyasa değerleri CoinGecko’dan; her biri en derin likiditeye sahip zincirde açılır.",
       "emptyTitle": "Gösterilecek yüksek piyasa değerli coin yok",
       "emptyBody": "Piyasa değeri sıralaması yanıt vermedi. Kendi kendine yeniden deneyecek."
     },

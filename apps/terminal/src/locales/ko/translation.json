@@ -6865,29 +6865,26 @@
       "change24h": "24시간",
       "change": "변동",
       "flow": "매수/매도",
-      "volume": "24시간 거래대금"
+      "volume": "24시간 거래대금",
+      "turnoverHint": "시가총액 대비 거래대금을 이 열의 중앙값과 비교한 배수."
     },
     "new": {
       "title": "신규 민트",
-      "footnote": "지난 6시간 안에 민트됨. 홀더 수는 티커 옆에 있습니다.",
       "emptyTitle": "아직 민트된 것이 없습니다",
       "emptyBody": "새 토큰은 첫 체결 후 몇 초 안에 여기 나타납니다."
     },
     "graduating": {
       "title": "졸업 임박",
-      "footnote": "마이그레이션까지의 커브 진행도. 물결표는 추정치라는 뜻입니다.",
       "emptyTitle": "졸업에 가까운 토큰이 없습니다",
       "emptyBody": "본딩 커브를 3분의 1까지 오른 토큰이 여기 나타납니다."
     },
     "graduated": {
       "title": "졸업 완료",
-      "footnote": "커브를 끝내고 AMM 풀로 옮겨감, 최근 7일.",
       "emptyTitle": "최근 졸업이 없습니다",
       "emptyBody": "본딩 커브를 끝낸 토큰이 여기로 옵니다."
     },
     "legendary": {
       "title": "레전드",
-      "footnote": "시가총액은 CoinGecko 기준. 각 토큰은 유동성이 가장 깊은 체인에서 열립니다.",
       "emptyTitle": "보여줄 대형 종목이 없습니다",
       "emptyBody": "시가총액 랭킹이 응답하지 않았습니다. 알아서 다시 시도합니다."
     },

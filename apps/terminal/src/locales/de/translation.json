@@ -6865,29 +6865,26 @@
       "change24h": "24h",
       "change": "Änd.",
       "flow": "Käufe/Verk.",
-      "volume": "Vol 24h"
+      "volume": "Vol 24h",
+      "turnoverHint": "Volumen im Verhältnis zur Marktkapitalisierung, gemessen am Median dieser Spalte."
     },
     "new": {
       "title": "Neue Mints",
-      "footnote": "In den letzten 6 Stunden gemintet. Die Holder-Zahl steht neben dem Ticker.",
       "emptyTitle": "Noch nichts gemintet",
       "emptyBody": "Neue Tokens erscheinen hier Sekunden nach ihrem ersten Trade."
     },
     "graduating": {
       "title": "Graduieren",
-      "footnote": "Curve-Fortschritt bis zur Migration. Eine Tilde steht für eine Schätzung.",
       "emptyTitle": "Nichts kurz vor der Graduierung",
       "emptyBody": "Tokens erscheinen hier, sobald sie ein Drittel ihrer Bonding-Curve geschafft haben."
     },
     "graduated": {
       "title": "Graduiert",
-      "footnote": "Curve abgeschlossen und in einen AMM-Pool gewechselt, letzte 7 Tage.",
       "emptyTitle": "Keine frischen Graduierungen",
       "emptyBody": "Tokens, die ihre Bonding-Curve abschließen, landen hier."
     },
     "legendary": {
       "title": "Legendär",
-      "footnote": "Marktkapitalisierung von CoinGecko, jeweils auf der Chain mit der tiefsten Liquidität.",
       "emptyTitle": "Keine Large Caps zu zeigen",
       "emptyBody": "Das Marktkapitalisierungs-Ranking hat nicht geantwortet. Es versucht es von selbst noch einmal."
     },
