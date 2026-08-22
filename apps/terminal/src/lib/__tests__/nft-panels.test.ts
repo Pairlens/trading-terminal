@@ -202,3 +202,51 @@ describe('the nft asset class', () => {
     expect(new Set(hues).size).toBe(hues.length)
   })
 })
+
+describe('NFT capability routing against the real bundle', () => {
+  /**
+   * The synthetic resolver test in plugin-system proves the mechanism. This
+   * proves the SHIPPED manifests actually carry what the mechanism needs, which
+   * is the half that rots: a connector losing its `metadata.assetClass` in a
+   * refactor would put NFT orders back on a swap router with every unit test
+   * still green.
+   */
+  const bundled = (id: string) =>
+    BOOTSTRAP_PLUGINS.find((p) => p.manifest.id === id)?.manifest
+
+  it('stamps every venue that shares a chain id with another class', () => {
+    for (const id of [
+      'opensea-nft-connector',
+      'coingecko-nft-provider',
+      'ethereum-dex-connector',
+      'base-dex-connector',
+      'geckoterminal-data-provider',
+    ]) {
+      const manifest = bundled(id)
+      expect(manifest, id).toBeDefined()
+      expect(typeof manifest!.metadata?.['assetClass'], id).toBe('string')
+    }
+  })
+
+  it('does not let a DEX venue answer for an NFT one', () => {
+    expect(bundled('opensea-nft-connector')!.metadata?.['assetClass']).toBe(
+      'nft',
+    )
+    expect(bundled('ethereum-dex-connector')!.metadata?.['assetClass']).toBe(
+      'dex',
+    )
+  })
+
+  it('declares the NFT data capability on a wildcard market', () => {
+    // Chain-scoped here and the whole Discovery board resolves to nothing
+    // whenever the chart happens to be sitting on a CEX pair, because the
+    // manager resolves on the terminal's current venue rather than on the
+    // chain the call names. The chains are declared in metadata instead.
+    for (const id of ['opensea-nft-connector', 'coingecko-nft-provider']) {
+      const manifest = bundled(id)!
+      const nft = manifest.capabilities.find((c) => c.id === 'market-data:nft')
+      expect(nft?.markets, id).toEqual(['*'])
+      expect(Array.isArray(manifest.metadata?.['chains']), id).toBe(true)
+    }
+  })
+})
