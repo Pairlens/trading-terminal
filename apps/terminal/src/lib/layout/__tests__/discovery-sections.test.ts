@@ -290,9 +290,9 @@ describe('discovery sections', () => {
       'prediction',
       'dex',
       'spot',
+      'stocks',
       'perp',
       'memecoin',
-      'stocks',
       'nft',
     ])
     expect(ordered.length).toBe(sections.length)

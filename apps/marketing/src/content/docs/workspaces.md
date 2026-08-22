@@ -77,17 +77,17 @@ every other panel in that column keeps at least the height it declares.
 ## Discovery is one board per asset class
 
 Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
-**CEX Futures**, **DEX**, **Memecoins**, **Equities**, **Predictions**, **NFT**.
+**Equities**, **CEX Futures**, **DEX**, **Memecoins**, **Predictions**, **NFT**.
 Each tab is a full workspace of its own. Rearrange the futures board and the
 spot board has not moved, and each one remembers its own arrangement between
 sessions.
 
 Every class has one fixed colour, and it is the same colour the badge beside
 the pair symbol wears on the trade page (see
-[terminal tour](/docs/terminal-tour)). Amber is spot, violet is perps, magenta
-is on-chain, red is memecoins, green is equities, cyan is event contracts,
-coral is NFTs. Pick a tab here and the pair you open from it is badged in the
-colour you clicked.
+[terminal tour](/docs/terminal-tour)). Amber is spot, green is equities,
+violet is perps, magenta is on-chain, lime is memecoins, cyan is event
+contracts, coral is NFTs. Pick a tab here and the pair you open from it is
+badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
 and not one of them opens on an A-to-Z list of pairs.
@@ -101,6 +101,12 @@ this board works with no account connected. The full markets scanner is not on
 it, since the list you want by name is a keystroke away in omni-search: add the
 panel from **Panes**, or open the **Markets** board from the workspaces menu,
 and it follows the same sector selection.
+
+**Equities** is built around the calendar rather than the tape. The session
+state leads, the earnings calendar sits under it and macro releases under
+those, with the movers and the news wire beside them. No sentiment gauge and no
+heatmap here: both read a crypto index and would be quietly wrong above a list
+of tickers.
 
 **CEX Futures** scans by cost of carry instead of by price. The funding matrix
 takes the wide column with the basis monitor under it, and open interest sits
@@ -118,12 +124,6 @@ progress against the threshold that migrates them, **Graduated** already
 trading on an AMM pool, and **Legendary** the large caps that outlived their
 cycle. Equal widths, because which stage deserves your attention is your call.
 Full details in [memecoins](/docs/memecoins).
-
-**Equities** is built around the calendar rather than the tape. The session
-state leads, the earnings calendar sits under it and macro releases under
-those, with the movers and the news wire beside them. No sentiment gauge and no
-heatmap here: both read a crypto index and would be quietly wrong above a list
-of tickers.
 
 **Predictions** swaps the pair scanner for the event board, since outcomes are
 listed and resolved daily and never sit in a catalog of pairs. A category rail
