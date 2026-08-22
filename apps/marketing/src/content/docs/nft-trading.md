@@ -1,6 +1,6 @@
 ---
 title: NFT collections
-description: Trade NFT collections as markets instead of galleries. Listings are the ask ladder, collection offers aggregate into a real bid ladder, sales are the tape, and the ticket names the ordinary order behind each intent: sweep the floor, bid the collection, list a token you own, hit the best standing offer. Reads cover six chains through OpenSea with a keyless CoinGecko fallback, orders are signed on Ethereum and Base, and every one of them goes down the same guarded path as a CEX fill.
+description: 'Trade NFT collections as markets instead of galleries. Listings are the ask ladder, collection offers aggregate into a real bid ladder, sales are the tape, and the ticket names the ordinary order behind each intent: sweep the floor, bid the collection, list a token you own, hit the best standing offer. Reads cover six chains through OpenSea with a keyless CoinGecko fallback, orders are signed on Ethereum and Base, and every one of them goes down the same guarded path as a CEX fill.'
 group: traders
 parent: trading
 order: 10

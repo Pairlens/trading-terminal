@@ -5,6 +5,7 @@ import {
   Brain,
   Flame,
   Gamepad2,
+  Gem,
   Landmark,
   Layers,
   LayoutGrid,
@@ -12,7 +13,6 @@ import {
   Star,
   TrendingUp,
   Vote,
-  Gem,
 } from 'lucide-react'
 import { registerToken } from '@pairlens/market-engine/token-directory'
 import type { LucideIcon } from 'lucide-react'

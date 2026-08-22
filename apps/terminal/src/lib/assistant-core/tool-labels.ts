@@ -18,7 +18,7 @@ import { AUTOMATION_TOOL_LABELS } from '@/lib/assistant/automation-tool-labels'
 const TERMINAL_TOOL_LABELS = {
   navigate_to: ['open', 'the page'],
   open_instrument: ['open', 'the instrument'],
-  list_nft_collections: ['rank', 'NFT collections'],
+  list_nft_collections: ['list', 'NFT collections'],
   get_nft_collection: ['read', 'the collection'],
   get_nft_book: ['read', 'the NFT ladder'],
   get_prediction_event: ['read', 'the event'],
