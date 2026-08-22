@@ -1,22 +1,33 @@
 ---
 title: Build a workflow
-description: Wire an entry, a take-profit, a stop-loss, and conditional branches into one reusable chain you fire from the order ticket.
+description: Bracket orders, explained and then built. Wire an entry, a take-profit, a stop-loss and conditional branches into one reusable chain you fire from the order ticket.
 group: traders
 parent: automation
 order: 1
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 22 AUG 2026
 readTime: 6 min read
 ---
 
-A workflow is a graph of steps on a canvas. Open **Workflows** in the left nav,
-drag steps from the palette, and connect them. Every step carries its own
-controls on the card, so a size, a price or a wait duration is set right there
-on the graph.
+## The problem this solves
 
-The point of a workflow is the bracket order: one action that places an entry
-and arms its exits, so you are never sitting in a position you meant to protect
-and forgot to.
+You buy something at $100, intending to take profit at $110 and cut the loss at
+$95. Then the market moves, and you are deciding in the moment rather than
+sticking to the plan. That is where most discipline is lost.
+
+A **bracket order** fixes it by deciding both exits at the same moment you
+decide the entry. One action places the buy and arms a take-profit above and a
+stop-loss below. Whichever hits first closes the position and cancels the other.
+
+In Pairlens you build that once as a **workflow**, then fire it from the order
+ticket on any pair. Open **Workflows** in the left nav, drag steps from the
+palette, and connect them. Every step carries its own controls, so a size, a
+price or a wait is set right there on the graph.
+
+Workflows go further than a plain bracket when you need it: scale out in
+tranches, wait for a condition before adding, branch on whether something
+filled. But if you only ever use them for entry plus stop plus target, that
+alone is worth the ten minutes.
 
 ## Describe it instead
 

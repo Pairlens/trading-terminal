@@ -1,63 +1,63 @@
 ---
 title: Desktop app
-description: The Pairlens desktop app for macOS, Windows, and Linux. OS-keychain credential storage, direct exchange connections, and signed auto-updates.
+description: The free desktop app for macOS, Windows and Linux. Why it is the safest place for live-trading keys, the venues only it can reach, and how updates work.
 group: get-started
 order: 4
 eyebrow: Get started
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 3 min read
 ---
 
-The Tauri desktop app is the strongest home for live-trading secrets. It wraps
-the same terminal that runs in your browser in a native shell and adds the
-things a browser tab cannot: a first-class OS credential store, direct exchange
-connections that no CORS policy can block, multiple windows, native
-notifications, and the ability to keep the machine awake while a bot runs.
+The desktop app is the same terminal you get in a browser, in a native window.
+It is free, it updates itself, and it is where you should keep the keys to any
+account holding real money.
 
-## Credential storage
+## Why desktop for live trading
 
-On desktop, exchange API keys and wallet secrets are stored in the OS keychain:
+A browser is a shared, hostile place. Your terminal tab sits next to whatever
+else you have open, and browser storage is only as safe as the browser.
 
-- macOS: Keychain
-- Windows: Credential Manager
-- Linux: Secret Service
+The desktop app hands your credentials to your operating system instead. On
+macOS they go into Keychain, on Windows into Credential Manager, on Linux into
+the Secret Service. These are the same vaults your system uses for your Wi-Fi
+passwords, protected by your login, and no web page can reach them.
 
-These are reached through the `keychain_*` Tauri commands, backed by the Rust
-`keyring` crate. In a browser, credentials live in the encrypted vault instead:
-AES-256-GCM ciphertext in localStorage, unlocked by a vault password, a
-passkey, or Touch ID on macOS. The vault resists reading secrets off disk but
-not same-origin XSS, which is why desktop remains the strongest home for
-live-trading secrets.
+The browser terminal is not unsafe. Your keys are encrypted there too, behind a
+password, a passkey or Touch ID, and they never reach a Pairlens server either
+way. Desktop is simply the stronger of the two, and the difference matters most
+when the account is funded. See [connect an exchange](/docs/connect-an-exchange).
 
-## What desktop adds
+## What else desktop adds
 
-**Direct venue access.** Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex,
-Kalshi, KuCoin Futures, and Kraken Futures) serve no CORS headers, so a browser
-cannot reach them. On desktop, connector REST calls route through the native
-HTTP plugin, so all 22 venues work without a proxy.
+**Eight more venues.** Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin
+Futures and Kraken Futures refuse connections from web pages as a security
+policy of their own. A browser cannot reach them at all. The desktop app can,
+which takes you from 14 venues to all 22. If a venue looks greyed out in the
+browser terminal, this is why.
 
-**Multiple windows.** <kbd>⌘N</kbd> duplicates the current view into its own
-window. State stays in sync, and one window is elected leader so notifications
-fire once.
+**Bots that keep running.** A browser tab throttles or suspends background work
+when you switch away. The desktop app keeps a running bot alive and can stop the
+machine going to sleep underneath it. See [bots](/docs/bots).
 
-**Native notifications.** Alert rules can post to the OS notification centre
-instead of a toast that only exists while the app is focused.
+**Multiple windows.** Press <kbd>⌘N</kbd> to pull the current view into its own
+window. Put your chart on one screen and your book and ticket on another. The
+windows stay in sync, and alerts fire once rather than once per window.
 
-**Keep awake.** While a bot is running, the app can block idle sleep so your
-strategy is not silently stopped by a lid closing.
+**Real system notifications.** Alerts arrive in your operating system's
+notification centre, so you see them with the terminal minimized.
 
-**Screenshots to disk.** Chart images save to a real folder rather than the
-browser download sandbox.
+**Screenshots that go where you expect.** Chart images save to a real folder you
+choose.
 
-## Auto-updates
+## Updates
 
-Installed apps poll the latest release, verify a minisign signature against a
-pinned public key, download, and relaunch. Updates are cryptographically
-verified end to end, so a tampered build will not install. You can also trigger
-a check by hand from the app menu.
+The app checks for new versions and installs them itself. Every build is signed,
+and the app verifies that signature before installing anything, so a tampered
+update cannot get in. You can also check by hand from the app menu.
 
-## Get a build
+## Get it
 
-Grab a prebuilt binary for macOS, Windows, or Linux from the
-[install page](/install), or build from source with `bun run dev:desktop`
-(requires the Rust toolchain).
+Download a build for macOS, Windows or Linux from the
+[install page](/install). If you would rather build it yourself, the source is
+public and `bun run dev:desktop` is the command. See the
+[Quickstart](/docs/quickstart).

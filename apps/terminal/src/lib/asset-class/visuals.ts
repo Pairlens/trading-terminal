@@ -17,9 +17,10 @@
  *
  * The hues are CSS tokens (`--asset-*` in @pairlens/ui), NOT theme tokens: a
  * theme repainting them would unteach the association it took a session to
- * build. They are ~55 degrees apart so no two read alike at 10px, and nothing
- * here ships colour alone — every consumer draws the label or the icon beside
- * it, which is what keeps the meaning available without colour vision.
+ * build. No hue sits closer than 40 degrees to another, so no two read alike
+ * at 10px, and nothing here ships colour alone — every consumer draws the
+ * label or the icon beside it, which is what keeps the meaning available
+ * without colour vision.
  *
  * A pure leaf module: no React, no i18n runtime, no plugin registry. It hands
  * back class-name strings and literal translation keys, so it is testable and

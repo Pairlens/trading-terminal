@@ -1,18 +1,33 @@
 ---
 title: Self-hosting and standalone mode
-description: Run Pairlens entirely on infrastructure you control, standalone with zero cloud dependencies, or with your own private plugin registry for a desk or team.
+description: For teams evaluating Pairlens. No credential custody to review, nothing that has to leave your perimeter, asset classes you can remove at build time, and a licence that permits internal use.
 group: institutions
 order: 1
 eyebrow: For institutions
-updated: 17 AUG 2026
+updated: 22 AUG 2026
 readTime: 7 min read
 ---
 
-Pairlens is source-available under the Functional Source License (FSL), which
-expressly permits internal use of any kind, and every release converts to
-Apache 2.0 two years after it ships. It is designed to run without any Pairlens
-infrastructure. For a trading desk, a fund, or anyone with data-residency
-requirements, that means the full terminal can live inside your perimeter.
+If you are evaluating Pairlens for a desk, a fund, or any team with a compliance
+function, this is the page that matters. Four things are usually decisive:
+
+**There is no credential custody to review.** Pairlens has no server-side store
+of exchange keys, because keys never leave the machine that uses them. That
+removes an entire category from your risk register rather than mitigating it.
+
+**Nothing has to leave your perimeter.** The terminal is designed to run with
+zero Pairlens infrastructure. Market data goes exchange to workstation; orders go
+workstation to exchange.
+
+**You can remove asset classes at build time.** A bank with no mandate to touch
+memecoins can ship a build in which they do not exist and cannot be added back
+by a user.
+
+**The licence permits internal use of any kind.** Pairlens is source-available
+under the Functional Source License, and every release converts to Apache 2.0
+two years after it ships. You can read, audit, patch and build it yourself.
+
+The rest of this page is how each of those works.
 
 ## What never leaves your machines
 
@@ -98,8 +113,9 @@ instance to curate exactly which connectors, AI providers, indicators, and
 themes your team can install, then point terminals at it with
 `VITE_REGISTRY_URL`.
 
-Packages are Ed25519-signed and verified against pinned keys, and third-party
-plugins run sandboxed with an explicit network allowlist. A private registry
+Packages are cryptographically signed and verified against keys you pin, and
+third-party plugins run sandboxed with an explicit list of network hosts they
+may reach. A private registry
 plus a pinned key set is how you get a fixed, reviewed plugin surface across a
 desk.
 
@@ -136,5 +152,5 @@ Everything that shapes a deployment is set when you build the terminal:
 
 - [Security model](/docs/security-model) for the guarantee-by-guarantee
   breakdown
-- [Architecture](/docs/architecture) for where each piece of data lives
+- [How Pairlens works](/docs/architecture) for where each piece of data lives
 - [Registry](/docs/registry) for the distribution mechanics

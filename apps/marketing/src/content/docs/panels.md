@@ -1,6 +1,6 @@
 ---
 title: Panels
-description: Every panel in the Pairlens crypto trading terminal, from charts and order books to funding scanners, liquidation clusters, LP and bridge panes, calendars and event boards, what each shows, and which plugin provides it.
+description: The full catalogue of sixty-eight panels and what each one answers, plus the six that cover almost everything if you are building your first workspace.
 group: traders
 parent: workspaces
 order: 1
@@ -9,13 +9,27 @@ updated: 22 AUG 2026
 readTime: 12 min read
 ---
 
-Panels are contributed by plugins, which is why the catalogue grows when you
-install one. Sixty-eight ship in the box, from **Pairlens Core**, **Pairlens
-Intelligence**, and the four asset-class families: **Pairlens Futures**,
-**Pairlens DEX**, **Pairlens Equities**, and **Pairlens Predictions**.
+This is the full catalogue: sixty-eight panels, each doing one job. You will not
+need most of them, and that is fine. It is a reference to come back to when you
+want something specific on screen.
 
-Uninstall a family from the Plugins page and its panels leave the Add Pane
-dialog with it. That is the user-level way to drop a whole asset class. See
+**If you are building your first workspace**, six panels cover almost everything:
+
+| Panel           | Why                                        |
+| --------------- | ------------------------------------------ |
+| **Chart**       | Price over time                            |
+| **Order Book**  | What it would cost to trade right now      |
+| **Trades**      | What is actually happening, trade by trade |
+| **Trade Entry** | Placing the order                          |
+| **Positions**   | What you hold and what is still working    |
+| **Risk**        | Whether you are inside your own limits     |
+
+Everything else is specialised. Add it when a question comes up that your
+current layout cannot answer.
+
+Panels are contributed by plugins, which is why the catalogue grows when you
+install one. Uninstall a plugin family from the Plugins page and its panels
+leave with it, which is how you drop a whole asset class you do not trade. See
 [plugins](/docs/plugins-for-traders).
 
 ## Charting and data
@@ -54,7 +68,7 @@ cheapest right now. It quotes the active pair on every venue that lists it and
 sorts by price, so the top row is the answer. The Venue Ladder is the compact
 version of the same idea, sized for a rail above the book, and it leads the
 spot pair default. Clicking a row on either one moves to that venue: see
-[cross-venue pricing](/docs/cross-venue-pricing#switching-venue-from-the-board).
+[cross-venue pricing](/docs/cross-venue-pricing#switching-exchange-from-the-board).
 
 Level 1 stands in for an order book on a stock, and says so in the pane. The
 broker's feed carries top of book only, so there is no depth behind the quote
@@ -66,15 +80,13 @@ an AMM: the on-chain pair layout ships with no book and no depth pane, because a
 data provider's bid and ask are synthesized around the pool price, and the impact
 rows are live aggregator quotes at three real sizes rather than curve math.
 
-The Liquidation Map is a heatmap over time and price, and every cell in it is a
-print. It hosts its own candles of the contract and paints the venue's force-order
-history behind them: a column per candle, a row per price bucket, coloured by the
-side that was liquidated and darkened by the notional. Your own liquidation levels
-ride over the cells as dashed lines from each venue's position payload. Chips pick
-1h, 6h, 24h or 72h and the candle interval follows, from 1m up to 1h. A source
-control switches between the collectors that answer for the contract and never
-blends them, because a sampled feed and a complete one are not comparable by
-magnitude. See [perpetual futures](/docs/cex-futures#reading-the-risk).
+The Liquidation Map shows where leveraged positions were actually force-closed,
+over time and price, behind the contract's own candles. Colour is which side was
+liquidated, and intensity is how much money went with it. Your own liquidation
+levels sit over the top as dashed lines. Chips pick 1h, 6h, 24h or 72h of
+history. Every cell is a real print rather than a model, which is the difference
+between this and most liquidation heatmaps sold elsewhere. See
+[perpetual futures](/docs/cex-futures#reading-the-risk).
 
 ## Trading
 
@@ -182,19 +194,17 @@ schedules, and carries no consensus, actual or prior column: no agency forecasts
 itself and none of them publish the street's number, so three columns of dashes
 would be the pane pretending to a feed it does not have.
 
-Liquidity Flow is named carefully. Neither data provider has a liquidity-flow
-endpoint, so nothing on it measures deposits or withdrawals. What it measures
-is the money that crossed the pool: buy notional minus sell notional per
-bucket, off the same swap feed the tape shows.
+Liquidity Flow is named carefully. Nothing on it measures deposits into or
+withdrawals from the pool, because no source publishes those. What it measures is
+the money that crossed the pool, buys minus sells, which is the number that moves
+price.
 
-Pool Detail and Liquidity Flow follow whatever the Pool Map has selected, and
-they read the pool by its own address rather than by its ticker pair. A chain
-can list a dozen pools for the same two tokens, so re-deriving one from the
-symbols is how a detail pane ends up quoting a different pool than the tile you
-clicked. Pool Detail paints the map row's own figures the moment you select a
-pool and swaps them for live pool state as soon as it lands; when the on-chain
-data provider is rate limiting, both panes say so rather than drawing a pool
-that has gone quiet.
+Pool Detail and Liquidity Flow follow whatever Pool Map has selected, and they
+identify the pool by its own address rather than by its ticker pair. A chain can
+list a dozen pools for the same two tokens, so anything else risks a detail panel
+quoting a different pool than the tile you clicked. Both fill in progressively,
+and both say when the data provider is throttling rather than drawing a pool that
+has gone quiet.
 
 The three panes share one metered provider, so the board loads in a deliberate
 order: the selected pool's state and swaps are fetched ahead of the chain
@@ -281,7 +291,7 @@ Panels declare what they need to render:
   Insider Activity, the Movers listings tab and the Liquidation Map's measured
   clusters, and each says so rather than reading as an empty week. Top Coins,
   Heatmap and Fear and Greed fall back to keyless public sources instead, and
-  Market Pulse, Movers and Sector Tape ride the same snapshot Top Coins does
+  Market Pulse, Movers and Sector Tape read the same source Top Coins does
 - Session, Session Clock and Your Position need a connected broker, because the
   trading calendar is the broker's
 - Web needs the desktop app

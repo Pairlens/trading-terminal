@@ -1,11 +1,11 @@
 ---
 title: Quickstart
-description: Get trading in five minutes. Open the web-based crypto trading terminal or install the desktop app, stream live market data, and connect an exchange. Keys never leave your device.
+description: Open the terminal, find a market, read the chart, and place your first practice order. Five minutes, no account, no installation, no money at risk.
 group: get-started
 order: 2
 eyebrow: Get started
-updated: AUG 2026
-readTime: 4 min read
+updated: 22 AUG 2026
+readTime: 5 min read
 ---
 
 import Prereqs from '@/components/docs/mdx/Prereqs.astro'
@@ -15,36 +15,73 @@ import ConsoleMock from '@/components/docs/mdx/ConsoleMock.astro'
 import KeychainMock from '@/components/marketing/KeychainMock.astro'
 import NextSteps from '@/components/docs/mdx/NextSteps.astro'
 
-There are three ways into Pairlens, and they all land on the same terminal.
-The fastest is the **web terminal**: it opens in your browser with nothing to
-install. The **desktop app** is free and auto-updating, and keeps your
-exchange keys in your operating system's own keychain. If you'd rather read
-the code you're about to trust, **run everything from source**.
+You do not need an account, an exchange, or any money to start. Live prices are
+public, so the terminal is useful the second it opens. This page takes you from
+nothing to your first practice order.
 
-## Open the terminal
+## 1. Open the terminal
 
-Go to [terminal.pairlens.finance](https://terminal.pairlens.finance) and
-you're on a live chart. Nothing to install, no account. On a phone, the same
-URL opens the Mobile Trading Terminal: a chart-first shell with real order
-entry through the same guarded order path.
+Go to [terminal.pairlens.finance](https://terminal.pairlens.finance). You land
+on a live chart of Bitcoin against the US dollar, streaming from a real
+exchange. Nothing to install, no sign-up.
 
-Prefer it on your desk? Grab the installer for macOS, Windows, or Linux from
-the [install page](/install) (or straight from the
-[latest GitHub release](https://github.com/Pairlens/trading-terminal/releases/latest)).
+Prefer it as a real app on your desk? Grab the installer for macOS, Windows or
+Linux from the [install page](/install). Same terminal, plus a safer place to
+store keys later. On a phone, the same web address opens the
+[mobile terminal](/docs/mobile-terminal).
 
-Either way:
+## 2. Find a market
 
-1. The terminal opens with a live chart, streaming directly from the exchange.
-   No sign-up, nothing to configure.
-2. Pick a market (BTC-USDT is the default) and watch candles stream in.
-3. Sign in with your email **only if** you want workspaces synced across
-   devices; everything works without it, stored locally.
+Press <kbd>⌘K</kbd> (<kbd>Ctrl+K</kbd> on Windows and Linux) and type a name.
+"ETH", "Apple", "SOL". Pick a result and the whole screen follows it: chart,
+order book, trade tape, everything.
 
-## Connect an exchange
+A market is always a **pair**: what you are buying, priced in what you are
+paying with. `BTC-USDT` means Bitcoin priced in Tether, a dollar stablecoin.
+`ETH-USD` means Ethereum priced in dollars. The first half is what you get, the
+second is what you spend.
 
-Open **Accounts** in the left nav, hit **Connect Account**, and pick your
-venue. Paste the API key it issued you. Keys are used only to sign requests to
-that venue, and never touch a Pairlens server.
+<Callout type="tip">
+  Different exchanges list different pairs and quote slightly different prices
+  for the same asset. That is normal, and the [Multi-Price
+  panel](/docs/cross-venue-pricing) exists to show you the gap.
+</Callout>
+
+## 3. Read what is on screen
+
+Three things are worth understanding before you trade anything:
+
+**The chart** shows price over time. Each candle covers one slice of time and
+records four numbers: where price opened, where it closed, and the highest and
+lowest it reached in between. Green means it closed above where it opened.
+See [the chart](/docs/chart-panel).
+
+**The order book** shows the offers waiting to be filled right now, sellers
+above and buyers below. It tells you how much you could actually trade before
+moving the price. See [the order book](/docs/order-book).
+
+**The tape** shows trades that already happened, newest first. It is the only
+panel that cannot be faked, because everything on it already cleared. See
+[time and sales](/docs/time-and-sales).
+
+Take the [terminal tour](/docs/terminal-tour) for the rest of the screen.
+
+## 4. Practise before you risk anything
+
+Most exchanges run a free **demo environment**: a full copy of their trading
+system with fake money in it. Orders behave the same way, prices are real, and
+nothing you do can cost you anything.
+
+Open **Accounts** in the left nav, hit **Connect Account**, pick your venue, and
+choose **Paper** when the wizard asks for a trading mode. Now place an order and
+watch what happens. See [paper trading](/docs/paper-trading) for all three ways
+to practise.
+
+## 5. Connect a real account when you are ready
+
+Same flow, with **Live** selected instead. You paste an API key that the
+exchange issues you from its own settings page. That key is stored on your
+device and used only to sign requests to that one venue.
 
 <KeychainMock class="my-5" />
 
@@ -55,16 +92,19 @@ that venue, and never touch a Pairlens server.
   rest, behind a vault you unlock with a password, a passkey, or Touch ID.
 </Callout>
 
-Not ready to risk real funds? Most venues issue demo keys. Choose **Paper**
-when the wizard asks for a trading mode and rehearse the whole flow against the
-exchange's own sandbox: same charts, same signals, no money at stake. See
-[Connect an exchange](/docs/connect-an-exchange) for key-scoping advice and
-[paper trading](/docs/paper-trading) for the three ways to practise.
+Before your first live order, set your
+[risk guardrails](/docs/risk-guardrails). They are a daily loss cap and a
+maximum position size, checked by the terminal before any order leaves your
+machine. Five minutes now saves a bad afternoon later.
 
-## Run it from source
+See [connect an exchange](/docs/connect-an-exchange) for advice on which
+permissions to grant a key, and which to leave off.
 
-Everything the app does is in the public monorepo. Building it yourself
-takes one tool (two for the native desktop shell):
+## Optional: run it from source
+
+Everything the app does is in the public repository. Building it yourself takes
+one tool, or two for the native desktop shell. Skip this section entirely if you
+just want to trade.
 
 <Prereqs
   items={[
@@ -88,9 +128,6 @@ takes one tool (two for the native desktop shell):
     },
   ]}
 />
-
-Clone the repository and install workspace dependencies. Pairlens is a Bun
-monorepo; one install wires up every app and package.
 
 <CodeTabs
   client:visible
@@ -132,12 +169,6 @@ monorepo; one install wires up every app and package.
   ]}
 />
 
-<Callout type="note">
-  The browser terminal trades live too, through the encrypted credential vault.
-  The desktop app remains the strongest home for live-trading secrets: it stores
-  them in your OS keychain.
-</Callout>
-
 ## Next steps
 
 <NextSteps
@@ -148,19 +179,19 @@ monorepo; one install wires up every app and package.
       href: '/docs/terminal-tour',
     },
     {
+      tag: 'Read',
+      title: 'How to read a market',
+      href: '/docs/market-data',
+    },
+    {
       tag: 'Trade',
-      title: 'Connect an exchange',
-      href: '/docs/connect-an-exchange',
+      title: 'Place your first order',
+      href: '/docs/place-an-order',
     },
     {
-      tag: 'Chart',
-      title: 'Everything in the chart panel',
-      href: '/docs/chart-panel',
-    },
-    {
-      tag: 'Automate',
-      title: 'Build a workflow',
-      href: '/docs/build-a-workflow',
+      tag: 'Protect',
+      title: 'Set your risk guardrails',
+      href: '/docs/risk-guardrails',
     },
   ]}
 />

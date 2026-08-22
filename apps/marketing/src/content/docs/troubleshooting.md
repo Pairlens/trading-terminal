@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 8 min read
 ---
 
@@ -28,8 +28,8 @@ country setting. Others vary. This is the venue's rule, not ours, and no setting
 works around it.
 
 **Eight venues need the desktop app.** Coinbase, Gate, KuCoin, MEXC, Bitfinex,
-Kalshi, KuCoin Futures, and Kraken Futures serve REST without CORS headers,
-which a browser will not allow. In a browser they refuse with a clear message
+Kalshi, KuCoin Futures and Kraken Futures refuse connections coming from a web
+page, as a policy of their own. No browser can reach them. In a browser they refuse with a clear message
 rather than presenting a dead chart, and on the futures and predictions
 discovery boards the venue's own row says so instead of going blank.
 [Install the desktop app](/docs/desktop-app) or use one of the other fourteen.
@@ -52,9 +52,9 @@ one update per second, which on a quiet pair genuinely looks static.
 
 ## The chart shows only the newest candle
 
-A chart paints its history from one REST call to the venue, made the moment
-you open a pair or change timeframe. The live socket is a separate feed, and
-it starts arriving first. So if that one call is slow, or the venue rate limits
+A chart gets its history from a single request to the exchange, made the moment
+you open a pair or change timeframe. The live price feed is separate, and it
+starts arriving first. So if that one call is slow, or the venue rate limits
 it because you have just switched a few times in a row, the terminal shows what
 it has: the bar currently forming, moving on its own with nothing behind it.
 

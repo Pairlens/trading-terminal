@@ -1,17 +1,25 @@
 ---
 title: Affiliate program
-description: How referral codes and tiers work. You submit codes, never URLs, and Pairlens builds the signup links.
+description: Earn a share of the exchange fees when someone you referred signs up. How the tiers work, and why you submit codes rather than links.
 group: traders
 order: 11
 eyebrow: For traders
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 2 min read
 ---
 
-Affiliates submit exchange referral **codes**, never URLs. Pairlens builds the
-signup links from your codes and shows them where traders naturally connect new
-venues. You can never route a user off-venue, because URLs are built from a
-trusted per-venue template.
+Exchanges pay a share of trading fees to whoever referred a new customer. If you
+have an audience, the affiliate program puts your referral codes in front of
+Pairlens users at the moment they connect a new exchange.
+
+## Codes, never links
+
+You submit your referral **code** for each exchange. Pairlens builds the signup
+link itself, from a template it keeps per venue.
+
+That is a deliberate limit, and it protects users rather than you: because the
+address is constructed on our side, a code can never send somebody to a page
+other than the exchange's own signup. Nobody can be routed anywhere unexpected.
 
 ## Tiers
 
@@ -23,8 +31,9 @@ trusted per-venue template.
 
 ## Submitting codes
 
-Each venue declares its own referral schema, usually a single `code`, though
-some (Kraken among them) need two fields. Submit the values and Pairlens
-validates them against the venue's pattern before the link goes live.
+Each exchange has its own format. Most want a single code; a few, Kraken among
+them, need two fields. Submit the values and Pairlens checks them against that
+exchange's own pattern before the link goes live, so a typo is caught before
+anyone clicks it.
 
 Ready to apply? Head to the [affiliate signup](/affiliates).

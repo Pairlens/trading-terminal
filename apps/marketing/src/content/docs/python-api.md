@@ -5,7 +5,7 @@ group: traders
 parent: python-scripts
 order: 2
 eyebrow: For traders
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 9 min read
 ---
 

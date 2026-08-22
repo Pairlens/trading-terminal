@@ -8,6 +8,10 @@ updated: 22 AUG 2026
 readTime: 5 min read
 ---
 
+**Trading rather than building?** The short version is that all 23 venues work
+in the desktop app and 15 of them work in a browser, and each asset class doc
+lists what its own venues support. This page is the developer's view.
+
 Market connectors are plugins that stream data and route orders directly
 between your machine and the venue. Pairlens ships with connectors for major
 centralized exchanges, five perpetual futures venues, a US equities broker,
@@ -57,9 +61,9 @@ tape, items, traits and history rather than returning empty ones, so a fresh
 install shows a real floor before anything is configured.
 
 All 23 venues work in the desktop app. In a browser, 15 of them do: Coinbase,
-Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures, and Kraken Futures serve
+Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures and Kraken Futures serve
 REST without CORS headers, so they require the desktop app and refuse cleanly
-with a clear message rather than presenting a dead chart. Binance, ByBit and
+with a typed error rather than presenting a dead chart. Binance, ByBit and
 OKX futures all reach a browser, so three of the five perpetual venues trade
 from the hosted terminal.
 

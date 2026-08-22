@@ -5,16 +5,17 @@ group: traders
 parent: python-scripts
 order: 1
 eyebrow: For traders
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 9 min read
 ---
 
-Custom indicators in Pairlens work the way Pine Script does on TradingView, a
-declaration plus a compute function, except the language is real Python with
-real dependencies. Scripts run 100% locally: the terminal embeds a Python
-runtime (Pyodide, CPython compiled to WebAssembly) in a dedicated Web Worker,
-on desktop and in the browser alike. Your code and your candles never touch a
-server.
+If you have written Pine Script on TradingView, the shape here is familiar: a
+declaration that says what your indicator draws, and a compute function that
+works out the numbers. The difference is that this is real Python, with real
+libraries.
+
+Scripts run entirely on your own machine, in the browser and on the desktop
+alike. Your code and your candles never touch a server.
 
 ## Quickstart
 

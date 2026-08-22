@@ -1,150 +1,136 @@
 ---
 title: Cross-venue pricing
-description: The Multi-Price panel quotes the active pair on every venue that lists it, ranked by price, with a gross executable spread and the caveats that make it honest.
+description: The same asset trades at a different price on every exchange. The Multi-Price panel shows all of them at once, ranked, with an honest note about why the gap is harder to capture than it looks.
 group: traders
 parent: market-data
 order: 4
 eyebrow: For traders
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 5 min read
 ---
 
-A single chart cannot answer "where is this cheapest right now". The Multi-Price
-panel quotes the active pair on every venue your connectors can reach, sorted so
-the answer is the top row.
+## Why one asset has many prices
+
+There is no single price for Bitcoin. Each exchange runs its own separate market
+with its own buyers and sellers, and those markets settle at slightly different
+numbers. Usually the gap is tiny, because traders who move money between
+exchanges close it for profit. Sometimes, especially on thin venues or during
+fast moves, it is not tiny at all.
+
+That matters to you in two ways. If you are buying, one exchange is cheaper
+right now. And if the gaps are wide, this asset's liquidity is fragmented, which
+tells you something about how easily you will get out later.
+
+The Multi-Price panel quotes your active pair on every exchange your connectors
+can reach, sorted so the answer is the top row.
 
 ## The board
 
 | Column      | What it holds                                          |
 | ----------- | ------------------------------------------------------ |
 | **Venue**   | The exchange, with a status badge where it matters     |
-| **Price**   | That venue's live quote                                |
-| **vs best** | The premium over the cheapest live quote, as a percent |
-| **24h**     | That venue's own 24-hour change                        |
+| **Price**   | That exchange's live price                             |
+| **vs best** | How much more it costs than the cheapest, as a percent |
+| **24h**     | That exchange's own 24-hour change                     |
 
-The panel is width-aware: venue and price are the floor, the premium column
-joins at around 16rem and the 24-hour column at 24rem. Everything past the floor
-is a comparison the badges already make qualitatively, so dropping a column
-costs emphasis rather than meaning.
+Narrow the panel and the last two columns drop. The badges already tell you the
+same story qualitatively.
 
-## Switching venue from the board
+## Switching exchange from the board
 
-Click any row to move to that venue. Both this panel and the compact
-**Venue Ladder** do it, and what moves depends on which pair the panel is
-showing.
+Click any row to move there. The chart re-streams from that exchange's market,
+the book follows, and the order ticket points at it.
 
-On a pair page the click is a navigation: the address becomes
-`/spot/kraken/BTC-USDT`, the chart re-streams from the new tape, and the book
-and the ticket follow it. That is deliberate: the venue is part of the address,
-so a link you share afterwards opens on the venue you were reading rather than
-on whichever one the reader happens to prefer. The switch replaces the address
-instead of stacking on it, so flicking through five venues on one pair does not
-leave five entries to walk back out of.
+The address bar changes too, so a link you share afterwards opens on the
+exchange you were reading rather than whichever one the reader happens to
+prefer. Flicking through five exchanges does not leave five entries in your back
+history.
 
-On a board where the panel holds its own pair, either as a pane override or
-bound to a workspace variable, the click moves that pair instead. An override
-moves this panel alone; a bound variable moves every panel bound to it, which is
-how a chart beside the board follows along.
-
-Two kinds of row do not move anything, because there is nothing to move to: a
-venue that does not list the pair, and a connector that needs the desktop app.
+If the panel has been pinned to its own pair rather than following your chart,
+clicking a row moves that panel instead. Two kinds of row do not move anything,
+because there is nowhere to go: an exchange that does not list the pair, and one
+that needs the desktop app.
 
 ## How rows are ranked
 
 Live prices first, cheapest at the top. Then quotes that have gone stale, then
-venues still connecting, then the definite "not listed here" answers. The
-actionable part of the board is always the top of it.
+exchanges still connecting, then the ones that plainly do not list the pair. The
+part of the board you can act on is always at the top.
 
-**Stale quotes get a row but never rank.** A thin venue that last printed ninety
-seconds ago is worth seeing, and the number is real. Crowning it "Best" is not,
-because the cheapest price on the board reads as a recommendation and that fill
-may no longer exist. This was measured on BTC-USDT, where a thin USDT book sat
-apparently best at 64,352 while every live venue traded 64,8xx.
+**A stale quote never gets crowned "Best".** A thin exchange that last printed
+ninety seconds ago is worth seeing, and its number is real, but calling it the
+cheapest reads as a recommendation and that price may no longer exist. This is
+not hypothetical: a thin Bitcoin market once sat apparently best at 64,352 while
+every live exchange was trading 64,8xx.
 
 ## The badges
 
-| Badge          | Meaning                                                  |
-| -------------- | -------------------------------------------------------- |
-| **Best**       | Cheapest live quote on the board                         |
-| **High**       | Dearest live quote on the board                          |
-| **Stale**      | The venue has stopped publishing recently enough to rank |
-| **Delayed**    | The feed is behind                                       |
-| **No prints**  | Connected, but nothing is trading                        |
-| **Desktop**    | This venue needs the [desktop app](/docs/desktop-app)    |
-| **Not listed** | This venue does not carry the pair                       |
+| Badge          | Meaning                                               |
+| -------------- | ----------------------------------------------------- |
+| **Best**       | Cheapest live price on the board                      |
+| **High**       | Most expensive live price on the board                |
+| **Stale**      | This exchange has stopped publishing recently enough  |
+| **Delayed**    | The feed is behind                                    |
+| **No prints**  | Connected, but nothing is trading                     |
+| **Desktop**    | This venue needs the [desktop app](/docs/desktop-app) |
+| **Not listed** | This exchange does not carry the pair                 |
 
-Five connectors cannot run in a browser at all, because their REST endpoints
-send no CORS headers. In the hosted web terminal those venues show a Desktop
-badge rather than a dead row. See [connectors](/docs/connectors).
+Some exchanges refuse connections from web pages entirely, so in the browser
+terminal they show a Desktop badge rather than an empty row. See
+[connectors](/docs/connectors).
 
-## The executable spread strip
+## The spread strip, and why it is not free money
 
-When two venues both publish a real book, a strip above the board names the
-cheapest ask and the dearest bid and the gross gap between them, as a
-percentage: buy on one, sell on the other.
+When two exchanges both publish a real book, a strip above the board names the
+cheapest place to buy, the dearest place to sell, and the gap between them as a
+percentage.
 
-**It is gross, and the panel says so in two places.** The tooltip on the strip
-and the footer on the panel both spell out what is not in that number: exchange
-fees on both legs, withdrawal costs, transfer time between venues, and depth
-past the top of the book. Any one of those is routinely larger than the gap you
-are looking at.
+Every new trader sees that number and thinks: buy there, sell here, repeat.
 
-Treat the strip as a measure of how fragmented this asset's liquidity is, which
-is genuinely useful, rather than as a trade you can lift. Real cross-venue
-execution needs inventory already sitting on both sides.
+**It is a gross figure, and the panel says so twice.** What is not in it: trading
+fees on both sides, withdrawal fees, the time it takes to move funds between
+exchanges (during which the gap can close or invert), and the fact that the
+quoted price only covers the top of each book. Any one of those is routinely
+larger than the gap itself.
 
-## Where bid and ask come from
+Real cross-exchange arbitrage is done by desks that already hold inventory on
+both sides, so they never need to move anything. Treat the strip as a measure of
+how fragmented this asset is, which is genuinely useful, rather than a trade you
+can lift.
 
-Most venues publish their top of book on the same stream that carries the last
-price, and that is where the ladder reads it.
+## A note on where the quotes come from
 
-Three do not. ByBit, MEXC and Upbit send 24-hour statistics with no quote in
-them at all, which used to leave those rows blank on a panel that ranks venues
-by their spread. They are not bookless venues: the depth panel one pane over
-was streaming the same exchange's spread the whole time. So the Venue Ladder
-opens the venue's own order book and reads the top of it, and the row quotes
-what the book quotes.
+Most exchanges publish their best bid and ask alongside the last price. Three do
+not (ByBit, MEXC and Upbit send 24-hour statistics with no quote in them), so for
+those the panel opens their order book and reads the top of it. A row that still
+has nothing to quote after that says `no book quoted` rather than shimmering
+forever.
 
-That second stream is opened only for a venue that has been ticking for a few
-seconds without quoting. A venue that quotes on its ticker never costs one, and
-the venue you are charting already has its book open for the depth panel, so
-there it costs nothing at all.
+On-chain rows are different: decentralized exchanges have no bid and ask in the
+usual sense, so a DEX row is a last price only, and it cannot take part in the
+spread strip.
 
-A row that still has no quote once the wait is over reads `no book quoted`.
-That is an answer rather than a delay, and it is why the row stops shimmering.
+## Only comparable markets
 
-## Only comparable venues
-
-Venues are only quoted when they share an asset class with the charted one.
-Quoting a Solana pool against Kraken's spot book would be comparing two
-different instruments that happen to share a ticker, so the panel does not.
-A pair with no comparable venue says so instead of showing an empty board.
+The panel only quotes exchanges trading the same kind of instrument. Comparing a
+Solana pool against Kraken's spot book would be comparing two different things
+that happen to share a ticker, so it does not. A pair with nothing comparable
+says so instead of showing an empty board.
 
 ## Sort and pause
 
-The header carries two controls: a sort toggle between price order and venue
-order, and a pause. Pausing freezes the board where it is, which is what you
-want when you are reading a row rather than watching one.
+The header carries a sort toggle between price order and exchange order, and a
+pause button. Pause freezes the board, which is what you want when you are
+reading a row rather than watching one.
 
-## Why this beats one panel per venue
+## Try it as a workspace
 
-The panel takes bulk ticker snapshots per venue rather than opening a stream per
-row, which is also how it detects which venues actually list the pair. Fanning
-individual ticker subscriptions across a dozen venues is the naive version and
-it is much heavier for a strictly worse result.
-
-One caveat on DEX rows: on-chain data providers do not publish a real bid and
-ask, so a DEX quote on this board is a last price, not a two-sided book. It
-cannot participate in the executable spread strip.
-
-## The Cross-Venue Desk
-
-The [Workspace Store](/docs/workspaces#the-workspace-store) ships a template
-built around this panel, with the board next to a chart and an order ticket. It
-is the fastest way to see what the panel is for.
+The [Workspace Store](/docs/workspaces#the-workspace-store) ships a Cross-Venue
+Desk template with this board next to a chart and an order ticket. It is the
+fastest way to see what the panel is for.
 
 ## Where to next
 
 - [Market discovery](/docs/market-discovery) to find the pair in the first place
-- [Connect an exchange](/docs/connect-an-exchange) to add venues to the board
-- [Connectors](/docs/connectors) for what each venue supports
+- [Connect an exchange](/docs/connect-an-exchange) to widen what the board covers
+- [Connectors](/docs/connectors) for what each exchange supports
