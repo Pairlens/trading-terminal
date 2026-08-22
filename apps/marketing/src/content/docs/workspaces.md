@@ -8,9 +8,17 @@ updated: 22 AUG 2026
 readTime: 13 min read
 ---
 
-A workspace is a saved arrangement of panels. Scalping wants a book, a depth
-chart, and a ticket. Swing trading wants a daily chart, news, and a research
-panel. Rather than reconfiguring, you keep both and switch.
+A workspace is a saved arrangement of panels, and it is the feature that turns a
+terminal into _your_ terminal.
+
+The reason to bother: different kinds of trading need genuinely different things
+on screen. Trading in and out over minutes wants an order book, a depth chart
+and a ticket, all large. Holding for weeks wants a daily chart, news and
+research, and does not need a book at all. Rather than rebuilding your screen
+every time you change mode, you keep both and switch between them.
+
+Most people end up with three or four: one per market they trade, plus a
+research one.
 
 ## Building one
 
@@ -50,9 +58,8 @@ Full tool list in the
 
 ## Moving a panel
 
-A column is one surface, and the panels stacked inside it are divided by a
-single hairline. That line is also the resize handle: drag it to give one panel
-more room, and drag the gap between two columns to change the split.
+The thin line between two stacked panels is the resize handle: drag it to give
+one panel more room. Drag the gap between two columns to change the split.
 
 Every panel carries a grip at the right end of its title row. It is always
 there, faint, and comes up to full strength the moment your pointer enters the

@@ -1,15 +1,22 @@
 ---
 title: Keyboard shortcuts
-description: Every keyboard shortcut in the Pairlens trading terminal, from timeframe digits to drawing tools to window management, on macOS, Windows, and Linux.
+description: Every shortcut in the terminal, on macOS, Windows and Linux, plus the two alternative keymaps and how to rebind anything you do not like.
 group: reference
 order: 3
 eyebrow: Reference
-updated: 16 AUG 2026
-readTime: 2 min read
+updated: 22 AUG 2026
+readTime: 3 min read
 ---
 
 macOS uses <kbd>⌘</kbd> and <kbd>⌥</kbd>. Windows and Linux use
 <kbd>Ctrl</kbd> and <kbd>Alt</kbd>.
+
+**If you learn one, learn <kbd>⌘K</kbd>.** It searches pairs, pages,
+workspaces, panels, plugins and actions, which is the fastest route to almost
+anything in the app.
+
+Hold <kbd>⌘</kbd> for a beat anywhere in the terminal and every control that has
+a shortcut shows it.
 
 ## Global
 
@@ -19,15 +26,36 @@ macOS uses <kbd>⌘</kbd> and <kbd>⌥</kbd>. Windows and Linux use
 | <kbd>⌘/</kbd> | Open the assistant   |
 | <kbd>⌘J</kbd> | Open the assistant   |
 | <kbd>⌘,</kbd> | Open settings        |
+| <kbd>⇧F</kbd> | Toggle fullscreen    |
 | <kbd>⌘N</kbd> | New window (desktop) |
 | <kbd>⌘[</kbd> | Back                 |
 | <kbd>⌘]</kbd> | Forward              |
 
-The assistant answers to both chords. Prefer <kbd>⌘/</kbd> on the web
-terminal: on Windows and Linux the other one is <kbd>Ctrl</kbd>+<kbd>J</kbd>,
-which Chrome and Firefox spend on their own Downloads panel. Hold <kbd>⌘</kbd>
-for a beat anywhere in the terminal and every control that has a chord
-shows it, the orb included.
+The assistant answers to both chords. Prefer <kbd>⌘/</kbd> on the web terminal:
+on Windows and Linux the other one is <kbd>Ctrl</kbd>+<kbd>J</kbd>, which Chrome
+and Firefox spend on their own Downloads panel before the page ever sees it.
+
+## Sections
+
+| Chord         | Goes to                 |
+| ------------- | ----------------------- |
+| <kbd>⌥1</kbd> | Pairs                   |
+| <kbd>⌥2</kbd> | Charts                  |
+| <kbd>⌥3</kbd> | Notifications           |
+| <kbd>⌥4</kbd> | Workflows               |
+| <kbd>⌥5</kbd> | Indicators & Strategies |
+| <kbd>⌥6</kbd> | Accounts                |
+| <kbd>⌥7</kbd> | Plugins                 |
+| <kbd>⌥8</kbd> | Your workspaces         |
+| <kbd>⌥9</kbd> | Workspace Store         |
+| <kbd>⌥B</kbd> | Bots                    |
+
+## Workspace
+
+| Chord          | Action                  |
+| -------------- | ----------------------- |
+| <kbd>⌘⇧P</kbd> | Add a panel             |
+| <kbd>⌘⇧L</kbd> | Open the workspace menu |
 
 ## Timeframes
 
@@ -40,6 +68,9 @@ Press a digit and the active chart switches.
 | 3   | 15m       | 8   | 1D        |
 | 4   | 30m       | 9   | 1W        |
 | 5   | 1h        | 0   | 3D        |
+
+Monthly ships without a chord. Assign one in **Settings → Keyboard** if you want
+it.
 
 ## Chart
 
@@ -66,11 +97,32 @@ Hold <kbd>⌥</kbd> (<kbd>Alt</kbd>) and press:
 | <kbd>⌥L</kbd> | Long Position   | <kbd>⌥D</kbd> | Date Range |
 | <kbd>⌥S</kbd> | Short Position  |               |            |
 
+## Shipped without a chord, on purpose
+
+**Lock terminal** and **hard lock** arrive unbound. The obvious chords belong to
+the workspace menu, your browser's address bar and macOS's own screen lock, and
+hard lock stops live automation, which is the wrong thing to fire by accident.
+Assign either one in **Settings → Keyboard**.
+
+## Two other keymaps
+
+**Settings → Keyboard** offers alternatives if you are coming from somewhere
+else.
+
+**TradingView** matches their drawing chords, moves redo to <kbd>⌘Y</kbd>, and
+spends the freed <kbd>⌥</kbd> letters the way TradingView does.
+
+**Bloomberg** puts section navigation on the function keys, F2 through F11, with
+F1 also opening search.
+
+Either way, every individual shortcut is rebindable, and any command shipped
+without one can be given one.
+
 ## How routing works
 
-Chart shortcuts do not require the chart to have focus. They are routed to the
-chart pane you last pointed at or focused, so a digit still switches the
-timeframe when your cursor is over the order book.
+Chart shortcuts do not require the chart to have focus. They go to the chart
+panel you last pointed at or focused, so a digit still switches the timeframe
+while your cursor is over the order book.
 
 They are suppressed while you are typing in a field, and while a dialog or menu
 outside the chart is open, so pressing "1" in a search box types a 1.

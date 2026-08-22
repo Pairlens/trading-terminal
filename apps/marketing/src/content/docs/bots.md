@@ -1,16 +1,31 @@
 ---
 title: Bots
-description: Deploy a Python strategy to a market and let it trade. Sizing, guards, paper mode, the live-arming gate, and the honest limits of running on your own machine.
+description: Rules that trade without you. Sizing, guards, paper mode, the live-arming gate, and the honest limits of running a bot on your own machine.
 group: traders
 order: 6
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 22 AUG 2026
 readTime: 7 min read
 ---
 
-A bot is one of your [strategy scripts](/docs/strategies-and-backtests)
-deployed to a market. It evaluates on that pair's closed candles at the
-timeframe you choose, and acts on the entries and exits the script produces.
+## What a bot is, honestly
+
+A bot is a set of rules that trades without you. You write the rules as a
+[strategy script](/docs/strategies-and-backtests), point it at a market and a
+timeframe, and it acts every time a candle closes.
+
+Two things worth saying before you build one.
+
+**A bot removes emotion, not risk.** Its whole advantage is that it does not
+hesitate, does not revenge trade, and does not talk itself out of a stop. It is
+still trading whatever rules you gave it, and a bad strategy executed perfectly
+loses money faster than a bad strategy executed nervously.
+
+**A backtest is not a promise.** It is very easy to tune a strategy until it
+looks brilliant on the past, which teaches you about the past. The honest test is
+paper mode running forward on data that had not happened when you wrote it. That
+is why every bot here starts in paper and stays there until you deliberately arm
+it.
 
 Open **Bots** in the left nav.
 

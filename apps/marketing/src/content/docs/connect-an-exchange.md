@@ -1,111 +1,135 @@
 ---
 title: Connect an exchange
-description: Connect exchange, broker, or wallet API keys. They stay on your device, in the OS keychain or encrypted vault, and only sign requests to that one venue.
+description: What an API key is, which permissions to grant and which to refuse, and where your key lives once Pairlens has it. Covers exchanges, brokers, wallets and prediction venues.
 group: traders
 parent: trading
 order: 1
 eyebrow: For traders
-updated: AUG 2026
-readTime: 5 min read
+updated: 22 AUG 2026
+readTime: 6 min read
 ---
 
-Open **Accounts** in the left nav and hit **Connect Account**. Everything you
-add is stored on this device and nowhere else.
+## What you are actually connecting
+
+To trade on an exchange from outside its website, you need an **API key**: a
+long string the exchange issues you from its own settings page, which acts as a
+password for programs rather than people.
+
+Two things make it safer than handing over your login. You choose what the key
+is allowed to do, and you can revoke it at any moment without touching your
+account. A key scoped to "read balances and place spot trades" cannot withdraw
+your funds, cannot change your email, and cannot be used to log in.
+
+Pairlens uses your key to sign requests to that one exchange, and nothing else.
 
 ## Four kinds of account
 
-**Crypto exchange.** A centralized venue such as Binance, OKX, or Kraken,
-connected with an API key. Your funds stay on the exchange. Fourteen ship in
-the box.
+**Crypto exchange.** A centralized venue like Binance, OKX or Kraken, connected
+with an API key. Your funds stay on the exchange. Fourteen ship in the box.
 
-**Crypto wallet.** A private key you import so Pairlens can swap on-chain
-through DEXs. Covers Solana via Jupiter and five EVM chains. See
-[DEX and wallets](/docs/dex-trading).
+**Crypto wallet.** A private key you import so Pairlens can swap directly
+on-chain. Covers Solana and five other chains. This is a different security
+posture from an exchange key, because a wallet key can move funds. Only import
+a wallet you are comfortable trading from, and keep the bulk of your holdings
+elsewhere. See [DEX and wallets](/docs/dex-trading).
 
-**Stock broker.** Alpaca today, for US equities and ETFs. Alpaca hands out free
-paper-trading keys in minutes, which makes it the easiest venue to try the
-whole flow on.
+**Stock broker.** Alpaca today, for US stocks and ETFs. Alpaca hands out free
+practice keys in minutes, which makes it the easiest place to rehearse the whole
+flow.
 
-**Prediction market.** Kalshi with an API key and an RSA private key, or
-Polymarket with an Ethereum wallet. See
-[prediction markets](/docs/prediction-markets).
+**Prediction market.** Kalshi with an API key, or Polymarket with an Ethereum
+wallet. See [prediction markets](/docs/prediction-markets).
 
 ## The wizard
 
-Connecting an exchange takes four steps:
+Open **Accounts** in the left nav and hit **Connect Account**.
 
-1. **Pick the exchange.** Only venues with an installed connector appear. If
-   yours is missing, install its plugin first.
-2. **Choose a trading mode.** **Paper** points at the exchange's demo
-   environment where one exists, so no real funds are involved. **Live** is the
+1. **Pick the venue.** Only venues with an installed connector appear. If yours
+   is missing, install its plugin first.
+2. **Choose a trading mode.** **Paper** points at the exchange's own practice
+   environment, where one exists, so no real funds are involved. **Live** is the
    real thing.
-3. **Enter credentials.** Usually an API key and secret. Some venues need a
-   passphrase or a second field; the form asks for exactly what that venue
-   requires.
-4. **Name it.** Useful once you run several accounts on the same exchange.
+3. **Enter credentials.** Usually a key and a secret. Some venues want a
+   passphrase or an extra field; the form asks for exactly what that venue
+   needs.
+4. **Name it.** Useful once you run several accounts on one exchange.
 
-## What to scope
+## Which permissions to grant
 
-Create a read plus spot-trade key. Pairlens never needs withdrawal permissions,
-so do not grant them. If the venue supports IP allowlists, pin the key to your
-machine. Keep a backup of the key somewhere safe, because Pairlens cannot show
-it to you again once it is in the keychain.
+**Grant:** read (balances, orders, history) and spot trading.
 
-If you do not have an account at the venue yet, the Accounts page links
-straight to signup, and some links carry a
-[referral code](/docs/affiliate-program).
+**Never grant:** withdrawals or transfers. Pairlens does not need them and will
+never ask. A key without withdrawal rights cannot be used to move your money,
+no matter who ends up holding it.
+
+**If offered:** an IP allowlist, pinned to your machine. It means the key is
+useless from anywhere else.
+
+Keep your own copy of the key somewhere safe. Once it is in your keychain,
+Pairlens cannot show it to you again.
+
+If you do not have an account at the venue yet, the Accounts page links straight
+to signup, and some links carry a [referral code](/docs/affiliate-program).
 
 ## Where the secret goes
 
-On desktop, into the OS keychain: macOS Keychain, Windows Credential Manager,
-or Linux Secret Service. That is the same encrypted store your operating system
-uses for its own passwords. In a browser, it goes into the credential vault:
-AES-256-GCM ciphertext in localStorage, unlocked by a protector you enroll
-first (a vault password, a passkey, or Touch ID on macOS).
+**On the desktop app**, into your operating system's own credential store: macOS
+Keychain, Windows Credential Manager, or Linux Secret Service. Same place your
+system keeps its own passwords.
+
+**In a browser**, into an encrypted vault on your device, unlocked by something
+you set up first: a vault password, a passkey, or Touch ID on macOS. Nothing is
+stored until you have a way to unlock it, so a browser profile either holds
+encrypted secrets or holds nothing at all.
 
 Either way it is never sent to a Pairlens server, not even while you are signed
-in. The **Local Only** badge on the Accounts page opens a panel explaining
-exactly this, with a link to the source so you can check for yourself.
+in. The **Local Only** badge on the Accounts page explains this and links to the
+source code so you can check for yourself.
 
-## Alpaca needs its key to show prices, not just to trade
+## Alpaca needs its key just to show prices
 
-Every crypto venue streams candles, quotes, and depth from a public feed, so a
-missing key costs you the order ticket and nothing else. Alpaca is the
-exception: it has no public feed, and the chart stays empty until a credential
-reaches the connector.
+Every crypto exchange publishes a free public price feed, so a missing key
+costs you the order ticket and nothing else. You can chart Bitcoin all day
+without connecting anything.
 
-That has one consequence worth knowing in a browser. Credentials live in the
-vault there, the vault seals on every page reload, and a sealed vault means a
-blank stock chart until you unlock. The panes say so and carry the unlock
-button, so it is one click rather than a hunt through Settings.
+Alpaca is the exception. US stock data is not free, so there is no public feed,
+and a stock chart stays empty until your key reaches the connector.
 
-If you use Alpaca in a browser, enroll a passkey. It answers the lock screen and
-the vault in a single touch, where a vault password answers them one at a time.
-Pairlens offers this once, straight after you connect Alpaca. You can also add
-one any time in **Settings → Security**.
+In a browser that has one consequence worth knowing: the vault locks on every
+page reload, and a locked vault means a blank stock chart until you unlock it.
+The panels say so and carry the unlock button.
 
-On desktop this is a non-issue: keys sit in the OS keychain and load at startup.
+If you use Alpaca in a browser, set up a passkey. It answers the lock screen and
+the vault in one touch. Pairlens offers this once, right after you connect
+Alpaca, and **Settings → Security** has it any time.
+
+On the desktop app this never comes up, because keys load from the OS keychain
+at startup.
 
 ## Regional endpoints
 
-Set your country in **Settings → Country**. Connectors use it to route API
-requests to the right regional endpoint, which matters more than it sounds:
-OKX sends US and Australian users to `us.okx.com` and EU users to
-`eea.okx.com`, and some venues are unavailable in some regions entirely. If a
-venue is blocked where you are, Pairlens tells you instead of failing quietly.
+Set your country in **Settings → Country**. Exchanges route users to different
+servers by region, and some are unavailable in some countries entirely. OKX
+sends US and Australian users to one address and EU users to another, for
+example.
 
-## Verifying the connection
+If a venue is not available where you are, Pairlens tells you plainly instead of
+failing in a confusing way.
 
-Once a key is saved, its balances load and the order ticket unlocks for that
-venue. The credential row shows where the secret is stored. If a venue rejects
-the key, the error from the exchange is shown verbatim rather than being
-swallowed.
+## Checking it worked
+
+Once a key is saved, your balances load and the order ticket unlocks for that
+venue. The credential row shows where the secret is stored. If the exchange
+rejects the key, its own error message is shown to you word for word rather than
+hidden behind something generic.
 
 ## Removing a key
 
-Delete the credential row and Pairlens erases it from the keychain. Because
-nothing was ever synced, there is nothing to revoke server-side. If you suspect
-exposure, rotate the key at the exchange.
+Delete the credential row and it is erased from your keychain or vault. Because
+nothing was ever synced anywhere, there is nothing to revoke on our side.
+
+If you think a key may have been exposed, revoke it at the exchange itself. That
+is the only action that truly invalidates it.
 
 ## Next
 

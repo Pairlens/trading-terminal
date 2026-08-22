@@ -5,14 +5,20 @@ group: traders
 parent: automation
 order: 2
 eyebrow: For traders
-updated: 16 AUG 2026
+updated: 22 AUG 2026
 readTime: 7 min read
 ---
 
-Most alerts are one line: tell me when BTC crosses 100,000, or tell me when it
-moves 5% in an hour. Both take two fields and no setup. Flows, with conditions
-and branches on a canvas, are still there for everything else, one click away
-and never in your way.
+An alert watches a market for you and tells you when something happens. It never
+places an order, which makes it the safest piece of automation to start with and
+the one most traders get the most out of.
+
+The obvious use is a price level: tell me when Bitcoin crosses 100,000. The less
+obvious and often more useful one is a percentage move: tell me when anything
+moves 5% in an hour, which catches the thing you were not watching.
+
+Both take two fields and no setup. Flows, with conditions and branches on a
+canvas, are there for everything else, one click away and never in your way.
 
 ## Or just say it
 

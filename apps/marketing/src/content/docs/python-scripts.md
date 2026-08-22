@@ -1,17 +1,24 @@
 ---
 title: Python scripts
-description: The workbench where you write indicators and strategies in real Python, run them against live candles, backtest them, and ship them to your charts or a bot.
+description: Optional, and only for when the indicator you want does not exist. Write it in real Python, run it against live candles, backtest it, and ship it to your charts or a bot.
 group: traders
 order: 5
 eyebrow: For traders
-updated: 21 AUG 2026
+updated: 22 AUG 2026
 readTime: 6 min read
 ---
 
-Pairlens runs your Python. Not a scripting dialect that looks like Python: an
-actual CPython interpreter compiled to WebAssembly (Pyodide), living in a
-dedicated Web Worker, with numpy preloaded and pip packages available. Your
-code and your candles never touch a server.
+**You do not need this page to use Pairlens.** Ninety indicators and every
+drawing tool ship built in, and most traders never write a line of code. This
+section is for when the thing you want does not exist yet.
+
+If that is you, the good news is that it is real Python. Not a scripting dialect
+that looks like Python: an actual Python interpreter, with numpy already loaded
+and most of the scientific stack a pip install away. If you have written Python
+before, you already know how to write an indicator here.
+
+It runs entirely on your machine. Your code and your candles never touch a
+server, ours or anybody's.
 
 Open **Indicators & Strategies** in the left nav. That is the workbench.
 
@@ -24,8 +31,8 @@ markers, fills, reference levels. It shows up in every chart's indicator picker
 under **Custom**.
 
 **`meta = strategy(...)`** declares something that trades. Same drawing surface,
-plus your `compute()` returns entries and exits. That makes it backtestable,
-and deployable as a [bot](/docs/bots).
+plus your `compute()` returns entries and exits. That makes it backtestable, and
+deployable as a [bot](/docs/bots) that trades on its own.
 
 An indicator cannot run as a bot. There is nothing to execute. Swapping
 `indicator(` for `strategy(` and returning entry and exit arrays is the whole

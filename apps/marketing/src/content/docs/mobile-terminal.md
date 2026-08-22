@@ -1,331 +1,207 @@
 ---
 title: Mobile terminal
-description: The Pairlens Mobile Trading Terminal. The same URL below 768px, with five destinations over one chart, real order entry, drawings, and the assistant.
+description: The same web address on a phone opens a chart-first trading terminal with five tabs, real order entry, drawings and the assistant. What it does, and the few things it leaves to the desktop.
 group: get-started
 order: 5
 eyebrow: Get started
 updated: 22 AUG 2026
-readTime: 12 min read
+readTime: 9 min read
 ---
 
 Open [terminal.pairlens.finance](https://terminal.pairlens.finance) on a phone
-and you get a different shell. Not the desktop grid squeezed into a column: a
-chart-first surface with five destinations, built from the same codebase, with
-the same connectors, the same drawings, the same assistant and the same guarded
-order path.
+and you get a different app. Not the desktop grid squeezed into a column: a
+chart-first surface built for a thumb, with the same exchanges, the same
+drawings, the same assistant and the same order checks.
 
-The switch happens at 767px. Anything narrower gets the mobile terminal,
-anything from 768px up gets the desktop one. It is decided before the first
-paint, so a phone never flashes a desktop frame, and it survives a live resize:
-drag a desktop window narrow and the shell swaps without dropping your plugin
-connections, your sockets or your watchlist.
+Nothing to install, though **Add to Home Screen** gives it its own icon and
+hides the browser chrome.
 
-## Five destinations, one chart
+## Five tabs, one chart
 
-| Tab           | What it is                                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------------------------ |
-| **Watchlist** | Your lists, each row with a live price and a trend line. Tapping one switches the pair, bringing its venue with it |
-| **Trade**     | Order entry, with the order book above it                                                                          |
-| **Chart**     | The chart on its own, with the drawing toolbar                                                                     |
-| **Assistant** | The full assistant, same 113 tools and same confirm cards as the desktop                                           |
-| **Discover**  | Featured pairs, prediction markets, news, Fear and Greed, and today's P&L                                          |
+| Tab           | What it is                                                           |
+| ------------- | -------------------------------------------------------------------- |
+| **Watchlist** | Your lists, each row with a live price and a trend line              |
+| **Trade**     | The order ticket, with the order book above it                       |
+| **Chart**     | The chart on its own, with the drawing tools                         |
+| **Assistant** | The full AI assistant, same abilities as the desktop                 |
+| **Discover**  | Featured pairs, prediction markets, news, and today's profit or loss |
 
-The chart is underneath all five and never unmounts. The other four are bottom
-sheets that slide over it, so switching destination is not a page load and the
-chart behind never redraws from scratch. Drag a sheet up to expand it, down to
-dismiss it, or just tap the chart.
+The chart sits underneath all five. The other tabs are sheets that slide over
+it, so switching tabs never reloads anything and the chart keeps streaming
+behind whatever you are doing. Drag a sheet up to expand it, down to dismiss it,
+or just tap the chart.
 
-The [assistant](/docs/ai-copilot) gets a tab rather than the desktop's docked
-orb, because a phone has no room for a floating window over a chart. It is the same assistant underneath: it draws on the live chart under
-the sheet, prepares orders on the same confirm cards, and asks its questions on
-the same tappable option cards. **History** in the tab's top row opens the same
-thread list the desktop rail shows, over the panel rather than beside it, and a
-long press on a row gets the same rename and delete it gets on a laptop. Those
-threads are the phone's own unless you turn conversation sync on, which the rail
-offers once and Settings keeps: until then the ones on your laptop are not
-here.
-
-That is also why the tabs are not URLs. The address bar stays on
-`/spot/okx/BTC-USDT`, rewritten as you change pair or venue so a refresh or a
-shared link lands on exactly what you were looking at, while the browser's back
-button walks the shell one step at a time: back closes the sheet, then leaves.
+The address bar stays on the market you are looking at, so a refresh or a shared
+link lands exactly where you were. The back button closes the open sheet first,
+then leaves.
 
 ## The bar at the top
 
-Three controls, always visible.
+**The pair chip** opens search across every venue. Pick something your current
+exchange does not list and it tells you before you commit, then switches
+exchange for you.
 
-The **pair chip** opens the pair picker, which doubles as search across every
-venue. Pick something the current venue does not list and it tells you before
-you commit, then brings the right venue with it.
+**The venue chip** shows which exchange you are on and how the connection is
+doing: **LIVE** when prices are streaming, **OFFLINE** for a venue your phone
+cannot reach. An eye icon means you can watch but not trade there.
 
-The **venue chip** opens the venue picker and carries a live connection badge:
-**LIVE** when market data is streaming, an ellipsis while it connects, and
-**OFFLINE** for a venue this device cannot reach. An eye glyph next to it means
-the venue is read-only for you. The picker lists the venues that can serve what
-is on the chart and nothing else. On a token or an event contract, whose venue
-is part of what they are, the chip loses its caret and reads as a label.
-
-The **avatar** opens Settings, which is a screen rather than a tab.
+**The avatar** opens Settings.
 
 ## The chart
 
-**Touch and hold to read any bar.** A chart engine draws its crosshair from a
-mouse it can see moving, and a phone has none, so the price at a given moment
-used to be the one thing a phone chart could not tell you. Hold a finger on the
-plot for a moment and a crosshair comes up under it: the bar's open, high, low
-and close where the live price normally sits, its own move in percent, its
-volume, a price tag in the price scale and the date on the time axis.
+**Touch and hold to read any bar.** Phones have no mouse, so there is no
+crosshair following your pointer. Hold a finger on the chart for a moment and
+one appears underneath it, showing that bar's open, high, low and close, its
+percentage move, its volume, and its date. Drag without lifting to scrub bar by
+bar. Let go and the readout stays put so you can read it with your hand out of
+the way. Tap the ✕ to dismiss it.
 
-Drag without lifting and it scrubs along the series, one bar at a time, while
-the chart stays exactly where it is. Let go and the crosshair stays put, so you
-can read it with your hand out of the way. From there a tap anywhere on the
-plot moves it again, no hold needed. Close it with the ✕ on the readout, or
-pinch to zoom and it steps aside for you.
+**Timeframes** live on a chip beside the price. Four are pinned by default (1m,
+1h, 1D, 1W) and the rest are one tap away. Long-press any of them to pin it.
 
-It follows the crosshair chip in the toolbar: in Magnet the line rides the
-closes, in Free it floats wherever you put it. Switching pair, venue or
-timeframe takes it down, because the bars underneath are no longer the bars it
-was placed on.
+**The toolbar** above the tabs holds eight chips: the cursor, two tool slots,
+indicators, the full tool sheet, snapping, undo and clear. The two slots are
+earned: pick anything from the tool sheet and it moves into the toolbar,
+pushing out whatever you use least. After a day, the toolbar is the two tools
+you actually draw with.
 
-**Timeframes** live on a chip beside the price. Four are pinned by default
-(1m, 1h, 1D, 1W) and the rest are one tap further down. Long-press any of them
-to pin it, and the least recently used pin makes room.
+**Drawing uses a target, not your fingertip.** Your finger covers the exact spot
+you are trying to hit, so instead a crosshair parks in the middle of the chart
+with a price and time readout under it. Drag anywhere to move it, floated well
+above your finger, then tap **Set point**. Multi-point tools count the steps for
+you. Freehand tools (brush, highlighter, polyline) still draw directly under
+your finger.
 
-**The toolbar** above the tab bar is eight chips: the cursor, two tool slots,
-indicators, the full tool sheet, the crosshair mode, undo, and clear. The two
-slots are earned rather than fixed. Pick anything from the tool sheet and it
-moves into the toolbar, pushing out whatever you have used least, so after a
-day the toolbar is the two tools you actually draw with.
+The snap chip cycles **Magnet**, **Free** and **Hidden**. In Magnet your points
+land on the candle, which is what you want for a support level. In Free they
+land wherever you put them.
 
-**Drawing uses a reticle, not your fingertip.** Arm a tool and a crosshair
-parks in the middle of the plot with a price and time readout under it. Drag
-anywhere to move it, floated well above your finger so you can see what you are
-aiming at, then tap **Set point**. Multi-point tools count the steps for you.
-Freehand tools (brush, highlighter, polyline, Elliott wave) still draw straight
-under your finger.
-
-**The crosshair chip cycles Magnet, Free, and Hidden.** Magnet is the default,
-and on a phone it is also the snap control: in Magnet your points land on the
-candle, in Free they land where you put them.
-
-Undo is the chart engine's own history, so it undoes the drawing you just made
-rather than approximating it. Clear asks first.
-
-**An event contract charts as odds, not candles.** The phone opens a prediction
-on the same **Probability Chart** the desktop boards use: every outcome in the
-event on one time axis, and a legend under the plot that prices each runner and
-hides its line on a tap. Drag a finger across it and a card reads the whole
-field at that instant, sorted by probability, so a crossover is something you
-watch happen. The spans sit where the drawing toolbar would be: 1H, 6H, 1D, 1W,
-1M. A field larger than eight runners draws its leaders and says how many it is
-leaving to the ladder.
-
-Beside the spans is the same lines-or-bands switch the desktop has, and it
-matters more here. Eight lines under a 22% favourite are cramped on a laptop;
-on a phone they are one thick smear. Stacked bands fill the axis instead, so
-each runner is a thickness rather than a hairline, favourite highest and the
-longest shots along the axis, with the grey rest of the field on top for
-everything the chart is not drawing. It is the default where the field is a
-partition, and your choice follows you back to the laptop.
-
-The chip in the corner switches to **candles**, which brings back the chart
-engine, the interval picker and the drawing toolbar for the one outcome you are
-on. Two things are candles-only, because both convert a price to a position
-through that engine: the drawing toolbar, and the Trade screen's draggable limit
-line. The ticket's numeric limit field works in either view. Whichever you pick
-is remembered across contracts, and the span is the same one your desktop uses.
-See [the Probability Chart](/docs/prediction-markets#the-probability-chart).
-
-**On an event contract the chart gains a strip.** A prediction pair is a
-question, so under the price you get that question in full, the date it
-resolves, and the price of the answer you are on. Tap the strip and the whole
-event opens: every question it carries, every outcome priced, and the venue's
-resolution rules. Beside it is the ladder button, which is on **every**
-prediction rather than only on a race: the pair is the question, so "show me
-the other answers" is the same request whether there are two of them or a
-hundred. The strip prices come from the venue's board, not the live socket, so
-nothing on it flickers while you read it; the number that moves is the price
-above it.
+**Prediction markets chart as odds, not candles.** Opening an event shows every
+possible answer on one time axis, each as a probability. Tap a name in the
+legend to hide its line. Drag across the chart and a card reads the whole field
+at that moment, sorted by likelihood, so you watch one answer overtake another.
+Switch between separate lines and stacked bands, and use the chip in the corner
+to go back to ordinary candles for the single answer you are trading. See
+[prediction markets](/docs/prediction-markets).
 
 ## Trading
 
 The Trade sheet is a real ticket, not a shortcut to one.
 
-Above it sits the order book as a single live row: best bid, best ask, the
-spread, and a pressure bar. Tap it for the full book with its own grouping
-control.
+Above it, the order book compressed to a single live row: best bid, best ask,
+the spread and a pressure bar. Tap it for the full ladder.
 
-The ticket has Buy and Sell, an order type of **Limit**, **Market**, or
-**Stop**, an amount whose unit chip toggles between base and quote without
-opening the keyboard, and 25/50/75/Max shortcuts. Order types the venue cannot
-do are visibly disabled rather than hidden, so a DEX without limit support says
-so. The limit price is seeded from the live book the first time, which puts the
-line where you are already looking.
+The ticket has Buy and Sell, a type of **Limit**, **Market** or **Stop**, an
+amount whose unit toggles between the coin and the dollars without opening the
+keyboard, and 25/50/75/Max shortcuts. Order types your exchange does not offer
+are shown greyed out rather than hidden, so you learn what is missing instead of
+wondering. The limit price starts at the live market price, which is usually
+where you want it.
 
-**On an event contract the ticket takes dollars.** The question, the field, its
-resolution date and a **Resolution rules** disclosure sit above the ticket,
-beside the order book rather than inside it, so they stay readable when the
-ticket is behind a connect card: what a market asks and how it settles is not
-something a missing API key should hide. Tap the question to open the whole
-event.
-
-Under it, every answer as a chip with its price, favourites first, the one you
-are trading ringed. Tap another and the ticket, the chart and the book follow
-without leaving the screen: the pair is the question, so picking a side is a
-selection inside it rather than a trip to a different contract. The chip row
-scrolls, and the ladder button at its end opens the whole field ranked. The
-amount is collateral with **$25**, **$50**, **$100** and **Max** as presets, and
-the count it buys is stated under the field, floored to whole contracts. Above the confirm bar is the payout card:
-what the order returns if it is right, split against what it costs, with the
-stake, the profit and the return. The limit field takes cents, 53 for 53¢. It is
-the desktop ticket's arithmetic, and the presets are the same list, so a stake
-edited on the desk is the stake offered here. See
-[Prediction markets](/docs/prediction-markets).
-
-**A limit price shows on the chart** as a dashed line with a draggable tag, in
-the candle view. Move the line and the field follows, type in the field and the
-line follows. It
-is an order line, not a drawing, so it never turns up on your desktop chart.
-If the level is below the part of the chart the sheet leaves visible, the line
-pins to the bottom edge with a chevron rather than disappearing. On an event
-contract the tag reads in cents, the same unit as the price axis beside it, and
-a level the venue cannot take (a price left over from another instrument) draws
-no line at all rather than one parked at the edge of the chart.
+**Your limit price shows on the chart** as a dashed line with a draggable tag.
+Move the line and the number changes; type a number and the line moves. It is an
+order, not a drawing, so it never turns up on your desktop chart.
 
 **Confirming is a press and hold.** The bar at the bottom fills as you hold and
-commits at the end: 720ms for live funds, 480ms for paper. If you have set
-order confirmation to a single click in
-[Risk Management](/docs/risk-guardrails), it is a tap instead. Either way the
-order leaves through exactly the same guarded path as the desktop, so your
-position caps, loss caps and order locks all apply, and the row above the
-confirm bar tells you how much of your cap the order would use before you
-commit.
+commits at the end: a little longer for real money than for practice. This is
+deliberate, because a mis-tap on a phone is easy and an accidental market order
+is expensive. If you prefer a single tap, change it in
+[Risk Management](/docs/risk-guardrails).
 
-If you have no key for the venue, the ticket blurs behind a card that offers to
-connect one, and the order book above it stays live. A venue that is read-only
-for you says that instead, with no button, because there is nothing to fix.
+Either way the order goes through exactly the same checks as on the desktop.
+Your position caps and daily loss caps apply, and the row above the confirm bar
+tells you how much of your cap this order would use before you commit.
+
+If you have no key for the exchange, the ticket blurs behind a card offering to
+connect one, and the order book above it stays live so you can still watch.
+
+**On a prediction market the ticket takes dollars.** The question, its
+resolution date and the venue's own rules sit above the ticket. Under it, every
+possible answer as a chip with its price, favourites first. Tap another answer
+and the ticket, chart and book all follow without leaving the screen. Above the
+confirm bar is a payout card: what the trade returns if you are right, against
+what it costs.
 
 ## Discover
 
-Discover is the browse sheet: Fear and Greed and today's P&L as two cards,
-featured pairs, prediction markets, then the news feed. The two cards and the
-two lists each open out into a full screen, so the sheet stays a summary. The
-news feed refreshes itself every two minutes while the app is in front, and new
-stories arrive at the top of the list without a pull. Open a story and the
-reader holds its place while the list keeps filling behind it.
+The browse sheet: a Fear and Greed reading and today's profit or loss as two
+cards, then featured pairs, prediction markets, and the news feed. News
+refreshes itself every couple of minutes while the app is in front, and new
+stories arrive at the top without a pull.
 
-**Prediction markets** sit between the featured pairs and the news. A handful
-of live events, each with its artwork, its question, how long until it resolves,
-and a price button per outcome in cents, Yes in green and No in red. Tap an
-outcome and the question becomes the chart with that answer loaded in the
-ticket and the book. Tap the event heading and the whole event opens as its own
-screen: every
-question it carries, every outcome priced. **All events** opens the full board,
-where you can search question text and filter by venue.
+**Prediction markets** get their own section: live events with their artwork,
+the question, time until it resolves, and a price per answer in cents. Tap an
+answer to load it in the chart and ticket. Tap the heading to open the whole
+event, where each question carries the venue's own resolution rules, collapsed
+until you want them.
 
-**Every market carries its rules.** On the event screen each question has a
-**Resolution rules** disclosure holding the venue's own criteria, verbatim.
-They are per market and not per event, because a race's questions each settle on
-their own terms. Collapsed by default: it is what you check once before staking,
-not on every glance.
-
-**A race gets a ladder.** An event with more than two tradeable answers shows
-**Rank all N outcomes** at the top of its screen, which opens the field as one
-ranked list: probability order, the 24h move, a colour per runner that matches
-the one the desktop panes use, and the sum of every Yes price so you can see
-whether the field is priced above or below a fair 100%. Filter it by name or by
-question, and tap a row to make that runner the chart. It exists because reading
-a 128-candidate race market by market answers "what is in this event" and never
-answers "who is winning".
-
-Cards are bounded on both surfaces. A race with thirty candidates would
-otherwise be sixty buttons deep and push the rest of Discover off the screen, so
-a card shows the leading questions and counts the rest into a tap that opens the
-event.
-
-The section only exists when a connected plugin serves event contracts. Disable
-Kalshi and Polymarket in the Plugin Store, or ship a build without the
-predictions family, and the heading goes with them rather than standing over an
-empty list. In a browser Kalshi cannot answer at all, so on a phone the board
-lists what Polymarket has and names Kalshi once, in a line, instead of failing.
+An event with more than two answers gets **Rank all N outcomes**, which opens
+the field as one ranked list with each runner's probability, its 24-hour move,
+and the sum of every price so you can see whether the field is collectively
+priced above or below a fair 100%. A 128-candidate race read one market at a
+time never answers "who is winning". This does.
 
 ## What the phone does not do
 
 Some screens are desktop-only. Open a link to one on a phone and you get a
-single toast, **"That screen is only on the desktop app,"** and land on the
-chart rather than something broken. Those are workspaces and the workspace
-store, bots, workflows, notification rules, the Python indicator workbench, and
-the plugin store.
+single message and land on the chart rather than something broken:
 
-[NFT collections](/docs/nft-trading) are on that list too, and the reason is
-worth stating rather than hiding. The class is the ladder, the traits and
-the sweep ticket, and half of that on a 402px screen would be a worse answer
-than an honest redirect. So a `/nft/...` link opens the same toast and lands you
-on the chart. A desktop browser dragged under 768px keeps its URL, so widening
-back restores the exact board.
+- Workspaces and the workspace store
+- Bots, workflows and notification rules
+- The Python workbench
+- The plugin store
+- [NFT collections](/docs/nft-trading)
 
-Eight venues (Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures,
-and Kraken Futures) serve no CORS headers, so no browser can reach them, phone
-included. They are listed in the venue picker under **Needs the desktop app**
-rather than hidden, whenever they serve the market you are looking at, so you
-can see what you are missing. The other fifteen
-work in a browser, Polymarket plus the Binance, ByBit and OKX futures venues
-included, so [event contracts](/docs/prediction-markets) and
-[perpetual futures](/docs/cex-futures) both trade from a phone. OpenSea is a
-browser venue too, but it has no phone surface yet, for the reason above.
+NFTs are on that list for an honest reason. Trading a collection means reading a
+bid ladder, a listings ladder, trait floors and a sweep ticket at the same time,
+and half of that on a phone screen would be worse than sending you to a laptop.
 
-The desktop's Prediction Discovery workspace is a pane layout, so it stays on
-the desktop grid. The phone carries the part that matters, the event board
-itself, in Discover (above), and pair search finds an outcome by its question
-text as well.
+Two smaller things are desktop-only: editing an indicator's settings, and
+reordering a watchlist.
 
-Two smaller things are desktop-only on purpose: editing an existing indicator's
-parameters, and reordering a watchlist.
+**Eight exchanges cannot be reached from any browser**, phone included:
+Coinbase, Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures and Kraken
+Futures. They block web pages as a policy of their own, and only the
+[desktop app](/docs/desktop-app) can reach them. They appear in the venue picker
+under **Needs the desktop app** rather than being hidden, so you can see what
+you are missing.
+
+The other fifteen work fine, so perpetual futures and Polymarket event contracts
+both trade from a phone.
 
 ## It is the same terminal
 
-The phone is not a separate profile. On the same device it reads and writes the
-same state the desktop terminal does, and with
-[cloud sync](/docs/settings#cloud-sync) on it follows you between devices:
+The phone is not a separate profile. On the same device it shares state with the
+desktop terminal, and with [cloud sync](/docs/settings#cloud-sync) on it follows
+you between devices:
 
-- Drawings, per pair. A level drawn on the phone is on the laptop.
-- Indicators, per pair. An EMA added on the laptop is already in the mobile
-  indicators list.
-- Timeframe, venue, chart type, and price scale.
+- Drawings, per pair. A level you drew on the phone is on the laptop.
+- Indicators, per pair.
+- Timeframe, venue, chart type and price scale.
 - Watchlists, recent pairs, risk settings, display currency, theme, and every
   Settings section.
 - Connected accounts, through the same vault.
 
-Two things stay on the phone, because they describe a thumb rather than a
-setup: the two earned toolbar slots and your pinned timeframes.
+Two things stay on the phone, because they describe a thumb rather than a setup:
+your two earned toolbar slots and your pinned timeframes.
 
 ## Your keys on a phone
 
-Same rule as any browser: exchange API keys and wallet secrets are encrypted on
-the device and never reach a Pairlens server. Connecting an account mounts the
-same wizard the desktop Accounts page uses, and the first credential requires
-enrolling a way to unlock the vault, so a phone either holds ciphertext or
-holds nothing.
+Same rule as any browser. Exchange keys and wallet secrets are encrypted on the
+device and never reach a Pairlens server. Connecting an account uses the same
+wizard as the desktop, and your first credential requires setting up a way to
+unlock the vault, so a phone either holds encrypted secrets or holds nothing at
+all.
 
-Face ID, Touch ID and Android fingerprint unlock work here too, both for the
-vault and for the terminal lock screen. See
-[Settings, Security](/docs/settings#security).
+Face ID, Touch ID and Android fingerprint unlock work for both the vault and the
+terminal lock screen. See [Settings, Security](/docs/settings#security).
 
-If the vault is sealed, the phone says so and offers to unlock. It never
-reports your accounts as missing.
-
-## Add it to your home screen
-
-The terminal ships a web app manifest, so **Add to Home Screen** installs it as
-a standalone app with its own icon rather than a browser bookmark. There is no
-service worker and no offline mode, deliberately: this is live market data, and
-a cache that answers on an exchange's behalf is worse than no cache.
-
-Pinch to zoom works. Nothing is capped.
+If the vault is locked, the phone says so and offers to unlock it. It never
+pretends your accounts are missing.
 
 ## Related
 
 - [Quickstart](/docs/quickstart)
-- [Desktop app](/docs/desktop-app) for what the native shell adds
+- [Desktop app](/docs/desktop-app) for what the native app adds
 - [Connect an exchange](/docs/connect-an-exchange)
 - [Settings](/docs/settings)
