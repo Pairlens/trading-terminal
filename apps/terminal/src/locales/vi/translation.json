@@ -6865,29 +6865,26 @@
       "change24h": "24h",
       "change": "Biến động",
       "flow": "Mua/Bán",
-      "volume": "KL 24h"
+      "volume": "KL 24h",
+      "turnoverHint": "Khối lượng so với vốn hóa, đo theo trung vị của cột này."
     },
     "new": {
       "title": "Mint mới",
-      "footnote": "Mint trong 6 giờ qua. Số holder nằm cạnh mã token.",
       "emptyTitle": "Chưa có gì được mint",
       "emptyBody": "Token mới xuất hiện ở đây vài giây sau giao dịch đầu tiên."
     },
     "graduating": {
       "title": "Sắp tốt nghiệp",
-      "footnote": "Tiến độ đường cong tới lúc chuyển pool. Dấu ngã nghĩa là ước tính.",
       "emptyTitle": "Chưa có gì gần tốt nghiệp",
       "emptyBody": "Token xuất hiện ở đây khi đã đi được một phần ba đường cong bonding."
     },
     "graduated": {
       "title": "Đã tốt nghiệp",
-      "footnote": "Đi hết đường cong và chuyển sang pool AMM, 7 ngày qua.",
       "emptyTitle": "Chưa có đợt tốt nghiệp nào gần đây",
       "emptyBody": "Token đi hết đường cong bonding sẽ rơi vào đây."
     },
     "legendary": {
       "title": "Huyền thoại",
-      "footnote": "Vốn hóa từ CoinGecko, mỗi đồng mở trên chuỗi có thanh khoản sâu nhất.",
       "emptyTitle": "Không có đồng vốn hóa lớn nào để hiện",
       "emptyBody": "Bảng xếp hạng theo vốn hóa không trả lời. Nó sẽ tự thử lại."
     },

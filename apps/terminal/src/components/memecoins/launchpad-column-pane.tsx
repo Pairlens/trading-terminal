@@ -49,7 +49,6 @@ import {
   PANE_TABLE_BODY,
   PaneEmpty,
   PaneErrorBanner,
-  PaneFootnote,
   Th,
 } from '@/components/panes/pane-primitives'
 import { SkeletonStatus } from '@/components/panes/pane-skeletons'
@@ -63,6 +62,11 @@ import {
   formatMcap,
 } from '@/components/memecoins/memecoin-pane-primitives'
 import { track } from '@/lib/analytics-events'
+import {
+  UNUSUAL_TURNOVER,
+  turnoverKey,
+  turnoverMultiples,
+} from '@/lib/launchpad-turnover'
 import { useLaunchpadColumn } from '@/hooks/use-launchpad'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { registerDisplayToken } from '@/stores/token-directory-store'
@@ -89,21 +93,28 @@ const VENUE_BY_CHAIN: Readonly<Record<string, string>> = {
 /** The quote leg a memecoin board trades against. */
 const QUOTE = 'USDC'
 
+/** Stable identity for the three columns that never measure turnover. */
+const EMPTY_TURNOVER: ReadonlyMap<string, number> = new Map()
+
 type ColumnConfig = {
   icon: typeof Sparkles
   titleKey: string
-  footnoteKey: string
   emptyTitleKey: string
   emptyBodyKey: string
   /** Header for the third column, which differs per stage. */
   metricHeaderKey: string
 }
 
+// No footnote key, and the four sentences that used to sit under these columns
+// are gone with it. They explained the pane's own window ("minted in the last 6
+// hours"), which is a thing a reader learns once and then reads past forever —
+// and they cost a permanent line of the shortest column on the board. The
+// column headers and the pane titles carry the same information in the place
+// somebody is already looking.
 const COLUMNS: Readonly<Record<LaunchpadStage, ColumnConfig>> = {
   new: {
     icon: Sparkles,
     titleKey: 'memecoins.new.title',
-    footnoteKey: 'memecoins.new.footnote',
     emptyTitleKey: 'memecoins.new.emptyTitle',
     emptyBodyKey: 'memecoins.new.emptyBody',
     metricHeaderKey: 'memecoins.columns.age',
@@ -111,7 +122,6 @@ const COLUMNS: Readonly<Record<LaunchpadStage, ColumnConfig>> = {
   graduating: {
     icon: Rocket,
     titleKey: 'memecoins.graduating.title',
-    footnoteKey: 'memecoins.graduating.footnote',
     emptyTitleKey: 'memecoins.graduating.emptyTitle',
     emptyBodyKey: 'memecoins.graduating.emptyBody',
     metricHeaderKey: 'memecoins.columns.curve',
@@ -119,7 +129,6 @@ const COLUMNS: Readonly<Record<LaunchpadStage, ColumnConfig>> = {
   graduated: {
     icon: GraduationCap,
     titleKey: 'memecoins.graduated.title',
-    footnoteKey: 'memecoins.graduated.footnote',
     emptyTitleKey: 'memecoins.graduated.emptyTitle',
     emptyBodyKey: 'memecoins.graduated.emptyBody',
     metricHeaderKey: 'memecoins.columns.since',
@@ -127,7 +136,6 @@ const COLUMNS: Readonly<Record<LaunchpadStage, ColumnConfig>> = {
   legendary: {
     icon: Crown,
     titleKey: 'memecoins.legendary.title',
-    footnoteKey: 'memecoins.legendary.footnote',
     emptyTitleKey: 'memecoins.legendary.emptyTitle',
     emptyBodyKey: 'memecoins.legendary.emptyBody',
     metricHeaderKey: 'memecoins.columns.change24h',
@@ -161,6 +169,12 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
   const now = useTick(stage === 'new' || stage === 'graduated')
 
   const rows = useMemo(() => tokens, [tokens])
+  // Only Legendary spends a cell on this: the other three columns rank tokens
+  // minutes old, whose "usual" volume does not exist yet.
+  const turnover = useMemo(
+    () => (stage === 'legendary' ? turnoverMultiples(rows) : EMPTY_TURNOVER),
+    [stage, rows],
+  )
 
   // Teach the token directory what each row is called, keyed by VENUE the way
   // the pool rows do it, because that is the key `pairEntryForRef` reads back.
@@ -221,15 +235,45 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
                 {/* The token cell absorbs the slack and the three numeric
                     cells shrink to their content. Four even columns is what a
                     table does by default, and on a quarter-width board that
-                    truncated every ticker to a single letter. */}
+                    truncated every ticker to a single letter.
+
+                    The three numeric headers are `whitespace-nowrap` for the
+                    other half of that: a header allowed to wrap takes a second
+                    line from every row rather than width from the token cell,
+                    which is what "Buys / Sells" did on any board narrower than
+                    full width. */}
                 <Th>{t('memecoins.columns.token')}</Th>
-                <Th align="right">{t('memecoins.columns.mcap')}</Th>
-                <Th align="right">{t(config.metricHeaderKey)}</Th>
-                <Th align="right">
-                  {t(
+                <Th align="right" className="whitespace-nowrap">
+                  {t('memecoins.columns.mcap')}
+                </Th>
+                <Th align="right" className="whitespace-nowrap">
+                  {t(config.metricHeaderKey)}
+                </Th>
+                <Th
+                  align="right"
+                  className="whitespace-nowrap"
+                  title={
                     stage === 'legendary'
-                      ? 'memecoins.columns.volume'
-                      : 'memecoins.columns.flow',
+                      ? t('memecoins.columns.turnoverHint')
+                      : undefined
+                  }
+                >
+                  {stage === 'legendary' ? (
+                    t('memecoins.columns.volume')
+                  ) : (
+                    // The widest header on the board, over the narrowest cell,
+                    // so below 16rem of pane it would set the column's width
+                    // and take that width from the tickers. Two spans rather
+                    // than `sr-only`/`not-sr-only`, which resets
+                    // `white-space` and put the header back on two lines.
+                    <>
+                      <span className="sr-only @min-[16rem]/pane:hidden">
+                        {t('memecoins.columns.flow')}
+                      </span>
+                      <span className="hidden @min-[16rem]/pane:inline">
+                        {t('memecoins.columns.flow')}
+                      </span>
+                    </>
                   )}
                 </Th>
               </tr>
@@ -237,18 +281,17 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
             <tbody>
               {rows.map((token) => (
                 <LaunchpadRow
-                  key={`${token.chain}:${token.address}`}
+                  key={turnoverKey(token)}
                   token={token}
                   stage={stage}
                   now={now}
+                  turnoverMultiple={turnover.get(turnoverKey(token)) ?? null}
                 />
               ))}
             </tbody>
           </table>
         ) : null}
       </div>
-
-      <PaneFootnote>{t(config.footnoteKey)}</PaneFootnote>
     </div>
   )
 }
@@ -286,10 +329,13 @@ function LaunchpadRow({
   token,
   stage,
   now,
+  turnoverMultiple,
 }: {
   token: LaunchpadToken
   stage: LaunchpadStage
   now: number
+  /** Legendary only, and null until the column has a baseline to measure on. */
+  turnoverMultiple: number | null
 }) {
   const { t } = useTranslation()
   const venue = VENUE_BY_CHAIN[token.chain] ?? null
@@ -327,7 +373,9 @@ function LaunchpadRow({
             })}
             title={t('memecoins.openChart', { symbol: token.symbol })}
             className="block outline-none focus-visible:underline"
-            onClick={() => track('memecoin_row_opened', { stage })}
+            onClick={() =>
+              track('memecoin_row_opened', { stage, chain: token.chain })
+            }
           >
             {identity}
           </Link>
@@ -349,9 +397,31 @@ function LaunchpadRow({
       <td className="w-px whitespace-nowrap py-1 text-right">
         {/* Legendary has no buy/sell split to show — CoinGecko publishes a
             market-cap ranking, not a tape — so that column spends its width on
-            traded volume instead of a full column of dashes. */}
+            traded volume instead of a full column of dashes, with the turnover
+            multiple beside it. Volume without the multiple is unreadable
+            across three orders of market cap: $310M is enormous for a $500M
+            coin and a quiet day for a $14B one. */}
         {stage === 'legendary' ? (
-          <span>{formatMcap(flow ? flow.volumeUsd : null)}</span>
+          <span>
+            {formatMcap(flow ? flow.volumeUsd : null)}
+            {turnoverMultiple !== null ? (
+              <span
+                className="hidden @min-[17rem]/pane:inline"
+                title={t('memecoins.columns.turnoverHint')}
+              >
+                {' · '}
+                <span
+                  className={
+                    turnoverMultiple >= UNUSUAL_TURNOVER
+                      ? '[color:var(--chart-4)]'
+                      : 'text-muted-foreground'
+                  }
+                >
+                  {turnoverMultiple.toFixed(1)}×
+                </span>
+              </span>
+            ) : null}
+          </span>
         ) : (
           <FlowBar flow={flow} />
         )}

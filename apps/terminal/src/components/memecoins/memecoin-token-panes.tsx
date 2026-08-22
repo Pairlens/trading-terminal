@@ -69,7 +69,9 @@ function useToken(): {
 } {
   const activePair = usePanePair()
   const mint = mintOf(activePair?.pairKey)
-  const state = useLaunchpadToken(mint)
+  // The venue IS the chain on this class, and it is what routes the read: a
+  // Legendary row opens on Ethereum or Base as often as on Solana.
+  const state = useLaunchpadToken(mint, activePair?.market)
 
   // A COLD link is the case this covers: someone pastes a memecoin URL and no
   // board row ever taught the directory this mint's ticker, so the header

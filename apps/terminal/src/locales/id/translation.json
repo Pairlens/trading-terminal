@@ -6865,29 +6865,26 @@
       "change24h": "24j",
       "change": "Perubahan",
       "flow": "Beli/Jual",
-      "volume": "Vol 24j"
+      "volume": "Vol 24j",
+      "turnoverHint": "Volume terhadap kapitalisasi pasar, dibandingkan median kolom ini."
     },
     "new": {
       "title": "Mint Baru",
-      "footnote": "Di-mint dalam 6 jam terakhir. Jumlah holder ada di sebelah ticker.",
       "emptyTitle": "Belum ada yang di-mint",
       "emptyBody": "Token baru muncul di sini beberapa detik setelah transaksi pertamanya."
     },
     "graduating": {
       "title": "Hampir Lulus",
-      "footnote": "Progres curve menuju migrasi. Tanda tilde berarti perkiraan.",
       "emptyTitle": "Belum ada yang dekat lulus",
       "emptyBody": "Token muncul di sini setelah menempuh sepertiga bonding curve-nya."
     },
     "graduated": {
       "title": "Sudah Lulus",
-      "footnote": "Menyelesaikan curve dan pindah ke pool AMM, 7 hari terakhir.",
       "emptyTitle": "Belum ada kelulusan terbaru",
       "emptyBody": "Token yang menyelesaikan bonding curve-nya mendarat di sini."
     },
     "legendary": {
       "title": "Legendaris",
-      "footnote": "Kapitalisasi pasar dari CoinGecko, masing-masing dibuka di chain dengan likuiditas terdalam.",
       "emptyTitle": "Tidak ada kapitalisasi besar untuk ditampilkan",
       "emptyBody": "Peringkat kapitalisasi pasar tidak menjawab. Ia akan mencoba lagi sendiri."
     },

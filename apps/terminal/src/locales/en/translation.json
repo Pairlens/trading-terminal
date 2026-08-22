@@ -6865,29 +6865,26 @@
       "change24h": "24h",
       "change": "Move",
       "flow": "Buys / Sells",
-      "volume": "24h Vol"
+      "volume": "24h Vol",
+      "turnoverHint": "Volume against market cap, measured against this column's median."
     },
     "new": {
       "title": "New Mints",
-      "footnote": "Minted in the last 6 hours. Holder count beside the ticker.",
       "emptyTitle": "Nothing minted yet",
       "emptyBody": "New tokens appear here within seconds of their first trade."
     },
     "graduating": {
       "title": "Graduating",
-      "footnote": "Curve progress toward migration. A tilde marks an estimate.",
       "emptyTitle": "Nothing close to graduating",
       "emptyBody": "Tokens appear here once they are a third of the way up their bonding curve."
     },
     "graduated": {
       "title": "Graduated",
-      "footnote": "Completed the curve and moved to an AMM pool, last 7 days.",
       "emptyTitle": "No recent graduations",
       "emptyBody": "Tokens that complete their bonding curve land here."
     },
     "legendary": {
       "title": "Legendary",
-      "footnote": "Market caps from CoinGecko, each opened on the chain it trades deepest.",
       "emptyTitle": "No large caps to show",
       "emptyBody": "The market-cap ranking did not answer. It will retry on its own."
     },

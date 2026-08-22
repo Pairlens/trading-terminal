@@ -6865,29 +6865,26 @@
       "change24h": "24 小時",
       "change": "漲跌",
       "flow": "買/賣",
-      "volume": "24 小時成交額"
+      "volume": "24 小時成交額",
+      "turnoverHint": "成交額與市值之比，相對本欄中位數。"
     },
     "new": {
       "title": "新鑄造",
-      "footnote": "過去 6 小時內鑄造。持幣人數在代號旁邊。",
       "emptyTitle": "還沒有新鑄造",
       "emptyBody": "新代幣會在第一筆成交後幾秒內出現在這裡。"
     },
     "graduating": {
       "title": "畢業中",
-      "footnote": "距離遷移的曲線進度。波浪號表示這是估算值。",
       "emptyTitle": "還沒有接近畢業的",
       "emptyBody": "代幣走完綁定曲線三分之一後會出現在這裡。"
     },
     "graduated": {
       "title": "已畢業",
-      "footnote": "走完曲線並遷到 AMM 池子，最近 7 天。",
       "emptyTitle": "最近沒有畢業的",
       "emptyBody": "走完綁定曲線的代幣會落到這裡。"
     },
     "legendary": {
       "title": "傳奇",
-      "footnote": "市值來自 CoinGecko，每個代幣在流動性最深的鏈上開啟。",
       "emptyTitle": "沒有大市值幣可顯示",
       "emptyBody": "市值排行沒有回應。它會自己重試。"
     },

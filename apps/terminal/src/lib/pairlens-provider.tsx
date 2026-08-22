@@ -52,6 +52,7 @@ import {
   BOOTSTRAP_PLUGINS,
   BOOTSTRAP_PLUGIN_IDS,
 } from '@/lib/plugins/bootstrap-bundle'
+import { activatesBeforeReady } from '@/lib/plugins/boot-activation'
 import { isFamilyExcluded } from '@/lib/plugins/plugin-families'
 import { applyServerPins } from '@/lib/plugins/apply-pins'
 import { buildActivationConfig } from '@/lib/plugins/official-config'
@@ -1493,13 +1494,10 @@ export function PairlensProvider({
         if (destroyed) return
       }
 
-      // market connector + DEX data provider plugins
+      // market connector + market data provider plugins — see
+      // `lib/plugins/boot-activation.ts` for what belongs here and why
       const MARKET_CONNECTOR_IDS = BOOTSTRAP_PLUGINS.filter((p) =>
-        p.manifest.capabilities.some(
-          (c) =>
-            c.id === 'market-data:candles' ||
-            (c.id === 'market-data:discovery' && !c.markets.includes('*')),
-        ),
+        activatesBeforeReady(p.manifest),
       ).map((p) => p.manifest.id)
       for (const connectorId of MARKET_CONNECTOR_IDS) {
         if (!isEnabled(connectorId)) continue

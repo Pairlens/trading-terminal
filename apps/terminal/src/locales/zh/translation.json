@@ -6865,29 +6865,26 @@
       "change24h": "24小时",
       "change": "涨跌",
       "flow": "买/卖",
-      "volume": "24小时成交额"
+      "volume": "24小时成交额",
+      "turnoverHint": "成交额与市值之比，相对本栏中位数。"
     },
     "new": {
       "title": "新铸造",
-      "footnote": "过去 6 小时内铸造。持币人数在代号旁边。",
       "emptyTitle": "还没有新铸造",
       "emptyBody": "新代币会在第一笔成交后几秒内出现在这里。"
     },
     "graduating": {
       "title": "毕业中",
-      "footnote": "距离迁移的曲线进度。波浪号表示这是估算值。",
       "emptyTitle": "还没有接近毕业的",
       "emptyBody": "代币走完绑定曲线三分之一后会出现在这里。"
     },
     "graduated": {
       "title": "已毕业",
-      "footnote": "走完曲线并迁到 AMM 池子，最近 7 天。",
       "emptyTitle": "最近没有毕业的",
       "emptyBody": "走完绑定曲线的代币会落到这里。"
     },
     "legendary": {
       "title": "传奇",
-      "footnote": "市值来自 CoinGecko，每个代币在流动性最深的链上打开。",
       "emptyTitle": "没有大市值币可显示",
       "emptyBody": "市值排行没有响应。它会自己重试。"
     },

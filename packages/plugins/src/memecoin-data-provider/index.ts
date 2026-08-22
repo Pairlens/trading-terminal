@@ -23,6 +23,10 @@
  *   because the column is cross-chain and its ranking is market cap, and
  *   DEX-derived market cap is unreliable enough to have reported BONK at over
  *   a trillion dollars.
+ * - **One token**, for the trade board's three panes — Jupiter on Solana,
+ *   DexScreener (`dexscreener-token.ts`) on every other chain and as Solana's
+ *   backstop. The board opens rows on six chains, so a Solana-only lookup left
+ *   every EVM row with three panes saying the feed had nothing.
  *
  * ## Why it throws instead of answering null
  *
@@ -32,7 +36,9 @@
  * will act on. A throw is a failure the plugin manager walks past, and if this
  * provider is the last candidate the message names the read that is missing.
  */
+import { chainIdForMarket } from '../dexscreener-data-provider/chains'
 import { fetchLegendary } from './coingecko-client'
+import { fetchDexscreenerToken } from './dexscreener-token'
 import { fetchGems } from './gems-client'
 import {
   GRADUATED_MAX_AGE_MS,
@@ -71,7 +77,17 @@ export const memecoinDataProviderManifest: PluginManifest = {
     'Launchpad tokens from keyless public sources: new mints and bonding-curve progress from Jupiter, large-cap memecoins from CoinGecko. No API key and no server of ours: every request is metered against the browser that made it.',
   homepage: 'https://jup.ag',
   icon: '/logo512.png',
-  metadata: { family: 'memes', assetClass: 'memecoin' },
+  // No `assetClass` stamp, deliberately, and this cost the board its three
+  // trade panes for a release. The stamp exists to break a TIE: 'ethereum' is
+  // a DEX venue and an NFT venue, both declare `trading:orders` on it, and the
+  // resolver needed a second dimension to tell them apart. `market-data:launchpad`
+  // has no tie to break — one capability, one declarer, every market. What the
+  // stamp did instead was narrow it: the terminal derives the class from the
+  // PAIR KEY, a memecoin key is `{address}-{QUOTE}` and therefore indistinguishable
+  // from a DEX one, so every memecoin board resolved with `assetClass: 'dex'`
+  // and filtered this plugin out of its own capability. The chart painted, from
+  // the DEX connector, and the three panes beside it said no plugin was found.
+  metadata: { family: 'memes' },
   // Priority 5 — the only launchpad provider that ships, and deliberately not
   // priority 0: a bring-your-own-key provider with a paid feed should be able
   // to outrank it by declaring a lower number, without this manifest changing.
@@ -271,6 +287,76 @@ async function launchpadColumn(
   }
 }
 
+// ── One token, for the trade board's panes ───────────────────────────
+
+/**
+ * The Solana lookup: the PUBLISHED token API, never the gems endpoint.
+ *
+ * Gems answers in POOLS and a token that has left every ranked bucket is
+ * simply absent from it, while `search` answers for any mint that exists.
+ */
+async function jupiterToken(mint: string): Promise<LaunchpadToken | null> {
+  const solPriceUsd = await fetchSolPriceUsd().catch(() => null)
+  const rows = await fetchTokens([mint])
+  const raw = rows[0]
+  if (!raw) return null
+  const graduatedAt =
+    typeof raw.graduatedAt === 'string' ? raw.graduatedAt : null
+  return parseJupiterToken(
+    raw,
+    graduatedAt ? 'graduated' : 'new',
+    curveProgressOf({
+      launchpad: typeof raw.launchpad === 'string' ? raw.launchpad : null,
+      marketCapUsd: typeof raw.mcap === 'number' ? raw.mcap : null,
+      solPriceUsd,
+      graduatedAt,
+    }),
+  )
+}
+
+/**
+ * One token, on whichever chain the board opened it on.
+ *
+ * The board is cross-chain and the lookup was not, which is the whole bug this
+ * split fixes: every Legendary row that resolves to an EVM chain (PEPE and
+ * SPX6900 are Ethereum-native, and half that column is) opened a board whose
+ * chart painted while all three panes beside it reported that the feed had
+ * nothing. Jupiter is a Solana token API and always was.
+ *
+ * So the chain decides the source, and Solana keeps a second one behind it:
+ * Jupiter knows launchpads, curve progress, holders and the mint authority,
+ * and none of that has an equivalent anywhere else — but a Solana token it has
+ * never indexed still trades in a pool DexScreener can see. An unknown market
+ * tries Jupiter alone, because a mint with no chain beside it is a Solana mint
+ * by every convention this board uses.
+ */
+async function tokenLookup(
+  address: string,
+  market: string,
+): Promise<LaunchpadToken | null> {
+  const chainId = chainIdForMarket(market)
+
+  if (chainId !== null && chainId !== 'solana') {
+    return fetchDexscreenerToken(chainId, address)
+  }
+
+  let jupiterError: unknown
+  try {
+    const token = await jupiterToken(address)
+    if (token) return token
+  } catch (err) {
+    jupiterError = err
+  }
+
+  try {
+    return await fetchDexscreenerToken('solana', address)
+  } catch (err) {
+    // The primary's failure is the one a maintainer needs, and a token
+    // Jupiter answered nothing for is a token, not a failure.
+    throw jupiterError ?? err
+  }
+}
+
 function listing(
   stage: LaunchpadStage,
   tokens: Array<LaunchpadToken>,
@@ -287,7 +373,7 @@ export function createMemecoinDataProviderPlugin(
   manifest: PluginManifest,
 ): PluginInstance {
   async function execute(params: PluginExecuteParams): Promise<unknown> {
-    const { capability, params: p } = params
+    const { capability, params: p, context } = params
     if (capability !== 'market-data:launchpad') return null
 
     const action = String(p['action'] ?? 'new') as LaunchpadAction
@@ -299,28 +385,12 @@ export function createMemecoinDataProviderPlugin(
       case 'graduated':
         return listing(action, await launchpadColumn(action, now))
       case 'token': {
-        // One mint, for the trade board's own panes. Always the published API
-        // rather than the gems endpoint: gems answers in POOLS and a token
-        // that has left every ranked bucket is simply absent from it, while
-        // `search` answers for any mint that exists.
-        const mint = String(p['address'] ?? p['pair'] ?? '').trim()
-        if (!mint) throw new Error('Memecoin Feed needs an address to look up')
-        const solPriceUsd = await fetchSolPriceUsd().catch(() => null)
-        const rows = await fetchTokens([mint])
-        const raw = rows[0]
-        if (!raw) return null
-        const graduatedAt =
-          typeof raw.graduatedAt === 'string' ? raw.graduatedAt : null
-        return parseJupiterToken(
-          raw,
-          graduatedAt ? 'graduated' : 'new',
-          curveProgressOf({
-            launchpad: typeof raw.launchpad === 'string' ? raw.launchpad : null,
-            marketCapUsd: typeof raw.mcap === 'number' ? raw.mcap : null,
-            solPriceUsd,
-            graduatedAt,
-          }),
-        )
+        const address = String(p['address'] ?? p['pair'] ?? '').trim()
+        if (!address) {
+          throw new Error('Memecoin Feed needs an address to look up')
+        }
+        const market = String(p['market'] ?? p['chain'] ?? context.market ?? '')
+        return tokenLookup(address, market)
       }
       case 'legendary': {
         const tokens = (await fetchLegendary())

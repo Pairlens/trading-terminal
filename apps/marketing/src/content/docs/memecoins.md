@@ -73,11 +73,17 @@ shown as a bar and a percentage. Tokens enter this column a third of the way up.
 trades on a real pool.
 
 **Legendary** is the cross-chain long tail that outlived its cycle: DOGE, SHIB,
-PEPE, BONK, WIF and the rest, ranked by market cap.
+PEPE, BONK, WIF and the rest, ranked by market cap. Volume there carries a
+multiple: `$310M · 1.4×` means the coin traded 1.4 times as much of itself today
+as the median coin in the column. Volume alone cannot say that, because $310M is
+enormous for a $500M coin and a quiet day for a $14B one. Past 3× it is marked.
 
-Every row carries market cap and a buy/sell bar. Buys green, sells red, the bar
-is the ratio, and the two numbers are the magnitude, because 8 buys to 1 sell and
-800 to 100 are the same ratio and very different events.
+Every row on the other three columns carries market cap and a buy/sell bar. Buys
+green on the left, sells red on the right, the boundary between them is the
+ratio, and the counts sit inside the bar, because 8 buys to 1 sell and 800 to 100
+are the same ratio and very different events. The bar is the same width in every
+row, so the same ratio lands in the same place all the way down the column. On a
+narrow pane the counts drop and the bar stays.
 
 Clicking a row opens that token's chart and swap ticket.
 
@@ -108,6 +114,11 @@ most launchpad tokens the whole supply is circulating and the two agree. When
 they do not, the gap is supply that has not hit the market yet, which is supply
 that eventually can.
 
+Holder count, the launchpad and curve progress are Solana knowledge, and they
+read as a dash on a token opened on Ethereum, Base, BSC, Arbitrum or Polygon.
+That is most of the Legendary column. A curve is a launchpad's own mechanic, and
+nobody publishes one for a coin that has been trading on Uniswap since 2021.
+
 **Buy / Sell Flow** puts buys against sells over 5 minutes, 1 hour, 6 hours and
 24 hours, each with the price move and the volume behind it. Counts are trades,
 not traders, which matters here: one wallet can be a hundred trades.
@@ -125,7 +136,9 @@ not traders, which matters here: one wallet can be a hundred trades.
 
 One rule about that panel: **Unknown is not safe.** When no source publishes an
 audit, it says Unknown rather than showing a green check, because a green check
-here reads as permission to size up.
+here reads as permission to size up. An Ethereum-style token has no mint or
+freeze authority to revoke in the first place, so on those chains the panel
+reports no audit rather than inventing a clean one.
 
 **Memecoin Sniper** is a second layout for working launches: the New and
 Graduating columns stay on screen beside the chart, the flow strip and the
@@ -148,6 +161,15 @@ marked with a tilde (`~96%`) so you always know which one you are reading.
 there rather than from a DEX because DEX-reported market cap is unreliable at the
 top end: measured live, one venue reported BONK's market cap as over a trillion
 dollars.
+
+**One token**, which is what the three trade-board panes read, comes from Jupiter
+on Solana and from DexScreener everywhere else. The split is forced by the
+board's own reach: Legendary rows open on whichever of six chains a coin trades
+deepest on, and Jupiter is a Solana token API. DexScreener answers for every
+chain the terminal routes. It sums liquidity, volume and the trade counts across
+a token's pools and quotes price, market cap and the move from the deepest one,
+and it publishes no holders and no audit, which is why those read as unknown
+there. It is also Solana's backstop, for a mint Jupiter has never indexed.
 
 The launchpads' own APIs are not usable from a browser at all, so a client-side
 board cannot read them.

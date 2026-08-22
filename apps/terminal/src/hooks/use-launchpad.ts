@@ -114,8 +114,15 @@ export function useLaunchpadColumn(
     ...seededFromSnapshot<LaunchpadListing | null>(key),
   })
 
-  const { data, dataUpdatedAt, isFetching, failureCount, fetchStatus, error } =
-    query
+  const {
+    data,
+    dataUpdatedAt,
+    isFetching,
+    failureCount,
+    fetchStatus,
+    status,
+    error,
+  } = query
 
   // In an effect, never during render: a snapshot write is a side effect, and
   // under StrictMode a render-time one runs twice.
@@ -137,7 +144,11 @@ export function useLaunchpadColumn(
   const hasRows = tokens.length > 0
   return {
     tokens,
-    isLoading: !hasRows && (isFetching || !pluginsReady),
+    // Pending covers the fetch that is parked as well as the one in flight: a
+    // retry backing off while the window is unfocused reports `isFetching`
+    // false, and an empty column is then drawn as "nothing is minting" over a
+    // read that has not answered yet.
+    isLoading: !hasRows && (status === 'pending' || !pluginsReady),
     revalidating: hasRows && isFetching,
     fromSnapshot: hasRows && dataUpdatedAt < mountedAt,
     error: error ? (error.message ?? String(error)) : null,
@@ -151,11 +162,21 @@ export function useLaunchpadColumn(
 /**
  * One token, for the trade board's panes.
  *
- * Keyed on the MINT rather than the pair key: the pair key carries a quote leg
- * the launchpad feed knows nothing about, and two boards looking at the same
- * token against different quotes are one read, not two.
+ * Keyed on the CHAIN and the address rather than on the pair key: the pair key
+ * carries a quote leg the launchpad feed knows nothing about, so two boards
+ * looking at the same token against different quotes are one read — but the
+ * chain is identity here exactly as it is for a pool, and the same address can
+ * exist on two of them.
+ *
+ * The market is what routes the read, which is why it is passed rather than
+ * inferred: the provider serves Solana from Jupiter and every other chain from
+ * DexScreener, and the manager's own context carries the terminal's current
+ * venue, which for a second board on another chain is the wrong one.
  */
-export function useLaunchpadToken(address: string | null): {
+export function useLaunchpadToken(
+  address: string | null,
+  market: string | undefined,
+): {
   token: LaunchpadToken | null
   isLoading: boolean
   error: string | null
@@ -164,12 +185,13 @@ export function useLaunchpadToken(address: string | null): {
   const { pluginManager, pluginsReady } = usePairlens()
 
   const query = useQuery({
-    queryKey: ['launchpad-token', address],
+    queryKey: ['launchpad-token', market ?? '', address],
     enabled: pluginsReady && !!address,
     queryFn: async (): Promise<LaunchpadToken | null> => {
       const result = await pluginManager.execute('market-data:launchpad', {
         action: 'token',
         address,
+        ...(market ? { market } : {}),
       })
       return (result as LaunchpadToken | null) ?? null
     },
@@ -181,7 +203,12 @@ export function useLaunchpadToken(address: string | null): {
 
   return {
     token: query.data ?? null,
-    isLoading: query.isLoading,
+    // `status`, not `isLoading`. A retry that backs off while the window is
+    // unfocused sits at `fetchStatus: 'paused'`, which makes `isLoading` false
+    // on a query that has never answered — and the panes then render "not a
+    // launchpad token", a verdict, over a read that never happened. Pending
+    // with no data IS loading, however the fetch is currently parked.
+    isLoading: query.status === 'pending',
     error: query.error ? (query.error.message ?? String(query.error)) : null,
     throttled: isProviderThrottledError(query.error),
   }

@@ -7011,29 +7011,26 @@
       "change24h": "24h",
       "change": "Zmiana",
       "flow": "Kup./Sprz.",
-      "volume": "Wol 24h"
+      "volume": "Wol 24h",
+      "turnoverHint": "Wolumen do kapitalizacji, mierzony względem mediany tej kolumny."
     },
     "new": {
       "title": "Nowe minty",
-      "footnote": "Zmintowane w ostatnich 6 godzinach. Liczba holderów obok tickera.",
       "emptyTitle": "Nic jeszcze nie zmintowano",
       "emptyBody": "Nowe tokeny pojawiają się tu w kilka sekund po pierwszej transakcji."
     },
     "graduating": {
       "title": "Graduują",
-      "footnote": "Postęp krzywej do migracji. Tylda oznacza szacunek.",
       "emptyTitle": "Nic blisko graduacji",
       "emptyBody": "Tokeny pojawiają się tu, gdy przejdą jedną trzecią swojej krzywej bondingu."
     },
     "graduated": {
       "title": "Po graduacji",
-      "footnote": "Przeszły krzywą i trafiły do puli AMM, ostatnie 7 dni.",
       "emptyTitle": "Brak świeżych graduacji",
       "emptyBody": "Tokeny, które kończą swoją krzywą bondingu, lądują tutaj."
     },
     "legendary": {
       "title": "Legendarne",
-      "footnote": "Kapitalizacja z CoinGecko, każda otwierana na łańcuchu o największej płynności.",
       "emptyTitle": "Brak dużych kapitalizacji do pokazania",
       "emptyBody": "Ranking kapitalizacji nie odpowiedział. Spróbuje ponownie sam."
     },
