@@ -249,8 +249,8 @@ export async function executeNftOrder(
       'No wallet is connected for this venue. Connect one in Accounts, then place the order again.',
     )
   }
-  const wallet = ctx.slot.address as `0x${string}`
-  const contract = ctx.contract as `0x${string}`
+  const wallet = ctx.slot.address
+  const contract = ctx.contract
 
   let tokenId: bigint | null = null
   if (params.tokenId !== undefined) {

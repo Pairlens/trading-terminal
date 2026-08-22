@@ -42,7 +42,9 @@ import type { AssistantDeps } from './tool-deps'
 
 const CHAIN = z
   .enum(NFT_CHAINS as unknown as [NftChain, ...Array<NftChain>])
-  .describe('Chain the collection lives on. A collection IS its chain plus its contract, so the same art on two chains is two markets.')
+  .describe(
+    'Chain the collection lives on. A collection IS its chain plus its contract, so the same art on two chains is two markets.',
+  )
 
 const CONTRACT = z
   .string()
@@ -92,7 +94,13 @@ export function buildNftTools(deps: AssistantDeps): ToolSet {
       inputSchema: z.object({
         chain: CHAIN,
         sort: z
-          .enum(['volume24h', 'floorChange24h', 'sales24h', 'marketCap', 'newest'])
+          .enum([
+            'volume24h',
+            'floorChange24h',
+            'sales24h',
+            'marketCap',
+            'newest',
+          ])
           .default('volume24h')
           .describe('Ranking axis. `newest` surfaces recent deployments.'),
         limit: z.number().int().min(1).max(50).default(20),

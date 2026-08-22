@@ -1,18 +1,18 @@
 ---
 title: Connectors
-description: Every exchange connector in the Pairlens crypto trading terminal, 14 spot CEXs, five perpetual futures venues, Alpaca for US equities, Kalshi and Polymarket for event contracts, DEX aggregators, and a cross-chain bridge.
+description: Every exchange connector in the Pairlens crypto trading terminal, 14 spot CEXs, five perpetual futures venues, Alpaca for US equities, Kalshi and Polymarket for event contracts, OpenSea for NFT collections, DEX aggregators, and a cross-chain bridge.
 group: builders
 order: 4
 eyebrow: For builders
-updated: 18 AUG 2026
-readTime: 4 min read
+updated: 22 AUG 2026
+readTime: 5 min read
 ---
 
 Market connectors are plugins that stream data and route orders directly
 between your machine and the venue. Pairlens ships with connectors for major
 centralized exchanges, five perpetual futures venues, a US equities broker,
-two prediction markets, DEX aggregators on Solana and EVM chains, and a
-cross-chain bridge.
+two prediction markets, an NFT marketplace, DEX aggregators on Solana and EVM
+chains, and a cross-chain bridge.
 
 ## Bundled connectors
 
@@ -29,6 +29,13 @@ Futures, Kraken Futures, for linear perpetual swaps. See
 **Prediction markets.** Kalshi and Polymarket, for event contracts. See
 [prediction markets](/docs/prediction-markets).
 
+**NFTs.** OpenSea, for collection data and Seaport order execution. It is the
+one connector serving both halves of its asset class, because it is the only
+NFT venue that answers market data and accepts a signed order over an API a
+browser can call. Reads span Ethereum, Base, Polygon, Arbitrum, Optimism and
+Solana; orders are signed on Ethereum and Base only. Bring your own free
+OpenSea key. See [NFT collections](/docs/nft-trading).
+
 **DEX.** Jupiter on Solana, plus an EVM DEX connector spanning Ethereum, Base,
 Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.
 
@@ -44,7 +51,12 @@ against the public node.
 **DEX data.** GeckoTerminal as primary and DexPaprika as fallback, both
 read-only.
 
-All 22 venues work in the desktop app. In a browser, 14 of them do: Coinbase,
+**NFT data.** CoinGecko NFT, keyless and read-only. It answers a collection's
+floor, volume, supply and holders on every chain, and refuses the book, the
+tape, items, traits and history rather than returning empty ones, so a fresh
+install shows a real floor before anything is configured.
+
+All 23 venues work in the desktop app. In a browser, 15 of them do: Coinbase,
 Gate, KuCoin, MEXC, Bitfinex, Kalshi, KuCoin Futures, and Kraken Futures serve
 REST without CORS headers, so they require the desktop app and refuse cleanly
 with a clear message rather than presenting a dead chart. Binance, ByBit and
@@ -66,6 +78,11 @@ The two prediction connectors ride a separate runtime with the same shape.
 Event contracts have no base and quote asset, no spot symbol, and a price that
 is a probability rather than an amount of money, so they get their own bridge
 instead of bending the spot one.
+
+OpenSea rides neither. An NFT read is a REST snapshot on a timer rather than a
+stream, sizes are item counts, and an order is an on-chain Seaport transaction
+signed by the user's own wallet key rather than an HMAC over a request body. It
+is closer in shape to the DEX connectors than to any CEX.
 
 ## Regional routing
 

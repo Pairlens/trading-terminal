@@ -15,8 +15,8 @@
  * than guessed here: a listings row and a trait row are different shapes, and
  * one generic placeholder would reflow both.
  */
-import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
 import { cn } from '@pairlens/ui'
+import { Shimmer, SkeletonStatus } from '@/components/panes/pane-skeletons'
 
 /** Rows a ghost draws before it knows how many there will be. */
 const GHOST_ROWS = 8
