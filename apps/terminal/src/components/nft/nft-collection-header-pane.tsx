@@ -13,7 +13,7 @@
  * The floor is the one large number, because it is the only price on the board
  * that a buyer can act on without reading anything else. Everything after it is
  * a dense stat row rather than a grid of cards: seven facts, in the order they
- * change a decision. Listed share sits in there deliberately — 2% listed is a
+ * change a decision. Listed share sits in there deliberately: 2% listed is a
  * floor with conviction behind it, 30% listed is an exit queue, and the floor
  * alone cannot tell those apart.
  */

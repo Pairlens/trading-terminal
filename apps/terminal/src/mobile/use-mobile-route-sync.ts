@@ -52,6 +52,11 @@ import { track } from '@/lib/analytics-events'
 
 /** Routes the phone deliberately does not carry. */
 const DESKTOP_ONLY_PREFIXES = [
+  // NFT collections are a desktop surface for now. The phone could chart a
+  // floor, but the class is the ladder, the trait floors and the sweep ticket,
+  // and half of that on a 402px screen is a worse answer than an honest
+  // redirect. Remove this line when the mobile NFT panels ship.
+  '/nft/',
   '/notifications',
   '/workflows',
   '/indicators',

@@ -16,7 +16,13 @@
 import type { MarketAdapterInfo } from '@pairlens/market-engine/adapter'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 
-export type VenueKind = 'cex' | 'dex' | 'equities' | 'prediction' | 'futures'
+export type VenueKind =
+  | 'cex'
+  | 'dex'
+  | 'equities'
+  | 'prediction'
+  | 'futures'
+  | 'nft'
 
 /**
  * The instrument class a kind trades, which is what the phone paints it with.
@@ -32,6 +38,7 @@ export const VENUE_KIND_CLASS: Record<VenueKind, InstrumentClass> = {
   equities: 'stocks',
   prediction: 'prediction',
   futures: 'perp',
+  nft: 'nft',
 }
 
 /** i18n key per kind. Static keys — the catalog audit cannot follow a template. */
@@ -41,6 +48,7 @@ export const VENUE_KIND_KEY: Record<VenueKind, string> = {
   equities: 'mobile.pickers.equities',
   prediction: 'mobile.pickers.predictions',
   futures: 'mobile.pickers.futures',
+  nft: 'mobile.pickers.nfts',
 }
 
 /**
@@ -55,6 +63,10 @@ export const VENUE_KIND_KEY: Record<VenueKind, string> = {
  * everything else is a centralized spot venue. An unknown market reads as
  * `cex`, which is what most connectors are.
  *
+ * NFTs sit above the wallet test for that same reason: OpenSea signs with an
+ * EVM key and declares a `walletChain`, so the wallet test would have filed a
+ * marketplace next to Jupiter and painted a collection as an on-chain token.
+ *
  * Futures sits above the wallet test for the same reason predictions does, and
  * above the spot fallback because a perp venue IS a centralized exchange —
  * "Binance Futures spot · trading" is the line the fallback would have
@@ -63,6 +75,7 @@ export const VENUE_KIND_KEY: Record<VenueKind, string> = {
 export function venueKindFor(info: MarketAdapterInfo | undefined): VenueKind {
   if (!info) return 'cex'
   if (info.assetClasses.includes('prediction')) return 'prediction'
+  if (info.assetClasses.includes('nft')) return 'nft'
   if (info.assetClasses.includes('stocks')) return 'equities'
   if (info.assetClasses.includes('crypto-perp')) return 'futures'
   if (info.walletChain) return 'dex'

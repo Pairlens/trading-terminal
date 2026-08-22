@@ -108,7 +108,9 @@ function NftTraitsInner({
       </PaneHeaderMetric>
 
       <div className="grid shrink-0 grid-cols-[1fr_58px_64px_44px] gap-x-2 pb-1">
-        <span className={PANE_COLUMN_HEADER}>{t('nftTraits.columns.value')}</span>
+        <span className={PANE_COLUMN_HEADER}>
+          {t('nftTraits.columns.value')}
+        </span>
         <span className={cn(PANE_COLUMN_HEADER, 'text-right')}>
           {t('nftTraits.columns.count')}
         </span>

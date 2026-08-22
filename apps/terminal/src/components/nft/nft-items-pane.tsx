@@ -121,7 +121,9 @@ function NftItemsInner({
               <div
                 className={cn(
                   'truncate font-mono text-[10.5px] tabular-nums',
-                  item.listPrice != null ? 'text-down' : 'text-muted-foreground',
+                  item.listPrice != null
+                    ? 'text-down'
+                    : 'text-muted-foreground',
                 )}
               >
                 {item.listPrice != null

@@ -193,7 +193,13 @@ function NftTicketInner({
 
   const count = wantsQuantity ? normalizeCount(quantity) : 1
   const limitPrice = wantsPrice ? normalizePrice(price) : null
-  const quote = quoteOrder({ intent, asks, bestBidPrice: bestBid?.price ?? null, count, limitPrice })
+  const quote = quoteOrder({
+    intent,
+    asks,
+    bestBidPrice: bestBid?.price ?? null,
+    count,
+    limitPrice,
+  })
 
   const canSubmit =
     !submitting &&
@@ -452,7 +458,8 @@ function quoteOrder({
 
   // Both limit intents are priced by the field, which is the whole point of a
   // limit: the book does not get to decide what it costs.
-  if (limitPrice === null) return { notional: null, average: null, shortfall: 0 }
+  if (limitPrice === null)
+    return { notional: null, average: null, shortfall: 0 }
   const units = intent === 'offer' ? count : 1
   return {
     notional: limitPrice * units,

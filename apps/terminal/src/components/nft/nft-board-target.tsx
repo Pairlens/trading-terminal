@@ -18,9 +18,9 @@
  */
 import { usePanePair } from '@pairlens/plugin-sdk'
 
+import { isNftChain } from '@pairlens/shared/nft-types'
 import type { WalletChain } from '@pairlens/market-engine/adapter'
 import type { NftChain } from '@pairlens/shared/nft-types'
-import { isNftChain } from '@pairlens/shared/nft-types'
 
 import type { CryptoWallet } from '@/stores/wallets-store'
 import { useActiveWallet } from '@/lib/active-wallet-context'

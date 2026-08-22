@@ -86,9 +86,7 @@ function NftHoldingsInner({
 
   const sorted = useMemo(
     () =>
-      [...holdings].sort(
-        (a, b) => (b.acquiredMs ?? 0) - (a.acquiredMs ?? 0),
-      ),
+      [...holdings].sort((a, b) => (b.acquiredMs ?? 0) - (a.acquiredMs ?? 0)),
     [holdings],
   )
 
@@ -181,9 +179,7 @@ function HoldingRow({
       ? holding.markPrice - holding.costBasis
       : null
   const pnlPct =
-    pnl !== null && holding.costBasis
-      ? (pnl / holding.costBasis) * 100
-      : null
+    pnl !== null && holding.costBasis ? (pnl / holding.costBasis) * 100 : null
 
   return (
     <tr className="border-none">
