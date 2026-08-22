@@ -53,7 +53,7 @@ import {
   orderNotionalUsd,
   priceUsdFor,
 } from '@/lib/risk/position-size'
-import { isNftPairKey, normalizePairKey } from '@/lib/pairs'
+import { isDexPairKey, isNftPairKey, normalizePairKey } from '@/lib/pairs'
 import { resolveSolanaRpcEndpoint } from '@/lib/dex/solana-rpc'
 import { contractSizeFor } from '@/lib/futures/contract-size'
 import {
@@ -103,7 +103,9 @@ export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
  * exactly as it always did.
  */
 function assetClassFor(pair: string): string | undefined {
-  return isNftPairKey(pair) ? 'nft' : undefined
+  if (isNftPairKey(pair)) return 'nft'
+  if (isDexPairKey(pair)) return 'dex'
+  return undefined
 }
 
 const WARMUP_TTL_MS = 15_000
@@ -1626,8 +1628,20 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         'market-data:history',
         market,
       )
+      // A chain is shared by two asset classes now, so naming the market is no
+      // longer enough to prove a plugin is talking about the same thing: the
+      // NFT connector names 'ethereum' too, and asked about a token it would
+      // answer about a collection that does not exist. Same rule as the
+      // capability resolver's, and unstamped plugins stay eligible.
+      const wantedClass = assetClassFor(pair)
+      const eligible = wantedClass
+        ? candidates.filter((p) => {
+            const declared = p.manifest.metadata?.['assetClass']
+            return typeof declared !== 'string' || declared === wantedClass
+          })
+        : candidates
       const plugin =
-        candidates.find((p) =>
+        eligible.find((p) =>
           p.manifest.capabilities.some(
             (c) => c.id === 'market-data:history' && c.markets.includes(market),
           ),
@@ -1636,7 +1650,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         // history, and the DEX data provider that declares '*' is the only
         // source there is. Opt-in, because on a CEX the same widening would
         // answer "does Bitvavo carry this pair?" out of GeckoTerminal.
-        (options?.allowWildcardProvider ? candidates[0] : undefined)
+        (options?.allowWildcardProvider ? eligible[0] : undefined)
       if (!plugin) return null
 
       // A locally-built context rather than setContext(): this runs alongside

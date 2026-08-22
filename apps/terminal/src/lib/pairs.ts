@@ -110,3 +110,18 @@ export function isNftPairKey(pairKey: string): boolean {
   const trimmed = pairKey.trim()
   return isTokenAddress(trimmed) && !trimmed.includes('-')
 }
+
+/**
+ * Whether a pair key names an on-chain TOKEN.
+ *
+ * The other half of the same guarantee `isNftPairKey` reads: a dex id is an
+ * address with a quote leg, a collection is an address without one. Worth
+ * naming rather than writing as a negation at each call site, because the two
+ * are only exhaustive over addresses and a plain 'BTC-USDT' is neither.
+ */
+export function isDexPairKey(pairKey: string): boolean {
+  const trimmed = pairKey.trim()
+  const at = trimmed.lastIndexOf('-')
+  if (at <= 0) return false
+  return isTokenAddress(trimmed.slice(0, at))
+}
