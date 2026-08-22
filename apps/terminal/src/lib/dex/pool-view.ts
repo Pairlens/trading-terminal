@@ -29,6 +29,24 @@ export type PoolView = {
   trades24h: PoolTradeCounts | null
   /** Only the pool read carries one; a listing row never does. */
   feeTier: number | null
+  /**
+   * The eight figures below are the pool read's alone. A listing row publishes
+   * none of them except `fdvUsd`, so they collapse rather than resolve to the
+   * snapshot: the same whole-object rule, read the other way round.
+   */
+  change1hPct: number | null
+  volume1hUsd: number | null
+  /** Base priced in the quote token, and what a unit of that quote is worth. */
+  priceInQuote: number | null
+  quotePriceUsd: number | null
+  /** Both sides in token units, where a provider published them. */
+  baseReserve: number | null
+  quoteReserve: number | null
+  /** 24h buy/sell notionals. DexPaprika publishes these; GeckoTerminal doesn't. */
+  buyVolume24hUsd: number | null
+  sellVolume24hUsd: number | null
+  createdAt: string | null
+  fdvUsd: number | null
   /** True when these are the pool read rather than the map's snapshot. */
   live: boolean
 }
@@ -45,6 +63,16 @@ export function poolDetailView(
       reserveUsd: stats.reserveUsd,
       trades24h: stats.trades24h,
       feeTier: stats.feeTier,
+      change1hPct: stats.change1hPct,
+      volume1hUsd: stats.volume1hUsd,
+      priceInQuote: stats.priceInQuote,
+      quotePriceUsd: stats.quotePriceUsd,
+      baseReserve: stats.baseReserve,
+      quoteReserve: stats.quoteReserve,
+      buyVolume24hUsd: stats.buyVolume24hUsd,
+      sellVolume24hUsd: stats.sellVolume24hUsd,
+      createdAt: stats.createdAt,
+      fdvUsd: stats.fdvUsd,
       live: true,
     }
   }
@@ -55,6 +83,19 @@ export function poolDetailView(
     reserveUsd: listed.reserveUsd,
     trades24h: listed.trades24h,
     feeTier: null,
+    change1hPct: null,
+    volume1hUsd: null,
+    priceInQuote: null,
+    quotePriceUsd: null,
+    baseReserve: null,
+    quoteReserve: null,
+    buyVolume24hUsd: null,
+    sellVolume24hUsd: null,
+    createdAt: null,
+    // The one figure of the eight a listing row does carry. It is the map's
+    // own measurement of the same thing, taken in the same tick as price and
+    // volume, so it is not a blend.
+    fdvUsd: listed.fdvUsd,
     live: false,
   }
 }

@@ -78,6 +78,35 @@ describe('poolDetailView', () => {
     expect(view.change24hPct).toBe(LIVE.change24hPct)
   })
 
+  it('carries the figures only the pool read has', () => {
+    // These are the reason the pane is worth a full-height column: the same
+    // read the six headline numbers come from already publishes the hour, the
+    // reserves and the pool's age, and nothing was drawing them.
+    const view = poolDetailView(LIVE, LISTED)
+    expect(view.change1hPct).toBe(1.2)
+    expect(view.volume1hUsd).toBe(900_000)
+    expect(view.priceInQuote).toBe(0.00000019)
+    expect(view.quotePriceUsd).toBe(76.99)
+  })
+
+  it('leaves them null on the listing row rather than inventing them', () => {
+    // A map row publishes none of them. FDV is the one exception, and it is
+    // the map's own measurement taken in the same tick as price and volume.
+    const view = poolDetailView(null, LISTED)
+    expect(view.change1hPct).toBeNull()
+    expect(view.volume1hUsd).toBeNull()
+    expect(view.baseReserve).toBeNull()
+    expect(view.createdAt).toBeNull()
+    expect(view.fdvUsd).toBe(15_500_000)
+  })
+
+  it('does not reach back to the listing for an FDV the read lacks', () => {
+    // The whole-object rule, read the other way round: this pool read measured
+    // no FDV, and the listing's five-minute-old one beside fresh volume would
+    // be exactly the blend the split exists to prevent.
+    expect(poolDetailView(LIVE, LISTED).fdvUsd).toBeNull()
+  })
+
   it('keeps a null the live read published, rather than falling back', () => {
     // "The provider measured this pool and it has no value locked" is a real
     // answer, and reaching back to the listing for a nicer number would draw

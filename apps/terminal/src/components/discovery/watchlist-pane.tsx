@@ -276,7 +276,7 @@ export function WatchlistPane() {
                   <Button
                     variant="ghost"
                     size="xs"
-                    className="min-w-0 flex-1 justify-start gap-1 px-1.5 text-[11.5px] font-semibold"
+                    className="min-w-0 flex-1 justify-start gap-1 px-0 text-[11.5px] font-semibold"
                   />
                 }
               >
@@ -705,7 +705,12 @@ const SortableWatchlistItem = memo(function SortableWatchlistItem({
       data-watchlist-row
       onKeyDown={handleRowKeyDown}
       className={cn(
-        'group flex cursor-pointer items-center gap-1.5 border-b border-border/40 px-1.5 py-1.5 transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
+        // No horizontal padding: the column's own 12px is the inset, so a
+        // row bleeds to the pane edge and its grip lines up under the "W" of
+        // the header the shell draws. The 6px this used to carry indented
+        // every row against that title, and it took the hover fill and the
+        // rule with it.
+        'group flex cursor-pointer items-center gap-1.5 border-b border-border/40 py-1.5 transition-colors hover:[background-color:color-mix(in_oklch,var(--primary)_8%,transparent)]',
         isActive &&
           '[background-color:color-mix(in_oklch,var(--primary)_10%,transparent)]',
       )}

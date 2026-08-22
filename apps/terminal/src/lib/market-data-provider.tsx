@@ -242,12 +242,19 @@ type MarketDataContextValue = {
    * question is whether this venue carries this pair, so an answer from
    * anywhere else is worse than no answer. Returns null when the venue
    * declares no history capability of its own, meaning it can't be asked.
+   *
+   * `allowWildcardProvider` widens that to a provider that declares every
+   * market, and is for the one case where the strict reading has no answer at
+   * all: a DEX chain has no connector publishing candles, so the pool data
+   * provider IS the venue there. It still resolves one plugin and still never
+   * walks a fallback chain.
    */
   probeVenueHistory: (
     market: string,
     pair: string,
     timeframe: string,
     limit: number,
+    options?: { allowWildcardProvider?: boolean },
   ) => Promise<Array<Candle>> | null
   placeOrder: (params: Record<string, unknown>) => Promise<OrderResult>
   /**
@@ -1602,6 +1609,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       pair: string,
       requestedTimeframe: string,
       limit: number,
+      options?: { allowWildcardProvider?: boolean },
     ): Promise<Array<Candle>> | null => {
       // Clamped like every other egress. This probe decides whether a pair is
       // published as UNLISTED, so asking a venue for an interval it does not
@@ -1614,13 +1622,21 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
       // filling a chart, wrong for asking a venue about itself: GeckoTerminal
       // declares market-data:history for '*' and would gladly answer "does
       // Bitvavo carry BTC-USDT?" on Bitvavo's behalf.
-      const plugin = pluginManager
-        .getPluginsForCapability('market-data:history', market)
-        .find((p) =>
+      const candidates = pluginManager.getPluginsForCapability(
+        'market-data:history',
+        market,
+      )
+      const plugin =
+        candidates.find((p) =>
           p.manifest.capabilities.some(
             (c) => c.id === 'market-data:history' && c.markets.includes(market),
           ),
-        )
+        ) ??
+        // A chain, not a venue: nothing declares `jupiter` or `base` for
+        // history, and the DEX data provider that declares '*' is the only
+        // source there is. Opt-in, because on a CEX the same widening would
+        // answer "does Bitvavo carry this pair?" out of GeckoTerminal.
+        (options?.allowWildcardProvider ? candidates[0] : undefined)
       if (!plugin) return null
 
       // A locally-built context rather than setContext(): this runs alongside
