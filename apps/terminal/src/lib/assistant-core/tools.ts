@@ -15,6 +15,7 @@
 
 import { buildNavigationTools, buildResearchTools } from './terminal-tools'
 import { buildDataTools } from './data-tools'
+import { buildNftTools } from './nft-tools'
 import { buildPredictionTools } from './prediction-tools'
 import { buildSurfaceTools } from './surface-tools'
 import { toAutomationDeps, toCopilotDeps, toScriptDeps } from './tool-deps'
@@ -88,6 +89,10 @@ export function buildAssistantToolSet(deps: AssistantDeps): ToolSet {
     // pair, so no amount of candles or order books could reach them: an
     // outcome ladder is the only place a probability is published.
     ...buildPredictionTools(deps),
+    // NFT collections. A floor is a min over a listing set rather than a
+    // last trade, so no candle or ticker tool could reach it, and the
+    // ladder is the only read that says whether the floor is liquid.
+    ...buildNftTools(deps),
     // Surface-published actions last: a pane that publishes a name the
     // core set already uses is deliberately allowed to specialise it.
     ...buildSurfaceTools(deps.registry),

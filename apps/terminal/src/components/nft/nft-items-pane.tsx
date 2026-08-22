@@ -34,6 +34,7 @@ import {
   NftThumbnail,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingGrid } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftItems } from '@/hooks/use-nft-market'
 import { formatNftCount, formatNftPrice, formatTokenId } from '@/lib/nft/format'
@@ -79,6 +80,10 @@ function NftItemsInner({
       }),
     [items],
   )
+
+  if (phase === 'loading') {
+    return <NftLoadingGrid label={t('nftItems.loadingLabel')} />
+  }
 
   if (phase !== 'ready') {
     return (

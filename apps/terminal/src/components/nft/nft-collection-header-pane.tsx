@@ -33,6 +33,7 @@ import {
   nftChainLabelKey,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingHeader } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftCollection } from '@/hooks/use-nft-market'
 import { useNftDirectoryEntry } from '@/stores/nft-directory-store'
@@ -78,6 +79,10 @@ function NftCollectionHeaderInner({
   // The pin counts as something to draw. A header with the right name and no
   // numbers yet is the honest intermediate state; an empty pane is not.
   const phase = nftPanePhase(status, Boolean(collection ?? pinned))
+
+  if (phase === 'loading') {
+    return <NftLoadingHeader label={t('nftCollectionHeader.loadingLabel')} />
+  }
 
   if (phase !== 'ready') {
     return (

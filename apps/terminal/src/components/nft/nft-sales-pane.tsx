@@ -39,6 +39,7 @@ import {
   nftMarketplaceLabelKey,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingRows } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftSales } from '@/hooks/use-nft-market'
 import {
@@ -81,6 +82,17 @@ function NftSalesInner({
     () => [...sales].sort((a, b) => b.timestampMs - a.timestampMs),
     [sales],
   )
+
+  if (phase === 'loading') {
+    return (
+      <NftLoadingRows
+        cells={['w-12', 'w-16', 'w-14', 'w-10', 'w-14', 'w-14']}
+        label={t('nftSales.loadingLabel')}
+        template="grid-cols-[auto_1fr_auto_auto_auto_auto]"
+        thumbnail
+      />
+    )
+  }
 
   if (phase !== 'ready') {
     return (

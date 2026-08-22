@@ -45,6 +45,7 @@ import {
   nftMarketplaceLabelKey,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingRows } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftBook } from '@/hooks/use-nft-market'
 import {
@@ -119,6 +120,17 @@ function NftBookInner({
   const phase = nftPanePhase(status, hasRows)
 
   const ladder = useMemo(() => buildLadder(book), [book])
+
+  if (phase === 'loading') {
+    return (
+      <NftLoadingRows
+        cells={['w-14', 'w-12', 'w-8', 'w-10']}
+        label={t('nftBook.loadingLabel')}
+        rows={10}
+        template="grid-cols-[1fr_auto_auto_auto]"
+      />
+    )
+  }
 
   if (phase !== 'ready' || !book || !ladder) {
     return (

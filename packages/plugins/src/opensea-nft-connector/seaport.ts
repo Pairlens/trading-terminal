@@ -64,18 +64,17 @@ export type SeaportDeployment = {
  * today points at them, and an allowlist is only worth having if it is the
  * shortest one that works.
  */
-export const SEAPORT_DEPLOYMENTS: Readonly<
-  Record<string, SeaportDeployment>
-> = {
-  '0x0000000000000068f116a894984e2db1123eb395': {
-    address: '0x0000000000000068F116a894984e2DB1123eB395',
-    version: '1.6',
-  },
-  '0x00000000000000adc04c56bf30ac9d3c0aaf14dc': {
-    address: '0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC',
-    version: '1.5',
-  },
-}
+export const SEAPORT_DEPLOYMENTS: Readonly<Record<string, SeaportDeployment>> =
+  {
+    '0x0000000000000068f116a894984e2db1123eb395': {
+      address: '0x0000000000000068F116a894984e2DB1123eB395',
+      version: '1.6',
+    },
+    '0x00000000000000adc04c56bf30ac9d3c0aaf14dc': {
+      address: '0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC',
+      version: '1.5',
+    },
+  }
 
 /** The version a freshly built order is signed against. */
 export const DEFAULT_SEAPORT: SeaportDeployment =
@@ -713,7 +712,10 @@ export function planFulfillCall(opts: {
   // call rather than fix it.
   let operator = seaport.address
   if ('fulfillerConduitKey' in input) {
-    const resolved = operatorForConduitKey(input['fulfillerConduitKey'], seaport)
+    const resolved = operatorForConduitKey(
+      input['fulfillerConduitKey'],
+      seaport,
+    )
     if (!resolved) {
       return {
         error:

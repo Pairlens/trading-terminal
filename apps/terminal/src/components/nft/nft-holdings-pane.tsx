@@ -42,6 +42,7 @@ import {
   nftChainLabelKey,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingRows } from '@/components/nft/nft-board-skeletons'
 import {
   useNftBoardWallet,
   useNftPaneTarget,
@@ -103,6 +104,18 @@ function NftHoldingsInner({
   }
 
   const phase = nftPanePhase(status, sorted.length > 0)
+  if (phase === 'loading') {
+    return (
+      <NftLoadingRows
+        cells={['w-16', 'w-14', 'w-12', 'w-12', 'w-12']}
+        label={t('nftHoldings.loadingLabel')}
+        rows={6}
+        template="grid-cols-[1fr_auto_auto_auto_auto]"
+        thumbnail
+      />
+    )
+  }
+
   if (phase !== 'ready') {
     return (
       <NftPaneFallback

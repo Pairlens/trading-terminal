@@ -291,7 +291,8 @@ export async function executeNftOrder(
   }
 
   try {
-    if (params.side === 'buy' && params.type === 'market') return await sweep(shared)
+    if (params.side === 'buy' && params.type === 'market')
+      return await sweep(shared)
     if (params.side === 'buy') return await makeCollectionOffer(shared)
     if (params.type === 'limit') return await listToken(shared)
     return await acceptBestOffer(shared)
@@ -340,7 +341,9 @@ type ViemBundle = Awaited<ReturnType<typeof viemFor>>
  */
 async function signerFor(run: OrderRun, bundle: ViemBundle) {
   const privateKey = await run.getPrivateKey()
-  if (!privateKey) return { error: 'Wallet private key not found' as const }
+  if (!privateKey) {
+    return { ok: false as const, error: 'Wallet private key not found' }
+  }
   const { privateKeyToAccount } = await import('viem/accounts')
   const account = privateKeyToAccount(
     (privateKey.startsWith('0x')
@@ -348,14 +351,14 @@ async function signerFor(run: OrderRun, bundle: ViemBundle) {
       : `0x${privateKey}`) as `0x${string}`,
   )
   if (!sameAddress(account.address, run.wallet)) {
-    return { error: 'Private key does not match wallet' as const }
+    return { ok: false as const, error: 'Private key does not match wallet' }
   }
   const walletClient = bundle.viem.createWalletClient({
     account,
     chain: bundle.chain,
     transport: bundle.transport,
   })
-  return { account, walletClient }
+  return { ok: true as const, account, walletClient }
 }
 
 /**
@@ -439,8 +442,11 @@ async function sweep(run: OrderRun): Promise<NftOrderResult> {
   const bundle = await viemFor(run)
 
   // Build and validate every transaction before signing any of them.
-  const calls: Array<{ to: `0x${string}`; data: `0x${string}`; value: bigint }> =
-    []
+  const calls: Array<{
+    to: `0x${string}`
+    data: `0x${string}`
+    value: bigint
+  }> = []
   for (const item of checked) {
     const built = await buildFill(run, bundle, item)
     if ('error' in built) return fail(built.error)
@@ -448,7 +454,7 @@ async function sweep(run: OrderRun): Promise<NftOrderResult> {
   }
 
   const signer = await signerFor(run, bundle)
-  if ('error' in signer) return fail(signer.error)
+  if (!signer.ok) return fail(signer.error)
 
   const hashes: Array<string> = []
   let shortfall: string | null = null
@@ -528,10 +534,7 @@ function checkListing(
   }
   const offered = offer[0] as Record<string, unknown>
   const offeredType = Number(toUint(offered['itemType']) ?? -1n)
-  if (
-    offeredType !== ITEM_TYPE.ERC721 &&
-    offeredType !== ITEM_TYPE.ERC1155
-  ) {
+  if (offeredType !== ITEM_TYPE.ERC721 && offeredType !== ITEM_TYPE.ERC1155) {
     return { error: 'Refusing to buy: the listing does not offer an NFT' }
   }
   if (!sameAddress(offered['token'], run.contract)) {
@@ -599,7 +602,8 @@ async function buildFill(
   bundle: ViemBundle,
   item: CheckedListing,
 ): Promise<
-  { call: { to: `0x${string}`; data: `0x${string}`; value: bigint } } | { error: string }
+  | { call: { to: `0x${string}`; data: `0x${string}`; value: bigint } }
+  | { error: string }
 > {
   const response = await run.ctx.request<Record<string, unknown>>(
     '/listings/fulfillment_data',
@@ -626,7 +630,8 @@ async function encodeFulfilment(
   seaport: SeaportDeployment,
   localValue: bigint,
 ): Promise<
-  { call: { to: `0x${string}`; data: `0x${string}`; value: bigint } } | { error: string }
+  | { call: { to: `0x${string}`; data: `0x${string}`; value: bigint } }
+  | { error: string }
 > {
   const data = response['fulfillment_data']
   const transaction =
@@ -729,15 +734,18 @@ async function makeCollectionOffer(run: OrderRun): Promise<NftOrderResult> {
   if (priceWei === null) return fail('A collection offer needs a price')
   const total = priceWei * BigInt(run.size)
 
-  const build = await run.ctx.request<Record<string, unknown>>('/offers/build', {
-    method: 'POST',
-    body: {
-      offerer: run.wallet,
-      quantity: run.size,
-      criteria: { collection: { slug: run.ctx.slug } },
-      protocol_address: DEFAULT_SEAPORT.address,
+  const build = await run.ctx.request<Record<string, unknown>>(
+    '/offers/build',
+    {
+      method: 'POST',
+      body: {
+        offerer: run.wallet,
+        quantity: run.size,
+        criteria: { collection: { slug: run.ctx.slug } },
+        protocol_address: DEFAULT_SEAPORT.address,
+      },
     },
-  })
+  )
   const partialRaw = build['partialParameters'] ?? build['partial_parameters']
   if (!partialRaw || typeof partialRaw !== 'object') {
     return fail('OpenSea did not return the criteria for this collection')
@@ -856,7 +864,7 @@ async function makeCollectionOffer(run: OrderRun): Promise<NftOrderResult> {
   }
 
   const signer = await signerFor(run, bundle)
-  if ('error' in signer) return fail(signer.error)
+  if (!signer.ok) return fail(signer.error)
 
   // The conduit has to be able to pull the WETH when somebody takes the bid.
   // Approved for exactly the offer, never for an unbounded amount.
@@ -933,9 +941,15 @@ async function collectionFees(
     const recipient = fee['recipient']
     const percent = fee['fee']
     if (!isEvmAddress(recipient)) {
-      return { error: 'Refusing to sign: a fee names something that is not an address' }
+      return {
+        error: 'Refusing to sign: a fee names something that is not an address',
+      }
     }
-    if (typeof percent !== 'number' || !Number.isFinite(percent) || percent < 0) {
+    if (
+      typeof percent !== 'number' ||
+      !Number.isFinite(percent) ||
+      percent < 0
+    ) {
       return { error: 'Refusing to sign: a fee is not a readable percentage' }
     }
     const bps = Math.round(percent * 100)
@@ -1044,7 +1058,9 @@ async function listToken(run: OrderRun): Promise<NftOrderResult> {
   if ('error' in found) return fail(found.error)
   const message = found.message
 
-  const seaport = resolveSeaport(found.protocolAddress ?? DEFAULT_SEAPORT.address)
+  const seaport = resolveSeaport(
+    found.protocolAddress ?? DEFAULT_SEAPORT.address,
+  )
   if (!seaport) {
     return fail(
       `Refusing to sign: OpenSea named an unpinned protocol contract ${String(found.protocolAddress)}`,
@@ -1086,7 +1102,7 @@ async function listToken(run: OrderRun): Promise<NftOrderResult> {
   })
 
   const signer = await signerFor(run, bundle)
-  if ('error' in signer) return fail(signer.error)
+  if (!signer.ok) return fail(signer.error)
 
   if (!approved) {
     // Built here from the pinned operator, never from whatever transaction the
@@ -1098,7 +1114,9 @@ async function listToken(run: OrderRun): Promise<NftOrderResult> {
       functionName: 'setApprovalForAll',
       args: [operator, true],
     })
-    const receipt = await bundle.publicClient.waitForTransactionReceipt({ hash })
+    const receipt = await bundle.publicClient.waitForTransactionReceipt({
+      hash,
+    })
     if (receipt.status !== 'success') {
       return fail('The collection approval failed, so nothing was listed')
     }
@@ -1150,7 +1168,9 @@ export function checkListingOrder(opts: {
 
   const offer = message['offer']
   if (!Array.isArray(offer) || offer.length !== 1) {
-    return { error: 'Refusing to sign: the order does not offer exactly one item' }
+    return {
+      error: 'Refusing to sign: the order does not offer exactly one item',
+    }
   }
   const offered = offer[0] as Record<string, unknown>
   const offeredType = Number(toUint(offered['itemType']) ?? -1n)
@@ -1183,7 +1203,9 @@ export function checkListingOrder(opts: {
 
   const totals = considerationTotals(message['consideration'])
   if (!totals) {
-    return { error: 'Refusing to sign: the order has no readable consideration' }
+    return {
+      error: 'Refusing to sign: the order has no readable consideration',
+    }
   }
   if (totals.hasNonNative) {
     return {
@@ -1245,7 +1267,9 @@ export function checkListingOrder(opts: {
   const startTime = toUint(message['startTime'])
   const endTime = toUint(message['endTime'])
   if (startTime === null || endTime === null || endTime <= startTime) {
-    return { error: 'Refusing to sign: the order has no usable validity window' }
+    return {
+      error: 'Refusing to sign: the order has no usable validity window',
+    }
   }
   const now = BigInt(Math.floor(Date.now() / 1000))
   if (startTime > now + BigInt(START_TIME_SLACK_SECONDS)) {
@@ -1319,7 +1343,9 @@ export function checkListingOrder(opts: {
  */
 export function findOrderComponents(
   response: unknown,
-): { message: Record<string, unknown>; protocolAddress: string | null } | { error: string } {
+):
+  | { message: Record<string, unknown>; protocolAddress: string | null }
+  | { error: string } {
   const seen = new Set<unknown>()
   let protocolAddress: string | null = null
 
@@ -1330,7 +1356,10 @@ export function findOrderComponents(
     'conduitKey' in value &&
     'counter' in value
 
-  const walk = (value: unknown, depth: number): Record<string, unknown> | null => {
+  const walk = (
+    value: unknown,
+    depth: number,
+  ): Record<string, unknown> | null => {
     if (depth > 8 || !value || typeof value !== 'object') return null
     if (seen.has(value)) return null
     seen.add(value)
@@ -1436,7 +1465,7 @@ async function acceptBestOffer(run: OrderRun): Promise<NftOrderResult> {
   })
 
   const signer = await signerFor(run, bundle)
-  if ('error' in signer) return fail(signer.error)
+  if (!signer.ok) return fail(signer.error)
 
   if (!approved) {
     const approveHash = await signer.walletClient.writeContract({
@@ -1491,7 +1520,8 @@ export function pickBestOffer(
     const chain = offer['chain']
     if (typeof chain === 'string' && chain !== run.chainSlug) continue
     const status = offer['status']
-    if (typeof status === 'string' && status.toUpperCase() !== 'ACTIVE') continue
+    if (typeof status === 'string' && status.toUpperCase() !== 'ACTIVE')
+      continue
     const remaining = toUint(offer['remaining_quantity'])
     if (remaining !== null && remaining < 1n) continue
 

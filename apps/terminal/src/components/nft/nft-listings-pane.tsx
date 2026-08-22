@@ -38,6 +38,7 @@ import {
   nftMarketplaceLabelKey,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingRows } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftListings } from '@/hooks/use-nft-market'
 import { formatNftPrice, formatNftUsd, formatTokenId } from '@/lib/nft/format'
@@ -75,6 +76,17 @@ function NftListingsInner({
     () => [...listings].sort((a, b) => a.price - b.price),
     [listings],
   )
+
+  if (phase === 'loading') {
+    return (
+      <NftLoadingRows
+        cells={['w-16', 'w-14', 'w-8', 'w-10', 'w-10']}
+        label={t('nftListings.loadingLabel')}
+        template="grid-cols-[1fr_auto_auto_auto_auto]"
+        thumbnail
+      />
+    )
+  }
 
   if (phase !== 'ready') {
     return (

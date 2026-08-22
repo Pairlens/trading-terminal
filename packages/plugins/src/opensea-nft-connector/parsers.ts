@@ -678,7 +678,9 @@ export function parseSaleEvents(
     sale.chain = chain
     const contract = asString(nft?.['contract']) ?? ctx.contract
     if (contract) sale.contract = contract
-    const collectionName = asString(nft?.['collection']) ?? ctx.collectionName
+    // The caller's own display name wins where it has one; the payload only
+    // carries the slug, which is a routing key rather than a label.
+    const collectionName = ctx.collectionName ?? asString(nft?.['collection'])
     if (collectionName) sale.collectionName = collectionName
     const name = asString(nft?.['name'])
     if (name) sale.name = name

@@ -40,6 +40,7 @@ import {
   NftShareBar,
   nftPanePhase,
 } from '@/components/nft/nft-pane-primitives'
+import { NftLoadingRows } from '@/components/nft/nft-board-skeletons'
 import { useNftPaneTarget } from '@/components/nft/nft-board-target'
 import { useNftCollection, useNftTraits } from '@/hooks/use-nft-market'
 import { formatNftCount, formatNftPrice } from '@/lib/nft/format'
@@ -85,6 +86,16 @@ function NftTraitsInner({
   const phase = nftPanePhase(status, traits.length > 0)
 
   const groups = useMemo(() => groupTraits(traits), [traits])
+
+  if (phase === 'loading') {
+    return (
+      <NftLoadingRows
+        cells={['w-20', 'w-8', 'w-14', 'w-8']}
+        label={t('nftTraits.loadingLabel')}
+        template="grid-cols-[1fr_58px_64px_44px]"
+      />
+    )
+  }
 
   if (phase !== 'ready') {
     return (
