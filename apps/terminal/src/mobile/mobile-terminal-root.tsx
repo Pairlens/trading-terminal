@@ -165,6 +165,11 @@ export function MobileTerminalRoot() {
       <ActiveWalletProvider initial={initialWallet}>
         <ChartTerminalProvider
           defaultMarket={defaultMarket}
+          /* The class comes off the address, so the stale-venue correction
+             below can refuse to move a venue that IS the instrument. Without
+             it a `/dex/jupiter/<mint>-USDC` link was rewritten to the user's
+             preferred CEX while the connectors were still activating. */
+          instrumentClass={focusedClass}
           markets={markets}
           pairKey={focusedPair}
         >

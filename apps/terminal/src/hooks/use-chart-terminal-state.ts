@@ -20,6 +20,7 @@ import type {
   Timeframe,
 } from '@pairlens/fast-financial-charts/types'
 import type { AssetClass } from '@pairlens/market-engine'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { PluginCandle } from '@/hooks/use-candle-stream'
 import { track } from '@/lib/analytics-events'
 import { trackDrawingToolUse } from '@/lib/chart-drawing-tools'
@@ -43,6 +44,7 @@ import {
   customIndicatorSourceKey,
 } from '@/lib/indicators/custom-indicator-registry'
 import { useMarketData } from '@/lib/market-data-provider'
+import { correctStaleMarket } from '@/lib/market-ref/resolve'
 import { clampTimeframeToVenue } from '@/lib/chart-timeframes'
 import {
   MIN_HEALTHY_SEED_BARS,
@@ -336,6 +338,15 @@ export function useChartTerminalState(
     marketOverride?: string
     /** Called on every venue change so the owner can move the URL. */
     onMarketChange?: (market: string) => void
+    /**
+     * What this chart is drawing, when something above owns the answer: the
+     * chart route reads it out of its URL, the mobile shell out of its focus.
+     * Only the stale-venue correction consumes it, and only to refuse to move
+     * a venue that is half of the instrument's identity — see
+     * `correctStaleMarket`. Unset for workspace panes, which are pointed at a
+     * pair rather than at an address.
+     */
+    instrumentClass?: InstrumentClass
   },
 ) {
   const defaultMarket = options?.defaultMarket ?? 'okx'
@@ -377,7 +388,7 @@ export function useChartTerminalState(
   // chart into an empty state. The clamp lands BEFORE the subscription; the
   // stored preference is deliberately left alone, so leaving the venue
   // restores the user's own choice rather than the one it was narrowed to.
-  const { getTimeframes } = useMarketData()
+  const { getTimeframes, pluginsReady } = useMarketData()
   const supportedTimeframes = useMemo(
     () => getTimeframes(market),
     [getTimeframes, market],
@@ -435,16 +446,29 @@ export function useChartTerminalState(
     scopedKey('terminal.invertedScale'),
     false,
   )
-  // Reset stale market when available markets change (e.g. plugin deactivated)
+  // A venue that went away under an open chart (a connector disabled in the
+  // Plugin Store). The rule, and the two ways reading the venue table alone
+  // got it wrong, are in `correctStaleMarket`.
+  const availableMarkets = options?.availableMarkets
+  const instrumentClass = options?.instrumentClass
   useEffect(() => {
-    if (
-      options?.availableMarkets &&
-      options.availableMarkets.length > 0 &&
-      !options.availableMarkets.some((m) => m.value === market)
-    ) {
-      setMarket(options.defaultMarket)
-    }
-  }, [market, options?.availableMarkets, options?.defaultMarket, setMarket])
+    if (!availableMarkets) return
+    const corrected = correctStaleMarket({
+      market,
+      cls: instrumentClass,
+      markets: availableMarkets,
+      defaultMarket,
+      settled: pluginsReady,
+    })
+    if (corrected) setMarket(corrected)
+  }, [
+    market,
+    instrumentClass,
+    availableMarkets,
+    defaultMarket,
+    pluginsReady,
+    setMarket,
+  ])
 
   // Per-chart storage key for indicators/compares: scoped panes get their own
   // entry so two panes on the same pair hold independent indicator sets.
