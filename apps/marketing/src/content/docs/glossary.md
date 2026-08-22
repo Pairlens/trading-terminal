@@ -1,15 +1,16 @@
 ---
 title: Glossary
-description: Every term Pairlens uses with a specific meaning, from capabilities and connectors to guardrails, panes, protectors, and the three kinds of paper trading.
+description: 'Two lists: the words Pairlens uses in a particular way, and the ordinary trading vocabulary the rest of the docs assume. Start with the second one if you are new.'
 group: reference
 order: 1
 eyebrow: Reference
 updated: 22 AUG 2026
-readTime: 7 min read
+readTime: 9 min read
 ---
 
-Terms that mean something particular in Pairlens, and the market terms the docs
-assume. Alphabetical.
+Two lists. The first is terms that mean something particular in Pairlens. The
+second is ordinary trading vocabulary the rest of the docs assume you know, and
+if you are new, that is the one to skim first.
 
 ## Pairlens terms
 
@@ -67,9 +68,9 @@ workspace. See [panels](/docs/panels).
 own demo environment, a bot's paper mode, or an assistant paper trade. They
 simulate different amounts of reality. See [paper trading](/docs/paper-trading).
 
-**Plugin.** The unit of extension. Connectors, AI providers, panels, indicators,
-and themes are all plugins. Third-party plugins run sandboxed and Ed25519
-signed. See [the Plugin SDK](/docs/plugin-sdk).
+**Plugin.** The unit of extension. Connectors, AI providers, panels, indicators
+and themes are all plugins. Third-party plugins run in a sandbox and every
+package is cryptographically signed. See [the Plugin SDK](/docs/plugin-sdk).
 
 **Protector.** A way to unlock the credential vault: a vault password, a
 passkey, or Touch ID on macOS desktop. Each one wraps its own copy of the vault's
@@ -98,10 +99,9 @@ optionally publishes actions only it can perform. A workspace board publishes
 **Terminal lock.** A password prompt in front of the screen. It stops the person
 at your desk. It does not stop armed bots, and it is not the vault.
 
-**Vault.** The browser's encrypted credential store: AES-256-GCM ciphertext in
-local storage under one data key, wrapped by each protector you enrol. On
-desktop, credentials live in the OS keychain instead. See
-[the security model](/docs/security-model).
+**Vault.** The browser's encrypted store for your exchange keys and wallet keys,
+opened by whichever protector you enrolled. On desktop, credentials live in your
+OS keychain instead. See [the security model](/docs/security-model).
 
 **Venue.** An exchange, broker, event exchange, NFT marketplace, or on-chain
 aggregator. Twenty-three ship in the box, plus the on-chain connectors.
@@ -114,8 +114,14 @@ pair, venue, and account. See [workspaces](/docs/workspaces).
 **Aggressor.** The side that crossed the spread to get filled. What the
 [tape](/docs/time-and-sales) reports, and the direction that moved price.
 
+**All-time high (ATH).** The highest price an asset has ever traded at.
+
 **Ask / offer.** The lowest price a seller will accept. The right side of the
 book.
+
+**Base and quote.** The two halves of a pair. In `BTC-USDT`, BTC is the base
+(what you are buying) and USDT is the quote (what you pay with). Sizes can be
+expressed in either.
 
 **Basis.** The gap between a [perpetual](/docs/cex-futures) and the spot index
 it tracks. Pairlens quotes it in basis points and annualised, so carry reads as
@@ -123,8 +129,18 @@ a yield rather than as a price difference.
 
 **Bid.** The highest price a buyer will pay. The left side of the book.
 
+**Candle.** One mark on a chart, covering one slice of time and recording four
+numbers: the open, the high, the low and the close. See
+[the chart](/docs/chart-panel).
+
 **Depth.** How much size rests between the touch and a given price. What the
 [depth curve](/docs/depth-and-liquidity) plots.
+
+**Dollar-cost averaging (DCA).** Buying a fixed amount at regular intervals
+rather than all at once, which trades a worse best case for a better worst case.
+
+**Drawdown.** How far you are down from your peak. The number that actually
+describes how a strategy feels to run.
 
 **Event contract.** An instrument that pays one unit of collateral if its
 outcome resolves true and nothing if it does not. Priced between 0 and 1 and
@@ -138,15 +154,30 @@ somebody is asking, not what a holder can get, which is why Pairlens marks
 holdings against the top offer instead. See
 [NFT collections](/docs/nft-trading).
 
+**Fully diluted value (FDV).** What a token would be worth if every token that
+will ever exist were already trading. Compare it to market cap: a large gap means
+supply is still coming.
+
 **Funding rate.** The periodic payment between longs and shorts on a
 [perpetual](/docs/cex-futures) that keeps its price pinned near spot. Positive
 means longs pay shorts.
+
+**Gap.** A jump between one bar's close and the next bar's open, with nothing
+traded in between. Common on stocks over a weekend, and the reason a stop-loss
+cannot always protect you at the price you set.
+
+**Gas.** The fee paid to a blockchain to process a transaction, in that chain's
+own token. See [DEX and wallets](/docs/dex-trading).
 
 **Grouping / tick.** The price increment the [order book](/docs/order-book)
 buckets levels into. The venue's own tick is the floor.
 
 **Imbalance.** The ratio of resting bid depth to ask depth. Suggestive, and
 easily manufactured, because resting orders can be cancelled.
+
+**Impermanent loss.** The value a liquidity provider gives up because the pool
+sells them out of the rising asset and into the falling one. See
+[DEX and wallets](/docs/dex-trading#liquidity-positions).
 
 **Level 1.** The top of the book and nothing behind it: best bid, best ask,
 their sizes, and the spread. What a broker's free stock feed carries, and what
@@ -171,6 +202,13 @@ balance.
 **Liquidity.** How much can trade without moving price. Read it from depth and
 from the spread, not from volume alone.
 
+**Long / short.** Long means you profit if the price rises. Short means you
+profit if it falls. Buying an asset outright is a long; shorting needs a
+[perpetual](/docs/cex-futures) or a margin account.
+
+**Market cap.** Price times the supply currently circulating. The number to
+compare two assets by, since price alone says nothing without supply.
+
 **Maker / taker.** The maker rests an order; the taker crosses the spread to hit
 it. Most venues charge them differently.
 
@@ -178,6 +216,9 @@ it. Most venues charge them differently.
 guaranteed, price is not.
 
 **Mid.** The midpoint between best bid and best ask.
+
+**Moving average.** The average closing price over the last N bars, redrawn each
+bar. The simplest way to read a trend. See [indicators](/docs/chart-indicators).
 
 **Notional.** Price times size: the money a level or a print represents. Usually
 the more useful reading of the two.
@@ -189,11 +230,32 @@ funding rate. Sized in contracts, settled in a stablecoin or in dollars. See
 **Reduce-only.** An order flag that may shrink an open position but never open
 the opposite side. What makes closing a position safe to do twice.
 
+**Position.** What you currently hold in one market, and by extension your
+exposure to it. **Position sizing** is deciding how large it should be, which
+follows from your stop rather than from your confidence. See
+[risk guardrails](/docs/risk-guardrails).
+
+**Profit and loss (P&L).** What a position or a period has made or lost.
+_Unrealised_ is the paper gain on something you still hold; _realised_ is what
+you actually banked by closing it.
+
 **Regime.** Whether the market is trending or ranging, as classified by the
 strategy engine. Strategies that work in one fail in the other.
 
+**Rug pull.** A token whose creator sells their entire holding at once, taking
+the price to zero. The specific risk the memecoin
+[safety panel](/docs/memecoins) checks for.
+
 **Slippage.** The gap between the price you expected and the price you got. A
 function of depth and order size.
+
+**Stop-loss.** An order that closes your position automatically once price moves
+against you by a set amount. The single most useful risk tool there is, and the
+one most often skipped.
+
+**Support / resistance.** A price where buying has repeatedly stopped a fall
+(support) or selling has repeatedly stopped a rise (resistance). See
+[drawing tools](/docs/drawing-tools).
 
 **Open interest.** The total size currently open in a contract, on one venue.
 Rising open interest into a move means new money; falling means positions
@@ -221,7 +283,13 @@ mind, and the fastest comparison of liquidity across venues.
 market buy sized in items, priced from the ask ladder rather than from the
 floor, because five items deep can cost well over five times the first one.
 
+**Take-profit.** The mirror of a stop-loss: an order that closes your position
+once price moves in your favour by a set amount.
+
 **Tick size.** The smallest price increment a venue accepts.
+
+**Timeframe.** How much time one candle covers: 1m, 1h, 1D and so on. There is
+no correct one, only the one that matches how long you intend to hold.
 
 **Top offer.** The best standing collection-wide bid on an NFT collection: the
 price a holder can sell any token into right now. The one number on that board
@@ -232,6 +300,9 @@ a holder can actually act on.
 **Trait floor.** The cheapest ask among the tokens carrying one trait value. On
 a mature collection this is where pricing actually happens, and the collection
 floor is only a headline.
+
+**Volume.** How much traded in a period. A big price move on low volume
+convinces fewer people than the same move on high volume.
 
 **Wall.** A level holding much more size than its neighbours. Real until it is
 cancelled, which is why the [liquidity heatmap](/docs/depth-and-liquidity) beats

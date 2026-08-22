@@ -1,18 +1,23 @@
 ---
 title: Automation
-description: Workflows chain orders and conditions into brackets you can reuse. Alerts watch the market and tell you. Bots trade a strategy on their own.
+description: Three ways to stop watching a screen. Alerts tell you when something happens, workflows attach exits to an entry, and bots make the decision themselves.
 group: traders
 order: 7
 eyebrow: For traders
-updated: AUG 2026
+updated: 22 AUG 2026
 readTime: 2 min read
 ---
 
-Automation in Pairlens is deterministic, not black-box. You compose explicit
-step chains, and the running thing is plain, inspectable logic. The AI can help
-you build one. It is not what executes it.
+You cannot watch a screen all day, and the moments that matter rarely wait for
+you. Automation is how you delegate the parts of trading that are rules rather
+than judgement.
 
-There are three tools, and they do different jobs.
+Everything here is deterministic: you compose explicit steps, and what runs is
+plain logic you can read back. The AI can help you build one. It is never what
+executes it.
+
+Three tools, three different jobs. Start with alerts, which cannot cost you
+anything.
 
 ## Workflows
 

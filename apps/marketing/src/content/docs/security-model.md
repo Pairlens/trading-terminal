@@ -1,17 +1,30 @@
 ---
 title: Security model
-description: What Pairlens guarantees about credentials, plugin isolation, package signing, and network egress, and how each guarantee is enforced.
+description: Seven security guarantees, each with the mechanism that enforces it and where to verify it in the source. Written for a security review rather than for a brochure.
 group: institutions
 order: 2
 eyebrow: For institutions
-updated: 19 AUG 2026
+updated: 22 AUG 2026
 readTime: 6 min read
 ---
 
-Pairlens is designed so that the sensitive parts of a trading setup, keys and
-order flow, never leave the operator's machine. This page states each
-guarantee and how it is enforced, so a security review has something concrete
-to check against the source.
+Pairlens is designed so the sensitive parts of a trading setup, keys and order
+flow, never leave the operator's machine. This page states each guarantee and
+how it is enforced, so a security review has something concrete to check against
+the source rather than a marketing claim to take on faith.
+
+| Guarantee                                       | Where to check                          |
+| ----------------------------------------------- | --------------------------------------- |
+| Credentials never reach a Pairlens server       | [Credentials](#credentials)             |
+| No order routes through Pairlens infrastructure | [Order flow](#order-flow)               |
+| Third-party code cannot read keys or trade      | [Plugin isolation](#plugin-isolation)   |
+| Only signed packages load                       | [Package integrity](#package-integrity) |
+| The app can only reach hosts you consented to   | [Network egress](#network-egress)       |
+| User scripts cannot reach the network           | [Python execution](#python-execution)   |
+| Nothing needs to leave your perimeter           | [Data residency](#data-residency)       |
+
+Everything below is in the public repository except the optional App Server,
+which by design holds no credentials and touches no exchange.
 
 ## Credentials
 
@@ -148,6 +161,6 @@ does not run it has nothing unpublished in its trust boundary.
 ## Related
 
 - [Self-hosting and standalone mode](/docs/self-hosting)
-- [Architecture](/docs/architecture)
+- [How Pairlens works](/docs/architecture)
 - [Publish to the registry](/docs/publish-to-registry) for the publisher side
   of the trust model

@@ -1,6 +1,6 @@
 ---
 title: Plugins
-description: Add venues, AI providers, panels, indicators, and themes from the Plugin Store, and understand what each one is allowed to do.
+description: Add exchanges, AI providers, panels, indicators and themes, or remove the ones you never use. What a plugin is allowed to do, and how to tell before you install.
 group: traders
 order: 9
 eyebrow: For traders
@@ -8,9 +8,15 @@ updated: 22 AUG 2026
 readTime: 7 min read
 ---
 
-Almost everything in Pairlens is a plugin, including the parts that shipped
-with it. That is what lets you add an exchange, an AI provider, a panel, an
-indicator, or a theme without waiting for a release.
+A plugin is a small add-on that teaches the terminal something new: a new
+exchange to connect to, a new AI model to use, a new panel to put on a board, a
+new theme.
+
+Almost everything in Pairlens is one, including the parts that shipped with it.
+That has two consequences worth knowing. New capabilities can arrive without
+waiting for an app update. And **you can remove what you do not use**, which is
+how you get rid of a whole asset class you never trade rather than scrolling past
+it forever.
 
 Open **Plugins** in the left nav.
 
@@ -150,15 +156,14 @@ signing key. Installs sandboxed by default. Full access is an explicit grant
 you make per plugin, never a default, and the store tells you what you are
 granting before you grant it.
 
-Every package is Ed25519-signed and verified against pinned keys before it
-loads. An unsigned or tampered package will not run.
+Every package is cryptographically signed and verified before it loads. An
+unsigned or tampered package will not run at all.
 
 ## Declared network hosts
 
-A plugin lists the exact hosts it needs to reach. On desktop, the app builds a
-Content-Security-Policy from those declarations and you consent before any
-traffic is permitted. A connector that declares `api.exchange.com` cannot
-quietly call somewhere else.
+A plugin has to list, up front, the exact internet addresses it needs to reach.
+You approve that list before any traffic is allowed, and the app enforces it: a
+connector that declared `api.exchange.com` cannot quietly call anywhere else.
 
 The plugin's store page shows this list. A market connector needing its
 exchange's API is expected. A theme needing network access is not.

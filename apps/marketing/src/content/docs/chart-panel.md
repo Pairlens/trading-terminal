@@ -1,49 +1,64 @@
 ---
 title: The chart
-description: 16 chart types, up to 11 timeframes, four price-scale modes, bar replay, symbol comparison, screenshots, and CSV export. Everything the chart panel can do.
+description: 'How to read a candle, what a timeframe really changes, and everything the Pairlens chart panel does: 16 chart types, log and percentage scales, bar replay, symbol comparison, screenshots and CSV export.'
 group: traders
 order: 1
 eyebrow: For traders
 updated: 22 AUG 2026
-readTime: 8 min read
+readTime: 9 min read
 ---
 
-The chart is the centre of the terminal. It is rendered by
-[Fast Financial Charts](/docs/charts), our own WebGL2 engine, which means
-panning a year of candles with a dozen indicators on top stays smooth.
+## How to read a candle
 
-This page covers the chart panel itself. Drawings and indicators have their own
-pages:
+A price chart draws time across the bottom and price up the side. Each mark on
+it covers one slice of time, and the standard mark is a **candle**, which packs
+four numbers into one shape:
 
-- [Drawing tools](/docs/drawing-tools) for the 45 tools and their shortcuts
-- [Indicators](/docs/chart-indicators) for the 90 built-ins and how to tune them
+```
+        │  ← the highest price reached in this slice
+      ┌─┴─┐
+      │   │  ← the body: from the opening price to the closing price
+      └─┬─┘
+        │  ← the lowest price reached
+```
+
+Green (or hollow) means it closed higher than it opened. Red means it closed
+lower. The body shows where most of the action settled; the thin wicks show how
+far price got pushed before coming back.
+
+That last part is the reason candles beat a plain line. A long upper wick means
+buyers pushed price up and got rejected. A line chart would just show you the
+close and hide the whole fight.
+
+## What a timeframe changes
+
+Pick 1m and each candle covers one minute. Pick 1D and each covers a day. Same
+market, same data, completely different picture.
+
+There is no correct timeframe. There is only the one that matches how long you
+intend to hold. If you plan to be out by lunch, a daily chart tells you almost
+nothing about today. If you plan to hold for months, a 1-minute chart is noise
+that will talk you out of a good position.
+
+Most traders keep two open: a slower one for direction, a faster one for timing.
 
 ## The toolbar
 
-Everything below lives in the toolbar strip along the top of the chart panel.
-
 ### Symbol
 
-The first chip on the strip is what this chart is of, and clicking it points
-**this** chart somewhere else: search any instrument, pick a venue from the row
-above the results, and the chart moves while the rest of the board stays where
-it is. The pair switcher in the top bar is the other half of that: it moves the
-whole board, book and ticket included.
+The first chip is what this chart is showing. Clicking it points **this chart**
+somewhere else, leaving the rest of the board where it is. The pair switcher in
+the top bar is the other half: that one moves everything, book and ticket
+included.
 
-A chart holding a symbol of its own is badged **Pinned**, and its panel header
-repeats the symbol beside the panel name, so a four-chart board says at a glance
-which panels still follow the top bar. **Follow the board** at the bottom of the
-picker hands one back.
-
-On a saved workspace, a chart bound to a
-[pair variable](/docs/workspaces#variables) sets that variable instead, so every
-panel bound to it moves together. The chip says which variable it is reading.
+A chart holding its own symbol is badged **Pinned**, so on a four-chart board
+you can see at a glance which panels still follow the top bar. **Follow the
+board** at the bottom of the picker hands one back.
 
 ### Timeframes
 
-Eleven timeframes, ten with a single-key shortcut. Press the digit anywhere in
-the app and the active chart switches. Every centralized exchange serves all
-eleven.
+Eleven of them, ten with a single-key shortcut. Press the digit anywhere in the
+app and the active chart switches.
 
 | Key | Timeframe | Key | Timeframe |
 | --- | --------- | --- | --------- |
@@ -53,23 +68,20 @@ eleven.
 | 4   | 30m       | 9   | 1W        |
 | 5   | 1h        | 0   | 3D        |
 
-Monthly (1M) is in the menu without a shortcut.
+Monthly is in the menu without a shortcut.
 
-**Not every venue serves every interval.** A connector declares the intervals
-it has, and the picker shows only those. Kalshi has three (1m, 1h, 1D) and
-Polymarket four (1m, 5m, 1h, 1D), because that is what their OHLCV endpoints
-accept, and the futures venues each publish their own shorter list. See
-[prediction markets](/docs/prediction-markets) and
-[perpetual futures](/docs/cex-futures).
+**Not every exchange offers every interval.** Kalshi has three, Polymarket four,
+and each futures exchange publishes its own list. The picker shows only what is
+actually available.
 
-Your choice is remembered rather than rewritten. Point a chart pinned to 15m at
-a venue without it and you get the nearest shorter interval that venue does
-serve, because a finer bar still shows you the window you asked for. Switch
-back to an exchange that has 15m and the chart is on 15m again.
+Your choice is remembered rather than overwritten. Point a chart pinned to 15m
+at an exchange that does not have it and you get the nearest shorter interval,
+because a finer bar still covers the window you asked for. Go back to an
+exchange with 15m and you are on 15m again.
 
 ### Chart types
 
-Sixteen of them, all GPU-rendered:
+Sixteen, all drawn on the GPU so they stay smooth with a year of history loaded.
 
 **Candle family.** Candles, Heikin-Ashi, Hollow Candles, Bar, High-Low.
 
@@ -79,32 +91,31 @@ Sixteen of them, all GPU-rendered:
 
 **Alternative.** Renko, Line Break, Kagi, Point and Figure.
 
-Renko, Kagi, Line Break, and Point and Figure redraw price without a fixed time
-axis, which is what makes them useful for filtering noise out of a trend.
+Start with candles. **Heikin-Ashi** is worth knowing about too: it averages
+neighbouring candles to smooth out the chop, which makes a trend easier to see
+and a reversal harder to catch early. The four alternative types drop the fixed
+time axis entirely and draw a new mark only when price moves a set amount, which
+filters noise out of a trend at the cost of knowing when anything happened.
 
-**Predictions open on Step Line.** A prediction outcome is a probability, and it
-trades sparsely: candles come out as a row of doji ticks with nothing between
-them, which reads as a flat market when the market is only quiet. So a
-[prediction outcome](/docs/prediction-markets) opens as a step line of close on
-the cents axis, and the menu puts Step Line and Line at the top. All sixteen
-types are still there, one scroll down, and whichever you pick is remembered.
+**Prediction markets open on Step Line.** A contract's price is a probability
+that trades in occasional jumps, so candles come out as a row of tiny ticks with
+nothing between them, which looks like a flat market when the market is only
+quiet. See [prediction markets](/docs/prediction-markets).
 
 ### Crosshair
 
-Three modes. **Normal** follows the pointer freely. **Magnet** snaps to the
-nearest OHLC value, which is what you want while drawing levels off wicks.
-**Hidden** removes it entirely for a clean screenshot.
+**Normal** follows your pointer freely. **Magnet** snaps to the nearest high,
+low, open or close, which is what you want when you are drawing a level off a
+wick and want it exactly on the wick. **Hidden** removes it for a clean
+screenshot.
 
-**On a phone the crosshair is something you ask for.** There is no pointer to
-follow, so you touch and hold the plot and one comes up under your finger, with
-the bar's OHLC in place of the live price. Magnet and Normal mean the same
-thing there as here. Hidden does not apply: a crosshair you held a finger down
-for did not arrive by accident. See
+On a phone there is no pointer, so you touch and hold the chart and a crosshair
+appears under your finger. See
 [the mobile terminal](/docs/mobile-terminal#the-chart).
 
 ### Price scale
 
-Four modes:
+Four modes, and the second one matters more than people expect:
 
 | Mode               | What it shows                                        |
 | ------------------ | ---------------------------------------------------- |
@@ -113,115 +124,115 @@ Four modes:
 | **Percentage**     | Everything relative to the first visible bar         |
 | **Indexed to 100** | All series start at 100, ideal for comparing symbols |
 
-There is also **Invert scale**, which flips the vertical axis. Traders use it
-to sanity-check whether a setup still looks good from the other side of the
-trade.
+**Use logarithmic on anything with a long history.** On a linear scale, a move
+from $1 to $2 (a doubling) looks like a tiny wiggle next to a move from $60,000
+to $61,000 (under 2%). Log scale fixes that: the same percentage move is the
+same distance anywhere on the chart, so a trendline drawn across years actually
+means something.
+
+**Invert scale** flips the axis upside down. Traders use it to check whether a
+setup still looks convincing from the other side of the trade, which is a
+surprisingly effective way to catch your own bias.
 
 ### Bid and ask lines
 
-Toggle **Bid/Ask** to draw the live best bid and best ask as horizontal lines
-across the chart. On thin books, the gap between them is the real cost of a
-market order, and seeing it drawn to scale changes how you size.
+Toggle **Bid/Ask** to draw the live best buy and sell prices across the chart.
+On a thin market the gap between them is what a market order will actually cost
+you, and seeing it drawn to scale changes how you size. See
+[the order book](/docs/order-book).
 
 ### Screenshots
 
-The camera menu gives you **Copy image** (straight to your clipboard) and
-**Download image**. On desktop the file lands in a real folder and the toast
-tells you which one. Screenshots capture the chart exactly as rendered,
-drawings and indicators included.
+The camera menu gives you **Copy image** and **Download image**. On desktop the
+file lands in a real folder and the toast tells you which. Everything on screen
+comes with it, drawings and indicators included.
 
 ### Export data
 
-The spreadsheet button next to the camera saves the chart's bars as a CSV.
-Pick **Visible bars** to take only what is on screen, or **All loaded bars**
-for everything the chart has pulled in, and choose how timestamps are written:
-ISO 8601, a plain UTC date and time, or a Unix timestamp in seconds or
-milliseconds.
+The spreadsheet button saves the chart's bars as a CSV. Take **Visible bars** or
+**All loaded bars**, and choose how timestamps are written.
 
-Every row is one bar, with time, open, high, low, close and volume. Indicators
-you have on the chart come along as extra columns, one per plot, so a MACD
-arrives as three. Compare symbols add a close column each. Bars from before an
-indicator had enough history leave the cell empty rather than borrowing the
-next value.
+One row per bar with time, open, high, low, close and volume. Indicators on your
+chart come along as extra columns, one per line they draw, so a MACD arrives as
+three. Bars from before an indicator had enough history to compute leave the cell
+empty rather than borrowing the next value, which keeps a spreadsheet honest.
 
 ### Fullscreen
 
-Expands the chart over the whole workspace. <kbd>Esc</kbd> leaves fullscreen,
-and if you are not in fullscreen it clears the active drawing tool instead.
+Expands the chart over the whole workspace. <kbd>Esc</kbd> leaves. If you are
+not in fullscreen, <kbd>Esc</kbd> drops the active drawing tool instead.
 
 ## Bar replay
 
-Replay steps historical bars forward one at a time so you can rehearse a setup
-without knowing what happened next. Pan left first to load deeper history, then
-open **Replay** and use play, pause, and next bar.
+This is the single best practice tool in the terminal, and almost nobody finds
+it.
 
-Indicators recompute bar by bar as replay advances, so an EMA cross looks
-exactly as it would have looked live rather than as hindsight paints it.
+Replay hides the future and steps historical bars forward one at a time. You see
+exactly what you would have seen live, make your decision, then advance the bar
+and find out if you were right. Pan left first to load deeper history, then open
+**Replay** and use play, pause and next bar.
+
+Indicators recompute as replay advances, so an EMA crossover looks the way it
+looked at the time rather than the way hindsight paints it. If you want to know
+whether a setup works, this is how you find out without paying for the lesson.
 
 ## Compare symbols
 
-Add a second (or fifth) symbol to the same chart from the compare menu. Three
-scale modes decide how they are drawn together:
+Add up to five symbols to one chart. Three modes decide how they are drawn
+together:
 
-**Percentage (indexed).** Every series normalised to its first visible bar. The
-right choice for "which of these outran the other".
+**Percentage (indexed).** Every series rebased to its first visible bar. This is
+the right choice for "which of these outran the other", and the one you want
+almost always.
 
 **Price overlay.** Raw prices on one axis. Only readable when the symbols trade
 in a similar range.
 
-**Dual axis.** Each series gets its own scale. Good for pairing an asset
-against something on a different order of magnitude.
+**Dual axis.** Each series keeps its own scale. Good for pairing an asset
+against something on a completely different order of magnitude.
 
-A prediction outcome starts on Dual axis rather than Percentage, because it is
-already the extreme case of a different order of magnitude: a contract priced at
-47¢ next to BTC at 64,000 on one axis leaves the outcome as a flat line along
-the bottom, and rebasing both to 100 puts an index number through the cents
-formatter. On dual axis the outcome keeps its own cents axis whatever is drawn
-over it. Switch it if you want the other reading.
+A prediction contract starts on dual axis, because a contract priced at 47¢ next
+to Bitcoin at 64,000 would otherwise be a flat line along the bottom.
 
 ## Right-click menu
 
-Right-clicking the chart gives you the fast path to the things you do most:
+The fast path to what you do most:
 
 - Add indicator
 - Horizontal line at the clicked price
 - Trend line, ray, arrow, Fibonacci retracement
 - Add alert at the clicked price, which creates a real
-  [notification rule](/docs/alerts-notifications) with the level prefilled
+  [notification rule](/docs/alerts-notifications) with the level filled in
 - Fit content, scroll to latest
 - Delete drawing, when you right-clicked one
 
-## What persists
+## What is remembered
 
-Chart state is saved per pair: chart type, timeframe, scale mode, indicators
-and their parameters, and your drawings. Reopen a pair a week later and it
-looks the way you left it. Locally by default, synced across devices when you
-are signed in.
+Chart state is saved per pair: chart type, timeframe, scale, indicators and
+their settings, and your drawings. Reopen a pair next week and it looks the way
+you left it. Local by default, synced across devices when you are signed in.
 
-Chart type and compare scale mode are saved per asset class, not per pair.
-Candles on BTC and a step line on an election outcome hold at the same time, and
-picking Line on a stock does not turn your crypto charts into lines. Everything
-else stays per pair.
+Two things are saved per market type instead of per pair: chart type and compare
+mode. So candles on Bitcoin and a step line on an election contract hold at the
+same time, and choosing Line on a stock does not turn your crypto charts into
+lines.
 
 ## Multiple charts
 
-Add more than one chart panel to a workspace and each keeps its own symbol,
-venue, timeframe, type, and indicator set.
+Add more than one chart panel and each keeps its own symbol, exchange,
+timeframe, type and indicators.
 
 **Dual Charts**, **Triple Charts** and **Quad Charts** in the Workspaces menu
-are the ready-made versions. They open with a different instrument per panel:
-the first panel follows the pair you were already looking at, the rest arrive on
-their own, and every one of them is changeable from its symbol chip. Venues
-follow the page you opened them from, so a board opened on Binance is a board of
-Binance tapes.
+are the ready-made versions. The first panel follows the pair you were already
+on, the rest arrive with their own, and every one is changeable from its symbol
+chip.
 
-Keyboard shortcuts go to the chart you last pointed at or focused, so digits and
-tool chords always land where you expect.
+Keyboard shortcuts go to the chart you last pointed at, so digits and tool
+chords land where you expect.
 
 ## Related
 
 - [Drawing tools](/docs/drawing-tools)
 - [Indicators](/docs/chart-indicators)
-- [Custom Python indicators](/docs/custom-python-indicators)
-- [Reading the market](/docs/market-data) for the book, tape, and depth panels
+- [Reading the market](/docs/market-data) for the book, tape and depth panels
 - [Keyboard shortcuts](/docs/keyboard-shortcuts)

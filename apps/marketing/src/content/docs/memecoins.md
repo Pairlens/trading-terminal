@@ -1,154 +1,183 @@
 ---
 title: Memecoins
-description: A four-column launchpad board for Solana memecoins, with bonding-curve progress, buy and sell counts, holder concentration and a deployer audit, fed entirely from keyless public sources with no Pairlens server in the path.
+description: What a bonding curve is, why graduation matters, and how to read a launchpad token before you buy it. Then the four-column Pairlens board, the safety panel, and where the data comes from.
 group: traders
 parent: trading
 order: 10
 eyebrow: For traders
 updated: 22 AUG 2026
-readTime: 10 min read
+readTime: 9 min read
 ---
 
-Memecoins are their own asset class in Pairlens, not a filter over the DEX
-board. They route through the same connectors and the same guarded order path
-as any other token, but they are read differently: a pool desk is about
-reserves, fee tier and price impact, and a memecoin desk is about market cap,
-who is buying, and whether the deployer can still mint more supply.
+## Before anything else
 
-So the class gets its own Discovery tab, its own colour, its own trade board,
-and its own panes.
+Memecoins are the most hostile market in this terminal. Most of them go to zero,
+many are built to. Two specific mechanisms are worth naming, because they are how
+people actually lose money here rather than merely being wrong:
+
+**A rug pull.** The creator holds most of the supply, waits for buyers, and sells
+everything at once. The chart goes vertical then straight to zero, in minutes.
+
+**A honeypot.** The token's code lets you buy and quietly prevents you from
+selling. You watch it go up and cannot get out.
+
+The Token Safety panel below exists to check for exactly these before you trade.
+Read it every time. And size every memecoin position as money you have already
+decided to lose, because there is no thesis that survives the creator minting
+another billion tokens.
+
+## What a launchpad actually does
+
+Most Solana memecoins are created on a **launchpad**, which is a system that lets
+anyone mint a token and start trading it immediately, with no liquidity provider
+needed.
+
+It works through a **bonding curve**: a formula that sets the price purely from
+how much has been bought so far. The first buyer pays almost nothing, and each
+subsequent buyer pays more than the last, automatically. No seller is required,
+because the curve itself is the counterparty.
+
+**Graduation** is what happens when enough has been paid in. The curve completes,
+the money it collected becomes real liquidity, and the token migrates to an
+ordinary [liquidity pool](/docs/dex-trading) where it trades like any other
+on-chain asset. Only a small fraction of tokens ever get there.
+
+That is why launchpad tokens get their own board, split by where they are in that
+lifecycle. It is the one thing about them that is genuinely structural rather
+than vibes.
+
+## Why they are a separate class
+
+Memecoins route through the same connectors and the same guarded order path as
+any other on-chain token. What differs is what you read before trading.
+
+A pool desk is about reserves, fee tier and price impact. A memecoin desk is
+about market cap, who is buying, and whether the creator can still mint more
+supply. So the class gets its own Discovery tab, its own trade board and its own
+panels.
 
 ## The board
 
-**Discovery → Memecoins** opens on four columns, one per stage of a token's
-life. Equal widths on purpose: which stage is worth your attention is a
-decision about your own risk, not one the layout should make for you.
+**Discovery → Memecoins** opens on four columns, one per stage of a token's life.
+Equal widths on purpose: which stage deserves your attention is a decision about
+your own risk tolerance, not one a layout should make for you.
 
 **New Mints** is what was minted in the last six hours, newest first, with the
-holder count sitting beside the ticker. Rows appear within seconds of a token's
-first trade, and the age column counts in seconds while it matters.
+holder count beside the ticker. Rows appear within seconds of a token's first
+trade, and the age column counts in seconds while that matters.
 
-**Graduating** is the one that takes reading. A launchpad token starts life on
-a _bonding curve_, a formula that sets its price against how much has been
-bought so far. When enough has been paid in, the curve completes and the token
-migrates to a real AMM pool. That is graduation, and this column ranks
-everything currently climbing by how close it is. The bar and the percentage
-are that progress. Tokens enter the column at a third of the way up, because
-below that they are still New.
+**Graduating** ranks everything currently climbing a curve by how close it is,
+shown as a bar and a percentage. Tokens enter this column a third of the way up.
 
-**Graduated** is everything that completed a curve in the last seven days and
-now trades on a pool. The third column counts time since migration.
+**Graduated** is everything that completed a curve in the last seven days and now
+trades on a real pool.
 
 **Legendary** is the cross-chain long tail that outlived its cycle: DOGE, SHIB,
-PEPE, BONK, WIF and the rest, ranked by market cap with the 24-hour move and
-traded volume beside them.
+PEPE, BONK, WIF and the rest, ranked by market cap.
 
-Every row carries market cap and a buy/sell bar. Buys are green and sells are
-red, the bar is the ratio, and the two numbers are the magnitude, because 8
-buys to 1 sell and 800 to 100 are the same ratio and very different events.
+Every row carries market cap and a buy/sell bar. Buys green, sells red, the bar
+is the ratio, and the two numbers are the magnitude, because 8 buys to 1 sell and
+800 to 100 are the same ratio and very different events.
 
 Clicking a row opens that token's chart and swap ticket.
 
-Legendary rows take an extra step to get there, because that column ranks
-_coins_ rather than contracts. A coin id like `gigachad-2` is not something a
-swap ticket can use, and the ticker is no help: GIGACHAD is three different
-tokens on three chains. So each row is resolved to a real contract through
-CoinGecko's own coin-to-contract mapping, which is a lookup rather than a
-guess.
+Legendary rows take an extra step to get there, because that column ranks _coins_
+rather than contracts, and a ticker is no help: GIGACHAD is three different
+tokens on three chains. Each row is resolved to a real contract through a proper
+coin-to-contract mapping.
 
-Most large-cap memecoins list a contract on several chains, and all but one of
-them is usually a bridged wrapper with almost no liquidity. BONK lists eight
-chains, PEPE four. Pairlens picks the one where the token actually trades
-deepest, which is the only rule that gets both right: BONK is Solana-native and
-SPX6900 is Ethereum-native, so any fixed "prefer this chain" order sends one of
-them to a wrapper.
+Most large memecoins list a contract on several chains, and all but one is
+usually a bridged wrapper with almost no liquidity. BONK lists eight chains, PEPE
+four. Pairlens picks the one where the token actually trades deepest, which is
+the only rule that gets both right: BONK is Solana-native and SPX6900 is
+Ethereum-native, so any fixed chain preference sends one of them to a wrapper.
 
-A handful of rows still do not link, and that is correct rather than missing.
-DOGE has no contract on any chain, and some coins list only a brokerage. When
-every candidate contract measures zero liquidity, Pairlens refuses to pick one
-instead of guessing.
+A handful of rows do not link at all, and that is correct rather than missing.
+DOGE has no contract on any chain. When every candidate measures zero liquidity,
+Pairlens refuses to pick one instead of guessing.
 
 ## The trade board
 
-Open a memecoin and you get **Memecoin Terminal** rather than the DEX layout.
+Open a memecoin and you get **Memecoin Terminal** rather than the pool layout.
 
-**Token Stats** carries market cap, FDV, liquidity, holder count, the launchpad
-that minted it, and curve progress. Market cap uses circulating supply and FDV
-uses total supply; for most launchpad tokens the whole supply is circulating
-and the two agree.
+**Token Stats** carries market cap, fully diluted value, liquidity, holder count,
+the launchpad that minted it, and curve progress.
 
-**Buy / Sell Flow** puts buys against sells at four horizons, 5m, 1h, 6h and
-24h, each with the price move and the traded volume behind it. Counts are
-trades, not traders.
+Market cap uses circulating supply and fully diluted value uses total supply. For
+most launchpad tokens the whole supply is circulating and the two agree. When
+they do not, the gap is supply that has not hit the market yet, which is supply
+that eventually can.
 
-**Token Safety** is the panel worth reading before an order:
+**Buy / Sell Flow** puts buys against sells over 5 minutes, 1 hour, 6 hours and
+24 hours, each with the price move and the volume behind it. Counts are trades,
+not traders, which matters here: one wallet can be a hundred trades.
 
-- **Mint authority.** Revoked means the deployer cannot create more supply.
-- **Freeze authority.** Revoked means they cannot freeze your account.
-- **Top holders.** The share of supply held by the largest wallets. Above 30%
-  it turns red.
+**Token Safety** is the panel to read before an order:
+
+- **Mint authority.** Revoked means the creator cannot create more supply. Not
+  revoked means your holding can be diluted at will.
+- **Freeze authority.** Revoked means they cannot freeze your account. Not
+  revoked is the mechanism behind a honeypot.
+- **Top holders.** The share of supply held by the largest wallets. Above 30% it
+  turns red, because that is enough for one seller to end the market.
 - **Deployer mints.** How many tokens this wallet has launched before, and how
-  many of them graduated. A wallet on its four-thousandth mint is telling you
-  something.
+  many graduated. A wallet on its four-thousandth mint is telling you something.
 
-One rule about that panel: **Unknown is not safe.** When a source publishes no
-audit, the pane says Unknown rather than showing a green check, because a green
-check here reads as permission to size up.
+One rule about that panel: **Unknown is not safe.** When no source publishes an
+audit, it says Unknown rather than showing a green check, because a green check
+here reads as permission to size up.
 
-**Memecoin Sniper** is the second layout, for working launches: the New and
+**Memecoin Sniper** is a second layout for working launches: the New and
 Graduating columns stay on screen beside the chart, the flow strip and the
 ticket, so the two columns that decide the entry are still visible while the
 order goes in.
 
 ## Where the data comes from
 
-No Pairlens server is involved. Every request goes out from your own browser to
-a keyless public API, which means each user spends their own rate-limit budget
-rather than competing for one server's.
+No Pairlens server is involved. Every request goes out from your own browser to a
+keyless public API, so each user spends their own rate-limit budget rather than
+competing for one server's.
 
-**New, Graduating and Graduated** come from Jupiter. The primary feed publishes
-bonding-curve completion computed by the venue that runs the curve. If it stops
-answering, the board falls back to Jupiter's published token API and
-reconstructs the percentage from market cap against the curve's own formula,
-which lands within a fraction of a point in the middle of the curve and can
-drift a couple near the top. A reconstructed number is marked with a tilde
-(`~96%`) so you always know which one you are reading.
+**New, Graduating and Graduated** come from Jupiter, whose primary feed publishes
+curve completion computed by the venue running the curve. If it stops answering,
+the board falls back to Jupiter's public token API and reconstructs the
+percentage from market cap and the curve's own formula. A reconstructed number is
+marked with a tilde (`~96%`) so you always know which one you are reading.
 
 **Legendary** comes from CoinGecko's meme-token category. Market cap comes from
-there rather than from a DEX because DEX-reported market cap is unreliable at
-the top end: measured on a live pair, one venue reported BONK's market cap as
-over a trillion dollars.
+there rather than from a DEX because DEX-reported market cap is unreliable at the
+top end: measured live, one venue reported BONK's market cap as over a trillion
+dollars.
 
-The launchpads' own APIs are not usable from a browser. pump.fun's endpoint
-refuses any origin but its own, so a client-side board cannot read it at all.
+The launchpads' own APIs are not usable from a browser at all, so a client-side
+board cannot read them.
 
 Both columns cache their last answer locally, so re-opening the board paints
-immediately and then refreshes, and a throttled feed leaves the previous list
-on screen rather than emptying the column.
+immediately and then refreshes, and a throttled feed leaves the previous list on
+screen rather than emptying the column.
 
 ### Swapping the feed
 
-The board reads its data through a plugin capability, `market-data:launchpad`,
-not through a hardcoded fetch. The bundled **Memecoin Feed** plugin serves it
-keylessly at priority 5. Any plugin declaring the same capability at a lower
-priority number wins resolution and serves the same rows, with no pane
+The board reads its data through a plugin capability rather than a hardcoded
+fetch. The bundled feed serves it keylessly. Any plugin declaring the same
+capability at a higher priority serves the same rows instead, with no panel
 changing. That is the upgrade path if you want a paid feed behind the board.
 
 ## Trading one
 
 Memecoin orders take the identical path as any other on-chain swap: the same
-Jupiter connector, the same wallet, the same risk guardrails, the same
-confirmation. See [DEX and wallets](/docs/dex-trading) for the wallet setup and
-[risk guardrails](/docs/risk-guardrails) for the limits that apply.
+connector, the same wallet, the same risk guardrails, the same confirmation. See
+[DEX and wallets](/docs/dex-trading) for the wallet setup.
 
-A memecoin's identity is its chain and its mint address, never its ticker. Six
-tokens on the board can be called TIMBOTHY and be six different mints. The URL
-carries the address for that reason, and so does everything the board pins.
+Two practical notes. **Set your slippage wider than you would elsewhere**, since
+a thin launchpad token at 0.1% tolerance simply will not go through. And **a
+memecoin's identity is its chain and mint address, never its ticker.** Six tokens
+on the board can be called TIMBOTHY and be six different mints. The address is
+what everything pins.
 
 ## Turning it off
 
-Memecoins are a plugin family. Uninstalling **Pairlens Memecoins** from the
-Plugin Store removes the Discovery tab, the workspaces and the panes;
-uninstalling **Memecoin Feed** removes the data. A deployment can drop the
-whole class at build time with `VITE_PAIRLENS_DISABLED_FAMILIES=memes`, and
-nothing about the class is seeded, installed or listed.
+Memecoins are a plugin family. Uninstalling **Pairlens Memecoins** removes the
+Discovery tab, the workspaces and the panels; uninstalling **Memecoin Feed**
+removes the data. A deployment can drop the whole class at build time. See
+[plugins](/docs/plugins-for-traders).

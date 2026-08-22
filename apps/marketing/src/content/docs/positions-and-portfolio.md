@@ -1,108 +1,108 @@
 ---
 title: Positions and portfolio
-description: The Positions, Portfolio, and Risk panels. Open orders, fill history, balances, allocation, and the guardrail state, read straight from the venue.
+description: What you hold, what is still waiting, and what it is all worth. The Positions, Portfolio and Risk panels, read live from your exchange.
 group: traders
 parent: trading
 order: 7
 eyebrow: For traders
-updated: 15 AUG 2026
+updated: 22 AUG 2026
 readTime: 5 min read
 ---
 
-Three panels answer "what do I actually hold and what is still working". All
-three read from the venue through your connector, using the credentials on this
-device. Nothing about your account passes through a Pairlens server.
+Three panels answer the question "what do I actually have on right now".
+
+All three read from your exchange through your connector, using the credentials
+on this device. Nothing about your account passes through a Pairlens server, and
+nothing here is our copy of the truth. It is the exchange's own record.
 
 ## Positions
 
-Four tabs, bound to whichever connected account you select in the panel header.
+Four tabs, bound to whichever connected account you pick in the panel header.
 
-| Tab           | What it shows                                                     |
-| ------------- | ----------------------------------------------------------------- |
-| **Positions** | Margin positions. Empty on spot, and it says so                   |
-| **Orders**    | Resting orders, with a cancel button per row                      |
-| **Fills**     | Trade history: side, pair, price, size, fee, and time             |
-| **Balances**  | Every asset on the account, with a total in your display currency |
+| Tab           | What it shows                                                 |
+| ------------- | ------------------------------------------------------------- |
+| **Positions** | Leveraged positions. Empty on a spot account, and it says so  |
+| **Orders**    | Orders still waiting to fill, with a cancel button per row    |
+| **Fills**     | Your trade history: side, pair, price, size, fee and time     |
+| **Balances**  | Every asset on the account, totalled in your display currency |
 
-**The Positions tab is empty on purpose.** This panel reads a spot account,
-and spot has no margin positions, so rather than showing a plausible-looking
-table with nothing in it, the tab says "Spot mode, no margin positions". What
-you hold is under Balances.
+**Why the Positions tab is empty on a spot account.** A "position" in the
+trading sense is something you opened with borrowed money and will have to close
+to realise. Buying Bitcoin outright is not a position, it is just owning
+Bitcoin, and that shows up under Balances.
 
-Leveraged positions live in their own panel. **Futures Positions** lists your
-open perpetuals with entry price, mark, liquidation level and unrealized P&L,
-and **Prediction Positions** lists event contracts. Both are separate panels
-rather than tabs here, because a position with a liquidation price and a
-contract that expires against a real-world event have different columns than a
-spot balance. See [perpetual futures](/docs/cex-futures) and
-[prediction markets](/docs/prediction-markets).
+Rather than draw a plausible-looking empty table, the tab says "Spot mode, no
+margin positions" so you know nothing is missing.
 
-**Orders can be cancelled from the row.** A confirmation names the side and the
-pair before anything is sent, because a misclick here is not recoverable. Order
-status reads Open, Partial, Filled, or Canceled.
+Leveraged positions get their own panels. **Futures Positions** lists your open
+perpetuals with entry, mark, liquidation level and unrealised profit and loss.
+**Prediction Positions** lists event contracts. Both are separate panels because
+a position with a liquidation price and a contract that settles on a real-world
+event need genuinely different columns.
 
-**Fills are the venue's record, not ours.** Fees come back in whatever currency
-the venue charged them in, and are shown that way rather than converted, because
+**Cancelling an order** is done from its row. A confirmation names the side and
+the pair first, because a misclick here is not recoverable.
+
+**Fills are the venue's record.** Fees come back in whatever currency the
+exchange charged them in, and are shown that way rather than converted, because
 a converted fee is a number you cannot reconcile against your exchange
-statement.
+statement at tax time.
 
-If no account is selected, each tab says which one it needs rather than
-rendering blank. Connect one under [Accounts](/docs/connect-an-exchange).
-
-Event contracts get their own panel instead of a tab here, because a contract
-that expires against a real-world outcome needs different columns. See
-[prediction markets](/docs/prediction-markets).
+If no account is selected, each tab says which one it needs rather than showing
+you a blank. Connect one under [Accounts](/docs/connect-an-exchange).
 
 ## Portfolio
 
-Holdings as a donut with a ranked list beside it: every asset, its share of the
-total, and its value in your display currency (USD, EUR, or GBP, set in
+Your holdings as a donut with a ranked list beside it: every asset, its share of
+the total, and its value in your display currency (USD, EUR or GBP, set in
 [settings](/docs/settings#currency)).
 
-It is the answer to "am I concentrated", which is a question the Balances tab
-technically answers but does not make visible. Values fall back to raw amounts
-for assets with no price available, so a long-tail token still appears rather
-than silently dropping out of your total.
+This panel answers one question the Balances tab technically answers but does
+not make visible: **am I concentrated?** If one asset is 70% of your portfolio,
+you are not really diversified, you are making one bet with extra steps. Seeing
+it as a picture makes that obvious in a way a list of numbers does not.
 
-Portfolio is a singleton: one per workspace.
+Assets with no available price fall back to their raw amount rather than
+silently dropping out of your total.
+
+Portfolio appears once per workspace.
 
 ## Risk
 
-A compact panel that reads your current window against the caps you configured.
-It sits in a corner and says one of:
+A compact readout of your current window against the caps you set. It sits in a
+corner and says one of:
 
-| State             | Meaning                                             |
-| ----------------- | --------------------------------------------------- |
-| **All clear**     | Inside every limit                                  |
-| **Caution**       | Approaching one                                     |
-| **Limit hit**     | A cap has been breached                             |
-| **Buys Locked**   | New buys are blocked by the breach action you chose |
-| **Orders Locked** | All new orders are blocked                          |
+| State             | Meaning                                      |
+| ----------------- | -------------------------------------------- |
+| **All clear**     | Inside every limit                           |
+| **Caution**       | Approaching one                              |
+| **Limit hit**     | A cap has been breached                      |
+| **Buys Locked**   | New buys are blocked by the action you chose |
+| **Orders Locked** | All new orders are blocked                   |
 
-Alongside the state it carries the window's P&L, trade count, and exposure.
+Alongside it: the window's profit and loss, your trade count, and your exposure.
 
 The panel is a readout, not the enforcement. Limits are enforced in the order
-path itself, which is why the AI cannot talk its way around one and a bot cannot
-either. Configure them under
-[risk guardrails](/docs/risk-guardrails), which also covers the reset window and
-what each breach action does.
+path itself, which is why neither the AI nor a bot can talk its way around one.
+Configure them in [risk guardrails](/docs/risk-guardrails).
 
-If you have not set any limits, the panel prompts you to, which is the correct
+If you have not set any limits, the panel prompts you to. That is the correct
 first thing to do with it.
 
 ## What syncs and what does not
 
-None of this is Pairlens state. Balances, orders, and fills are fetched live
-from the venue every time, so they are as current as the venue's API and they
+None of this is Pairlens state. Balances, orders and fills are fetched live from
+your exchange every time, so they are exactly as current as its API, and they
 disappear the moment you disconnect the account.
 
-The one exception is the **trade journal**, which is yours: trades you or the
-[assistant](/docs/ai-copilot) log, stored in your account when you are signed in
-and sync is on. It exists to hold the reasoning behind a trade, which no
-exchange API will ever give you back.
+The one exception is your **trade journal**: notes you or the
+[assistant](/docs/ai-copilot) record against a trade, stored in your account
+when you are signed in with sync on. It exists to hold the reasoning behind a
+trade, which no exchange API will ever give you back and which is the single
+most useful thing to reread after a losing month.
 
 ## Where to next
 
 - [Place an order](/docs/place-an-order) for the ticket that creates these rows
 - [Risk guardrails](/docs/risk-guardrails) for the caps behind the Risk panel
-- [Paper trading](/docs/paper-trading) to see all of this without real money
+- [Paper trading](/docs/paper-trading) to see all of this with no money at stake

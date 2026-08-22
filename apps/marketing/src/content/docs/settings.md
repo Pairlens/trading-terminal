@@ -1,15 +1,20 @@
 ---
 title: Settings
-description: Every setting in the terminal, from the terminal lock and credential vault to cloud sync, keyboard shortcuts, themes, languages, regional endpoint routing, data rate, analytics, and account deletion.
+description: 'Every setting in the terminal, and the three worth visiting first: your risk caps, your security, and your country.'
 group: traders
 order: 10
 eyebrow: For traders
-updated: 19 AUG 2026
+updated: 22 AUG 2026
 readTime: 11 min read
 ---
 
 Open settings with <kbd>⌘,</kbd>, from the user menu, or by searching for a
 section in omni-search.
+
+Three sections are worth visiting on your first day, and you can ignore the rest
+until something prompts you: **Risk Management** for your loss and position caps,
+**Security** if you are going to store exchange keys, and **Country**, which
+decides how connectors reach exchanges that route by region.
 
 ## Profile
 
@@ -152,9 +157,9 @@ It opens the screen and nothing else. If you also have a vault, your keys ask
 for their own password after the screen unlocks. What opens both in one gesture
 is a vault passkey, added under Ways to unlock below.
 
-The desktop app has no biometric row: it serves the terminal from a `tauri://`
-origin, which is not a valid WebAuthn origin. Touch ID on a Mac is offered
-through the vault there instead.
+The desktop app has no biometric row here, because of how the web standard
+behind passkeys identifies an app. Touch ID on a Mac is offered through the
+vault instead.
 
 **When to lock.** Five independent triggers:
 
@@ -194,14 +199,11 @@ one System Settings visit from unopenable. You cannot remove the last method
 either. There is no recovery here.
 
 **Changing how the vault opens asks for your password, even when it is already
-open.** Adding a method always did, because the data key cannot be re-wrapped
-without recovering it first. Removing one and turning the vault off now ask
-too. The reason is the second window: open the terminal in another tab and it
-receives the key from the first, so it is unlocked without anyone having typed
-anything. That is what makes a second window useful, and it is exactly what you
-do not want standing behind "remove this passkey" on a machine you walked away
-from. Reading your keys still costs nothing there. Changing the locks costs one
-password.
+open.** The reason is the second window: open the terminal in another tab and it
+inherits the unlocked state from the first, without anyone typing anything. That
+is useful, and it is exactly what you do not want standing behind "remove this
+passkey" on a machine you walked away from. Using your keys costs nothing there.
+Changing the locks costs one password.
 
 **Hard lock** seals the vault rather than just covering the screen. Live bots
 and automations stop trading until you unlock again; paper bots keep running.
@@ -217,15 +219,17 @@ The vault and the lock screen share one attempt limit. Five wrong passwords arm
 a doubling delay capped at five minutes, and it survives a reload and a second
 window, so a wrong vault password also delays the lock screen.
 
-**What checks your password depends on whether a vault stands behind it.** With
-a vault password enrolled, the lock screen answers by actually unwrapping your
-vault key: it either decrypts or it does not, so nothing an attacker can edit
-in browser storage makes it say yes. Without one, the check is a stored hash of
-your password, which is the only artifact there is. On desktop that hash sits
-in the system keychain and never leaves the machine. In a browser it is in
-browser storage, so clearing site data removes the lock, and someone who can
-edit that storage can get past the screen. They reach a terminal with no keys
-in it, because there were none to protect in that configuration.
+**How strong the lock screen is depends on whether a vault stands behind it.**
+With a vault password set, the lock screen answers by actually decrypting your
+vault: it either works or it does not, so nothing an attacker can tamper with
+will make it say yes.
+
+Without a vault there is nothing to decrypt, so the check is a stored fingerprint
+of your password. On desktop that lives in the system keychain and never leaves
+the machine. In a browser it lives in browser storage, so clearing site data
+removes the lock, and somebody who can edit that storage can get past the screen.
+What they reach is a terminal with no keys in it, because in that configuration
+there were none to protect.
 
 The command-line tool takes API keys as arguments and never reads the vault at
 all.
@@ -311,7 +315,7 @@ noise and battery.
 
 Live status of your market-data connections. Data streams directly from
 exchanges through the installed connector plugins, with no intermediate server,
-so this page tells you which sockets are up.
+so this page tells you which live connections are actually up.
 
 ## Language
 
