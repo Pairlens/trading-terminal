@@ -34,6 +34,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { isDesktopOnlyClass } from './lib/desktop-only-classes'
 
 import {
   marketRefToPath,
@@ -52,11 +53,6 @@ import { track } from '@/lib/analytics-events'
 
 /** Routes the phone deliberately does not carry. */
 const DESKTOP_ONLY_PREFIXES = [
-  // NFT collections are a desktop surface for now. The phone could chart a
-  // floor, but the class is the ladder, the trait floors and the sweep ticket,
-  // and half of that on a 402px screen is a worse answer than an honest
-  // redirect. Remove this line when the mobile NFT panels ship.
-  '/nft/',
   '/notifications',
   '/workflows',
   '/indicators',
@@ -137,6 +133,18 @@ export function useMobileRouteSync(): void {
     reconciledPathRef.current = pathname
 
     const routed = marketRefFromPath(pathname)
+    if (routed && isDesktopOnlyClass(routed.cls)) {
+      // Same rule as the prefix list below: only for a session that STARTED on
+      // a phone, so a desktop browser dragged under 768px keeps its address and
+      // widening back restores the exact screen.
+      if (getInitialViewportMode() === 'desktop') return
+      if (handledRef.current === pathname) return
+      handledRef.current = pathname
+      toast.info(t('mobile.shell.desktopOnlyRoute'))
+      void navigate({ to: canonicalPath, replace: true })
+      return
+    }
+
     if (routed) {
       handledRef.current = null
       // Which side is the newer fact. The rule, and what reading it backwards

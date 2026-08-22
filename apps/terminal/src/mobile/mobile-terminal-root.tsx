@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 import { MobileFocusProvider } from './mobile-focus-context'
 import { MobilePredictionDesk } from './mobile-prediction-desk'
 import { MobileSurface } from './mobile-surface'
+import { isDesktopOnlyClass } from './lib/desktop-only-classes'
 import { marketRefFromPath } from './use-mobile-route-sync'
 import {
   focusInstrument,
@@ -68,13 +69,20 @@ export function MobileTerminalRoot() {
   // on a stock venue long enough to render.
   const [focus, setFocus] = useState<MobileFocusState>(() => {
     const routed = marketRefFromPath(location.pathname)
-    if (routed)
+    // A class the phone cannot render must not be seeded from the address.
+    // Adopting it mounts a tree with no chart provider under it and the board
+    // comes up on the error boundary; `useMobileRouteSync` sends the address
+    // itself somewhere the shell can draw.
+    if (routed && !isDesktopOnlyClass(routed.cls))
       return seedFocus(
         routed.id,
         routed.cls,
         outcomeFromSearch(location.search),
       )
-    const recent = recentPairs[0]
+    // Recents can carry a desktop-only class too: the strip is written by the
+    // desktop shell as well, and a collection opened on a laptop must not
+    // become the phone's opening screen.
+    const recent = recentPairs.find((r) => !isDesktopOnlyClass(r.cls))
     if (recent) return seedFocus(recent.id, recent.cls, '')
     return { instrument: FALLBACK_PAIR, pair: FALLBACK_PAIR, cls: 'spot' }
   })
