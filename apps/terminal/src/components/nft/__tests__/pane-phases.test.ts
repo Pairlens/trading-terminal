@@ -23,11 +23,14 @@ import { join } from 'node:path'
 const PANE_DIR = join(import.meta.dir, '..')
 
 /**
- * Phases that mean "there is nothing to draw and here is why". A pane naming
- * any one of them must name all of them, or the ones it missed render as a
- * blank table.
+ * The pair that must travel together.
+ *
+ * `unsupported` on its own is legitimate: a pane may gate on "no provider
+ * installed" and let everything else fall through. `failed` is different. A
+ * pane that distinguishes a failure at all has to distinguish the ONE failure
+ * with a fix attached, or the state it misses renders as a blank table.
  */
-const FALLBACK_PHASES = ['unsupported', 'needsKey', 'failed'] as const
+const PAIRED_PHASES = ['needsKey', 'failed'] as const
 
 function paneSources(): Array<{ name: string; source: string }> {
   return readdirSync(PANE_DIR)
@@ -39,15 +42,13 @@ function paneSources(): Array<{ name: string; source: string }> {
 }
 
 describe('NFT pane phase handling', () => {
-  test('a pane naming one fallback phase names every fallback phase', () => {
+  test('a pane that names a failure also names the one with a fix', () => {
     for (const { name, source } of paneSources()) {
-      const named = FALLBACK_PHASES.filter((phase) =>
+      const named = PAIRED_PHASES.filter((phase) =>
         source.includes(`'${phase}'`),
       )
       if (named.length === 0) continue
-      expect(named.slice().sort(), name).toEqual(
-        [...FALLBACK_PHASES].sort(),
-      )
+      expect(named.slice().sort(), name).toEqual([...PAIRED_PHASES].sort())
     }
   })
 

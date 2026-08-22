@@ -180,7 +180,11 @@ export class PluginManager {
     capability: CapabilityId,
     params: Record<string, unknown>,
   ): Promise<unknown> {
-    const query = { capability, market: this.context.market || undefined }
+    const query = {
+      capability,
+      market: this.context.market || undefined,
+      assetClass: this.context.assetClass,
+    }
     const resolved = this.resolver.resolve(query)
 
     if (resolved === null) {
@@ -258,7 +262,11 @@ export class PluginManager {
     params: Record<string, unknown>,
     callback: (data: unknown) => void,
   ): () => void {
-    const query = { capability, market: this.context.market || undefined }
+    const query = {
+      capability,
+      market: this.context.market || undefined,
+      assetClass: this.context.assetClass,
+    }
     const resolved = this.resolver.resolve(query)
 
     if (resolved === null) {

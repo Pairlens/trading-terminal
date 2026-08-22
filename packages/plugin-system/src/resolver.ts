@@ -54,6 +54,34 @@ export class PluginResolver {
     return this.userPins.get(`${capability}|${market}`) ?? null
   }
 
+  /**
+   * Does this plugin trade the kind of market being asked about?
+   *
+   * Only ever narrows, and only when BOTH sides say something: a query with no
+   * class matches everything, and so does a plugin that declares none. That is
+   * what keeps this invisible to every caller that existed before it, while
+   * letting an asset class that shares a market id with another one stop losing
+   * to it.
+   *
+   * The concrete case: 'ethereum' is a DEX venue and an NFT venue. Both declare
+   * `trading:orders` on it, the DEX connector at a higher priority, and
+   * `trading:orders` is side-effecting so there is no walk to a runner-up. An
+   * NFT order was therefore handed to a swap router that split the contract
+   * address on a dash, found no quote leg, and refused. The market-ref module's
+   * own header describes the same failure from the other direction: a crypto
+   * pair routed to a stock venue because one string could not say which kind of
+   * asset it named.
+   */
+  private classMatches(
+    query: CapabilityQuery,
+    plugin: PluginInstance,
+  ): boolean {
+    if (query.assetClass === undefined) return true
+    const declared = plugin.manifest.metadata?.['assetClass']
+    if (typeof declared !== 'string') return true
+    return declared === query.assetClass
+  }
+
   private getCandidates(query: CapabilityQuery): Array<PluginInstance> {
     const results: Array<PluginInstance> = []
 
@@ -70,7 +98,7 @@ export class PluginResolver {
           decl.markets.includes('*') ||
           (query.market !== undefined && decl.markets.includes(query.market))
 
-        if (marketMatches) {
+        if (marketMatches && this.classMatches(query, plugin)) {
           results.push(plugin)
           break // Only add each plugin once even if it declares the capability multiple times
         }

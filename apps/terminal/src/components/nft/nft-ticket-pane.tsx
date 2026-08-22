@@ -171,7 +171,7 @@ function NftTicketInner({
   }
 
   const phase = nftPanePhase(bookStatus, Boolean(book))
-  if (phase === 'unsupported') {
+  if (phase === 'unsupported' || phase === 'needsKey' || phase === 'failed') {
     return (
       <NftPaneFallback
         emptyBody={t('nftTicket.emptyBody')}

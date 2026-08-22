@@ -12,6 +12,7 @@ import {
 
 import { StreamThrottle } from '@pairlens/market-engine'
 import { feedEventTs, latencyMonitor } from '@pairlens/market-engine/latency'
+import { isTokenAddress } from '@pairlens/shared/market-ref'
 import { TIMEFRAMES, isTimeframe } from '@pairlens/shared/timeframe'
 import { usePairlens } from './pairlens-provider'
 import { getCountrySetting } from './region-settings'
@@ -86,6 +87,34 @@ export type MarketDataStatus = 'disconnected' | 'connecting' | 'connected'
 // waiting for the user to complete the switch. Long enough to cover
 // hover-then-decide, short enough that hovering the whole dropdown doesn't
 // pin a dozen venue connections.
+/**
+ * Which asset class a pair key is about, when the market id alone cannot say.
+ *
+ * A market id used to be enough. It stopped being enough when NFTs arrived:
+ * 'ethereum' is a DEX venue AND an NFT venue, both declare `trading:orders`
+ * and `market-data:candles` on it, and the capability resolver keys on the
+ * market alone. The DEX connector is the higher priority, and `trading:orders`
+ * is side-effecting so there is no walk to a runner-up, which meant every NFT
+ * order was handed to a swap router that split the contract address on a dash,
+ * found no quote leg, and refused. The chart lost the same way, to a pool
+ * resolver that answered an empty array rather than throwing.
+ *
+ * This is NOT a guess about the symbol's shape. It reads a guarantee the id
+ * rules enforce on the way in: `normalizeInstrumentId('dex', …)` always emits
+ * `{address}-{QUOTE}` and `toInstrumentRef`'s dex arm defaults the quote to
+ * USDC precisely so the pool resolvers have one, while the `nft` arm emits a
+ * bare contract and never adds a leg. A bare token address is therefore a
+ * collection, and an address with a quote leg is a token, by construction.
+ *
+ * Returns undefined for everything else, which the resolver reads as "do not
+ * filter": every venue that does not share its market id with another class
+ * resolves exactly as it always did.
+ */
+function assetClassFor(pair: string): string | undefined {
+  if (!pair) return undefined
+  return isTokenAddress(pair) && !pair.includes('-') ? 'nft' : undefined
+}
+
 const WARMUP_TTL_MS = 15_000
 /** Speculative streams open at once — hover sweeps must not fan out. */
 const MAX_CONCURRENT_WARMUPS = 3
@@ -1319,6 +1348,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
             pair,
             timeframe,
             country: getCountrySetting(),
+            assetClass: assetClassFor(pair),
           })
           return pluginManager.subscribe(
             'market-data:candles',
@@ -1353,6 +1383,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:ticker',
@@ -1389,6 +1420,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:orderbook',
@@ -1430,6 +1462,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
               market,
               pair,
               country: getCountrySetting(),
+              assetClass: assetClassFor(pair),
             })
             return pluginManager.subscribe(
               'market-data:trades',
@@ -1559,6 +1592,7 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
         pair,
         timeframe,
         country: getCountrySetting(),
+        assetClass: assetClassFor(pair),
       })
       const result = await pluginManager.execute('market-data:history', {
         pair,
@@ -1731,7 +1765,11 @@ export function MarketDataProvider({ children }: MarketDataProviderProps) {
           }
         }
 
-        pluginManager.setContext({ market, country: getCountrySetting() })
+        pluginManager.setContext({
+          market,
+          country: getCountrySetting(),
+          assetClass: assetClassFor(String(params['pair'] ?? '')),
+        })
         // Idempotency key — generated once per logical order so a retried or
         // double-clicked submit can't execute twice at the exchange. 32
         // alphanumeric chars fits every connector's client-order-id field.
