@@ -4,8 +4,8 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 20 AUG 2026
-readTime: 12 min read
+updated: 22 AUG 2026
+readTime: 13 min read
 ---
 
 A workspace is a saved arrangement of panels. Scalping wants a book, a depth
@@ -77,18 +77,18 @@ every other panel in that column keeps at least the height it declares.
 ## Discovery is one board per asset class
 
 Discovery carries tabs beside its title, one per asset class: **CEX Spot**,
-**CEX Futures**, **DEX**, **Equities**, **Predictions**. Each tab is a full
-workspace of its own. Rearrange the futures board and the spot board has not
-moved, and each one remembers its own arrangement between sessions.
+**CEX Futures**, **DEX**, **Equities**, **Predictions**, **NFT**. Each tab is a
+full workspace of its own. Rearrange the futures board and the spot board has
+not moved, and each one remembers its own arrangement between sessions.
 
 Every class has one fixed colour, and it is the same colour the badge beside
 the pair symbol wears on the trade page (see
 [terminal tour](/docs/terminal-tour)). Amber is spot, violet is perps, magenta
-is on-chain, green is equities, cyan is event contracts. Pick a tab here and
-the pair you open from it is badged in the colour you clicked.
+is on-chain, green is equities, cyan is event contracts, coral is NFTs. Pick a
+tab here and the pair you open from it is badged in the colour you clicked.
 
 Every tab opens on a board built for what that class is actually shopped on,
-and none of the five opens on an A-to-Z list of pairs.
+and none of the six opens on an A-to-Z list of pairs.
 
 **CEX Spot** opens on what moved and why: a market pulse strip over the movers
 table over the sector tape, the news wire beside them, and your watchlist in
@@ -121,6 +121,13 @@ listed and resolved daily and never sit in a catalog of pairs. A category rail
 narrows the board, and a right rail carries the biggest odds moves over what
 settles soonest.
 
+**NFT** is chain first, then collection. A chain rail on the left is the
+argument every other pane takes rather than a filter over one result set, since
+NFT data is chain-scoped at the provider: picking Base re-asks for rankings,
+movers, mints and the tape. The market strip sits over the rankings table, and
+the right rail carries floor movers, fresh mints and the whale tape above a
+size threshold you set. See [NFT collections](/docs/nft-trading).
+
 The markets scanner is on whatever board you add it to. It opens on that tab's
 asset class and remembers its own filter per tab, so widening one board to
 every market is a decision about that board alone.
@@ -135,9 +142,9 @@ Predictions the way to remove predictions from Discovery entirely.
 ## One pair layout per asset class
 
 The pair page itself is a workspace too, and it is saved per asset class. Spot,
-perpetuals, DEX tokens, stocks, and prediction markets each keep their own
-arrangement: rearrange the panels while charting a perp and your spot layout
-has not moved.
+perpetuals, DEX tokens, stocks, prediction markets, and NFT collections each
+keep their own arrangement: rearrange the panels while charting a perp and your
+spot layout has not moved.
 
 Each class ships a default built for what it trades.
 
@@ -166,6 +173,13 @@ from the ticket before you have scrolled anywhere; What Moved It, the tape and
 your open contracts sit behind it as tabs. The right column carries the event
 brief over the event browser.
 
+**NFT Desk** puts the collection header over the chart and the two-sided ladder
+directly under it, because on an NFT market the ladder is the liquidity story:
+a floor with two items behind it and a floor with two hundred are the same
+number and completely different markets. Listings and offers take the right
+column, the ticket sits under the ladder, and the items grid is demoted to a
+tab beside the tape and the trait breakdown.
+
 Beyond the default, each class carries its own named boards in the same menu:
 
 | Class       | Boards beside Default                                                                                                                                                                    |
@@ -175,6 +189,7 @@ Beyond the default, each class carries its own named boards in the same menu:
 | DEX         | **Liquidity** for the LP side of the pool, with the manage panel beside it; **Cross-Chain** for the same token priced per chain, with the bridge quote and in-flight transfers beside it |
 | Equities    | **Company**, the ticker read as a business rather than a price, with its insider filings under it                                                                                        |
 | Predictions | **Race**, for a field of a hundred rather than a handful: the outcome ladder gets the whole strip and the basket ticket sits beside it                                                   |
+| NFT         | **Collector**, for picking a token rather than the floor: the items grid at full width with the trait breakdown in its own column, and the ticket still there                            |
 
 The **Workspaces** menu follows the same rule as the defaults: on a prediction
 market it suggests layouts built for prediction markets, not a spot execution
@@ -187,7 +202,8 @@ Those per-class layouts are not baked into the app. Each asset-class plugin
 carries its own: the perps desk and the futures Discovery board come from
 Pairlens Futures, the prediction desk and the event-market board from Pairlens
 Predictions, the on-chain boards from Pairlens DEX, the stock boards from
-Pairlens Equities. Disable or uninstall one from the Plugins page and its
+Pairlens Equities, the collection boards from Pairlens NFTs. Disable or
+uninstall one from the Plugins page and its
 layouts leave the Workspace Store, the Workspaces menu, and Discovery (its
 tab included) immediately. Enable it again and they come back.
 

@@ -1,12 +1,12 @@
 ---
 title: Assistant tool reference
-description: All 110 tools the Pairlens assistant can call, by category, plus the workspace and board actions the screen publishes on top, with what each one reads or does and which need your confirmation.
+description: All 113 tools the Pairlens assistant can call, by category, plus the workspace and board actions the screen publishes on top, with what each one reads or does and which need your confirmation.
 group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 21 AUG 2026
-readTime: 12 min read
+updated: 22 AUG 2026
+readTime: 13 min read
 ---
 
 The assistant's agentic loop runs in the terminal, not on a server. These are
@@ -16,7 +16,7 @@ your connectors already hold or your credentials can reach.
 Tool calls are visible in the chat as labelled chips, so you can always see what
 was read and in what order. A turn runs up to 28 steps before it stops.
 
-Two rules govern which of the 110 are actually on the table for a given step, and
+Two rules govern which of the 113 are actually on the table for a given step, and
 both are re-read on every step rather than fixed when the turn started:
 
 - The 27 chart tools that change something are offered only while a chart is
@@ -106,6 +106,26 @@ refusing. Kalshi needing the desktop app is a fact about your build, not an
 event that does not exist.
 
 Open one with `open_instrument`, described under [Terminal](#terminal).
+
+## NFT collections
+
+An NFT collection has no ticker and no candle stream to point the market-data
+tools at, so it gets three reads of its own.
+
+| Tool                   | What it does                                                                                                                        |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `list_nft_collections` | Rank one chain's collections by 24h volume, floor move, sales, market cap or newest deployment                                      |
+| `get_nft_collection`   | One collection's state: floor, top offer, 24h volume and change, supply, holders and how many are listed                            |
+| `get_nft_book`         | Both sides of the ladder: the cheapest listings item by item, and the standing collection offers with executable size at each price |
+
+`get_nft_book` is the one that answers the question a floor cannot: whether the
+floor is real, how deep the bid actually is, and what a sweep of five would
+cost. Prices come back in the collection's own settlement currency with the
+ticker attached, never converted, because a bare number invites the model to
+assume ETH and be wrong by two orders of magnitude on Polygon.
+
+A chain with no provider is reported as needing one rather than as having no
+collections. See [NFT collections](/docs/nft-trading).
 
 ## Calendars, filings and market structure
 
@@ -337,7 +357,7 @@ be gated behind the terminal lock.
 
 ## Surface actions
 
-The 110 above are the fixed set. Anything mounted can publish tools of its own,
+The 113 above are the fixed set. Anything mounted can publish tools of its own,
 and they exist for exactly as long as it is on screen.
 
 The workspace board is the built-in example. It publishes these, and withdraws

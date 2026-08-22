@@ -90,6 +90,12 @@ describe('pairWorkspaceFor', () => {
         'trade-entry',
       ],
       dex: ['chart', 'trade-entry'],
+      // NFTs chart through the ORDINARY chart pane: a floor over time is a
+      // candle series like any other, so the board keeps drawings, indicators
+      // and the timeframe control rather than reinventing them. Its trading
+      // surfaces are its own, because a collection's book is item-level on the
+      // ask side and the generic order book cannot draw a token id.
+      nft: ['chart', 'nft-book', 'nft-ticket', 'nft-collection-header'],
       stocks: ['chart', 'positions', 'trade-entry', 'symbol-news'],
     }
     for (const cls of INSTRUMENT_CLASSES) {

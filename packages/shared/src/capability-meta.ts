@@ -71,6 +71,15 @@ export const CAPABILITY_META: Array<CapabilityMeta> = [
     description: 'Browse prediction-market events and their outcomes',
   },
   {
+    id: 'market-data:nft',
+    label: 'NFT Markets',
+    domain: 'market-data',
+    domainLabel: 'Market Data',
+    singleton: false,
+    description:
+      'Collection rankings, floor prices, listings, offers and the sales tape',
+  },
+  {
     id: 'market-data:pool-stats',
     label: 'Pool Stats',
     domain: 'market-data',

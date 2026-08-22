@@ -5,13 +5,14 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 8 min read
 ---
 
-Twenty venues, tens of thousands of spot pairs, an unbounded tail of on-chain
-tokens, and a rolling set of event contracts. Finding the instrument is its own
-problem, and Pairlens solves it locally first.
+Twenty-three venues, tens of thousands of spot pairs, an unbounded tail of
+on-chain tokens, a rolling set of event contracts, and NFT collections on six
+chains. Finding the instrument is its own problem, and Pairlens solves it
+locally first.
 
 ## Where to search from
 
@@ -29,7 +30,8 @@ in one is findable in the others. The Discovery boards are the other half of
 the problem: search answers "where is the thing I already named", and a board
 answers "what should I be looking at". Each asset class gets its own, ranked by
 what matters there, funding and basis on perps, turnover on pools, the calendar
-on stocks, the clock and the odds move on event contracts. See
+on stocks, the clock and the odds move on event contracts, the floor and how
+much supply is listed against it on NFT collections. See
 [workspaces](/docs/workspaces).
 
 The **CEX Spot** board carries a venue button on its bar, left of **Panes**.

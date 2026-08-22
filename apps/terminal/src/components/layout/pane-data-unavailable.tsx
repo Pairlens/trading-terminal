@@ -12,6 +12,7 @@ import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 import { usePairAvailabilityStore } from '@/stores/pair-availability-store'
 import { predictionQuestionOf } from '@/components/pair-picker/pair-picker-data'
 import { isOpaqueTitle, shortenId } from '@/lib/predictions/event-labels'
+import { isNftPairKey } from '@/lib/pairs'
 
 /**
  * Graceful empty state shown when a connector carries no data for the active
@@ -62,13 +63,23 @@ export function PaneDataUnavailable({
   const isPrediction =
     pinned !== null || (current?.assetClasses.includes('prediction') ?? false)
 
+  // An NFT collection with no candles is almost never an unlisted collection.
+  // It is the OpenSea key not being configured, and "try another connector
+  // that lists it" sends someone hunting for a venue when the fix is a field
+  // in the Plugin Store.
+  //
+  // Read off the KEY, not the venue's declared classes: an NFT chain is also a
+  // DEX chain, so the venue entry for 'ethereum' carries both and could never
+  // separate a collection from a token.
+  const isNft = isNftPairKey(pairKey)
+
   // Same class only, and skip venues this build cannot reach, or the recovery
   // just moves the wall: "AAPL is not on Alpaca, try Binance" was offered, and
   // it is another dead pane one click away. An outcome has no alternatives at
   // all — see the header, and `alternativeVenuesFor` says so for every
   // venue-bound class rather than only for the pinned ones.
   const alternatives =
-    onSelectMarket && !isPrediction
+    onSelectMarket && !isPrediction && !isNft
       ? alternativeVenuesFor(current, markets).slice(0, 4)
       : []
 
@@ -134,7 +145,9 @@ export function PaneDataUnavailable({
         >
           {isPrediction
             ? t('layout.paneUnavailable.predictionDescription')
-            : t('layout.paneUnavailable.description')}
+            : isNft
+              ? t('layout.paneUnavailable.nftDescription')
+              : t('layout.paneUnavailable.description')}
         </p>
 
         {/* Retry, not "try another venue": dropping this session's verdict is

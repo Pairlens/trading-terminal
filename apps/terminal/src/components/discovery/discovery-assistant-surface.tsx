@@ -18,6 +18,7 @@ const SECTION_NAMES: Record<DiscoverySectionId, string> = {
   dex: 'on-chain DEX tokens',
   stocks: 'US equities',
   prediction: 'prediction markets',
+  nft: 'NFT collections',
 }
 
 export function DiscoveryAssistantSurface({

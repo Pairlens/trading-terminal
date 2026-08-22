@@ -60,6 +60,7 @@ const CLASS_NAMES: Record<MarketRef['cls'], string> = {
   dex: 'on-chain DEX',
   stocks: 'US equities',
   prediction: 'prediction market',
+  nft: 'NFT collection',
 }
 
 function RouteSurface() {

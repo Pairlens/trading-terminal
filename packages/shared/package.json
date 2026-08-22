@@ -27,6 +27,7 @@
     "./persistence-types": "./src/persistence-types.ts",
     "./plugin-types": "./src/plugin-types.ts",
     "./instrument-types": "./src/instrument-types.ts",
+    "./nft-types": "./src/nft-types.ts",
     "./market-ref": "./src/market-ref.ts",
     "./registry-types": "./src/registry-types.ts",
     "./plugin-manifest-schema": "./src/plugin-manifest-schema.ts",

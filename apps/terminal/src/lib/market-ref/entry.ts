@@ -67,6 +67,21 @@ export function entryToInstrumentRef(entry: RefSource): InstrumentRef {
       id: normalizeInstrumentId('prediction', entry.symbol),
     }
   }
+  // An NFT collection also carries a chain and an address, so it has to be
+  // tested BEFORE the token arm or every collection would be charted as an
+  // ERC-20 that does not exist. Unlike a token it takes no quote leg: a
+  // collection is priced in its chain's own currency and there is no pool to
+  // pair it against.
+  if (normalizeInstrumentClass(entry.assetClass) === 'nft') {
+    const market = (entry.chain ?? entry.market ?? '').toLowerCase()
+    if (market) {
+      return {
+        cls: 'nft',
+        market,
+        id: normalizeInstrumentId('nft', entry.address ?? entry.symbol),
+      }
+    }
+  }
   if (entry.chain && entry.address) {
     // Address as the base, the row's own quote leg after it: the address is
     // the identity, and the quote is what the pool resolvers pair it against.

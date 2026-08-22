@@ -48,6 +48,8 @@ const MAX_EDGE = 512
 
 /** plugin id → brand domain */
 const DOMAINS: Record<string, string> = {
+  'opensea-nft-connector': 'opensea.io',
+  'coingecko-nft-provider': 'coingecko.com',
   'okx-market-connector': 'okx.com',
   'binance-market-connector': 'binance.com',
   'bybit-market-connector': 'bybit.com',
@@ -94,6 +96,13 @@ const DOMAINS: Record<string, string> = {
  * CoinGecko exchange art, Trust Wallet chain logos, project logo CDNs.
  */
 const OVERRIDES: Record<string, string> = {
+  // Verified GitHub org avatars. OpenSea's site sits behind bot protection and
+  // CoinGecko's apple-touch-icon is below MIN_EDGE, so neither reaches a mark
+  // large enough through the normal chain.
+  'opensea-nft-connector':
+    'https://avatars.githubusercontent.com/ProjectOpenSea?s=512',
+  'coingecko-nft-provider':
+    'https://avatars.githubusercontent.com/coingecko?s=512',
   // crypto.com's own favicon is a tiny mark upscaled; the Cronos chain logo
   // is the same brand hexagon at genuine resolution.
   'cryptocom-market-connector':

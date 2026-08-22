@@ -23,6 +23,7 @@ const ASSET_CLASS_KEYWORDS: Record<string, Array<string>> = {
   dex: ['dex', 'onchain', 'swap', 'wallet'],
   stocks: ['stocks', 'equities', 'shares', 'broker'],
   prediction: ['prediction', 'predictions', 'events'],
+  nft: ['nft', 'nfts', 'collection', 'collections', 'marketplace'],
 }
 
 /**

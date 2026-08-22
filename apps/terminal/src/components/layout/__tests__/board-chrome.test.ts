@@ -40,6 +40,7 @@ const PANE_DIRS = [
   join(SRC, 'components', 'futures'),
   join(SRC, 'components', 'dex'),
   join(SRC, 'components', 'equities'),
+  join(SRC, 'components', 'nft'),
   join(SRC, 'components', 'panes'),
   join(SRC, 'components', 'layout'),
   join(SRC, 'components', 'bots'),

@@ -3473,7 +3473,22 @@
     "sessionClock": "세션 시계",
     "level1": "Level 1",
     "company": "기업 정보",
-    "yourPosition": "보유 포지션"
+    "yourPosition": "보유 포지션",
+    "nftChains": "체인",
+    "nftCollections": "컬렉션",
+    "nftOverview": "NFT 마켓",
+    "nftMovers": "바닥가 변동",
+    "nftMints": "신규 & 민팅",
+    "nftTape": "고래 체결",
+    "nftCollectionHeader": "컬렉션",
+    "nftBook": "래더",
+    "nftListings": "매물",
+    "nftOffers": "오퍼",
+    "nftSales": "체결 내역",
+    "nftItems": "아이템",
+    "nftTraits": "속성",
+    "nftTicket": "NFT 티켓",
+    "nftHoldings": "내 아이템"
   },
   "paneDescriptions": {
     "insiderActivity": "최근 Form 4 신고: 회사 내부자가 무엇을 얼마나 어떤 가격에 사고팔았는지",
@@ -3546,7 +3561,22 @@
     "sessionClock": "거래일 상태를 한 줄로 보여주는 시계, 시간외 주문에 놀랄 일이 없도록",
     "level1": "매수·매도 호가와 잔량, 스프레드, 당일 범위, 그리고 거래소가 거래를 정지했을 때의 상태 행",
     "company": "밸류에이션, 성장률, 이익률, 다음 촉매, 그리고 애널리스트들의 시각을 하나의 패널에",
-    "yourPosition": "이 종목에서 내가 보유한 것: 수량, 원가, 마크 가격, 그리고 당일 손익과 보유 손익"
+    "yourPosition": "이 종목에서 내가 보유한 것: 수량, 원가, 마크 가격, 그리고 당일 손익과 보유 손익",
+    "nftChains": "모든 NFT 패널을 한 체인으로 좁히고, 체인별 24시간 거래대금 비중을 함께 표시",
+    "nftCollections": "거래대금, 바닥가 변동, 체결 수, 시가총액 기준으로 순위를 매긴 컬렉션",
+    "nftOverview": "마켓 전체의 NFT 거래대금, 시가총액, 체결 수와 거래소별 비중",
+    "nftMovers": "최근 24시간 동안 바닥가가 가장 많이 오르고 내린 컬렉션",
+    "nftMints": "최근 배포되어 첫 거래대금이 붙기 시작한 컬렉션",
+    "nftTape": "인덱싱된 모든 컬렉션에서 체결되는 고액 거래를 실시간으로 표시",
+    "nftCollectionHeader": "바닥가, 거래대금, 발행량, 홀더, 그리고 매물로 나온 비중",
+    "nftBook": "매물과 컬렉션 오퍼를 실제 심도가 있는 양방향 래더로 표시",
+    "nftListings": "매도 측: 매물로 나온 모든 아이템을 싼 순서대로",
+    "nftOffers": "매수 측: 체결 가능한 수량과 함께 보는 컬렉션, 속성, 토큰 오퍼",
+    "nftSales": "이 컬렉션의 체결 내역, 최신 체결이 먼저",
+    "nftItems": "컬렉션의 토큰을 매도 호가, 희귀도와 함께 탐색",
+    "nftTraits": "각 속성 값이 몇 개의 토큰에 붙어 있고 그래서 얼마나 희귀한지 표시. 속성별 바닥가는 제공자가 공개하면 함께 표시됩니다.",
+    "nftTicket": "바닥가 매수, 스윕, 오퍼 제출, 매물 등록, 매수 오퍼 수락",
+    "nftHoldings": "이 지갑이 컬렉션에서 보유한 아이템을 매입가, 마크가와 함께 표시"
   },
   "multiPrice": {
     "venue": "거래소",
@@ -3622,7 +3652,8 @@
       "predictionDescription": "이벤트 결과는 한 거래소에서만 거래되므로 다른 곳에서 시도할 수 없습니다. 거래소가 요청 한 건만 거부했을 수도 있습니다.",
       "retry": "다시 시도",
       "desktopOnlyTitle": "이 거래소는 데스크톱 앱이 필요합니다",
-      "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다."
+      "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다.",
+      "nftDescription": "이 컬렉션의 바닥가 시계열을 반환한 프로바이더가 없습니다. OpenSea 플러그인에서 OpenSea 키를 추가하세요. 차트와 래더, 체결 내역이 모두 여기에서 옵니다."
     },
     "paneCredentials": {
       "sealedTitle": "{{venue}} 데이터를 불러오려면 잠금을 해제하세요",
@@ -3718,7 +3749,8 @@
       "stocks": "주식",
       "prediction": "예측",
       "moveLeft": "왼쪽으로 이동",
-      "moveRight": "오른쪽으로 이동"
+      "moveRight": "오른쪽으로 이동",
+      "nft": "NFT"
     }
   },
   "assetClass": {
@@ -3733,7 +3765,9 @@
     "perpDescription": "만기가 없는 레버리지 가격 계약입니다. 롱과 숏이 서로 펀딩을 지급해 현물 가격에 가깝게 유지합니다.",
     "dexDescription": "유동성 풀을 상대로 한 스왑이며 본인 지갑으로 서명합니다. 어느 체인에서 일어나는지도 거래 대상의 일부입니다.",
     "stocksDescription": "브로커를 통한 주식이며 거래소 자체 달력을 따릅니다. 거래 시간, 거래 정지, 결제 규칙이 적용됩니다.",
-    "predictionDescription": "질문의 답에 대한 계약입니다. 답이 맞으면 1달러를, 틀리면 아무것도 지급하지 않습니다."
+    "predictionDescription": "질문의 답에 대한 계약입니다. 답이 맞으면 1달러를, 틀리면 아무것도 지급하지 않습니다.",
+    "nft": "NFT",
+    "nftDescription": "대체 불가능 토큰(NFT) 컬렉션입니다. 바닥가는 가장 싼 매도 호가, 오퍼는 매수 측이며, 포지션은 특정 토큰 하나입니다."
   },
   "pluginStore": {
     "registryOffline": "플러그인 레지스트리가 오프라인입니다. 설치된 플러그인만 표시합니다.",
@@ -4219,6 +4253,18 @@
       "pairlens-equities": {
         "title": "Pairlens 주식",
         "description": "주식 기능: 세션 시계, Level 1 호가, 기업 펀더멘털, 실적 캘린더"
+      },
+      "pairlens-nfts": {
+        "title": "Pairlens NFT",
+        "description": "NFT 화면: 컬렉션 순위, 매물과 오퍼 래더, 아이템 그리드, 체결 내역, 그리고 이들이 놓이는 보드까지."
+      },
+      "opensea-nft-connector": {
+        "title": "OpenSea",
+        "description": "여섯 개 체인의 NFT 컬렉션, 호가창, 체결 내역, Seaport 주문 실행. 본인 OpenSea 키를 추가하세요. 무료이며 즉시 발급됩니다."
+      },
+      "coingecko-nft-provider": {
+        "title": "CoinGecko NFT",
+        "description": "키 없이 색인된 모든 컬렉션의 바닥가, 거래대금, 발행량, 홀더를 제공합니다. 비어 있는 NFT 보드에 실제 값을 채워 주는 대체 공급자입니다."
       }
     },
     "families": {
@@ -4257,6 +4303,10 @@
       "cexFutures": {
         "label": "암호화폐 선물",
         "description": "레버리지 암호화폐 포지션을 위한 무기한 선물 거래소."
+      },
+      "nfts": {
+        "label": "NFT",
+        "description": "컬렉션 순위, 매물과 오퍼 호가창, 마켓플레이스 주문 실행."
       }
     },
     "familyToggleAria": "{{family}} 플러그인 전체 사용 또는 사용 안 함",
@@ -4963,6 +5013,30 @@
         "tagline": "열린 모든 구간을 정산 기준 가격과 나란히.",
         "description": "양쪽 거래소의 반복 암호화폐 계약을 한 표에 모았습니다. Kalshi는 다섯 자산에 15분 구간을, Polymarket은 네 자산에 시간별과 일별 구간을 엽니다. 각 행에는 정산 기준가, 실시간 현물가, 둘 사이의 거리, 그리고 최근 실현 변동성을 사용하는 드리프트 없는 확산이 남은 시간에서 도출한 확률이 담겨 있어 배당률을 견줄 대상이 생깁니다.",
         "menuLabel": "암호화폐 상승/하락"
+      },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "기본",
+        "tagline": "컬렉션을 갤러리가 아니라 호가창으로.",
+        "description": "바닥가 차트 아래에 양방향 래더, 매물과 컬렉션 오퍼가 실제 심도로 들어갑니다. 그 아래 탭에는 체결 내역, 아이템 그리드, 속성별 바닥가."
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "바닥가가 아니라 토큰을 고르세요.",
+        "description": "아이템 그리드를 전체 폭으로, 그 옆에 속성별 바닥가. 가장 싼 것이 아니라 특정 토큰 하나를 사기 위한 화면입니다."
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "기본",
+        "tagline": "NFT 시장에서 무엇이 움직이는지.",
+        "description": "거래대금 순으로 정렬한 컬렉션과 그 옆의 바닥가 변동, 체인 필터, 마켓 전체 개요, 신규 민팅, 그리고 고래 체결 내역."
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Flow",
+        "tagline": "체결 내역을 화면 폭 전체에.",
+        "description": "인덱싱된 모든 컬렉션의 고래 체결을 보여주고, 옆에는 바닥가 변동과 순위 테이블."
       }
     },
     "traderTypes": {
@@ -5013,6 +5087,9 @@
       },
       "multi-asset": {
         "label": "멀티에셋"
+      },
+      "nfts": {
+        "label": "NFT"
       }
     },
     "screenSizes": {
@@ -5979,6 +6056,10 @@
       "events": {
         "label": "이벤트",
         "description": "예측 시장의 이벤트와 결과 탐색"
+      },
+      "nft": {
+        "label": "NFT 마켓",
+        "description": "컬렉션 순위, 바닥가, 매물, 오퍼, 체결 내역"
       }
     },
     "domains": {
@@ -6343,7 +6424,8 @@
       "predictions": "예측",
       "filterPredictions": "예측",
       "futures": "선물",
-      "filterFutures": "선물"
+      "filterFutures": "선물",
+      "nfts": "NFT"
     }
   },
   "events": {
@@ -6433,5 +6515,284 @@
     "mark": "평가 가격",
     "marketValue": "평가 금액",
     "dayChange": "오늘"
+  },
+  "nft": {
+    "noProviderTitle": "NFT 데이터 제공자 없음",
+    "noProviderBody": "설치된 것 중 NFT 컬렉션을 읽을 수 있는 플러그인이 없습니다. 플러그인 스토어에서 제공자를 설치하면 이 보드가 채워집니다.",
+    "browseProviders": "제공자 둘러보기",
+    "throttledTitle": "요청 제한",
+    "unavailableTitle": "제공자 사용 불가",
+    "unavailableBody": "NFT 데이터 제공자가 응답하지 않았습니다. 보통 다음 갱신에서 복구됩니다.",
+    "providerLabel": "NFT 데이터",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "기타"
+    },
+    "needsKeyTitle": "OpenSea 키를 추가하세요",
+    "needsKeyBody": "순위와 래더, 체결 내역은 API 키가 필요한 OpenSea에서 옵니다. 키는 무료이며 즉시 발급됩니다. OpenSea 플러그인에서 본인 키를 추가하세요.",
+    "addKeyAction": "플러그인 스토어 열기"
+  },
+  "nftChains": {
+    "subtitle": "체인",
+    "subtitleShare": "24시간 거래대금 비중",
+    "loadingLabel": "체인별 시장 거래대금을 읽는 중",
+    "emptyTitle": "사용 가능한 체인 없음",
+    "emptyBody": "설치된 제공자가 서비스할 수 있는 체인을 알려주지 않습니다."
+  },
+  "nftCollections": {
+    "searchPlaceholder": "컬렉션 검색",
+    "countMetric_one": "컬렉션 {{count}}개",
+    "loadingLabel": "컬렉션 순위를 읽는 중",
+    "verified": "인증된 컬렉션",
+    "emptyTitle": "컬렉션 없음",
+    "emptyBody": "제공자가 이 체인에서 아무 순위도 내지 않았습니다. 레일에서 다른 체인을 선택해 보세요.",
+    "noMatchTitle": "일치 항목 없음",
+    "noMatchBody": "이 페이지의 컬렉션 중 검색어와 일치하는 것이 없습니다. 검색은 순위가 매겨진 페이지 안에서만 좁히며, 체인 전체를 찾지는 않습니다.",
+    "columns": {
+      "collection": "컬렉션",
+      "floor": "바닥가",
+      "change": "24시간",
+      "volume": "거래대금",
+      "sales": "체결 수",
+      "listed": "매물",
+      "holders": "홀더"
+    },
+    "countMetric_other": "컬렉션 {{count}}개"
+  },
+  "nftOverview": {
+    "subtitle": "최근 24시간, 전체 체인",
+    "loadingLabel": "시장 합계를 읽는 중",
+    "volume": "거래대금",
+    "marketCap": "시가총액",
+    "sales": "체결 수",
+    "traders": "트레이더",
+    "emptyTitle": "시장 합계 없음",
+    "emptyBody": "제공자가 마켓 전체 수치를 공개하지 않습니다."
+  },
+  "nftMovers": {
+    "subtitle": "바닥가 변동, 24시간",
+    "gainers": "상승",
+    "losers": "하락",
+    "loadingLabel": "바닥가 변동을 읽는 중",
+    "emptyTitle": "바닥가 변동 없음",
+    "emptyGainersBody": "이 체인에서 어제보다 바닥가가 오른 컬렉션이 없습니다.",
+    "emptyLosersBody": "이 체인에서 어제보다 바닥가가 내린 컬렉션이 없습니다."
+  },
+  "nftMints": {
+    "subtitle": "최근 배포순",
+    "loadingLabel": "최근 배포된 컬렉션을 읽는 중",
+    "emptyTitle": "최근 민팅 없음",
+    "emptyBody": "제공자가 이 체인에서 최근 배포된 컬렉션을 제시하지 않습니다.",
+    "columns": {
+      "collection": "컬렉션",
+      "age": "경과",
+      "floor": "바닥가",
+      "volume": "거래대금",
+      "supply": "발행량"
+    }
+  },
+  "nftTape": {
+    "allSizes": "전체",
+    "allMetric": "모든 체결",
+    "aboveMetric": "{{value}} 초과 체결",
+    "loadingLabel": "체결 내역을 읽는 중",
+    "partiesHint": "매도자, 그다음 매수자",
+    "emptyTitle": "체결 없음",
+    "emptyBody": "제공자가 이 체인에서 체결을 보고하지 않았습니다.",
+    "belowThresholdTitle": "그만큼 큰 체결 없음",
+    "belowThresholdBody": "제공자가 제공하는 기간 동안 {{value}}을 넘은 체결이 없습니다. 위의 최소 금액을 낮추면 나머지 체결 내역이 보입니다.",
+    "columns": {
+      "time": "시각",
+      "item": "아이템",
+      "price": "가격",
+      "venue": "거래소",
+      "parties": "매도자, 매수자"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "바닥가, 발행량, 홀더를 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "아직 표시할 것이 없습니다",
+    "emptyBody": "이 제공자가 컬렉션 상태를 반환하지 않았습니다.",
+    "loadingLabel": "컬렉션을 읽는 중",
+    "verified": "인증된 컬렉션",
+    "floor": "바닥가",
+    "volume24h": "24시간 거래대금",
+    "marketCap": "시가총액",
+    "supply": "발행량",
+    "holders": "홀더",
+    "listed": "매물",
+    "listedValue": "{{percent}}% ({{listed}})",
+    "topOffer": "최고 오퍼",
+    "royalty": "로열티"
+  },
+  "nftBook": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "호가창 양쪽을 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "호가 없음",
+    "emptyBody": "지금 이 컬렉션에는 나온 매물도, 들어온 오퍼도 없습니다.",
+    "loadingLabel": "호가창 양쪽을 읽는 중",
+    "asOf": "{{when}} 기준",
+    "mid": "중간가",
+    "spread": "{{amount}} ({{percent}}%)",
+    "bidQuantity_one": "1개",
+    "bidQuantity_other": "{{count}}개",
+    "collectionWide": "전체",
+    "depthSummary": "매물 {{asks}}, 오퍼 {{bids}}",
+    "columns": {
+      "price": "가격",
+      "item": "아이템",
+      "rank": "희귀도",
+      "venue": "거래소"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "매도 측에 무엇이 있는지 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "매물 없음",
+    "emptyBody": "지금 이 컬렉션에는 판매 중인 토큰이 없습니다.",
+    "loadingLabel": "매물을 읽는 중",
+    "count_one": "매물 1개",
+    "count_other": "매물 {{count}}개",
+    "footnote": "바닥가 {{floor}}",
+    "columns": {
+      "item": "아이템",
+      "price": "가격",
+      "rank": "희귀도",
+      "venue": "거래소",
+      "expires": "만료"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "매수자들이 얼마를 부르는지 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "오퍼 없음",
+    "emptyBody": "지금 이 컬렉션에 오퍼를 넣은 사람이 없습니다.",
+    "loadingLabel": "오퍼를 읽는 중",
+    "topBid": "최고 오퍼 {{price}}",
+    "footnote": "오퍼 총액 {{value}}",
+    "scopeCollection": "컬렉션",
+    "columns": {
+      "price": "가격",
+      "quantity": "수량",
+      "value": "금액",
+      "scope": "범위",
+      "venue": "거래소",
+      "bidder": "매수자",
+      "expires": "만료"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "무엇이 체결됐는지 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "체결 없음",
+    "emptyBody": "이 제공자에는 컬렉션의 최근 체결 기록이 없습니다.",
+    "loadingLabel": "체결 내역을 읽는 중",
+    "prints_one": "체결 1건",
+    "prints_other": "체결 {{count}}건",
+    "footnote_one": "체결 1건, 평균 {{average}}",
+    "footnote_other": "체결 {{count}}건, 평균 {{average}}",
+    "columns": {
+      "time": "시각",
+      "item": "아이템",
+      "price": "가격",
+      "venue": "거래소",
+      "buyer": "매수자",
+      "seller": "매도자"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "토큰을 둘러보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "아이템 없음",
+    "emptyBody": "이 제공자가 컬렉션의 토큰을 반환하지 않았습니다.",
+    "loadingLabel": "아이템을 읽는 중",
+    "count_one": "아이템 1개",
+    "count_other": "아이템 {{count}}개",
+    "unlisted": "미등록",
+    "footnote": "표시된 {{shown}}개 중 {{listed}}개가 매물"
+  },
+  "nftTraits": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "속성의 가치를 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "속성 바닥가 없음",
+    "emptyBody": "이 제공자는 컬렉션의 속성별 가격을 공개하지 않습니다.",
+    "loadingLabel": "속성 바닥가를 읽는 중",
+    "groupCount_one": "속성 1개",
+    "groupCount_other": "속성 {{count}}개",
+    "footnote": "속성 값 {{total}}개 중 {{priced}}개에 바닥가가 있습니다",
+    "columns": {
+      "value": "값",
+      "count": "개수",
+      "floor": "바닥가",
+      "listed": "매물"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "거래하려면 컬렉션을 선택하세요.",
+    "emptyTitle": "제공자 없음",
+    "emptyBody": "컬렉션을 거래하려면 NFT 마켓 제공자를 설치하세요.",
+    "quantity": "아이템 수",
+    "price": "가격 {{currency}}",
+    "token": "토큰",
+    "tokenPlaceholder": "보유한 토큰을 선택하세요",
+    "notional": "합계",
+    "notionalUsd": "합계 (USD)",
+    "averagePrice": "평균 체결가",
+    "royalty": "로열티",
+    "royaltyValue": "{{percent}}% ({{amount}})",
+    "thinBook_one": "호가창에 아이템이 1개 부족합니다.",
+    "thinBook_other": "호가창에 아이템이 {{count}}개 부족합니다.",
+    "placing": "주문 접수 중…",
+    "placedBody_one": "{{collection}} 아이템 1개.",
+    "placedBody_other": "{{collection}} 아이템 {{count}}개.",
+    "intents": {
+      "sweep": "스윕",
+      "offer": "오퍼",
+      "list": "등록",
+      "accept": "수락"
+    },
+    "mapping": {
+      "sweep": "시장가 매수. 가장 싼 매물부터 아이템당 한 건씩 주문합니다.",
+      "offer": "지정가 매수. 어느 홀더든 받아칠 수 있는 컬렉션 오퍼입니다.",
+      "list": "보유한 토큰을 원하는 가격에 내놓는 지정가 매도입니다.",
+      "accept": "보유한 토큰을 최고 오퍼에 넘기는 시장가 매도입니다."
+    },
+    "placed": {
+      "sweep": "스윕 주문을 보냈습니다",
+      "offer": "오퍼를 보냈습니다",
+      "list": "매물 등록을 보냈습니다",
+      "accept": "매도 주문을 보냈습니다"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "선택된 컬렉션 없음",
+    "noPairBody": "지갑이 이 컬렉션에서 무엇을 보유하는지 보려면 컬렉션을 선택하세요.",
+    "emptyTitle": "보유 없음",
+    "emptyBody": "이 지갑은 컬렉션의 토큰을 보유하고 있지 않습니다.",
+    "loadingLabel": "보유 내역을 읽는 중",
+    "footnote_one": "1개 보유, 오퍼 기준 {{value}}",
+    "footnote_other": "{{count}}개 보유, 오퍼 기준 {{value}}",
+    "columns": {
+      "item": "아이템",
+      "acquired": "취득",
+      "basis": "매입가",
+      "mark": "마크가",
+      "pnl": "손익"
+    }
   }
 }
