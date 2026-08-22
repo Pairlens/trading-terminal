@@ -86,6 +86,30 @@ export type NftQueryState = {
   throttled: boolean
   /** No provider installed serves NFT data at all. */
   unsupported: boolean
+  /**
+   * The provider is installed but has no key, so this is a configuration
+   * state rather than an outage.
+   *
+   * Worth its own flag because the two look identical from a pane and read
+   * completely differently to a user: "it usually recovers on the next
+   * refresh" is a lie told to someone who needs to paste an API key, and they
+   * will wait for a recovery that cannot come.
+   */
+  needsKey: boolean
+}
+
+/**
+ * Duck-typed, not `instanceof`.
+ *
+ * The error is minted inside a plugin bundle and read here, and the two do not
+ * share a class identity across that boundary. Same trick, and the same
+ * reason, as the `__providerThrottled` sentinel in `market-engine`.
+ */
+function isMissingKey(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    (error as { __openSeaMissingKey?: boolean }).__openSeaMissingKey === true
+  )
 }
 
 function stateOf(
@@ -101,6 +125,7 @@ function stateOf(
     error: error ? messageOf(error) : null,
     throttled: isProviderThrottledError(error),
     unsupported: !hasProvider,
+    needsKey: isMissingKey(error),
   }
 }
 

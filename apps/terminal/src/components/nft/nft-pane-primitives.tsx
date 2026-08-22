@@ -87,6 +87,7 @@ export function nftMarketplaceLabelKey(marketplace: NftMarketplace): string {
  */
 export type NftPanePhase =
   | 'unsupported'
+  | 'needsKey'
   | 'loading'
   | 'failed'
   | 'empty'
@@ -99,6 +100,10 @@ export function nftPanePhase(
   if (status.unsupported) return 'unsupported'
   if (hasRows) return 'ready'
   if (status.isLoading) return 'loading'
+  // Ahead of `failed`, because it IS a failure and it is the one with a fix
+  // the reader can carry out. Told as an outage, someone waits for a recovery
+  // that cannot come.
+  if (status.needsKey) return 'needsKey'
   if (status.error) return 'failed'
   return 'empty'
 }
@@ -140,6 +145,24 @@ export function NftPaneFallback({
         body={t('nft.noProviderBody')}
         icon={icon}
         title={t('nft.noProviderTitle')}
+      />
+    )
+  }
+
+  if (phase === 'needsKey') {
+    return (
+      <PaneEmpty
+        action={
+          <Link
+            className="mt-3 text-xs text-primary hover:underline"
+            to="/plugins"
+          >
+            {t('nft.addKeyAction')}
+          </Link>
+        }
+        body={t('nft.needsKeyBody')}
+        icon={icon}
+        title={t('nft.needsKeyTitle')}
       />
     )
   }

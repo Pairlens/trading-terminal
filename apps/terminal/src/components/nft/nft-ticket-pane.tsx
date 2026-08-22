@@ -309,7 +309,10 @@ function NftTicketInner({
 
         {wantsToken && (
           <Field label={t('nftTicket.token')}>
-            <Select onValueChange={setTokenId} value={tokenId}>
+            <Select
+              onValueChange={(value) => setTokenId(value ?? '')}
+              value={tokenId}
+            >
               <SelectTrigger className="h-7 w-full rounded-md border-transparent bg-muted/40 px-2 font-mono text-[11.5px]">
                 <SelectValue placeholder={t('nftTicket.tokenPlaceholder')} />
               </SelectTrigger>

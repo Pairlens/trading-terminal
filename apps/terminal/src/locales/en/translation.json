@@ -6516,7 +6516,10 @@
       "x2y2": "X2Y2",
       "tensor": "Tensor",
       "unknown": "Other"
-    }
+    },
+    "needsKeyTitle": "Add an OpenSea key",
+    "needsKeyBody": "NFT rankings, the ladder and the tape come from OpenSea, which needs an API key. They are free and issued instantly.",
+    "addKeyAction": "Add the key"
   },
   "nftChains": {
     "subtitle": "Chain",
@@ -6593,6 +6596,179 @@
       "price": "Price",
       "venue": "Venue",
       "parties": "Seller, buyer"
+    }
+  },
+  "nftCollectionHeader": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see its floor, supply and holders.",
+    "emptyTitle": "Nothing to show yet",
+    "emptyBody": "This provider returned no state for the collection.",
+    "loadingLabel": "Reading the collection",
+    "verified": "Verified collection",
+    "floor": "Floor",
+    "volume24h": "24h volume",
+    "marketCap": "Market cap",
+    "supply": "Supply",
+    "holders": "Holders",
+    "listed": "Listed",
+    "listedValue": "{{percent}}% ({{listed}})",
+    "topOffer": "Top offer",
+    "royalty": "Royalty"
+  },
+  "nftBook": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see both sides of its book.",
+    "emptyTitle": "No book",
+    "emptyBody": "Nothing is listed and nothing is bid on this collection right now.",
+    "loadingLabel": "Reading both sides of the book",
+    "asOf": "Read {{when}}",
+    "mid": "Mid",
+    "spread": "{{amount}} ({{percent}}%)",
+    "bidQuantity_one": "1x",
+    "bidQuantity_other": "{{count}}x",
+    "collectionWide": "Any",
+    "depthSummary": "{{asks}} listed, {{bids}} bid for",
+    "columns": {
+      "price": "Price",
+      "item": "Item",
+      "rank": "Rank",
+      "venue": "Venue"
+    }
+  },
+  "nftListings": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see what is on the ask.",
+    "emptyTitle": "Nothing listed",
+    "emptyBody": "No token in this collection is currently for sale.",
+    "loadingLabel": "Reading the listings",
+    "count_one": "1 listed",
+    "count_other": "{{count}} listed",
+    "footnote": "Floor {{floor}}",
+    "columns": {
+      "item": "Item",
+      "price": "Price",
+      "rank": "Rank",
+      "venue": "Venue",
+      "expires": "Expires"
+    }
+  },
+  "nftOffers": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see what buyers are bidding.",
+    "emptyTitle": "No offers",
+    "emptyBody": "Nobody is bidding on this collection right now.",
+    "loadingLabel": "Reading the offers",
+    "topBid": "Top bid {{price}}",
+    "footnote": "{{value}} bid for in total",
+    "scopeCollection": "Collection",
+    "columns": {
+      "price": "Price",
+      "quantity": "Qty",
+      "value": "Value",
+      "scope": "Scope",
+      "venue": "Venue",
+      "bidder": "Bidder",
+      "expires": "Expires"
+    }
+  },
+  "nftSales": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see what has cleared.",
+    "emptyTitle": "No sales",
+    "emptyBody": "This provider has no recent prints for the collection.",
+    "loadingLabel": "Reading the tape",
+    "prints_one": "1 print",
+    "prints_other": "{{count}} prints",
+    "footnote_one": "1 print, {{average}} average",
+    "footnote_other": "{{count}} prints, {{average}} average",
+    "columns": {
+      "time": "Time",
+      "item": "Item",
+      "price": "Price",
+      "venue": "Venue",
+      "buyer": "Buyer",
+      "seller": "Seller"
+    }
+  },
+  "nftItems": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to browse its tokens.",
+    "emptyTitle": "No items",
+    "emptyBody": "This provider returned no tokens for the collection.",
+    "loadingLabel": "Reading the items",
+    "count_one": "1 item",
+    "count_other": "{{count}} items",
+    "unlisted": "Not listed",
+    "footnote": "{{listed}} of {{shown}} shown are listed"
+  },
+  "nftTraits": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see what its traits are worth.",
+    "emptyTitle": "No trait floors",
+    "emptyBody": "This provider publishes no per-trait pricing for the collection.",
+    "loadingLabel": "Reading the trait floors",
+    "groupCount_one": "1 trait",
+    "groupCount_other": "{{count}} traits",
+    "footnote": "{{priced}} of {{total}} trait values have a floor",
+    "columns": {
+      "value": "Value",
+      "count": "Count",
+      "floor": "Floor",
+      "listed": "Listed"
+    }
+  },
+  "nftTicket": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to trade it.",
+    "emptyTitle": "No provider",
+    "emptyBody": "Install an NFT market provider to trade collections.",
+    "quantity": "Items",
+    "price": "Price {{currency}}",
+    "token": "Token",
+    "tokenPlaceholder": "Pick a token you own",
+    "notional": "Total",
+    "notionalUsd": "Total (USD)",
+    "averagePrice": "Average fill",
+    "royalty": "Royalty",
+    "royaltyValue": "{{percent}}% ({{amount}})",
+    "thinBook_one": "The book is 1 item short of this size.",
+    "thinBook_other": "The book is {{count}} items short of this size.",
+    "placing": "Placing…",
+    "placedBody_one": "1 item on {{collection}}.",
+    "placedBody_other": "{{count}} items on {{collection}}.",
+    "intents": {
+      "sweep": "Sweep",
+      "offer": "Offer",
+      "list": "List",
+      "accept": "Accept"
+    },
+    "mapping": {
+      "sweep": "Market buy. Takes the cheapest listings, one order per item.",
+      "offer": "Limit buy. A collection offer any holder can hit.",
+      "list": "Limit sell of a token you own, at your price.",
+      "accept": "Market sell of a token you own, into the best standing bid."
+    },
+    "placed": {
+      "sweep": "Sweep submitted",
+      "offer": "Offer submitted",
+      "list": "Listing submitted",
+      "accept": "Sale submitted"
+    }
+  },
+  "nftHoldings": {
+    "noPairTitle": "No collection selected",
+    "noPairBody": "Pick a collection to see what your wallet holds in it.",
+    "emptyTitle": "Nothing held",
+    "emptyBody": "This wallet owns no tokens in the collection.",
+    "loadingLabel": "Reading your holdings",
+    "footnote_one": "1 held, {{value}} at the bid",
+    "footnote_other": "{{count}} held, {{value}} at the bid",
+    "columns": {
+      "item": "Item",
+      "acquired": "Acquired",
+      "basis": "Basis",
+      "mark": "Mark",
+      "pnl": "P/L"
     }
   }
 }

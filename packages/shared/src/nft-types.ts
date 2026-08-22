@@ -204,6 +204,13 @@ export type NftItem = {
 export type NftTraitFloor = {
   key: string
   value: string
+  /**
+   * Settlement currency for this trait's floor. Carried per row rather than
+   * assumed from the collection, because a price with no ticker beside it is
+   * the one thing this file's header forbids, and a pane reading it off a
+   * second query is a pane that can render the two out of step.
+   */
+  priceCurrency?: string
   /** How many tokens carry this trait. */
   count: number
   /** Share of supply carrying it, as a fraction. */
