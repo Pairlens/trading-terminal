@@ -2356,7 +2356,22 @@
     "level1": "Level 1",
     "company": "Company",
     "insiderActivity": "Insider Activity",
-    "yourPosition": "Your Position"
+    "yourPosition": "Your Position",
+    "nftChains": "Chains",
+    "nftCollections": "Collections",
+    "nftOverview": "NFT Market",
+    "nftMovers": "Floor Movers",
+    "nftMints": "New & Minting",
+    "nftTape": "Whale Sales",
+    "nftCollectionHeader": "Collection",
+    "nftBook": "Ladder",
+    "nftListings": "Listings",
+    "nftOffers": "Offers",
+    "nftSales": "Sales",
+    "nftItems": "Items",
+    "nftTraits": "Trait Floors",
+    "nftTicket": "NFT Ticket",
+    "nftHoldings": "My Items"
   },
   "paneDescriptions": {
     "markets": "Browse all available trading pairs across exchanges",
@@ -2429,7 +2444,22 @@
     "level1": "Bid, ask and sizes, the spread, the day's range, and a halt row when the tape calls one",
     "company": "Valuation, growth, margins, the next catalyst and where the analysts sit, in one pane",
     "insiderActivity": "Recent Form 4 filings: who inside the company bought or sold, how much, and at what price",
-    "yourPosition": "What you hold in this symbol: quantity, cost, mark, and both the day and the open profit"
+    "yourPosition": "What you hold in this symbol: quantity, cost, mark, and both the day and the open profit",
+    "nftChains": "Filter every NFT pane to one chain, with each chain's share of 24h volume.",
+    "nftCollections": "Collections ranked by volume, floor move, sales or market cap.",
+    "nftOverview": "Market-wide NFT volume, market cap, sales and the split by marketplace.",
+    "nftMovers": "The biggest floor gainers and losers over the last 24 hours.",
+    "nftMints": "Recently deployed collections that are seeing their first volume.",
+    "nftTape": "High-value sales as they print, across every indexed collection.",
+    "nftCollectionHeader": "Floor, volume, supply, holders and the share of supply listed.",
+    "nftBook": "Listings and collection offers as a two-sided ladder with real depth.",
+    "nftListings": "The ask side: every listed item, cheapest first.",
+    "nftOffers": "The bid side: collection, trait and token offers with executable size.",
+    "nftSales": "This collection's tape, newest print first.",
+    "nftItems": "Browse the collection's tokens with their asks and rarity.",
+    "nftTraits": "Floor price per trait value, where a collection's real market lives.",
+    "nftTicket": "Buy the floor, sweep, make an offer, list an item or accept a bid.",
+    "nftHoldings": "What this wallet holds in the collection, with cost basis and mark."
   },
   "venueLadder": {
     "emptyTitle": "No venue to compare",
@@ -2729,7 +2759,8 @@
       "stocks": "Equities",
       "prediction": "Predictions",
       "moveLeft": "Move left",
-      "moveRight": "Move right"
+      "moveRight": "Move right",
+      "nft": "NFTs"
     }
   },
   "assetClass": {
@@ -2744,7 +2775,9 @@
     "perpDescription": "A leveraged contract on the price, with no expiry date. Longs and shorts pay each other funding to keep it near spot.",
     "dexDescription": "A swap against a liquidity pool, signed by your own wallet. The chain it happens on is part of what you are trading.",
     "stocksDescription": "Shares through a broker, on the exchange’s own calendar. Hours, halts and settlement rules apply.",
-    "predictionDescription": "A contract on the answer to a question. It pays $1 if the answer is right and nothing if it is not."
+    "predictionDescription": "A contract on the answer to a question. It pays $1 if the answer is right and nothing if it is not.",
+    "nft": "NFT",
+    "nftDescription": "A collection of non-fungible tokens. The floor is the cheapest ask, offers are the bid, and a position is one specific token."
   },
   "pluginStore": {
     "registryOffline": "Plugin registry is offline. Showing installed plugins only.",
@@ -3268,6 +3301,10 @@
       "cexFutures": {
         "label": "Crypto Futures",
         "description": "Perpetual futures venues for leveraged crypto positions."
+      },
+      "nfts": {
+        "label": "NFTs",
+        "description": "Collection rankings, the listings and offers book, and marketplace execution"
       }
     },
     "familyToggleAria": "Enable or disable all {{family}} plugins",
@@ -3974,6 +4011,30 @@
         "tagline": "Every open window, against the tape it settles on.",
         "description": "The recurring crypto contracts on both venues in one table: Kalshi opens a fifteen-minute window on five assets, Polymarket an hourly and a daily one on four. Each row carries the settlement reference, live spot, the distance between them and what a driftless diffusion at recent realized volatility makes of the time remaining, so the odds have something to be compared against.",
         "menuLabel": "Crypto Up/Down"
+      },
+      "nft-terminal": {
+        "name": "NFT Desk",
+        "menuLabel": "Default",
+        "tagline": "A collection as a book, not a gallery.",
+        "description": "Floor chart over a two-sided ladder, with listings and collection offers as real depth. The sales tape, the items grid and trait floors share the tabs below."
+      },
+      "nft-collector": {
+        "name": "Collector",
+        "menuLabel": "Collector",
+        "tagline": "Pick the token, not the floor.",
+        "description": "The items grid at full width with trait floors beside it, for buying one specific token rather than whatever is cheapest."
+      },
+      "nft-discovery": {
+        "name": "NFT Discovery",
+        "menuLabel": "Default",
+        "tagline": "What is moving across NFT markets.",
+        "description": "Collections ranked by volume with floor moves beside them, a chain filter, the market-wide overview, fresh mints and the whale tape."
+      },
+      "nft-flow": {
+        "name": "NFT Flow",
+        "menuLabel": "Flow",
+        "tagline": "The tape, full width.",
+        "description": "Whale sales across every indexed collection, with floor movers and the rankings table alongside."
       }
     },
     "traderTypes": {
@@ -4024,6 +4085,9 @@
       },
       "multi-asset": {
         "label": "Multi-Asset"
+      },
+      "nfts": {
+        "label": "NFTs"
       }
     },
     "screenSizes": {
@@ -5341,6 +5405,10 @@
       "bridge": {
         "label": "Bridge Quotes",
         "description": "Cross-chain route quotes and transfer status tracking"
+      },
+      "nft": {
+        "label": "NFT Markets",
+        "description": "Collection rankings, floor prices, listings, offers and the sales tape"
       }
     },
     "domains": {
@@ -5705,7 +5773,8 @@
       "predictions": "predictions",
       "filterPredictions": "Predictions",
       "futures": "futures",
-      "filterFutures": "Futures"
+      "filterFutures": "Futures",
+      "nfts": "NFTs"
     }
   },
   "events": {
@@ -6422,5 +6491,108 @@
     "mark": "Mark",
     "marketValue": "Market value",
     "dayChange": "Today"
+  },
+  "nft": {
+    "noProviderTitle": "No NFT data provider",
+    "noProviderBody": "Nothing installed can read NFT collections. Install a provider from the Plugin Store to fill this board.",
+    "browseProviders": "Browse providers",
+    "throttledTitle": "Rate limited",
+    "unavailableTitle": "Provider unavailable",
+    "unavailableBody": "The NFT data provider did not answer. It usually recovers on the next refresh.",
+    "providerLabel": "NFT data",
+    "chains": {
+      "ethereum": "Ethereum",
+      "solana": "Solana",
+      "base": "Base",
+      "polygon": "Polygon",
+      "arbitrum": "Arbitrum",
+      "optimism": "Optimism"
+    },
+    "marketplaces": {
+      "opensea": "OpenSea",
+      "blur": "Blur",
+      "magiceden": "Magic Eden",
+      "looksrare": "LooksRare",
+      "x2y2": "X2Y2",
+      "tensor": "Tensor",
+      "unknown": "Other"
+    }
+  },
+  "nftChains": {
+    "subtitle": "Chain",
+    "subtitleShare": "24h volume share",
+    "loadingLabel": "Reading market volume by chain",
+    "emptyTitle": "No chains available",
+    "emptyBody": "The installed provider does not name a chain it can serve."
+  },
+  "nftCollections": {
+    "searchPlaceholder": "Search collections",
+    "countMetric": "{{count}} collections",
+    "countMetric_one": "{{count}} collection",
+    "loadingLabel": "Reading collection rankings",
+    "verified": "Verified collection",
+    "emptyTitle": "No collections",
+    "emptyBody": "The provider ranked nothing on this chain. Try another chain in the rail.",
+    "noMatchTitle": "No match",
+    "noMatchBody": "No collection on this page matches your search. The search narrows the ranked page, not the whole chain.",
+    "columns": {
+      "collection": "Collection",
+      "floor": "Floor",
+      "change": "24h",
+      "volume": "Volume",
+      "sales": "Sales",
+      "listed": "Listed",
+      "holders": "Holders"
+    }
+  },
+  "nftOverview": {
+    "subtitle": "Last 24h, all chains",
+    "loadingLabel": "Reading market totals",
+    "volume": "Volume",
+    "marketCap": "Market cap",
+    "sales": "Sales",
+    "traders": "Traders",
+    "emptyTitle": "No market totals",
+    "emptyBody": "The provider does not publish market-wide figures."
+  },
+  "nftMovers": {
+    "subtitle": "Floor move, 24h",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "loadingLabel": "Reading floor moves",
+    "emptyTitle": "No floor moves",
+    "emptyGainersBody": "No collection on this chain has a higher floor than it did yesterday.",
+    "emptyLosersBody": "No collection on this chain has a lower floor than it did yesterday."
+  },
+  "nftMints": {
+    "subtitle": "Newest deployments",
+    "loadingLabel": "Reading recent deployments",
+    "emptyTitle": "No recent mints",
+    "emptyBody": "The provider lists no recently deployed collections on this chain.",
+    "columns": {
+      "collection": "Collection",
+      "age": "Age",
+      "floor": "Floor",
+      "volume": "Volume",
+      "supply": "Supply"
+    }
+  },
+  "nftTape": {
+    "allSizes": "All",
+    "allMetric": "Every sale",
+    "aboveMetric": "Sales above {{value}}",
+    "loadingLabel": "Reading the sales tape",
+    "partiesHint": "Seller, then buyer",
+    "emptyTitle": "No sales",
+    "emptyBody": "The provider reported no sales on this chain.",
+    "belowThresholdTitle": "Nothing that big",
+    "belowThresholdBody": "No sale cleared {{value}} in the window the provider serves. Lower the size floor above to see the rest of the tape.",
+    "columns": {
+      "time": "Time",
+      "item": "Item",
+      "price": "Price",
+      "venue": "Venue",
+      "parties": "Seller, buyer"
+    }
   }
 }
