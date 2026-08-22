@@ -43,8 +43,14 @@ export type DiscoverySection = {
 
 /**
  * Ship order, which is also the fallback for a trader who has never dragged a
- * tab: spot first because it is where most people start, then the rest by how
- * far each sits from it.
+ * tab: spot first because it is where most people start, then equities, then
+ * the crypto ladder out to launchpads, predictions and collections.
+ *
+ * Equities sits second for a colour reason rather than a market one. Memecoin
+ * lime and equities emerald are the closest pair on the asset-class wheel (40
+ * degrees, see `--asset-*` in @pairlens/ui), and they used to be neighbours in
+ * the strip, which is the one place seven of these hues are read side by side.
+ * Anywhere else the gap is enough; touching, it was not.
  */
 export const DISCOVERY_SECTIONS: ReadonlyArray<DiscoverySection> = [
   {
@@ -52,6 +58,12 @@ export const DISCOVERY_SECTIONS: ReadonlyArray<DiscoverySection> = [
     labelKey: 'discovery.sections.spot',
     icon: 'Bitcoin',
     templateId: null,
+  },
+  {
+    id: 'stocks',
+    labelKey: 'discovery.sections.stocks',
+    icon: 'TrendingUp',
+    templateId: EQUITIES_DISCOVERY_TEMPLATE_ID,
   },
   {
     id: 'perp',
@@ -70,12 +82,6 @@ export const DISCOVERY_SECTIONS: ReadonlyArray<DiscoverySection> = [
     labelKey: 'discovery.sections.memecoin',
     icon: 'Dog',
     templateId: MEMECOIN_DISCOVERY_TEMPLATE_ID,
-  },
-  {
-    id: 'stocks',
-    labelKey: 'discovery.sections.stocks',
-    icon: 'TrendingUp',
-    templateId: EQUITIES_DISCOVERY_TEMPLATE_ID,
   },
   {
     id: 'prediction',
