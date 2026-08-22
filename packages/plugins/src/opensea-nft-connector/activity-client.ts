@@ -121,7 +121,9 @@ export async function fetchSales(
   }
 
   const filtered = applyUsdFloor({ sales }, minPriceUsd)
-  return { sales: filtered.sales.slice(0, clamp(query.limit, 50, MAX_EVENT_PAGE)) }
+  return {
+    sales: filtered.sales.slice(0, clamp(query.limit, 50, MAX_EVENT_PAGE)),
+  }
 }
 
 function applyUsdFloor(

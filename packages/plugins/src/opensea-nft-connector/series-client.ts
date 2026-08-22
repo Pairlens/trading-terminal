@@ -71,7 +71,10 @@ const MAX_RESOLUTION = 1000
 const MAX_SALE_PAGES = 6
 const SALE_PAGE = 200
 
-export function floorWindowFor(spanMs: number): { window: string; spanMs: number } {
+export function floorWindowFor(spanMs: number): {
+  window: string
+  spanMs: number
+} {
   for (const [window, size] of FLOOR_WINDOWS) {
     if (size >= spanMs) return { window, spanMs: size }
   }
@@ -118,7 +121,14 @@ export function bucketFloorCandles(
           })
         }
       }
-      current = { ts, open: price, high: price, low: price, close: price, volume: 0 }
+      current = {
+        ts,
+        open: price,
+        high: price,
+        low: price,
+        close: price,
+        volume: 0,
+      }
       candles.push(current)
       continue
     }
@@ -189,7 +199,11 @@ export function bucketSaleCandles(
   for (const point of points) {
     const previous = candles[candles.length - 1]
     if (previous) {
-      for (let gap = previous.ts + bucketMs; gap < point.timestampMs; gap += bucketMs) {
+      for (
+        let gap = previous.ts + bucketMs;
+        gap < point.timestampMs;
+        gap += bucketMs
+      ) {
         candles.push({
           ts: gap,
           open: previous.close,
@@ -323,7 +337,11 @@ export async function fetchSeries(
     // answered from a 30-day window and is never short. It IS short when the
     // collection is younger than the window, and that is not a gap.
     const first = series.points[0]?.timestampMs
-    if (first !== undefined && first > sinceMs + bucketMs * 2 && floor.windowMs < spanMs) {
+    if (
+      first !== undefined &&
+      first > sinceMs + bucketMs * 2 &&
+      floor.windowMs < spanMs
+    ) {
       series.truncated = true
     }
     return series
@@ -366,11 +384,48 @@ export async function fetchCandles(
   const floor = await fetchFloorPoints(apiKey, slug, spanMs, bucketMs).catch(
     () => null,
   )
-  if (floor && floor.points.length > 1) {
-    const candles = bucketFloorCandles(floor.points, bucketMs)
-    if (candles.length > 1) return candles.slice(-bars)
+  const floorCandles =
+    floor && floor.points.length > 1
+      ? bucketFloorCandles(floor.points, bucketMs)
+      : []
+  if (
+    floorCandles.length > 1 &&
+    !isCoarserThan(floor?.points ?? [], bucketMs)
+  ) {
+    return floorCandles.slice(-bars)
   }
 
+  // Either OpenSea tracks no floor for this collection, or it tracks one at a
+  // coarser step than the bars we were asked for. The second case is the one
+  // worth guarding: some chains are backed by a daily feed, and serving a 5m
+  // chart out of daily points would be twelve identical bars an hour claiming
+  // to be intraday. Bucketed fills at the real step are sparse and honest.
   const { sales } = await pageSales(apiKey, slug, ctx, Date.now() - spanMs)
-  return bucketSaleCandles(sales, bucketMs).slice(-bars)
+  const saleCandles = bucketSaleCandles(sales, bucketMs)
+  if (saleCandles.length > 1) return saleCandles.slice(-bars)
+  return floorCandles.slice(-bars)
+}
+
+/**
+ * Whether a point series steps more slowly than the bars asked for.
+ *
+ * Median spacing rather than mean: a feed with one long gap in it is still a
+ * fine intraday feed, and a mean would condemn it.
+ */
+function isCoarserThan(
+  points: ReadonlyArray<NftPricePoint>,
+  bucketMs: number,
+): boolean {
+  if (points.length < 3) return false
+  const gaps: Array<number> = []
+  for (let i = 1; i < points.length; i++) {
+    const previous = points[i - 1]
+    const current = points[i]
+    if (!previous || !current) continue
+    gaps.push(current.timestampMs - previous.timestampMs)
+  }
+  if (gaps.length === 0) return false
+  gaps.sort((a, b) => a - b)
+  const median = gaps[Math.floor(gaps.length / 2)] ?? 0
+  return median > bucketMs * 2
 }

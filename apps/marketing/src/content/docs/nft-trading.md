@@ -81,7 +81,7 @@ That is enough to make a cold board real.
 | Rankings across a chain     | Yes     | No        |
 | Listings, offers, the book  | Yes     | No        |
 | Sales tape                  | Yes     | No        |
-| Items and trait floors      | Yes     | No        |
+| Items and traits            | Yes     | No        |
 | Price history               | Yes     | No        |
 | Orders                      | Yes     | No        |
 
@@ -168,7 +168,7 @@ and rankings beside it.
 
 Opening a collection loads **NFT Desk**, the default pair layout for the class.
 Middle column: the collection header, the chart, and a tabbed cell holding the
-sales tape, the items grid, trait floors and your holdings. Beside it, the
+sales tape, the items grid, the trait breakdown and your holdings. Beside it, the
 ladder over the ticket. On the right, listings over offers.
 
 **Collection** is the identity line. The floor is the one large number, because
@@ -208,12 +208,14 @@ specific token is a real job: a rank-40 and a rank-4000 at the same ask are not
 the same trade. Unlisted tokens say "not for sale" rather than showing a blank,
 because that is different from "we did not read a price".
 
-**Trait Floors** is where the pricing actually happens on any collection past
-its first month. The collection floor is a headline; the spread between the
-cheapest Gold Fur and the cheapest anything is the market. Rarity sits beside
-each floor on purpose, and so does the listed count, because a trait floor set
-by one listing is a quote rather than a market and there is no way to tell
-those apart from the price alone.
+**Traits** is where the pricing actually happens on any collection past its
+first month. The collection floor is a headline; the spread between the cheapest
+Gold Fur and the cheapest anything is the market. Right now the pane shows what
+OpenSea publishes, which is every trait value with its count and its rarity
+share. A floor per trait is one filtered listings read per value, and a
+mid-size collection has hundreds of them, so it would cost more of the hourly
+budget than the rest of the board put together. The field is in the data model
+and the column appears the day a provider publishes it.
 
 **My Items** marks your holdings against the best bid, not the floor. Every NFT
 portfolio on the internet values a holding at the collection floor, which is a
@@ -224,7 +226,7 @@ rather than a zero, because inventing one from the token's last sale attributes
 somebody else's trade to your wallet.
 
 **Collector** is the second preset for the same market, read the way someone
-picking individual tokens reads it: the items grid at full width, trait floors
+picking individual tokens reads it: the items grid at full width, the traits
 in a column of their own, and the ticket still there because the point is still
 to trade.
 
@@ -305,7 +307,7 @@ set by what actually moves:
 - The **ladder** and the **tape** refresh every 20 seconds.
 - **Collection state** (floor, volume, supply) every minute.
 - **Rankings** every 5 minutes.
-- **Items** and **trait floors** every 10 minutes.
+- **Items** and **traits** every 10 minutes.
 
 Every query is gated on the pane being open, so a tab you are not looking at
 costs nothing. That matters because a free OpenSea key allows on the order of
@@ -324,7 +326,7 @@ NFT routes are desktop only for now. Open `/nft/...` on a phone and the
 a toast saying so.
 
 That is a deliberate answer rather than an oversight. The class is the ladder,
-the trait floors and the sweep ticket, and half of that on a 402px screen is
+the trait breakdown and the sweep ticket, and half of that on a 402px screen is
 worse than an honest redirect. A desktop browser dragged under 768px keeps its
 URL, so widening back restores the exact board.
 

@@ -120,28 +120,31 @@ async function fetchStats(apiKey: string, slug: string): Promise<unknown> {
 }
 
 /** Run `work` over `rows` a few at a time, keeping every result positional. */
-async function mapLimited<T, R>(
+async function mapLimited<T, TResult>(
   rows: Array<T>,
   limit: number,
-  work: (row: T, index: number) => Promise<R>,
-): Promise<Array<R | null>> {
-  const results: Array<R | null> = new Array(rows.length).fill(null)
+  work: (row: T, index: number) => Promise<TResult>,
+): Promise<Array<TResult | null>> {
+  const results: Array<TResult | null> = new Array(rows.length).fill(null)
   let cursor = 0
-  const workers = Array.from({ length: Math.min(limit, rows.length) }, async () => {
-    for (;;) {
-      const index = cursor++
-      if (index >= rows.length) return
-      const row = rows[index]
-      if (row === undefined) return
-      try {
-        results[index] = await work(row, index)
-      } catch {
-        // One row's stats failing is one row without numbers, never a failed
-        // ranking: the table is still the answer to what is ranked.
-        results[index] = null
+  const workers = Array.from(
+    { length: Math.min(limit, rows.length) },
+    async () => {
+      for (;;) {
+        const index = cursor++
+        if (index >= rows.length) return
+        const row = rows[index]
+        if (row === undefined) return
+        try {
+          results[index] = await work(row, index)
+        } catch {
+          // One row's stats failing is one row without numbers, never a failed
+          // ranking: the table is still the answer to what is ranked.
+          results[index] = null
+        }
       }
-    }
-  })
+    },
+  )
   await Promise.all(workers)
   return results
 }

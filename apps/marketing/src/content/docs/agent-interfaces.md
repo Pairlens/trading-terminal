@@ -4,7 +4,7 @@ description: 'Every way an AI agent can drive Pairlens: the in-app assistant, th
 group: builders
 order: 2
 eyebrow: For builders
-updated: 19 AUG 2026
+updated: 22 AUG 2026
 readTime: 6 min read
 ---
 

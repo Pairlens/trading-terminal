@@ -32,7 +32,7 @@ export const pairlensNftsManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'NFT surfaces: collection rankings, the listings and offers ladder, trait floors and the sales tape',
+    'NFT surfaces: collection rankings, the listings and offers ladder, the items grid and the sales tape',
   homepage: 'https://pairlens.finance',
   // Served from the terminal bundle, not pairlens.finance: a first-party
   // plugin's mark must render offline, on the desktop app, and inside the
@@ -164,7 +164,7 @@ export const pairlensNftsManifest: PluginManifest = {
       },
       {
         id: 'nft-traits',
-        label: 'Trait Floors',
+        label: 'Traits',
         labelKey: 'panes.nftTraits',
         descriptionKey: 'paneDescriptions.nftTraits',
         icon: 'Tags',

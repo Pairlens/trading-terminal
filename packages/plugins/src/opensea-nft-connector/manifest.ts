@@ -34,9 +34,10 @@
  * an average of fills is not. `NftSeriesBasis` travels with every series so the
  * chart says which one it drew rather than implying.
  *
- * These timeframes are OpenSea's own. A chain served by the keyless CoinGecko
- * fallback is daily-granularity, so a board reads its timeframes off the
- * provider that resolved, never off the asset class.
+ * These timeframes are OpenSea's own, and a board must read them off the
+ * provider that resolved rather than off the asset class: the keyless
+ * CoinGecko fallback serves no history at all, so a collection it answers for
+ * has a floor and no chart behind it.
  */
 import type { PluginManifest } from '@pairlens/plugin-system/types'
 

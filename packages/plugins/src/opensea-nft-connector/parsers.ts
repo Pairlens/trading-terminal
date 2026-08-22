@@ -35,6 +35,7 @@ import { CHAIN_CURRENCY, OPENSEA_CHAIN } from './types'
 
 import type {
   NftChain,
+  NftCollectionSummary,
   NftHolding,
   NftItem,
   NftListing,
@@ -44,7 +45,6 @@ import type {
   NftSale,
   NftTraitFloor,
 } from '@pairlens/shared/nft-types'
-import type { NftCollectionSummary } from '@pairlens/shared/nft-types'
 
 // ── Reading untyped JSON ─────────────────────────────────────────────
 
@@ -66,7 +66,8 @@ export function asString(value: unknown): string | undefined {
 
 /** A number, from a number or a numeric string. Never NaN, never Infinity. */
 export function asNumber(value: unknown): number | undefined {
-  if (typeof value === 'number') return Number.isFinite(value) ? value : undefined
+  if (typeof value === 'number')
+    return Number.isFinite(value) ? value : undefined
   if (typeof value === 'string' && value.trim() !== '') {
     const parsed = Number(value)
     return Number.isFinite(parsed) ? parsed : undefined
@@ -107,7 +108,9 @@ export function unitsFromRaw(
   const padded = digits.padStart(places_ + 1, '0')
   const whole = padded.slice(0, padded.length - places_)
   const fraction = places_ > 0 ? padded.slice(padded.length - places_) : ''
-  const parsed = Number(`${negative ? '-' : ''}${whole}${fraction ? `.${fraction}` : ''}`)
+  const parsed = Number(
+    `${negative ? '-' : ''}${whole}${fraction ? `.${fraction}` : ''}`,
+  )
   return Number.isFinite(parsed) ? parsed : undefined
 }
 
@@ -138,7 +141,10 @@ export function toMs(value: unknown): number | undefined {
 // ── Chains, currencies, marketplaces ─────────────────────────────────
 
 const CHAIN_BY_VENUE_SLUG: Record<string, NftChain> = Object.fromEntries(
-  Object.entries(OPENSEA_CHAIN).map(([chain, slug]) => [slug, chain as NftChain]),
+  Object.entries(OPENSEA_CHAIN).map(([chain, slug]) => [
+    slug,
+    chain as NftChain,
+  ]),
 ) as Record<string, NftChain>
 
 /** OpenSea's chain slug back to ours. Undefined for a chain we do not address. */
@@ -449,7 +455,9 @@ export function parseListings(
     const parameters = seaportParameters(order)
     const offered = asArray(parameters?.['offer'])
       .map((item) => asObject(item))
-      .find((item) => item && NFT_ITEM_TYPES.has(asNumber(item['itemType']) ?? -1))
+      .find(
+        (item) => item && NFT_ITEM_TYPES.has(asNumber(item['itemType']) ?? -1),
+      )
     const tokenId =
       asString(asObject(order['asset'])?.['identifier']) ??
       asString(offered?.['identifierOrCriteria'])
@@ -463,7 +471,9 @@ export function parseListings(
     }
     const priceUsd = usd(
       amount,
-      isSettlementCurrency(currency, ctx.priceCurrency) ? ctx.usdRate : undefined,
+      isSettlementCurrency(currency, ctx.priceCurrency)
+        ? ctx.usdRate
+        : undefined,
     )
     if (priceUsd !== undefined) listing.priceUsd = priceUsd
     const seller = asString(parameters?.['offerer'])
@@ -509,7 +519,10 @@ export function parseOfferAggregates(
       .map((bidder) => asObject(bidder))
       .filter((bidder): bidder is Json => bidder !== null)
     const quantity =
-      bidders.reduce((sum, bidder) => sum + (asNumber(bidder['quantity']) ?? 0), 0) ||
+      bidders.reduce(
+        (sum, bidder) => sum + (asNumber(bidder['quantity']) ?? 0),
+        0,
+      ) ||
       asNumber(level['total_offers']) ||
       1
 
@@ -570,7 +583,9 @@ export function parseOffers(
     // startAmount is how many items the bidder will take.
     const wanted = asArray(parameters?.['consideration'])
       .map((item) => asObject(item))
-      .find((item) => item && NFT_ITEM_TYPES.has(asNumber(item['itemType']) ?? -1))
+      .find(
+        (item) => item && NFT_ITEM_TYPES.has(asNumber(item['itemType']) ?? -1),
+      )
     const quantity =
       asNumber(order['remaining_quantity']) ??
       asNumber(wanted?.['startAmount']) ??
@@ -607,10 +622,13 @@ export function parseOffers(
     }
     const priceUsd = usd(
       unit,
-      isSettlementCurrency(currency, ctx.priceCurrency) ? ctx.usdRate : undefined,
+      isSettlementCurrency(currency, ctx.priceCurrency)
+        ? ctx.usdRate
+        : undefined,
     )
     if (priceUsd !== undefined) offer.priceUsd = priceUsd
-    if (traitKey && traitValue) offer.trait = { key: traitKey, value: traitValue }
+    if (traitKey && traitValue)
+      offer.trait = { key: traitKey, value: traitValue }
     if (tokenId) offer.tokenId = tokenId
     const bidder = asString(parameters?.['offerer'])
     if (bidder) offer.bidder = bidder
@@ -695,7 +713,9 @@ export function parseSaleEvents(
     if (txHash) sale.txHash = txHash
     const priceUsd = usd(
       unit,
-      isSettlementCurrency(currency, ctx.priceCurrency) ? ctx.usdRate : undefined,
+      isSettlementCurrency(currency, ctx.priceCurrency)
+        ? ctx.usdRate
+        : undefined,
     )
     if (priceUsd !== undefined) sale.priceUsd = priceUsd
 

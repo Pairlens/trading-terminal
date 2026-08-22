@@ -51,10 +51,7 @@ export const CHAIN_CURRENCY: Readonly<Record<NftChain, string>> = {
  * ticket it cannot fill is worse than one that says so. Widen this only against
  * a real key and a real fill.
  */
-export const TRADABLE_CHAINS: ReadonlyArray<NftChain> = [
-  'ethereum',
-  'base',
-]
+export const TRADABLE_CHAINS: ReadonlyArray<NftChain> = ['ethereum', 'base']
 
 export function isTradableChain(chain: NftChain): boolean {
   return TRADABLE_CHAINS.includes(chain)

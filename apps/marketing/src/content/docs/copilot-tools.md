@@ -5,8 +5,8 @@ group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 21 AUG 2026
-readTime: 12 min read
+updated: 22 AUG 2026
+readTime: 13 min read
 ---
 
 The assistant's agentic loop runs in the terminal, not on a server. These are
@@ -112,11 +112,11 @@ Open one with `open_instrument`, described under [Terminal](#terminal).
 An NFT collection has no ticker and no candle stream to point the market-data
 tools at, so it gets three reads of its own.
 
-| Tool                    | What it does                                                                                                                        |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `list_nft_collections`  | Rank one chain's collections by 24h volume, floor move, sales, market cap or newest deployment                                      |
-| `get_nft_collection`    | One collection's state: floor, top offer, 24h volume and change, supply, holders and how many are listed                            |
-| `get_nft_book`          | Both sides of the ladder: the cheapest listings item by item, and the standing collection offers with executable size at each price  |
+| Tool                   | What it does                                                                                                                        |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `list_nft_collections` | Rank one chain's collections by 24h volume, floor move, sales, market cap or newest deployment                                      |
+| `get_nft_collection`   | One collection's state: floor, top offer, 24h volume and change, supply, holders and how many are listed                            |
+| `get_nft_book`         | Both sides of the ladder: the cheapest listings item by item, and the standing collection offers with executable size at each price |
 
 `get_nft_book` is the one that answers the question a floor cannot: whether the
 floor is real, how deep the bid actually is, and what a sweep of five would

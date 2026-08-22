@@ -2369,7 +2369,7 @@
     "nftOffers": "Offers",
     "nftSales": "Sales",
     "nftItems": "Items",
-    "nftTraits": "Trait Floors",
+    "nftTraits": "Traits",
     "nftTicket": "NFT Ticket",
     "nftHoldings": "My Items"
   },
@@ -2457,7 +2457,7 @@
     "nftOffers": "The bid side: collection, trait and token offers with executable size.",
     "nftSales": "This collection's tape, newest print first.",
     "nftItems": "Browse the collection's tokens with their asks and rarity.",
-    "nftTraits": "Floor price per trait value, where a collection's real market lives.",
+    "nftTraits": "Every trait value with how many tokens carry it and how rare that makes them. Floors per trait arrive when a provider publishes them.",
     "nftTicket": "Buy the floor, sweep, make an offer, list an item or accept a bid.",
     "nftHoldings": "What this wallet holds in the collection, with cost basis and mark."
   },

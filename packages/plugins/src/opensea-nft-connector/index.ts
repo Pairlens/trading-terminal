@@ -28,6 +28,8 @@
  * events do not count against the REST limit); it is not wired here, and the
  * poller is what the panes are built against.
  */
+import { isNftChain } from '@pairlens/shared/nft-types'
+
 import {
   fetchHoldings,
   fetchItems,
@@ -41,14 +43,12 @@ import {
   fetchCollections,
   fetchOverview,
 } from './collections-client'
-import { openSeaFetch, unsupported } from './http'
+import { MissingKeyError, openSeaFetch, unsupported } from './http'
 import { asArray, asObject, asString } from './parsers'
 import { clearSlugCache, resolveSlug } from './slug-resolver'
 import { fetchCandles, fetchSeries } from './series-client'
 import { executeNftOrder } from './trading'
-import { CHAIN_CURRENCY, isTradableChain, OPENSEA_CHAIN } from './types'
-
-import { isNftChain } from '@pairlens/shared/nft-types'
+import { CHAIN_CURRENCY, OPENSEA_CHAIN, isTradableChain } from './types'
 
 import type { NftChain, NftCollectionSort } from '@pairlens/shared/nft-types'
 import type { NftCollectionInstrument } from '@pairlens/shared/instrument-types'
@@ -136,7 +136,9 @@ function requireContract(params: PluginExecuteParams, action: string): string {
   return contract
 }
 
-export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance {
+export function createOpenSeaNftPlugin(
+  manifest: PluginManifest,
+): PluginInstance {
   const walletSlots = new Map<string, WalletSlot>()
   const candlePollers = new Map<string, ReturnType<typeof setInterval>>()
   const tickerPollers = new Map<string, ReturnType<typeof setInterval>>()
@@ -147,14 +149,12 @@ export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance
    *
    * There is no keyless OpenSea tier to degrade to, so a connector activated
    * without one would answer every read with the same 401 and read as broken
-   * rather than as unconfigured.
+   * rather than as unconfigured. It throws the SAME typed error a rejected key
+   * throws, because the panes flag that one type as "this needs a key" and a
+   * plain error would send someone waiting for a recovery that cannot come.
    */
   function requireKey(): string {
-    if (!apiKey) {
-      throw new Error(
-        'OpenSea needs an API key. Add one in Accounts: they are free and issued instantly.',
-      )
-    }
+    if (!apiKey) throw new MissingKeyError()
     return apiKey
   }
 
@@ -247,7 +247,8 @@ export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance
         )
       case 'holdings': {
         const owner = readString(p['owner'])
-        if (!owner) throw new Error("OpenSea: 'holdings' needs a wallet address.")
+        if (!owner)
+          throw new Error("OpenSea: 'holdings' needs a wallet address.")
         const contract = contractOf(params)
         return fetchHoldings(
           key,
@@ -272,9 +273,11 @@ export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance
    * can route. The chain in context wins; Ethereum is the fallback, which is
    * where the overwhelming majority of what anyone types is deployed.
    */
-  async function searchCollections(
-    params: PluginExecuteParams,
-  ): Promise<{ items: Array<NftCollectionInstrument>; total: number; hasMore: boolean }> {
+  async function searchCollections(params: PluginExecuteParams): Promise<{
+    items: Array<NftCollectionInstrument>
+    total: number
+    hasMore: boolean
+  }> {
     const query =
       readString(params.params['q']) ?? readString(params.params['query'])
     if (!query) return { items: [], total: 0, hasMore: false }
@@ -390,7 +393,9 @@ export function createOpenSeaNftPlugin(manifest: PluginManifest): PluginInstance
           ...(readNumber(p['price']) !== undefined
             ? { price: readNumber(p['price']) as number }
             : {}),
-          ...(readString(p['tokenId']) ? { tokenId: readString(p['tokenId']) as string } : {}),
+          ...(readString(p['tokenId'])
+            ? { tokenId: readString(p['tokenId']) as string }
+            : {}),
           ...(readString(p['clientOrderId'])
             ? { clientOrderId: readString(p['clientOrderId']) as string }
             : {}),

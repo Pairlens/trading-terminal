@@ -4,7 +4,7 @@ description: One assistant for the whole terminal, in the nav rail, a strip unde
 group: traders
 order: 4
 eyebrow: For traders
-updated: 20 AUG 2026
+updated: 22 AUG 2026
 readTime: 14 min read
 ---
 
