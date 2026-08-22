@@ -7,12 +7,32 @@
  *
  * **The budget.** A free OpenSea key allows on the order of 600 reads an hour,
  * which is tight for a board that can have eight panes open on one collection.
- * So every request is paced through a sliding-window limiter sized well under
- * that ceiling: a board opening asks for a burst, and spacing the burst is what
- * keeps a cold open off the limit entirely. The live surface does not come
- * through here at all, which is what makes the budget workable: OpenSea's
- * stream is a WebSocket whose events are documented as not counting against the
- * REST limit, so REST is for snapshots and backfill only.
+ * The ceiling it is metered against is HOURLY, so a per-minute window cannot
+ * express it: 100 a minute is 6000 an hour, ten times the budget, and a limiter
+ * that never engages is decoration. So the pacing is two windows over one
+ * budget, and a request waits on both.
+ *
+ * The hourly window is the ceiling: 500 of the ~600 the key allows. The
+ * headroom is real, because a 429's own cool-off and any read this module does
+ * not see both spend from the same key.
+ *
+ * The short window is what keeps a cold open honest. A cold collection board is
+ * about twenty reads (slug, detail, book, listings, offers, tape, items,
+ * traits, floor series), and pacing those to a request a second would make the
+ * board crawl for the sake of a budget the whole burst barely dents. So 20 go
+ * out at once and only what follows is spaced, at four a second, which is the
+ * sliding window's own promise: full speed until the window is full.
+ *
+ * The trade that buys: a board's steady state, four 20s pollers plus a 90s
+ * candle poller, is already ABOVE 500 an hour on its own, so the hourly window
+ * does engage and pollers queue behind each other. That is the point. Queueing
+ * a refresh is a stale number for a few seconds; spending the key is throttle
+ * banners across every pane, and OpenSea's cool-off is not ours to shorten.
+ *
+ * The live surface does not come through here at all, which is what makes the
+ * budget workable: OpenSea's stream is a WebSocket whose events are documented
+ * as not counting against the REST limit, so REST is for snapshots and backfill
+ * only.
  *
  * **The refusal.** A rate limit is not an empty collection, and the difference
  * has to survive all the way to the pane. A 429 becomes a typed
@@ -34,12 +54,65 @@ export const OPENSEA_PROVIDER = 'opensea'
 
 export const OPENSEA_API_BASE = 'https://api.opensea.io/api/v2'
 
+/** Reads an hour, against the ~600 a free key is metered at. */
+export const HOURLY_BUDGET = 500
+
+/** Reads that may leave at once before anything is spaced. One cold board. */
+export const BURST_BUDGET = 20
+
+const BURST_WINDOW_MS = 5_000
+
+export type OpenSeaBudget = {
+  acquire: () => Promise<void>
+  cooldown: (ms: number) => void
+  /** Test seam: a shared budget is process-wide. */
+  reset: () => void
+}
+
 /**
- * Sized under the documented free-tier ceiling rather than at it, and shared
- * process-wide: two boards open on two collections are one budget, and a
+ * The hourly ceiling and the burst window, as one gate.
+ *
+ * Both are acquired, hourly first, and both are FIFO, so the order a caller
+ * arrives in is the order it goes out in. A cool-off from a 429 goes to both:
+ * OpenSea is telling us to stop, not to slow down.
+ *
+ * The clock is injectable so the shape can be tested against a virtual hour
+ * rather than a real one.
+ */
+export function createOpenSeaBudget(
+  clock: { now?: () => number; delay?: (ms: number) => Promise<void> } = {},
+): OpenSeaBudget {
+  const hourly = createRequestLimiter({
+    capacity: HOURLY_BUDGET,
+    windowMs: 3_600_000,
+    ...clock,
+  })
+  const burst = createRequestLimiter({
+    capacity: BURST_BUDGET,
+    windowMs: BURST_WINDOW_MS,
+    ...clock,
+  })
+  return {
+    async acquire() {
+      await hourly.acquire()
+      await burst.acquire()
+    },
+    cooldown(ms) {
+      hourly.cooldown(ms)
+      burst.cooldown(ms)
+    },
+    reset() {
+      hourly.reset()
+      burst.reset()
+    },
+  }
+}
+
+/**
+ * Shared process-wide: two boards open on two collections are one budget, and a
  * per-instance limiter would let them spend it twice.
  */
-const limiter = createRequestLimiter({ capacity: 100, windowMs: 60_000 })
+const limiter = createOpenSeaBudget()
 
 export type OpenSeaFetchOptions = {
   method?: string

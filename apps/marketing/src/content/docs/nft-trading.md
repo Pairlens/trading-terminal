@@ -311,10 +311,17 @@ set by what actually moves:
 
 Every query is gated on the pane being open, so a tab you are not looking at
 costs nothing. That matters because a free OpenSea key allows on the order of
-600 reads an hour and one board can have eight panes on one collection. Requests
-are paced through a shared sliding-window limiter sized under that ceiling, and
-the budget is process-wide: two boards on two collections spend one budget, not
-two.
+600 reads an hour and one board can have eight panes on one collection.
+
+Requests are paced against that ceiling on two windows at once. The hourly one
+is the budget itself, set at 500 reads so a rate limit and anything else on the
+same key still have room. The short one lets a cold board spend a burst of 20
+reads with no pacing at all, which is roughly what opening a collection costs,
+so nothing waits on a first paint. Past that, refreshes queue: a busy board's
+steady state is already above 500 an hour, and a number that is a few seconds
+stale beats a key spent to the point where every pane shows a throttle banner.
+The budget is process-wide, so two boards on two collections spend one budget,
+not two.
 
 A rate limit is reported as a rate limit, all the way to the pane. It is not an
 empty collection, and it retries on the provider's own advice.

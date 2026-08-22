@@ -174,34 +174,20 @@ export function isSettlementCurrency(
   return a === `W${b}` || `W${a}` === b
 }
 
-const MARKETPLACES: Array<[RegExp, NftMarketplace]> = [
-  [/opensea|seaport/i, 'opensea'],
-  [/blur/i, 'blur'],
-  [/magic\s*eden|magiceden/i, 'magiceden'],
-  [/looks\s*rare|looksrare/i, 'looksrare'],
-  [/x2y2/i, 'x2y2'],
-  [/tensor/i, 'tensor'],
-]
-
 /**
- * The venue a row will actually fill on.
+ * The venue every row this file produces will fill on.
  *
- * `fallback` rather than `'unknown'` by default because these payloads come off
- * OpenSea's own order book, where an order with no marketplace label is an
- * OpenSea order. A tape read market-wide is the case that should pass
- * `'unknown'`.
+ * There is nothing in a v2 payload to read a venue off. What looks like a
+ * label, `protocol_address`, is a Seaport CONTRACT address (`seaport.ts` looks
+ * the same field up in an address-keyed table), so matching it against
+ * marketplace names badged the whole board `unknown`. The endpoint is what
+ * knows the venue: `/listings/collection/...` and `/offers/collection/...`
+ * serve orders posted to OpenSea's own book, and `/events` calls a transfer a
+ * `sale` only when OpenSea brokered it, so a fill on another venue arrives as a
+ * bare `transfer` that `parseSaleEvents` drops before it can be priced. The day
+ * a payload does start naming a venue, this is the one place to read it.
  */
-export function marketplaceFrom(
-  value: unknown,
-  fallback: NftMarketplace = 'opensea',
-): NftMarketplace {
-  const raw = asString(value)
-  if (!raw) return fallback
-  for (const [pattern, marketplace] of MARKETPLACES) {
-    if (pattern.test(raw)) return marketplace
-  }
-  return 'unknown'
-}
+const OPENSEA_MARKETPLACE: NftMarketplace = 'opensea'
 
 /** The currency a chain's prices are quoted in when the payload does not say. */
 export function currencyForChain(chain: NftChain): string {
@@ -247,8 +233,8 @@ export type ParsedCollectionDetail = {
  *
  * `required: true` is the marketplace's own take, which every venue charges and
  * which is not the creator's. What is left is the royalty a seller actually
- * gives up, expressed as a fraction because that is what the wire type asks for
- * despite the field's name.
+ * gives up. OpenSea publishes each `fee` as a percent (2.5 for 2.5%), and
+ * `royaltyRate` is a fraction, which is the whole reason for the division.
  */
 function royaltyFraction(fees: unknown): number | undefined {
   const rows = asArray(fees)
@@ -319,7 +305,7 @@ export function parseCollectionDetail(
   if (description) summary.description = description
   if (supply !== undefined) summary.totalSupply = supply
   const royalty = royaltyFraction(body['fees'])
-  if (royalty !== undefined) summary.royaltyBps = royalty
+  if (royalty !== undefined) summary.royaltyRate = royalty
   if (body['safelist_status'] !== undefined) {
     summary.verified = asString(body['safelist_status']) === 'verified'
   }
@@ -467,7 +453,7 @@ export function parseListings(
       tokenId,
       price: amount,
       priceCurrency: currency,
-      marketplace: marketplaceFrom(order['protocol_address']),
+      marketplace: OPENSEA_MARKETPLACE,
     }
     const priceUsd = usd(
       amount,
@@ -530,7 +516,7 @@ export function parseOfferAggregates(
       price,
       priceCurrency: asString(priceBlock?.['symbol']) ?? ctx.priceCurrency,
       quantity,
-      marketplace: 'opensea',
+      marketplace: OPENSEA_MARKETPLACE,
     }
     const priceUsd = asNumber(priceBlock?.['usd_price'])
     if (priceUsd !== undefined) offer.priceUsd = priceUsd
@@ -618,7 +604,7 @@ export function parseOffers(
       price: unit,
       priceCurrency: currency,
       quantity,
-      marketplace: marketplaceFrom(order['protocol_address']),
+      marketplace: OPENSEA_MARKETPLACE,
     }
     const priceUsd = usd(
       unit,
@@ -690,7 +676,7 @@ export function parseSaleEvents(
       tokenId,
       price: unit,
       priceCurrency: currency,
-      marketplace: marketplaceFrom(event['protocol_address']),
+      marketplace: OPENSEA_MARKETPLACE,
       timestampMs,
     }
     sale.chain = chain

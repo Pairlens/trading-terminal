@@ -101,8 +101,10 @@ function NftCollectionHeaderInner({
   const currency = collection?.priceCurrency ?? pinned?.priceCurrency
   const verified = collection?.verified ?? pinned?.verified ?? false
   const listed = listedRatio(collection?.listedCount, collection?.totalSupply)
+  // A rate, like `listed` right below it: both are fractions, so both reach a
+  // percentage the same way.
   const royalty =
-    collection?.royaltyBps != null ? collection.royaltyBps / 100 : null
+    collection?.royaltyRate != null ? collection.royaltyRate * 100 : null
 
   return (
     <div className="flex h-full min-h-0 flex-col justify-between gap-2 py-0.5">

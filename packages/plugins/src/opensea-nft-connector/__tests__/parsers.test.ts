@@ -13,7 +13,6 @@ import {
   applyCollectionStats,
   chainFromVenue,
   isSettlementCurrency,
-  marketplaceFrom,
   mergeListingsIntoItems,
   parseCollectionDetail,
   parseFloorPoints,
@@ -103,13 +102,6 @@ describe('chains, currencies and marketplaces', () => {
     expect(isSettlementCurrency('ETH', 'ETH')).toBe(true)
     expect(isSettlementCurrency('USDC', 'ETH')).toBe(false)
   })
-
-  test('an unlabelled order off OpenSea is an OpenSea order', () => {
-    expect(marketplaceFrom(undefined)).toBe('opensea')
-    expect(marketplaceFrom(undefined, 'unknown')).toBe('unknown')
-    expect(marketplaceFrom('seaport-1.6')).toBe('opensea')
-    expect(marketplaceFrom('blur.io')).toBe('blur')
-  })
 })
 
 const collectionDetail = {
@@ -150,7 +142,16 @@ describe('collection detail', () => {
 
   test('the creator royalty excludes the marketplace fee', () => {
     const parsed = parseCollectionDetail(collectionDetail, 'ethereum')
-    expect(parsed?.summary.royaltyBps).toBeCloseTo(0.025, 6)
+    expect(parsed?.summary.royaltyRate).toBeCloseTo(0.025, 6)
+  })
+
+  test('the royalty is a RATE, so a 2.5% fee reads back as 2.5%', () => {
+    // The field was called `royaltyBps` while carrying a fraction, and the
+    // header pane divided by 100 a second time: every collection rendered
+    // "0.00%". A fraction times 100 is the percentage, and nothing else is.
+    const parsed = parseCollectionDetail(collectionDetail, 'ethereum')
+    const rate = parsed?.summary.royaltyRate ?? 0
+    expect((rate * 100).toFixed(2)).toBe('2.50')
   })
 
   test('carries the FX rates out for the rest of the connector', () => {
@@ -265,6 +266,13 @@ describe('listings', () => {
     expect(listings[0]?.expiresMs).toBe(1_700_000_000_000)
   })
 
+  test('an order off OpenSea is an OpenSea order, not `unknown`', () => {
+    // `protocol_address` is a Seaport CONTRACT, which matches no venue name.
+    // Reading it as a label badged every row of every book `unknown`.
+    const { listings } = parseListings({ listings: [listing] }, ctx)
+    expect(listings[0]?.marketplace).toBe('opensea')
+  })
+
   test('the ladder is cheapest first', () => {
     const cheaper = {
       ...listing,
@@ -341,6 +349,14 @@ describe('offers', () => {
     )
     expect(offers[0]?.price).toBe(3)
     expect(offers[0]?.quantity).toBe(5)
+  })
+
+  test('a bid off OpenSea is an OpenSea bid, not `unknown`', () => {
+    const { offers } = parseOffers(
+      { offers: [offer('0x1', '3000000000000000000', 1)] },
+      ctx,
+    )
+    expect(offers[0]?.marketplace).toBe('opensea')
   })
 
   test('two orders at one price are one level with real size', () => {
@@ -482,6 +498,13 @@ describe('the tape', () => {
     expect(sales[0]?.contract).toBe(
       '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     )
+  })
+
+  test('a print off OpenSea is an OpenSea print, not `unknown`', () => {
+    // The tape only sees a `sale` OpenSea brokered: a fill elsewhere arrives as
+    // a bare `transfer` and never reaches this parser.
+    const { sales } = parseSaleEvents({ asset_events: [sale] }, ctx)
+    expect(sales[0]?.marketplace).toBe('opensea')
   })
 
   test('an ERC-1155 print of five is priced per item', () => {
