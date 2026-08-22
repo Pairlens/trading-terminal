@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Lendo os launchpads",
     "retrying": "Tentando de novo",
+    "pacedNote": "Feeds públicos sem chave, ritmados dentro dos limites gratuitos. Recarregar começa do zero.",
     "unavailableBody": "O feed do launchpad não respondeu. Ele vai tentar de novo sozinho.",
     "unknown": "Desconhecido",
     "curveUnknown": "Sem curva de bonding, ou um launchpad sem limite publicado",

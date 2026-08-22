@@ -6998,6 +6998,7 @@
   "memecoins": {
     "loading": "Czytanie launchpadów",
     "retrying": "Ponawianie",
+    "pacedNote": "Publiczne źródła bez klucza, w tempie darmowych limitów. Przeładowanie zaczyna od nowa.",
     "unavailableBody": "Kanał launchpadu nie odpowiedział. Spróbuje ponownie sam.",
     "unknown": "Nieznane",
     "curveUnknown": "Brak krzywej bondingu albo launchpad bez opublikowanego progu",

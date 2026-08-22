@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Membaca launchpad",
     "retrying": "Mencoba lagi",
+    "pacedNote": "Feed publik tanpa kunci, diatur dalam batas gratisnya. Memuat ulang mengulang dari awal.",
     "unavailableBody": "Feed launchpad tidak menjawab. Ia akan mencoba lagi sendiri.",
     "unknown": "Tidak diketahui",
     "curveUnknown": "Tidak ada bonding curve, atau launchpad tanpa ambang yang dipublikasikan",

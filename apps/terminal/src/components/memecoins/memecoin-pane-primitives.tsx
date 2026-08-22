@@ -76,6 +76,34 @@ export function formatFlowCount(value: number): string {
   return `${Math.round(value / 1e6)}M`
 }
 
+/**
+ * One label-and-value line, for the two panes that are a list of figures
+ * rather than a table. The board's third surface is not used here.
+ *
+ * Lives beside the bars rather than in the pane that draws it because the
+ * loading skeleton has to draw the identical line with a ghost where the value
+ * goes, and two definitions of a 17px row is exactly how a skeleton starts
+ * lying about the layout it is standing in for.
+ */
+export function StatLine({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 py-[3px]">
+      <span className="truncate text-[11px] text-muted-foreground">
+        {label}
+      </span>
+      <span className="shrink-0 font-mono text-[11px] tabular-nums">
+        {children}
+      </span>
+    </div>
+  )
+}
+
 /** A signed percentage with its own colour. Null renders as a dash. */
 export function ChangeCell({
   percent,
@@ -122,7 +150,8 @@ export function CurveBar({
       <span
         // The same width a filled cell claims, so an unknown does not pull the
         // column in and out as rows arrive.
-        className="inline-flex w-[74px] justify-end text-muted-foreground"
+        className="inline-flex justify-end text-muted-foreground"
+        style={{ width: CURVE_CELL_WIDTH }}
         title={t('memecoins.curveUnknown')}
       >
         ·
@@ -167,8 +196,18 @@ export function CurveBar({
  * row, and a cell that sizes to its own contents cannot do that in either
  * state.
  */
-const FLOW_CELL =
+export const FLOW_CELL =
   'inline-flex h-3.5 w-8 shrink-0 items-center @min-[16rem]/pane:w-[68px]'
+
+/**
+ * The curve cell's exact width, so a skeleton can claim it.
+ *
+ * 32px of bar, 6px of gap, 36px of right-aligned percentage. Written down
+ * because a ghost that guesses it narrower makes the column jump the moment
+ * the first real percentage lands, which is the one thing a skeleton exists to
+ * prevent.
+ */
+export const CURVE_CELL_WIDTH = 74
 
 /**
  * Buys against sells, as one bar with the counts inside it.

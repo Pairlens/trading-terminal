@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Launchpad を読み込み中",
     "retrying": "再試行中",
+    "pacedNote": "キー不要の公開フィードを無料枠のペースで読み込み中です。再読み込みすると最初からやり直しになります。",
     "unavailableBody": "Launchpad のフィードが応答しませんでした。自動で再試行します。",
     "unknown": "不明",
     "curveUnknown": "ボンディングカーブがないか、しきい値を公開していない Launchpad です",

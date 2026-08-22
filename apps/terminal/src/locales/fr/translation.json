@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "Lecture des launchpads",
     "retrying": "Nouvel essai",
+    "pacedNote": "Flux publics sans clé, cadencés dans leurs limites gratuites. Recharger repart de zéro.",
     "unavailableBody": "Le flux du launchpad n’a pas répondu. Il réessaiera tout seul.",
     "unknown": "Inconnu",
     "curveUnknown": "Pas de courbe de bonding, ou un launchpad sans seuil publié",

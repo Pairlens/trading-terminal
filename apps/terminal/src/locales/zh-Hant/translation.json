@@ -6852,6 +6852,7 @@
   "memecoins": {
     "loading": "正在讀取 Launchpad",
     "retrying": "重試中",
+    "pacedNote": "正在依免費額度的節奏讀取免金鑰公開資料來源。重新整理會從頭開始。",
     "unavailableBody": "Launchpad 資料來源沒有回應。它會自己重試。",
     "unknown": "未知",
     "curveUnknown": "沒有綁定曲線，或者該 Launchpad 未公布門檻",
