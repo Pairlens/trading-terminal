@@ -29,7 +29,6 @@ import {
   PANE_TABLE_BODY,
   PaneEmpty,
   PaneErrorBanner,
-  PaneFootnote,
   Th,
 } from '@/components/panes/pane-primitives'
 import { SkeletonStatus } from '@/components/panes/pane-skeletons'
@@ -226,7 +225,6 @@ export function MemeTokenStatsPane() {
               </StatLine>
             ) : null}
           </div>
-          <PaneFootnote>{t('memecoins.stats.footnote')}</PaneFootnote>
         </>
       )}
     </PaneFrame>
@@ -315,7 +313,6 @@ export function MemeFlowPane() {
                 </tbody>
               </table>
             </div>
-            <PaneFootnote>{t('memecoins.flow.footnote')}</PaneFootnote>
           </>
         )
       }}
@@ -444,7 +441,6 @@ export function MemeSafetyPane() {
                 </StatLine>
               ) : null}
             </div>
-            <PaneFootnote>{t('memecoins.safety.footnote')}</PaneFootnote>
           </>
         )
       }}

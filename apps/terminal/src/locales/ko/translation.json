@@ -6867,7 +6867,8 @@
       "change": "변동",
       "flow": "매수/매도",
       "volume": "24시간 거래대금",
-      "turnoverHint": "시가총액 대비 거래대금을 이 열의 중앙값과 비교한 배수."
+      "turnoverHint": "시가총액 대비 거래대금을 이 열의 중앙값과 비교한 배수.",
+      "flowSortHint": "순매매 기준으로 정렬합니다: 매수에서 매도를 뺀 값."
     },
     "new": {
       "title": "신규 민트",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "커브",
       "graduated": "졸업 완료",
-      "organicScore": "오가닉 스코어",
-      "footnote": "시가총액은 유통 공급량을, FDV는 총공급량을 씁니다."
+      "organicScore": "오가닉 스코어"
     },
     "flow": {
       "window": "구간",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "세는 것은 체결 건수이지 트레이더 수가 아닙니다. 거래대금은 양쪽을 합친 값입니다.",
       "emptyTitle": "아직 체결이 없습니다",
       "emptyBody": "토큰의 첫 스왑이 나오면 흐름이 나타납니다."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}}개 졸업",
       "revoked": "해제됨",
       "live": "유효",
-      "footnote": "알 수 없음은 안전이 아닙니다. 감사 정보가 없다는 것은 토큰에 대해 아무것도 말해주지 않습니다.",
       "emptyTitle": "공개된 감사 없음",
       "emptyBody": "이 소스는 토큰의 민트 권한도 프리즈 권한도 공개하지 않았습니다. 안전이 아니라 알 수 없음으로 다루세요."
+    },
+    "filters": {
+      "title": "열 필터",
+      "description": "이 범위를 벗어난 행은 숨겨집니다. 비워 두면 제한이 없습니다.",
+      "open": "필터",
+      "apply": "적용",
+      "clear": "모두 지우기",
+      "emptyTitle": "모두 걸러졌습니다",
+      "emptyBody": "{{count}}개 행 전부가 이 열에 설정한 범위를 벗어납니다.",
+      "minMcap": "최소 시가총액",
+      "maxMcap": "최대 시가총액",
+      "minLiquidity": "최소 유동성",
+      "minHolders": "최소 보유자",
+      "minCurve": "최소 커브",
+      "maxCurve": "최대 커브",
+      "maxAgeMinutes": "최대 경과 시간",
+      "minVolume": "최소 24시간 거래대금",
+      "minTrades": "최소 거래 수",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "분"
     }
   }
 }

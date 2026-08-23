@@ -6867,7 +6867,8 @@
       "change": "漲跌",
       "flow": "買/賣",
       "volume": "24 小時成交額",
-      "turnoverHint": "成交額與市值之比，相對本欄中位數。"
+      "turnoverHint": "成交額與市值之比，相對本欄中位數。",
+      "flowSortHint": "按淨成交排序：買入減賣出。"
     },
     "new": {
       "title": "新鑄造",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "曲線",
       "graduated": "已畢業",
-      "organicScore": "自然度評分",
-      "footnote": "市值使用流通供應量；FDV 使用總供應量。"
+      "organicScore": "自然度評分"
     },
     "flow": {
       "window": "視窗",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "計的是筆數，不是人數。成交額把買賣兩邊加在一起。",
       "emptyTitle": "還沒有成交",
       "emptyBody": "代幣有了第一筆兌換後，流向就會出現。"
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} 個已畢業",
       "revoked": "已放棄",
       "live": "仍生效",
-      "footnote": "未知不等於安全。缺少稽核資訊，說明不了這個代幣任何事。",
       "emptyTitle": "未公布稽核",
       "emptyBody": "該資料來源沒有公布這個代幣的鑄造權限或凍結權限。請當作未知，而不是安全。"
+    },
+    "filters": {
+      "title": "欄位篩選",
+      "description": "超出這些範圍的列會被隱藏。留空表示不限。",
+      "open": "篩選",
+      "apply": "套用",
+      "clear": "全部清除",
+      "emptyTitle": "全部被篩掉了",
+      "emptyBody": "全部 {{count}} 列都在你為該欄設定的範圍之外。",
+      "minMcap": "最小市值",
+      "maxMcap": "最大市值",
+      "minLiquidity": "最小流動性",
+      "minHolders": "最少持有人",
+      "minCurve": "最小曲線進度",
+      "maxCurve": "最大曲線進度",
+      "maxAgeMinutes": "最長時間",
+      "minVolume": "最小24小時成交額",
+      "minTrades": "最少成交筆數",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "分鐘"
     }
   }
 }

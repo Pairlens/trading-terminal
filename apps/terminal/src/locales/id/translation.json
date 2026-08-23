@@ -6867,7 +6867,8 @@
       "change": "Perubahan",
       "flow": "Beli/Jual",
       "volume": "Vol 24j",
-      "turnoverHint": "Volume terhadap kapitalisasi pasar, dibandingkan median kolom ini."
+      "turnoverHint": "Volume terhadap kapitalisasi pasar, dibandingkan median kolom ini.",
+      "flowSortHint": "Mengurutkan berdasarkan transaksi bersih: beli dikurangi jual."
     },
     "new": {
       "title": "Mint Baru",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Curve",
       "graduated": "Sudah lulus",
-      "organicScore": "Skor organik",
-      "footnote": "Kapitalisasi pasar memakai suplai beredar; FDV memakai suplai total."
+      "organicScore": "Skor organik"
     },
     "flow": {
       "window": "Rentang",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Yang dihitung transaksi, bukan trader. Volume menjumlahkan kedua sisi.",
       "emptyTitle": "Belum ada transaksi",
       "emptyBody": "Aliran muncul begitu token punya swap pertamanya."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} sudah lulus",
       "revoked": "Dicabut",
       "live": "Aktif",
-      "footnote": "Tidak diketahui bukan berarti aman. Audit yang tidak ada tidak berkata apa pun soal token ini.",
       "emptyTitle": "Tidak ada audit yang dipublikasikan",
       "emptyBody": "Sumber ini tidak mempublikasikan otoritas mint maupun freeze untuk token ini. Perlakukan itu sebagai tidak diketahui, bukan aman."
+    },
+    "filters": {
+      "title": "Filter kolom",
+      "description": "Baris di luar batas ini disembunyikan. Kosongkan untuk tanpa batas.",
+      "open": "Filter",
+      "apply": "Terapkan",
+      "clear": "Hapus semua",
+      "emptyTitle": "Semuanya tersaring",
+      "emptyBody": "Seluruh {{count}} baris berada di luar batas yang Anda pasang untuk kolom ini.",
+      "minMcap": "Kap. pasar min",
+      "maxMcap": "Kap. pasar maks",
+      "minLiquidity": "Likuiditas min",
+      "minHolders": "Holder min",
+      "minCurve": "Kurva min",
+      "maxCurve": "Kurva maks",
+      "maxAgeMinutes": "Usia maks",
+      "minVolume": "Volume 24j min",
+      "minTrades": "Transaksi min",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "menit"
     }
   }
 }

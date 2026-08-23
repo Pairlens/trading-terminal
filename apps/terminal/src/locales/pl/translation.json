@@ -7013,7 +7013,8 @@
       "change": "Zmiana",
       "flow": "Kup./Sprz.",
       "volume": "Wol 24h",
-      "turnoverHint": "Wolumen do kapitalizacji, mierzony względem mediany tej kolumny."
+      "turnoverHint": "Wolumen do kapitalizacji, mierzony względem mediany tej kolumny.",
+      "flowSortHint": "Sortuje po transakcjach netto: kupna minus sprzedaże."
     },
     "new": {
       "title": "Nowe minty",
@@ -7047,8 +7048,7 @@
       "launchpad": "Launchpad",
       "curve": "Krzywa",
       "graduated": "Po graduacji",
-      "organicScore": "Wynik organiczny",
-      "footnote": "Kapitalizacja liczy podaż w obiegu; FDV liczy podaż całkowitą."
+      "organicScore": "Wynik organiczny"
     },
     "flow": {
       "window": "Okno",
@@ -7057,7 +7057,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Liczone są transakcje, nie traderzy. Wolumen bierze obie strony razem.",
       "emptyTitle": "Brak transakcji",
       "emptyBody": "Przepływ pojawia się, gdy token zaliczy pierwszy swap."
     },
@@ -7069,9 +7068,29 @@
       "devMigrations": "{{count}} po graduacji",
       "revoked": "Cofnięte",
       "live": "Aktywne",
-      "footnote": "Nieznane to nie to samo co bezpieczne. Brak audytu nie mówi o tokenie nic.",
       "emptyTitle": "Brak opublikowanego audytu",
       "emptyBody": "To źródło nie opublikowało dla tokena ani prawa mintowania, ani prawa zamrażania. Potraktuj to jako nieznane, nie jako bezpieczne."
+    },
+    "filters": {
+      "title": "Filtry kolumny",
+      "description": "Wiersze poza tymi granicami są ukryte. Puste pole oznacza brak granicy.",
+      "open": "Filtry",
+      "apply": "Zastosuj",
+      "clear": "Wyczyść wszystko",
+      "emptyTitle": "Wszystko odfiltrowane",
+      "emptyBody": "Wszystkie {{count}} wierszy są poza granicami ustawionymi dla tej kolumny.",
+      "minMcap": "Min. kapitalizacja",
+      "maxMcap": "Maks. kapitalizacja",
+      "minLiquidity": "Min. płynność",
+      "minHolders": "Min. posiadaczy",
+      "minCurve": "Min. krzywa",
+      "maxCurve": "Maks. krzywa",
+      "maxAgeMinutes": "Maks. wiek",
+      "minVolume": "Min. wolumen 24h",
+      "minTrades": "Min. transakcji",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "minuty"
     }
   }
 }

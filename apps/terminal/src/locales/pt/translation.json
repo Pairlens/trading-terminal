@@ -6867,7 +6867,8 @@
       "change": "Var.",
       "flow": "Compr./Vend.",
       "volume": "Vol 24h",
-      "turnoverHint": "Volume sobre a capitalização, medido face à mediana desta coluna."
+      "turnoverHint": "Volume sobre a capitalização, medido face à mediana desta coluna.",
+      "flowSortHint": "Ordena por negociações líquidas: compras menos vendas."
     },
     "new": {
       "title": "Novos mints",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Curva",
       "graduated": "Graduado",
-      "organicScore": "Score orgânico",
-      "footnote": "A capitalização usa a oferta circulante; o FDV usa a oferta total."
+      "organicScore": "Score orgânico"
     },
     "flow": {
       "window": "Janela",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "As contagens são negociações, não traders. O volume soma os dois lados.",
       "emptyTitle": "Ainda sem negociações",
       "emptyBody": "O fluxo aparece assim que o token tem o primeiro swap."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} graduados",
       "revoked": "Revogada",
       "live": "Ativa",
-      "footnote": "Desconhecido não é seguro. A falta de auditoria não diz nada sobre o token.",
       "emptyTitle": "Sem auditoria publicada",
       "emptyBody": "Esta fonte não publicou autoridade de mint nem de congelamento para o token. Trate isso como desconhecido, não como seguro."
+    },
+    "filters": {
+      "title": "Filtros de coluna",
+      "description": "As linhas fora destes limites ficam ocultas. Deixe vazio para não limitar.",
+      "open": "Filtros",
+      "apply": "Aplicar",
+      "clear": "Limpar tudo",
+      "emptyTitle": "Está tudo filtrado",
+      "emptyBody": "As {{count}} linhas ficam fora dos limites definidos para esta coluna.",
+      "minMcap": "Cap. mínima",
+      "maxMcap": "Cap. máxima",
+      "minLiquidity": "Liquidez mínima",
+      "minHolders": "Holders mínimos",
+      "minCurve": "Curva mínima",
+      "maxCurve": "Curva máxima",
+      "maxAgeMinutes": "Idade máxima",
+      "minVolume": "Volume 24h mínimo",
+      "minTrades": "Negociações mínimas",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "minutos"
     }
   }
 }

@@ -6867,7 +6867,8 @@
       "change": "Biến động",
       "flow": "Mua/Bán",
       "volume": "KL 24h",
-      "turnoverHint": "Khối lượng so với vốn hóa, đo theo trung vị của cột này."
+      "turnoverHint": "Khối lượng so với vốn hóa, đo theo trung vị của cột này.",
+      "flowSortHint": "Sắp xếp theo lệnh ròng: mua trừ bán."
     },
     "new": {
       "title": "Mint mới",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Đường cong",
       "graduated": "Đã tốt nghiệp",
-      "organicScore": "Điểm hữu cơ",
-      "footnote": "Vốn hóa dùng nguồn cung lưu hành; FDV dùng tổng nguồn cung."
+      "organicScore": "Điểm hữu cơ"
     },
     "flow": {
       "window": "Khung",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Đếm là số giao dịch, không phải số người. Khối lượng gộp cả hai chiều.",
       "emptyTitle": "Chưa có giao dịch",
       "emptyBody": "Dòng tiền xuất hiện ngay khi token có cú swap đầu tiên."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} đã tốt nghiệp",
       "revoked": "Đã thu hồi",
       "live": "Còn hiệu lực",
-      "footnote": "Không rõ không có nghĩa là an toàn. Thiếu kiểm tra thì không nói lên điều gì về token.",
       "emptyTitle": "Chưa công bố kiểm tra",
       "emptyBody": "Nguồn này không công bố quyền mint hay quyền đóng băng của token. Hãy coi đó là không rõ, không phải là an toàn."
+    },
+    "filters": {
+      "title": "Bộ lọc cột",
+      "description": "Các hàng nằm ngoài giới hạn này sẽ bị ẩn. Để trống nếu không muốn giới hạn.",
+      "open": "Bộ lọc",
+      "apply": "Áp dụng",
+      "clear": "Xóa tất cả",
+      "emptyTitle": "Đã lọc hết",
+      "emptyBody": "Cả {{count}} hàng đều nằm ngoài giới hạn bạn đặt cho cột này.",
+      "minMcap": "Vốn hóa tối thiểu",
+      "maxMcap": "Vốn hóa tối đa",
+      "minLiquidity": "Thanh khoản tối thiểu",
+      "minHolders": "Số ví tối thiểu",
+      "minCurve": "Đường cong tối thiểu",
+      "maxCurve": "Đường cong tối đa",
+      "maxAgeMinutes": "Tuổi tối đa",
+      "minVolume": "Khối lượng 24h tối thiểu",
+      "minTrades": "Số lệnh tối thiểu",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "phút"
     }
   }
 }

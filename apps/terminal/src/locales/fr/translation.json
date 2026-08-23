@@ -6867,7 +6867,8 @@
       "change": "Var.",
       "flow": "Ach./Vent.",
       "volume": "Vol 24h",
-      "turnoverHint": "Volume rapporté à la capitalisation, comparé à la médiane de cette colonne."
+      "turnoverHint": "Volume rapporté à la capitalisation, comparé à la médiane de cette colonne.",
+      "flowSortHint": "Trie par transactions nettes : achats moins ventes."
     },
     "new": {
       "title": "Nouveaux mints",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Courbe",
       "graduated": "Gradué",
-      "organicScore": "Score organique",
-      "footnote": "La capitalisation utilise l’offre en circulation ; le FDV utilise l’offre totale."
+      "organicScore": "Score organique"
     },
     "flow": {
       "window": "Fenêtre",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Les compteurs comptent des transactions, pas des traders. Le volume additionne les deux côtés.",
       "emptyTitle": "Aucune transaction",
       "emptyBody": "Le flux apparaît dès que le token a son premier swap."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} gradués",
       "revoked": "Révoquée",
       "live": "Active",
-      "footnote": "Inconnu n’est pas sûr. Un audit manquant ne dit rien sur le token.",
       "emptyTitle": "Aucun audit publié",
       "emptyBody": "Cette source n’a publié ni autorité de mint ni autorité de gel pour ce token. Traitez cela comme inconnu, pas comme sûr."
+    },
+    "filters": {
+      "title": "Filtres de colonne",
+      "description": "Les lignes hors de ces bornes sont masquées. Laissez un champ vide pour ne pas borner.",
+      "open": "Filtres",
+      "apply": "Appliquer",
+      "clear": "Tout effacer",
+      "emptyTitle": "Tout est filtré",
+      "emptyBody": "Les {{count}} lignes sont hors des bornes fixées pour cette colonne.",
+      "minMcap": "Cap. min",
+      "maxMcap": "Cap. max",
+      "minLiquidity": "Liquidité min",
+      "minHolders": "Détenteurs min",
+      "minCurve": "Courbe min",
+      "maxCurve": "Courbe max",
+      "maxAgeMinutes": "Âge max",
+      "minVolume": "Volume 24h min",
+      "minTrades": "Transactions min",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "minutes"
     }
   }
 }
