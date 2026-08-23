@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 10
 eyebrow: For traders
-updated: 22 AUG 2026
-readTime: 9 min read
+updated: 23 AUG 2026
+readTime: 10 min read
 ---
 
 ## Before anything else
@@ -78,14 +78,44 @@ multiple: `$310M · 1.4×` means the coin traded 1.4 times as much of itself tod
 as the median coin in the column. Volume alone cannot say that, because $310M is
 enormous for a $500M coin and a quiet day for a $14B one. Past 3× it is marked.
 
-Every row on the other three columns carries market cap and a buy/sell bar. Buys
-green on the left, sells red on the right, the boundary between them is the
-ratio, and the counts sit inside the bar, because 8 buys to 1 sell and 800 to 100
-are the same ratio and very different events. The bar is the same width in every
-row, so the same ratio lands in the same place all the way down the column. On a
-narrow pane the counts drop and the bar stays.
+Every row on the other three columns carries market cap and a buy/sell bar: the
+buy count on the left, the sell count on the right, and between them a bar whose
+green-to-red boundary is the ratio. The counts are there because 8 buys to 1 sell
+and 800 to 100 are the same ratio and very different events. Every part of that
+cell is a fixed width, so the same ratio lands in the same place all the way down
+the column. On a narrow pane the counts drop and the bar stays.
+
+A token with no picture gets a coloured mark instead of a grey one. It is
+generated from the token's own address, so it is the same mark on every device
+and in every session, and it follows the theme rather than fighting it. On a
+column where half the rows are anonymous, that is the difference between reading
+tickers and recognising rows.
 
 Clicking a row opens that token's chart and swap ticket.
+
+## Sorting and filtering
+
+Every column header sorts. Click once for descending, again for ascending, and a
+third time to go back to the column's own ranking, which is a real answer rather
+than an absence: "closest to graduating" cannot be reproduced from any single
+field once a published curve and a reconstructed one are mixed in the same list.
+
+The fourth column sorts by net trades, buys minus sells, so descending is what is
+being bought and ascending is what is being dumped. Total activity would rank a
+token being sold off above one being accumulated, which is the opposite of what
+anyone sorting that column is asking.
+
+The funnel in a column's header sets bounds on it: a market cap floor or ceiling,
+a liquidity or holder minimum, a curve range on Graduating, a maximum age on New
+Mints, a 24-hour volume floor on Legendary. Leave a field empty for no bound.
+Rows the feed published no figure for do not pass a bound, because a token whose
+market cap nobody published is not a token known to clear your floor.
+
+A column filtered down to nothing says so, and offers to clear the bounds, rather
+than showing you the same empty pane a quiet market would.
+
+Sorting and filters are saved per column, and they follow your account when cloud
+sync is on: set a floor on the laptop and the desktop app opens with it.
 
 Legendary rows take an extra step to get there, because that column ranks _coins_
 rather than contracts, and a ticker is no help: GIGACHAD is three different

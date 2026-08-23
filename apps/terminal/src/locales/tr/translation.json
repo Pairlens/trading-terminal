@@ -6867,7 +6867,8 @@
       "change": "Değişim",
       "flow": "Alım/Satım",
       "volume": "Hac 24s",
-      "turnoverHint": "Piyasa değerine göre hacim, bu sütunun medyanına kıyasla."
+      "turnoverHint": "Piyasa değerine göre hacim, bu sütunun medyanına kıyasla.",
+      "flowSortHint": "Net işleme göre sıralar: alımlar eksi satımlar."
     },
     "new": {
       "title": "Yeni Mintler",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Eğri",
       "graduated": "Mezun oldu",
-      "organicScore": "Organik skor",
-      "footnote": "Piyasa değeri dolaşımdaki arzı, FDV toplam arzı kullanır."
+      "organicScore": "Organik skor"
     },
     "flow": {
       "window": "Aralık",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Sayılan işlemlerdir, yatırımcılar değil. Hacim iki tarafı birden alır.",
       "emptyTitle": "Henüz işlem yok",
       "emptyBody": "Token ilk takasını yaptığı anda akış belirir."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} mezun oldu",
       "revoked": "Kaldırıldı",
       "live": "Aktif",
-      "footnote": "Bilinmiyor, güvenli demek değildir. Denetimin olmaması token hakkında hiçbir şey söylemez.",
       "emptyTitle": "Yayımlanmış denetim yok",
       "emptyBody": "Bu kaynak token için ne mint ne de freeze yetkisi yayımladı. Bunu güvenli değil, bilinmiyor olarak ele al."
+    },
+    "filters": {
+      "title": "Sütun filtreleri",
+      "description": "Bu sınırların dışındaki satırlar gizlenir. Sınır istemiyorsanız alanı boş bırakın.",
+      "open": "Filtreler",
+      "apply": "Uygula",
+      "clear": "Tümünü temizle",
+      "emptyTitle": "Her şey filtrelendi",
+      "emptyBody": "{{count}} satırın tamamı bu sütun için koyduğunuz sınırların dışında.",
+      "minMcap": "Min. piyasa değeri",
+      "maxMcap": "Maks. piyasa değeri",
+      "minLiquidity": "Min. likidite",
+      "minHolders": "Min. sahip",
+      "minCurve": "Min. eğri",
+      "maxCurve": "Maks. eğri",
+      "maxAgeMinutes": "Maks. yaş",
+      "minVolume": "Min. 24s hacim",
+      "minTrades": "Min. işlem",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "dakika"
     }
   }
 }

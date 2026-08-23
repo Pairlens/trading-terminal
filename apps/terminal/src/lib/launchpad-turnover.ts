@@ -81,3 +81,20 @@ export function turnoverMultiples(
   for (const [key, turnover] of measured) out.set(key, turnover / median)
   return out
 }
+
+/**
+ * A multiple in at most four characters, so the cell it sits in cannot grow.
+ *
+ * TRUMP printed `22.1×` on a live board and a launch during its first hour can
+ * print far worse, which pushed the volume cell wide enough to squeeze the
+ * ticker beside it. The precision that gets dropped above 10× is precision
+ * that was never real: the number is a ratio against a median of thirty rows,
+ * and past a certain point the only thing it says is "far more than usual".
+ * Everything above 99 says exactly that and says it in the same width.
+ */
+export function formatTurnoverMultiple(multiple: number): string {
+  if (!Number.isFinite(multiple) || multiple < 0) return '·'
+  if (multiple >= 100) return '99+×'
+  if (multiple >= 10) return `${Math.round(multiple)}×`
+  return `${multiple.toFixed(1)}×`
+}

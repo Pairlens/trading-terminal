@@ -6867,7 +6867,8 @@
       "change": "Änd.",
       "flow": "Käufe/Verk.",
       "volume": "Vol 24h",
-      "turnoverHint": "Volumen im Verhältnis zur Marktkapitalisierung, gemessen am Median dieser Spalte."
+      "turnoverHint": "Volumen im Verhältnis zur Marktkapitalisierung, gemessen am Median dieser Spalte.",
+      "flowSortHint": "Sortiert nach Netto-Trades: Käufe minus Verkäufe."
     },
     "new": {
       "title": "Neue Mints",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Curve",
       "graduated": "Graduiert",
-      "organicScore": "Organic Score",
-      "footnote": "Die Marktkapitalisierung nutzt den zirkulierenden Supply; der FDV nutzt den Gesamt-Supply."
+      "organicScore": "Organic Score"
     },
     "flow": {
       "window": "Zeitraum",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Gezählt werden Trades, nicht Trader. Das Volumen fasst beide Seiten zusammen.",
       "emptyTitle": "Noch keine Trades",
       "emptyBody": "Der Fluss erscheint, sobald der Token seinen ersten Swap hat."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} graduiert",
       "revoked": "Entzogen",
       "live": "Aktiv",
-      "footnote": "Unbekannt heißt nicht sicher. Ein fehlendes Audit sagt nichts über den Token.",
       "emptyTitle": "Kein Audit veröffentlicht",
       "emptyBody": "Diese Quelle hat für den Token weder Mint- noch Freeze-Authority veröffentlicht. Behandle das als unbekannt, nicht als sicher."
+    },
+    "filters": {
+      "title": "Spaltenfilter",
+      "description": "Zeilen außerhalb dieser Grenzen werden ausgeblendet. Leeres Feld heißt keine Grenze.",
+      "open": "Filter",
+      "apply": "Anwenden",
+      "clear": "Alle löschen",
+      "emptyTitle": "Alles herausgefiltert",
+      "emptyBody": "Alle {{count}} Zeilen liegen außerhalb der Grenzen für diese Spalte.",
+      "minMcap": "Min. Marktkap.",
+      "maxMcap": "Max. Marktkap.",
+      "minLiquidity": "Min. Liquidität",
+      "minHolders": "Min. Holder",
+      "minCurve": "Min. Kurve",
+      "maxCurve": "Max. Kurve",
+      "maxAgeMinutes": "Max. Alter",
+      "minVolume": "Min. Volumen 24h",
+      "minTrades": "Min. Trades",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "Minuten"
     }
   }
 }

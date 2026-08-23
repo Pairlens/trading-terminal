@@ -6867,7 +6867,8 @@
       "change": "変動",
       "flow": "買/売",
       "volume": "出来高24時間",
-      "turnoverHint": "時価総額に対する出来高を、この列の中央値と比較した倍率。"
+      "turnoverHint": "時価総額に対する出来高を、この列の中央値と比較した倍率。",
+      "flowSortHint": "正味の取引数（買い引く売り）で並べ替えます。"
     },
     "new": {
       "title": "新規ミント",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "カーブ",
       "graduated": "卒業済み",
-      "organicScore": "オーガニックスコア",
-      "footnote": "時価総額は流通供給量、FDV は総供給量で計算します。"
+      "organicScore": "オーガニックスコア"
     },
     "flow": {
       "window": "期間",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "数えているのは取引の件数で、人数ではありません。出来高は両サイドの合計です。",
       "emptyTitle": "まだ約定がありません",
       "emptyBody": "最初のスワップが入るとフローが現れます。"
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} 件が卒業",
       "revoked": "放棄済み",
       "live": "有効",
-      "footnote": "不明は安全ではありません。監査がないことは、このトークンについて何も語りません。",
       "emptyTitle": "監査は未公開です",
       "emptyBody": "このソースはトークンのミント権限もフリーズ権限も公開していません。安全ではなく、不明として扱ってください。"
+    },
+    "filters": {
+      "title": "列フィルター",
+      "description": "この範囲から外れた行は非表示になります。空欄なら制限なしです。",
+      "open": "フィルター",
+      "apply": "適用",
+      "clear": "すべて消去",
+      "emptyTitle": "すべて除外されました",
+      "emptyBody": "{{count}} 行すべてがこの列に設定した範囲から外れています。",
+      "minMcap": "時価総額の下限",
+      "maxMcap": "時価総額の上限",
+      "minLiquidity": "流動性の下限",
+      "minHolders": "保有者数の下限",
+      "minCurve": "カーブの下限",
+      "maxCurve": "カーブの上限",
+      "maxAgeMinutes": "経過時間の上限",
+      "minVolume": "24時間出来高の下限",
+      "minTrades": "取引数の下限",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "分"
     }
   }
 }

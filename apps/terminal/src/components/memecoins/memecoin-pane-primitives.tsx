@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui/lib/utils'
 
 import type { LaunchpadFlow } from '@pairlens/shared/instrument-types'
+import { IdentityMark } from '@/components/identity-mark'
 
 /**
  * Time since a timestamp, in the shortest form that is still true.
@@ -189,15 +190,25 @@ export function CurveBar({
 /**
  * The one width every flow cell claims, filled or empty.
  *
- * Two widths, strictly: the counts need 68px to sit inside the bar, and a
- * quarter-width column on a laptop cannot spare them, so below 16rem of pane
- * the cell falls back to the bar alone at 32px. Both are FIXED — the point of
- * the cell is that the green-to-red boundary lands in the same place in every
- * row, and a cell that sizes to its own contents cannot do that in either
- * state.
+ * Two widths, strictly: the counts need the full 84px, and a quarter-width
+ * column on a laptop cannot spare them, so below 16rem of pane the cell falls
+ * back to the bar alone at 28px. Both are FIXED — the point of the cell is
+ * that the green-to-red boundary lands in the same place in every row, and a
+ * cell that sizes to its own contents cannot do that in either state.
  */
 export const FLOW_CELL =
-  'inline-flex h-3.5 w-8 shrink-0 items-center @min-[16rem]/pane:w-[68px]'
+  'inline-flex h-3.5 w-7 shrink-0 items-center justify-end gap-1 @min-[16rem]/pane:w-[84px]'
+
+/** The bar itself, at the width it keeps in both states. */
+const FLOW_TRACK = 'flex h-1.5 w-6 shrink-0 overflow-hidden rounded-full'
+
+/**
+ * Each count's own column, so the bar starts at the same x in every row.
+ *
+ * Four characters at 10px mono, which is what `formatFlowCount` is capped to.
+ */
+const FLOW_COUNT =
+  'hidden w-[26px] text-[10px] leading-none @min-[16rem]/pane:block'
 
 /**
  * The curve cell's exact width, so a skeleton can claim it.
@@ -210,7 +221,7 @@ export const FLOW_CELL =
 export const CURVE_CELL_WIDTH = 74
 
 /**
- * Buys against sells, as one bar with the counts inside it.
+ * Buys against sells: a bar between two counts.
  *
  * A count pair is what a memecoin trader reads first and it is nearly
  * unreadable as two numbers side by side, because the interesting cases are
@@ -218,16 +229,20 @@ export const CURVE_CELL_WIDTH = 74
  * magnitude, since 8 buys to 1 sell and 800 to 100 are the same ratio and not
  * the same event.
  *
- * The counts sit ON the bar rather than after it, and that is a layout
- * decision before it is a visual one. Laid out in a row, the cell was as wide
- * as its two numbers happened to be, so a column of thirty rows had thirty
- * different bar positions and the eye had nothing to run down. One fixed pill
- * per row costs the same pixels and gives the column a spine: the boundary
- * between the green and the red is at the same place for the same ratio in
- * every row, which is the comparison the cell exists to make.
+ * Two things about it are deliberate and were both got wrong once.
  *
- * The fills are tinted rather than solid so the counts stay legible over them;
- * the counts keep the full-strength colour, since they are the foreground.
+ * The bar is `--up` against `--down` at FULL strength, which is what every
+ * other proportional bar in the terminal is drawn in: the movers spark, the
+ * sector tape, the order book's imbalance. It shipped as a pair of 20% tints
+ * because the counts used to sit on top of the fill and needed the contrast,
+ * and the result was a green and a red that belonged to no other pane. Moving
+ * the counts off the bar is what buys the real colours back.
+ *
+ * And every part of the cell is a fixed width: the counts get a column each and
+ * the bar gets its own, so the boundary between green and red lands in the same
+ * place for the same ratio in every row. A cell that sizes to its contents
+ * gives a column of thirty rows thirty different bar positions, and the eye has
+ * nothing to run down.
  */
 export function FlowBar({ flow }: { flow: LaunchpadFlow | undefined }) {
   const total = flow ? flow.buys + flow.sells : 0
@@ -243,54 +258,37 @@ export function FlowBar({ flow }: { flow: LaunchpadFlow | undefined }) {
   }
   const buyShare = (flow.buys / total) * 100
   return (
-    <span
-      className={cn(FLOW_CELL, 'relative overflow-hidden rounded-[3px]')}
-      // The bar is a ratio, and a screen reader cannot read a ratio off a
-      // width. The counts below are the accessible text.
-      title={`${flow.buys} / ${flow.sells}`}
-    >
-      <span className="absolute inset-0 bg-down/20" />
-      <span
-        className="absolute inset-y-0 left-0 bg-up/25"
-        style={{ width: `${buyShare}%` }}
-      />
-      <span className="relative hidden w-full items-center justify-between px-1 text-[10px] leading-none @min-[16rem]/pane:flex">
-        <span className="text-up">{formatFlowCount(flow.buys)}</span>
-        <span className="text-down">{formatFlowCount(flow.sells)}</span>
+    <span className={FLOW_CELL} title={`${flow.buys} / ${flow.sells}`}>
+      <span className={cn(FLOW_COUNT, 'text-right text-up')}>
+        {formatFlowCount(flow.buys)}
+      </span>
+      <span className={cn(FLOW_TRACK, 'bg-down')}>
+        <span className="shrink-0 bg-up" style={{ width: `${buyShare}%` }} />
+      </span>
+      <span className={cn(FLOW_COUNT, 'text-left text-down')}>
+        {formatFlowCount(flow.sells)}
       </span>
     </span>
   )
 }
 
 /**
- * The token's mark, or its first letter.
+ * The token's mark.
  *
- * `referrerPolicy` and the error fallback both matter: launchpad icons are
- * user-supplied IPFS URLs, so a fair share of them 404, and a broken-image
- * glyph on every third row is what makes a board look abandoned.
+ * A thin wrapper over `IdentityMark`, kept so the board has one place that
+ * decides what a memecoin is SEEDED on. That is the mint rather than the
+ * ticker, and it matters here more than anywhere else in the terminal: six
+ * tokens on one board can be called TIMBOTHY, and six identical chips would
+ * undo the thing the chip is for.
  */
 export function TokenMark({
   iconUrl,
   symbol,
+  address,
 }: {
   iconUrl: string | null
   symbol: string
+  address?: string
 }) {
-  return (
-    <span className="relative flex size-4 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-[8px] font-semibold uppercase text-muted-foreground">
-      {symbol.slice(0, 1)}
-      {iconUrl ? (
-        <img
-          src={iconUrl}
-          alt=""
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          className="absolute inset-0 size-full object-cover"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none'
-          }}
-        />
-      ) : null}
-    </span>
-  )
+  return <IdentityMark name={symbol} seed={address} imageUrl={iconUrl} />
 }

@@ -6867,7 +6867,8 @@
       "change": "Move",
       "flow": "Buys / Sells",
       "volume": "24h Vol",
-      "turnoverHint": "Volume against market cap, measured against this column's median."
+      "turnoverHint": "Volume against market cap, measured against this column's median.",
+      "flowSortHint": "Sorts by net trades: buys minus sells."
     },
     "new": {
       "title": "New Mints",
@@ -6901,8 +6902,7 @@
       "launchpad": "Launchpad",
       "curve": "Curve",
       "graduated": "Graduated",
-      "organicScore": "Organic score",
-      "footnote": "Market cap uses circulating supply; FDV uses total supply."
+      "organicScore": "Organic score"
     },
     "flow": {
       "window": "Window",
@@ -6911,7 +6911,6 @@
       "h1": "1h",
       "h6": "6h",
       "h24": "24h",
-      "footnote": "Counts are trades, not traders. Volume is both sides together.",
       "emptyTitle": "No trades yet",
       "emptyBody": "Flow appears once the token has its first swap."
     },
@@ -6923,9 +6922,29 @@
       "devMigrations": "{{count}} graduated",
       "revoked": "Revoked",
       "live": "Live",
-      "footnote": "Unknown is not safe. A missing audit says nothing about the token.",
       "emptyTitle": "No audit published",
       "emptyBody": "This source published no mint or freeze authority for the token. Treat that as unknown, not as safe."
+    },
+    "filters": {
+      "title": "Column filters",
+      "description": "Rows that fall outside these bounds are hidden. Leave a field empty for no bound.",
+      "open": "Filters",
+      "apply": "Apply",
+      "clear": "Clear all",
+      "emptyTitle": "Everything is filtered out",
+      "emptyBody": "All {{count}} rows fall outside the bounds you set for this column.",
+      "minMcap": "Min market cap",
+      "maxMcap": "Max market cap",
+      "minLiquidity": "Min liquidity",
+      "minHolders": "Min holders",
+      "minCurve": "Min curve",
+      "maxCurve": "Max curve",
+      "maxAgeMinutes": "Max age",
+      "minVolume": "Min 24h volume",
+      "minTrades": "Min trades",
+      "unitUsd": "USD",
+      "unitPercent": "%",
+      "unitMinutes": "minutes"
     }
   }
 }
