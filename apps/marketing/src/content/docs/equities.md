@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 9
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 24 AUG 2026
 readTime: 12 min read
 ---
 
@@ -114,6 +114,13 @@ as a million shares of a $400 one). Rows carry a reason line where there is one:
 
 **The Earnings Calendar** and **Economic Calendar** finish the board, each
 covered below.
+
+**With no broker connected, the board explains itself once.** The first time you
+open the Equities section without a key, a short dialog says why half of it is
+blank: the calendars run on their own, everything priced waits for a key, and US
+market data is licensed so Alpaca serves it to yours alone. Connect from there,
+or dismiss it and keep reading the calendars. It asks once per device, and the
+panels keep their own connect buttons for every visit after.
 
 ## The trading day
 

@@ -6570,6 +6570,15 @@
     "marketValue": "Piyasa değeri",
     "dayChange": "Bugün"
   },
+  "equitiesConnect": {
+    "title": "ABD hisse verileri kendi {{venue}} anahtarınızı gerektirir",
+    "description": "Kripto borsaları herkese açık bir fiyat akışı yayınlar, bu yüzden o panolar kendi kendine dolar. ABD piyasa verileri lisanslıdır; {{venue}} bunları yalnızca sizin sağladığınız bir anahtara verir. Konektöre bir anahtar ulaşana kadar bu masa gösterebildiğini gösterir, gerisini boş bırakır.",
+    "factPrices": "Kotasyonlar, en çok hareket edenler ve hisse grafikleri bir anahtar bağlanana kadar boş kalır.",
+    "factCalendars": "Bu panodaki bilanço ve makro takvimleri anahtar olmadan da çalışıyor.",
+    "factKeys": "{{venue}} ücretsiz demo anahtarı veriyor. Sizinki bu cihazda kalır ve sunucularımıza asla ulaşmaz.",
+    "dismiss": "Şimdi değil",
+    "connect": "{{venue}} bağla"
+  },
   "nft": {
     "noProviderTitle": "NFT veri sağlayıcısı yok",
     "noProviderBody": "Kurulu hiçbir eklenti NFT koleksiyonlarını okuyamıyor. Bu panoyu doldurmak için Eklenti Mağazası'ndan bir sağlayıcı kurun.",

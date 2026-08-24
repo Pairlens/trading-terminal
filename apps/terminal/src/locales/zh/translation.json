@@ -6570,6 +6570,15 @@
     "marketValue": "市值",
     "dayChange": "今日"
   },
+  "equitiesConnect": {
+    "title": "美股行情需要你自己的 {{venue}} 密钥",
+    "description": "加密货币交易所提供公开行情源，所以那些面板会自动加载。美股行情是授权数据，{{venue}} 只把它提供给你自己的密钥。在密钥接入连接器之前，这个界面只显示它能显示的部分，其余留空。",
+    "factPrices": "报价、涨跌榜和股票图表在连接密钥之前都会是空的。",
+    "factCalendars": "本面板的财报日历和宏观日历已经可用，无需密钥。",
+    "factKeys": "{{venue}} 提供免费的模拟盘密钥。你的密钥只保存在本设备，绝不会发送到我们的服务器。",
+    "dismiss": "暂不",
+    "connect": "连接 {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "没有 NFT 数据提供方",
     "noProviderBody": "已安装的插件都无法读取 NFT 系列。请从插件商店安装一个数据提供方来填充这个看板。",

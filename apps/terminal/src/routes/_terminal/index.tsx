@@ -18,6 +18,7 @@ import type { DiscoverySectionId } from '@/lib/layout/workspaces/discovery-secti
 import { PAGE_FRAME } from '@/components/chrome/page-chrome'
 import { DiscoveryAssistantSurface } from '@/components/discovery/discovery-assistant-surface'
 import { DiscoveryTopBar } from '@/components/discovery/discovery-top-bar'
+import { EquitiesConnectDialog } from '@/components/equities/equities-connect-dialog'
 import { LayoutShell } from '@/components/layout/layout-shell'
 import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { useDiscoverySections } from '@/hooks/use-discovery-sections'
@@ -195,6 +196,10 @@ function DiscoveryBoard() {
             sections={sections.map((entry) => entry.id)}
           />
           {preset ? <PresetFromSearch /> : null}
+          {/* Says once, per device, why the stocks board comes up gated when
+              no broker key has been provisioned. Inert on every other
+              section and for anyone already connected. */}
+          <EquitiesConnectDialog section={active} />
           <main className={PAGE_FRAME}>
             <DiscoveryTopBar
               sections={sections}

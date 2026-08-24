@@ -6570,6 +6570,15 @@
     "marketValue": "Giá trị thị trường",
     "dayChange": "Hôm nay"
   },
+  "equitiesConnect": {
+    "title": "Dữ liệu cổ phiếu Mỹ cần khóa {{venue}} của riêng bạn",
+    "description": "Các sàn crypto phát nguồn giá công khai nên những bảng đó tự lấp đầy. Dữ liệu thị trường Mỹ có bản quyền, nên {{venue}} chỉ phục vụ cho khóa do bạn cung cấp. Khi chưa có khóa nào tới bộ kết nối, bàn làm việc này hiển thị những gì có thể và để trống phần còn lại.",
+    "factPrices": "Báo giá, danh sách biến động mạnh và biểu đồ cổ phiếu sẽ trống cho tới khi bạn kết nối khóa.",
+    "factCalendars": "Lịch báo cáo lợi nhuận và lịch kinh tế trên bảng này đã chạy, không cần khóa.",
+    "factKeys": "{{venue}} cấp khóa tài khoản thử nghiệm miễn phí. Khóa của bạn nằm trên thiết bị này và không bao giờ đến máy chủ của chúng tôi.",
+    "dismiss": "Để sau",
+    "connect": "Kết nối {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Chưa có nhà cung cấp dữ liệu NFT",
     "noProviderBody": "Không plugin đã cài nào đọc được bộ sưu tập NFT. Hãy cài một nhà cung cấp từ Plugin Store để lấp đầy bảng này.",

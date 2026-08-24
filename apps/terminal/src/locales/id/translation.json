@@ -6570,6 +6570,15 @@
     "marketValue": "Nilai pasar",
     "dayChange": "Hari ini"
   },
+  "equitiesConnect": {
+    "title": "Data saham AS butuh kunci {{venue}} milikmu sendiri",
+    "description": "Bursa kripto menyiarkan feed harga publik, jadi papan-papan itu terisi sendiri. Data pasar AS berlisensi, jadi {{venue}} hanya menyajikannya ke kunci yang kamu sediakan. Selama belum ada kunci yang sampai ke konektor, meja ini menampilkan yang bisa ditampilkan dan membiarkan sisanya kosong.",
+    "factPrices": "Kuotasi, daftar pergerakan terbesar, dan grafik saham tetap kosong sampai sebuah kunci terhubung.",
+    "factCalendars": "Kalender laba dan kalender ekonomi di papan ini sudah berjalan, tanpa perlu kunci.",
+    "factKeys": "{{venue}} membagikan kunci akun latihan gratis. Punyamu tetap di perangkat ini dan tidak pernah sampai ke server kami.",
+    "dismiss": "Nanti saja",
+    "connect": "Hubungkan {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Tidak ada penyedia data NFT",
     "noProviderBody": "Tidak ada yang terpasang yang bisa membaca koleksi NFT. Pasang penyedia dari Plugin Store untuk mengisi papan ini.",

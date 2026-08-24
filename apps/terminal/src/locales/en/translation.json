@@ -6570,6 +6570,15 @@
     "marketValue": "Market value",
     "dayChange": "Today"
   },
+  "equitiesConnect": {
+    "title": "US stock data needs your own {{venue}} key",
+    "description": "Crypto venues publish a public price feed, so those boards fill in on their own. US market data is licensed, so {{venue}} serves it only to a key you provide. Until one reaches the connector this desk shows what it can and leaves the rest blank.",
+    "factPrices": "Quotes, movers and stock charts stay empty until a key is connected.",
+    "factCalendars": "The earnings and economic calendars on this board already work, no key needed.",
+    "factKeys": "{{venue}} gives out free paper keys. Yours stays on this device and never reaches our servers.",
+    "dismiss": "Not now",
+    "connect": "Connect {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "No NFT data provider",
     "noProviderBody": "Nothing installed can read NFT collections. Install a provider from the Plugin Store to fill this board.",

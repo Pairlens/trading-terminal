@@ -6696,6 +6696,15 @@
     "marketValue": "Wartość rynkowa",
     "dayChange": "Dzisiaj"
   },
+  "equitiesConnect": {
+    "title": "Dane amerykańskich akcji wymagają twojego klucza {{venue}}",
+    "description": "Giełdy kryptowalut publikują otwarty strumień cen, więc tamte tablice wypełniają się same. Dane rynku USA są licencjonowane, więc {{venue}} udostępnia je tylko kluczowi, który sam podasz. Dopóki żaden nie dotrze do konektora, ten pulpit pokazuje to, co może, a resztę zostawia pustą.",
+    "factPrices": "Notowania, największe ruchy i wykresy akcji pozostaną puste, dopóki nie podłączysz klucza.",
+    "factCalendars": "Kalendarz wyników i kalendarz makro na tej tablicy już działają, klucz nie jest potrzebny.",
+    "factKeys": "{{venue}} rozdaje darmowe klucze do konta demo. Twój zostaje na tym urządzeniu i nigdy nie trafia na nasze serwery.",
+    "dismiss": "Nie teraz",
+    "connect": "Połącz {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Brak dostawcy danych NFT",
     "noProviderBody": "Żadna zainstalowana wtyczka nie czyta kolekcji NFT. Zainstaluj dostawcę ze Sklepu wtyczek, aby wypełnić tę tablicę.",

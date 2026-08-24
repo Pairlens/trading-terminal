@@ -6570,6 +6570,15 @@
     "marketValue": "Valor de mercado",
     "dayChange": "Hoy"
   },
+  "equitiesConnect": {
+    "title": "Los datos bursátiles de EE. UU. necesitan tu propia clave de {{venue}}",
+    "description": "Los exchanges de cripto publican un feed de precios público, así que esos paneles se llenan solos. Los datos del mercado estadounidense tienen licencia, así que {{venue}} solo los sirve a una clave que tú aportes. Hasta que una llegue al conector, este escritorio muestra lo que puede y deja el resto en blanco.",
+    "factPrices": "Las cotizaciones, los movimientos y los gráficos de acciones seguirán vacíos hasta que conectes una clave.",
+    "factCalendars": "Los calendarios de resultados y macro de este panel ya funcionan, no hace falta clave.",
+    "factKeys": "{{venue}} regala claves de práctica. La tuya se queda en este dispositivo y nunca llega a nuestros servidores.",
+    "dismiss": "Ahora no",
+    "connect": "Conectar {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Sin proveedor de datos NFT",
     "noProviderBody": "Nada de lo instalado puede leer colecciones NFT. Instala un proveedor desde la Tienda de Plugins para llenar este tablero.",
