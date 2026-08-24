@@ -45,7 +45,26 @@ describe('memecoin loading states', () => {
     // pane rebuild itself instead of filling in.
     const source = read('launchpad-column-pane.tsx')
     expect(source).toContain('{isLoading || rows.length > 0 ? (')
-    expect(source).toContain('<LaunchpadGhostRows stage={stage} />')
+    expect(source).toContain('<LaunchpadGhostRows stage={stage}')
+  })
+
+  test('the ghosts are sized to the pane and fade out at its bottom', () => {
+    // A fixed row count drew a block of placeholders across the top of a
+    // full-height column and stopped, which reads as a column that has
+    // answered and found sixteen rows. The count is measured now, and the
+    // stack is masked at the bottom so wherever it ends is a list running out
+    // of sight rather than a hard edge.
+    const pane = read('launchpad-column-pane.tsx')
+    expect(pane).toContain('useGhostRowCount(scrollRef, isLoading)')
+    expect(pane).toContain('rows={ghostRows}')
+    expect(pane).toContain('skeleton-fade')
+    // The sweep depth and the mask read the same number. Two copies drift, and
+    // the seam where the highlight stops comes back mid-pane.
+    expect(pane).toContain('--skeleton-fade-start')
+    expect(pane).toContain('GHOST_FADE_START')
+    const skeletons = read('memecoin-skeletons.tsx')
+    expect(skeletons).toContain('export const GHOST_FADE_START')
+    expect(skeletons).toContain('const GHOST_SWEEP_DEPTH = GHOST_FADE_START')
   })
 
   test('each token pane passes its OWN shape to the frame', () => {

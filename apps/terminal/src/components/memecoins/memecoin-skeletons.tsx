@@ -24,6 +24,7 @@
  * would be inventing a wait for something that is already on screen. Only the
  * figures the feed owns are blocks.
  */
+import { useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui/lib/utils'
@@ -37,17 +38,93 @@ import {
 } from '@/components/memecoins/memecoin-pane-primitives'
 
 /**
- * Ghost rows a column draws before it knows how many there will be.
+ * Where the pane's mask starts taking the ghosts away.
  *
- * A column returns up to 30 and is usually the full height of the board, so a
- * short stack would leave the pane looking half-answered, which is the reading
- * the skeleton is there to prevent. Past the fold they stop sweeping and cost
- * nothing but markup.
+ * Published from here rather than written into `.skeleton-fade`, because it
+ * decides two things at once: where the stack dissolves, and how far down the
+ * travelling highlight is worth running. Split across two files they drift,
+ * and the seam where the sweep stops reappears in the middle of a pane that is
+ * still fully opaque.
  */
-const GHOST_ROWS = 24
+export const GHOST_FADE_START = 0.42
 
-/** Past roughly a pane's worth, placeholders stop sweeping. See `Shimmer`. */
-const SWEPT_ROWS = 12
+/**
+ * An estimate of a ghost row's height, deliberately low.
+ *
+ * A real row is a 16px mark inside 4px of padding either side, plus whatever
+ * leading the board's 11px mono carries, so this under-counts by a few pixels
+ * on purpose. Over-filling costs markup the mask has already taken to zero;
+ * under-filling puts a hard edge back in the middle of the pane, which is the
+ * whole thing being fixed here.
+ */
+const GHOST_ROW_HEIGHT = 24
+
+/** A pane too short to have been measured yet still draws a stack. */
+const MIN_GHOST_ROWS = 10
+
+/** A guard rather than a design. A screen on its side is well under this. */
+const MAX_GHOST_ROWS = 72
+
+/**
+ * Past this many rows the sweep stops, whatever the mask is doing.
+ *
+ * The highlight is a compositor layer per element and a column holds five per
+ * row, so a full-height board is four columns bidding for them at once. A cap
+ * rather than a fraction, because the fraction is what a tall pane grows and
+ * the layers are what a tall pane cannot afford.
+ */
+const MAX_SWEPT_ROWS = 24
+
+/**
+ * How far down the stack the sweep runs, as a fraction of it.
+ *
+ * Halfway INTO the fade rather than at its start. Stopping the highlight
+ * exactly where the mask begins puts the seam at nine tenths opacity, which is
+ * the seam the mask was supposed to hide; by the middle of the gradient the
+ * rows are at half strength and a 9% highlight under that is arithmetic
+ * nobody can see.
+ */
+const GHOST_SWEEP_DEPTH = GHOST_FADE_START + (1 - GHOST_FADE_START) / 2
+
+/**
+ * How many ghost rows it takes to fill the pane they are drawn in.
+ *
+ * The count used to be 24, fixed, chosen against a pane about that tall. On a
+ * full-height board it drew a block of placeholders across the top half and
+ * stopped, which reads as a column that has finished and found sixteen rows,
+ * not one that is still reading. Measuring costs one observer per loading
+ * pane and it stops the moment the rows land.
+ */
+export function useGhostRowCount(
+  ref: React.RefObject<HTMLElement | null>,
+  active: boolean,
+): number {
+  const [rows, setRows] = useState(MIN_GHOST_ROWS)
+
+  useLayoutEffect(() => {
+    const element = ref.current
+    if (!element || !active) return
+
+    const measure = () => {
+      const height = element.clientHeight
+      // A pane mid-animation measures 0; that is not a short pane, it is one
+      // that has not been laid out yet.
+      if (height <= 0) return
+      const next = Math.min(
+        MAX_GHOST_ROWS,
+        Math.max(MIN_GHOST_ROWS, Math.ceil(height / GHOST_ROW_HEIGHT)),
+      )
+      setRows((prev) => (prev === next ? prev : next))
+    }
+
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [ref, active])
+
+  return rows
+}
 
 /**
  * Widths that keep a column of ghosts from reading as a bar chart.
@@ -106,15 +183,17 @@ function GhostMetric({
  */
 export function LaunchpadGhostRows({
   stage,
-  rows = GHOST_ROWS,
+  rows = MIN_GHOST_ROWS,
 }: {
   stage: LaunchpadStage
+  /** What `useGhostRowCount` measured for this pane. */
   rows?: number
 }) {
+  const swept = Math.min(MAX_SWEPT_ROWS, Math.ceil(rows * GHOST_SWEEP_DEPTH))
   return (
     <>
       {Array.from({ length: rows }, (_, row) => {
-        const still = row >= SWEPT_ROWS
+        const still = row >= swept
         return (
           <tr className="border-none" key={row}>
             <td className="w-full max-w-0 py-1 pr-3">
