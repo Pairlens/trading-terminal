@@ -33,7 +33,7 @@
  * on any chain, and a coin whose every candidate measures zero liquidity is
  * one we would be guessing about.
  */
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
@@ -68,8 +68,10 @@ import {
 } from '@/components/panes/pane-primitives'
 import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
+  GHOST_FADE_START,
   LaunchpadGhostRows,
   MemecoinPacedNote,
+  useGhostRowCount,
 } from '@/components/memecoins/memecoin-skeletons'
 import {
   ChangeCell,
@@ -208,6 +210,12 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
   // Only the two columns that show an elapsed time need a ticking clock.
   const now = useTick(stage === 'new' || stage === 'graduated')
   const slow = useSlowLoad(isLoading)
+
+  // The ghosts fill whatever height this column happens to have. A fixed
+  // count drew a block of them across the top of a full-height pane and
+  // stopped, which reads as an answer rather than a wait.
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const ghostRows = useGhostRowCount(scrollRef, isLoading)
 
   const [prefs, setPrefs] = usePersistedState<LaunchpadBoardPrefs>(
     MEMECOIN_BOARD_PREFS_KEY,
@@ -356,8 +364,24 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
         </div>
       ) : null}
 
+      {/* While the ghosts are up the pane masks its own bottom and stops
+          scrolling: the stack is sized to overflow slightly, and a scrollbar
+          on a pane with nothing in it yet is furniture for a list that does
+          not exist. The mask is what turns the end of the stack into a column
+          running out of sight instead of a hard edge halfway down. */}
       <div
-        className="min-h-0 flex-1 overflow-y-auto"
+        ref={scrollRef}
+        className={cn(
+          'min-h-0 flex-1',
+          isLoading ? 'skeleton-fade overflow-hidden' : 'overflow-y-auto',
+        )}
+        style={
+          isLoading
+            ? ({
+                '--skeleton-fade-start': `${GHOST_FADE_START * 100}%`,
+              } as React.CSSProperties)
+            : undefined
+        }
         aria-busy={isLoading || revalidating}
       >
         {isLoading ? (
@@ -452,7 +476,7 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
             </thead>
             <tbody>
               {isLoading ? (
-                <LaunchpadGhostRows stage={stage} />
+                <LaunchpadGhostRows stage={stage} rows={ghostRows} />
               ) : (
                 rows.map((token) => (
                   <LaunchpadRow

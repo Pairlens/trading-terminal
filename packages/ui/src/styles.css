@@ -572,6 +572,29 @@
   }
 }
 
+/* The bottom of a skeleton, dissolving.
+
+   A stack of ghost rows ends somewhere, and wherever it ends is a hard edge
+   saying "this is all there is" about a list that is still reading. Masking
+   the last stretch of the pane turns that edge into a column running off into
+   the distance, which is the honest reading of a feed that has not answered
+   yet. It also covers the seam where the travelling highlight stops, so the
+   sweep can run over the part of the pane a reader is looking at and nowhere
+   below it.
+
+   The start of the fade comes from the caller (`--skeleton-fade-start`), which
+   is the same number the caller uses to decide how far down to sweep.
+
+   Unprefixed only: Lightning CSS emits the WebKit alias itself, and writing
+   both here makes the build keep ONLY the prefixed one. */
+.skeleton-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    black var(--skeleton-fade-start, 45%),
+    transparent 100%
+  );
+}
+
 /* Live pulse dot */
 .live-dot {
   animation: live-blink 1.6s ease-in-out infinite;
