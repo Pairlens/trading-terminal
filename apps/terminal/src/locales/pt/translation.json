@@ -6570,6 +6570,15 @@
     "marketValue": "Valor de mercado",
     "dayChange": "Hoje"
   },
+  "equitiesConnect": {
+    "title": "Os dados de ações dos EUA exigem a sua própria chave da {{venue}}",
+    "description": "As corretoras de cripto publicam um feed de preços público, por isso aqueles painéis se preenchem sozinhos. Os dados do mercado americano são licenciados, então a {{venue}} só os entrega a uma chave sua. Enquanto nenhuma chegar ao conector, esta mesa mostra o que consegue e deixa o resto em branco.",
+    "factPrices": "Cotações, maiores altas e baixas e gráficos de ações ficam vazios até uma chave ser conectada.",
+    "factCalendars": "Os calendários de resultados e macro deste painel já funcionam, sem chave.",
+    "factKeys": "A {{venue}} distribui chaves de simulação gratuitas. A sua fica neste dispositivo e nunca chega aos nossos servidores.",
+    "dismiss": "Agora não",
+    "connect": "Conectar {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Nenhum provedor de dados NFT",
     "noProviderBody": "Nada instalado consegue ler coleções NFT. Instale um provedor pela loja de plugins para preencher este painel.",

@@ -6570,6 +6570,15 @@
     "marketValue": "Valeur de marché",
     "dayChange": "Aujourd'hui"
   },
+  "equitiesConnect": {
+    "title": "Les données actions US demandent votre propre clé {{venue}}",
+    "description": "Les plateformes crypto publient un flux de prix public, donc ces tableaux se remplissent tout seuls. Les données du marché américain sont sous licence : {{venue}} ne les sert qu'à une clé que vous fournissez. Tant qu'aucune n'atteint le connecteur, ce bureau affiche ce qu'il peut et laisse le reste vide.",
+    "factPrices": "Cotations, plus fortes variations et graphiques actions restent vides tant qu'aucune clé n'est connectée.",
+    "factCalendars": "Les calendriers de résultats et macro de ce tableau fonctionnent déjà, sans clé.",
+    "factKeys": "{{venue}} distribue des clés de démonstration gratuites. La vôtre reste sur cet appareil et n'atteint jamais nos serveurs.",
+    "dismiss": "Pas maintenant",
+    "connect": "Connecter {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Aucun fournisseur de données NFT",
     "noProviderBody": "Aucun plugin installé ne sait lire les collections NFT. Installez un fournisseur depuis le Plugin Store pour remplir ce tableau.",

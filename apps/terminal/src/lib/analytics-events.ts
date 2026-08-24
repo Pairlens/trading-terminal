@@ -314,6 +314,19 @@ export interface AnalyticsEvents {
   venue_disconnected: { venue: string }
   /** Wallet linked for DEX trading. Chain only — never addresses. */
   wallet_connected: { chain: string }
+  /**
+   * The one-time explainer the Equities desk shows when no broker key is
+   * provisioned. Two questions it answers that nothing else can: does a
+   * trader who lands on a gated board ever reach the connect wizard, and how
+   * many simply leave. `venue` is a connector id, the same one
+   * `venue_connected` carries, which is what lets the two be joined into a
+   * funnel.
+   */
+  equities_connect_prompt_shown: { venue: string }
+  equities_connect_prompt_decided: {
+    venue: string
+    action: 'connect' | 'dismissed'
+  }
 
   // ── Workspaces & workflows ────────────────────────────────────────
   /** Composition of the active layout — what users actually build. Fired on

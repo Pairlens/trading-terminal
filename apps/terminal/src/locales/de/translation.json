@@ -6570,6 +6570,15 @@
     "marketValue": "Marktwert",
     "dayChange": "Heute"
   },
+  "equitiesConnect": {
+    "title": "US-Aktienkurse brauchen deinen eigenen {{venue}}-Key",
+    "description": "Krypto-Börsen veröffentlichen einen öffentlichen Kurs-Feed, deshalb füllen sich diese Boards von selbst. US-Marktdaten sind lizenziert, also liefert {{venue}} sie nur an einen Key, den du selbst hinterlegst. Bis einer den Connector erreicht, zeigt dieser Desk, was er kann, und lässt den Rest leer.",
+    "factPrices": "Kurse, Bewegungslisten und Aktiencharts bleiben leer, bis ein Key verbunden ist.",
+    "factCalendars": "Die Earnings- und Konjunkturkalender auf diesem Board laufen bereits, ganz ohne Key.",
+    "factKeys": "{{venue}} vergibt kostenlose Paper-Keys. Deiner bleibt auf diesem Gerät und erreicht unsere Server nie.",
+    "dismiss": "Jetzt nicht",
+    "connect": "{{venue}} verbinden"
+  },
   "nft": {
     "noProviderTitle": "Kein NFT-Datenprovider",
     "noProviderBody": "Nichts Installiertes kann NFT-Kollektionen lesen. Installiere einen Provider aus dem Plugin Store, um dieses Board zu füllen.",

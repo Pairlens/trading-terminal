@@ -6570,6 +6570,15 @@
     "marketValue": "Valore di mercato",
     "dayChange": "Oggi"
   },
+  "equitiesConnect": {
+    "title": "I dati azionari USA richiedono una tua chiave {{venue}}",
+    "description": "Gli exchange cripto pubblicano un feed di prezzi pubblico, quindi quelle board si riempiono da sole. I dati del mercato americano sono su licenza, perciò {{venue}} li serve solo a una chiave fornita da te. Finché non ne arriva una al connettore, questa scrivania mostra ciò che può e lascia vuoto il resto.",
+    "factPrices": "Quotazioni, migliori e peggiori e grafici azionari restano vuoti finché non colleghi una chiave.",
+    "factCalendars": "I calendari di trimestrali e macro di questa board funzionano già, senza chiave.",
+    "factKeys": "{{venue}} distribuisce chiavi demo gratuite. La tua resta su questo dispositivo e non raggiunge mai i nostri server.",
+    "dismiss": "Non ora",
+    "connect": "Collega {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "Nessun provider di dati NFT",
     "noProviderBody": "Nessun plugin installato sa leggere le collezioni NFT. Installa un provider dal Plugin Store per riempire questa board.",

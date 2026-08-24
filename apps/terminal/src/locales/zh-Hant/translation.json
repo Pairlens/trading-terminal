@@ -6570,6 +6570,15 @@
     "marketValue": "市值",
     "dayChange": "今日"
   },
+  "equitiesConnect": {
+    "title": "美股行情需要你自己的 {{venue}} 金鑰",
+    "description": "加密貨幣交易所提供公開行情來源，因此那些面板會自動載入。美股行情屬於授權資料，{{venue}} 只提供給你自己的金鑰。在金鑰接上連接器之前，這個介面只顯示能顯示的部分，其餘留白。",
+    "factPrices": "報價、漲跌榜與股票圖表在連接金鑰之前都會是空的。",
+    "factCalendars": "本面板的財報日曆與總經日曆已經可用，不需要金鑰。",
+    "factKeys": "{{venue}} 提供免費的模擬帳戶金鑰。你的金鑰只留在這台裝置上，絕不會傳到我們的伺服器。",
+    "dismiss": "暫不",
+    "connect": "連接 {{venue}}"
+  },
   "nft": {
     "noProviderTitle": "沒有 NFT 資料提供方",
     "noProviderBody": "已安裝的外掛都無法讀取 NFT 系列。請從外掛商店安裝一個提供方來填滿這個看板。",
