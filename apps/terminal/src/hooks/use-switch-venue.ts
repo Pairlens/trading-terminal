@@ -10,30 +10,36 @@
  * tape in a shared link. So the click wrote a value nothing on screen read.
  *
  * `planVenueSwitch` holds the decision and is tested on its own; this is the
- * part that needs React and the router.
+ * part that needs React and the router. The venue table comes in here because
+ * the plan needs to know what the clicked venue actually trades — a switch
+ * across asset classes has to move the class too, or refuse.
  */
 import { useCallback, useContext } from 'react'
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 
-import type { VenueSwitchScope } from '@/lib/venue-switch'
+import type { VenueSwitchPlan, VenueSwitchScope } from '@/lib/venue-switch'
 import { planVenueSwitch } from '@/lib/venue-switch'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { PaneContext } from '@/lib/layout/pane-context'
 import { switchActiveMarket } from '@/lib/switch-market'
+import { useAvailableMarkets } from '@/hooks/use-available-markets'
 
-export type { VenueSwitchScope }
+export type { VenueSwitchPlan, VenueSwitchScope }
 
-export function useSwitchVenue(): (market: string) => VenueSwitchScope {
+export function useSwitchVenue(): (market: string) => VenueSwitchPlan {
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const { markets } = useAvailableMarkets()
   // Optional on purpose: the geo dialog and the omni-search palette switch
   // venue from outside any pane.
   const pane = useContext(PaneContext)
 
   return useCallback(
-    (market: string): VenueSwitchScope => {
+    (market: string): VenueSwitchPlan => {
       const plan = planVenueSwitch({
         market,
+        venueClasses:
+          markets.find((m) => m.value === market)?.assetClasses ?? null,
         pairSource: pane?.pairSource ?? null,
         panePair: pane?.resolvedPair ?? null,
         pathname,
@@ -50,8 +56,8 @@ export function useSwitchVenue(): (market: string) => VenueSwitchScope {
         void navigate({ ...chartLinkProps(plan.navigateTo), replace: true })
       }
 
-      return plan.scope
+      return plan
     },
-    [pane, pathname, navigate],
+    [markets, pane, pathname, navigate],
   )
 }

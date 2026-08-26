@@ -4388,6 +4388,8 @@
     "switchMarket": "Trocar de mercado",
     "marketActive": "Ativo",
     "marketSwitched": "Alterado para {{name}}",
+    "marketNoInstrument": "{{name}} não lista {{pair}}",
+    "marketNoInstrumentHint": "Negocia outra classe de ativos, por isso o gráfico não mudou.",
     "topMarkets": "Principais Mercados",
     "staleListings": "Listagens das corretoras atualizadas em {{date}}"
   },

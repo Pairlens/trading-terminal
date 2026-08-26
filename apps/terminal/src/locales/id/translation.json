@@ -4388,6 +4388,8 @@
     "switchMarket": "Ganti market",
     "marketActive": "Aktif",
     "marketSwitched": "Beralih ke {{name}}",
+    "marketNoInstrument": "{{name}} tidak menyediakan {{pair}}",
+    "marketNoInstrumentHint": "Bursa ini memperdagangkan kelas aset lain, jadi grafiknya tidak berubah.",
     "topMarkets": "Market Teratas",
     "staleListings": "Daftar bursa terakhir diperbarui {{date}}"
   },

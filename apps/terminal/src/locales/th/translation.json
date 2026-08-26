@@ -4388,6 +4388,8 @@
     "switchMarket": "สลับตลาด",
     "marketActive": "ใช้งานอยู่",
     "marketSwitched": "สลับไปที่ {{name}} แล้ว",
+    "marketNoInstrument": "{{name}} ไม่มี {{pair}}",
+    "marketNoInstrumentHint": "ที่นั่นซื้อขายสินทรัพย์คนละประเภท กราฟจึงยังคงเดิม",
     "topMarkets": "ตลาดยอดนิยม",
     "staleListings": "รายการจดทะเบียนของกระดานเทรดอัปเดตล่าสุด {{date}}"
   },

@@ -4482,6 +4482,8 @@
     "switchMarket": "Сменить рынок",
     "marketActive": "Активен",
     "marketSwitched": "Переключено на {{name}}",
+    "marketNoInstrument": "{{name}} не торгует {{pair}}",
+    "marketNoInstrumentHint": "Эта площадка торгует другим классом активов, поэтому график остался на месте.",
     "topMarkets": "Топ рынков",
     "staleListings": "Списки бирж обновлены {{date}}"
   },

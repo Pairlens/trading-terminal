@@ -4482,6 +4482,8 @@
     "switchMarket": "Змінити ринок",
     "marketActive": "Активний",
     "marketSwitched": "Перемкнено на {{name}}",
+    "marketNoInstrument": "{{name}} не торгує {{pair}}",
+    "marketNoInstrumentHint": "Ця біржа торгує іншим класом активів, тому графік залишився на місці.",
     "topMarkets": "Топ ринки",
     "staleListings": "Списки бірж оновлено {{date}}"
   },

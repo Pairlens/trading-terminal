@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 8
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 13 min read
 ---
 
@@ -139,6 +139,11 @@ perpetual can never be mistaken for spot.
 
 The pair picker grows a **Futures** tab. Contract lists come from each exchange's
 own table, so the tab fills in as you connect venues.
+
+You can also arrive from spot. With BTC-USDT on screen, press <kbd>⌘K</kbd> and
+pick Binance Futures: the terminal adds the settle leg, swaps the board for the
+perps one, and opens BTC-USDT-USDT. It works in reverse too, and a venue with no
+contract for what you are looking at tells you instead of moving.
 
 ## The funding scanners
 

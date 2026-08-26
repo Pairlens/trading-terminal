@@ -3399,6 +3399,8 @@
     "switchMarket": "Switch market",
     "marketActive": "Active",
     "marketSwitched": "Switched to {{name}}",
+    "marketNoInstrument": "{{name}} does not list {{pair}}",
+    "marketNoInstrumentHint": "It trades a different asset class, so the chart stayed put.",
     "topMarkets": "Top Markets",
     "staleListings": "Venue listings last updated {{date}}"
   },

@@ -4388,6 +4388,8 @@
     "switchMarket": "マーケットを切り替え",
     "marketActive": "使用中",
     "marketSwitched": "{{name}} に切り替えました",
+    "marketNoInstrument": "{{name}} は {{pair}} を取り扱っていません",
+    "marketNoInstrumentHint": "別のアセットクラスを扱うため、チャートはそのままです。",
     "topMarkets": "トップマーケット",
     "staleListings": "取引所の銘柄リストの最終更新: {{date}}"
   },

@@ -39,6 +39,7 @@ import { usePaneAddRequestStore } from '@/stores/pane-add-request-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
 import { useRecentPairs } from '@/lib/recent-tickers'
+import { shortenId } from '@/lib/predictions/event-labels'
 import { entryToMarketRef } from '@/lib/market-ref/entry'
 import { chartLinkProps } from '@/lib/market-ref/link'
 
@@ -126,12 +127,35 @@ export function OmniSearchPalette({
         case 'market': {
           // What a venue switch moves depends on where it lands: on a pair
           // page the venue is in the URL, so this navigates and the chart,
-          // the book and the ticket all follow. Everywhere else there is no
-          // chart to move and it only writes the venue preference, which has
-          // no visible surface, so that is the case that gets a toast.
-          const scope = switchVenue(result.marketId)
-          if (scope === 'preference') {
+          // the book and the ticket all follow — carrying the asset class
+          // with them when the venue trades a different one, which is what
+          // makes BTC-USDT on Binance reachable as BTC-USDT-USDT on Binance
+          // Futures from one row. The two outcomes that change nothing on
+          // screen are the ones that get a toast: off a chart there is
+          // nothing to move, and on one the venue may simply not trade what
+          // is charted.
+          const plan = switchVenue(result.marketId)
+          if (plan.scope === 'preference') {
             toast.success(t('search.marketSwitched', { name: result.label }))
+          } else if (plan.scope === 'unavailable') {
+            track('venue_class_switched', {
+              venue: result.marketId,
+              asset_class: result.assetClass ?? 'unknown',
+              outcome: 'stranded',
+            })
+            toast.warning(
+              t('search.marketNoInstrument', {
+                name: result.label,
+                pair: shortenId(plan.stranded?.id ?? ''),
+              }),
+              { description: t('search.marketNoInstrumentHint') },
+            )
+          } else if (plan.scope === 'cross-class') {
+            track('venue_class_switched', {
+              venue: result.marketId,
+              asset_class: result.assetClass ?? 'unknown',
+              outcome: 'moved',
+            })
           }
           break
         }

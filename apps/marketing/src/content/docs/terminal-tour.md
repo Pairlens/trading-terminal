@@ -4,7 +4,7 @@ description: A guided walk around the screen. What the left nav does, what a wor
 group: get-started
 order: 3
 eyebrow: Get started
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 8 min read
 ---
 
@@ -166,12 +166,18 @@ Press <kbd>⌘K</kbd> (<kbd>Ctrl</kbd>+<kbd>K</kbd> on Windows and Linux). This 
 the shortcut to learn. It searches:
 
 - Pairs, including ones you have never opened
-- Venues, which switches the chart on a pair page and sets your default
-  elsewhere
+- Venues, which moves the chart on a pair page and sets your default elsewhere
 - Pages, workspaces, workflows, and alert rules
 - Panels you can add to the current layout
 - Plugins
 - Actions such as switching theme, opening settings, or opening a new window
+
+Picking a venue that trades a different asset class takes the whole page with
+it. Choose Binance Futures while BTC-USDT is charted and you land on the
+BTC-USDT-USDT perpetual, on the perps board, with the funding and position
+panels that belong there. Choose one that cannot trade what is charted, a stock
+broker while you are on a crypto pair, and it says so and leaves the chart
+alone rather than opening a market that does not exist.
 
 ## Multiple windows
 

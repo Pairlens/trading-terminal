@@ -107,4 +107,130 @@ describe('planVenueSwitch', () => {
     expect(plan.navigateTo).toBeNull()
     expect(plan.writePreference).toBe(false)
   })
+
+  // ── Crossing asset classes ────────────────────────────────────────
+  //
+  // The omni search lists every connected venue under one heading, so a perp
+  // venue is one keystroke away from a spot chart. Before these, the venue
+  // swapped into the address and the class did not.
+
+  test('a perp venue takes the spot pair with it, settle leg and all', () => {
+    const plan = planVenueSwitch({
+      market: 'binance-futures',
+      venueClasses: ['crypto-perp'],
+      pairSource: null,
+      panePair: null,
+      pathname: '/spot/binance/BTC-USDT',
+    })
+
+    expect(plan.scope).toBe('cross-class')
+    expect(plan.navigateTo).toEqual({
+      cls: 'perp',
+      market: 'binance-futures',
+      id: 'BTC-USDT-USDT',
+    })
+    expect(plan.writePreference).toBe(true)
+    expect(plan.stranded).toBeNull()
+  })
+
+  test('and a spot venue takes the contract back the other way', () => {
+    const plan = planVenueSwitch({
+      market: 'binance',
+      venueClasses: ['crypto-spot'],
+      pairSource: null,
+      panePair: null,
+      pathname: '/perp/binance-futures/BTC-USDT-USDT',
+    })
+
+    expect(plan.scope).toBe('cross-class')
+    expect(plan.navigateTo).toEqual({
+      cls: 'spot',
+      market: 'binance',
+      id: 'BTC-USDT',
+    })
+  })
+
+  test('a stock venue cannot take a crypto pair, and says so instead', () => {
+    // The arm that matters: Alpaca's own 'BTC' is a spot-bitcoin ETF, so
+    // navigating there would price a ~$28 equity under a crypto pair's label.
+    const plan = planVenueSwitch({
+      market: 'alpaca',
+      venueClasses: ['stocks'],
+      pairSource: null,
+      panePair: null,
+      pathname: CHART,
+    })
+
+    expect(plan.scope).toBe('unavailable')
+    expect(plan.navigateTo).toBeNull()
+    expect(plan.stranded).toEqual({
+      cls: 'spot',
+      market: 'okx',
+      id: 'BTC-USDT',
+    })
+    // The user still named a venue; the classes it does trade open there next.
+    expect(plan.writePreference).toBe(true)
+  })
+
+  test('a venue-bound instrument has no other venue to be on', () => {
+    // The same mint on another venue is another asset, or nothing at all.
+    const plan = planVenueSwitch({
+      market: 'okx',
+      venueClasses: ['crypto-spot'],
+      pairSource: null,
+      panePair: null,
+      pathname: '/dex/solana/So11111111111111111111111111111111111111112-USDC',
+    })
+
+    expect(plan.scope).toBe('unavailable')
+    expect(plan.navigateTo).toBeNull()
+  })
+
+  test('the venue already charted is never a refusal, whatever it trades', () => {
+    const plan = planVenueSwitch({
+      market: 'solana',
+      venueClasses: ['dex'],
+      pairSource: null,
+      panePair: null,
+      pathname: '/dex/solana/So11111111111111111111111111111111111111112-USDC',
+    })
+
+    expect(plan.scope).toBe('chart')
+    expect(plan.navigateTo).toBeNull()
+  })
+
+  test('a venue serving the class charted is believed, extra classes and all', () => {
+    const plan = planVenueSwitch({
+      market: 'kraken',
+      venueClasses: ['crypto-spot', 'crypto-perp'],
+      pairSource: null,
+      panePair: null,
+      pathname: CHART,
+    })
+
+    expect(plan.scope).toBe('chart')
+    expect(plan.navigateTo).toEqual({
+      cls: 'spot',
+      market: 'kraken',
+      id: 'BTC-USDT',
+    })
+  })
+
+  test('a caller that cannot name the venue class keeps the plain switch', () => {
+    // The pane pickers narrow their own lists to the class on screen, so a
+    // switch arriving from one of them is same-class by construction.
+    const plan = planVenueSwitch({
+      market: 'alpaca',
+      pairSource: null,
+      panePair: null,
+      pathname: CHART,
+    })
+
+    expect(plan.scope).toBe('chart')
+    expect(plan.navigateTo).toEqual({
+      cls: 'spot',
+      market: 'alpaca',
+      id: 'BTC-USDT',
+    })
+  })
 })
