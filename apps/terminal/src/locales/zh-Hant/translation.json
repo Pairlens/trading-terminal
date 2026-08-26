@@ -6475,6 +6475,7 @@
       "notListed": "未在 {{venue}} 上架",
       "notListedCallout": "{{pair}} 未在 {{venue}} 上架。選擇它會將目前使用中的交易所切換為 {{other}}。",
       "availableVenues": "可用",
+      "otherClassVenues": "作為 {{cls}} · {{pair}}",
       "desktopOnlyVenues": "需要桌面應用程式",
       "desktopOnlyVenue": "僅桌面版",
       "predictions": "預測",

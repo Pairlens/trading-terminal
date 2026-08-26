@@ -8,6 +8,7 @@ import { describe, expect, test } from 'bun:test'
 
 import {
   alternativeVenuesFor,
+  crossClassVenuesFor,
   resolveMarketRef,
   venuesForClass,
 } from '../resolve'
@@ -36,6 +37,12 @@ const SOLANA = market('solana', ['dex'])
 const COINBASE = market('coinbase', ['crypto-spot'], { desktopOnly: true })
 const KALSHI = market('kalshi', ['prediction'])
 const POLYMARKET = market('polymarket', ['prediction'])
+const BINANCE_FUTURES = market('binance-futures', ['crypto-perp'])
+const KRAKEN_FUTURES = market('kraken-futures', ['crypto-perp'], {
+  desktopOnly: true,
+})
+/** A venue listing both, the way Kraken and OKX do under one connector each. */
+const BOTH = market('both', ['crypto-spot', 'crypto-perp'])
 
 const ALL = [OKX, GATE, ALPACA, BASE, SOLANA]
 
@@ -344,5 +351,75 @@ describe('the venue picker offers only what can serve the chart', () => {
     expect(
       venuesForClass('stocks', 'okx', CONNECTED).map((m) => m.value),
     ).toEqual(['okx', 'alpaca'])
+  })
+})
+
+describe('the picker also offers the same asset under another class', () => {
+  const CONNECTED = [
+    ...ALL,
+    COINBASE,
+    KALSHI,
+    POLYMARKET,
+    BINANCE_FUTURES,
+    KRAKEN_FUTURES,
+  ]
+
+  test('a spot pair reaches the perp venues, under its contract key', () => {
+    expect(
+      crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, CONNECTED),
+    ).toEqual([
+      {
+        cls: 'perp',
+        id: 'BTC-USDT-USDT',
+        options: [BINANCE_FUTURES, KRAKEN_FUTURES],
+      },
+    ])
+  })
+
+  test('and a contract reaches the spot venues, under the pair key', () => {
+    const [section] = crossClassVenuesFor(
+      { cls: 'perp', id: 'BTC-USDT-USDT' },
+      CONNECTED,
+    )
+    expect(section.cls).toBe('spot')
+    expect(section.id).toBe('BTC-USDT')
+    expect(section.options.map((m) => m.value)).toEqual([
+      'okx',
+      'gate',
+      'coinbase',
+    ])
+  })
+
+  // It is already in the primary list, where the checkmark and the id on
+  // screen are. Twice would offer one row under two different instruments.
+  test('a venue serving both classes is not listed a second time', () => {
+    expect(
+      crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, [
+        OKX,
+        BOTH,
+        BINANCE_FUTURES,
+      ])[0].options.map((m) => m.value),
+    ).toEqual(['binance-futures'])
+  })
+
+  test('a stock has no contract, so the section never appears', () => {
+    expect(
+      crossClassVenuesFor({ cls: 'stocks', id: 'AAPL' }, CONNECTED),
+    ).toEqual([])
+  })
+
+  test('a token is its chain, so there is nothing to offer', () => {
+    expect(
+      crossClassVenuesFor(
+        { cls: 'dex', id: '0XDAC17F958D2EE523A2206206994597C13D831EC7-USDC' },
+        CONNECTED,
+      ),
+    ).toEqual([])
+  })
+
+  test('no perp venue connected, no section', () => {
+    expect(crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, ALL)).toEqual(
+      [],
+    )
   })
 })

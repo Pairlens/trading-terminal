@@ -6475,6 +6475,7 @@
       "notListed": "{{venue}}'de listede yok",
       "notListedCallout": "{{pair}}, {{venue}}'de listede yok. Seçmen, odaktaki borsayı {{other}} olarak değiştirir.",
       "availableVenues": "Kullanılabilir",
+      "otherClassVenues": "{{cls}} olarak · {{pair}}",
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
       "desktopOnlyVenue": "Yalnızca masaüstü",
       "predictions": "tahmin",

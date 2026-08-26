@@ -6597,6 +6597,7 @@
       "notListed": "niedostępne na {{venue}}",
       "notListedCallout": "{{pair}} nie jest notowana na {{venue}}. Wybranie jej przełączy aktywną giełdę na {{other}}.",
       "availableVenues": "Dostępne",
+      "otherClassVenues": "Jako {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Wymaga aplikacji na komputer",
       "desktopOnlyVenue": "Tylko desktop",
       "predictions": "prognozy",

@@ -6475,6 +6475,7 @@
       "notListed": "non quotata su {{venue}}",
       "notListedCallout": "{{pair}} non è quotata su {{venue}}. Selezionandola, la piattaforma attiva passerà a {{other}}.",
       "availableVenues": "Disponibili",
+      "otherClassVenues": "Come {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Richiede l'app desktop",
       "desktopOnlyVenue": "Solo desktop",
       "predictions": "previsioni",

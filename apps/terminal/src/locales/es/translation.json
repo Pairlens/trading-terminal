@@ -6475,6 +6475,7 @@
       "notListed": "no cotiza en {{venue}}",
       "notListedCallout": "{{pair}} no cotiza en {{venue}}. Elegirlo cambiará el venue activo a {{other}}.",
       "availableVenues": "Disponibles",
+      "otherClassVenues": "Como {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Necesita la app de escritorio",
       "desktopOnlyVenue": "Solo escritorio",
       "predictions": "predicciones",

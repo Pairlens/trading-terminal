@@ -6475,6 +6475,7 @@
       "notListed": "não listado na {{venue}}",
       "notListedCallout": "{{pair}} não está listado na {{venue}}. Selecioná-lo vai mudar a corretora em foco para {{other}}.",
       "availableVenues": "Disponíveis",
+      "otherClassVenues": "Como {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Precisa do app de desktop",
       "desktopOnlyVenue": "Somente desktop",
       "predictions": "previsões",

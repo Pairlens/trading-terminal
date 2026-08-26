@@ -23,13 +23,19 @@
  *    `.includes()` between them never matched.
  */
 import {
+  INSTRUMENT_CLASSES,
   isVenueBoundClass,
   marketServesClass,
   normalizeInstrumentClass,
 } from '@pairlens/shared/market-ref'
-import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
+import type {
+  InstrumentClass,
+  InstrumentRef,
+  MarketRef,
+} from '@pairlens/shared/market-ref'
 
 import type { MarketOption } from '@/hooks/use-available-markets'
+import { sameAssetInClass } from '@/lib/market-ref/cross-class'
 
 /** Why a ref resolved the way it did. Surfaced in dev logs and tests. */
 export type ResolvedReason =
@@ -116,6 +122,58 @@ export function venuesForClass(
   return markets.filter(
     (m) => m.value === current || marketServesClass(m.assetClasses, cls),
   )
+}
+
+/** A class an instrument on screen can also be traded as, and where. */
+export type CrossClassVenues = {
+  cls: InstrumentClass
+  /** What the instrument is called on these venues. */
+  id: string
+  options: Array<MarketOption>
+}
+
+/**
+ * The venues that trade this instrument as ANOTHER asset class, grouped by
+ * that class and carrying the id it answers to there.
+ *
+ * `venuesForClass` is the primary list and stays exactly what it was: the
+ * venues whose tape is of the thing on screen. This is the second list, and
+ * the reason it can exist at all is that spot and a linear perpetual are one
+ * asset read two ways (`sameAssetInClass`). Offering Binance Futures under
+ * BTC-USDT is not offering a dead venue, it is offering the same risk with
+ * funding attached, and the picker was hiding it because "same class" was the
+ * only rule it had.
+ *
+ * Empty for everything else, which is most things: a stock has no contract, a
+ * token IS its chain, and a venue that already serves the class charted
+ * belongs in the primary list rather than here.
+ *
+ * Desktop-only venues stay in, marked, for the same reason `venuesForClass`
+ * keeps them: hiding a third of the connector list makes the product look
+ * smaller than it is.
+ */
+export function crossClassVenuesFor(
+  ref: { cls: InstrumentClass; id: string },
+  markets: ReadonlyArray<MarketOption>,
+): Array<CrossClassVenues> {
+  if (isVenueBoundClass(ref.cls)) return []
+
+  const out: Array<CrossClassVenues> = []
+  for (const cls of INSTRUMENT_CLASSES) {
+    if (cls === ref.cls) continue
+    const id = sameAssetInClass(ref.id, ref.cls, cls)
+    if (!id) continue
+    // A venue serving BOTH classes is already in the primary list, where the
+    // checkmark and the current id are. Listing it twice would offer the same
+    // row under two different instruments.
+    const options = markets.filter(
+      (m) =>
+        marketServesClass(m.assetClasses, cls) &&
+        !marketServesClass(m.assetClasses, ref.cls),
+    )
+    if (options.length > 0) out.push({ cls, id, options })
+  }
+  return out
 }
 
 /** The class a connected venue serves, or undefined if it names none we know. */
@@ -258,7 +316,17 @@ export function resolveMarketRefOrNull(
  * CEX, `useMobileRouteSync` wrote that back into the address, and the pair
  * route then refused a Solana mint on OKX.
  *
- * Two rules, and the second one is `resolveMarketRef`'s own:
+ * A venue can also be present and still wrong, which is the second half of the
+ * job. The mobile shell has no venue in its address: it composes one from
+ * `terminal.market`, the user's own preference, and that preference is
+ * whatever they last charted. Chart a perpetual on the laptop, open a spot
+ * pair on the phone, and the shell wrote `/spot/binance-futures/BTC-USDT` — a
+ * spot board on a venue that lists no spot pairs, from two facts that were
+ * each correct on their own. Offering the perp venues in the pickers made that
+ * a couple of taps away rather than a rare leftover, so the correction now
+ * asks whether the venue SERVES the class, not only whether it exists.
+ *
+ * Three rules, and the second one is `resolveMarketRef`'s own:
  *
  * 1. Absence only counts once every connector has had its turn. `settled` is
  *    the caller's `pluginsReady`, which flips after the bootstrap activation
@@ -269,6 +337,10 @@ export function resolveMarketRefOrNull(
  *    venue really is missing the honest answer is the refusal the surfaces
  *    already render (`venue-missing`, and the phone's "only exists on ..."),
  *    never another venue's tape under the same address.
+ * 3. The class in hand is the load-bearing half. It is what the board is built
+ *    from and what the id is spelled in, so a disagreement moves the venue.
+ *    Nothing moves when no reachable venue serves the class: the surfaces
+ *    render their own refusal, which beats a second wrong venue.
  *
  * Returns the venue to move to, or null to stay put.
  */
@@ -277,21 +349,48 @@ export function correctStaleMarket(input: {
   /**
    * What the chart is drawing, when something above owns the answer (the
    * chart route's URL, the mobile shell's focus). Undefined means "not
-   * stated", which only costs rule 2 — a caller that cannot name the class
-   * keeps the old behaviour.
+   * stated", which costs rules 2 and 3 — a caller that cannot name the class
+   * (a workspace pane, pointed at a pair rather than an address) keeps the
+   * plain does-it-exist behaviour.
    */
   cls: InstrumentRef['cls'] | undefined
   /**
-   * The venue table. Structural rather than `MarketOption`, because presence
-   * is the whole question here and the chart terminal holds a narrower row.
+   * The venue table. Structural rather than `MarketOption`, because the chart
+   * terminal holds a narrower row. `assetClasses` is what rule 3 reads and a
+   * row without it is simply not tested by it.
    */
-  markets: ReadonlyArray<{ value: string }>
+  markets: ReadonlyArray<{
+    value: string
+    assetClasses?: ReadonlyArray<string>
+    desktopOnly?: boolean
+  }>
   defaultMarket: string
   /** Every bundled connector has activated. Until then absence proves nothing. */
   settled: boolean
 }): string | null {
   if (!input.settled || input.markets.length === 0) return null
-  if (input.markets.some((m) => m.value === input.market)) return null
-  if (input.cls && isVenueBoundClass(input.cls)) return null
-  return input.defaultMarket === input.market ? null : input.defaultMarket
+  const cls = input.cls
+  if (cls && isVenueBoundClass(cls)) return null
+
+  const current = input.markets.find((m) => m.value === input.market)
+  if (!current) {
+    return input.defaultMarket === input.market ? null : input.defaultMarket
+  }
+
+  if (!cls || !current.assetClasses) return null
+  if (marketServesClass(current.assetClasses, cls)) return null
+
+  // Reachable venues of the right class, the preference first when it is one
+  // of them. Same shape as `resolveVenueForClass`, on the narrower row.
+  const serving = input.markets.filter(
+    (m) =>
+      !m.desktopOnly &&
+      m.assetClasses &&
+      marketServesClass(m.assetClasses, cls),
+  )
+  if (serving.length === 0) return null
+  const next = (
+    serving.find((m) => m.value === input.defaultMarket) ?? serving[0]
+  ).value
+  return next === input.market ? null : next
 }

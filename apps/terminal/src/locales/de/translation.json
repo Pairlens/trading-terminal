@@ -6475,6 +6475,7 @@
       "notListed": "Nicht auf {{venue}}",
       "notListedCallout": "{{pair}} ist nicht auf {{venue}} gelistet. Bei Auswahl wechselt die fokussierte Venue zu {{other}}.",
       "availableVenues": "Verfügbar",
+      "otherClassVenues": "Als {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Braucht die Desktop-App",
       "desktopOnlyVenue": "Nur Desktop",
       "predictions": "Prognosen",

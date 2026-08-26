@@ -6597,6 +6597,7 @@
       "notListed": "нет на {{venue}}",
       "notListedCallout": "{{pair}} не торгуется на {{venue}}. При выборе активная площадка переключится на {{other}}.",
       "availableVenues": "Доступно",
+      "otherClassVenues": "Как {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Только в десктоп-приложении",
       "desktopOnlyVenue": "Только десктоп",
       "predictions": "прогнозы",

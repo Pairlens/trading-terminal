@@ -6475,6 +6475,7 @@
       "notListed": "{{venue}}の取り扱いなし",
       "notListedCallout": "{{pair}}は{{venue}}の取り扱いがありません。選択すると、フォーカス中の取引所が{{other}}に切り替わります。",
       "availableVenues": "利用可能",
+      "otherClassVenues": "{{cls}} として · {{pair}}",
       "desktopOnlyVenues": "デスクトップアプリが必要です",
       "desktopOnlyVenue": "デスクトップのみ",
       "predictions": "予測",

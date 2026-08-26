@@ -35,6 +35,66 @@ import type { MarketRef } from '@pairlens/shared/market-ref'
 
 import { sameAssetInClass } from '@/lib/market-ref/cross-class'
 
+/**
+ * Where an instrument goes when a venue is picked for it.
+ *
+ * Split out from the plan because two surfaces ask it and only one of them is
+ * a "switch": the omni search hands over a venue with no idea what is on
+ * screen, while the chart's own dropdown has already narrowed its list to
+ * venues that can take this instrument and just needs the address. One answer
+ * for both, so the dropdown cannot drift back into keeping the class.
+ */
+export type VenueTarget =
+  /** Already on this venue. */
+  | { kind: 'same' }
+  /** The venue serves the class charted; only the tape moves. */
+  | { kind: 'chart'; ref: MarketRef }
+  /** The venue trades another class, and the instrument exists there. */
+  | { kind: 'cross-class'; ref: MarketRef }
+  /** The venue trades another class and this instrument is not on it. */
+  | { kind: 'unavailable' }
+
+export function venueTargetFor({
+  ref,
+  market,
+  venueClasses,
+}: {
+  ref: MarketRef
+  /** The venue that was picked. */
+  market: string
+  /**
+   * Asset classes it declares, spelled however its manifest spells them.
+   * Null means the caller cannot say, and then the venue is believed.
+   */
+  venueClasses?: ReadonlyArray<string> | null
+}): VenueTarget {
+  // Already here. Never a refusal, whatever the venue declares: the checkmark
+  // in a picker has to stay clickable.
+  if (ref.market === market) return { kind: 'same' }
+
+  // A venue-bound class has no tape to move to. A token IS its chain plus its
+  // address and an outcome IS its venue plus its market id, so the same string
+  // on another venue is a different asset or, far more often, nothing.
+  if (isVenueBoundClass(ref.cls)) return { kind: 'unavailable' }
+
+  if (!venueClasses || marketServesClass(venueClasses, ref.cls)) {
+    return { kind: 'chart', ref: { ...ref, market } }
+  }
+
+  // Another class. The whole page moves to it — class, venue and instrument
+  // together — when the asset exists on that side. Spot to perp is the one hop
+  // that qualifies, which is the one users ask for.
+  for (const declared of venueClasses) {
+    const cls = normalizeInstrumentClass(declared)
+    if (!cls) continue
+    const id = sameAssetInClass(ref.id, ref.cls, cls)
+    if (!id) continue
+    return { kind: 'cross-class', ref: { cls, market, id } }
+  }
+
+  return { kind: 'unavailable' }
+}
+
 /** Which owner took the switch. Callers report it; nothing branches on it. */
 export type VenueSwitchScope =
   | 'override'
@@ -118,59 +178,25 @@ export function planVenueSwitch({
     }
   }
 
-  // Already here. Never a refusal, whatever the venue declares: the checkmark
-  // in a picker has to stay clickable.
-  if (ref.market === market) {
+  const target = venueTargetFor({ ref, market, venueClasses })
+
+  if (target.kind === 'unavailable') {
     return {
-      scope: 'chart',
+      scope: 'unavailable',
       setPair: null,
+      // The user still named a venue, and the classes it does trade should
+      // open there next time. This is exactly the off-chart outcome.
       writePreference: true,
       navigateTo: null,
-      stranded: null,
+      stranded: ref,
     }
   }
 
-  const stranded: VenueSwitchPlan = {
-    scope: 'unavailable',
+  return {
+    scope: target.kind === 'cross-class' ? 'cross-class' : 'chart',
     setPair: null,
-    // The user still named a venue, and the classes it does trade should open
-    // there next time. This is exactly the off-chart outcome: preference only.
     writePreference: true,
-    navigateTo: null,
-    stranded: ref,
+    navigateTo: target.kind === 'same' ? null : target.ref,
+    stranded: null,
   }
-
-  // A venue-bound class has no tape to move to. A token IS its chain plus its
-  // address and an outcome IS its venue plus its market id, so the same string
-  // on another venue is a different asset or, far more often, nothing.
-  if (isVenueBoundClass(ref.cls)) return stranded
-
-  if (!venueClasses || marketServesClass(venueClasses, ref.cls)) {
-    return {
-      scope: 'chart',
-      setPair: null,
-      writePreference: true,
-      navigateTo: { ...ref, market },
-      stranded: null,
-    }
-  }
-
-  // The venue trades something else. Move the whole page to it — class, venue
-  // and instrument together — when the asset exists on that side. Spot to
-  // perp is the one hop that qualifies, which is the one users ask for.
-  for (const declared of venueClasses) {
-    const cls = normalizeInstrumentClass(declared)
-    if (!cls) continue
-    const id = sameAssetInClass(ref.id, ref.cls, cls)
-    if (!id) continue
-    return {
-      scope: 'cross-class',
-      setPair: null,
-      writePreference: true,
-      navigateTo: { cls, market, id },
-      stranded: null,
-    }
-  }
-
-  return stranded
 }

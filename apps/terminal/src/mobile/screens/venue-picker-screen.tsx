@@ -23,6 +23,13 @@
  * exchange under an event contract is not a venue at all for this market, and
  * offering it only bought a dark screen.
  *
+ * With one exception, which earns its own section: a spot pair and its linear
+ * perpetual are one asset under two ids (`crossClassVenuesFor`). Tapping a
+ * perp venue under BTC-USDT is not a dead choice, it is BTC-USDT-USDT, so the
+ * section header says so and the tap moves the pair, the class and the venue
+ * in one commit. Two commits would paint a frame of the perps ticket with the
+ * spot key still in it.
+ *
  * Hover pre-connect is meaningless on touch, so the warmup fires on
  * `pointerdown` instead — which is roughly a tap's worth of head start on the
  * socket handshake, and the whole of what hovering bought on the desktop.
@@ -38,6 +45,7 @@ import { VENUE_KIND_KEY, venueKindOf } from '../lib/venue-kind'
 import { MobileRow } from '../primitives/mobile-row'
 import { MobileSheet, useSheetExit } from '../primitives/mobile-sheet'
 import { PRESS } from '../primitives/press'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { LucideIcon } from 'lucide-react'
 import type { MarketOption } from '@/hooks/use-available-markets'
 import type { MobileOverlay } from '../mobile-focus-context'
@@ -45,7 +53,9 @@ import { haptic } from '@/lib/haptics'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useChartConfig } from '@/lib/chart-terminal-context'
-import { venuesForClass } from '@/lib/market-ref/resolve'
+import { crossClassVenuesFor, venuesForClass } from '@/lib/market-ref/resolve'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
+import { track } from '@/lib/analytics-events'
 
 type VenuePickerScreenProps = {
   overlay: Extract<MobileOverlay, { kind: 'venuePicker' }>
@@ -57,8 +67,9 @@ export default memo(function VenuePickerScreen({
   onClose,
 }: VenuePickerScreenProps) {
   const { t } = useTranslation()
-  const { focusedPair, focusedClass, focusedVenue } = useMobileFocus()
-  const { setFocusedVenue } = useMobileActions()
+  const { focusedPair, focusedInstrument, focusedClass, focusedVenue } =
+    useMobileFocus()
+  const { setFocusedPair, setFocusedVenue } = useMobileActions()
   const { markets } = useAvailableMarkets()
   // `availableMarkets` is the adapter list the kind tag is derived from; the
   // desktop-only rows below are plain `MobileRow`s with no hook of their own.
@@ -78,6 +89,19 @@ export default memo(function VenuePickerScreen({
   const available = compatible.filter((m) => !m.desktopOnly)
   const desktopOnly = compatible.filter((m) => m.desktopOnly)
 
+  // The same asset under another class, when there is one. Desktop-only rows
+  // are dropped here rather than listed: the section is already the answer to
+  // a question nobody asked, and a row it cannot open does not earn the space.
+  const otherClass = crossClassVenuesFor(
+    { cls: focusedClass, id: focusedInstrument },
+    markets,
+  )
+    .map((section) => ({
+      ...section,
+      options: section.options.filter((m) => !m.desktopOnly),
+    }))
+    .filter((section) => section.options.length > 0)
+
   const handleSelect = useCallback(
     (market: string) => {
       // A row tapped while the sheet is already leaving is not a choice — see
@@ -92,6 +116,28 @@ export default memo(function VenuePickerScreen({
       requestClose()
     },
     [isClosing, focusedVenue, setFocusedVenue, requestClose],
+  )
+
+  /**
+   * The same tap, for a venue that trades this as another class. The pair and
+   * the venue move together so the surface never renders one against the
+   * other; React batches both into the commit this handler ends with.
+   */
+  const handleSelectCrossClass = useCallback(
+    (market: string, cls: InstrumentClass, id: string) => {
+      if (isClosing()) return
+      haptic('selection')
+      track('venue_class_switched', {
+        venue: market,
+        asset_class: cls,
+        outcome: 'moved',
+        source: 'mobile-picker',
+      })
+      setFocusedPair(id, cls)
+      setFocusedVenue(market)
+      requestClose()
+    },
+    [isClosing, setFocusedPair, setFocusedVenue, requestClose],
   )
 
   const handleWarmup = useCallback(
@@ -137,6 +183,32 @@ export default memo(function VenuePickerScreen({
             />
           ))}
         </section>
+
+        {otherClass.map((section) => (
+          <section key={section.cls}>
+            <SectionLabel>
+              {t('mobile.pickers.otherClassVenues', {
+                cls: t(assetClassVisual(section.cls).labelKey),
+                pair: section.id,
+              })}
+            </SectionLabel>
+            {section.options.map((venue) => (
+              <VenueRow
+                key={venue.value}
+                onSelect={(market) =>
+                  handleSelectCrossClass(market, section.cls, section.id)
+                }
+                // The other class's key, not the one on screen: warming
+                // BTC-USDT against a futures venue seeds nothing.
+                onWarmup={(market) =>
+                  warmupMarket(market, section.id, timeframe)
+                }
+                selected={false}
+                venue={venue}
+              />
+            ))}
+          </section>
+        ))}
 
         {desktopOnly.length > 0 ? (
           <section>

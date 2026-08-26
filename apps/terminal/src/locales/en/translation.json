@@ -5848,6 +5848,7 @@
       "notListed": "not on {{venue}}",
       "notListedCallout": "{{pair}} is not listed on {{venue}}. Picking it will switch the focused venue to {{other}}.",
       "availableVenues": "Available",
+      "otherClassVenues": "As {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Needs the desktop app",
       "desktopOnlyVenue": "Desktop only",
       "predictions": "predictions",
