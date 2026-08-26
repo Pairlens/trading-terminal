@@ -4388,6 +4388,8 @@
     "switchMarket": "Piyasa değiştir",
     "marketActive": "Etkin",
     "marketSwitched": "{{name}} piyasasına geçildi",
+    "marketNoInstrument": "{{name}} {{pair}} işlemi sunmuyor",
+    "marketNoInstrumentHint": "Farklı bir varlık sınıfında işlem yapıyor, bu yüzden grafik olduğu yerde kaldı.",
     "topMarkets": "En İyi Piyasalar",
     "staleListings": "Borsa listeleri son güncelleme: {{date}}"
   },

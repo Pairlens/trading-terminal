@@ -4482,6 +4482,8 @@
     "switchMarket": "Zmień rynek",
     "marketActive": "Aktywny",
     "marketSwitched": "Przełączono na {{name}}",
+    "marketNoInstrument": "{{name}} nie oferuje {{pair}}",
+    "marketNoInstrumentHint": "Obsługuje inną klasę aktywów, więc wykres pozostał bez zmian.",
     "topMarkets": "Najlepsze rynki",
     "staleListings": "Listingi giełd zaktualizowano {{date}}"
   },

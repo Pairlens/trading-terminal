@@ -4388,6 +4388,8 @@
     "switchMarket": "切换市场",
     "marketActive": "使用中",
     "marketSwitched": "已切换到 {{name}}",
+    "marketNoInstrument": "{{name}} 未上架 {{pair}}",
+    "marketNoInstrumentHint": "该平台交易的是其他资产类别，因此图表保持不变。",
     "topMarkets": "热门市场",
     "staleListings": "交易所上币列表更新于 {{date}}"
   },

@@ -4388,6 +4388,8 @@
     "switchMarket": "Chuyển thị trường",
     "marketActive": "Đang dùng",
     "marketSwitched": "Đã chuyển sang {{name}}",
+    "marketNoInstrument": "{{name}} không niêm yết {{pair}}",
+    "marketNoInstrumentHint": "Sàn này giao dịch một lớp tài sản khác, nên biểu đồ vẫn giữ nguyên.",
     "topMarkets": "Thị trường hàng đầu",
     "staleListings": "Danh sách niêm yết của sàn cập nhật lần cuối {{date}}"
   },

@@ -4388,6 +4388,8 @@
     "switchMarket": "Markt wechseln",
     "marketActive": "Aktiv",
     "marketSwitched": "Zu {{name}} gewechselt",
+    "marketNoInstrument": "{{name}} führt {{pair}} nicht",
+    "marketNoInstrumentHint": "Dort wird eine andere Anlageklasse gehandelt, der Chart bleibt also, wo er war.",
     "topMarkets": "Top-Märkte",
     "staleListings": "Börsenlistings zuletzt aktualisiert am {{date}}"
   },

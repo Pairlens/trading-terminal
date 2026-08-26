@@ -4388,6 +4388,8 @@
     "switchMarket": "마켓 전환",
     "marketActive": "사용 중",
     "marketSwitched": "{{name}}(으)로 전환했습니다",
+    "marketNoInstrument": "{{name}}에는 {{pair}}이(가) 없습니다",
+    "marketNoInstrumentHint": "다른 자산군을 거래하므로 차트는 그대로 유지됩니다.",
     "topMarkets": "상위 마켓",
     "staleListings": "거래소 상장 목록 최종 업데이트: {{date}}"
   },
