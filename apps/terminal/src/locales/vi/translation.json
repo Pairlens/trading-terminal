@@ -3677,6 +3677,14 @@
       "desktopOnlyDescription": "API của sàn từ chối origin từ trình duyệt, nên dữ liệu thị trường của cặp này chỉ truy cập được từ bản máy tính.",
       "nftDescription": "Không nhà cung cấp nào trả về chuỗi giá sàn cho bộ sưu tập này. Thêm khóa OpenSea trong plugin OpenSea: biểu đồ, bảng giá và dòng khớp lệnh đều đến từ đó."
     },
+    "venueCheck": {
+      "checking": "Đang kiểm tra {{venue}} có {{pair}} không",
+      "listed": "{{venue}} có {{pair}}",
+      "unlisted": "{{venue}} không có {{pair}}",
+      "blocked": "{{venue}} không phục vụ khu vực của bạn",
+      "unchecked": "Chuyển sang {{venue}}",
+      "noneListed": "Không sàn nào đang kết nối có cặp này."
+    },
     "paneCredentials": {
       "sealedTitle": "Mở khóa để tải dữ liệu {{venue}}",
       "sealedDescription": "{{venue}} không có nguồn giá công khai. Biểu đồ, sổ lệnh và báo giá đều chạy qua khóa API của bạn, và khóa đang bị khóa lúc này.",
@@ -4396,6 +4404,8 @@
     "switchMarket": "Chuyển thị trường",
     "marketActive": "Đang dùng",
     "marketSwitched": "Đã chuyển sang {{name}}",
+    "marketNoInstrument": "{{name}} không niêm yết {{pair}}",
+    "marketNoInstrumentHint": "Sàn này giao dịch một lớp tài sản khác, nên biểu đồ vẫn giữ nguyên.",
     "topMarkets": "Thị trường hàng đầu",
     "staleListings": "Danh sách niêm yết của sàn cập nhật lần cuối {{date}}"
   },
@@ -6483,6 +6493,7 @@
       "notListed": "không niêm yết trên {{venue}}",
       "notListedCallout": "{{pair}} không niêm yết trên {{venue}}. Chọn nó sẽ chuyển sàn đang chọn sang {{other}}.",
       "availableVenues": "Khả dụng",
+      "otherClassVenues": "Dưới dạng {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
       "desktopOnlyVenue": "Chỉ trên máy tính",
       "predictions": "dự đoán",

@@ -85,6 +85,27 @@ export interface AnalyticsEvents {
   /** Active market changed. Symbols are public instrument names. */
   pair_opened: { venue: string; asset_class: string; pair: string }
   /**
+   * A venue was picked while a chart of ANOTHER asset class was on screen, and
+   * what came of it: `moved` means the instrument had a counterpart on that
+   * venue and the whole page followed (spot BTC-USDT to a perpetual, or back),
+   * `stranded` means it had none and the chart stayed put behind a message.
+   *
+   * The question it answers: whether crossing asset classes is a path anyone
+   * takes, from which surface, and how often it dead-ends. The venue dropdown
+   * only OFFERS venues that can take the instrument, so it never strands; a
+   * high stranded rate from `search` says the omni search's venue rows should
+   * name what they trade before the click rather than after it.
+   *
+   * `asset_class` is the class the instrument ends up in (or the venue's own,
+   * when it went nowhere), never the chart's previous one.
+   */
+  venue_class_switched: {
+    venue: string
+    asset_class: string
+    outcome: 'moved' | 'stranded'
+    source: 'search' | 'picker' | 'mobile-picker'
+  }
+  /**
    * Which answer of a prediction event the user pointed the ticket at, and how
    * they got there.
    *
@@ -397,6 +418,19 @@ export interface AnalyticsEvents {
    * `section` an asset class: both name our own surfaces, never the person.
    */
   discovery_venue_changed: { venue: string; section: string }
+  /**
+   * A venue offered as the way out of "no data for this pair" was taken, and
+   * what the live listing check had said about it at the moment of the click.
+   *
+   * The row used to be a guess, and the failure mode it produced is invisible
+   * from any single event: the user switches venue, hits the same empty state,
+   * switches again. `status` is what makes that measurable: `listed` means the
+   * venue answered with candles before the click, `unknown` means it could not
+   * be asked (no history provider, or a rate limit), and a run of `unknown`
+   * clicks followed by another empty state is the check failing to do its job.
+   * Both fields name our own surfaces: a connector id and a probe verdict.
+   */
+  venue_alternative_taken: { venue: string; status: 'listed' | 'unknown' }
   /**
    * The on-chain board could not draw a chain's pools, and why.
    *

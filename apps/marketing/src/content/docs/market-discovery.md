@@ -5,7 +5,7 @@ group: traders
 parent: market-data
 order: 5
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 7 min read
 ---
 
@@ -161,7 +161,10 @@ exchange directly. See [how Pairlens works](/docs/architecture).
 
 A pair being in the index does not mean the exchange you are charting carries
 it. When a panel is pointed at an exchange that does not list the pair, it says
-so and offers the ones that do, rather than showing you an empty frame.
+so and offers the ones that do, rather than showing you an empty frame. Those
+offers are checked, not guessed: every exchange in the row is asked for the pair
+right then, and the ones that answer with nothing are crossed out and disabled
+before you can click them.
 
 ## Where to next
 

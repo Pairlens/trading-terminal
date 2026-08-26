@@ -3677,6 +3677,14 @@
       "desktopOnlyDescription": "Son API refuse les origines navigateur : les données de marché de cette paire ne sont accessibles que depuis la version bureau.",
       "nftDescription": "Aucun fournisseur n'a renvoyé de série de prix plancher pour cette collection. Ajoutez une clé OpenSea dans le plugin OpenSea : le graphique, l'échelle et le fil des ventes en viennent tous."
     },
+    "venueCheck": {
+      "checking": "Vérification : {{venue}} propose-t-il {{pair}} ?",
+      "listed": "{{venue}} propose {{pair}}",
+      "unlisted": "{{venue}} ne propose pas {{pair}}",
+      "blocked": "{{venue}} n’est pas disponible dans ta région",
+      "unchecked": "Passer à {{venue}}",
+      "noneListed": "Aucune autre plateforme connectée ne propose cette paire."
+    },
     "paneCredentials": {
       "sealedTitle": "Déverrouillez pour charger les données {{venue}}",
       "sealedDescription": "{{venue}} n’a pas de flux de prix public. Le graphique, le carnet et les cotations passent par vos clés API, et elles sont verrouillées pour le moment.",
@@ -4396,6 +4404,8 @@
     "switchMarket": "Changer de marché",
     "marketActive": "Actif",
     "marketSwitched": "Basculé sur {{name}}",
+    "marketNoInstrument": "{{name}} ne cote pas {{pair}}",
+    "marketNoInstrumentHint": "Elle traite une autre classe d'actifs, le graphique n'a donc pas bougé.",
     "topMarkets": "Top marchés",
     "staleListings": "Listings des plateformes mis à jour le {{date}}"
   },
@@ -6483,6 +6493,7 @@
       "notListed": "pas sur {{venue}}",
       "notListedCallout": "{{pair}} n’est pas disponible sur {{venue}}. La sélectionner basculera la place de marché active vers {{other}}.",
       "availableVenues": "Disponibles",
+      "otherClassVenues": "En {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Nécessitent l’app de bureau",
       "desktopOnlyVenue": "Bureau uniquement",
       "predictions": "prédictions",

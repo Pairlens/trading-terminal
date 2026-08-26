@@ -43,6 +43,7 @@ const OKX = market('okx', ['crypto-spot'])
 const GATE = market('gate', ['crypto-spot'])
 const JUPITER = market('jupiter', ['dex'])
 const KALSHI = market('kalshi', ['prediction'])
+const BINANCE_FUTURES = market('binance-futures', ['crypto-perp'])
 
 /** The venue table mid-boot: one CEX has published, nothing else has. */
 const BOOTING = [OKX]
@@ -261,5 +262,107 @@ describe('the mobile shell hands the chart terminal its class', () => {
       'utf8',
     )
     expect(source).toContain('instrumentClass={focusedClass}')
+  })
+})
+
+/**
+ * The other way a composed address goes wrong, and the one the venue pickers
+ * made easy to reach: the venue exists, the class exists, and they disagree.
+ *
+ * The phone has no venue in its URL. It composes one from `terminal.market`,
+ * which is whatever was last charted anywhere — so a perpetual charted on the
+ * laptop wrote `/spot/binance-futures/BTC-USDT` the next time a spot pair was
+ * opened on the phone: a spot board on a venue that lists no spot pairs.
+ */
+describe('a venue that cannot serve the class is corrected too', () => {
+  const CONNECTED = [OKX, GATE, JUPITER, KALSHI, BINANCE_FUTURES]
+
+  test('a spot pair does not sit on a futures venue', () => {
+    expect(
+      correctStaleMarket({
+        market: 'binance-futures',
+        cls: 'spot',
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBe('okx')
+  })
+
+  test('the preference wins when it serves, otherwise the first that does', () => {
+    expect(
+      correctStaleMarket({
+        market: 'binance-futures',
+        cls: 'spot',
+        markets: CONNECTED,
+        // Not a spot venue either, so it cannot be the answer.
+        defaultMarket: 'jupiter',
+        settled: true,
+      }),
+    ).toBe('okx')
+  })
+
+  test('a venue that does serve the class is left alone', () => {
+    expect(
+      correctStaleMarket({
+        market: 'gate',
+        cls: 'spot',
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBeNull()
+  })
+
+  test('a perp key on its perp venue is left alone', () => {
+    expect(
+      correctStaleMarket({
+        market: 'binance-futures',
+        cls: 'perp',
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBeNull()
+  })
+
+  // Rule 2 still wins: moving the venue of a token names a different token.
+  test('a venue-bound class is not corrected by class either', () => {
+    expect(
+      correctStaleMarket({
+        market: 'okx',
+        cls: 'dex',
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBeNull()
+  })
+
+  // A workspace pane is pointed at a pair, not an address, so it names no
+  // class and keeps the plain does-it-exist behaviour.
+  test('a caller that names no class is not corrected by class', () => {
+    expect(
+      correctStaleMarket({
+        market: 'binance-futures',
+        cls: undefined,
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBeNull()
+  })
+
+  // Better a refusal the surfaces already render than a second wrong venue.
+  test('nothing moves when no connected venue serves the class', () => {
+    expect(
+      correctStaleMarket({
+        market: 'okx',
+        cls: 'stocks',
+        markets: CONNECTED,
+        defaultMarket: 'okx',
+        settled: true,
+      }),
+    ).toBeNull()
   })
 })

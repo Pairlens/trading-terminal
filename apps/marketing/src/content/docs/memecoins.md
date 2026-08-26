@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 10
 eyebrow: For traders
-updated: 23 AUG 2026
-readTime: 10 min read
+updated: 26 AUG 2026
+readTime: 11 min read
 ---
 
 ## Before anything else
@@ -191,6 +191,16 @@ marked with a tilde (`~96%`) so you always know which one you are reading.
 there rather than from a DEX because DEX-reported market cap is unreliable at the
 top end: measured live, one venue reported BONK's market cap as over a trillion
 dollars.
+
+**The chart** comes from Jupiter too, and this is the one source that has no
+alternative. A token still on its bonding curve has no AMM pool yet, so the pool
+data providers have nothing to look up: measured against three mints that were
+minted within the hour, the pool provider returned no pool at all for every one
+of them. Jupiter charts a token by its mint rather than by a pool, so the curve
+is on screen from the first trade. Off the curve it also aggregates every pool
+the token trades in, which is the number you want for a token rather than for a
+particular pool, and it needs one request where a pool lookup needs two. On
+chains other than Solana the chart still comes from the pool providers.
 
 **One token**, which is what the three trade-board panes read, comes from Jupiter
 on Solana and from DexScreener everywhere else. The split is forced by the
