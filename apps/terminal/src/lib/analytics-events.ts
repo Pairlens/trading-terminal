@@ -336,6 +336,19 @@ export interface AnalyticsEvents {
   /** Wallet linked for DEX trading. Chain only — never addresses. */
   wallet_connected: { chain: string }
   /**
+   * The pair header's connection dot went amber while the sockets were still
+   * up: streams have fallen behind the cadence they had been keeping.
+   *
+   * The one question this answers is whether the thresholds behind that state
+   * are calibrated. They were derived from what a healthy feed looks like, not
+   * from data, and both failure modes are invisible from here: fire constantly
+   * and the colour becomes furniture people learn to ignore, never fire and we
+   * are back to a green dot over a frozen tape. Rate limited to one per venue
+   * per minute at the call site, so a flapping link reports a bad link rather
+   * than a histogram of it. `venue` is a connector id.
+   */
+  market_data_delayed: { venue: string }
+  /**
    * The one-time explainer the Equities desk shows when no broker key is
    * provisioned. Two questions it answers that nothing else can: does a
    * trader who lands on a gated board ever reach the connect wizard, and how

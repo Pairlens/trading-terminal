@@ -996,6 +996,11 @@
     animation: plLiveBlink 1.4s ease-in-out infinite;
   }
 
+  /* `delayed` deliberately gets no rule of its own, and the absence is the
+     design. The ring above means something is ARRIVING; on a link that has
+     gone soft nothing is, so the mark just sits still in amber. Motion here
+     would say the opposite of what the state means. */
+
   /* Hollow: nothing is arriving, and a filled mark in a muted colour still
      reads as "on" at 4px. */
   .pl-live-badge[data-state='offline'] .pl-live-mark {

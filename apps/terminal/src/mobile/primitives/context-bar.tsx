@@ -7,6 +7,12 @@
  * It must NOT subscribe to a ticker — the LIVE badge is a connection state,
  * not a price — and it is `memo` so a streaming market leaves it at zero
  * re-renders (see the performance budget in the blueprint).
+ *
+ * Stream health is the one exception, and it earns it: the store behind
+ * `useStreamHealth` recomputes on read but only notifies when the health
+ * TRANSITIONS, which is a handful of times in a session. A per-tick cost it is
+ * not, and the alternative is a phone on a weak link showing LIVE over a
+ * frozen chart.
  */
 import { memo } from 'react'
 import { ChevronDown, Eye, UserRound } from 'lucide-react'
@@ -27,6 +33,7 @@ import {
   usePairDisplayLabel,
 } from '@/hooks/use-prediction-pair'
 import { useMarketData } from '@/lib/market-data-provider'
+import { useStreamHealth } from '@/hooks/use-stream-health'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useOptimisticSession } from '@/lib/session'
 
@@ -39,24 +46,32 @@ export type ContextBarProps = {
 /**
  * What the venue chip claims about the data behind it.
  *
- * Read from the two facts the chip already has in hand, both of which change
- * on the order of once a session: whether the connectors have come up at all,
- * and whether THIS venue is one this build can reach. A venue that declares
- * `requiresDesktop` is present in the market list and still serves nothing in
- * a browser, so it is `offline` rather than `live` — the old green dot said
- * "connected" for all four of them.
+ * Three of the four states are read from facts the chip already has in hand,
+ * all of which change on the order of once a session: whether the connectors
+ * have come up at all, and whether THIS venue is one this build can reach. A
+ * venue that declares `requiresDesktop` is present in the market list and
+ * still serves nothing in a browser, so it is `offline` rather than `live` —
+ * the old green dot said "connected" for all four of them.
+ *
+ * `delayed` is the fourth, and it is the only one that needs the data itself.
+ * Capability alone cannot see a bad link: on a phone that has wandered to one
+ * bar the sockets stay open and frames keep arriving late, so the badge said
+ * LIVE over a chart that had stopped moving and only gave that up once the
+ * connection dropped for good. This is the warning in between.
  */
-type VenueLiveState = 'live' | 'connecting' | 'offline'
+type VenueLiveState = 'live' | 'delayed' | 'connecting' | 'offline'
 
 /** Static keys — the i18n audit cannot follow a template literal. */
 const LIVE_LABEL_KEY: Record<VenueLiveState, string> = {
   live: 'mobile.shell.live.live',
+  delayed: 'mobile.shell.live.delayed',
   connecting: 'mobile.shell.live.connecting',
   offline: 'mobile.shell.live.offline',
 }
 
 const LIVE_A11Y_KEY: Record<VenueLiveState, string> = {
   live: 'mobile.shell.live.liveA11y',
+  delayed: 'mobile.shell.live.delayedA11y',
   connecting: 'mobile.shell.live.connectingA11y',
   offline: 'mobile.shell.live.offlineA11y',
 }
@@ -74,7 +89,9 @@ function LiveBadge({ state }: { state: VenueLiveState }) {
         'pl-live-badge flex shrink-0 items-center gap-[3px] rounded border px-[4px] py-[2.5px] text-[8px] font-semibold leading-none tracking-[0.09em]',
         state === 'live'
           ? 'border-up/45 text-up'
-          : 'border-border text-muted-foreground',
+          : state === 'delayed'
+            ? 'border-amber-400/50 text-amber-400'
+            : 'border-border text-muted-foreground',
       )}
       data-state={state}
     >
@@ -171,6 +188,7 @@ export const ContextBar = memo(function ContextBar({
   const { focusedPair, focusedClass, focusedVenue } = useMobileFocus()
   const { markets } = useAvailableMarkets()
   const { status } = useMarketData()
+  const health = useStreamHealth()
   const permission = useVenueTradePermission(focusedVenue)
   const { session } = useOptimisticSession()
   const [assetClassMap] = usePersistedState<Record<string, string>>(
@@ -185,12 +203,19 @@ export const ContextBar = memo(function ContextBar({
   const venue = markets.find((m) => m.value === focusedVenue)
   const venueLabel = venue?.label ?? focusedVenue.toUpperCase()
   const venueBound = isVenueBoundClass(focusedClass)
+  // Delivery outranks capability, but only for a venue this build can
+  // actually reach: a desktop-only venue in a browser is silent by design, and
+  // labelling that `delayed` would blame the link for a refusal.
+  const reachable = Boolean(venue && !venue.desktopOnly)
+  const lagging = health === 'degraded' || health === 'stale'
   const liveState: VenueLiveState =
     status !== 'connected'
       ? 'connecting'
-      : venue && !venue.desktopOnly
-        ? 'live'
-        : 'offline'
+      : !reachable
+        ? 'offline'
+        : lagging
+          ? 'delayed'
+          : 'live'
   const userName = session?.user.name ?? session?.user.email ?? ''
   // Signed out there is nobody to initial, and the two letters the button used
   // to fall back to were the PRODUCT's — a stranger reads "PL" as an account

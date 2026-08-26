@@ -4,7 +4,7 @@ description: 'Fixes for the problems people actually hit: a venue that will not 
 group: reference
 order: 2
 eyebrow: Reference
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 8 min read
 ---
 
@@ -39,12 +39,21 @@ shows which sockets are actually up.
 
 ## Market data looks frozen
 
-The connection dot in the pair header is the source of truth. If it reads
-**Reconnecting**, a socket went quiet and the terminal is already rebuilding it.
+The connection dot in the pair header is the source of truth, and it carries
+two warnings rather than one. Hover it for the reason and for how long it has
+been since anything arrived.
 
-The usual trigger is a laptop waking from sleep, which the terminal detects and
-recovers from on its own. Give it a few seconds. If it stays reconnecting, the
-venue is likely having an incident.
+**Delayed** means the socket is still open but the feed has fallen behind the
+rhythm it had been keeping. Every stream is judged against its own cadence, so
+a book that normally ticks several times a second is called late after five,
+while a thin pair that prints once a minute is left alone. This is what a weak
+mobile connection looks like from the inside: frames keep arriving, just late
+enough that the price you are reading is not the price.
+
+**Reconnecting** means a socket went quiet altogether and the terminal is
+already rebuilding it. The usual trigger is a laptop waking from sleep, which
+the terminal detects and recovers from on its own. Give it a few seconds. If it
+stays reconnecting, the venue is likely having an incident.
 
 If the dot is green but nothing moves, check
 [Data Rate](/docs/settings#data-rate): Energy Saver caps the book and ticker at

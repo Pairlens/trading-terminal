@@ -94,8 +94,13 @@ the market is even open.
 
 The strip above the grid names what you are looking at: the symbol, the current
 price, the 24-hour change, and the venue streaming it. Click the symbol to
-switch markets. A connection dot shows stream health and says **Reconnecting**
-if a feed goes quiet, which normally happens after a laptop wakes from sleep.
+switch markets. A connection dot shows stream health on a scale rather than a
+switch: **Live** while data is arriving, **Delayed** once a feed falls behind
+the rhythm it had been keeping with its socket still open, **Reconnecting**
+once it goes quiet altogether. Hover it for the reason and for how long it has
+been since anything arrived. Delayed is the one worth knowing about, because a
+weak connection does not fail cleanly. It keeps trickling frames in late, and a
+green dot over a tape running seconds behind is the reading that costs you.
 
 Beside the symbol sits a coloured badge naming the market type: **SPOT**,
 **PERP**, **DEX**, **MEME**, **STOCK** or **EVENT**. This matters more than it
