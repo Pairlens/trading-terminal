@@ -21,7 +21,8 @@ import {
   listTriggerOrders,
 } from './trigger-client'
 import { fetchBalances } from './balance-client'
-import type { Instrument } from '@pairlens/market-engine/types'
+import { fetchJupiterCandles, supportsTimeframe } from './chart-client'
+import type { CandleUpdate, Instrument } from '@pairlens/market-engine/types'
 import type {
   PluginExecuteParams,
   PluginInstance,
@@ -90,6 +91,19 @@ export const jupiterDexConnectorManifest: PluginManifest = {
     logoUrl: '/posters/jupiter-dex-connector.png',
   },
   capabilities: [
+    // Candles for the `jupiter` venue only, at priority 4 so it outranks
+    // GeckoTerminal's wildcard 5 HERE and nowhere else. The scope is the
+    // point: a Solana token charts from its mint in one request and carries
+    // its bonding curve, while an Ethereum memecoin keeps resolving a pool
+    // through GeckoTerminal exactly as before. A failure throws, and the
+    // wildcard provider behind it is what answers.
+    {
+      id: 'market-data:candles',
+      singleton: false,
+      markets: ['jupiter'],
+      priority: 4,
+      streaming: true,
+    },
     {
       id: 'market-data:discovery',
       singleton: false,
@@ -391,11 +405,86 @@ export function createJupiterDexConnectorPlugin(
     return null
   }
 
+  /**
+   * Candle pollers, keyed by pair and timeframe.
+   *
+   * Kept in a map and cleared on re-subscribe for the same key, which is the
+   * leak GeckoTerminal's own poller learned to close: a chart pane that
+   * re-subscribes without the previous unsubscribe landing would otherwise
+   * leave a timer spending budget on a chart nobody is looking at.
+   */
+  const candlePollers = new Map<string, ReturnType<typeof setInterval>>()
+
+  function subscribe(
+    params: PluginExecuteParams,
+    callback: (data: unknown) => void,
+  ): () => void {
+    const { capability, params: p, context } = params
+    if (capability !== 'market-data:candles') return () => {}
+
+    const pair = String(p['pair'] ?? context.pair ?? '')
+    const timeframe = String(p['timeframe'] ?? context.timeframe ?? '')
+    // Refusing here rather than answering empty is what makes the fallthrough
+    // work: an unmapped timeframe or a symbol pair is GeckoTerminal's to serve,
+    // and a subscription that returns nothing forever would strand the pane.
+    if (!supportsTimeframe(timeframe)) return () => {}
+
+    const key = `${pair}:${timeframe}`
+    let snapshotDelivered = false
+    // One request on the wire at a time. The interval is shorter than a slow
+    // answer, and a second request behind the first spends a budget re-asking
+    // a question already asked.
+    let inFlight = false
+    let active = true
+
+    const poll = async () => {
+      if (!active || inFlight) return
+      inFlight = true
+      try {
+        if (!snapshotDelivered) {
+          const candles = await fetchJupiterCandles(pair, timeframe, 500)
+          if (candles.length > 0 && active) {
+            snapshotDelivered = true
+            callback({ type: 'snapshot', candles } satisfies CandleUpdate)
+          }
+          return
+        }
+        // Two bars: the forming one and the one that just closed, which is
+        // what an incremental update has to carry so a late trade on the
+        // previous bar is not lost.
+        const candles = await fetchJupiterCandles(pair, timeframe, 2)
+        if (candles.length > 0 && active) {
+          callback({ type: 'update', candles } satisfies CandleUpdate)
+        }
+      } catch {
+        // Transient, or the undocumented endpoint changed shape. The next tick
+        // retries; publishing a no-data verdict here is what would tell the
+        // pane this token does not trade.
+      } finally {
+        inFlight = false
+      }
+    }
+
+    void poll()
+
+    const existing = candlePollers.get(key)
+    if (existing) clearInterval(existing)
+    const timer = setInterval(() => void poll(), 15_000)
+    candlePollers.set(key, timer)
+
+    return () => {
+      active = false
+      clearInterval(timer)
+      candlePollers.delete(key)
+    }
+  }
+
   return {
     manifest,
     status: 'installed',
     config: {},
     execute,
+    subscribe,
 
     async initialize(config: Record<string, unknown>) {
       // Update config

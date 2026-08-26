@@ -3687,6 +3687,14 @@
       "desktopOnlyDescription": "API'si tarayıcı kaynaklarını reddeder; bu çiftin piyasa verilerine yalnızca masaüstü sürümünden erişilebilir.",
       "nftDescription": "Hiçbir sağlayıcı bu koleksiyon için taban fiyat serisi döndürmedi. OpenSea eklentisine bir OpenSea anahtarı ekle: grafik, sıralama tablosu ve işlem akışı hepsi oradan gelir."
     },
+    "venueCheck": {
+      "checking": "{{venue}} borsasında {{pair}} var mı diye bakılıyor",
+      "listed": "{{venue}} borsasında {{pair}} var",
+      "unlisted": "{{venue}} borsasında {{pair}} yok",
+      "blocked": "{{venue}} bulunduğun bölgeye hizmet vermiyor",
+      "unchecked": "{{venue}} borsasına geç",
+      "noneListed": "Bağlı başka hiçbir borsada bu parite yok."
+    },
     "paneCredentials": {
       "sealedTitle": "{{venue}} verilerini yüklemek için kilidi açın",
       "sealedDescription": "{{venue}} için herkese açık bir fiyat akışı yok. Grafik, emir defteri ve kotasyonlar API anahtarlarınızla geliyor ve anahtarlar şu anda kilitli.",
@@ -4406,6 +4414,8 @@
     "switchMarket": "Piyasa değiştir",
     "marketActive": "Etkin",
     "marketSwitched": "{{name}} piyasasına geçildi",
+    "marketNoInstrument": "{{name}} {{pair}} işlemi sunmuyor",
+    "marketNoInstrumentHint": "Farklı bir varlık sınıfında işlem yapıyor, bu yüzden grafik olduğu yerde kaldı.",
     "topMarkets": "En İyi Piyasalar",
     "staleListings": "Borsa listeleri son güncelleme: {{date}}"
   },
@@ -6491,6 +6501,7 @@
       "notListed": "{{venue}}'de listede yok",
       "notListedCallout": "{{pair}}, {{venue}}'de listede yok. Seçmen, odaktaki borsayı {{other}} olarak değiştirir.",
       "availableVenues": "Kullanılabilir",
+      "otherClassVenues": "{{cls}} olarak · {{pair}}",
       "desktopOnlyVenues": "Masaüstü uygulaması gerekiyor",
       "desktopOnlyVenue": "Yalnızca masaüstü",
       "predictions": "tahmin",

@@ -120,12 +120,16 @@ export function TerminalTopBar({
 
       {/* Market + Wallet — grouped as a trading context pair. The picker is
           scoped to what is being charted: a venue that cannot serve this
-          class is not a choice, it is a dark terminal one click away. */}
+          class is not a choice, it is a dark terminal one click away. The
+          exception it makes is the perpetual of a spot pair (and the reverse),
+          which is the same asset under another id — it gets its own section
+          rather than being hidden. */}
       <div className={HEADER_GROUP}>
         <MarketPicker
           market={market}
           marketOptions={marketOptions}
           assetClass={assetClass}
+          instrumentId={pairKey}
           onMarketChange={onMarketChange}
           onMarketHover={onMarketHover}
           aria-label={t('terminal.market')}

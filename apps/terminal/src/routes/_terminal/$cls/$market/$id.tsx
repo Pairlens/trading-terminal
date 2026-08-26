@@ -60,6 +60,8 @@ import { LayoutProvider } from '@/lib/layout/context'
 import { WorkspaceProvider } from '@/lib/layout/workspace-context'
 import { pairWorkspaceFor } from '@/lib/layout/workspaces/pair-workspace'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
+import { venueTargetFor } from '@/lib/venue-switch'
+import { chartLinkProps } from '@/lib/market-ref/link'
 
 /**
  * `?o=` — which answer of a prediction event the book, the tape and the ticket
@@ -353,16 +355,31 @@ function ChartTerminalContent({
   // are keyed `market:pair` and used to swap with no history entry behind
   // them. `replace` is deliberate: flicking through venues on one pair should
   // not build a back stack the user has to walk out of.
+  //
+  // Where it lands is `venueTargetFor`'s call, shared with the omni search, so
+  // the class travels with the venue: the dropdown offers the perp venues of a
+  // spot pair, and picking one has to move the whole address rather than
+  // swapping the tape under a class that no longer describes it.
   const handleMarketChange = useCallback(
     (next: string) => {
-      if (next === marketRef.market) return
-      void navigate({
-        to: '/$cls/$market/$id',
-        params: { cls: marketRef.cls, market: next, id: marketRef.id },
-        replace: true,
+      const target = venueTargetFor({
+        ref: marketRef,
+        market: next,
+        venueClasses:
+          markets.find((m) => m.value === next)?.assetClasses ?? null,
       })
+      if (target.kind === 'same' || target.kind === 'unavailable') return
+      if (target.kind === 'cross-class') {
+        track('venue_class_switched', {
+          venue: next,
+          asset_class: target.ref.cls,
+          outcome: 'moved',
+          source: 'picker',
+        })
+      }
+      void navigate({ ...chartLinkProps(target.ref), replace: true })
     },
-    [navigate, marketRef.cls, marketRef.id, marketRef.market],
+    [navigate, markets, marketRef],
   )
 
   return (
