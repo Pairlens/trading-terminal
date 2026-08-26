@@ -317,7 +317,45 @@ export async function fetchTokens(
  * disagree about the price of SOL would put the progress bar off by whatever
  * the two sources differ by.
  */
-export async function fetchSolPriceUsd(): Promise<number | null> {
-  const rows = await fetchTokens([SOL_MINT])
-  return numberOrNull(rows[0]?.usdPrice)
+/**
+ * Cached, because this is the most-repeated request in the provider and the
+ * one with the least reason to be.
+ *
+ * It funds a THRESHOLD conversion: the graduation target is 413 SOL, and the
+ * dollar figure it becomes moves by fractions of a percent over a minute. Every
+ * column cycle and every token lookup was re-asking for it, which on a memecoin
+ * board is a request every few seconds spent on a number that had not changed.
+ *
+ * A minute is well inside the precision the curve percentage needs (a 1% move
+ * in SOL shifts reconstructed progress by well under a point) and it is the
+ * difference between the fallback path fitting in the budget and tripping it.
+ */
+const SOL_PRICE_TTL_MS = 60_000
+let solPriceCache: { at: number; value: number | null } | null = null
+let solPriceInFlight: Promise<number | null> | null = null
+
+/** Test seam, same reason as the ranked cache: the module outlives a case. */
+export function clearSolPriceCache(): void {
+  solPriceCache = null
+  solPriceInFlight = null
+}
+
+export function fetchSolPriceUsd(): Promise<number | null> {
+  const now = Date.now()
+  if (solPriceCache && now - solPriceCache.at < SOL_PRICE_TTL_MS) {
+    return Promise.resolve(solPriceCache.value)
+  }
+  if (solPriceInFlight) return solPriceInFlight
+  solPriceInFlight = fetchTokens([SOL_MINT])
+    .then((rows) => {
+      const value = numberOrNull(rows[0]?.usdPrice)
+      // A failed read is not cached: the next caller should retry rather than
+      // inherit a null threshold for a minute.
+      solPriceCache = { at: Date.now(), value }
+      return value
+    })
+    .finally(() => {
+      solPriceInFlight = null
+    })
+  return solPriceInFlight
 }
