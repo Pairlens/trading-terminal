@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "Pilih panel untuk ditambahkan ke tata letak ruang kerja Anda.",
     "added": "Ditambahkan",
-    "desktopOnly": "Khusus Desktop"
+    "desktopOnly": "Khusus Desktop",
+    "all": "Semua panel",
+    "count_one": "{{count}} panel",
+    "count_other": "{{count}} panel",
+    "add": "Tambah panel",
+    "sampleData": "Data contoh, bukan panel langsung.",
+    "alreadyOnBoard": "Sudah ada di ruang kerja ini.",
+    "desktopOnlyDetail": "Hanya berfungsi di aplikasi desktop.",
+    "source": "Dari {{plugin}}",
+    "needs": {
+      "title": "Yang dibutuhkan",
+      "pair": "Mengikuti pasangan aktif ruang kerja.",
+      "wallet": "Butuh akun yang terhubung.",
+      "desktop": "Hanya berjalan di aplikasi desktop.",
+      "singleton": "Satu per ruang kerja.",
+      "access": "Termasuk dalam {{level}}.",
+      "capability": "Butuh plugin yang menyediakan {{capability}}."
+    },
+    "noMatchHint": "Tidak ada yang cocok. Coba kata yang lebih pendek, atau hapus filter."
   },
   "layout": {
     "workspaces": "Ruang Kerja",

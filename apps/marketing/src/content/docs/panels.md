@@ -5,7 +5,7 @@ group: traders
 parent: workspaces
 order: 1
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 12 min read
 ---
 
@@ -26,6 +26,11 @@ want something specific on screen.
 
 Everything else is specialised. Add it when a question comes up that your
 current layout cannot answer.
+
+You do not have to read this page to shop for one. The add-panel dialog
+(<kbd>⌘⇧P</kbd>) draws every panel before you add it, with sample numbers in
+it, and says what it needs to work. This catalogue is the version you can
+search with your eyes.
 
 Panels are contributed by plugins, which is why the catalogue grows when you
 install one. Uninstall a plugin family from the Plugins page and its panels

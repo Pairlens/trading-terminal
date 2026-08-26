@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "选择一个要添加到工作区布局的面板。",
     "added": "已添加",
-    "desktopOnly": "仅限桌面端"
+    "desktopOnly": "仅限桌面端",
+    "all": "全部面板",
+    "count_one": "{{count}} 个面板",
+    "count_other": "{{count}} 个面板",
+    "add": "添加面板",
+    "sampleData": "示例数据，并非实时面板。",
+    "alreadyOnBoard": "已在此工作区中。",
+    "desktopOnlyDetail": "仅在桌面应用中可用。",
+    "source": "来自 {{plugin}}",
+    "needs": {
+      "title": "运行条件",
+      "pair": "跟随工作区的当前交易对。",
+      "wallet": "需要已连接的账户。",
+      "desktop": "仅在桌面应用中运行。",
+      "singleton": "每个工作区仅一个。",
+      "access": "包含在 {{level}} 中。",
+      "capability": "需要提供 {{capability}} 的插件。"
+    },
+    "noMatchHint": "没有匹配项。试试更短的关键词，或清除筛选。"
   },
   "layout": {
     "workspaces": "工作区",

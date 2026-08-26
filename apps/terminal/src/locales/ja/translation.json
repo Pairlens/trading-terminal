@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "ワークスペースレイアウトに追加するペインを選択してください。",
     "added": "追加済み",
-    "desktopOnly": "デスクトップ専用"
+    "desktopOnly": "デスクトップ専用",
+    "all": "すべてのパネル",
+    "count_one": "{{count}} 個のパネル",
+    "count_other": "{{count}} 個のパネル",
+    "add": "パネルを追加",
+    "sampleData": "サンプルデータです。実際の表示ではありません。",
+    "alreadyOnBoard": "このワークスペースに追加済みです。",
+    "desktopOnlyDetail": "デスクトップアプリでのみ動作します。",
+    "source": "提供元: {{plugin}}",
+    "needs": {
+      "title": "必要なもの",
+      "pair": "ワークスペースのアクティブなペアに追従します。",
+      "wallet": "接続済みのアカウントが必要です。",
+      "desktop": "デスクトップアプリでのみ動作します。",
+      "singleton": "ワークスペースにつき1つ。",
+      "access": "{{level}} に含まれます。",
+      "capability": "{{capability}} を提供するプラグインが必要です。"
+    },
+    "noMatchHint": "一致するものがありません。短い語で試すか、フィルターを外してください。"
   },
   "layout": {
     "workspaces": "ワークスペース",

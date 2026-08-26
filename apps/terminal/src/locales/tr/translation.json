@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "Çalışma alanı düzenine eklemek için bir pano seç.",
     "added": "Eklendi",
-    "desktopOnly": "Yalnızca Masaüstü"
+    "desktopOnly": "Yalnızca Masaüstü",
+    "all": "Tüm paneller",
+    "count_one": "{{count}} panel",
+    "count_other": "{{count}} panel",
+    "add": "Panel ekle",
+    "sampleData": "Örnek veri, canlı panel değil.",
+    "alreadyOnBoard": "Bu çalışma alanında zaten var.",
+    "desktopOnlyDetail": "Yalnızca masaüstü uygulamasında çalışır.",
+    "source": "{{plugin}} tarafından",
+    "needs": {
+      "title": "Neye ihtiyacı var",
+      "pair": "Çalışma alanının aktif paritesini izler.",
+      "wallet": "Bağlı bir hesap gerekir.",
+      "desktop": "Yalnızca masaüstü uygulamasında çalışır.",
+      "singleton": "Çalışma alanı başına bir tane.",
+      "access": "{{level}} kapsamındadır.",
+      "capability": "{{capability}} sunan bir eklenti gerekir."
+    },
+    "noMatchHint": "Eşleşen yok. Daha kısa bir kelime deneyin ya da filtreyi kaldırın."
   },
   "layout": {
     "workspaces": "Çalışma alanları",

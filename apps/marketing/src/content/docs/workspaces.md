@@ -4,8 +4,8 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 22 AUG 2026
-readTime: 13 min read
+updated: 26 AUG 2026
+readTime: 14 min read
 ---
 
 A workspace is a saved arrangement of panels, and it is the feature that turns a
@@ -23,8 +23,25 @@ research one.
 ## Building one
 
 **New Workspace** in the left nav creates an empty grid. Add panels from the
-empty-cell placeholder, from omni-search (<kbd>⌘K</kbd>, then **Add to
-layout**), or from the pane menu on an existing panel.
+empty-cell placeholder, from the **Panes** menu (<kbd>⌘⇧P</kbd>), from
+omni-search (<kbd>⌘K</kbd>, then **Add to layout**), or from the pane menu on
+an existing panel.
+
+The add-panel dialog shows you what a panel is before you commit to it. Pick a
+row and the right-hand side draws that panel the way the board would draw it,
+filled with sample numbers, under the panel's own title bar. Below the drawing
+sits what it does in a line, and what it needs before it can show anything:
+whether it follows the workspace's active pair, whether it wants a connected
+account, whether it only runs in the desktop app, and whether it is one of the
+singletons. The plugin that contributes it is named at the bottom.
+
+Type to search across every panel at once. The search reads names, descriptions,
+categories and the contributing plugin, so "nfts" finds the whole NFT family and
+"funding" finds the four panels that answer a funding question. The rail on the
+left filters by category and carries a count, and a category the search has
+emptied stops applying rather than showing you nothing. Arrow keys move through
+the results and <kbd>Enter</kbd> adds the highlighted panel; clicking a row does
+the same in one action.
 
 Split a cell horizontally or vertically, replace what is in it, or close it.
 Panels marked as singletons appear once per workspace, which is why you cannot
