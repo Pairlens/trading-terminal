@@ -7,7 +7,7 @@ them in-app ("Update available → Restart & update").
 ## Architecture
 
 ```
-git tag v0.2.0
+git tag v0.2.0                      (by hand, or by the daily Auto Release job)
   → .github/workflows/release.yml
       → builds installers on GitHub runners:
           macOS  .dmg + .app.tar.gz(+.sig)     (Apple Silicon + Intel)
@@ -15,7 +15,9 @@ git tag v0.2.0
           Linux  .AppImage(+.sig), .deb, .rpm
       → uploads everything to a DRAFT release on this repo
       → attaches latest.json (updater manifest, minisign-signed entries)
-  → human publishes the draft  ← this is the "ship it" button
+  → published  ← this is the "ship it" moment
+      Auto Release publishes it itself, once all four platforms built.
+      A tag pushed by hand leaves the draft for you to publish.
       → installed apps poll
         https://github.com/Pairlens/trading-terminal/releases/latest/download/latest.json
         and offer the update in-app
@@ -97,9 +99,15 @@ compromised download host alone cannot ship malicious updates.
 ## Cutting a release
 
 ```bash
-bun run release patch        # or minor / major / 1.2.3
+bun run release patch        # or minor / major / auto / 1.2.3
 git push origin HEAD --follow-tags
 ```
+
+Shorthands: `bun run release:patch`, `:minor`, `:major`. Add `--push` to skip
+the second command (`bun run release patch --push`). `auto` picks the bump from
+the conventional commits that have landed since the last tag: a `feat` or a
+breaking change makes it a minor while the app is pre-1.0, anything else a
+patch.
 
 `bun run release` bumps the version in `tauri.conf.json`, `Cargo.toml`,
 `Cargo.lock` and `apps/desktop/package.json` (the release workflow refuses
@@ -108,6 +116,62 @@ tags that disagree with `tauri.conf.json`), commits, and tags `v<version>`.
 The tag push triggers the **Release** workflow (~20–30 min across four
 runners). It produces a **draft** release with all installers plus
 `latest.json`.
+
+### The daily check
+
+Installers only move when a tag is cut, so weeks of merged work can sit
+unshipped while the download page serves an old build. `.github/workflows/auto-release.yml`
+runs at 06:30 UTC every day and cuts the tag when one is overdue.
+
+Overdue means: a change that ships **inside the app** has been on main for
+7 days without reaching a release. The rules, all of them in
+`scripts/release/due.ts`:
+
+- **Age is measured from when work landed on main**, not when it was written.
+  A branch whose commits are a month old but merged yesterday has been on main
+  for one day.
+- **Only changes that reach an installer start the clock.** Marketing site,
+  registry, CLI, docs, CI config and agent files do not. A README typo should
+  not spend 30 minutes on four runners.
+- **The soak window is a trigger, not a cutoff.** Once a release is due,
+  everything on main goes into it, yesterday's merges included.
+- **The bump is inferred** the same way `bun run release auto` infers it.
+  Majors stay a human decision: a breaking change on a 0.x version is a minor.
+
+Two guards stop it from making things worse. It skips while any draft release
+is still unpublished, because that human gate has not been passed yet and a
+second draft would only stack. And it skips when checks on the head commit are
+failing or still running, because those installers would auto-update users into
+a broken build.
+
+Either way it says so in the run summary and as a workflow warning, and tries
+again the next day.
+
+Ask the same question locally at any time:
+
+```bash
+bun run release:check              # human report
+bun run release:check --json       # the whole decision as JSON
+bun run release:check --soak-days 3 --bump minor
+```
+
+The workflow can also be run by hand from the Actions tab, where the inputs
+override the bump, shorten the soak window, dry-run the decision, or force past
+the guards.
+
+**And it publishes.** The week on main behind a green CI run is the review; a
+draft waiting for someone to notice it is the problem the job exists to solve.
+Publishing happens last, after all four platforms have built and the signed
+`latest.json` is attached, so a failed build leaves a draft instead of a
+release with a missing installer. Uncheck **publish** on a manual dispatch to
+stop at a draft.
+
+Two consequences worth knowing. Nobody edits the release notes before they go
+out, so what `scripts/release/changelog.ts` generates is what users read (you
+can still edit a published release). And if a release turns out bad, unpublish
+it: `gh release edit v0.6.0 --draft=true` puts `releases/latest` back on the
+previous version, which stops it spreading to anyone who has not updated yet.
+Then fix forward.
 
 ### Release notes
 
@@ -129,8 +193,9 @@ bun scripts/release/changelog.ts v0.2.0
 Reruns of a failed pipeline reuse the existing draft and leave its body alone,
 so hand-edits survive a rebuild.
 
-**Publish the draft to ship** — edit the release notes on the releases page,
-then publish (or `gh release edit v0.2.0 --draft=false`). Publishing makes
+**Publish the draft to ship.** Hand-cut tags only; Auto Release does this
+itself. Edit the release notes on the releases page, then publish (or
+`gh release edit v0.2.0 --draft=false`). Publishing makes
 `releases/latest/download/latest.json` resolve to the new manifest; running
 apps pick it up on their next check (on launch + every 4 h, or App menu →
 "Check for Updates…" on macOS).
@@ -168,6 +233,21 @@ names.
   from whatever `.sig` assets exist, so a re-run fully heals the manifest.
 - **Apps report "Could not check for updates"** — the release is still a
   draft, or the repo isn't public yet.
+- **Auto Release ran but cut nothing.** Read its job summary. It prints the
+  baseline tag, how many unreleased commits it counted, how many of those ship
+  inside the app, and the age of the oldest one. The usual answers are an
+  unpublished draft, checks that are not green on main, or a week that has not
+  passed yet.
+- **Auto Release cut a tag but no installers built.** The build runs as a
+  called workflow inside the same Auto Release run, not as a separate Release
+  run. Look for the `release / build` jobs there.
+- **Auto Release cut a release but left it a draft.** A build job failed, so
+  the `publish` job never ran. Re-run the failed jobs; the manifest and the
+  aliases heal, and publishing is then one `gh release edit --draft=false`.
+- **A published release needs to be taken back.** `gh release edit <tag>
+--draft=true`. `releases/latest` falls back to the previous published
+  release, so new update checks stop seeing it. Anyone already updated stays
+  updated, so follow it with a fix.
 - **Local `tauri build` fails at "error running bundle_dmg.sh"** — the DMG
   step drives Finder via AppleScript to lay out the volume window, which
   needs an interactive session with Automation permission. Run

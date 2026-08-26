@@ -1,0 +1,187 @@
+# Keep the desktop installers fresh.
+#
+# Work merges to main continuously, but users only ever get what was last
+# tagged — so the download page and every installed app drift behind the code
+# until someone remembers to cut a release. This runs daily and does the
+# remembering: when a change that ships inside the app has been sitting on main
+# for a week without reaching a release, it bumps the version, tags it, and
+# hands the tag to the Release workflow.
+#
+# scripts/release/due.ts owns the decision (see its header for how age, the
+# path filter and the bump are worked out). Run it locally any time with
+# `bun run release:check`.
+#
+# It publishes too. A week on main behind a green CI run is the review; a draft
+# waiting for someone to notice it is the problem this job exists to solve. The
+# release only goes public after all four platforms have built and the signed
+# updater manifest is attached, so a failed build leaves a draft instead.
+#
+# Manual dispatch takes over every knob: pick the bump, shorten the soak
+# window, stop at a draft, dry-run the decision, or force past the guards.
+
+name: Auto Release
+
+on:
+  schedule:
+    # 06:30 UTC daily — after the European morning's merges, before the US day.
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version bump'
+        type: choice
+        options: [auto, patch, minor, major]
+        default: auto
+      soak_days:
+        description: 'Days a change must sit on main before it triggers a release'
+        type: string
+        default: '7'
+      dry_run:
+        description: 'Report the decision without tagging anything'
+        type: boolean
+        default: false
+      publish:
+        description: 'Publish the release (uncheck to stop at a draft)'
+        type: boolean
+        default: true
+      force:
+        description: 'Ignore the soak window and the draft/CI guards'
+        type: boolean
+        default: false
+
+# Everything else drops to none the moment this block exists: `contents` writes
+# the bump commit and the tag, `checks` reads whether CI passed on HEAD.
+permissions:
+  contents: write
+  checks: read
+
+# Two of these overlapping would race on the same version bump.
+concurrency:
+  group: auto-release
+  cancel-in-progress: false
+
+jobs:
+  decide:
+    runs-on: ubuntu-latest
+    env:
+      # Empty inputs on the scheduled run fall through to the defaults.
+      RELEASE_SOAK_DAYS: ${{ inputs.soak_days || '7' }}
+      RELEASE_BUMP: ${{ inputs.bump || 'auto' }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      FORCE: ${{ inputs.force || false }}
+    outputs:
+      # Set only when a tag was actually pushed — the build job keys off it.
+      tag: ${{ steps.cut.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Releases are cut from main, whatever branch a manual dispatch ran
+          # from. fetch-depth 0 because the decision reads the whole history
+          # and every tag.
+          ref: main
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.8
+
+      # Writes the verdict to this step's outputs and the job summary.
+      - name: Is a release due?
+        id: check
+        run: |
+          if [ "$FORCE" = "true" ]; then export RELEASE_SOAK_DAYS=0; fi
+          bun scripts/release/due.ts
+
+      # An unpublished draft is someone holding a release back by hand. Cutting
+      # the next one would publish whatever made them hold it, straight to
+      # every installed app, so stop and let them decide.
+      - name: Guard — no release draft is waiting
+        id: drafts
+        if: steps.check.outputs.due == 'true'
+        run: |
+          set -euo pipefail
+          WAITING=$(gh api "repos/$REPO/releases" --paginate \
+            --jq '[.[] | select(.draft) | .tag_name] | join(", ")')
+          if [ -n "$WAITING" ] && [ "$FORCE" != "true" ]; then
+            echo "blocked=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Skipped: a draft release is still unpublished"
+              echo
+              echo "Waiting on: **$WAITING**"
+              echo
+              echo "Publish or delete it, then this job cuts the next one."
+              echo
+              echo "Nothing is released while a draft is held back: the next version would"
+              echo "carry whatever is being held back straight to every installed app."
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::Release due, but draft(s) $WAITING are unpublished — publish to unblock."
+          fi
+
+      # Never tag a commit CI has already failed on: the installers would build
+      # from it and users would auto-update into it. An unfinished run is just
+      # bad timing — tomorrow's run picks it up.
+      - name: Guard — CI is green on HEAD
+        id: ci
+        if: steps.check.outputs.due == 'true' && steps.drafts.outputs.blocked != 'true'
+        run: |
+          set -euo pipefail
+          SHA=$(git rev-parse HEAD)
+          RUNS=$(gh api "repos/$REPO/commits/$SHA/check-runs" --jq '.check_runs')
+          FAILED=$(jq -r '[.[] | select(.conclusion == "failure" or .conclusion == "timed_out") | .name] | join(", ")' <<< "$RUNS")
+          BUSY=$(jq -r '[.[] | select(.status != "completed") | .name] | join(", ")' <<< "$RUNS")
+          BLOCK=""
+          if [ -n "$FAILED" ]; then BLOCK="failing: $FAILED"; fi
+          if [ -n "$BUSY" ]; then BLOCK="${BLOCK:+$BLOCK; }still running: $BUSY"; fi
+          # No checks at all is not evidence of breakage — the release commit
+          # itself never triggers CI, since a GITHUB_TOKEN push cannot.
+          if [ -n "$BLOCK" ] && [ "$FORCE" != "true" ]; then
+            echo "blocked=true" >> "$GITHUB_OUTPUT"
+            echo "### Skipped: checks on \`${SHA:0:7}\` — $BLOCK" >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::Release due, but checks on $SHA are not green ($BLOCK)."
+          fi
+
+      - name: Dry run — stop before tagging
+        if: inputs.dry_run
+        env:
+          WOULD_CUT: ${{ steps.check.outputs.tag || 'nothing' }}
+        run: |
+          echo "### Dry run — nothing was tagged" >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::Dry run: would have cut $WOULD_CUT."
+
+      - name: Bump, tag and push
+        id: cut
+        if: >-
+          steps.check.outputs.due == 'true'
+          && steps.drafts.outputs.blocked != 'true'
+          && steps.ci.outputs.blocked != 'true'
+          && !inputs.dry_run
+        env:
+          NEXT_VERSION: ${{ steps.check.outputs.next_version }}
+          TAG: ${{ steps.check.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # The explicit version, not the bump kind: the tag this job reports
+          # and the version the commit writes can then never disagree.
+          bun scripts/release.ts "$NEXT_VERSION" --push
+          ACTUAL=$(git describe --tags --exact-match HEAD)
+          if [ "$ACTUAL" != "$TAG" ]; then
+            echo "Expected to tag $TAG but HEAD is $ACTUAL"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "### Cut \`$TAG\` — installers are building" >> "$GITHUB_STEP_SUMMARY"
+
+  # A tag pushed with the built-in GITHUB_TOKEN does not trigger the Release
+  # workflow's own `push: tags` trigger, so call it directly.
+  release:
+    needs: decide
+    if: needs.decide.outputs.tag != ''
+    uses: ./.github/workflows/release.yml
+    with:
+      tag: ${{ needs.decide.outputs.tag }}
+      # Scheduled runs always publish; a manual dispatch can stop at a draft.
+      publish: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+    secrets: inherit
