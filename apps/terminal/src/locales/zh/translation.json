@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "其 API 拒绝浏览器来源，因此该交易对的行情数据只能通过桌面版获取。",
       "nftDescription": "没有任何提供方返回该系列的地板价序列。请在 OpenSea 插件中添加 OpenSea 密钥：图表、阶梯和成交明细都来自这里。"
     },
+    "venueCheck": {
+      "checking": "正在检查 {{venue}} 是否有 {{pair}}",
+      "listed": "{{venue}} 有 {{pair}}",
+      "unlisted": "{{venue}} 没有 {{pair}}",
+      "blocked": "{{venue}} 不向你所在的地区提供服务",
+      "unchecked": "切换到 {{venue}}",
+      "noneListed": "已连接的其他交易所都没有这个交易对。"
+    },
     "paneCredentials": {
       "sealedTitle": "解锁以加载 {{venue}} 数据",
       "sealedDescription": "{{venue}} 没有公开行情源。图表、订单簿和报价都由你的 API 密钥推送，而密钥目前处于锁定状态。",

@@ -3759,6 +3759,14 @@
       "desktopOnlyDescription": "Jej API odrzuca żądania z przeglądarki, więc dane rynkowe tej pary są dostępne tylko w wersji desktopowej.",
       "nftDescription": "Żaden dostawca nie zwrócił serii floor dla tej kolekcji. Dodaj klucz OpenSea we wtyczce OpenSea: wykres, drabinka i wstęga pochodzą właśnie stamtąd."
     },
+    "venueCheck": {
+      "checking": "Sprawdzanie, czy {{venue}} ma parę {{pair}}",
+      "listed": "{{venue}} ma parę {{pair}}",
+      "unlisted": "{{venue}} nie ma pary {{pair}}",
+      "blocked": "{{venue}} nie działa w Twoim regionie",
+      "unchecked": "Przełącz na {{venue}}",
+      "noneListed": "Żadna inna podłączona giełda nie ma tej pary."
+    },
     "paneCredentials": {
       "sealedTitle": "Odblokuj, aby wczytać dane {{venue}}",
       "sealedDescription": "{{venue}} nie ma publicznego strumienia cen. Wykres, arkusz zleceń i notowania płyną z Twoich kluczy API, a te są w tej chwili zablokowane.",

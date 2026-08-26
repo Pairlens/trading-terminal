@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "その API はブラウザからのオリジンを拒否するため、このペアの市場データはデスクトップ版からのみ利用できます。",
       "nftDescription": "このコレクションのフロア系列を返したプロバイダーがありません。OpenSea プラグインで OpenSea キーを追加してください。チャート、ラダー、約定履歴はすべてそこから取得されます。"
     },
+    "venueCheck": {
+      "checking": "{{venue}} に {{pair}} があるか確認中",
+      "listed": "{{venue}} に {{pair}} があります",
+      "unlisted": "{{venue}} に {{pair}} はありません",
+      "blocked": "{{venue}} はお住まいの地域では利用できません",
+      "unchecked": "{{venue}} に切り替える",
+      "noneListed": "接続中のほかの取引所にこのペアはありません。"
+    },
     "paneCredentials": {
       "sealedTitle": "{{venue}} のデータを読み込むにはロックを解除してください",
       "sealedDescription": "{{venue}} には公開の価格フィードがありません。チャート、板情報、気配値はあなたの API キーで配信されますが、そのキーが今ロックされています。",

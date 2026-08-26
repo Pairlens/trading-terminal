@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@pairlens/ui/lib/utils'
 import { Button } from '@pairlens/ui/components/ui/button'
 import { PaneDesktopOnly } from '@/components/layout/pane-desktop-only'
+import { VenueAlternatives } from '@/components/layout/venue-alternatives'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { MAX_CHECKED_ALTERNATIVES } from '@/hooks/use-venue-listings'
 import { alternativeVenuesFor } from '@/lib/market-ref/resolve'
 import { usePredictionOutcome } from '@/stores/prediction-directory-store'
 import { usePairAvailabilityStore } from '@/stores/pair-availability-store'
@@ -26,10 +28,14 @@ import { isNftPairKey } from '@/lib/pairs'
  * recovery buttons, because the chart pane beside them already carries the CTA
  * and four copies of it would be noise.
  *
- * The CTA offers to switch to another connector that may carry the pair, which
- * is the common recovery path (e.g. BTC-USDT not on Coinbase → try OKX). We
- * don't claim a specific reason since connectors don't expose an authoritative
- * instrument list; "no data" is the honest, useful message.
+ * The CTA offers to switch to another connector, which is the common recovery
+ * path (e.g. BTC-USDT not on Coinbase → try OKX). It used to offer four venues
+ * of the right asset class and no more than that, so on anything but a major
+ * the recovery was a coin flip that cost a venue switch to lose. Now every
+ * candidate is asked, live, before it is offered: `VenueAlternatives` probes
+ * each one for this pair and marks it. The message itself stays "no data",
+ * which is still the honest reading of the venue in front of you — connectors
+ * publish no authoritative instrument list, only an answer per question.
  *
  * That recovery is WRONG for a prediction outcome and is suppressed for one.
  * `BTC-USDT` is the same asset on fifteen venues; `KXBTCD-26AUG15-T53` is one
@@ -80,7 +86,10 @@ export function PaneDataUnavailable({
   // venue-bound class rather than only for the pinned ones.
   const alternatives =
     onSelectMarket && !isPrediction && !isNft
-      ? alternativeVenuesFor(current, markets).slice(0, 4)
+      ? alternativeVenuesFor(current, markets).slice(
+          0,
+          MAX_CHECKED_ALTERNATIVES,
+        )
       : []
 
   // A venue this build cannot reach is a platform statement, not a listing
@@ -166,26 +175,12 @@ export function PaneDataUnavailable({
         )}
 
         {alternatives.length > 0 && (
-          <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-            {alternatives.map((m) => (
-              <Button
-                key={m.value}
-                variant="outline"
-                size="sm"
-                className="h-7 gap-1.5 px-2 text-xs"
-                onClick={() => onSelectMarket?.(m.value)}
-              >
-                {m.iconUrl && (
-                  <img
-                    src={m.iconUrl}
-                    alt=""
-                    className="size-3.5 rounded-full"
-                  />
-                )}
-                {m.label}
-              </Button>
-            ))}
-          </div>
+          <VenueAlternatives
+            className="mt-4"
+            onSelect={(next) => onSelectMarket?.(next)}
+            pairKey={pairKey}
+            venues={alternatives}
+          />
         )}
       </div>
     </div>
