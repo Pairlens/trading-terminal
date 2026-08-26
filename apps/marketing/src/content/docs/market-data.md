@@ -4,7 +4,7 @@ description: Underneath the chart is a live market of people buying and selling.
 group: traders
 order: 2
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 4 min read
 ---
 
@@ -59,7 +59,12 @@ for four exchanges, side by side, is a perfectly normal layout. See
 [workspace variables](/docs/workspaces#variables).
 
 **A venue that does not list the pair says so.** Rather than spinning forever,
-the panel tells you and offers the exchanges that do carry it.
+the panel tells you, then asks the other exchanges the same question before it
+offers them. Each one is checked live for the pair on screen and wears the
+answer: a spinner while the request is out, a check once the exchange has
+returned data for it, a cross when it has never heard of it. Crossed exchanges
+are not clickable, so the way out of one empty panel is never a click into the
+next one.
 
 **Switching exchange keeps the old data on screen**, dimmed, until the new one's
 first snapshot lands. No blank flash.

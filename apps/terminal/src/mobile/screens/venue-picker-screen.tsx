@@ -26,9 +26,18 @@
  * Hover pre-connect is meaningless on touch, so the warmup fires on
  * `pointerdown` instead — which is roughly a tap's worth of head start on the
  * socket handshake, and the whole of what hovering bought on the desktop.
+ *
+ * Every reachable row is ASKED whether it carries the pair on screen, the
+ * moment the sheet opens (`useVenueListings`, shared with the desktop empty
+ * state). A venue that answers "no such market" is crossed and disabled, the
+ * same treatment a desktop-only venue gets and for the same reason: the list is
+ * the recovery from a pair that would not load, and a picker that answers that
+ * with fourteen equally plausible rows just charges another socket handshake
+ * for the same wall. A venue that could not be asked keeps no mark and stays
+ * tappable — a cross means the venue said no, never that nobody answered.
  */
 import { memo, useCallback } from 'react'
-import { ArrowLeftRight, Check, Eye, Lock } from 'lucide-react'
+import { ArrowLeftRight, Check, Eye, Loader2, Lock, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui'
@@ -40,9 +49,11 @@ import { MobileSheet, useSheetExit } from '../primitives/mobile-sheet'
 import { PRESS } from '../primitives/press'
 import type { LucideIcon } from 'lucide-react'
 import type { MarketOption } from '@/hooks/use-available-markets'
+import type { VenueListingStatus } from '@/hooks/use-venue-listings'
 import type { MobileOverlay } from '../mobile-focus-context'
 import { haptic } from '@/lib/haptics'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useVenueListings } from '@/hooks/use-venue-listings'
 import { useMarketData } from '@/lib/market-data-provider'
 import { useChartConfig } from '@/lib/chart-terminal-context'
 import { venuesForClass } from '@/lib/market-ref/resolve'
@@ -77,6 +88,10 @@ export default memo(function VenuePickerScreen({
   const compatible = venuesForClass(focusedClass, focusedVenue, markets)
   const available = compatible.filter((m) => !m.desktopOnly)
   const desktopOnly = compatible.filter((m) => m.desktopOnly)
+
+  // Only the rows a tap can actually reach are asked: a desktop-only venue
+  // would answer about the browser wall, which its own section already says.
+  const listings = useVenueListings(focusedPair, available)
 
   const handleSelect = useCallback(
     (market: string) => {
@@ -130,6 +145,7 @@ export default memo(function VenuePickerScreen({
           {available.map((venue) => (
             <VenueRow
               key={venue.value}
+              listing={listings[venue.value] ?? 'checking'}
               onSelect={handleSelect}
               onWarmup={handleWarmup}
               selected={venue.value === focusedVenue}
@@ -258,22 +274,28 @@ function VenueMark({ venue }: { venue: MarketOption }) {
 const VenueRow = memo(function VenueRow({
   venue,
   selected,
+  listing,
   onSelect,
   onWarmup,
 }: {
   venue: MarketOption
   selected: boolean
+  /** Live answer to "do you carry the pair on screen?" — see the header. */
+  listing: VenueListingStatus
   onSelect: (market: string) => void
   onWarmup: (market: string) => void
 }) {
   const { availableMarkets } = useMarketData()
   const permission = useVenueTradePermission(venue.value)
+  const refused = listing === 'unlisted' || listing === 'blocked'
 
   return (
     // The warmup rides a wrapper because the row itself is a shared primitive
     // with no pointer props — and the event bubbles out of its button anyway.
-    <div onPointerDown={() => onWarmup(venue.value)}>
+    // A refused row takes no warmup either: there is nothing to connect to.
+    <div onPointerDown={refused ? undefined : () => onWarmup(venue.value)}>
       <MobileRow
+        disabled={refused}
         leading={<VenueMark venue={venue} />}
         onPress={() => onSelect(venue.value)}
         selected={selected}
@@ -285,9 +307,58 @@ const VenueRow = memo(function VenueRow({
         }
         title={venue.label}
         trailing={
-          selected ? <Check className="size-4 text-primary" /> : undefined
+          // The current venue keeps its own tick: "you are here" outranks
+          // "it has the pair", and the row you are standing on demonstrably
+          // does not (that is why the picker is open).
+          selected ? (
+            <Check className="size-4 text-primary" />
+          ) : (
+            <VenueListingMark status={listing} venue={venue.label} />
+          )
         }
       />
     </div>
   )
 })
+
+/**
+ * The trailing listing mark, with its meaning in text for a screen reader:
+ * a bare glyph in a 44px row is shorthand nobody was taught.
+ */
+function VenueListingMark({
+  status,
+  venue,
+}: {
+  status: VenueListingStatus
+  venue: string
+}) {
+  const { t } = useTranslation()
+  const { focusedPair } = useMobileFocus()
+
+  if (status === 'unknown') return null
+
+  const label =
+    status === 'checking'
+      ? t('layout.venueCheck.checking', { pair: focusedPair, venue })
+      : status === 'listed'
+        ? t('layout.venueCheck.listed', { pair: focusedPair, venue })
+        : status === 'blocked'
+          ? t('layout.venueCheck.blocked', { venue })
+          : t('layout.venueCheck.unlisted', { pair: focusedPair, venue })
+
+  return (
+    <span className="flex items-center">
+      <span className="sr-only">{label}</span>
+      {status === 'checking' ? (
+        <Loader2
+          aria-hidden
+          className="size-3.5 animate-spin text-muted-foreground/70"
+        />
+      ) : status === 'listed' ? (
+        <Check aria-hidden className="size-3.5 text-up" />
+      ) : (
+        <X aria-hidden className="size-3.5 text-muted-foreground" />
+      )}
+    </span>
+  )
+}

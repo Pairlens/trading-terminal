@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "其 API 拒絕瀏覽器來源，因此該交易對的行情資料只能透過桌面版取得。",
       "nftDescription": "沒有任何提供方回傳該系列的地板價序列。請在 OpenSea 外掛中加入 OpenSea 金鑰：圖表、階梯與成交明細都來自這裡。"
     },
+    "venueCheck": {
+      "checking": "正在檢查 {{venue}} 是否有 {{pair}}",
+      "listed": "{{venue}} 有 {{pair}}",
+      "unlisted": "{{venue}} 沒有 {{pair}}",
+      "blocked": "{{venue}} 不提供你所在地區的服務",
+      "unchecked": "切換到 {{venue}}",
+      "noneListed": "已連接的其他交易所都沒有這個交易對。"
+    },
     "paneCredentials": {
       "sealedTitle": "解鎖以載入 {{venue}} 資料",
       "sealedDescription": "{{venue}} 沒有公開行情來源。圖表、掛單簿與報價都由你的 API 金鑰推送，而金鑰目前處於鎖定狀態。",

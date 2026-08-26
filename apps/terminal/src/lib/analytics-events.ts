@@ -402,6 +402,19 @@ export interface AnalyticsEvents {
    */
   discovery_venue_changed: { venue: string; section: string }
   /**
+   * A venue offered as the way out of "no data for this pair" was taken, and
+   * what the live listing check had said about it at the moment of the click.
+   *
+   * The row used to be a guess, and the failure mode it produced is invisible
+   * from any single event: the user switches venue, hits the same empty state,
+   * switches again. `status` is what makes that measurable: `listed` means the
+   * venue answered with candles before the click, `unknown` means it could not
+   * be asked (no history provider, or a rate limit), and a run of `unknown`
+   * clicks followed by another empty state is the check failing to do its job.
+   * Both fields name our own surfaces: a connector id and a probe verdict.
+   */
+  venue_alternative_taken: { venue: string; status: 'listed' | 'unknown' }
+  /**
    * The on-chain board could not draw a chain's pools, and why.
    *
    * The question this answers is whether the DEX Discovery board is usable in

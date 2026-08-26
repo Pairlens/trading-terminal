@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "Ihre API lehnt Browser-Ursprünge ab, daher sind Marktdaten für dieses Paar nur im Desktop-Build erreichbar.",
       "nftDescription": "Kein Provider hat eine Floor-Serie für diese Kollektion geliefert. Hinterlege einen OpenSea-Key im OpenSea-Plugin: Chart, Ladder und Tape kommen alle von dort."
     },
+    "venueCheck": {
+      "checking": "Prüfe, ob {{venue}} {{pair}} listet",
+      "listed": "{{venue}} listet {{pair}}",
+      "unlisted": "{{venue}} listet {{pair}} nicht",
+      "blocked": "{{venue}} ist in deiner Region nicht verfügbar",
+      "unchecked": "Zu {{venue}} wechseln",
+      "noneListed": "Keine andere verbundene Plattform führt dieses Paar."
+    },
     "paneCredentials": {
       "sealedTitle": "Entsperren, um {{venue}}-Daten zu laden",
       "sealedDescription": "{{venue}} hat keinen öffentlichen Kursfeed. Chart, Orderbuch und Kurse laufen über deine API-Schlüssel, und die sind gerade gesperrt.",

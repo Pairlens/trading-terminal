@@ -19,6 +19,10 @@
  * sample: the list IS the recovery, and picking for the user only hides the
  * one they wanted. Other classes are not a narrower recovery, they are the
  * same wall with a different name on it.
+ *
+ * When the caller names the pair, each of those venues is asked live whether it
+ * carries it (`VenueAlternatives`), so the way out of one wall can't be a click
+ * into the next one.
  */
 import { useState } from 'react'
 import { Monitor } from 'lucide-react'
@@ -36,14 +40,22 @@ import {
 import { DesktopDownloadDialog } from '@/components/feedback/desktop-download-dialog'
 import { OS_ICON } from '@/components/feedback/os-icons'
 import { detectOs } from '@/lib/desktop-download'
+import { VenueAlternatives } from '@/components/layout/venue-alternatives'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
 import { alternativeVenuesFor } from '@/lib/market-ref/resolve'
 
 export function DesktopOnlyState({
   market,
+  pairKey,
   onSelectMarket,
 }: {
   market: string
+  /**
+   * The pair on screen, when the caller knows it. With it the alternatives are
+   * checked against each venue before they are offered; without it they are
+   * listed as they always were, since there is no question to ask.
+   */
+  pairKey?: string
   onSelectMarket: (market: string) => void
 }) {
   const { t } = useTranslation()
@@ -102,26 +114,35 @@ export function DesktopOnlyState({
               </span>
               <span className="h-px flex-1 bg-border" />
             </div>
-            <div className="mt-4 flex flex-wrap justify-center gap-1.5">
-              {alternatives.map((m) => (
-                <Button
-                  key={m.value}
-                  variant="outline"
-                  size="sm"
-                  className="h-8 gap-1.5 px-2.5 text-xs"
-                  onClick={() => onSelectMarket(m.value)}
-                >
-                  {m.iconUrl && (
-                    <img
-                      src={m.iconUrl}
-                      alt=""
-                      className="size-4 rounded-full"
-                    />
-                  )}
-                  {m.label}
-                </Button>
-              ))}
-            </div>
+            {pairKey ? (
+              <VenueAlternatives
+                className="mt-4"
+                onSelect={onSelectMarket}
+                pairKey={pairKey}
+                venues={alternatives}
+              />
+            ) : (
+              <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                {alternatives.map((m) => (
+                  <Button
+                    key={m.value}
+                    variant="outline"
+                    size="sm"
+                    className="h-8 gap-1.5 px-2.5 text-xs"
+                    onClick={() => onSelectMarket(m.value)}
+                  >
+                    {m.iconUrl && (
+                      <img
+                        src={m.iconUrl}
+                        alt=""
+                        className="size-4 rounded-full"
+                      />
+                    )}
+                    {m.label}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </Empty>

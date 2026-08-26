@@ -2680,6 +2680,14 @@
       "desktopOnlyDescription": "Its API refuses browser origins, so market data for this pair is only reachable from the desktop build.",
       "nftDescription": "No provider returned a floor series for this collection. Add an OpenSea key on the OpenSea plugin: the chart, the ladder and the tape all come from it."
     },
+    "venueCheck": {
+      "checking": "Checking whether {{venue}} lists {{pair}}",
+      "listed": "{{venue}} lists {{pair}}",
+      "unlisted": "{{venue}} doesn’t list {{pair}}",
+      "blocked": "{{venue}} doesn’t serve your region",
+      "unchecked": "Switch to {{venue}}",
+      "noneListed": "No other connected venue carries this pair."
+    },
     "paneCredentials": {
       "sealedTitle": "Unlock to load {{venue}} data",
       "sealedDescription": "{{venue}} has no public price feed. Your API keys are what stream the chart, the book and quotes, and they are locked right now.",

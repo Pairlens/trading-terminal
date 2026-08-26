@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "Su API rechaza los orígenes del navegador, así que los datos de mercado de este par solo son accesibles desde la app de escritorio.",
       "nftDescription": "Ningún proveedor devolvió una serie de precio suelo para esta colección. Añade una clave de OpenSea en el plugin de OpenSea: el gráfico, la escalera y la cinta salen todos de ahí."
     },
+    "venueCheck": {
+      "checking": "Comprobando si {{venue}} lista {{pair}}",
+      "listed": "{{venue}} lista {{pair}}",
+      "unlisted": "{{venue}} no lista {{pair}}",
+      "blocked": "{{venue}} no da servicio en tu región",
+      "unchecked": "Cambiar a {{venue}}",
+      "noneListed": "Ninguna otra plataforma conectada tiene este par."
+    },
     "paneCredentials": {
       "sealedTitle": "Desbloquea para cargar los datos de {{venue}}",
       "sealedDescription": "{{venue}} no tiene un feed de precios público. Tus claves API son las que transmiten el gráfico, el libro y las cotizaciones, y ahora mismo están bloqueadas.",

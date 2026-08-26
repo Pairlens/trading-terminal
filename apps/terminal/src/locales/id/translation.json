@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "API-nya menolak origin browser, sehingga data pasar untuk pasangan ini hanya bisa diakses dari versi desktop.",
       "nftDescription": "Tidak ada provider yang mengembalikan seri harga floor untuk koleksi ini. Tambahkan kunci OpenSea di plugin OpenSea: chart, tangga, dan pita semuanya berasal dari sana."
     },
+    "venueCheck": {
+      "checking": "Memeriksa apakah {{venue}} punya {{pair}}",
+      "listed": "{{venue}} punya {{pair}}",
+      "unlisted": "{{venue}} tidak punya {{pair}}",
+      "blocked": "{{venue}} tidak melayani wilayahmu",
+      "unchecked": "Pindah ke {{venue}}",
+      "noneListed": "Tidak ada bursa terhubung lain yang punya pasangan ini."
+    },
     "paneCredentials": {
       "sealedTitle": "Buka kunci untuk memuat data {{venue}}",
       "sealedDescription": "{{venue}} tidak punya umpan harga publik. Grafik, order book, dan kuotasi dialirkan lewat kunci API Anda, dan kunci itu sedang terkunci.",
