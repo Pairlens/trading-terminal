@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "워크스페이스 레이아웃에 추가할 패널을 선택하세요.",
     "added": "추가됨",
-    "desktopOnly": "데스크톱 전용"
+    "desktopOnly": "데스크톱 전용",
+    "all": "모든 패널",
+    "count_one": "패널 {{count}}개",
+    "count_other": "패널 {{count}}개",
+    "add": "패널 추가",
+    "sampleData": "샘플 데이터이며 실제 패널이 아닙니다.",
+    "alreadyOnBoard": "이미 이 워크스페이스에 있습니다.",
+    "desktopOnlyDetail": "데스크톱 앱에서만 작동합니다.",
+    "source": "{{plugin}} 제공",
+    "needs": {
+      "title": "필요한 것",
+      "pair": "워크스페이스의 활성 페어를 따릅니다.",
+      "wallet": "연결된 계정이 필요합니다.",
+      "desktop": "데스크톱 앱에서만 실행됩니다.",
+      "singleton": "워크스페이스당 하나.",
+      "access": "{{level}}에 포함됩니다.",
+      "capability": "{{capability}}를 제공하는 플러그인이 필요합니다."
+    },
+    "noMatchHint": "일치하는 항목이 없습니다. 더 짧은 단어로 검색하거나 필터를 해제하세요."
   },
   "layout": {
     "workspaces": "워크스페이스",

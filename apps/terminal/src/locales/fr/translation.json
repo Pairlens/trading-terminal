@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "Choisissez un panneau à ajouter à la mise en page de votre espace de travail.",
     "added": "Ajouté",
-    "desktopOnly": "Bureau uniquement"
+    "desktopOnly": "Bureau uniquement",
+    "all": "Tous les panneaux",
+    "count_one": "{{count}} panneau",
+    "count_other": "{{count}} panneaux",
+    "add": "Ajouter le panneau",
+    "sampleData": "Données d'exemple, pas un panneau en direct.",
+    "alreadyOnBoard": "Déjà dans cet espace de travail.",
+    "desktopOnlyDetail": "Fonctionne uniquement dans l'app de bureau.",
+    "source": "De {{plugin}}",
+    "needs": {
+      "title": "Ce qu'il lui faut",
+      "pair": "Suit la paire active de l'espace de travail.",
+      "wallet": "Nécessite un compte connecté.",
+      "desktop": "Fonctionne uniquement dans l'app de bureau.",
+      "singleton": "Un seul par espace de travail.",
+      "access": "Inclus avec {{level}}.",
+      "capability": "Nécessite un plugin fournissant {{capability}}."
+    },
+    "noMatchHint": "Aucun résultat. Essayez un mot plus court, ou retirez le filtre."
   },
   "layout": {
     "workspaces": "Espaces de travail",

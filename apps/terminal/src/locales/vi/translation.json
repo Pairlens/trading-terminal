@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "Chọn một panel để thêm vào bố cục không gian làm việc của bạn.",
     "added": "Đã thêm",
-    "desktopOnly": "Chỉ trên Desktop"
+    "desktopOnly": "Chỉ trên Desktop",
+    "all": "Tất cả bảng",
+    "count_one": "{{count}} bảng",
+    "count_other": "{{count}} bảng",
+    "add": "Thêm bảng",
+    "sampleData": "Dữ liệu mẫu, không phải bảng trực tiếp.",
+    "alreadyOnBoard": "Đã có trong không gian làm việc này.",
+    "desktopOnlyDetail": "Chỉ hoạt động trong ứng dụng desktop.",
+    "source": "Từ {{plugin}}",
+    "needs": {
+      "title": "Cần những gì",
+      "pair": "Theo cặp đang hoạt động của không gian làm việc.",
+      "wallet": "Cần một tài khoản đã kết nối.",
+      "desktop": "Chỉ chạy trong ứng dụng desktop.",
+      "singleton": "Một cái cho mỗi không gian làm việc.",
+      "access": "Bao gồm trong {{level}}.",
+      "capability": "Cần một plugin cung cấp {{capability}}."
+    },
+    "noMatchHint": "Không có kết quả. Thử từ ngắn hơn, hoặc xoá bộ lọc."
   },
   "layout": {
     "workspaces": "Không gian làm việc",

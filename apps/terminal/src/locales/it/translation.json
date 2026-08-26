@@ -3633,7 +3633,25 @@
   "addPaneDialog": {
     "description": "Scegli un pannello da aggiungere al layout del tuo spazio di lavoro.",
     "added": "Aggiunto",
-    "desktopOnly": "Solo desktop"
+    "desktopOnly": "Solo desktop",
+    "all": "Tutti i pannelli",
+    "count_one": "{{count}} pannello",
+    "count_other": "{{count}} pannelli",
+    "add": "Aggiungi pannello",
+    "sampleData": "Dati di esempio, non un pannello dal vivo.",
+    "alreadyOnBoard": "Già presente in questo workspace.",
+    "desktopOnlyDetail": "Funziona solo nell'app desktop.",
+    "source": "Da {{plugin}}",
+    "needs": {
+      "title": "Cosa serve",
+      "pair": "Segue la coppia attiva del workspace.",
+      "wallet": "Richiede un account collegato.",
+      "desktop": "Funziona solo nell'app desktop.",
+      "singleton": "Uno per workspace.",
+      "access": "Incluso con {{level}}.",
+      "capability": "Richiede un plugin che fornisca {{capability}}."
+    },
+    "noMatchHint": "Nessun risultato. Prova una parola più corta o togli il filtro."
   },
   "layout": {
     "workspaces": "Spazi di lavoro",

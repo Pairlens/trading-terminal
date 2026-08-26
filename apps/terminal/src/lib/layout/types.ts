@@ -1,5 +1,7 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
+import type { LocalizedText } from '@pairlens/shared/localized-text'
+
 export type PaneType = string
 
 export type PaneCategory = string
@@ -7,7 +9,16 @@ export type PaneCategory = string
 export type PaneDefinition = {
   type: string
   labelKey: string // i18n translation key (resolved via t() at render time)
+  /**
+   * The manifest's own inline strings, kept beside the catalog keys because a
+   * third-party plugin cannot add a catalog entry. Without them the picker
+   * rendered `plugin.acme.flow` where a name belonged, and a panel nobody can
+   * name is a panel nobody can search for.
+   */
+  label?: LocalizedText
+  description?: LocalizedText
   icon: string // lucide icon name
+  preview?: string // PanePreviewArchetype id — the schematic the picker draws
   descriptionKey?: string // i18n translation key for pane description
   category?: PaneCategory
   minHeight?: number // px

@@ -2644,7 +2644,25 @@
   "addPaneDialog": {
     "description": "Choose a pane to add to your workspace layout.",
     "added": "Added",
-    "desktopOnly": "Desktop only"
+    "desktopOnly": "Desktop only",
+    "all": "All panels",
+    "count_one": "{{count}} panel",
+    "count_other": "{{count}} panels",
+    "add": "Add panel",
+    "sampleData": "Sample data, not a live panel.",
+    "alreadyOnBoard": "Already on this workspace.",
+    "desktopOnlyDetail": "Only works in the desktop app.",
+    "source": "From {{plugin}}",
+    "needs": {
+      "title": "What it needs",
+      "pair": "Follows the workspace's active pair.",
+      "wallet": "Needs a connected account.",
+      "desktop": "Runs in the desktop app only.",
+      "singleton": "One per workspace.",
+      "access": "Included with {{level}}.",
+      "capability": "Needs a plugin that serves {{capability}}."
+    },
+    "noMatchHint": "Nothing matches. Try a shorter word, or clear the filter."
   },
   "layout": {
     "workspaces": "Workspaces",

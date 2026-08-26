@@ -415,6 +415,20 @@ export interface AnalyticsEvents {
   /** Layout panes added/removed — which surfaces users actually assemble. */
   panel_added: { pane_type: string }
   panel_removed: Record<string, never>
+  /**
+   * A panel was committed from the add-panel dialog. Separate from
+   * `panel_added`, which also counts panels arriving from templates, presets
+   * and the assistant — this one is only the picker, and it exists to answer
+   * whether the picker's own machinery earns its keep: `searched` says whether
+   * anyone types rather than browses, and `rank` is the zero-based row the
+   * user committed from, which is the ranking's own score. The query text is
+   * deliberately absent: it is free text the user typed.
+   */
+  panel_picker_committed: {
+    pane_type: string
+    searched: boolean
+    rank: number
+  }
 
   // ── DEX liquidity & bridging ──────────────────────────────────────
   /** A cross-chain bridge transfer was submitted and signed. Chains and the
