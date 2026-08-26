@@ -15,6 +15,11 @@ import {
   Vote,
 } from 'lucide-react'
 import { registerToken } from '@pairlens/market-engine/token-directory'
+import {
+  INSTRUMENT_CLASSES,
+  isVenueBoundClass,
+  normalizeInstrumentClass,
+} from '@pairlens/shared/market-ref'
 import type { LucideIcon } from 'lucide-react'
 
 import type { Instrument } from '@pairlens/shared/instrument-types'
@@ -22,6 +27,9 @@ import type {
   InstrumentClass,
   InstrumentRef,
 } from '@pairlens/shared/market-ref'
+import { sameAssetInClass } from '@/lib/market-ref/cross-class'
+import { classFromSymbolShape } from '@/lib/market-ref/entry'
+import { splitPairAssets } from '@/lib/pairs'
 import {
   lookupPredictionEvent,
   lookupPredictionOutcome,
@@ -82,6 +90,83 @@ export const ASSET_CLASS_FILTER_FOR: Record<InstrumentClass, AssetClassFilter> =
     prediction: 'prediction',
     nft: 'nft',
   }
+
+/**
+ * The catalog's own name for a row's asset class, from whatever the row says.
+ *
+ * Three dialects reach the pickers and comparing them raw is a bug that has
+ * shipped twice: the chart route hands down `'spot'`, the catalog rows say
+ * `'crypto'`, and `'spot' === 'crypto'` is false, so the switcher's "narrow
+ * the shortlist to the class being charted" filter matched NOTHING and fell
+ * through to its escape hatch. A crypto chart's popular list opened on AAPL
+ * and MSFT.
+ *
+ * Returning the FILTER id rather than the `InstrumentClass` is deliberate: it
+ * is the vocabulary the catalog rows are written in, and it collapses
+ * `memecoin` onto `dex`, which is how the catalog files one.
+ */
+export function catalogClassOf(
+  symbol: string,
+  assetClass?: string,
+): AssetClassFilter {
+  return ASSET_CLASS_FILTER_FOR[
+    normalizeInstrumentClass(assetClass) ?? classFromSymbolShape(symbol)
+  ]
+}
+
+/**
+ * The pair on screen, as its other asset class.
+ *
+ * The question `crossClassVenuesFor` answers for venues, asked about the
+ * instrument instead. A spot pair and its linear perpetual are one asset under
+ * two ids, so a switcher opened on BTC-USDT can offer BTC-USDT-USDT outright
+ * rather than making the user know to go and search for it. One class or none,
+ * for the same reason: `sameAssetInClass` maps spot to perp and back and
+ * refuses everything else, so a stock, a token and an event contract all come
+ * back null.
+ *
+ * The catalog's own row wins when it has one, because it carries the name, the
+ * logo and the rank. Otherwise the row is built from the key, which is the
+ * point of deriving the counterpart rather than looking it up: a pair the
+ * catalog has not paged in, or one no discovery provider serves at all
+ * (standalone builds have none for perps), still gets offered. Whether a venue
+ * actually lists it is the destination's question, and its empty state answers
+ * it with alternatives — the same trade the venue picker makes when it offers
+ * five futures venues without knowing which of them carries the contract.
+ */
+export function crossClassPairFor(
+  ref: { cls: InstrumentClass; id: string },
+  bySymbol: ReadonlyMap<string, PairEntry>,
+): { cls: InstrumentClass; entry: PairEntry } | null {
+  if (isVenueBoundClass(ref.cls)) return null
+
+  for (const cls of INSTRUMENT_CLASSES) {
+    if (cls === ref.cls) continue
+    const id = sameAssetInClass(ref.id, ref.cls, cls)
+    if (!id) continue
+    const known = bySymbol.get(id)
+    if (known) return { cls, entry: known }
+    // `splitPairAssets` and not a first-dash split: a perp key has three legs
+    // and the naive read gives a quote of 'USDT-USDT'.
+    const { base, quote } = splitPairAssets(id)
+    return {
+      cls,
+      entry: {
+        id,
+        symbol: id,
+        name: base,
+        base,
+        quote,
+        // Spelled the catalog's way, which is what the venue resolver and the
+        // ref builder both normalize from.
+        assetClass: ASSET_CLASS_FILTER_FOR[cls],
+        categories: [],
+        rank: Number.MAX_SAFE_INTEGER,
+      },
+    }
+  }
+  return null
+}
 
 export type PairCategory =
   | 'layer1'
@@ -288,7 +373,18 @@ export function pinSelectedEntry(entry: PairEntry): void {
  * standalone build never fetched. A picker that silently drops what you were
  * just looking at is worse than one that renders it from its own key.
  */
-export function synthesizeEntry(symbol: string): PairEntry {
+export function synthesizeEntry(
+  symbol: string,
+  /**
+   * The class the caller already knows, when it does. A stored ref carries
+   * one and it has to survive the trip through this function: a row with no
+   * class is routed by `resolveMarket(undefined)`, which answers with the
+   * user's preferred venue whatever the row is — so a perpetual in the
+   * recents list resolved to a spot CEX and wore a "not on OKX" mark about a
+   * contract that venue was never going to list.
+   */
+  cls?: InstrumentClass,
+): PairEntry {
   const idx = symbol.indexOf('-')
   const base = idx === -1 ? symbol : symbol.slice(0, idx)
   const quote = idx === -1 ? '' : symbol.slice(idx + 1)
@@ -298,6 +394,7 @@ export function synthesizeEntry(symbol: string): PairEntry {
     name: base,
     base,
     quote,
+    ...(cls ? { assetClass: ASSET_CLASS_FILTER_FOR[cls] } : {}),
     categories: [],
     rank: Number.MAX_SAFE_INTEGER,
   }
@@ -388,7 +485,7 @@ export function pairEntryForRef(
     }
   }
 
-  return bySymbol.get(ref.id) ?? synthesizeEntry(ref.id)
+  return bySymbol.get(ref.id) ?? synthesizeEntry(ref.id, ref.cls)
 }
 
 /** `0x532f…-WETH` → `['0x532f…', 'WETH']`. The base is the address. */

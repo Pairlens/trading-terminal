@@ -140,12 +140,13 @@ perpetual can never be mistaken for spot.
 The pair picker grows a **Futures** tab. Contract lists come from each exchange's
 own table, so the tab fills in as you connect venues.
 
-You can also arrive from spot. With BTC-USDT on screen, open the venue chip:
-under the exchange list sits a **PERP** group headed by BTC-USDT-USDT, holding
-all five futures venues. Pick one and the terminal adds the settle leg, swaps
-the board for the perps one, and opens the contract. The same group is in
-<kbd>⌘K</kbd> and in the phone's venue sheet, and it works in reverse from a
-contract back to the spot pair.
+You can also arrive from spot, from either chip in the header. Open the venue
+chip and under the exchange list sits a **PERP** group headed by BTC-USDT-USDT,
+holding all five futures venues; open the pair chip and an **Also as PERP** row
+sits under your recents with the contract itself. Either one adds the settle
+leg, swaps the board for the perps one, and opens the contract. Both are on the
+phone too, and both work in reverse from a contract back to the spot pair.
+<kbd>⌘K</kbd> takes the venue half of that.
 
 ## The funding scanners
 

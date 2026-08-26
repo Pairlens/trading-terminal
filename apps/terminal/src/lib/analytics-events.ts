@@ -96,6 +96,11 @@ export interface AnalyticsEvents {
    * high stranded rate from `search` says the omni search's venue rows should
    * name what they trade before the click rather than after it.
    *
+   * `source` names every surface that can cross the line, not only the venue
+   * ones the event is named after: the pair pickers offer the same asset under
+   * its other class too, and a single event is what lets "did anyone use the
+   * new row" be answered against the path that already existed.
+   *
    * `asset_class` is the class the instrument ends up in (or the venue's own,
    * when it went nowhere), never the chart's previous one.
    */
@@ -103,7 +108,12 @@ export interface AnalyticsEvents {
     venue: string
     asset_class: string
     outcome: 'moved' | 'stranded'
-    source: 'search' | 'picker' | 'mobile-picker'
+    source:
+      | 'search'
+      | 'picker'
+      | 'mobile-picker'
+      | 'pair-picker'
+      | 'mobile-pair-picker'
   }
   /**
    * Which answer of a prediction event the user pointed the ticket at, and how

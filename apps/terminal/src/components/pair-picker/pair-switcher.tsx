@@ -29,10 +29,16 @@ import {
 } from '@pairlens/ui/components/ui/popover'
 import { Skeleton } from '@pairlens/ui/components/ui/skeleton'
 
+import { normalizeInstrumentClass } from '@pairlens/shared/market-ref'
+import type { InstrumentClass } from '@pairlens/shared/market-ref'
+
 import type { PairEntry } from '@/components/pair-picker/pair-picker-data'
 import { HEADER_CHIP } from '@/components/chrome/header-chrome'
 import { PairLogo, PairSymbol } from '@/components/pair-picker/pair-avatar'
 import {
+  ASSET_CLASS_FILTER_FOR,
+  catalogClassOf,
+  crossClassPairFor,
   instrumentToPairEntry,
   pinSelectedEntry,
 } from '@/components/pair-picker/pair-picker-data'
@@ -45,7 +51,9 @@ import { useMarketInstruments } from '@/hooks/use-market-instruments'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { useRecentPairs } from '@/lib/recent-tickers'
 import { usePreferredMarketResolver } from '@/hooks/use-preferred-market'
-import { entryToMarketRef } from '@/lib/market-ref/entry'
+import { classFromSymbolShape, entryToMarketRef } from '@/lib/market-ref/entry'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
+import { track } from '@/lib/analytics-events'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { usePairlens } from '@/lib/pairlens-provider'
 import { useWatchlistsStore } from '@/stores/watchlists-store'
@@ -100,7 +108,7 @@ function classOf(symbol: string, assetClass?: string): string {
  * unpinned one falls through to the BASE-QUOTE reading, which is at worst the
  * bare key it already was.
  */
-function synthesizeEntry(symbol: string): PairEntry {
+function synthesizeEntry(symbol: string, cls?: InstrumentClass): PairEntry {
   const event = lookupPredictionEvent(symbol)
   if (event) {
     return {
@@ -149,6 +157,10 @@ function synthesizeEntry(symbol: string): PairEntry {
     name: base,
     base,
     quote,
+    // The stored ref's class, when the caller has one. Dropping it here is
+    // what sent a perpetual in the recents list to `resolveMarket(undefined)`,
+    // which answers with the preferred venue whatever the row is.
+    ...(cls ? { assetClass: ASSET_CLASS_FILTER_FOR[cls] } : {}),
     categories: [],
     rank: Number.MAX_SAFE_INTEGER,
   }
@@ -225,10 +237,12 @@ export function PairSwitcher({
   const recentEntries = useMemo(
     () =>
       recentSymbols
-        .map((ref) => ref.id)
-        .filter((s) => s !== pairKey)
+        .filter((ref) => ref.id !== pairKey)
         .slice(0, MAX_RECENT)
-        .map((s) => pairsBySymbol.get(s) ?? synthesizeEntry(s)),
+        .map(
+          (ref) =>
+            pairsBySymbol.get(ref.id) ?? synthesizeEntry(ref.id, ref.cls),
+        ),
     [recentSymbols, pairKey, pairsBySymbol],
   )
 
@@ -237,9 +251,16 @@ export function PairSwitcher({
   // class (BTC-USDT and AAPL are both rank 1), so an unnarrowed list
   // interleaves equities into a crypto trader's shortlist and vice versa.
   // Anything already offered as a recent is dropped so no pair is listed twice.
+  //
+  // The comparison runs through `ASSET_CLASS_FILTER_FOR` because the two sides
+  // speak different dialects and used to be compared raw: the route hands down
+  // `'spot'` while the catalog rows say `'crypto'`, so NOTHING matched, the
+  // list fell through to its own escape hatch and a crypto chart's shortlist
+  // opened on AAPL and MSFT. It also collapses `memecoin` onto `dex`, which is
+  // how the catalog files one.
   const popularEntries = useMemo(() => {
     const skip = new Set([pairKey, ...recentEntries.map((p) => p.symbol)])
-    const wanted = classOf(pairKey, assetClass)
+    const wanted = catalogClassOf(pairKey, assetClass)
     const ranked = [...pairsBySymbol.values()]
       .filter((p) => !skip.has(p.symbol))
       .sort((a, b) => {
@@ -247,12 +268,22 @@ export function PairSwitcher({
         return a.rank - b.rank
       })
     const sameClass = ranked.filter(
-      (p) => classOf(p.symbol, p.assetClass) === wanted,
+      (p) => catalogClassOf(p.symbol, p.assetClass) === wanted,
     )
     // A venue serving only the other class (an equities-only build, a DEX with
     // no catalog entry for what's charted) still gets a list rather than a gap.
     return (sameClass.length > 0 ? sameClass : ranked).slice(0, MAX_POPULAR)
   }, [pairsBySymbol, recentEntries, pairKey, assetClass])
+
+  // The same pair under its other class, when it has one. `classOf` cannot
+  // answer this: its shape fallback calls anything with a dash 'crypto', so a
+  // perp key reads as spot and the counterpart would come back as itself.
+  // `classFromSymbolShape` knows the third leg.
+  const crossClass = useMemo(() => {
+    const cls =
+      normalizeInstrumentClass(assetClass) ?? classFromSymbolShape(pairKey)
+    return crossClassPairFor({ cls, id: pairKey }, pairsBySymbol)
+  }, [assetClass, pairKey, pairsBySymbol])
 
   const sections = useMemo<Array<Section>>(() => {
     if (hasQuery) {
@@ -269,6 +300,23 @@ export function PairSwitcher({
         items: recentEntries,
       })
     }
+    // After the recents, so Enter on an untouched box still takes the pair you
+    // were last on, and before the popular list, which is eight rows of
+    // things that have nothing to do with what is on screen. Skipped entirely
+    // when the recents already hold it: a trader who just came from the perp
+    // does not need it named twice, one row apart.
+    const inRecents = recentEntries.some(
+      (p) => p.symbol === crossClass?.entry.symbol,
+    )
+    if (crossClass && !inRecents) {
+      out.push({
+        id: 'cross-class',
+        label: t('pairPicker.otherClass', {
+          cls: t(assetClassVisual(crossClass.cls).labelKey),
+        }),
+        items: [crossClass.entry],
+      })
+    }
     if (popularEntries.length > 0) {
       out.push({
         id: 'popular',
@@ -277,7 +325,7 @@ export function PairSwitcher({
       })
     }
     return out
-  }, [hasQuery, showResults, recentEntries, popularEntries, t])
+  }, [hasQuery, showResults, recentEntries, crossClass, popularEntries, t])
 
   const flatItems = useMemo(() => sections.flatMap((s) => s.items), [sections])
 
@@ -330,6 +378,14 @@ export function PairSwitcher({
       if (cls) {
         setAssetClassMap((prev) => ({ ...prev, [pair.symbol]: cls }))
       }
+      if (crossClass && pair.symbol === crossClass.entry.symbol) {
+        track('venue_class_switched', {
+          venue: resolveMarket(pair.assetClass),
+          asset_class: crossClass.cls,
+          outcome: 'moved',
+          source: 'pair-picker',
+        })
+      }
       setOpen(false)
       setSearchValue('')
       // The route records the visit itself (every entry point must feed the
@@ -338,7 +394,7 @@ export function PairSwitcher({
         chartLinkProps(entryToMarketRef(pair, resolveMarket(pair.assetClass))),
       )
     },
-    [navigate, setAssetClassMap],
+    [navigate, setAssetClassMap, crossClass, resolveMarket],
   )
 
   const handleKeyDown = useCallback(

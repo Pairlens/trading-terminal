@@ -5807,6 +5807,7 @@
   },
   "pairPicker": {
     "popular": "人気",
+    "otherClass": "{{cls}} としても",
     "switchPair": "ペアを変更",
     "noPairsFound": "ペアが見つかりません。",
     "startTyping": "入力を開始してペアを検索してください。"

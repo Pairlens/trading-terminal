@@ -5807,6 +5807,7 @@
   },
   "pairPicker": {
     "popular": "Populer",
+    "otherClass": "Juga sebagai {{cls}}",
     "switchPair": "Ganti pair",
     "noPairsFound": "Tidak ada pair yang ditemukan.",
     "startTyping": "Mulai mengetik untuk mencari pair."

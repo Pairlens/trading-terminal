@@ -5807,6 +5807,7 @@
   },
   "pairPicker": {
     "popular": "Popüler",
+    "otherClass": "{{cls}} olarak da",
     "switchPair": "Parite değiştir",
     "noPairsFound": "Parite bulunamadı.",
     "startTyping": "Parite aramak için yazmaya başla."

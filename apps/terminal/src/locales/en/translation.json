@@ -4818,6 +4818,7 @@
   },
   "pairPicker": {
     "popular": "Popular",
+    "otherClass": "Also as {{cls}}",
     "switchPair": "Change pair",
     "noPairsFound": "No pairs found.",
     "startTyping": "Start typing to search pairs."

@@ -5807,6 +5807,7 @@
   },
   "pairPicker": {
     "popular": "熱門",
+    "otherClass": "也可作為 {{cls}}",
     "switchPair": "更換交易對",
     "noPairsFound": "找不到交易對。",
     "startTyping": "開始輸入以搜尋交易對。"

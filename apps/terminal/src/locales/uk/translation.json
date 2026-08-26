@@ -5919,6 +5919,7 @@
   },
   "pairPicker": {
     "popular": "Популярні",
+    "otherClass": "Також як {{cls}}",
     "switchPair": "Змінити пару",
     "noPairsFound": "Пар не знайдено.",
     "startTyping": "Почніть вводити текст, щоб знайти пари."
