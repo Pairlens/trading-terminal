@@ -4,7 +4,7 @@ description: The same web address on a phone opens a chart-first trading termina
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 9 min read
 ---
 
@@ -42,8 +42,11 @@ exchange does not list and it tells you before you commit, then switches
 exchange for you.
 
 **The venue chip** shows which exchange you are on and how the connection is
-doing: **LIVE** when prices are streaming, **OFFLINE** for a venue your phone
-cannot reach. An eye icon means you can watch but not trade there.
+doing: **LIVE** when prices are streaming, **DELAYED** when they have fallen
+behind their own rhythm and the chart you are looking at is no longer current,
+**OFFLINE** for a venue your phone cannot reach. Delayed is the state that
+matters on a phone, where one bar of signal keeps the socket open and the data
+late. An eye icon means you can watch but not trade there.
 
 **The avatar** opens Settings.
 

@@ -309,6 +309,16 @@ export function useCandleStream(
     // fired timeout can't contradict data that has since arrived.
     let resolved = false
     let throttleDeferrals = 0
+    // A probe that never reached the venue answers nothing about the pair, and
+    // unlike a throttle it leaves no shared record the backstop below can
+    // consult. So it leaves one here. Without it a transport failure bought
+    // exactly one 5s deferral and then the backstop declared the pair
+    // unlisted: cut the network under a chart that had just subscribed and
+    // six seconds later every pane read "not available on this venue", a
+    // confident wrong answer published to all of them, where the honest one is
+    // that the link is down. Measured 2026-08-26 against OKX BTC-USDT with
+    // Chrome offline emulation.
+    let probeBlockedByTransport = false
 
     // Backstop for venues the probe below can't reach (no history endpoint of
     // their own, or a REST call that never settles).
@@ -325,10 +335,16 @@ export function useCandleStream(
       clearNoDataTimer()
       noDataTimer = setTimeout(() => {
         noDataTimer = null
-        // Silence from a data provider that is cooling off is not an answer
-        // about the pair. Only the SILENCE path defers: a venue that answered
-        // the probe, emptily or with a refusal, has told us something.
-        if (isProviderThrottled() && deferVerdict()) return
+        // Silence from a data provider that is cooling off, or from a link
+        // that is down, is not an answer about the pair. Only the SILENCE path
+        // defers: a venue that answered the probe, emptily or with a refusal,
+        // has told us something.
+        if (
+          (isProviderThrottled() || probeBlockedByTransport) &&
+          deferVerdict()
+        ) {
+          return
+        }
         markUnavailable()
       }, delayMs)
     }
@@ -394,6 +410,7 @@ export function useCandleStream(
           // retries, so a venue that recovers clears the question with data.
           if (isProviderThrottledError(err) || isTransportError(err)) {
             if (resolved) return
+            if (isTransportError(err)) probeBlockedByTransport = true
             // Falls through to the verdict once the deferral budget is spent,
             // so a provider that never recovers still resolves to something.
             if (deferVerdict()) return
