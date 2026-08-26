@@ -156,6 +156,14 @@ Switching venue changes the address, so the back button returns you to the
 previous venue with the drawings you made there, and a link you send someone
 opens the exact market you were looking at.
 
+The venue chip beside the pair lists the exchanges that carry what you are
+looking at, and one more group when there is one. A spot pair carries a
+**PERP** section holding the five futures venues, headed by the contract key
+you would land on: pick Binance Futures under BTC-USDT and the address, the
+board and the ticket all become BTC-USDT-USDT. It works in reverse from a
+contract, and it is the same on the phone, where the venue sheet grows an
+**As PERP** section under the exchange list.
+
 Tokens are addressed by contract rather than ticker, because dozens of tokens
 share a symbol and a link built from a ticker can open the wrong asset. Older
 `/pair/BTC-USDT` links still work and redirect to the full form.
@@ -172,10 +180,9 @@ the shortcut to learn. It searches:
 - Plugins
 - Actions such as switching theme, opening settings, or opening a new window
 
-Picking a venue that trades a different asset class takes the whole page with
-it. Choose Binance Futures while BTC-USDT is charted and you land on the
-BTC-USDT-USDT perpetual, on the perps board, with the funding and position
-panels that belong there. Choose one that cannot trade what is charted, a stock
+Picking a venue here does what the venue chip does, with one difference: the
+chip only lists venues that can take the instrument, while search lists every
+connector you have. Choose one that cannot trade what is charted, a stock
 broker while you are on a crypto pair, and it says so and leaves the chart
 alone rather than opening a market that does not exist.
 

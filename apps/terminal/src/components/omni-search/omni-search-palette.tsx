@@ -142,6 +142,7 @@ export function OmniSearchPalette({
               venue: result.marketId,
               asset_class: result.assetClass ?? 'unknown',
               outcome: 'stranded',
+              source: 'search',
             })
             toast.warning(
               t('search.marketNoInstrument', {
@@ -153,8 +154,9 @@ export function OmniSearchPalette({
           } else if (plan.scope === 'cross-class') {
             track('venue_class_switched', {
               venue: result.marketId,
-              asset_class: result.assetClass ?? 'unknown',
+              asset_class: plan.navigateTo?.cls ?? 'unknown',
               outcome: 'moved',
+              source: 'search',
             })
           }
           break

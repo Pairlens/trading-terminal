@@ -6605,6 +6605,7 @@
       "notListed": "немає на {{venue}}",
       "notListedCallout": "{{venue}} не лістить {{pair}}. Вибір цієї пари перемкне активний майданчик на {{other}}.",
       "availableVenues": "Доступні",
+      "otherClassVenues": "Як {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Потрібен десктоп-застосунок",
       "desktopOnlyVenue": "Лише десктоп",
       "predictions": "прогнози",

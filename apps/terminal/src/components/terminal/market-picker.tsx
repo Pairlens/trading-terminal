@@ -26,12 +26,14 @@ import { isVenueBoundClass } from '@pairlens/shared/market-ref'
 import type { InstrumentClass } from '@pairlens/shared/market-ref'
 import type { AssetClass } from '@pairlens/market-engine'
 import type { MarketOption } from '@/hooks/use-available-markets'
+import type { CrossClassVenues } from '@/lib/market-ref/resolve'
 import { DesktopOnlyBadge } from '@/components/venues/desktop-only-badge'
 import {
   HEADER_CHIP,
   HEADER_CHIP_MUTED,
 } from '@/components/chrome/header-chrome'
-import { venuesForClass } from '@/lib/market-ref/resolve'
+import { crossClassVenuesFor, venuesForClass } from '@/lib/market-ref/resolve'
+import { assetClassVisual } from '@/lib/asset-class/visuals'
 
 // ---------------------------------------------------------------------------
 // Venue picker — the one place venues are chosen, so every surface gets the
@@ -92,6 +94,14 @@ type MarketPickerProps = {
    * venue is picked BEFORE an instrument exists, so every venue is offered.
    */
   assetClass?: InstrumentClass
+  /**
+   * The instrument's id, when there is one. With `assetClass` it is what lets
+   * the list reach past the class charted: spot BTC-USDT and the BTC-USDT-USDT
+   * perpetual are one asset, so the perp venues belong in this dropdown under
+   * a heading that says what the instrument becomes there. Without it the
+   * picker cannot name the destination and offers same-class venues only.
+   */
+  instrumentId?: string
   /** Speculative pre-connect when a venue in the dropdown is hovered/focused. */
   onMarketHover?: (market: string) => void
   /** Extra classes for the trigger button (sizing lives with the caller). */
@@ -104,6 +114,7 @@ export function MarketPicker({
   marketOptions,
   onMarketChange,
   assetClass,
+  instrumentId,
   onMarketHover,
   className,
   'aria-label': ariaLabel,
@@ -118,6 +129,17 @@ export function MarketPicker({
         ? venuesForClass(assetClass, market, marketOptions)
         : marketOptions,
     [marketOptions, assetClass, market],
+  )
+
+  const crossClass = useMemo(
+    () =>
+      assetClass && instrumentId
+        ? crossClassVenuesFor(
+            { cls: assetClass, id: instrumentId },
+            marketOptions,
+          )
+        : null,
+    [marketOptions, assetClass, instrumentId],
   )
 
   // Tokens and event contracts carry their venue as part of their identity: a
@@ -175,6 +197,9 @@ export function MarketPicker({
         market={market}
         marketOptions={compatible}
         grouped={!assetClass}
+        primaryClass={assetClass}
+        primaryId={instrumentId}
+        crossClass={crossClass}
         onMarketChange={onMarketChange}
         onMarketHover={onMarketHover}
       />
@@ -186,6 +211,9 @@ function MarketDropdownContent({
   market,
   marketOptions,
   grouped,
+  primaryClass,
+  primaryId,
+  crossClass,
   onMarketChange,
   onMarketHover,
 }: {
@@ -193,6 +221,12 @@ function MarketDropdownContent({
   marketOptions: Array<MarketOption>
   /** Headers earn their room only when more than one class is on offer. */
   grouped: boolean
+  /** The class charted, when one is. Titles the primary section. */
+  primaryClass?: InstrumentClass
+  /** Its id under that class, shown beside the title for contrast. */
+  primaryId?: string
+  /** Venues that trade the same asset as another class. Usually null. */
+  crossClass: CrossClassVenues | null
   onMarketChange: (market: string) => void
   onMarketHover?: (market: string) => void
 }) {
@@ -200,23 +234,27 @@ function MarketDropdownContent({
   const [filter, setFilter] = useState('')
 
   // Filter markets (case-insensitive)
-  const filtered = useMemo(() => {
-    if (!filter) return marketOptions
-    const q = filter.toLowerCase()
-    return marketOptions.filter(
-      (o) =>
-        o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q),
-    )
-  }, [marketOptions, filter])
+  const filtered = useMemo(
+    () => filterMarkets(marketOptions, filter),
+    [marketOptions, filter],
+  )
+
+  // The same filter over the other-class section, dropped when it empties so
+  // a heading never stands alone over an empty list.
+  const crossFiltered = useMemo(() => {
+    if (!crossClass) return null
+    const options = filterMarkets(crossClass.options, filter)
+    return options.length > 0 ? { ...crossClass, options } : null
+  }, [crossClass, filter])
 
   // Group by primary asset class
   const groups = useMemo(() => {
     const map = new Map<AssetClass, Array<MarketOption>>()
     for (const opt of filtered) {
-      const primaryClass = opt.assetClasses[0] ?? 'crypto-spot'
-      const arr = map.get(primaryClass) ?? []
+      const declared = opt.assetClasses[0] ?? 'crypto-spot'
+      const arr = map.get(declared) ?? []
       arr.push(opt)
-      map.set(primaryClass, arr)
+      map.set(declared, arr)
     }
     return map
   }, [filtered])
@@ -270,18 +308,43 @@ function MarketDropdownContent({
             )
           })
         ) : (
-          <DropdownMenuGroup>
-            {filtered.map((option) => (
-              <MarketRadioItem
-                key={option.value}
-                option={option}
-                onMarketHover={onMarketHover}
-              />
-            ))}
-          </DropdownMenuGroup>
+          <>
+            <DropdownMenuGroup>
+              {/* The primary list is bare until a second section exists to
+                  tell it apart from. Then both are titled, because the whole
+                  point of the second is that it charts a different
+                  instrument. */}
+              {crossFiltered && primaryClass ? (
+                <ClassSectionLabel cls={primaryClass} id={primaryId} />
+              ) : null}
+              {filtered.map((option) => (
+                <MarketRadioItem
+                  key={option.value}
+                  option={option}
+                  onMarketHover={onMarketHover}
+                />
+              ))}
+            </DropdownMenuGroup>
+            {crossFiltered ? (
+              <DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <ClassSectionLabel
+                  cls={crossFiltered.cls}
+                  id={crossFiltered.id}
+                />
+                {crossFiltered.options.map((option) => (
+                  <MarketRadioItem
+                    key={option.value}
+                    option={option}
+                    onMarketHover={onMarketHover}
+                  />
+                ))}
+              </DropdownMenuGroup>
+            ) : null}
+          </>
         )}
 
-        {filtered.length === 0 && (
+        {filtered.length === 0 && !crossFiltered && (
           <DropdownMenuItem disabled>
             <span className="text-xs text-muted-foreground">
               {t('terminal.noMarketsFound')}
@@ -290,6 +353,37 @@ function MarketDropdownContent({
         )}
       </DropdownMenuRadioGroup>
     </DropdownMenuContent>
+  )
+}
+
+function filterMarkets(
+  options: Array<MarketOption>,
+  filter: string,
+): Array<MarketOption> {
+  if (!filter) return options
+  const q = filter.toLowerCase()
+  return options.filter(
+    (o) =>
+      o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q),
+  )
+}
+
+/**
+ * A section's heading: the class, then the id the instrument answers to under
+ * it. The id is the load-bearing half — "PERP" alone does not tell you that
+ * picking Binance Futures under BTC-USDT lands you on BTC-USDT-USDT.
+ */
+function ClassSectionLabel({ cls, id }: { cls: InstrumentClass; id?: string }) {
+  const { t } = useTranslation()
+  return (
+    <DropdownMenuLabel className="flex items-baseline gap-2 text-[10px] uppercase tracking-wider text-muted-foreground">
+      {t(assetClassVisual(cls).labelKey)}
+      {id ? (
+        <span className="font-mono normal-case tracking-normal text-muted-foreground/65">
+          {id}
+        </span>
+      ) : null}
+    </DropdownMenuLabel>
   )
 }
 

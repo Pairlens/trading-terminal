@@ -6483,6 +6483,7 @@
       "notListed": "pas sur {{venue}}",
       "notListedCallout": "{{pair}} n’est pas disponible sur {{venue}}. La sélectionner basculera la place de marché active vers {{other}}.",
       "availableVenues": "Disponibles",
+      "otherClassVenues": "En {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Nécessitent l’app de bureau",
       "desktopOnlyVenue": "Bureau uniquement",
       "predictions": "prédictions",

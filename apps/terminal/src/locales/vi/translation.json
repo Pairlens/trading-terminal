@@ -6483,6 +6483,7 @@
       "notListed": "không niêm yết trên {{venue}}",
       "notListedCallout": "{{pair}} không niêm yết trên {{venue}}. Chọn nó sẽ chuyển sàn đang chọn sang {{other}}.",
       "availableVenues": "Khả dụng",
+      "otherClassVenues": "Dưới dạng {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Cần ứng dụng máy tính",
       "desktopOnlyVenue": "Chỉ trên máy tính",
       "predictions": "dự đoán",

@@ -6483,6 +6483,7 @@
       "notListed": "tidak terdaftar di {{venue}}",
       "notListedCallout": "{{pair}} tidak terdaftar di {{venue}}. Memilihnya akan mengalihkan venue yang difokuskan ke {{other}}.",
       "availableVenues": "Tersedia",
+      "otherClassVenues": "Sebagai {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Butuh aplikasi desktop",
       "desktopOnlyVenue": "Hanya desktop",
       "predictions": "prediksi",

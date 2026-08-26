@@ -6483,6 +6483,7 @@
       "notListed": "{{venue}}에 없음",
       "notListedCallout": "{{pair}}은(는) {{venue}}에 상장되어 있지 않습니다. 선택하면 포커스 거래소가 {{other}}(으)로 전환됩니다.",
       "availableVenues": "사용 가능",
+      "otherClassVenues": "{{cls}}로 · {{pair}}",
       "desktopOnlyVenues": "데스크톱 앱이 필요합니다",
       "desktopOnlyVenue": "데스크톱 전용",
       "predictions": "예측",

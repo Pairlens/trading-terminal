@@ -6483,6 +6483,7 @@
       "notListed": "ไม่มีใน {{venue}}",
       "notListedCallout": "{{pair}} ไม่มีอยู่ในตลาด {{venue}} การเลือกคู่นี้จะสลับตลาดที่โฟกัสไปเป็น {{other}}",
       "availableVenues": "พร้อมใช้งาน",
+      "otherClassVenues": "ในรูปแบบ {{cls}} · {{pair}}",
       "desktopOnlyVenues": "ต้องใช้แอปเดสก์ท็อป",
       "desktopOnlyVenue": "เดสก์ท็อปเท่านั้น",
       "predictions": "พยากรณ์",
