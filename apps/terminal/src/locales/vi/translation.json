@@ -5833,6 +5833,7 @@
   },
   "pairPicker": {
     "popular": "Phổ biến",
+    "otherClass": "Cũng dưới dạng {{cls}}",
     "switchPair": "Đổi cặp giao dịch",
     "noPairsFound": "Không tìm thấy cặp nào.",
     "startTyping": "Bắt đầu nhập để tìm cặp giao dịch."

@@ -5833,6 +5833,7 @@
   },
   "pairPicker": {
     "popular": "Beliebt",
+    "otherClass": "Auch als {{cls}}",
     "switchPair": "Paar ändern",
     "noPairsFound": "Keine Paare gefunden.",
     "startTyping": "Beginne zu tippen, um Paare zu suchen."

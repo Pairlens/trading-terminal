@@ -50,10 +50,13 @@ import type { MobileOverlay } from '../mobile-focus-context'
 import type { VenueKind } from '../lib/venue-kind'
 import { SnapshotAgeFooter } from '@/components/pair-picker/snapshot-age-footer'
 import {
+  crossClassPairFor,
+  instrumentToPairEntry,
   pinSelectedEntry,
   predictionQuestionOf,
 } from '@/components/pair-picker/pair-picker-data'
 import { haptic } from '@/lib/haptics'
+import { track } from '@/lib/analytics-events'
 import { isSearchInFlight } from '@/components/pair-picker/search-progress'
 import { usePairSearchData } from '@/components/pair-picker/pair-search-results'
 import {
@@ -112,7 +115,8 @@ export default memo(function PairPickerScreen({
   onClose,
 }: PairPickerScreenProps) {
   const { t } = useTranslation()
-  const { focusedPair, focusedVenue } = useMobileFocus()
+  const { focusedPair, focusedInstrument, focusedClass, focusedVenue } =
+    useMobileFocus()
   const { setFocusedPair, setFocusedVenue } = useMobileActions()
   // Every dismiss routes through `requestClose` so the sheet gets to play its
   // exit before the overlay stack unmounts this screen. `overlay` is the
@@ -143,7 +147,8 @@ export default memo(function PairPickerScreen({
     isPending: searchPending,
     hasLocalResults,
   } = useInstrumentSearch(query)
-  const { isLoading: catalogLoading } = useMarketInstruments()
+  const { items: instruments, isLoading: catalogLoading } =
+    useMarketInstruments()
 
   // A one-character query is filtered client-side out of the catalog, and a
   // query the server answers needs a provider to answer it. Without this
@@ -240,6 +245,32 @@ export default memo(function PairPickerScreen({
     [route, filter],
   )
 
+  // The pair on screen under its other class, when it has one. The catalog's
+  // own row is preferred, so this map is what it is looked up in.
+  const crossClass = useMemo(() => {
+    const bySymbol = new Map(
+      instruments.map((i) => {
+        const entry = instrumentToPairEntry(i)
+        return [entry.symbol, entry] as const
+      }),
+    )
+    return crossClassPairFor(
+      { cls: focusedClass, id: focusedInstrument },
+      bySymbol,
+    )
+  }, [instruments, focusedClass, focusedInstrument])
+
+  // Through `apply` like every other row, so the venue-kind chips filter it
+  // too: a row the current chip excludes should not reappear under a heading.
+  // Skipped when the recents already hold it — a trader who just came from
+  // the perp does not need it named twice, one row apart.
+  const crossClassRows = useMemo(() => {
+    if (!crossClass) return []
+    if (recentEntries.some((e) => e.symbol === crossClass.entry.symbol))
+      return []
+    return apply([crossClass.entry])
+  }, [crossClass, recentEntries, apply])
+
   // Filter BEFORE truncating: a venue-kind chip must see the whole result
   // set, or matches ranked past MAX_RESULTS read as a settled "No pairs
   // found" while they exist. route() is map lookups, cheap over the full set.
@@ -268,6 +299,14 @@ export default memo(function PairPickerScreen({
       // Picking a pair the focused venue does not list takes the venue with it
       // — the callout said so before the tap.
       const ref = entryToMarketRef(entry, routing.market)
+      if (ref.cls !== focusedClass) {
+        track('venue_class_switched', {
+          venue: routing.market,
+          asset_class: ref.cls,
+          outcome: 'moved',
+          source: 'mobile-pair-picker',
+        })
+      }
       if (routing.market !== focusedVenue) setFocusedVenue(routing.market)
       setFocusedPair(entry.symbol, ref.cls)
       trackRecent(ref)
@@ -287,6 +326,7 @@ export default memo(function PairPickerScreen({
       isAdd,
       addToWatchlist,
       activeListId,
+      focusedClass,
       focusedVenue,
       setFocusedVenue,
       setFocusedPair,
@@ -443,6 +483,28 @@ export default memo(function PairPickerScreen({
               <PairResultRow
                 entry={entry}
                 focused={entry.symbol === focusedPair}
+                key={entry.id}
+                onSelect={handleSelect}
+                routing={routing}
+                watched={watchedSymbols.has(entry.symbol)}
+              />
+            ))}
+          </PickerSection>
+        ) : null}
+
+        {/* After the recents, so the list still opens on what you were last
+            looking at, and before the watchlist, which is a standing set
+            rather than an answer about the pair on screen. */}
+        {!hasQuery && crossClass && crossClassRows.length > 0 ? (
+          <PickerSection
+            label={t('pairPicker.otherClass', {
+              cls: t(assetClassVisual(crossClass.cls).labelKey),
+            })}
+          >
+            {crossClassRows.map(({ entry, routing }) => (
+              <PairResultRow
+                entry={entry}
+                focused={false}
                 key={entry.id}
                 onSelect={handleSelect}
                 routing={routing}

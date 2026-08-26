@@ -5833,6 +5833,7 @@
   },
   "pairPicker": {
     "popular": "热门",
+    "otherClass": "也可作为 {{cls}}",
     "switchPair": "更改交易对",
     "noPairsFound": "未找到交易对。",
     "startTyping": "开始输入以搜索交易对。"

@@ -5947,6 +5947,7 @@
   },
   "pairPicker": {
     "popular": "Популярные",
+    "otherClass": "Также как {{cls}}",
     "switchPair": "Сменить пару",
     "noPairsFound": "Пары не найдены.",
     "startTyping": "Начните вводить текст, чтобы найти пары."

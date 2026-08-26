@@ -5947,6 +5947,7 @@
   },
   "pairPicker": {
     "popular": "Popularne",
+    "otherClass": "Także jako {{cls}}",
     "switchPair": "Zmień parę",
     "noPairsFound": "Nie znaleziono par.",
     "startTyping": "Zacznij pisać, aby wyszukać pary."

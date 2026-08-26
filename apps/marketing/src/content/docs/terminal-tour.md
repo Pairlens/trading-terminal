@@ -169,6 +169,11 @@ board and the ticket all become BTC-USDT-USDT. It works in reverse from a
 contract, and it is the same on the phone, where the venue sheet grows an
 **As PERP** section under the exchange list.
 
+The pair chip answers the same question from the other side. Open it on a spot
+pair and an **Also as PERP** row sits under your recents, holding that pair's
+own contract; open it on a contract and the row is the spot pair. One click
+either way, and the board follows.
+
 Tokens are addressed by contract rather than ticker, because dozens of tokens
 share a symbol and a link built from a ticker can open the wrong asset. Older
 `/pair/BTC-USDT` links still work and redirect to the full form.
