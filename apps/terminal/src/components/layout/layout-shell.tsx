@@ -35,6 +35,7 @@ import type { ReactNode } from 'react'
 
 import type { DropZone } from '@/lib/layout/types'
 import { useAvailableMarkets } from '@/hooks/use-available-markets'
+import { useActivePair } from '@/lib/active-pair-context'
 import {
   useOptionalChartActions,
   useOptionalChartConfig,
@@ -88,6 +89,10 @@ export function LayoutShell() {
 
 function DesktopOnlyGate({ children }: { children: ReactNode }) {
   const { markets } = useAvailableMarkets()
+  // The pair the workspace is on, so the venues offered below can be checked
+  // against it. Null on a board with no active pair, which is exactly when
+  // there is nothing to check.
+  const { activePair } = useActivePair()
   // Optional reads: ChartTerminalAutoProvider deliberately mounts no chart
   // terminal when there is no active pair (the discovery workspace), and
   // with no market selected there is nothing to gate.
@@ -101,6 +106,7 @@ function DesktopOnlyGate({ children }: { children: ReactNode }) {
       <DesktopOnlyState
         market={config.market}
         onSelectMarket={actions.setMarket}
+        pairKey={activePair?.pairKey}
       />
     )
   }

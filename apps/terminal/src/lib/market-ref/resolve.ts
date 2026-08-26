@@ -133,8 +133,11 @@ export type CrossClassVenues = {
 }
 
 /**
- * The venues that trade this instrument as ANOTHER asset class, grouped by
- * that class and carrying the id it answers to there.
+ * The venues that trade this instrument as ANOTHER asset class, and the id it
+ * answers to there. One class or none, never a list: `sameAssetInClass` maps
+ * spot to perp and perp to spot and refuses everything else, so a second
+ * answer cannot exist. Callers lean on that — the phone probes the section's
+ * venues with one `useVenueListings`, and a hook cannot be called per section.
  *
  * `venuesForClass` is the primary list and stays exactly what it was: the
  * venues whose tape is of the thing on screen. This is the second list, and
@@ -155,10 +158,9 @@ export type CrossClassVenues = {
 export function crossClassVenuesFor(
   ref: { cls: InstrumentClass; id: string },
   markets: ReadonlyArray<MarketOption>,
-): Array<CrossClassVenues> {
-  if (isVenueBoundClass(ref.cls)) return []
+): CrossClassVenues | null {
+  if (isVenueBoundClass(ref.cls)) return null
 
-  const out: Array<CrossClassVenues> = []
   for (const cls of INSTRUMENT_CLASSES) {
     if (cls === ref.cls) continue
     const id = sameAssetInClass(ref.id, ref.cls, cls)
@@ -171,9 +173,9 @@ export function crossClassVenuesFor(
         marketServesClass(m.assetClasses, cls) &&
         !marketServesClass(m.assetClasses, ref.cls),
     )
-    if (options.length > 0) out.push({ cls, id, options })
+    return options.length > 0 ? { cls, id, options } : null
   }
-  return out
+  return null
 }
 
 /** The class a connected venue serves, or undefined if it names none we know. */

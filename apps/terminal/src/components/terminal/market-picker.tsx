@@ -57,9 +57,6 @@ const ASSET_CLASS_ORDER: Array<AssetClass> = [
   'nft',
 ]
 
-/** Stable identity, so the memo below does not rebuild on every render. */
-const NO_CROSS_CLASS: Array<CrossClassVenues> = []
-
 export const ASSET_CLASS_LABELS: Record<AssetClass, string> = {
   'crypto-spot': 'CEX (Spot)',
   'crypto-perp': 'CEX (Perpetuals)',
@@ -141,7 +138,7 @@ export function MarketPicker({
             { cls: assetClass, id: instrumentId },
             marketOptions,
           )
-        : NO_CROSS_CLASS,
+        : null,
     [marketOptions, assetClass, instrumentId],
   )
 
@@ -228,8 +225,8 @@ function MarketDropdownContent({
   primaryClass?: InstrumentClass
   /** Its id under that class, shown beside the title for contrast. */
   primaryId?: string
-  /** Venues that trade the same asset as another class. Usually empty. */
-  crossClass: Array<CrossClassVenues>
+  /** Venues that trade the same asset as another class. Usually null. */
+  crossClass: CrossClassVenues | null
   onMarketChange: (market: string) => void
   onMarketHover?: (market: string) => void
 }) {
@@ -242,18 +239,13 @@ function MarketDropdownContent({
     [marketOptions, filter],
   )
 
-  // The same filter over the other-class sections, dropping any it empties so
+  // The same filter over the other-class section, dropped when it empties so
   // a heading never stands alone over an empty list.
-  const crossFiltered = useMemo(
-    () =>
-      crossClass
-        .map((section) => ({
-          ...section,
-          options: filterMarkets(section.options, filter),
-        }))
-        .filter((section) => section.options.length > 0),
-    [crossClass, filter],
-  )
+  const crossFiltered = useMemo(() => {
+    if (!crossClass) return null
+    const options = filterMarkets(crossClass.options, filter)
+    return options.length > 0 ? { ...crossClass, options } : null
+  }, [crossClass, filter])
 
   // Group by primary asset class
   const groups = useMemo(() => {
@@ -322,7 +314,7 @@ function MarketDropdownContent({
                   tell it apart from. Then both are titled, because the whole
                   point of the second is that it charts a different
                   instrument. */}
-              {crossFiltered.length > 0 && primaryClass ? (
+              {crossFiltered && primaryClass ? (
                 <ClassSectionLabel cls={primaryClass} id={primaryId} />
               ) : null}
               {filtered.map((option) => (
@@ -333,11 +325,14 @@ function MarketDropdownContent({
                 />
               ))}
             </DropdownMenuGroup>
-            {crossFiltered.map((section) => (
-              <DropdownMenuGroup key={section.cls}>
+            {crossFiltered ? (
+              <DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <ClassSectionLabel cls={section.cls} id={section.id} />
-                {section.options.map((option) => (
+                <ClassSectionLabel
+                  cls={crossFiltered.cls}
+                  id={crossFiltered.id}
+                />
+                {crossFiltered.options.map((option) => (
                   <MarketRadioItem
                     key={option.value}
                     option={option}
@@ -345,11 +340,11 @@ function MarketDropdownContent({
                   />
                 ))}
               </DropdownMenuGroup>
-            ))}
+            ) : null}
           </>
         )}
 
-        {filtered.length === 0 && crossFiltered.length === 0 && (
+        {filtered.length === 0 && !crossFiltered && (
           <DropdownMenuItem disabled>
             <span className="text-xs text-muted-foreground">
               {t('terminal.noMarketsFound')}

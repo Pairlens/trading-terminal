@@ -367,23 +367,21 @@ describe('the picker also offers the same asset under another class', () => {
   test('a spot pair reaches the perp venues, under its contract key', () => {
     expect(
       crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, CONNECTED),
-    ).toEqual([
-      {
-        cls: 'perp',
-        id: 'BTC-USDT-USDT',
-        options: [BINANCE_FUTURES, KRAKEN_FUTURES],
-      },
-    ])
+    ).toEqual({
+      cls: 'perp',
+      id: 'BTC-USDT-USDT',
+      options: [BINANCE_FUTURES, KRAKEN_FUTURES],
+    })
   })
 
   test('and a contract reaches the spot venues, under the pair key', () => {
-    const [section] = crossClassVenuesFor(
+    const section = crossClassVenuesFor(
       { cls: 'perp', id: 'BTC-USDT-USDT' },
       CONNECTED,
     )
-    expect(section.cls).toBe('spot')
-    expect(section.id).toBe('BTC-USDT')
-    expect(section.options.map((m) => m.value)).toEqual([
+    expect(section?.cls).toBe('spot')
+    expect(section?.id).toBe('BTC-USDT')
+    expect(section?.options.map((m) => m.value)).toEqual([
       'okx',
       'gate',
       'coinbase',
@@ -398,14 +396,14 @@ describe('the picker also offers the same asset under another class', () => {
         OKX,
         BOTH,
         BINANCE_FUTURES,
-      ])[0].options.map((m) => m.value),
+      ])?.options.map((m) => m.value),
     ).toEqual(['binance-futures'])
   })
 
   test('a stock has no contract, so the section never appears', () => {
     expect(
       crossClassVenuesFor({ cls: 'stocks', id: 'AAPL' }, CONNECTED),
-    ).toEqual([])
+    ).toBeNull()
   })
 
   test('a token is its chain, so there is nothing to offer', () => {
@@ -414,12 +412,10 @@ describe('the picker also offers the same asset under another class', () => {
         { cls: 'dex', id: '0XDAC17F958D2EE523A2206206994597C13D831EC7-USDC' },
         CONNECTED,
       ),
-    ).toEqual([])
+    ).toBeNull()
   })
 
   test('no perp venue connected, no section', () => {
-    expect(crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, ALL)).toEqual(
-      [],
-    )
+    expect(crossClassVenuesFor({ cls: 'spot', id: 'BTC-USDT' }, ALL)).toBeNull()
   })
 })

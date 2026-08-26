@@ -4,7 +4,7 @@ description: The same web address on a phone opens a chart-first trading termina
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 9 min read
 ---
 
@@ -44,6 +44,12 @@ exchange for you.
 **The venue chip** shows which exchange you are on and how the connection is
 doing: **LIVE** when prices are streaming, **OFFLINE** for a venue your phone
 cannot reach. An eye icon means you can watch but not trade there.
+
+Tap it and every exchange in the list is asked, right then, whether it carries
+the pair you are looking at. A tick means it answered with data, a cross means
+it has never heard of the pair, and a crossed row cannot be tapped. Switching
+exchange costs a reconnect, so the list tells you which switch is worth making
+before you spend one.
 
 **The avatar** opens Settings.
 

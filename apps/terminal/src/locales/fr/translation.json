@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "Son API refuse les origines navigateur : les données de marché de cette paire ne sont accessibles que depuis la version bureau.",
       "nftDescription": "Aucun fournisseur n'a renvoyé de série de prix plancher pour cette collection. Ajoutez une clé OpenSea dans le plugin OpenSea : le graphique, l'échelle et le fil des ventes en viennent tous."
     },
+    "venueCheck": {
+      "checking": "Vérification : {{venue}} propose-t-il {{pair}} ?",
+      "listed": "{{venue}} propose {{pair}}",
+      "unlisted": "{{venue}} ne propose pas {{pair}}",
+      "blocked": "{{venue}} n’est pas disponible dans ta région",
+      "unchecked": "Passer à {{venue}}",
+      "noneListed": "Aucune autre plateforme connectée ne propose cette paire."
+    },
     "paneCredentials": {
       "sealedTitle": "Déverrouillez pour charger les données {{venue}}",
       "sealedDescription": "{{venue}} n’a pas de flux de prix public. Le graphique, le carnet et les cotations passent par vos clés API, et elles sont verrouillées pour le moment.",

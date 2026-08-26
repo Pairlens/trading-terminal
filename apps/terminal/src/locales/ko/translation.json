@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "해당 API는 브라우저 출처를 거부하므로 이 페어의 시장 데이터는 데스크톱 빌드에서만 이용할 수 있습니다.",
       "nftDescription": "이 컬렉션의 바닥가 시계열을 반환한 프로바이더가 없습니다. OpenSea 플러그인에서 OpenSea 키를 추가하세요. 차트와 래더, 체결 내역이 모두 여기에서 옵니다."
     },
+    "venueCheck": {
+      "checking": "{{venue}}에 {{pair}}이(가) 있는지 확인 중",
+      "listed": "{{venue}}에 {{pair}} 있음",
+      "unlisted": "{{venue}}에 {{pair}} 없음",
+      "blocked": "{{venue}}은(는) 현재 지역에서 이용할 수 없습니다",
+      "unchecked": "{{venue}}(으)로 전환",
+      "noneListed": "연결된 다른 거래소에도 이 페어가 없습니다."
+    },
     "paneCredentials": {
       "sealedTitle": "{{venue}} 데이터를 불러오려면 잠금을 해제하세요",
       "sealedDescription": "{{venue}}에는 공개 시세 피드가 없습니다. 차트와 호가창, 시세는 모두 사용자의 API 키로 전송되는데 지금은 그 키가 잠겨 있습니다.",
