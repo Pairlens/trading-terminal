@@ -345,6 +345,17 @@ export type ContributedPanel = {
   description?: LocalizedText
   descriptionKey?: string // i18n key (takes precedence over description)
   icon: string // lucide icon name
+  /**
+   * Which schematic the add-panel dialog draws to show what this panel looks
+   * like before it is on the board. One of `PANE_PREVIEW_ARCHETYPES` — a
+   * shape name (`book`, `tape`, `heat`, …), not a screenshot: ninety-odd
+   * panels cannot carry ninety-odd images through eighteen themes and two
+   * colour modes without every one of them rotting the week after a redesign.
+   * The terminal renders the named shape from its own tokens with sample
+   * numbers in it. Same contract as `icon`: the plugin names it, the terminal
+   * owns the drawing. Omitted falls back to the panel's category.
+   */
+  preview?: string
   category: string // PaneCategoryId
   singleton?: boolean
   minHeight?: number

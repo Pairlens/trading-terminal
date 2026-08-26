@@ -3641,7 +3641,25 @@
   "addPaneDialog": {
     "description": "Elige un panel para agregar a tu espacio de trabajo.",
     "added": "Agregado",
-    "desktopOnly": "Solo escritorio"
+    "desktopOnly": "Solo escritorio",
+    "all": "Todos los paneles",
+    "count_one": "{{count}} panel",
+    "count_other": "{{count}} paneles",
+    "add": "Añadir panel",
+    "sampleData": "Datos de ejemplo, no un panel en vivo.",
+    "alreadyOnBoard": "Ya está en este espacio.",
+    "desktopOnlyDetail": "Solo funciona en la app de escritorio.",
+    "source": "De {{plugin}}",
+    "needs": {
+      "title": "Qué necesita",
+      "pair": "Sigue el par activo del espacio.",
+      "wallet": "Necesita una cuenta conectada.",
+      "desktop": "Solo funciona en la app de escritorio.",
+      "singleton": "Uno por espacio de trabajo.",
+      "access": "Incluido con {{level}}.",
+      "capability": "Necesita un plugin que sirva {{capability}}."
+    },
+    "noMatchHint": "Nada coincide. Prueba una palabra más corta o quita el filtro."
   },
   "layout": {
     "workspaces": "Espacios de trabajo",

@@ -3731,7 +3731,27 @@
   "addPaneDialog": {
     "description": "Wybierz panel, aby dodać go do układu obszaru roboczego.",
     "added": "Dodano",
-    "desktopOnly": "Tylko desktop"
+    "desktopOnly": "Tylko desktop",
+    "all": "Wszystkie panele",
+    "count_one": "{{count}} panel",
+    "count_few": "{{count}} panele",
+    "count_many": "{{count}} paneli",
+    "count_other": "{{count}} paneli",
+    "add": "Dodaj panel",
+    "sampleData": "Przykładowe dane, nie działający panel.",
+    "alreadyOnBoard": "Jest już w tym obszarze roboczym.",
+    "desktopOnlyDetail": "Działa tylko w aplikacji desktopowej.",
+    "source": "Od {{plugin}}",
+    "needs": {
+      "title": "Czego wymaga",
+      "pair": "Podąża za aktywną parą obszaru roboczego.",
+      "wallet": "Wymaga połączonego konta.",
+      "desktop": "Działa tylko w aplikacji desktopowej.",
+      "singleton": "Jeden na obszar roboczy.",
+      "access": "Zawarte w {{level}}.",
+      "capability": "Wymaga wtyczki dostarczającej {{capability}}."
+    },
+    "noMatchHint": "Brak wyników. Spróbuj krótszego słowa lub wyczyść filtr."
   },
   "layout": {
     "workspaces": "Obszary robocze",

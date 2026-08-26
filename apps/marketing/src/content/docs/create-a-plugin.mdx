@@ -5,7 +5,7 @@ group: builders
 parent: plugin-sdk
 order: 1
 eyebrow: For builders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 4 min read
 ---
 
@@ -37,7 +37,13 @@ What you implement depends on what you declared:
   [`MarketAdapter`](/docs/marketadapter-api) interface
 - An AI provider exposes `getLanguageModel()`
 - A theme provides `theme:override`
-- A panel exports a React component named in `contributes.panels`
+- A panel exports a React component named in `contributes.panels`. Give the
+  entry a `preview` alongside its `icon` and the add-panel dialog draws your
+  panel's shape before anyone adds it: `chart`, `lines`, `book`, `depth`,
+  `tape`, `table`, `cards`, `tokens`, `feed`, `agenda`, `stats`, `ticket`,
+  `form`, `gauge`, `donut`, `heat`, `sparkbar`, `text`, `gallery`, `route` or
+  `browser`. Leave it out and the dialog guesses from your category, which
+  gets a charting panel drawn as a chart and everything else drawn as a table
 - A ready-made layout is a `contributes.workspaces` entry: an id, store copy,
   browse facets, and a column/cell/pane layout. No code, and no capability to
   declare, since a layout only arranges panels the user already has

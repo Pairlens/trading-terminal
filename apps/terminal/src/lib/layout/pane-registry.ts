@@ -85,7 +85,10 @@ export class DynamicPaneRegistry {
       const definition: PaneDefinition = {
         type: typeKey,
         labelKey: panel.labelKey ?? `plugin.${pluginId}.${panel.id}`,
+        label: panel.label,
+        description: panel.description,
         icon: panel.icon,
+        preview: panel.preview,
         descriptionKey: panel.descriptionKey,
         category: panel.category,
         singleton: panel.singleton,

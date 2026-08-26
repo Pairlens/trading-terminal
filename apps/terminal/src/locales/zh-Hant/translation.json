@@ -3641,7 +3641,25 @@
   "addPaneDialog": {
     "description": "選擇要新增到工作區版面的面板。",
     "added": "已新增",
-    "desktopOnly": "僅限桌面版"
+    "desktopOnly": "僅限桌面版",
+    "all": "全部面板",
+    "count_one": "{{count}} 個面板",
+    "count_other": "{{count}} 個面板",
+    "add": "新增面板",
+    "sampleData": "範例資料，並非即時面板。",
+    "alreadyOnBoard": "已在此工作區中。",
+    "desktopOnlyDetail": "僅在桌面應用程式中可用。",
+    "source": "來自 {{plugin}}",
+    "needs": {
+      "title": "運行條件",
+      "pair": "跟隨工作區的目前交易對。",
+      "wallet": "需要已連接的帳戶。",
+      "desktop": "僅在桌面應用程式中執行。",
+      "singleton": "每個工作區僅一個。",
+      "access": "包含於 {{level}}。",
+      "capability": "需要提供 {{capability}} 的外掛。"
+    },
+    "noMatchHint": "沒有相符的項目。試試更短的關鍵字，或清除篩選。"
   },
   "layout": {
     "workspaces": "工作區",
