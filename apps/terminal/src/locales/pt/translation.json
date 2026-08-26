@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "Sua API recusa origens de navegador, então os dados de mercado deste par só são acessíveis no app para desktop.",
       "nftDescription": "Nenhum provedor devolveu uma série de preço de piso para esta coleção. Adicione uma chave OpenSea no plugin da OpenSea: o gráfico, a escada e a fita vêm todos de lá."
     },
+    "venueCheck": {
+      "checking": "Verificando se a {{venue}} lista {{pair}}",
+      "listed": "A {{venue}} lista {{pair}}",
+      "unlisted": "A {{venue}} não lista {{pair}}",
+      "blocked": "A {{venue}} não atende a sua região",
+      "unchecked": "Mudar para {{venue}}",
+      "noneListed": "Nenhuma outra plataforma conectada tem este par."
+    },
     "paneCredentials": {
       "sealedTitle": "Desbloqueie para carregar os dados da {{venue}}",
       "sealedDescription": "A {{venue}} não tem feed público de preços. O gráfico, o livro e as cotações vêm das suas chaves de API, e elas estão bloqueadas agora.",
@@ -4388,6 +4396,8 @@
     "switchMarket": "Trocar de mercado",
     "marketActive": "Ativo",
     "marketSwitched": "Alterado para {{name}}",
+    "marketNoInstrument": "{{name}} não lista {{pair}}",
+    "marketNoInstrumentHint": "Negocia outra classe de ativos, por isso o gráfico não mudou.",
     "topMarkets": "Principais Mercados",
     "staleListings": "Listagens das corretoras atualizadas em {{date}}"
   },
@@ -6473,6 +6483,7 @@
       "notListed": "não listado na {{venue}}",
       "notListedCallout": "{{pair}} não está listado na {{venue}}. Selecioná-lo vai mudar a corretora em foco para {{other}}.",
       "availableVenues": "Disponíveis",
+      "otherClassVenues": "Como {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Precisa do app de desktop",
       "desktopOnlyVenue": "Somente desktop",
       "predictions": "previsões",

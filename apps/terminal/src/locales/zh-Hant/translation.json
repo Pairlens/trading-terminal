@@ -3669,6 +3669,14 @@
       "desktopOnlyDescription": "其 API 拒絕瀏覽器來源，因此該交易對的行情資料只能透過桌面版取得。",
       "nftDescription": "沒有任何提供方回傳該系列的地板價序列。請在 OpenSea 外掛中加入 OpenSea 金鑰：圖表、階梯與成交明細都來自這裡。"
     },
+    "venueCheck": {
+      "checking": "正在檢查 {{venue}} 是否有 {{pair}}",
+      "listed": "{{venue}} 有 {{pair}}",
+      "unlisted": "{{venue}} 沒有 {{pair}}",
+      "blocked": "{{venue}} 不提供你所在地區的服務",
+      "unchecked": "切換到 {{venue}}",
+      "noneListed": "已連接的其他交易所都沒有這個交易對。"
+    },
     "paneCredentials": {
       "sealedTitle": "解鎖以載入 {{venue}} 資料",
       "sealedDescription": "{{venue}} 沒有公開行情來源。圖表、掛單簿與報價都由你的 API 金鑰推送，而金鑰目前處於鎖定狀態。",
@@ -4388,6 +4396,8 @@
     "switchMarket": "切換市場",
     "marketActive": "使用中",
     "marketSwitched": "已切換至 {{name}}",
+    "marketNoInstrument": "{{name}} 未上架 {{pair}}",
+    "marketNoInstrumentHint": "該平台交易的是其他資產類別，因此圖表維持不變。",
     "topMarkets": "熱門市場",
     "staleListings": "交易所上架清單更新於 {{date}}"
   },
@@ -6473,6 +6483,7 @@
       "notListed": "未在 {{venue}} 上架",
       "notListedCallout": "{{pair}} 未在 {{venue}} 上架。選擇它會將目前使用中的交易所切換為 {{other}}。",
       "availableVenues": "可用",
+      "otherClassVenues": "作為 {{cls}} · {{pair}}",
       "desktopOnlyVenues": "需要桌面應用程式",
       "desktopOnlyVenue": "僅桌面版",
       "predictions": "預測",

@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 8
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 26 AUG 2026
 readTime: 13 min read
 ---
 
@@ -139,6 +139,13 @@ perpetual can never be mistaken for spot.
 
 The pair picker grows a **Futures** tab. Contract lists come from each exchange's
 own table, so the tab fills in as you connect venues.
+
+You can also arrive from spot. With BTC-USDT on screen, open the venue chip:
+under the exchange list sits a **PERP** group headed by BTC-USDT-USDT, holding
+all five futures venues. Pick one and the terminal adds the settle leg, swaps
+the board for the perps one, and opens the contract. The same group is in
+<kbd>⌘K</kbd> and in the phone's venue sheet, and it works in reverse from a
+contract back to the spot pair.
 
 ## The funding scanners
 

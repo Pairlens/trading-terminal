@@ -50,6 +50,7 @@ import {
 } from './graduation'
 import {
   clearRankedCache,
+  clearSolPriceCache,
   fetchRanked,
   fetchRecent,
   fetchSolPriceUsd,
@@ -216,14 +217,82 @@ export async function fallbackColumn(
 
 // ── The primary path ─────────────────────────────────────────────────
 
+/**
+ * The three buckets, in ONE body, always.
+ *
+ * The endpoint takes all three in a single POST and it always did; this
+ * provider was asking for them one at a time, so a board that mounts three
+ * columns opened with three round trips to the same host and then paid for
+ * three again on every twenty-second cycle. Batched, the board costs three
+ * requests a minute instead of nine, which is the difference that shows up on
+ * the Jupiter budget the swap ticket shares.
+ *
+ * The queries are pinned here rather than passed in because they have to be:
+ * one body means one set of filters, and a per-column query would fork the
+ * cache key and quietly undo the batching.
+ */
+const ALL_BUCKETS = {
+  recent: { timeframe: '1h', minHolderCount: NEW_MIN_HOLDERS },
+  aboutToGraduate: {
+    timeframe: '24h',
+    minLiquidity: GRADUATING_MIN_LIQUIDITY,
+  },
+  graduated: { timeframe: '24h' },
+} as const
+
+/**
+ * Shorter than the fastest column's refresh, same contract as the fallback's
+ * ranked cache: a hit collapses the three columns of ONE cycle and never
+ * serves a cycle's answer into the next.
+ */
+const GEMS_TTL_MS = 10_000
+
+let gemsCache: {
+  at: number
+  value: Partial<
+    Record<'recent' | 'aboutToGraduate' | 'graduated', Array<LaunchpadToken>>
+  >
+} | null = null
+let gemsInFlight: Promise<
+  Partial<
+    Record<'recent' | 'aboutToGraduate' | 'graduated', Array<LaunchpadToken>>
+  >
+> | null = null
+
+/** Test seam: a module-level cache would otherwise leak between cases. */
+export function clearGemsCache(): void {
+  gemsCache = null
+  gemsInFlight = null
+}
+
+function fetchGemsShared(): Promise<
+  Partial<
+    Record<'recent' | 'aboutToGraduate' | 'graduated', Array<LaunchpadToken>>
+  >
+> {
+  const now = Date.now()
+  if (gemsCache && now - gemsCache.at < GEMS_TTL_MS) {
+    return Promise.resolve(gemsCache.value)
+  }
+  if (gemsInFlight) return gemsInFlight
+  gemsInFlight = fetchGems({ ...ALL_BUCKETS })
+    .then((value) => {
+      gemsCache = { at: Date.now(), value }
+      return value
+    })
+    .finally(() => {
+      gemsInFlight = null
+    })
+  return gemsInFlight
+}
+
 async function primaryColumn(
   stage: Exclude<LaunchpadStage, 'legendary'>,
   now: number,
 ): Promise<Array<LaunchpadToken>> {
+  const out = await fetchGemsShared()
+
   if (stage === 'new') {
-    const out = await fetchGems({
-      recent: { timeframe: '1h', minHolderCount: NEW_MIN_HOLDERS },
-    })
     const rows = out.recent ?? []
     return rows
       .filter((t) => !t.graduatedAt)
@@ -236,19 +305,12 @@ async function primaryColumn(
   }
 
   if (stage === 'graduating') {
-    const out = await fetchGems({
-      aboutToGraduate: {
-        timeframe: '24h',
-        minLiquidity: GRADUATING_MIN_LIQUIDITY,
-      },
-    })
     return (out.aboutToGraduate ?? [])
       .filter((t) => !t.graduatedAt)
       .sort(byCurveProgressDesc)
       .slice(0, COLUMN_LIMIT)
   }
 
-  const out = await fetchGems({ graduated: { timeframe: '24h' } })
   return (out.graduated ?? [])
     .filter(hasSubstance)
     .filter((t) => {
@@ -296,8 +358,14 @@ async function launchpadColumn(
  * simply absent from it, while `search` answers for any mint that exists.
  */
 async function jupiterToken(mint: string): Promise<LaunchpadToken | null> {
-  const solPriceUsd = await fetchSolPriceUsd().catch(() => null)
-  const rows = await fetchTokens([mint])
+  // In parallel, and this is the whole latency of the trade board's three
+  // panes: the two reads have nothing to say to each other, and awaiting them
+  // in sequence doubled the time before a market cap appeared. The SOL price
+  // is also cached upstream, so on a warm board this is one request.
+  const [solPriceUsd, rows] = await Promise.all([
+    fetchSolPriceUsd().catch(() => null),
+    fetchTokens([mint]),
+  ])
   const raw = rows[0]
   if (!raw) return null
   const graduatedAt =
@@ -415,6 +483,8 @@ export function createMemecoinDataProviderPlugin(
     subscribe: () => () => {},
     async destroy() {
       clearRankedCache()
+      clearSolPriceCache()
+      clearGemsCache()
     },
   }
 }

@@ -3759,6 +3759,14 @@
       "desktopOnlyDescription": "Её API отклоняет запросы из браузера, поэтому рыночные данные по этой паре доступны только в настольной сборке.",
       "nftDescription": "Ни один провайдер не вернул серию флора по этой коллекции. Добавьте ключ OpenSea в плагине OpenSea: график, стакан и лента берутся именно оттуда."
     },
+    "venueCheck": {
+      "checking": "Проверяем, есть ли {{pair}} на {{venue}}",
+      "listed": "{{venue}}: пара {{pair}} доступна",
+      "unlisted": "{{venue}}: пары {{pair}} нет",
+      "blocked": "{{venue}} недоступна в вашем регионе",
+      "unchecked": "Перейти на {{venue}}",
+      "noneListed": "Ни одна другая подключённая площадка не торгует эту пару."
+    },
     "paneCredentials": {
       "sealedTitle": "Разблокируйте, чтобы загрузить данные {{venue}}",
       "sealedDescription": "У {{venue}} нет публичного потока котировок. График, стакан и цены передаются по вашим API-ключам, а они сейчас заблокированы.",
@@ -4482,6 +4490,8 @@
     "switchMarket": "Сменить рынок",
     "marketActive": "Активен",
     "marketSwitched": "Переключено на {{name}}",
+    "marketNoInstrument": "{{name}} не торгует {{pair}}",
+    "marketNoInstrumentHint": "Эта площадка торгует другим классом активов, поэтому график остался на месте.",
     "topMarkets": "Топ рынков",
     "staleListings": "Списки бирж обновлены {{date}}"
   },
@@ -6595,6 +6605,7 @@
       "notListed": "нет на {{venue}}",
       "notListedCallout": "{{pair}} не торгуется на {{venue}}. При выборе активная площадка переключится на {{other}}.",
       "availableVenues": "Доступно",
+      "otherClassVenues": "Как {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Только в десктоп-приложении",
       "desktopOnlyVenue": "Только десктоп",
       "predictions": "прогнозы",

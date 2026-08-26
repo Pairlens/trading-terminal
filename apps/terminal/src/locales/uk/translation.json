@@ -3759,6 +3759,14 @@
       "desktopOnlyDescription": "Її API відхиляє запити з браузера, тож ринкові дані за цією парою доступні лише в застосунку для комп'ютера.",
       "nftDescription": "Жоден провайдер не повернув серію флора для цієї колекції. Додайте ключ OpenSea у плагіні OpenSea: графік, драбина і стрічка беруться саме звідти."
     },
+    "venueCheck": {
+      "checking": "Перевіряємо, чи є {{pair}} на {{venue}}",
+      "listed": "{{venue}}: пара {{pair}} доступна",
+      "unlisted": "{{venue}}: пари {{pair}} немає",
+      "blocked": "{{venue}} недоступна у вашому регіоні",
+      "unchecked": "Перейти на {{venue}}",
+      "noneListed": "Жодна інша підключена платформа не торгує цю пару."
+    },
     "paneCredentials": {
       "sealedTitle": "Розблокуйте, щоб завантажити дані {{venue}}",
       "sealedDescription": "У {{venue}} немає публічного потоку котирувань. Графік, книгу заявок і ціни передають ваші API-ключі, а вони зараз заблоковані.",
@@ -4482,6 +4490,8 @@
     "switchMarket": "Змінити ринок",
     "marketActive": "Активний",
     "marketSwitched": "Перемкнено на {{name}}",
+    "marketNoInstrument": "{{name}} не торгує {{pair}}",
+    "marketNoInstrumentHint": "Ця біржа торгує іншим класом активів, тому графік залишився на місці.",
     "topMarkets": "Топ ринки",
     "staleListings": "Списки бірж оновлено {{date}}"
   },
@@ -6595,6 +6605,7 @@
       "notListed": "немає на {{venue}}",
       "notListedCallout": "{{venue}} не лістить {{pair}}. Вибір цієї пари перемкне активний майданчик на {{other}}.",
       "availableVenues": "Доступні",
+      "otherClassVenues": "Як {{cls}} · {{pair}}",
       "desktopOnlyVenues": "Потрібен десктоп-застосунок",
       "desktopOnlyVenue": "Лише десктоп",
       "predictions": "прогнози",

@@ -352,6 +352,7 @@ const ChartPaneInner = memo(function ChartPaneInner({
           <DesktopOnlyState
             market={chartConfig.market}
             onSelectMarket={setMarket}
+            pairKey={pairKey}
           />
         </div>
       ) : /* Ahead of `noData`, because it is the CAUSE of it: nothing was ever
