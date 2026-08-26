@@ -34,6 +34,11 @@ jobs:
         run: bunx turbo run typecheck --filter='!@pairlens/desktop'
       - name: Test
         run: bunx turbo run test --filter='!@pairlens/desktop'
+      # Root-level tooling lives outside every workspace, so turbo never sees
+      # it. The release decision logic (scripts/release/due.ts) runs unattended
+      # on a schedule — it is the last thing that should go untested.
+      - name: Release tooling tests
+        run: bun test --cwd scripts
       # Build verifies production bundles (Vite terminal build, Astro marketing
       # site, plugin SDK bundle) beyond what typecheck covers. Serialized: the
       # terminal build alone peaks at ~4 GB RSS, and running the workspace

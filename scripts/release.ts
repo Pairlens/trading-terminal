@@ -8,6 +8,11 @@
  *   bun run release minor          # 0.1.0 → 0.2.0
  *   bun run release major          # 0.1.0 → 1.0.0
  *   bun run release 1.2.3          # explicit version
+ *   bun run release auto           # minor if a feat landed, else patch
+ *   bun run release patch --push   # push the commit and tag too
+ *
+ * Shorthands: `bun run release:patch` / `:minor` / `:major`, and
+ * `bun run release:check` to see whether one is overdue at all.
  *
  * Version lives in four files that must stay in lockstep (the release
  * workflow refuses tags that disagree with tauri.conf.json):
@@ -17,15 +22,17 @@
  *   apps/desktop/src-tauri/Cargo.lock
  *   apps/desktop/package.json
  *
- * Pushing is left to the human: `git push origin main --follow-tags`
- * (`origin` is Pairlens/trading-terminal).
- * See docs/RELEASING.md for the full pipeline.
+ * Pushing is left to the human unless `--push` is passed:
+ * `git push origin HEAD --follow-tags` (`origin` is
+ * Pairlens/trading-terminal). See docs/RELEASING.md for the full pipeline.
  */
 
 import { spawnSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { resolveDecision } from './release/due'
+import { bumpVersion } from './release/version'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const CONF = resolve(ROOT, 'apps/desktop/src-tauri/tauri.conf.json')
@@ -45,31 +52,33 @@ function run(cmd: string, args: Array<string>): void {
 
 const conf = JSON.parse(readFileSync(CONF, 'utf8')) as { version: string }
 const current = conf.version
-const arg = process.argv[2]
-if (!arg) fail('Usage: bun run release <patch|minor|major|x.y.z>')
+const argv = process.argv.slice(2)
+const push = argv.includes('--push')
+const arg = argv.find((value) => !value.startsWith('-'))
+if (!arg) fail('Usage: bun run release <patch|minor|major|auto|x.y.z> [--push]')
 
-function bump(version: string, kind: string): string {
-  const parts = version.split('.').map(Number)
-  if (parts.length !== 3 || parts.some(Number.isNaN)) {
-    fail(`Cannot parse current version: ${version}`)
+// `auto` reads the same conventional commits the daily check reads, with the
+// soak window switched off — asking for auto means "pick the bump for what
+// has landed", not "tell me whether it is time yet".
+function resolveKind(kind: string): string {
+  if (kind !== 'auto') return kind
+  const decision = resolveDecision({ soakDays: 0, bumpOverride: 'auto' })
+  if (!decision.bump) {
+    fail(`Nothing to release: ${decision.detail}`)
   }
-  const [major, minor, patch] = parts as [number, number, number]
-  switch (kind) {
-    case 'major':
-      return `${major + 1}.0.0`
-    case 'minor':
-      return `${major}.${minor + 1}.0`
-    case 'patch':
-      return `${major}.${minor}.${patch + 1}`
-    default:
-      if (!/^\d+\.\d+\.\d+$/.test(kind)) {
-        fail(`Not a bump type or x.y.z version: ${kind}`)
-      }
-      return kind
+  console.log(`[release] auto → ${decision.bump} (${decision.detail})`)
+  return decision.bump
+}
+
+function resolveNext(kind: string): string {
+  try {
+    return bumpVersion(current, kind)
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error))
   }
 }
 
-const next = bump(current, arg)
+const next = resolveNext(resolveKind(arg))
 if (next === current) fail(`Already at ${current}`)
 
 // Refuse to tag on top of unrelated uncommitted work.
@@ -124,7 +133,17 @@ run('git', ['add', CONF, CARGO_TOML, CARGO_LOCK, PKG])
 run('git', ['commit', '-m', `release: v${next}`])
 run('git', ['tag', '-a', `v${next}`, '-m', `Pairlens v${next}`])
 
-console.log(`
+if (push) {
+  // --atomic so a rejected branch push (main moved under us) cannot leave the
+  // tag behind on its own, pointing at a commit nothing can reach.
+  run('git', ['push', 'origin', 'HEAD', '--follow-tags', '--atomic'])
+  console.log(`
+[release] v${next} pushed. The Release workflow is building installers for
+macOS/Windows/Linux and will attach latest.json to a DRAFT release on this
+repo. Publish the draft to ship the update to users.
+`)
+} else {
+  console.log(`
 [release] v${next} committed and tagged.
 
 Next steps:
@@ -133,3 +152,4 @@ Next steps:
   # to a DRAFT release on this repo. Publish the draft to ship the
   # update to users.
 `)
+}
