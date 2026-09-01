@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{granted}} 크레딧 중 {{used}} 사용",
       "resetsOn": "{{date}} 초기화",
       "webResearchNote": "호스팅 웹 검색 1회당 {{credits}} 크레딧과 이를 호출한 요청의 토큰이 차감됩니다.",
-      "byokNote": "자체 AI 공급자를 선호하시나요? 자체 키를 쓰는 플러그인(Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa)은 항상 무료입니다. 플러그인 페이지에서 연결하세요.",
+      "byokNote": "자체 AI 공급자를 선호하시나요? 자체 키를 쓰는 플러그인(Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa)은 항상 무료입니다. 플러그인 페이지에서 연결하세요.",
       "checkoutOpened": "브라우저에서 결제가 열렸습니다",
       "checkoutOpenedDescription": "결제가 완료되는 즉시 여기에서 구독이 활성화됩니다.",
       "checkoutFailed": "결제를 시작할 수 없습니다. 다시 시도해 주세요.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "가격에는 세금이 포함되어 있지 않습니다. 세금은 결제 시 계산됩니다.",
       "defaultTitle": "Pairlens Intelligence 잠금 해제",
       "defaultDescription": "호스팅 AI 어시스턴트에 심층 리서치와 웹 검색이 함께 딸려 오고, 관리할 API 키는 없습니다. 모든 플랜에는 채팅, 리서치, 웹 검색에서 공유되는 월간 사용 예산이 포함됩니다.",
-      "byokNote": "직접 제공자를 선호하시나요? <plugins>플러그인</plugins>에서 Anthropic, OpenAI, Groq 또는 OpenRouter 키를 연결하세요. 자체 키를 사용하는 AI는 항상 무료입니다.",
+      "byokNote": "직접 제공자를 선호하시나요? <plugins>플러그인</plugins>에서 Anthropic, OpenAI, DeepSeek, Groq 또는 OpenRouter 키를 연결하세요. 자체 키를 사용하는 AI는 항상 무료입니다.",
       "checkoutOpenedTitle": "브라우저에서 결제 페이지가 열렸습니다",
       "checkoutActivates": "결제가 완료되는 즉시 여기서 구독이 활성화됩니다.",
       "checkoutStartError": "결제를 시작할 수 없습니다. 다시 시도해 주세요.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI 추론",
         "description": "OpenAI API를 통한 AI 추론"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek 추론",
+        "description": "DeepSeek API를 통한 AI 추론"
       },
       "anthropic-inference": {
         "title": "Anthropic 추론",

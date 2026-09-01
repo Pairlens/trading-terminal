@@ -14,6 +14,7 @@ import {
   cryptoGoldManifest,
   cryptocomMarketConnectorManifest,
   cyberpunkNeonManifest,
+  deepseekInferenceManifest,
   earthTonesManifest,
   emeraldMatrixManifest,
   gateMarketConnectorManifest,
@@ -152,6 +153,14 @@ export const CATALOG: Array<RegistryPluginEntry> = [
     tagline: 'AI inference via OpenAI GPT models',
     longDescription:
       "Connect to OpenAI's GPT model family for AI co-pilot analysis. Supports GPT-4o, GPT-4o-mini, and other available models. Requires an OpenAI API key. Provides high-quality reasoning for signal evaluation, market context, and trade recommendations.",
+    bundled: true,
+  },
+  {
+    manifest: deepseekInferenceManifest,
+    category: 'ai',
+    tagline: 'AI inference via DeepSeek models',
+    longDescription:
+      "Connect to DeepSeek's V4 model family for AI co-pilot analysis. Defaults to deepseek-v4-flash; switch to deepseek-v4-pro in the plugin settings. Requires a DeepSeek API key. OpenAI-compatible, so the same chat, tools and research loop the other BYOK providers serve.",
     bundled: true,
   },
   {

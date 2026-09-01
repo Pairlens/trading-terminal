@@ -1804,7 +1804,7 @@
       "creditsUsed": "Đã dùng {{used}} / {{granted}} tín dụng",
       "resetsOn": "Đặt lại vào {{date}}",
       "webResearchNote": "Mỗi lần tìm kiếm web được lưu trữ tốn {{credits}} tín dụng cộng với token của yêu cầu kích hoạt nó.",
-      "byokNote": "Muốn dùng nhà cung cấp AI riêng? Các plugin dùng khóa riêng (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) luôn miễn phí. Kết nối tại trang Plugin.",
+      "byokNote": "Muốn dùng nhà cung cấp AI riêng? Các plugin dùng khóa riêng (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) luôn miễn phí. Kết nối tại trang Plugin.",
       "checkoutOpened": "Đã mở trang thanh toán trong trình duyệt",
       "checkoutOpenedDescription": "Gói đăng ký sẽ được kích hoạt tại đây ngay khi thanh toán hoàn tất.",
       "checkoutFailed": "Không thể bắt đầu thanh toán. Vui lòng thử lại.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Giá chưa bao gồm thuế, thuế được tính khi thanh toán.",
       "defaultTitle": "Mở khóa Pairlens Intelligence",
       "defaultDescription": "Trợ lý AI được lưu trữ sẵn, kèm nghiên cứu chuyên sâu và tìm kiếm web, và không có khóa API nào để bạn phải quản lý. Mỗi gói đi kèm ngân sách sử dụng hằng tháng dùng chung cho trò chuyện, nghiên cứu và tìm kiếm web.",
-      "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, Groq hoặc OpenRouter tại <plugins>Plugin</plugins>. AI dùng khóa riêng luôn miễn phí.",
+      "byokNote": "Muốn dùng nhà cung cấp riêng? Kết nối khóa Anthropic, OpenAI, DeepSeek, Groq hoặc OpenRouter tại <plugins>Plugin</plugins>. AI dùng khóa riêng luôn miễn phí.",
       "checkoutOpenedTitle": "Đã mở trang thanh toán trong trình duyệt",
       "checkoutActivates": "Gói đăng ký của bạn sẽ kích hoạt tại đây ngay khi thanh toán hoàn tất.",
       "checkoutStartError": "Không thể bắt đầu thanh toán. Vui lòng thử lại.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Inference",
         "description": "Suy luận AI qua OpenAI API"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Inference",
+        "description": "Suy luận AI qua DeepSeek API"
       },
       "anthropic-inference": {
         "title": "Anthropic Inference",

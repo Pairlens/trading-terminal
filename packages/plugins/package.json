@@ -16,6 +16,7 @@
   "exports": {
     "./groq-inference": "./src/groq-inference/index.ts",
     "./openai-inference": "./src/openai-inference/index.ts",
+    "./deepseek-inference": "./src/deepseek-inference/index.ts",
     "./anthropic-inference": "./src/anthropic-inference/index.ts",
     "./pairlens-intelligence": "./src/pairlens-intelligence/index.ts",
     "./pairlens-core": "./src/pairlens-core/index.ts",

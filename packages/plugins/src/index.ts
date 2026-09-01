@@ -173,6 +173,10 @@ export {
   createOpenaiInferencePlugin,
 } from './openai-inference/index.ts'
 export {
+  deepseekInferenceManifest,
+  createDeepseekInferencePlugin,
+} from './deepseek-inference/index.ts'
+export {
   anthropicInferenceManifest,
   createAnthropicInferencePlugin,
 } from './anthropic-inference/index.ts'

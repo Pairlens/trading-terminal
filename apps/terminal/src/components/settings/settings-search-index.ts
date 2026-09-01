@@ -104,6 +104,7 @@ export const SETTINGS_SEARCH_INDEX: ReadonlyArray<SettingsSearchEntry> = [
       'api key',
       'byok',
       'openai',
+      'deepseek',
       'anthropic',
       'groq',
       'openrouter',

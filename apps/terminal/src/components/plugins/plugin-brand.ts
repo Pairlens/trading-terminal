@@ -126,6 +126,7 @@ const BRANDS: Record<string, BrandSeed> = {
   'bitfinex-market-connector': { mono: 'BFX', tint: '#16b157', fg: '#052015' },
   'upbit-market-connector': { mono: 'UP', tint: '#093687', fg: '#ffffff' },
   'openai-inference': { mono: 'AI', tint: '#10a37f', fg: '#ffffff' },
+  'deepseek-inference': { mono: 'DS', tint: '#4d6bfe', fg: '#ffffff' },
   'anthropic-inference': { mono: 'AN', tint: '#d4a27f', fg: '#201509' },
   'openrouter-inference': { mono: 'OR', tint: '#6467f2', fg: '#ffffff' },
   'jupiter-dex-connector': { mono: 'JUP', tint: '#22c55e', fg: '#04140a' },

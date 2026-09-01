@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{used}} de {{granted}} créditos usados",
       "resetsOn": "Se reinicia el {{date}}",
       "webResearchNote": "Cada búsqueda web alojada usa {{credits}} créditos más los tokens de la petición que la origina.",
-      "byokNote": "¿Prefieres tu propio proveedor de IA? Los plugins con tu propia clave (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) son siempre gratis. Conéctalos desde la página de Plugins.",
+      "byokNote": "¿Prefieres tu propio proveedor de IA? Los plugins con tu propia clave (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) son siempre gratis. Conéctalos desde la página de Plugins.",
       "checkoutOpened": "Pago abierto en tu navegador",
       "checkoutOpenedDescription": "Tu suscripción se activará aquí en cuanto se complete el pago.",
       "checkoutFailed": "No se pudo iniciar el pago. Inténtalo de nuevo.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Los precios no incluyen impuestos, que se calculan al pagar.",
       "defaultTitle": "Desbloquea Pairlens Intelligence",
       "defaultDescription": "El asistente de IA alojado, con research profundo y búsqueda web, sin claves API que gestionar. Cada plan incluye un presupuesto de uso mensual compartido entre chat, research y búsquedas web.",
-      "byokNote": "¿Prefieres tu propio proveedor? Conecta una clave de Anthropic, OpenAI, Groq u OpenRouter en <plugins>Plugins</plugins>. La IA con tu propia clave siempre es gratis.",
+      "byokNote": "¿Prefieres tu propio proveedor? Conecta una clave de Anthropic, OpenAI, DeepSeek, Groq u OpenRouter en <plugins>Plugins</plugins>. La IA con tu propia clave siempre es gratis.",
       "checkoutOpenedTitle": "Pago abierto en tu navegador",
       "checkoutActivates": "Tu suscripción se activa aquí en cuanto se complete el pago.",
       "checkoutStartError": "No se pudo iniciar el pago. Inténtalo de nuevo.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "Inferencia OpenAI",
         "description": "Inferencia de IA a través de la API de OpenAI"
+      },
+      "deepseek-inference": {
+        "title": "Inferencia DeepSeek",
+        "description": "Inferencia de IA a través de la API de DeepSeek"
       },
       "anthropic-inference": {
         "title": "Inferencia Anthropic",

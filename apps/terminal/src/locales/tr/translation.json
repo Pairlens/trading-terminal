@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{granted}} kredinin {{used}} kadarı kullanıldı",
       "resetsOn": "{{date}} tarihinde sıfırlanır",
       "webResearchNote": "Her barındırılan web araması {{credits}} kredi artı onu tetikleyen isteğin tokenlarını harcar.",
-      "byokNote": "Kendi yapay zeka sağlayıcınızı mı tercih ediyorsunuz? Kendi anahtarınızı kullanan eklentiler (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) her zaman ücretsizdir. Eklentiler sayfasından bağlayın.",
+      "byokNote": "Kendi yapay zeka sağlayıcınızı mı tercih ediyorsunuz? Kendi anahtarınızı kullanan eklentiler (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) her zaman ücretsizdir. Eklentiler sayfasından bağlayın.",
       "checkoutOpened": "Ödeme tarayıcınızda açıldı",
       "checkoutOpenedDescription": "Ödeme tamamlanır tamamlanmaz aboneliğiniz burada etkinleşir.",
       "checkoutFailed": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Fiyatlara vergi dahil değildir; ödeme sırasında hesaplanır.",
       "defaultTitle": "Pairlens Intelligence'ın kilidini açın",
       "defaultDescription": "Barındırılan yapay zekâ asistanı, derinlemesine araştırma ve web aramasıyla birlikte, uğraşacağın bir API anahtarı olmadan. Her planda sohbet, araştırma ve web aramaları arasında paylaşılan aylık kullanım bütçesi bulunur.",
-      "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins> sayfasında bir Anthropic, OpenAI, Groq veya OpenRouter anahtarı bağla. Kendi anahtarınla yapay zekâ her zaman ücretsizdir.",
+      "byokNote": "Kendi sağlayıcını mı tercih edersin? <plugins>Eklentiler</plugins> sayfasında bir Anthropic, OpenAI, DeepSeek, Groq veya OpenRouter anahtarı bağla. Kendi anahtarınla yapay zekâ her zaman ücretsizdir.",
       "checkoutOpenedTitle": "Ödeme tarayıcınızda açıldı",
       "checkoutActivates": "Ödeme tamamlanır tamamlanmaz aboneliğin burada etkinleşir.",
       "checkoutStartError": "Ödeme başlatılamadı. Lütfen tekrar deneyin.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Çıkarım",
         "description": "OpenAI API üzerinden AI çıkarımı"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Çıkarım",
+        "description": "DeepSeek API üzerinden AI çıkarımı"
       },
       "anthropic-inference": {
         "title": "Anthropic Çıkarım",

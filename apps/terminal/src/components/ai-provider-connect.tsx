@@ -7,7 +7,7 @@
  * side effect of registering: its `ai:inference` and `ai:web-search`
  * declarations carry `requiresAuth` **and** `requiredAccessLevel:
  * 'intelligence'`, so a fresh account still lands on the upgrade card. A user
- * who already pays Anthropic, OpenAI, OpenRouter or Groq has no reason to buy
+ * who already pays Anthropic, OpenAI, DeepSeek, OpenRouter or Groq has no reason to buy
  * a second subscription, and capability resolution has always agreed —
  * activating a BYOK plugin grants the capability outright. The gate was never
  * the engine, it was the UI: the only way to paste a key was the Plugins
@@ -80,6 +80,7 @@ import {
 const KEY_CONSOLE_URLS: Record<string, string> = {
   'groq-inference': 'https://console.groq.com/keys',
   'openai-inference': 'https://platform.openai.com/api-keys',
+  'deepseek-inference': 'https://platform.deepseek.com/api_keys',
   'anthropic-inference': 'https://console.anthropic.com/settings/keys',
   'openrouter-inference': 'https://openrouter.ai/keys',
   'tavily-search': 'https://app.tavily.com/home',
