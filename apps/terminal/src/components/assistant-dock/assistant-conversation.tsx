@@ -121,6 +121,14 @@ const EMPTY_THREAD: Array<UIMessage> = []
  */
 const PERSIST_DEBOUNCE_MS = 700
 
+/**
+ * How often a streaming answer is allowed to commit into React. Token
+ * rate is far above a frame, and each commit re-parses the live
+ * answer's markdown. 50ms is ~20fps: readable, and leaves the chart
+ * under the dock its render budget.
+ */
+const STREAM_THROTTLE_MS = 50
+
 export type AssistantConversationProps = {
   /** Reports run phase up to the orb. Only called when the phase moves. */
   onStatusChange?: (status: AssistantRunStatus) => void
@@ -307,6 +315,7 @@ function AssistantConversationInner({
     id: threadId,
     messages: storedMessages,
     transport,
+    experimental_throttle: STREAM_THROTTLE_MS,
     // ask_user and approval-gated surface actions have no execute: the
     // run parks on them and resumes by itself once every call in the
     // last message carries a result.
@@ -645,7 +654,7 @@ function AssistantConversationInner({
   // to show than a status chip claims its own renderer here; everything
   // else falls through to the chip, and a tool nobody has taught the UI
   // about still renders.
-  const renderToolPart = useCallback(
+  const renderToolPartImpl = useCallback(
     (tool: ReturnType<typeof asToolPart>) => {
       if (!tool) return null
 
@@ -728,6 +737,14 @@ function AssistantConversationInner({
       return null
     },
     [answerQuestion, addToolResult, t],
+  )
+  // Stable identity for the list: a new callback every token would defeat
+  // CopilotChatMessage's memo and re-parse every historical answer.
+  const renderToolPartRef = useRef(renderToolPartImpl)
+  renderToolPartRef.current = renderToolPartImpl
+  const renderToolPart = useCallback(
+    (tool: ReturnType<typeof asToolPart>) => renderToolPartRef.current(tool),
+    [],
   )
 
   // Starter chips follow the screen: on a chart they name the pair, on a
