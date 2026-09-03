@@ -11,8 +11,8 @@
  * its product page. One function, the richer classification.
  */
 
-import type { PluginManifest } from '@pairlens/plugin-system'
 import { pluginFamilyOf } from '@pairlens/shared/plugin-families'
+import type { PluginManifest } from '@pairlens/plugin-system'
 import type { RegistryPluginEntry } from '@pairlens/shared/registry-types'
 import { pluginDescription } from '@/lib/plugin-text'
 
