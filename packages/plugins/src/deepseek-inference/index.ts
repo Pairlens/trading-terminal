@@ -160,10 +160,10 @@ export function createDeepseekInferencePlugin(
     })
   }
 
-  // AI SDK model for the host-run agentic loop (tools, multi-step). Note:
-  // api.deepseek.com does not send CORS headers, so direct browser calls only
-  // work where CORS is not enforced (e.g. permissive webviews); the Tauri
-  // desktop app is the supported home for this connector.
+  // AI SDK model for the host-run agentic loop (tools, multi-step). Unlike
+  // api.openai.com, api.deepseek.com reflects the request origin on the
+  // preflight and the response (verified 2026-09-03), so this provider works
+  // from the hosted web terminal as well as the desktop app.
   async function getLanguageModel(): Promise<unknown> {
     const createOpenAICompatible = await loadOpenAiCompatible()
     return createOpenAICompatible({

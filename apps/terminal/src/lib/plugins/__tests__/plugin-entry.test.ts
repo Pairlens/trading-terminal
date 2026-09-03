@@ -7,7 +7,7 @@ import { describe, expect, test } from 'bun:test'
  * bundled AI providers as `ai`, but the Store also builds entries from
  * installed / offerable manifests when the registry is offline or stale.
  * Getting that inference wrong drops DeepSeek (and any other BYOK provider
- * the remote catalog has not caught up with) off the AI 服务商 shelf.
+ * the remote catalog has not caught up with) off the AI Providers shelf.
  */
 
 import { BOOTSTRAP_PLUGINS } from '../bootstrap-bundle'
