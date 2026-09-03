@@ -4,7 +4,7 @@ description: For teams evaluating Pairlens. No credential custody to review, not
 group: institutions
 order: 1
 eyebrow: For institutions
-updated: 22 AUG 2026
+updated: 1 SEP 2026
 readTime: 7 min read
 ---
 
@@ -58,7 +58,7 @@ panels hidden, and all persistence local to the machine. The panes that read
 those feeds say the build has no server rather than reading as an empty week.
 
 AI features still work in standalone mode: bring your own provider key (Groq,
-OpenAI, Anthropic, OpenRouter for inference; Tavily or Exa for search) through
+OpenAI, DeepSeek, Anthropic, OpenRouter for inference; Tavily or Exa for search) through
 the AI plugins, and inference calls go directly from the terminal to your
 chosen provider. See [AI providers](/docs/ai-providers).
 

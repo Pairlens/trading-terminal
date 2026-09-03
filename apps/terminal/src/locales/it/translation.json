@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{used}} crediti usati su {{granted}}",
       "resetsOn": "Si azzera il {{date}}",
       "webResearchNote": "Ogni ricerca web in hosting usa {{credits}} crediti più i token della richiesta che la attiva.",
-      "byokNote": "Preferisci il tuo provider IA? I plugin con la tua chiave (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) sono sempre gratuiti. Collegali dalla pagina Plugin.",
+      "byokNote": "Preferisci il tuo provider IA? I plugin con la tua chiave (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) sono sempre gratuiti. Collegali dalla pagina Plugin.",
       "checkoutOpened": "Pagamento aperto nel browser",
       "checkoutOpenedDescription": "Il tuo abbonamento si attiverà qui non appena il pagamento sarà completato.",
       "checkoutFailed": "Impossibile avviare il pagamento. Riprova.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "I prezzi non includono le tasse, calcolate al momento del pagamento.",
       "defaultTitle": "Sblocca Pairlens Intelligence",
       "defaultDescription": "L'assistente IA in hosting, con ricerca approfondita e ricerca web, senza chiavi API da gestire. Ogni piano include un budget di utilizzo mensile condiviso tra chat, ricerca e ricerche web.",
-      "byokNote": "Preferisci il tuo provider? Collega una chiave Anthropic, OpenAI, Groq o OpenRouter in <plugins>Plugin</plugins>. L'IA con chiave propria è sempre gratuita.",
+      "byokNote": "Preferisci il tuo provider? Collega una chiave Anthropic, OpenAI, DeepSeek, Groq o OpenRouter in <plugins>Plugin</plugins>. L'IA con chiave propria è sempre gratuita.",
       "checkoutOpenedTitle": "Pagamento aperto nel tuo browser",
       "checkoutActivates": "Il tuo abbonamento si attiva qui non appena il pagamento è completato.",
       "checkoutStartError": "Impossibile avviare il pagamento. Riprova.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Inferenza",
         "description": "Inferenza AI via l'API di OpenAI"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Inferenza",
+        "description": "Inferenza AI via l'API di DeepSeek"
       },
       "anthropic-inference": {
         "title": "Anthropic Inferenza",

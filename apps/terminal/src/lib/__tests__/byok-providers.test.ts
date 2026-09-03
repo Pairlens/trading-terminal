@@ -25,6 +25,7 @@ function manifest(id: string): PluginManifest {
 const INFERENCE = [
   'groq-inference',
   'openai-inference',
+  'deepseek-inference',
   'anthropic-inference',
   'openrouter-inference',
 ]
@@ -79,7 +80,7 @@ describe('isByokProvider', () => {
         (c) => c.id === 'ai:inference' || c.id === 'ai:web-search',
       ),
     ).map((p) => p.manifest.id)
-    // Sanity floor: four model providers, two search providers, plus the
+    // Sanity floor: five model providers, two search providers, plus the
     // hosted one that serves both.
     expect(providers.length).toBeGreaterThanOrEqual(7)
   })

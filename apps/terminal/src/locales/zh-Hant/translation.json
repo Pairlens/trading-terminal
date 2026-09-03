@@ -1804,7 +1804,7 @@
       "creditsUsed": "已使用 {{used}} / {{granted}} 點數",
       "resetsOn": "{{date}} 重設",
       "webResearchNote": "每次託管網頁搜尋消耗 {{credits}} 點數,外加觸發該搜尋的請求所用的 token。",
-      "byokNote": "想用自己的 AI 供應商?使用自有金鑰的外掛(Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa)永遠免費。在外掛頁面連接。",
+      "byokNote": "想用自己的 AI 供應商?使用自有金鑰的外掛(Anthropic、OpenAI、DeepSeek、Groq、OpenRouter、Tavily、Exa)永遠免費。在外掛頁面連接。",
       "checkoutOpened": "已在瀏覽器中開啟付款頁面",
       "checkoutOpenedDescription": "付款完成後,訂閱將在此處立即啟用。",
       "checkoutFailed": "無法開始付款。請重試。",
@@ -3391,7 +3391,7 @@
       "taxNotice": "價格不含稅，稅費將於結帳時計算。",
       "defaultTitle": "解鎖 Pairlens Intelligence",
       "defaultDescription": "託管 AI 助理，附帶深度研究與網頁搜尋，也沒有 API 金鑰要管。每個方案都包含在聊天、研究與網頁搜尋之間共享的每月用量額度。",
-      "byokNote": "比較想用自己的服務商？在<plugins>外掛</plugins>中連接 Anthropic、OpenAI、Groq 或 OpenRouter 金鑰。使用自有金鑰的 AI 永遠免費。",
+      "byokNote": "比較想用自己的服務商？在<plugins>外掛</plugins>中連接 Anthropic、OpenAI、DeepSeek、Groq 或 OpenRouter 金鑰。使用自有金鑰的 AI 永遠免費。",
       "checkoutOpenedTitle": "已在瀏覽器中開啟結帳頁面",
       "checkoutActivates": "付款完成後，訂閱會立即在此啟用。",
       "checkoutStartError": "無法啟動結帳流程。請再試一次。",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI 推論",
         "description": "透過 OpenAI API 進行 AI 推論"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek 推論",
+        "description": "透過 DeepSeek API 進行 AI 推論"
       },
       "anthropic-inference": {
         "title": "Anthropic 推論",

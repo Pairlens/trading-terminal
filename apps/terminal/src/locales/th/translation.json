@@ -1804,7 +1804,7 @@
       "creditsUsed": "ใช้ไป {{used}} จาก {{granted}} เครดิต",
       "resetsOn": "รีเซ็ต {{date}}",
       "webResearchNote": "การค้นหาเว็บแบบโฮสต์แต่ละครั้งใช้ {{credits}} เครดิต บวกโทเคนของคำขอที่เรียกใช้",
-      "byokNote": "อยากใช้ผู้ให้บริการ AI ของตัวเอง? ปลั๊กอินที่ใช้คีย์ของคุณเอง (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) ฟรีเสมอ เชื่อมต่อได้ที่หน้าปลั๊กอิน",
+      "byokNote": "อยากใช้ผู้ให้บริการ AI ของตัวเอง? ปลั๊กอินที่ใช้คีย์ของคุณเอง (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) ฟรีเสมอ เชื่อมต่อได้ที่หน้าปลั๊กอิน",
       "checkoutOpened": "เปิดหน้าชำระเงินในเบราว์เซอร์แล้ว",
       "checkoutOpenedDescription": "การสมัครของคุณจะเปิดใช้งานที่นี่ทันทีที่ชำระเงินเสร็จสิ้น",
       "checkoutFailed": "ไม่สามารถเริ่มการชำระเงินได้ โปรดลองอีกครั้ง",
@@ -3391,7 +3391,7 @@
       "taxNotice": "ราคาที่แสดงไม่รวมภาษี ซึ่งจะคำนวณตอนชำระเงิน",
       "defaultTitle": "ปลดล็อก Pairlens Intelligence",
       "defaultDescription": "ผู้ช่วย AI แบบโฮสต์ พร้อมการวิจัยเชิงลึกและการค้นหาเว็บ โดยไม่ต้องดูแลคีย์ API เอง ทุกแพ็กเกจมีโควตาการใช้งานรายเดือนที่ใช้ร่วมกันระหว่างแชท การวิจัย และการค้นหาเว็บ",
-      "byokNote": "อยากใช้ผู้ให้บริการของคุณเอง? เชื่อมต่อคีย์ Anthropic, OpenAI, Groq หรือ OpenRouter ได้ที่ <plugins>ปลั๊กอิน</plugins> AI ที่ใช้คีย์ของคุณเองฟรีเสมอ",
+      "byokNote": "อยากใช้ผู้ให้บริการของคุณเอง? เชื่อมต่อคีย์ Anthropic, OpenAI, DeepSeek, Groq หรือ OpenRouter ได้ที่ <plugins>ปลั๊กอิน</plugins> AI ที่ใช้คีย์ของคุณเองฟรีเสมอ",
       "checkoutOpenedTitle": "เปิดหน้าชำระเงินในเบราว์เซอร์แล้ว",
       "checkoutActivates": "การสมัครสมาชิกของคุณจะเปิดใช้งานทันทีที่ชำระเงินเสร็จสมบูรณ์",
       "checkoutStartError": "ไม่สามารถเริ่มการชำระเงินได้ ลองอีกครั้ง",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Inference",
         "description": "AI อนุมานผ่าน OpenAI API"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Inference",
+        "description": "AI อนุมานผ่าน DeepSeek API"
       },
       "anthropic-inference": {
         "title": "Anthropic Inference",

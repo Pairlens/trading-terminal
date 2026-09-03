@@ -1804,7 +1804,7 @@
       "creditsUsed": "已使用 {{used}} / {{granted}} 积分",
       "resetsOn": "{{date}} 重置",
       "webResearchNote": "每次托管网页搜索消耗 {{credits}} 积分,外加触发该搜索的请求所用的 token。",
-      "byokNote": "想用自己的 AI 服务商?使用自有密钥的插件(Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa)始终免费。在插件页面连接。",
+      "byokNote": "想用自己的 AI 服务商?使用自有密钥的插件(Anthropic、OpenAI、DeepSeek、Groq、OpenRouter、Tavily、Exa)始终免费。在插件页面连接。",
       "checkoutOpened": "已在浏览器中打开支付页面",
       "checkoutOpenedDescription": "付款完成后,订阅将在此处立即激活。",
       "checkoutFailed": "无法启动支付。请重试。",
@@ -3391,7 +3391,7 @@
       "taxNotice": "价格不含税，税费将在结账时计算。",
       "defaultTitle": "解锁 Pairlens Intelligence",
       "defaultDescription": "托管 AI 助手，附带深度研究与网页搜索，没有 API 密钥要管。每个套餐都包含在聊天、研究和网页搜索之间共享的每月用量额度。",
-      "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、Groq 或 OpenRouter 密钥。使用自有密钥的 AI 始终免费。",
+      "byokNote": "更想用自己的服务商？在<plugins>插件</plugins>中连接 Anthropic、OpenAI、DeepSeek、Groq 或 OpenRouter 密钥。使用自有密钥的 AI 始终免费。",
       "checkoutOpenedTitle": "已在浏览器中打开结账页面",
       "checkoutActivates": "付款完成后，订阅会立即在此激活。",
       "checkoutStartError": "无法启动结账流程。请重试。",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI 推理",
         "description": "通过 OpenAI API 进行 AI 推理"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek 推理",
+        "description": "通过 DeepSeek API 进行 AI 推理"
       },
       "anthropic-inference": {
         "title": "Anthropic 推理",

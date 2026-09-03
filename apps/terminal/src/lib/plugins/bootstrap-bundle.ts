@@ -200,6 +200,7 @@ import {
   createBurntOrangePlugin,
   createCryptoGoldPlugin,
   createCyberpunkNeonPlugin,
+  createDeepseekInferencePlugin,
   createEarthTonesPlugin,
   createElectricLimePlugin,
   createEmeraldMatrixPlugin,
@@ -220,6 +221,7 @@ import {
   createZenTradingPlugin,
   cryptoGoldManifest,
   cyberpunkNeonManifest,
+  deepseekInferenceManifest,
   earthTonesManifest,
   electricLimeManifest,
   emeraldMatrixManifest,
@@ -296,6 +298,10 @@ export const BOOTSTRAP_CORE_PLUGINS: Array<BootstrapPlugin> = [
 export const BOOTSTRAP_INFERENCE_PLUGINS: Array<BootstrapPlugin> = [
   { manifest: groqInferenceManifest, factory: createGroqInferencePlugin },
   { manifest: openaiInferenceManifest, factory: createOpenaiInferencePlugin },
+  {
+    manifest: deepseekInferenceManifest,
+    factory: createDeepseekInferencePlugin,
+  },
   {
     manifest: anthropicInferenceManifest,
     factory: createAnthropicInferencePlugin,

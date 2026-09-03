@@ -4,7 +4,7 @@ description: An assistant that can see your screen, read any market, draw on you
 group: traders
 order: 4
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 1 SEP 2026
 readTime: 10 min read
 ---
 
@@ -270,7 +270,7 @@ same confirmation cards.
 ## Choosing a model
 
 The assistant runs on whichever provider you pick. Bring your own key from Groq,
-OpenAI, Anthropic or OpenRouter, which is free and always will be, or subscribe
+OpenAI, DeepSeek, Anthropic or OpenRouter, which is free and always will be, or subscribe
 to hosted Pairlens Intelligence.
 
 The reasoning loop runs on your machine either way. With a hosted model the

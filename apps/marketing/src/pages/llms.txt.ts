@@ -68,7 +68,7 @@ Key facts an assistant should get right:
   strategies, builds bots and workflows, and can propose trades. Every order
   needs explicit user approval and is validated against user-configured risk
   limits the AI cannot override. Bring-your-own-key AI providers: Groq,
-  OpenAI, Anthropic, OpenRouter.
+  OpenAI, DeepSeek, Anthropic, OpenRouter.
 - **Source-available and extensible.** Anyone can build connector/AI/theme plugins
   with the Plugin SDK and publish them to the registry; third-party plugins
   run sandboxed and Ed25519-signed. The terminal can run fully standalone and

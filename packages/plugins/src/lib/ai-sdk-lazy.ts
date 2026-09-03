@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
 // Lazy handles on the AI SDK provider factories.
 //
-// The five bundled inference plugins are all statically imported by the
+// The six bundled inference plugins are all statically imported by the
 // terminal's bootstrap bundle, so anything they import at module level is in
 // the boot graph. `@ai-sdk/anthropic` is 207 KB, `@ai-sdk/openai-compatible`
 // 55 KB, `@ai-sdk/provider-utils` 64 KB, and zod comes along behind them at
@@ -30,7 +30,7 @@ type CreateAnthropic = typeof createAnthropic
 let openAiCompatible: Promise<CreateOpenAiCompatible> | null = null
 let anthropic: Promise<CreateAnthropic> | null = null
 
-/** Cached across calls and across plugins: four of the five share this one. */
+/** Cached across calls and across plugins: five of the six share this one. */
 export function loadOpenAiCompatible(): Promise<CreateOpenAiCompatible> {
   openAiCompatible ??= import('@ai-sdk/openai-compatible').then(
     (m) => m.createOpenAICompatible,

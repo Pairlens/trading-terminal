@@ -9,7 +9,7 @@ import { DESK_POOLS } from '@/lib/site'
 
 // The desk pools also carry the web-search providers; the sentence reads
 // "trade X with Y", so only inference providers belong in the brain slot.
-const BRAIN_IDS = ['groq', 'openai', 'anthropic', 'openrouter']
+const BRAIN_IDS = ['groq', 'openai', 'deepseek', 'anthropic', 'openrouter']
 
 const pools = {
   asset: DESK_POOLS.asset.map((a) => ({
@@ -50,9 +50,9 @@ const CARDS = [
   {
     eyebrow: 'Intelligence',
     accent: 'var(--pl-magenta)',
-    figure: '6 AI providers',
-    copy: 'Four AI providers (Claude, OpenAI, Groq, OpenRouter) out of the box, plus Exa and Tavily for agentic search. Bring your own keys.',
-    logos: ['anthropic', 'openai', 'groq', 'openrouter', 'exa', 'tavily'],
+    figure: '7 AI providers',
+    copy: 'Five AI providers (Claude, OpenAI, DeepSeek, Groq, OpenRouter) out of the box, plus Exa and Tavily for agentic search. Bring your own keys.',
+    logos: ['anthropic', 'openai', 'deepseek', 'groq', 'openrouter', 'exa', 'tavily'],
   },
   {
     eyebrow: 'Markets',

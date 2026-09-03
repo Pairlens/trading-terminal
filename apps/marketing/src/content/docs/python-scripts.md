@@ -4,7 +4,7 @@ description: Optional, and only for when the indicator you want does not exist. 
 group: traders
 order: 5
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 1 SEP 2026
 readTime: 6 min read
 ---
 
@@ -117,7 +117,7 @@ pane the script declares and with the defaults its inputs carry.
 
 The assistant uses whatever AI provider the terminal resolves: Pairlens
 Intelligence when you are signed in with a plan, or any bring-your-own-key
-provider (Groq, OpenAI, Anthropic, OpenRouter) from the Plugins page. The
+provider (Groq, OpenAI, DeepSeek, Anthropic, OpenRouter) from the Plugins page. The
 whole loop runs in the terminal. Your prompt and the open script go to the
 provider you chose (through the Pairlens inference proxy when that provider is
 Pairlens Intelligence, which only forwards the request and streams the

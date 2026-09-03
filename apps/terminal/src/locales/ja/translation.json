@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{granted}} クレジット中 {{used}} 使用",
       "resetsOn": "{{date}} にリセット",
       "webResearchNote": "ホスト型ウェブ検索1回につき {{credits}} クレジットと、それを呼び出すリクエストのトークン分を消費します。",
-      "byokNote": "独自のAIプロバイダーを使いたい場合は、自分のキーを使うプラグイン（Anthropic、OpenAI、Groq、OpenRouter、Tavily、Exa）が常に無料です。プラグインページから接続できます。",
+      "byokNote": "独自のAIプロバイダーを使いたい場合は、自分のキーを使うプラグイン（Anthropic、OpenAI、DeepSeek、Groq、OpenRouter、Tavily、Exa）が常に無料です。プラグインページから接続できます。",
       "checkoutOpened": "ブラウザで決済ページを開きました",
       "checkoutOpenedDescription": "支払いが完了すると、ここでサブスクリプションが有効になります。",
       "checkoutFailed": "決済を開始できませんでした。もう一度お試しください。",
@@ -3391,7 +3391,7 @@
       "taxNotice": "価格には税金が含まれません。税金はチェックアウト時に計算されます。",
       "defaultTitle": "Pairlens Intelligence を利用する",
       "defaultDescription": "ホスト型AIアシスタントに、ディープリサーチとウェブ検索がついて、APIキーの管理は不要です。各プランには、チャット・リサーチ・ウェブ検索で共有される月間利用予算が含まれます。",
-      "byokNote": "独自のプロバイダーをお使いになりたい場合は、<plugins>プラグイン</plugins>で Anthropic、OpenAI、Groq、OpenRouter のいずれかのキーを接続してください。自分のキーを使うAIは常に無料です。",
+      "byokNote": "独自のプロバイダーをお使いになりたい場合は、<plugins>プラグイン</plugins>で Anthropic、OpenAI、DeepSeek、Groq、OpenRouter のいずれかのキーを接続してください。自分のキーを使うAIは常に無料です。",
       "checkoutOpenedTitle": "ブラウザでチェックアウトを開きました",
       "checkoutActivates": "お支払いが完了すると、ここでサブスクリプションが有効になります。",
       "checkoutStartError": "チェックアウトを開始できませんでした。もう一度お試しください。",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI 推論",
         "description": "OpenAI API による AI 推論"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek 推論",
+        "description": "DeepSeek API による AI 推論"
       },
       "anthropic-inference": {
         "title": "Anthropic 推論",

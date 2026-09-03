@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{used}} crédits utilisés sur {{granted}}",
       "resetsOn": "Réinitialisation le {{date}}",
       "webResearchNote": "Chaque recherche web hébergée coûte {{credits}} crédits plus les tokens de la requête qui la déclenche.",
-      "byokNote": "Vous préférez votre propre fournisseur d’IA ? Les plugins avec votre propre clé (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) sont toujours gratuits. Connectez-les depuis la page Plugins.",
+      "byokNote": "Vous préférez votre propre fournisseur d’IA ? Les plugins avec votre propre clé (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) sont toujours gratuits. Connectez-les depuis la page Plugins.",
       "checkoutOpened": "Paiement ouvert dans votre navigateur",
       "checkoutOpenedDescription": "Votre abonnement s’activera ici dès que le paiement sera terminé.",
       "checkoutFailed": "Impossible de démarrer le paiement. Veuillez réessayer.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Les prix s'entendent hors taxes ; elles sont calculées lors du paiement.",
       "defaultTitle": "Débloquez Pairlens Intelligence",
       "defaultDescription": "L'assistant IA hébergé, avec recherche approfondie et recherche web, sans clé API à fournir. Chaque forfait inclut un budget d'utilisation mensuel partagé entre le chat, la recherche et les recherches web.",
-      "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, Groq ou OpenRouter dans <plugins>Plugins</plugins>. L'IA avec votre propre clé est toujours gratuite.",
+      "byokNote": "Vous préférez votre propre fournisseur ? Connectez une clé Anthropic, OpenAI, DeepSeek, Groq ou OpenRouter dans <plugins>Plugins</plugins>. L'IA avec votre propre clé est toujours gratuite.",
       "checkoutOpenedTitle": "Paiement ouvert dans votre navigateur",
       "checkoutActivates": "Votre abonnement s'active ici dès que le paiement est finalisé.",
       "checkoutStartError": "Impossible de démarrer le paiement. Veuillez réessayer.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "Inférence OpenAI",
         "description": "Inférence IA via l'API OpenAI"
+      },
+      "deepseek-inference": {
+        "title": "Inférence DeepSeek",
+        "description": "Inférence IA via l'API DeepSeek"
       },
       "anthropic-inference": {
         "title": "Inférence Anthropic",

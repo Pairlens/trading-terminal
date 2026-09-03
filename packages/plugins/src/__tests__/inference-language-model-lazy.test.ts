@@ -14,6 +14,10 @@ import {
   openaiInferenceManifest,
 } from '../openai-inference'
 import {
+  createDeepseekInferencePlugin,
+  deepseekInferenceManifest,
+} from '../deepseek-inference'
+import {
   createOpenrouterInferencePlugin,
   openrouterInferenceManifest,
 } from '../openrouter-inference'
@@ -45,6 +49,11 @@ const PROVIDERS = [
     name: 'openai',
     create: createOpenaiInferencePlugin,
     manifest: openaiInferenceManifest,
+  },
+  {
+    name: 'deepseek',
+    create: createDeepseekInferencePlugin,
+    manifest: deepseekInferenceManifest,
   },
   {
     name: 'openrouter',

@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{used}} von {{granted}} Credits verbraucht",
       "resetsOn": "Zurückgesetzt am {{date}}",
       "webResearchNote": "Jede gehostete Websuche kostet {{credits}} Credits plus die Tokens der auslösenden Anfrage.",
-      "byokNote": "Lieber ein eigener KI-Anbieter? Plugins mit eigenem Schlüssel (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) sind immer kostenlos. Verbinde sie auf der Plugins-Seite.",
+      "byokNote": "Lieber ein eigener KI-Anbieter? Plugins mit eigenem Schlüssel (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) sind immer kostenlos. Verbinde sie auf der Plugins-Seite.",
       "checkoutOpened": "Bezahlvorgang im Browser geöffnet",
       "checkoutOpenedDescription": "Dein Abo wird hier aktiviert, sobald die Zahlung abgeschlossen ist.",
       "checkoutFailed": "Bezahlvorgang konnte nicht gestartet werden. Bitte erneut versuchen.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Preise verstehen sich zzgl. Steuern, werden beim Bezahlvorgang berechnet.",
       "defaultTitle": "Pairlens Intelligence freischalten",
       "defaultDescription": "Der gehostete KI-Assistent, mit Deep Research und Websuche, ohne eigene API-Schlüssel. Jeder Plan enthält ein monatliches Nutzungsbudget für Chat, Research und Websuchen.",
-      "byokNote": "Lieber einen eigenen Anbieter? Verbinde einen Anthropic-, OpenAI-, Groq- oder OpenRouter-Schlüssel auf der Seite <plugins>Plugins</plugins>. KI mit eigenem Schlüssel ist immer kostenlos.",
+      "byokNote": "Lieber einen eigenen Anbieter? Verbinde einen Anthropic-, OpenAI-, DeepSeek-, Groq- oder OpenRouter-Schlüssel auf der Seite <plugins>Plugins</plugins>. KI mit eigenem Schlüssel ist immer kostenlos.",
       "checkoutOpenedTitle": "Bezahlvorgang im Browser geöffnet",
       "checkoutActivates": "Dein Abo wird hier aktiviert, sobald die Zahlung abgeschlossen ist.",
       "checkoutStartError": "Bezahlvorgang konnte nicht gestartet werden. Versuche es erneut.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Inferenz",
         "description": "KI-Inferenz über die OpenAI-API"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek-Inferenz",
+        "description": "KI-Inferenz über die DeepSeek-API"
       },
       "anthropic-inference": {
         "title": "Anthropic Inferenz",

@@ -5,7 +5,7 @@ group: traders
 parent: ai-copilot
 order: 2
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 1 SEP 2026
 readTime: 4 min read
 ---
 
@@ -22,7 +22,7 @@ use your account, billed to you directly.
 Install that provider's plugin from the Plugin Store, paste the key, and the
 assistant uses it, research included.
 
-**Inference.** Anthropic, OpenAI, Groq, OpenRouter.
+**Inference.** Anthropic, OpenAI, DeepSeek, Groq, OpenRouter.
 
 **Web search.** Tavily, Exa. Without one of these, research reports still work
 but are built from market data alone.

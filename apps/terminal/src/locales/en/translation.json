@@ -741,7 +741,7 @@
       "creditsUsed": "{{used}} of {{granted}} credits used",
       "resetsOn": "Resets {{date}}",
       "webResearchNote": "Each hosted web search uses {{credits}} credits plus the tokens of the request that triggers it.",
-      "byokNote": "Prefer your own AI provider? Bring-your-own-key plugins (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) are always free. Connect them from the Plugins page.",
+      "byokNote": "Prefer your own AI provider? Bring-your-own-key plugins (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) are always free. Connect them from the Plugins page.",
       "checkoutOpened": "Checkout opened in your browser",
       "checkoutOpenedDescription": "Your subscription activates here as soon as payment completes.",
       "checkoutFailed": "Could not start checkout. Please try again.",
@@ -2274,7 +2274,7 @@
       "taxNotice": "Prices exclude tax, calculated at checkout.",
       "defaultTitle": "Unlock Pairlens Intelligence",
       "defaultDescription": "The hosted AI assistant, with deep research and web search, and no API keys to manage. Every plan includes a monthly usage budget shared across chat, research, and web searches.",
-      "byokNote": "Prefer your own provider? Connect an Anthropic, OpenAI, Groq, or OpenRouter key in <plugins>Plugins</plugins>. Bring-your-own-key AI is always free.",
+      "byokNote": "Prefer your own provider? Connect an Anthropic, OpenAI, DeepSeek, Groq, or OpenRouter key in <plugins>Plugins</plugins>. Bring-your-own-key AI is always free.",
       "checkoutOpenedTitle": "Checkout opened in your browser",
       "checkoutActivates": "Your subscription activates here as soon as payment completes.",
       "checkoutStartError": "Could not start checkout. Please try again.",
@@ -3075,6 +3075,10 @@
       "openai-inference": {
         "title": "OpenAI Inference",
         "description": "AI inference via OpenAI API"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Inference",
+        "description": "AI inference via DeepSeek API"
       },
       "anthropic-inference": {
         "title": "Anthropic Inference",

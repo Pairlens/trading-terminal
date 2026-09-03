@@ -1804,7 +1804,7 @@
       "creditsUsed": "{{used}} dari {{granted}} kredit terpakai",
       "resetsOn": "Direset {{date}}",
       "webResearchNote": "Setiap pencarian web terkelola memakai {{credits}} kredit ditambah token dari permintaan yang memicunya.",
-      "byokNote": "Lebih suka penyedia AI sendiri? Plugin dengan kunci sendiri (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa) selalu gratis. Hubungkan dari halaman Plugin.",
+      "byokNote": "Lebih suka penyedia AI sendiri? Plugin dengan kunci sendiri (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa) selalu gratis. Hubungkan dari halaman Plugin.",
       "checkoutOpened": "Pembayaran dibuka di browser Anda",
       "checkoutOpenedDescription": "Langganan Anda akan aktif di sini begitu pembayaran selesai.",
       "checkoutFailed": "Tidak dapat memulai pembayaran. Silakan coba lagi.",
@@ -3391,7 +3391,7 @@
       "taxNotice": "Harga belum termasuk pajak, dihitung saat checkout.",
       "defaultTitle": "Buka Pairlens Intelligence",
       "defaultDescription": "Asisten AI terkelola, dengan riset mendalam dan pencarian web, tanpa perlu mengurus kunci API. Setiap paket mencakup kuota penggunaan bulanan yang dibagi antara chat, riset, dan pencarian web.",
-      "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, Groq, atau OpenRouter di <plugins>Plugin</plugins>. AI dengan kunci sendiri selalu gratis.",
+      "byokNote": "Lebih suka penyedia sendiri? Hubungkan kunci Anthropic, OpenAI, DeepSeek, Groq, atau OpenRouter di <plugins>Plugin</plugins>. AI dengan kunci sendiri selalu gratis.",
       "checkoutOpenedTitle": "Checkout dibuka di browser Anda",
       "checkoutActivates": "Langganan Anda aktif di sini begitu pembayaran selesai.",
       "checkoutStartError": "Checkout gagal dimulai. Coba lagi.",
@@ -4076,6 +4076,10 @@
       "openai-inference": {
         "title": "OpenAI Inference",
         "description": "Inferensi AI via OpenAI API"
+      },
+      "deepseek-inference": {
+        "title": "DeepSeek Inference",
+        "description": "Inferensi AI via DeepSeek API"
       },
       "anthropic-inference": {
         "title": "Anthropic Inference",

@@ -67,6 +67,7 @@ const DOMAINS: Record<string, string> = {
   'alpaca-market-connector': 'alpaca.markets',
   'groq-inference': 'groq.com',
   'openai-inference': 'openai.com',
+  'deepseek-inference': 'deepseek.com',
   'anthropic-inference': 'anthropic.com',
   'openrouter-inference': 'openrouter.ai',
   'jupiter-dex-connector': 'jup.ag',
@@ -134,6 +135,9 @@ const OVERRIDES: Record<string, string> = {
   // is where the 180px app icon lives.
   'geckoterminal-data-provider':
     'https://www.geckoterminal.com/images/icons/180x180.png',
+  // DeepSeek's site serves no apple-touch-icon large enough to clear MIN_EDGE.
+  'deepseek-inference':
+    'https://avatars.githubusercontent.com/deepseek-ai?s=512',
 }
 
 /**

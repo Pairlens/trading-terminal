@@ -205,6 +205,12 @@ export const DESK_POOLS: {
     { id: 'groq', name: 'Groq', mono: 'GQ', hue: 'oklch(0.64 0.2 25)' },
     { id: 'openai', name: 'OpenAI', mono: 'AI', hue: 'oklch(0.74 0.15 175)' },
     {
+      id: 'deepseek',
+      name: 'DeepSeek',
+      mono: 'DS',
+      hue: 'oklch(0.62 0.18 265)',
+    },
+    {
       id: 'anthropic',
       name: 'Anthropic',
       mono: 'AN',

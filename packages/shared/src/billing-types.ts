@@ -7,7 +7,7 @@
 // subscription (billed via Stripe, managed by the App Server) that unlocks
 // AI usage with Pairlens as the provider — the hosted inference proxy and the
 // hosted web-research search. Bring-your-own-key AI provider plugins
-// (Anthropic, OpenAI, Groq, OpenRouter, Tavily, Exa, ...) are never gated.
+// (Anthropic, OpenAI, DeepSeek, Groq, OpenRouter, Tavily, Exa, ...) are never gated.
 //
 // Usage is metered in CREDITS: 1 credit = $0.001 USD of underlying cost.
 // Each plan grants a monthly credit budget of roughly 70% of the

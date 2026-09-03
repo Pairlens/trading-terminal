@@ -17,9 +17,14 @@
 // belong together, and because reasoning, sources and code each need
 // their own treatment rather than being dropped (reasoning and files
 // were, silently, until this pass).
+//
+// Memoized because useChat's replaceMessage keeps every prior UIMessage
+// object. A streaming token must not walk the whole thread and re-parse
+// markdown that has not changed.
 
 import {
   isValidElement,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -42,6 +47,7 @@ import type {
   CopilotCancelRequest,
   CopilotOrderRequest,
 } from './copilot-order-card'
+import type { Components } from 'react-markdown'
 import type { ReactNode } from 'react'
 import type { UIMessage } from 'ai'
 import type { ToolLabelMap } from '@/lib/copilot/tool-labels'
@@ -79,7 +85,7 @@ type Block =
   | { kind: 'node'; key: string; node: ReactNode }
   | { kind: 'tools'; key: string; tools: Array<NormalizedToolPart> }
 
-export function CopilotChatMessage({
+export const CopilotChatMessage = memo(function CopilotChatMessage({
   message,
   toolLabels,
   renderToolPart,
@@ -179,7 +185,7 @@ export function CopilotChatMessage({
       ) : null}
     </div>
   )
-}
+})
 
 /**
  * Fold a message's parts into renderable blocks.
@@ -376,104 +382,111 @@ function MessageActions({
 }
 
 // ── Markdown ─────────────────────────────────────────────────────────
+//
+// Plugins and the component map are module-level on purpose. A fresh
+// `components` object is a documented ReactMarkdown gotcha: it remounts
+// the whole tree even when the text did not change. The last answer
+// streams one token at a time, so this has to be stable there too.
 
-function MarkdownContent({ text }: { text: string }) {
+const MARKDOWN_PLUGINS = [remarkGfm]
+
+const MARKDOWN_COMPONENTS: Components = {
+  p: ({ children }) => (
+    <p className="leading-relaxed [&:not(:last-child)]:mb-2.5">{children}</p>
+  ),
+  h1: ({ children }) => (
+    <h1 className="mt-3 mb-1.5 font-serif text-[13px] leading-snug font-semibold first:mt-0">
+      {children}
+    </h1>
+  ),
+  h2: ({ children }) => (
+    <h2 className="mt-3 mb-1.5 font-serif text-[13px] leading-snug font-semibold first:mt-0">
+      {children}
+    </h2>
+  ),
+  h3: ({ children }) => (
+    <h3 className="text-muted-foreground mt-2.5 mb-1 font-serif text-[11px] font-medium tracking-wide uppercase first:mt-0">
+      {children}
+    </h3>
+  ),
+  ul: ({ children }) => (
+    <ul className="marker:text-muted-foreground/70 mb-2.5 list-disc space-y-1 pl-4">
+      {children}
+    </ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="marker:text-muted-foreground/70 mb-2.5 list-decimal space-y-1 pl-4">
+      {children}
+    </ol>
+  ),
+  li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+  strong: ({ children }) => (
+    <strong className="font-semibold">{children}</strong>
+  ),
+  code: ({ children, className }) => {
+    // Fenced blocks are handled by `pre` below, which owns the chrome.
+    // This only ever sees inline spans and the block's inner text.
+    if (className?.includes('language-')) return <>{children}</>
+    return (
+      <code className="rounded bg-[var(--ai-inset-strong)] px-1 py-0.5 font-mono text-[11px]">
+        {children}
+      </code>
+    )
+  },
+  // The fence, not the inner <code>: a block needs a header with the
+  // language and its actions, and a <div> is not valid inside <pre>.
+  pre: ({ children }) => {
+    const fence = readFence(children)
+    if (!fence) return null
+    return <AssistantCodeBlock code={fence.code} language={fence.language} />
+  },
+  table: ({ children }) => (
+    <div className="my-2.5 overflow-x-auto rounded-[10px] bg-[var(--ai-inset)] p-px">
+      <table className="w-full border-collapse text-[11px]">{children}</table>
+    </div>
+  ),
+  th: ({ children }) => (
+    <th className="text-muted-foreground px-2 py-1.5 text-left text-[10px] font-medium tracking-wide uppercase">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border-t border-[var(--ai-edge-soft)] px-2 py-1.5">
+      {children}
+    </td>
+  ),
+  blockquote: ({ children }) => (
+    <blockquote className="text-muted-foreground my-2.5 border-l-2 border-[var(--ai-ring)] pl-2.5 italic">
+      {children}
+    </blockquote>
+  ),
+  hr: () => <hr className="my-3 border-[var(--ai-edge-soft)]" />,
+  a: ({ children, href }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-primary decoration-from-font underline underline-offset-2"
+    >
+      {children}
+    </a>
+  ),
+}
+
+const MarkdownContent = memo(function MarkdownContent({
+  text,
+}: {
+  text: string
+}) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        p: ({ children }) => (
-          <p className="leading-relaxed [&:not(:last-child)]:mb-2.5">
-            {children}
-          </p>
-        ),
-        h1: ({ children }) => (
-          <h1 className="mt-3 mb-1.5 font-serif text-[13px] leading-snug font-semibold first:mt-0">
-            {children}
-          </h1>
-        ),
-        h2: ({ children }) => (
-          <h2 className="mt-3 mb-1.5 font-serif text-[13px] leading-snug font-semibold first:mt-0">
-            {children}
-          </h2>
-        ),
-        h3: ({ children }) => (
-          <h3 className="text-muted-foreground mt-2.5 mb-1 font-serif text-[11px] font-medium tracking-wide uppercase first:mt-0">
-            {children}
-          </h3>
-        ),
-        ul: ({ children }) => (
-          <ul className="marker:text-muted-foreground/70 mb-2.5 list-disc space-y-1 pl-4">
-            {children}
-          </ul>
-        ),
-        ol: ({ children }) => (
-          <ol className="marker:text-muted-foreground/70 mb-2.5 list-decimal space-y-1 pl-4">
-            {children}
-          </ol>
-        ),
-        li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-        strong: ({ children }) => (
-          <strong className="font-semibold">{children}</strong>
-        ),
-        code: ({ children, className }) => {
-          // Fenced blocks are handled by `pre` below, which owns the chrome.
-          // This only ever sees inline spans and the block's inner text.
-          if (className?.includes('language-')) return <>{children}</>
-          return (
-            <code className="rounded bg-[var(--ai-inset-strong)] px-1 py-0.5 font-mono text-[11px]">
-              {children}
-            </code>
-          )
-        },
-        // The fence, not the inner <code>: a block needs a header with the
-        // language and its actions, and a <div> is not valid inside <pre>.
-        pre: ({ children }) => {
-          const fence = readFence(children)
-          if (!fence) return null
-          return (
-            <AssistantCodeBlock code={fence.code} language={fence.language} />
-          )
-        },
-        table: ({ children }) => (
-          <div className="my-2.5 overflow-x-auto rounded-[10px] bg-[var(--ai-inset)] p-px">
-            <table className="w-full border-collapse text-[11px]">
-              {children}
-            </table>
-          </div>
-        ),
-        th: ({ children }) => (
-          <th className="text-muted-foreground px-2 py-1.5 text-left text-[10px] font-medium tracking-wide uppercase">
-            {children}
-          </th>
-        ),
-        td: ({ children }) => (
-          <td className="border-t border-[var(--ai-edge-soft)] px-2 py-1.5">
-            {children}
-          </td>
-        ),
-        blockquote: ({ children }) => (
-          <blockquote className="text-muted-foreground my-2.5 border-l-2 border-[var(--ai-ring)] pl-2.5 italic">
-            {children}
-          </blockquote>
-        ),
-        hr: () => <hr className="my-3 border-[var(--ai-edge-soft)]" />,
-        a: ({ children, href }) => (
-          <a
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary decoration-from-font underline underline-offset-2"
-          >
-            {children}
-          </a>
-        ),
-      }}
+      remarkPlugins={MARKDOWN_PLUGINS}
+      components={MARKDOWN_COMPONENTS}
     >
       {text}
     </ReactMarkdown>
   )
-}
+})
 
 /** Read the source and the language out of a markdown fence's children. */
 function readFence(
