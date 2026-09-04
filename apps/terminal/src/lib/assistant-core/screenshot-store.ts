@@ -36,8 +36,3 @@ export function getScreenshot(toolCallId: string | undefined): string | null {
   if (!toolCallId) return null
   return shots.get(toolCallId) ?? null
 }
-
-/** Clearing the conversation should not leave its images behind. */
-export function clearScreenshots(): void {
-  shots.clear()
-}

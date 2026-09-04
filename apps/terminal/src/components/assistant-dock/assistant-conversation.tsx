@@ -372,8 +372,14 @@ function AssistantConversationInner({
     experimental_throttle: STREAM_THROTTLE_MS,
   })
 
+  // Ids only, sorted: the index is ordered by updatedAt, and a background
+  // thread that keeps growing would otherwise reorder it on every persist
+  // and re-render the conversation on screen for nothing.
   const liveIds = useAssistantConversationsStore((state) =>
-    state.conversations.map((row) => row.id).join('\0'),
+    state.conversations
+      .map((row) => row.id)
+      .sort()
+      .join('\0'),
   )
   useEffect(() => {
     if (!liveIds) return
