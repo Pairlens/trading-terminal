@@ -4,7 +4,7 @@ description: An assistant that can see your screen, read any market, draw on you
 group: traders
 order: 4
 eyebrow: For traders
-updated: 1 SEP 2026
+updated: 4 SEP 2026
 readTime: 10 min read
 ---
 
@@ -107,12 +107,16 @@ Minimizing does not stop anything. The orb reports what it is doing in place of
 the suggestion (**Thinking...**, **Using tools...**, **Looking on the web...**),
 so a collapsed assistant is never a black box. Navigating away does not stop it
 either: ask for a backtest, go read the order book, and the run is still going
-when you come back.
+when you come back. Switching to another conversation in History is the same:
+the answer keeps writing in the background, and it is there when you return.
 
 ## Your conversations
 
 Down the left of the window, **History** holds every conversation, newest first.
 Clicking a row opens it exactly as you left it, tool activity and cards included.
+Switching rows does not stop a run that is still writing: come back and the rest
+of the answer is there, the same way minimizing keeps it going. Deleting a
+conversation is the one way a live run on that thread is aborted.
 
 Threads name themselves from your first message, then get a better title in the
 background. Double-click a row to rename it. Deleting asks first and is not

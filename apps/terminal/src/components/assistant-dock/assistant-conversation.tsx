@@ -10,11 +10,10 @@
 // long run keep working while the user goes back to the chart.
 //
 // It shows ONE thread at a time out of however many the user has, and
-// the thread it shows is the store's `activeId`. The chat is keyed on
-// that id, so switching rebuilds the AI SDK's Chat around the other
-// thread's messages rather than replaying them into the live one. What
-// makes that safe is the switch effect below: the outgoing run is
-// stopped and written out BEFORE the id the chat is keyed on moves.
+// the thread it shows is the store's `activeId`. Each thread keeps its
+// own Chat in AssistantChatSessions, so switching History only changes
+// which one is on screen. The previous run keeps streaming, the same
+// way minimizing the dock does.
 
 import {
   useCallback,
@@ -23,10 +22,11 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useChat } from '@ai-sdk/react'
+import { Chat, useChat } from '@ai-sdk/react'
 import { lastAssistantMessageIsCompleteWithToolCalls } from 'ai'
 import {
   ArrowDown,
@@ -97,10 +97,8 @@ import { humanizeToolName } from '@/lib/copilot/tool-labels'
 import { runSurfaceAction } from '@/lib/assistant-core/surface-tools'
 import { deriveRunStatus } from '@/lib/assistant-core/run-status'
 import { hasParkedToolCall } from '@/lib/assistant-core/run-gate'
-import {
-  clearScreenshots,
-  getScreenshot,
-} from '@/lib/assistant-core/screenshot-store'
+import { AssistantChatSessions } from '@/lib/assistant-core/chat-sessions'
+import { getScreenshot } from '@/lib/assistant-core/screenshot-store'
 import { useAssistantStore } from '@/stores/assistant-store'
 import { generateConversationTitle } from '@/lib/assistant-core/conversation-title'
 import {
@@ -201,8 +199,9 @@ export function AssistantConversation(props: AssistantConversationProps) {
  * Resolves which thread is on screen and hands it down as a plain prop.
  *
  * Split out so the store is only read once the assistant is actually
- * usable, and so the chat below can key itself on an id it is simply
- * given. The ensure runs in a layout effect rather than during render:
+ * usable, and so the chat below is given a plain id rather than
+ * subscribing to the whole index. The ensure runs in a layout effect
+ * rather than during render:
  * creating the first conversation is a store write, and a store write
  * mid-render is a write the conversation rail is also subscribed to.
  * Before paint, so the empty frame is never shown.
@@ -270,25 +269,6 @@ function AssistantConversationInner({
   const depsRef = useRef(deps)
   depsRef.current = deps
 
-  // ── Which thread is on screen ─────────────────────────────────────
-  //
-  // The chat is keyed on `threadId`, NOT on the store's `activeId`
-  // directly. The two are the same except for the one render between a
-  // row being clicked and the switch effect below having stopped and
-  // written out the run that was in flight. Keying straight off the
-  // store would rebuild the Chat first and orphan that run: it would
-  // keep streaming into an object nothing renders, and the half answer
-  // it had already produced would never be written anywhere.
-  const [threadId, setThreadId] = useState(conversationId)
-  // Read through the store's own cache rather than `messagesOf`, which
-  // writes on a miss: `select` and `create` both load the thread before
-  // they publish the id, so by the time it reaches here it is cached.
-  // Unsubscribed on purpose. `useChat` only reads this when it builds a
-  // Chat, which is exactly when `threadId` changes, and subscribing
-  // would rerender the whole conversation on every persisted token.
-  const storedMessages =
-    useAssistantConversationsStore.getState().threads[threadId] ?? EMPTY_THREAD
-
   const transport = useMemo(
     () =>
       new AssistantTransport({
@@ -298,8 +278,86 @@ function AssistantConversationInner({
     [],
   )
 
-  const runStartRef = useRef(0)
-  const runToolCallsRef = useRef(0)
+  const hostRef = useRef({ navigate, resolveMarketRef, scheduleCheck })
+  hostRef.current = { navigate, resolveMarketRef, scheduleCheck }
+
+  // Per-thread counters: onFinish is closed over the Chat at construction,
+  // so a shared pair of refs would credit a background run to whichever
+  // thread happened to send last.
+  const runStatsRef = useRef(
+    new Map<string, { start: number; tools: number }>(),
+  )
+  const queuedByIdRef = useRef(new Map<string, string>())
+  const [queuedEpoch, setQueuedEpoch] = useState(0)
+
+  // One Chat per thread, kept across History clicks. `useChat({ chat })`
+  // swaps the subscription without calling stop() on the previous one.
+  const sessionsRef = useRef<AssistantChatSessions<Chat<UIMessage>> | null>(
+    null,
+  )
+  if (!sessionsRef.current) {
+    sessionsRef.current = new AssistantChatSessions({
+      debounceMs: PERSIST_DEBOUNCE_MS,
+      persist: (id, messages) => {
+        useAssistantConversationsStore
+          .getState()
+          .setMessages(id, messages as Array<UIMessage>)
+      },
+      onReady: (id, chat) => {
+        const text = queuedByIdRef.current.get(id)
+        if (!text) return
+        const thread = chat.messages as Array<UIMessage>
+        if (hasParkedToolCall(thread) || findPendingQuestion(thread)) return
+        queuedByIdRef.current.delete(id)
+        setQueuedEpoch((n) => n + 1)
+        runStatsRef.current.set(id, { start: Date.now(), tools: 0 })
+        void chat.sendMessage({ text })
+      },
+      create: (id) =>
+        new Chat({
+          id,
+          messages:
+            useAssistantConversationsStore.getState().threads[id] ??
+            EMPTY_THREAD,
+          transport,
+          // ask_user and approval-gated surface actions have no execute:
+          // the run parks on them and resumes by itself once every call
+          // in the last message carries a result. Must live on the Chat:
+          // useChat does not refresh these callbacks when `chat` is passed.
+          sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+          onToolCall: ({ toolCall }) => {
+            const stats = runStatsRef.current.get(id) ?? {
+              start: 0,
+              tools: 0,
+            }
+            stats.tools += 1
+            runStatsRef.current.set(id, stats)
+            const host = hostRef.current
+            executeClientTool(
+              toolCall.toolName,
+              toolCall.input as Record<string, unknown> | undefined,
+              {
+                chart: depsRef.current.getChart(),
+                navigate: host.navigate,
+                resolveMarketRef: host.resolveMarketRef,
+                scheduleCheck: host.scheduleCheck,
+                toolCallId: toolCall.toolCallId,
+              },
+            )
+          },
+          onFinish: () => {
+            const stats = runStatsRef.current.get(id)
+            track('assistant_run_completed', {
+              outcome: 'success',
+              tool_calls: stats?.tools ?? 0,
+              duration_ms: stats?.start ? Date.now() - stats.start : 0,
+            })
+          },
+        }),
+    })
+  }
+  const sessions = sessionsRef.current
+  const chat = sessions.get(conversationId)
 
   const {
     messages,
@@ -310,41 +368,44 @@ function AssistantConversationInner({
     regenerate,
     addToolResult,
   } = useChat({
-    // Changing this is what swaps threads: the SDK rebuilds its Chat
-    // around `messages` whenever the id moves.
-    id: threadId,
-    messages: storedMessages,
-    transport,
+    chat,
     experimental_throttle: STREAM_THROTTLE_MS,
-    // ask_user and approval-gated surface actions have no execute: the
-    // run parks on them and resumes by itself once every call in the
-    // last message carries a result.
-    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
-    onToolCall: ({ toolCall }) => {
-      runToolCallsRef.current += 1
-      executeClientTool(
-        toolCall.toolName,
-        toolCall.input as Record<string, unknown> | undefined,
-        {
-          chart: depsRef.current.getChart(),
-          navigate,
-          resolveMarketRef,
-          scheduleCheck,
-          toolCallId: toolCall.toolCallId,
-        },
-      )
-    },
-    onFinish: () => {
-      track('assistant_run_completed', {
-        outcome: 'success',
-        tool_calls: runToolCallsRef.current,
-        duration_ms: runStartRef.current ? Date.now() - runStartRef.current : 0,
-      })
-    },
   })
 
+  const liveIds = useAssistantConversationsStore((state) =>
+    state.conversations.map((row) => row.id).join('\0'),
+  )
+  useEffect(() => {
+    if (!liveIds) return
+    const ids = liveIds.split('\0')
+    sessions.prune(ids)
+    const live = new Set(ids)
+    for (const id of queuedByIdRef.current.keys()) {
+      if (!live.has(id)) queuedByIdRef.current.delete(id)
+    }
+  }, [liveIds, sessions])
+  useEffect(
+    () => () => {
+      sessionsRef.current?.dispose()
+    },
+    [],
+  )
+
   // ── Run status, reported up to the orb ────────────────────────────
-  const runStatus = deriveRunStatus(messages, status)
+  //
+  // Prefer the thread on screen, then any Chat still working in the
+  // background, so switching away from a live answer does not make the
+  // orb look idle.
+  const bgRevision = useSyncExternalStore(
+    sessions.subscribe,
+    sessions.getSnapshot,
+    sessions.getSnapshot,
+  )
+  const visibleStatus = deriveRunStatus(messages, status)
+  const runStatus =
+    visibleStatus.phase !== 'idle' || bgRevision < 0
+      ? visibleStatus
+      : sessions.busiestStatus()
   const lastReportedRef = useRef<string>('')
   useEffect(() => {
     const key = `${runStatus.phase}:${runStatus.toolName ?? ''}`
@@ -352,83 +413,6 @@ function AssistantConversationInner({
     lastReportedRef.current = key
     onStatusChange?.(runStatus)
   }, [runStatus, onStatusChange])
-
-  // ── Local persistence ─────────────────────────────────────────────
-  //
-  // Threads are written to this device and nowhere else. There is no
-  // account copy any more, which is why the whole `UIMessage` goes down
-  // rather than the flattened text the server used to accept: tool
-  // calls, research cards and order proposals all come back on reload.
-  //
-  // Debounced, because a streaming answer changes the array on every
-  // token and serializing a long thread that often would be felt. The
-  // pending write carries the id it was scheduled for, so a flush that
-  // lands after a switch still writes to the thread it came from.
-  const messagesRef = useRef(messages)
-  messagesRef.current = messages
-  const pendingWriteRef = useRef<{
-    id: string
-    timer: ReturnType<typeof setTimeout>
-  } | null>(null)
-
-  const writeThreadNow = useCallback((id: string) => {
-    const pending = pendingWriteRef.current
-    if (pending?.id === id) {
-      clearTimeout(pending.timer)
-      pendingWriteRef.current = null
-    }
-    useAssistantConversationsStore
-      .getState()
-      .setMessages(id, messagesRef.current)
-  }, [])
-
-  useEffect(() => {
-    // An empty thread is left alone. Opening the dock and closing it
-    // again should not stamp a conversation as touched.
-    if (messages.length === 0) return
-    // A finished run is written at once: the answer is complete and the
-    // window may be closed the moment it lands.
-    if (status === 'ready' || status === 'error') {
-      writeThreadNow(threadId)
-      return
-    }
-    if (pendingWriteRef.current?.id === threadId) return
-    const timer = setTimeout(() => {
-      pendingWriteRef.current = null
-      useAssistantConversationsStore
-        .getState()
-        .setMessages(threadId, messagesRef.current)
-    }, PERSIST_DEBOUNCE_MS)
-    pendingWriteRef.current = { id: threadId, timer }
-  }, [messages, status, threadId, writeThreadNow])
-
-  useEffect(
-    () => () => {
-      const pending = pendingWriteRef.current
-      if (pending) clearTimeout(pending.timer)
-    },
-    [],
-  )
-
-  // ── Switching threads ─────────────────────────────────────────────
-  //
-  // Runs BEFORE `threadId` moves, which is the whole reason the chat is
-  // not keyed off the store directly. Stop first so nothing keeps
-  // streaming into a Chat about to be discarded, then write what did
-  // arrive, then let the render that swaps the thread happen.
-  const stopRef = useRef(stop)
-  stopRef.current = stop
-  useEffect(() => {
-    if (conversationId === threadId) return
-    stopRef.current()
-    if (messagesRef.current.length > 0) writeThreadNow(threadId)
-    // Chart captures are held in memory and never written down, so they
-    // cannot follow a thread across a reload anyway. Dropping them here
-    // is what keeps a long session of switching from accumulating PNGs
-    // for threads nobody is looking at.
-    clearScreenshots()
-    setThreadId(conversationId)
-  }, [conversationId, threadId, writeThreadNow])
 
   // ── Naming the thread ─────────────────────────────────────────────
   //
@@ -439,28 +423,30 @@ function AssistantConversationInner({
   // already readable.
   const titledRef = useRef<Set<string>>(new Set())
   useEffect(() => {
-    if (messages.length === 0 || titledRef.current.has(threadId)) return
+    if (messages.length === 0 || titledRef.current.has(conversationId)) return
     const first = messages.find((message) => message.role === 'user')
     const seed = first ? textOf(first) : ''
     if (!seed.trim()) return
-    titledRef.current.add(threadId)
+    titledRef.current.add(conversationId)
 
     const store = useAssistantConversationsStore.getState()
-    const existing = store.conversations.find((meta) => meta.id === threadId)
+    const existing = store.conversations.find(
+      (meta) => meta.id === conversationId,
+    )
     if (existing?.title) return
-    store.rename(threadId, titleFromText(seed))
+    store.rename(conversationId, titleFromText(seed))
 
     let cancelled = false
     void generateConversationTitle(depsRef.current.pluginManager, seed).then(
       (title) => {
         if (cancelled || !title) return
-        useAssistantConversationsStore.getState().rename(threadId, title)
+        useAssistantConversationsStore.getState().rename(conversationId, title)
       },
     )
     return () => {
       cancelled = true
     }
-  }, [messages, threadId])
+  }, [messages, conversationId])
 
   // ── Sending ───────────────────────────────────────────────────────
   const pendingQuestion = findPendingQuestion(messages)
@@ -488,12 +474,14 @@ function AssistantConversationInner({
 
   const send = useCallback(
     (text: string) => {
-      runStartRef.current = Date.now()
-      runToolCallsRef.current = 0
+      runStatsRef.current.set(conversationId, {
+        start: Date.now(),
+        tools: 0,
+      })
       jumpToLatest()
       sendMessage({ text })
     },
-    [sendMessage, jumpToLatest],
+    [sendMessage, jumpToLatest, conversationId],
   )
 
   // One message may wait for the run in flight. A turn can span 28 steps
@@ -501,8 +489,19 @@ function AssistantConversationInner({
   // it, so a correction that occurred to the user halfway through was
   // simply lost. A backlog is deliberately not supported: the second
   // queued message would be answered with context from before an answer
-  // the user has not read yet.
-  const [queued, setQueued] = useState<string | null>(null)
+  // the user has not read yet. Keyed per thread so a follow-up typed
+  // here is not flushed into the conversation they switched to.
+  const queued =
+    queuedEpoch < 0 ? null : (queuedByIdRef.current.get(conversationId) ?? null)
+
+  const setQueued = useCallback(
+    (text: string | null) => {
+      if (text === null) queuedByIdRef.current.delete(conversationId)
+      else queuedByIdRef.current.set(conversationId, text)
+      setQueuedEpoch((n) => n + 1)
+    },
+    [conversationId],
+  )
 
   const handleSend = useCallback(
     (text: string) => {
@@ -525,7 +524,7 @@ function AssistantConversationInner({
       }
       send(text)
     },
-    [send, status, pendingQuestion, answerQuestion, jumpToLatest],
+    [send, status, pendingQuestion, answerQuestion, jumpToLatest, setQueued],
   )
   handleSendRef.current = handleSend
 
@@ -564,10 +563,9 @@ function AssistantConversationInner({
 
   const handleRegenerate = useCallback(() => {
     track('assistant_regenerated', { after_error: Boolean(error) })
-    runStartRef.current = Date.now()
-    runToolCallsRef.current = 0
+    runStatsRef.current.set(conversationId, { start: Date.now(), tools: 0 })
     regenerate()
-  }, [regenerate, error])
+  }, [regenerate, error, conversationId])
 
   // ── Order execution for the confirm cards ─────────────────────────
   const orderActions = useMemo<CopilotOrderActions>(
@@ -771,12 +769,13 @@ function AssistantConversationInner({
   useEffect(() => {
     if (!error || trackedErrorRef.current === error) return
     trackedErrorRef.current = error
+    const stats = runStatsRef.current.get(conversationId)
     track('assistant_run_completed', {
       outcome: 'error',
-      tool_calls: runToolCallsRef.current,
-      duration_ms: runStartRef.current ? Date.now() - runStartRef.current : 0,
+      tool_calls: stats?.tools ?? 0,
+      duration_ms: stats?.start ? Date.now() - stats.start : 0,
     })
-  }, [error])
+  }, [error, conversationId])
 
   return (
     <CopilotOrderActionsProvider value={orderActions}>
