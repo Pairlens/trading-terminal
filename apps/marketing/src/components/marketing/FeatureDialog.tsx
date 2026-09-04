@@ -6,6 +6,11 @@
 // Astro side over two window events: `pl:feature-open` asks it to open on an
 // index, and every step it takes is echoed back as `pl:feature-sync` so the
 // rail behind the dialog parks on the feature the visitor last read.
+//
+// Features with a clip play it in place of the screenshot: a muted looping
+// video keyed on the feature, so stepping to the next feature mounts a fresh
+// element (React would otherwise keep the old <video> and never reload its
+// sources). Reduced-motion visitors get the clip's poster instead.
 import { useCallback, useEffect, useState } from 'react'
 import {
   Dialog,
@@ -15,6 +20,14 @@ import {
 } from '@pairlens/ui/components/ui/dialog'
 import type { CSSProperties } from 'react'
 
+export type FeatureClip = {
+  mp4: string
+  webm: string
+  poster: string
+  width: number
+  height: number
+}
+
 export type FeatureDialogItem = {
   n: string
   name: string
@@ -22,6 +35,48 @@ export type FeatureDialogItem = {
   alt: string
   accent: string
   shot: string
+  clip?: FeatureClip
+}
+
+const shotStyle: CSSProperties = {
+  display: 'block',
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  objectPosition: '50% 0',
+}
+
+function FeatureShot({
+  feature,
+  reducedMotion,
+}: {
+  feature: FeatureDialogItem
+  reducedMotion: boolean
+}) {
+  const { clip } = feature
+  if (!clip)
+    return <img src={feature.shot} alt={feature.alt} style={shotStyle} />
+  if (reducedMotion) {
+    return <img src={clip.poster} alt={feature.alt} style={shotStyle} />
+  }
+  return (
+    <video
+      key={feature.n}
+      autoPlay
+      muted
+      loop
+      playsInline
+      disablePictureInPicture
+      poster={clip.poster}
+      width={clip.width}
+      height={clip.height}
+      aria-label={feature.alt}
+      style={shotStyle}
+    >
+      <source src={clip.webm} type="video/webm" />
+      <source src={clip.mp4} type="video/mp4" />
+    </video>
+  )
 }
 
 declare global {
@@ -93,6 +148,15 @@ export default function FeatureDialog({
   features: Array<FeatureDialogItem>
 }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const sync = () => setReducedMotion(query.matches)
+    sync()
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
 
   const step = useCallback(
     (dir: number) => {
@@ -156,24 +220,16 @@ export default function FeatureDialog({
                 flex: '0 1 auto',
                 overflow: 'hidden',
                 width: '100%',
-                aspectRatio: '1608 / 1024',
+                aspectRatio: feature.clip
+                  ? `${feature.clip.width} / ${feature.clip.height}`
+                  : '1608 / 1024',
                 maxHeight: '56vh',
                 background: '#08080a',
                 borderBottom:
                   '1px solid color-mix(in oklch, var(--border) 70%, transparent)',
               }}
             >
-              <img
-                src={feature.shot}
-                alt={feature.alt}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: '50% 0',
-                }}
-              />
+              <FeatureShot feature={feature} reducedMotion={reducedMotion} />
             </div>
             <div
               style={{
