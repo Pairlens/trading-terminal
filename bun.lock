@@ -5,7 +5,7 @@
     "": {
       "name": "pairlens",
       "dependencies": {
-        "@pairlens/fast-financial-charts": "^2.1.0",
+        "@pairlens/fast-financial-charts": "^2.1.1",
       },
       "devDependencies": {
         "@tanstack/eslint-config": "^0.3.4",
@@ -108,7 +108,7 @@
         "@fontsource-variable/geist": "^5.2.8",
         "@lezer/highlight": "^1.2.1",
         "@pairlens/bot-engine": "workspace:*",
-        "@pairlens/fast-financial-charts": "^2.1.0",
+        "@pairlens/fast-financial-charts": "^2.1.1",
         "@pairlens/market-engine": "workspace:*",
         "@pairlens/notification-engine": "workspace:*",
         "@pairlens/persistence": "workspace:*",
@@ -849,7 +849,7 @@
 
     "@pairlens/desktop": ["@pairlens/desktop@workspace:apps/desktop"],
 
-    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@2.1.0", "", { "peerDependencies": { "@types/react": ">=19", "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["@types/react", "react", "react-dom"] }, "sha512-ql9izRW1hXRQXx9nEk9kSyrgmUicUdvxaEjgHkwxi4wZFh8L/4rvI8GtMGLsx5tgQvmkrhbYiU6yx7H5tlblcQ=="],
+    "@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@2.1.1", "", { "peerDependencies": { "@types/react": ">=19", "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["@types/react", "react", "react-dom"] }, "sha512-URKBeUEalm10a6id2b7Nw3fb15IDwkpkZNxZHRSth9AxXni1Rdw6Js5zxYvXuDaveRC6tM3lEVGrahzXAU52mw=="],
 
     "@pairlens/market-engine": ["@pairlens/market-engine@workspace:packages/market-engine"],
 
@@ -3180,8 +3180,6 @@
     "@modelcontextprotocol/sdk/zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
 
     "@napi-rs/wasm-runtime/@emnapi/core": ["@emnapi/core@1.8.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg=="],
-
-    "@pairlens/marketing/@pairlens/fast-financial-charts": ["@pairlens/fast-financial-charts@2.0.0", "", { "peerDependencies": { "@types/react": ">=19", "react": ">=19", "react-dom": ">=19" }, "optionalPeers": ["@types/react", "react", "react-dom"] }, "sha512-fCgOP0l2ZFdb8t53HZePlY4CaT6SIEi/xTFX2qLLLfOf7Mm3HlIKvvFnl0TjDtSgl83eAlKz0xeQvvsTBoA3Hw=="],
 
     "@parcel/watcher/detect-libc": ["detect-libc@1.0.3", "", { "bin": { "detect-libc": "./bin/detect-libc.js" } }, "sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg=="],
 

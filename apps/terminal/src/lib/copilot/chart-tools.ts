@@ -304,7 +304,7 @@ export function buildChartTools(deps: CopilotToolDeps) {
     }),
     get_chart_indicators: tool({
       description:
-        'Read the indicators currently applied to the chart, with their latest computed values where available (e.g. current RSI).',
+        'Read the indicators currently applied to the chart, with their latest computed point and the last 30 bars of values (RSI `value`, StochRSI `k`/`d`, EMACross `fast`/`slow`, MACD `macd`/`signal`/`histogram`).',
       inputSchema: z.object({}),
       execute: async () => {
         const snap = deps.getChartSnapshot()
