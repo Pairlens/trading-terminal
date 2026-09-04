@@ -13,7 +13,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 [![Platforms](https://img.shields.io/badge/platforms-macOS%20·%20Windows%20·%20Linux%20·%20Web-8b5cf6)](https://pairlens.finance/install)
 [![Built with Tauri](https://img.shields.io/badge/desktop-Tauri%202-24C8DB?logo=tauri&logoColor=white)](apps/desktop/)
 
-<a href="https://terminal.pairlens.finance"><img src="docs/assets/terminal.webp" alt="The Pairlens chart terminal: a live BTC-USDT chart on OKX beside the venue ladder, order book and guarded order entry" width="100%" /></a>
+<a href="https://terminal.pairlens.finance"><img src="docs/assets/demo.gif" alt="Pairlens in motion: the Discover dashboard, a live BTC-USDT chart, the AI assistant asked to mark the important indicators, the guarded trade ticket, and the chart with the indicators drawn" width="100%" /></a>
 
 </div>
 
