@@ -55,7 +55,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@pairlens/fast-financial-charts": "^2.1.0"
+    "@pairlens/fast-financial-charts": "^2.1.1"
   },
   "patchedDependencies": {
     "ccxt@4.5.71": "patches/ccxt@4.5.71.patch"

@@ -393,7 +393,7 @@ export function buildChartSnapshot(
     return {
       timeframe: s.timeframe,
       chartType: s.chartType,
-      priceScaleMode: 'priceScaleMode' in s ? s.priceScaleMode : undefined,
+      priceScaleMode: s.priceScaleMode,
       indicators,
       drawings,
       visibleRange:
