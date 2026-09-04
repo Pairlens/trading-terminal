@@ -19,6 +19,27 @@ import accountsShot from '@/assets/screens/user_accounts.webp'
 import workflowsShot from '@/assets/screens/workflows.webp'
 import workspacesShot from '@/assets/screens/workspaces.webp'
 
+// Feature clips: Screen Studio recordings of the terminal, transcoded to a
+// 1600px-wide 30fps MP4 + WebM pair with the first frame as a WebP poster.
+// They live in public/screens because Astro's asset pipeline only handles
+// images. The intrinsic size feeds the dialog's aspect box, so a clip never
+// gets cropped to the screenshots' 1608:1024 frame. Cards without a clip
+// keep their static screenshot.
+type Clip = {
+  mp4: string
+  webm: string
+  poster: string
+  width: number
+  height: number
+}
+const clip = (name: string, width: number, height: number): Clip => ({
+  mp4: `/screens/${name}.mp4`,
+  webm: `/screens/${name}.webm`,
+  poster: `/screens/${name}.webp`,
+  width,
+  height,
+})
+
 const FEATURES = [
   {
     n: '01',
@@ -26,6 +47,7 @@ const FEATURES = [
     accent: 'var(--pl-magenta)',
     phrase: 'reads your charts with you',
     shot: tradingShot,
+    clip: clip('trading', 1600, 1002),
     alt: 'The Pairlens trading view: a BTC-USDT chart and order book, with the AI assistant answering a question about the market beside them',
     copy: 'It sits in a dock over every screen and sees what you are looking at. Ask it to mark a level, explain a candle, or execute inside the guardrails you set.',
     detail:
@@ -37,6 +59,7 @@ const FEATURES = [
     accent: 'var(--pl-amber)',
     phrase: 'arranges itself the way you think',
     shot: workspacesShot,
+    clip: clip('workspaces', 1600, 1002),
     alt: 'A Comparer workspace with four synchronized charts: BTC, ETH, SOL and DOGE',
     copy: 'Drag panels into the layout you think in, pop them onto a second monitor, pick from 18 themes, and save the whole desk as a workspace.',
     detail:
@@ -48,6 +71,7 @@ const FEATURES = [
     accent: 'var(--pl-green)',
     phrase: 'runs the Python you write',
     shot: indicatorsShot,
+    clip: clip('indicators', 1600, 1002),
     alt: 'The Pairlens indicators editor: a SuperTrend indicator written in Python beside the live chart it paints on',
     copy: 'numpy, pandas and the pairlens.ta library, running against live candles. Export it as a plugin when ready, or run it 24/7 as a bot.',
     detail:
@@ -59,6 +83,7 @@ const FEATURES = [
     accent: 'var(--pl-orange)',
     phrase: 'watches the market while you sleep',
     shot: workflowsShot,
+    clip: clip('workflows', 1600, 1086),
     alt: 'The Pairlens workflow builder wiring a market condition to an action',
     copy: 'Deterministic strategies that fire on your conditions, even while you are away.',
     detail:
@@ -70,7 +95,7 @@ const FEATURES = [
     accent: 'var(--pl-cyan)',
     phrase: 'says something the moment a level breaks',
     shot: alertsShot,
-    alt: 'The Pairlens alerts panel listing price and signal alerts',
+    alt: 'The Pairlens notifications builder: two armed BTC-USDT alerts in the rules list, and a price-alert flow wired to toast and OS notification channels',
     copy: 'Levels, fills, signals and closes, routed to toasts, OS notifications or webhooks.',
     detail:
       'Levels, fills, signals and closes, routed to toasts, OS notifications or webhooks. Point a webhook at anything that accepts one and the terminal keeps firing while it runs, whether or not the window is in front of you.',
@@ -81,6 +106,7 @@ const FEATURES = [
     accent: 'var(--pl-green)',
     phrase: 'docks the web beside your chart',
     shot: browserShot,
+    clip: clip('embedded_browser', 1600, 1086),
     alt: 'A web page pinned as a panel beside a Pairlens chart',
     copy: 'Pin any site as a panel inside a workspace. Stop alt-tabbing mid-trade.',
     detail:
@@ -92,6 +118,7 @@ const FEATURES = [
     accent: 'var(--pl-iris)',
     phrase: 'finds anything you can name in one keystroke',
     shot: omnisearchShot,
+    clip: clip('omnisearch', 1600, 1086),
     alt: 'The Pairlens omnisearch palette open over a chart',
     copy: 'Pairs, plugins, commands and settings, one keystroke from anywhere.',
     detail:
@@ -114,6 +141,7 @@ const FEATURES = [
     accent: 'var(--pl-magenta)',
     phrase: 'Fifty-one plugins',
     shot: pluginsStoreShot,
+    clip: clip('plugins_store', 1600, 1086),
     alt: 'The Pairlens plugin store listing venue, brain and asset plugins',
     copy: 'Venues, brains, assets and themes, each shipped with its source.',
     detail:
@@ -171,6 +199,7 @@ const dialogFeatures = FEATURES.map((f, i) => ({
   alt: f.alt,
   accent: f.accent,
   shot: fullShots[i].src,
+  clip: f.clip,
 }))
 ---
 
@@ -238,18 +267,41 @@ const dialogFeatures = FEATURES.map((f, i) => ({
           >
             <span class="edge-light" aria-hidden="true"></span>
             <div class="fcard-shot">
-              {/* The phone `sizes` is 2/3 of the rendered 84vw on purpose: it
-                  caps 3x iPhones at the 2x-density rendition, which is
-                  indistinguishable for a 330px-wide screenshot and ~40%
-                  fewer bytes. Same trick on the laptop shot. */}
-              <Image
-                src={f.shot}
-                alt={f.alt}
-                widths={[560, 672, 1120]}
-                sizes="(max-width: 720px) 56vw, 560px"
-                format="webp"
-                quality={82}
-              />
+              {/* Clips carry no autoplay attribute: the script below plays
+                  whichever cards are on screen and pauses the rest, so a
+                  nine-card rail never decodes nine videos at once, and
+                  reduced-motion visitors keep the poster. `preload="none"`
+                  keeps the bytes off the page load until a card is seen.
+                  The phone `sizes` on the static shots is 2/3 of the rendered
+                  84vw on purpose: it caps 3x iPhones at the 2x-density
+                  rendition, which is indistinguishable for a 330px-wide
+                  screenshot and ~40% fewer bytes. */}
+              {f.clip ? (
+                <video
+                  muted
+                  loop
+                  playsinline
+                  disablepictureinpicture
+                  preload="none"
+                  poster={f.clip.poster}
+                  width={f.clip.width}
+                  height={f.clip.height}
+                  aria-label={f.alt}
+                  data-clip
+                >
+                  <source src={f.clip.webm} type="video/webm" />
+                  <source src={f.clip.mp4} type="video/mp4" />
+                </video>
+              ) : (
+                <Image
+                  src={f.shot}
+                  alt={f.alt}
+                  widths={[560, 672, 1120]}
+                  sizes="(max-width: 720px) 56vw, 560px"
+                  format="webp"
+                  quality={82}
+                />
+              )}
             </div>
             <div class="fcard-body">
               <div class="fcard-top">
@@ -443,6 +495,36 @@ const dialogFeatures = FEATURES.map((f, i) => ({
         event.preventDefault()
         openDialog(target)
       })
+    }
+
+    // — Clips — play only the cards that are actually on screen. Horizontal
+    // rail scrolling and vertical page scrolling both move cards in and out
+    // of the viewport, and an IntersectionObserver against the viewport
+    // covers both. Reduced motion never starts a clip: the poster stands in
+    // as the screenshot it replaced. play() returns a promise that rejects
+    // when a browser blocks autoplay, and the poster is the right fallback,
+    // so that rejection is swallowed.
+    const clips = Array.from(root.querySelectorAll<HTMLVideoElement>('[data-clip]'))
+    if (clips.length > 0 && !reducedMotion) {
+      const watcher = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const video = entry.target as HTMLVideoElement
+            if (entry.isIntersecting) {
+              video.play().catch(() => {})
+            } else if (!video.paused) {
+              video.pause()
+            }
+          }
+        },
+        { threshold: 0.35 },
+      )
+      for (const video of clips) watcher.observe(video)
+      document.addEventListener(
+        'astro:before-swap',
+        () => watcher.disconnect(),
+        { once: true },
+      )
     }
 
     root
@@ -826,12 +908,14 @@ const dialogFeatures = FEATURES.map((f, i) => ({
     border-radius: 17px 17px 0 0;
     border-bottom: 1px solid color-mix(in oklch, var(--border) 70%, transparent);
   }
-  .fcard-shot :global(img) {
+  .fcard-shot :global(img),
+  .fcard-shot video {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 0;
+    background: #08080a;
   }
   .fcard-body {
     padding: 28px 30px 32px;
