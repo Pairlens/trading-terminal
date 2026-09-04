@@ -5,7 +5,7 @@ group: builders
 parent: agent-interfaces
 order: 1
 eyebrow: For builders
-updated: 22 AUG 2026
+updated: 4 SEP 2026
 readTime: 13 min read
 ---
 
@@ -216,6 +216,9 @@ and show me" ends with a picture rather than a sentence.
 **Read-back (3).** `get_chart_state`, `get_chart_indicators`,
 `get_chart_drawings`. These are what let it answer questions about what is
 already on your chart, including levels you drew yourself.
+`get_chart_indicators` returns each indicator's latest computed point plus
+the last 30 bars of values, so a question about RSI, StochRSI or an EMA
+cross is answered from the numbers on the chart, not just the settings.
 
 The first 27 are the gated ones. On the bots page there is no chart, so they are
 not offered; ask for a drawing there and the assistant navigates to a chart

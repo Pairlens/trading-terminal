@@ -13,12 +13,15 @@
 import { putScreenshot } from './screenshot-store'
 import type { useNavigate } from '@tanstack/react-router'
 import type {
+  ChartSnapshot,
   FastFinancialChartRef,
   IndicatorInstanceInput,
+  IndicatorValuePoint,
 } from '@pairlens/fast-financial-charts/types'
 import type { InstrumentRef, MarketRef } from '@pairlens/shared/market-ref'
 import type {
   CopilotChartSnapshot,
+  CopilotIndicatorPoint,
   CopilotMarketDataHandle,
 } from '@/lib/copilot/tool-deps'
 import type { useMarketData } from '@/lib/market-data-provider'
@@ -343,48 +346,62 @@ export function executeClientTool(
   }
 }
 
+/** Matches `get_candles`' recent window: enough to see a cross, not a 500-bar dump. */
+const INDICATOR_VALUE_BARS = 30
+
+function isValueSnapshot(
+  snapshot: ReturnType<FastFinancialChartRef['getSnapshot']>,
+): snapshot is ChartSnapshot {
+  return 'indicatorResults' in snapshot
+}
+
+function toIndicatorPoint(point: IndicatorValuePoint): CopilotIndicatorPoint {
+  return point as CopilotIndicatorPoint
+}
+
 /** Extract a compact chart snapshot for the copilot's chart-query tools. */
 export function buildChartSnapshot(
   chart: FastFinancialChartRef | null,
 ): CopilotChartSnapshot | null {
   if (!chart) return null
-  const ref = chart as unknown as {
-    getSnapshot?: (o?: unknown) => Record<string, unknown>
-    data?: () => Array<unknown>
-    seriesOrder?: () => Array<string>
-  }
-  if (!ref.getSnapshot) return null
   try {
-    const s = ref.getSnapshot() ?? {}
-    const indicators = Array.isArray(s.indicators)
-      ? (s.indicators as Array<Record<string, unknown>>).map((ind) => ({
-          id: String(ind.id ?? ''),
-          type: String(ind.type ?? ''),
-          params: ind.params as Record<string, unknown> | undefined,
-        }))
-      : []
-    const drawings = Array.isArray(s.drawings)
-      ? (s.drawings as Array<Record<string, unknown>>).map((d) => ({
-          id: String(d.id ?? ''),
-          type: String(d.type ?? ''),
-        }))
-      : []
-    const viewport = s.viewport as
-      | { startIndex?: number; endIndex?: number }
-      | undefined
-    const seriesOrder = ref.seriesOrder?.() ?? []
+    const s = chart.getSnapshot({ includeIndicatorValues: true })
+    const valuesById = new Map<string, Array<CopilotIndicatorPoint>>()
+    if (isValueSnapshot(s)) {
+      for (const result of s.indicatorResults) {
+        valuesById.set(
+          result.indicator.id,
+          result.values.slice(-INDICATOR_VALUE_BARS).map(toIndicatorPoint),
+        )
+      }
+    }
+    const indicators = s.indicators.map((ind) => {
+      const values = valuesById.get(ind.id) ?? []
+      return {
+        id: ind.id,
+        type: String(ind.type),
+        params: ind.params as Record<string, unknown> | undefined,
+        latest: values[values.length - 1] ?? null,
+        values,
+      }
+    })
+    const drawings = s.drawings.map((d) => ({
+      id: d.id,
+      type: String(d.type),
+    }))
+    const viewport = s.viewport
     return {
-      timeframe: s.timeframe as string | undefined,
-      chartType: s.chartType as string | undefined,
-      priceScaleMode: s.priceScaleMode as string | undefined,
+      timeframe: s.timeframe,
+      chartType: s.chartType,
+      priceScaleMode: 'priceScaleMode' in s ? s.priceScaleMode : undefined,
       indicators,
       drawings,
       visibleRange:
         viewport?.startIndex != null && viewport?.endIndex != null
           ? { startIndex: viewport.startIndex, endIndex: viewport.endIndex }
           : undefined,
-      barCount: ref.data?.().length,
-      compareSymbols: seriesOrder.slice(1),
+      barCount: chart.data?.().length,
+      compareSymbols: chart.seriesOrder?.().slice(1),
     }
   } catch {
     return null

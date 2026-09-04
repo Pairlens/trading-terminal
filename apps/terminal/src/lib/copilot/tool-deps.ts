@@ -248,6 +248,12 @@ export type CopilotMarketDataHandle = {
   ) => () => void
 }
 
+/** One computed indicator sample. RSI uses `value`; StochRSI uses `k`/`d`; EMACross uses `fast`/`slow`. */
+export type CopilotIndicatorPoint = {
+  ts: number
+  [key: string]: boolean | number | string | undefined
+}
+
 export type CopilotChartSnapshot = {
   timeframe?: string
   chartType?: string
@@ -256,7 +262,10 @@ export type CopilotChartSnapshot = {
     id: string
     type: string
     params?: Record<string, unknown>
-    latest?: number | null
+    /** Last computed point, or null while the engine has not produced values yet. */
+    latest?: CopilotIndicatorPoint | null
+    /** Most recent computed points, newest last, capped so a long series stays compact. */
+    values?: Array<CopilotIndicatorPoint>
   }>
   drawings?: Array<{ id: string; type: string }>
   visibleRange?: { startIndex: number; endIndex: number }
