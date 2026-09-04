@@ -222,7 +222,7 @@ export default function FeatureDialog({
                 width: '100%',
                 aspectRatio: feature.clip
                   ? `${feature.clip.width} / ${feature.clip.height}`
-                  : '1608 / 1024',
+                  : '1600 / 1002',
                 maxHeight: '56vh',
                 background: '#08080a',
                 borderBottom:
