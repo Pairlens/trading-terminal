@@ -13,7 +13,7 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 [![Platforms](https://img.shields.io/badge/platforms-macOS%20·%20Windows%20·%20Linux%20·%20Web-8b5cf6)](https://pairlens.finance/install)
 [![Built with Tauri](https://img.shields.io/badge/desktop-Tauri%202-24C8DB?logo=tauri&logoColor=white)](apps/desktop/)
 
-<a href="https://terminal.pairlens.finance"><img src="docs/assets/terminal.webp" alt="The Pairlens chart terminal: live BTC chart, order book, guarded order entry, and the AI assistant analyzing the market" width="100%" /></a>
+<a href="https://terminal.pairlens.finance"><img src="docs/assets/terminal.webp" alt="The Pairlens chart terminal: a live BTC-USDT chart on OKX beside the venue ladder, order book and guarded order entry" width="100%" /></a>
 
 </div>
 
@@ -29,10 +29,10 @@ The kind of trading desk that usually costs thousands of dollars a year: free, p
 <table>
   <tr>
     <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/discovery.webp" alt="Discovery: markets overview, Fear and Greed, live news" /></a><p align="center"><sub><b>Discover</b> · markets, news, Fear &amp; Greed, top coins</sub></p></td>
-    <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/workspaces.webp" alt="Workspaces: four charts comparing pairs side by side" /></a><p align="center"><sub><b>Workspaces</b> · parameterized multi-chart layouts</sub></p></td>
+    <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/workspaces.webp" alt="Workspaces: the Cross-Venue Desk, one pair quoted on every venue beside the chart, tape, order book and ticket" /></a><p align="center"><sub><b>Workspaces</b> · parameterized multi-pane desks from the store</sub></p></td>
   </tr>
   <tr>
-    <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/indicators.png" alt="Python indicator workbench: SuperTrend in real Python next to a live chart" /></a><p align="center"><sub><b>Python indicators</b> · real Python with pip packages, run locally</sub></p></td>
+    <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/indicators.webp" alt="Python indicator workbench: SuperTrend in real Python next to a live chart" /></a><p align="center"><sub><b>Python indicators</b> · real Python with pip packages, run locally</sub></p></td>
     <td width="50%"><a href="https://pairlens.finance/#features"><img src="docs/assets/plugin-store.webp" alt="Plugin Store: connectors, AI providers, and themes as installable plugins" /></a><p align="center"><sub><b>Plugin Store</b> · connectors, AI providers, and themes</sub></p></td>
   </tr>
 </table>
