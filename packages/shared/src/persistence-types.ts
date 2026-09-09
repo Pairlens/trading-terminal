@@ -38,6 +38,16 @@ export type UserConfig = {
   aiPersona: 'mentor' | 'balanced' | 'technical'
   tradingMode: 'paper' | 'live'
   preferences: Record<string, unknown>
+  /**
+   * Server-relative avatar path (`/api/storage/...`), or null when the account
+   * has no uploaded picture.
+   *
+   * It is stored on the `users` row, not the config row, but it is served from
+   * here because this is the only profile read the terminal makes. `POST
+   * /api/user/avatar` used to be a write nothing handed back, so an upload
+   * succeeded and the avatar never appeared anywhere.
+   */
+  avatarUrl: string | null
 }
 
 // Risk state

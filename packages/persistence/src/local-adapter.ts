@@ -239,6 +239,8 @@ export class LocalPersistenceAdapter implements PersistenceAdapter {
       aiPersona: 'balanced',
       tradingMode: 'paper',
       preferences: {},
+      // The avatar is an App Server object; a local-only config never has one.
+      avatarUrl: null,
       ...existing,
       ...patch,
       userId,
