@@ -7047,7 +7047,9 @@
       "launchedOn": "Diluncurkan di {{launchpad}}",
       "twitter": "Profil X",
       "telegram": "Telegram",
-      "website": "Situs web"
-    }
+      "website": "Situs web",
+      "viewImage": "Perbesar gambar {{symbol}}"
+    },
+    "sortBy": "Urutkan menurut"
   }
 }

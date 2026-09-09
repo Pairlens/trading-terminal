@@ -45,7 +45,7 @@ describe('memecoin loading states', () => {
     // pane rebuild itself instead of filling in.
     const source = read('launchpad-column-pane.tsx')
     expect(source).toContain('{isLoading || rows.length > 0 ? (')
-    expect(source).toContain('<LaunchpadGhostRows stage={stage}')
+    expect(source).toMatch(/<LaunchpadGhostRows\s+stage=\{stage\}/)
   })
 
   test('the ghosts are sized to the pane and fade out at its bottom', () => {

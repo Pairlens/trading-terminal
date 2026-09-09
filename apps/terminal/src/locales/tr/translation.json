@@ -7047,7 +7047,9 @@
       "launchedOn": "{{launchpad}} üzerinde başlatıldı",
       "twitter": "X profili",
       "telegram": "Telegram",
-      "website": "Web sitesi"
-    }
+      "website": "Web sitesi",
+      "viewImage": "{{symbol}} görselini büyüt"
+    },
+    "sortBy": "Sırala"
   }
 }

@@ -7047,7 +7047,9 @@
       "launchedOn": "在 {{launchpad}} 發行",
       "twitter": "X 個人頁",
       "telegram": "Telegram",
-      "website": "網站"
-    }
+      "website": "網站",
+      "viewImage": "放大 {{symbol}} 的圖片"
+    },
+    "sortBy": "排序方式"
   }
 }

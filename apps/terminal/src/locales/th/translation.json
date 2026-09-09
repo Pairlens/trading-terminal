@@ -7047,7 +7047,9 @@
       "launchedOn": "เปิดตัวบน {{launchpad}}",
       "twitter": "โปรไฟล์ X",
       "telegram": "Telegram",
-      "website": "เว็บไซต์"
-    }
+      "website": "เว็บไซต์",
+      "viewImage": "ขยายรูปภาพของ {{symbol}}"
+    },
+    "sortBy": "เรียงตาม"
   }
 }

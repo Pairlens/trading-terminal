@@ -120,12 +120,20 @@ social link, and only rows whose deployer has revoked both mint and freeze
 authority; an unknown audit fails that switch, for the same reason the safety
 panel refuses to paint a green check on one.
 
-Every row is two lines and carries what the filters read. The ticker sits on
-the first line with a dot beside it: green when both authorities are revoked,
-red when the deployer can still mint or freeze, no dot when the feed published
-no audit. The name and the social links sit under it. Market cap has liquidity
-under it, the stage figure has the holder count, and buys against sells have the
-window's volume. The chart link's tooltip names the launchpad.
+Every row is a card and carries what the filters read. The ticker has a dot
+beside it: green when both authorities are revoked, red when the deployer can
+still mint or freeze, no dot when the feed published no audit. The name sits
+under the ticker, then the stage figure (age, curve, time since migration or
+the day's move) with the holder count and the social links, then market cap
+against buys and sells. On a wide column the card is two lines with the figures
+beside the text; on a narrow one it stacks to four, so nothing is cut to make
+room for something else. The chart link's tooltip names the launchpad.
+
+The picture is the pitch on a memecoin, so the mark is larger here than
+anywhere else in the terminal, and clicking it opens the image at full size
+with the token's address and links under it. The row above the list is a sort
+bar rather than column headers: chips for the ticker, the stage figure, market
+cap and flow, with the caret on the one in force.
 
 A column filtered down to nothing says so, and offers to clear the bounds, rather
 than showing you the same empty pane a quiet market would.

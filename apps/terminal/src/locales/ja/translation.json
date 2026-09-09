@@ -7047,7 +7047,9 @@
       "launchedOn": "{{launchpad}}でローンチ",
       "twitter": "Xプロフィール",
       "telegram": "Telegram",
-      "website": "ウェブサイト"
-    }
+      "website": "ウェブサイト",
+      "viewImage": "{{symbol}}の画像を拡大"
+    },
+    "sortBy": "並べ替え"
   }
 }

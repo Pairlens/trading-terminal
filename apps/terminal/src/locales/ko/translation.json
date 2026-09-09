@@ -7047,7 +7047,9 @@
       "launchedOn": "{{launchpad}}에서 출시",
       "twitter": "X 프로필",
       "telegram": "Telegram",
-      "website": "웹사이트"
-    }
+      "website": "웹사이트",
+      "viewImage": "{{symbol}} 이미지 확대"
+    },
+    "sortBy": "정렬 기준"
   }
 }

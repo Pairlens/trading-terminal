@@ -7195,7 +7195,9 @@
       "launchedOn": "Uruchomiony na {{launchpad}}",
       "twitter": "Profil X",
       "telegram": "Telegram",
-      "website": "Strona"
-    }
+      "website": "Strona",
+      "viewImage": "Powiększ obraz {{symbol}}"
+    },
+    "sortBy": "Sortuj według"
   }
 }

@@ -7195,7 +7195,9 @@
       "launchedOn": "Запущен на {{launchpad}}",
       "twitter": "Профиль X",
       "telegram": "Telegram",
-      "website": "Сайт"
-    }
+      "website": "Сайт",
+      "viewImage": "Увеличить изображение {{symbol}}"
+    },
+    "sortBy": "Сортировать по"
   }
 }

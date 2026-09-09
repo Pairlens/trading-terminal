@@ -7047,7 +7047,9 @@
       "launchedOn": "Ra mắt trên {{launchpad}}",
       "twitter": "Hồ sơ X",
       "telegram": "Telegram",
-      "website": "Trang web"
-    }
+      "website": "Trang web",
+      "viewImage": "Phóng to hình ảnh của {{symbol}}"
+    },
+    "sortBy": "Sắp xếp theo"
   }
 }

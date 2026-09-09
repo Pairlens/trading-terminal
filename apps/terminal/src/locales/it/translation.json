@@ -7047,7 +7047,9 @@
       "launchedOn": "Lanciato su {{launchpad}}",
       "twitter": "Profilo X",
       "telegram": "Telegram",
-      "website": "Sito web"
-    }
+      "website": "Sito web",
+      "viewImage": "Ingrandisci l'immagine di {{symbol}}"
+    },
+    "sortBy": "Ordina per"
   }
 }
