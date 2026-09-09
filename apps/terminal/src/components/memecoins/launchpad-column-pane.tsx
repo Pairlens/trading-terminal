@@ -776,7 +776,7 @@ function LaunchpadRow({
       onClick={() => setImageOpen(true)}
       aria-label={t('memecoins.row.viewImage', { symbol: token.symbol })}
       className={cn(
-        'relative shrink-0 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        'relative shrink-0 cursor-zoom-in overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-ring',
         markSize,
       )}
     >

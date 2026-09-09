@@ -171,7 +171,10 @@ export function TokenImageLightbox({
               layoutId={layoutId}
               transition={MARK_MORPH}
               style={{ borderRadius: 16 }}
-              className="mx-auto mt-4 size-[280px] max-w-full overflow-hidden"
+              // The cursor pairs with the row's zoom-in: the picture is the
+              // control that opened the box, so it is the one that closes it.
+              className="mx-auto mt-4 size-[280px] max-w-full cursor-zoom-out overflow-hidden"
+              onClick={onClose}
             >
               <TokenMark
                 iconUrl={token.iconUrl}
