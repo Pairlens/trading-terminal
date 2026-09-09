@@ -130,8 +130,10 @@ beside the text; on a narrow one it stacks to four, so nothing is cut to make
 room for something else. The chart link's tooltip names the launchpad.
 
 The picture is the pitch on a memecoin, so the mark is larger here than
-anywhere else in the terminal, and clicking it opens the image at full size
-with the token's address and links under it. The row above the list is a sort
+anywhere else in the terminal, and clicking it grows the mark out of its row
+into the image at full size, with the token's address and links under it.
+Closing shrinks it back into the row it came from, so you never lose track of
+which of thirty rows you just opened. The row above the list is a sort
 bar rather than column headers: chips for the ticker, the stage figure, market
 cap and flow, with the caret on the one in force.
 

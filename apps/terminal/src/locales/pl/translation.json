@@ -7196,7 +7196,8 @@
       "twitter": "Profil X",
       "telegram": "Telegram",
       "website": "Strona",
-      "viewImage": "Powiększ obraz {{symbol}}"
+      "viewImage": "Powiększ obraz {{symbol}}",
+      "closeImage": "Zamknij obraz"
     },
     "sortBy": "Sortuj według"
   }

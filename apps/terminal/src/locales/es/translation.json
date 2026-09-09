@@ -7048,7 +7048,8 @@
       "twitter": "Perfil de X",
       "telegram": "Telegram",
       "website": "Sitio web",
-      "viewImage": "Ampliar la imagen de {{symbol}}"
+      "viewImage": "Ampliar la imagen de {{symbol}}",
+      "closeImage": "Cerrar la imagen"
     },
     "sortBy": "Ordenar por"
   }

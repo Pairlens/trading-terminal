@@ -43,6 +43,7 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
+import { motion, useReducedMotion } from 'motion/react'
 import {
   AtSign,
   ChevronDown,
@@ -99,11 +100,17 @@ import {
   ChangeCell,
   CurveBar,
   FlowBar,
+  SocialLink,
   TokenMark,
   formatAge,
   formatCount,
   formatMcap,
 } from '@/components/memecoins/memecoin-pane-primitives'
+import {
+  MARK_MORPH,
+  TokenImageLightbox,
+  tokenMarkLayoutId,
+} from '@/components/memecoins/token-image-lightbox'
 import { track } from '@/lib/analytics-events'
 import {
   UNUSUAL_TURNOVER,
@@ -713,6 +720,8 @@ function LaunchpadRow({
 }) {
   const { t } = useTranslation()
   const [imageOpen, setImageOpen] = useState(false)
+  const markRef = useRef<HTMLButtonElement>(null)
+  const reduceMotion = useReducedMotion() ?? false
   const venue = VENUE_BY_CHAIN[token.chain] ?? null
   const audit = token.audit
   // Revoked means BOTH authorities are gone. One revoked and one unknown is
@@ -747,33 +756,43 @@ function LaunchpadRow({
   // memecoin the picture IS the pitch, and a tap on it opens the picture at
   // a size the pitch can be judged at. Only a real image is a button: a
   // gradient with two letters has nothing to enlarge.
-  const markClass = cn(
-    'shrink-0 rounded-xl',
-    stacked ? 'size-10 text-[12px]' : 'size-8 text-[11px]',
-  )
+  //
+  // The button is a shared-layout element: the lightbox draws the same
+  // `layoutId`, so opening it grows this mark into the 280px image and
+  // closing shrinks the image back into the row. Under reduced motion the
+  // id is dropped and the lightbox simply fades. The wrapper owns the
+  // corner radius (as a motion value, so it is corrected mid-morph) and the
+  // clipping; the mark inside is square so nothing is rounded twice.
+  const markSize = stacked ? 'size-10 text-[12px]' : 'size-8 text-[11px]'
+  const layoutId = reduceMotion ? undefined : tokenMarkLayoutId(stage, token)
   const mark = token.iconUrl ? (
-    <button
+    <motion.button
+      ref={markRef}
       type="button"
+      layoutId={layoutId}
+      transition={MARK_MORPH}
+      whileHover={{ scale: 1.06 }}
+      style={{ borderRadius: 12 }}
       onClick={() => setImageOpen(true)}
       aria-label={t('memecoins.row.viewImage', { symbol: token.symbol })}
       className={cn(
-        markClass,
-        'outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring',
+        'relative shrink-0 overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-ring',
+        markSize,
       )}
     >
       <TokenMark
         iconUrl={token.iconUrl}
         symbol={token.symbol}
         address={token.address}
-        className={markClass}
+        className="size-full rounded-none"
       />
-    </button>
+    </motion.button>
   ) : (
     <TokenMark
       iconUrl={null}
       symbol={token.symbol}
       address={token.address}
-      className={markClass}
+      className={cn('shrink-0 rounded-xl', markSize)}
     />
   )
 
@@ -915,10 +934,12 @@ function LaunchpadRow({
     ) : null
 
   const dialog = token.iconUrl ? (
-    <TokenImageDialog
+    <TokenImageLightbox
       open={imageOpen}
-      onOpenChange={setImageOpen}
+      onClose={() => setImageOpen(false)}
       token={token}
+      layoutId={layoutId}
+      returnFocusTo={markRef}
       chartLink={chartLink}
       onOpenChart={() =>
         track('memecoin_row_opened', { stage, chain: token.chain })
@@ -994,128 +1015,6 @@ function LaunchpadRow({
       <span className="flex w-[54px] items-center justify-end">{bolt}</span>
       {dialog}
     </li>
-  )
-}
-
-/**
- * The picture, at a size it can be judged at. A memecoin is bought on its
- * image before anything else, and a 32px chip is a promise the trader wants
- * to check. The dialog also carries the address and the links, since those
- * are the two other things a trader verifies before a buy.
- */
-function TokenImageDialog({
-  open,
-  onOpenChange,
-  token,
-  chartLink,
-  onOpenChart,
-}: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  token: LaunchpadToken
-  chartLink: ReturnType<typeof chartLinkProps> | null
-  onOpenChart: () => void
-}) {
-  const { t } = useTranslation()
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {token.symbol}
-            {token.launchpad ? (
-              <span className="rounded-md bg-muted/40 px-1.5 py-0.5 font-mono text-[10px] font-normal text-muted-foreground">
-                {token.launchpad}
-              </span>
-            ) : null}
-          </DialogTitle>
-          <DialogDescription>{token.name}</DialogDescription>
-        </DialogHeader>
-        {/* The same mark as the row, at 280px: it paints the token's gradient
-            under the image and falls back to it if the host refuses a second
-            fetch, so the dialog never opens on a broken-image glyph. */}
-        <TokenMark
-          iconUrl={token.iconUrl}
-          symbol={token.symbol}
-          address={token.address}
-          className="mx-auto size-[280px] max-w-full rounded-2xl text-[72px]"
-        />
-        <p
-          className="break-all font-mono text-[10.5px] leading-snug text-muted-foreground"
-          title={token.address}
-        >
-          {token.address}
-        </p>
-        <DialogFooter className="items-center sm:justify-between">
-          <span className="inline-flex items-center gap-1">
-            {token.socials.twitter ? (
-              <SocialLink
-                href={token.socials.twitter}
-                label={t('memecoins.row.twitter')}
-                Icon={AtSign}
-                large
-              />
-            ) : null}
-            {token.socials.telegram ? (
-              <SocialLink
-                href={token.socials.telegram}
-                label={t('memecoins.row.telegram')}
-                Icon={Send}
-                large
-              />
-            ) : null}
-            {token.socials.website ? (
-              <SocialLink
-                href={token.socials.website}
-                label={t('memecoins.row.website')}
-                Icon={Globe}
-                large
-              />
-            ) : null}
-          </span>
-          {chartLink ? (
-            <Button
-              size="sm"
-              nativeButton={false}
-              render={<Link {...chartLink} onClick={onOpenChart} />}
-            >
-              {t('memecoins.openChart', { symbol: token.symbol })}
-            </Button>
-          ) : null}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-function SocialLink({
-  href,
-  label,
-  Icon,
-  large = false,
-}: {
-  href: string
-  label: string
-  Icon: typeof Globe
-  /** The dialog's size: a 28px target with a 14px glyph. */
-  large?: boolean
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      title={label}
-      aria-label={label}
-      className={cn(
-        'rounded-md text-muted-foreground/70 outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring group-hover/row:text-muted-foreground',
-        large
-          ? 'inline-flex size-7 items-center justify-center bg-muted/40'
-          : 'p-0.5',
-      )}
-    >
-      <Icon className={large ? 'size-3.5' : 'size-2.5'} aria-hidden />
-    </a>
   )
 }
 

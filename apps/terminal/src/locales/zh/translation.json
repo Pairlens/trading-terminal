@@ -7048,7 +7048,8 @@
       "twitter": "X 主页",
       "telegram": "Telegram",
       "website": "网站",
-      "viewImage": "放大 {{symbol}} 的图片"
+      "viewImage": "放大 {{symbol}} 的图片",
+      "closeImage": "关闭图片"
     },
     "sortBy": "排序方式"
   }

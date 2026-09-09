@@ -7048,7 +7048,8 @@
       "twitter": "Hồ sơ X",
       "telegram": "Telegram",
       "website": "Trang web",
-      "viewImage": "Phóng to hình ảnh của {{symbol}}"
+      "viewImage": "Phóng to hình ảnh của {{symbol}}",
+      "closeImage": "Đóng hình ảnh"
     },
     "sortBy": "Sắp xếp theo"
   }

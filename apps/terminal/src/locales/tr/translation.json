@@ -7048,7 +7048,8 @@
       "twitter": "X profili",
       "telegram": "Telegram",
       "website": "Web sitesi",
-      "viewImage": "{{symbol}} görselini büyüt"
+      "viewImage": "{{symbol}} görselini büyüt",
+      "closeImage": "Görseli kapat"
     },
     "sortBy": "Sırala"
   }

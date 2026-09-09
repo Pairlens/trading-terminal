@@ -7048,7 +7048,8 @@
       "twitter": "Xプロフィール",
       "telegram": "Telegram",
       "website": "ウェブサイト",
-      "viewImage": "{{symbol}}の画像を拡大"
+      "viewImage": "{{symbol}}の画像を拡大",
+      "closeImage": "画像を閉じる"
     },
     "sortBy": "並べ替え"
   }

@@ -14,6 +14,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { cn } from '@pairlens/ui/lib/utils'
+import type { LucideIcon } from 'lucide-react'
 
 import type { LaunchpadFlow } from '@pairlens/shared/instrument-types'
 import { IdentityMark } from '@/components/identity-mark'
@@ -300,5 +301,41 @@ export function TokenMark({
       imageUrl={iconUrl}
       className={className}
     />
+  )
+}
+
+/**
+ * One social link on a row or in the lightbox. Its own anchor, never inside
+ * the chart link: a row is one link to its chart, and a link inside a link is
+ * not HTML.
+ */
+export function SocialLink({
+  href,
+  label,
+  Icon,
+  large = false,
+}: {
+  href: string
+  label: string
+  Icon: LucideIcon
+  /** The lightbox's size: a 28px target with a 14px glyph. */
+  large?: boolean
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={label}
+      aria-label={label}
+      className={cn(
+        'rounded-md text-muted-foreground/70 outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring group-hover/row:text-muted-foreground',
+        large
+          ? 'inline-flex size-7 items-center justify-center bg-muted/40'
+          : 'p-0.5',
+      )}
+    >
+      <Icon className={large ? 'size-3.5' : 'size-2.5'} aria-hidden />
+    </a>
   )
 }
