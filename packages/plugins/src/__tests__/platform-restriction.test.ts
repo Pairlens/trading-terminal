@@ -100,26 +100,53 @@ const candleSub = (market: string): PluginExecuteParams => ({
   },
 })
 
-function subscribeError(plugin: PluginInstance, market: string): unknown {
+/**
+ * The error `subscribe` threw, if any, with the subscription and the connector
+ * torn down either way.
+ *
+ * The teardown is the load-bearing half, and it is easy to talk yourself out of
+ * because the name says this helper is about the error. Half the cases below do
+ * NOT throw, and that IS the assertion: OKX is deliberately not gated, and
+ * nothing is gated outside a browser. A `subscribe` that does not throw has
+ * started a real stream hub, and the hub dials the venue over a WebSocket.
+ *
+ * Left running, that outlives the test. ccxt arms a ten-second connection
+ * timeout as it opens a socket, and the callback dereferences a connection that
+ * does not exist if the socket never came up, so it throws inside whichever
+ * test file happens to be running ten seconds later. That is how this file took
+ * `geckoterminal-data-provider` down in CI while passing here: the whole suite
+ * finishes in twelve seconds locally, so the timer never gets to fire.
+ */
+async function subscribeError(
+  plugin: PluginInstance,
+  market: string,
+): Promise<unknown> {
+  let stop: (() => void) | undefined
+  let thrown: unknown
   try {
-    plugin.subscribe!(candleSub(market), () => {})
+    stop = plugin.subscribe!(candleSub(market), () => {})
   } catch (e) {
-    return e
+    thrown = e
   }
-  return undefined
+  // Both halves, in this order: the subscription stops the loop, and destroy
+  // closes the socket and the exchange behind it. Awaited, so the teardown is
+  // finished rather than merely started when the test ends.
+  stop?.()
+  await plugin.destroy?.()
+  return thrown
 }
 
 describe('desktop-only venues in a browser build', () => {
   for (const [market, make] of RESTRICTED) {
-    it(`${market} refuses with a typed PlatformRestrictedError`, () => {
+    it(`${market} refuses with a typed PlatformRestrictedError`, async () => {
       g.window = {} // production browser build: CORS applies
-      const thrown = subscribeError(make(), market)
+      const thrown = await subscribeError(make(), market)
       expect(isPlatformRestrictedError(thrown)).toBe(true)
     })
 
-    it(`${market} works normally on desktop`, () => {
+    it(`${market} works normally on desktop`, async () => {
       g.window = { __TAURI_INTERNALS__: {} } // Rust-side fetch, CORS-exempt
-      const thrown = subscribeError(make(), market)
+      const thrown = await subscribeError(make(), market)
       expect(isPlatformRestrictedError(thrown)).toBe(false)
     })
   }
@@ -128,21 +155,21 @@ describe('desktop-only venues in a browser build', () => {
   // reads fall back to the CORS-enabled global host, which serves identical
   // data. Gating it would take the venue in the original bug report offline
   // instead of fixing it.
-  it('does not gate OKX — it reads public data from the global host', () => {
+  it('does not gate OKX — it reads public data from the global host', async () => {
     g.window = {}
-    const thrown = subscribeError(
+    const thrown = await subscribeError(
       createOkxMarketConnectorPlugin(okxMarketConnectorManifest),
       'okx',
     )
     expect(isPlatformRestrictedError(thrown)).toBe(false)
   })
 
-  it('does not gate anything outside a browser (CLI)', () => {
+  it('does not gate anything outside a browser (CLI)', async () => {
     delete g.window
     for (const [market, make] of RESTRICTED) {
-      expect(isPlatformRestrictedError(subscribeError(make(), market))).toBe(
-        false,
-      )
+      expect(
+        isPlatformRestrictedError(await subscribeError(make(), market)),
+      ).toBe(false)
     }
   })
 })

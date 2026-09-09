@@ -33,7 +33,29 @@
  * The live suites under `src/__tests__/live/` are the deliberate exception and
  * gate themselves on `PAIRLENS_LIVE_*`. When any of those is set the guard
  * stands down, because those tests exist precisely to reach a real venue.
+ *
+ * ## The socket half
+ *
+ * `fetch` was only half the hole. A connector whose `subscribe` is never torn
+ * down opens a real WebSocket to a real exchange, and that leak is nastier than
+ * the REST one because of what ccxt does around it: `createConnection` arms a
+ * ten-second connection timeout BEFORE it constructs the socket, and the
+ * callback dereferences `this.connection` unconditionally. So a socket that
+ * never comes up throws a bare `TypeError` ten seconds later, on a timer, with
+ * no test frame on the stack: it lands in whatever file is running by then and
+ * fails THAT one. It cost a green local run and a red CI to find (the whole
+ * suite takes twelve seconds here, so the timer never got to fire), and the
+ * file it took down had nothing to do with exchanges.
+ *
+ * So the same rule covers sockets. The patch is on ccxt's `createConnection`
+ * rather than on the WebSocket constructor, and the ordering above is exactly
+ * why: refusing later, from inside the constructor, would leave the timeout
+ * already armed and reproduce the bug this prevents. It reports through
+ * `client.onError`, which is how ccxt itself reports a connection failure, so
+ * the connector's own error path handles it and no promise is left unsettled.
  */
+
+import WsClient from 'ccxt/js/src/base/ws/WsClient.js'
 
 /** Thrown in place of a request. Named so a stack trace explains itself. */
 export class OfflineTestError extends Error {
@@ -44,6 +66,19 @@ export class OfflineTestError extends Error {
         `no requests: stub \`globalThis.fetch\` in the test that needs one. ` +
         `If this came from a connector the test never destroyed, destroy it ` +
         `(or await its teardown) so the load does not outlive the test.`,
+    )
+  }
+}
+
+/** Thrown in place of a socket, through ccxt's own connection-error path. */
+export class OfflineSocketError extends Error {
+  override readonly name = 'OfflineSocketError'
+  constructor(url: string) {
+    super(
+      `Blocked a WebSocket connection to ${url}. Unit tests in this package ` +
+        `open no sockets: a connector that streams must be torn down by the ` +
+        `test that started it. Call the unsubscribe \`subscribe\` returned AND ` +
+        `await the plugin's \`destroy()\`, or stub the exchange.`,
     )
   }
 }
@@ -68,4 +103,27 @@ export function installOfflineGuard(): void {
   }) as typeof fetch
 }
 
+/**
+ * Refuse a socket before ccxt arms anything.
+ *
+ * Deep import, never the barrel: this is the base client every pro exchange
+ * builds on, and it costs nothing to load.
+ */
+export function installOfflineSocketGuard(): void {
+  if (liveRun()) return
+  const proto = WsClient.prototype as unknown as {
+    createConnection: () => void
+    onError: (error: Error) => void
+    url?: string
+  }
+  proto.createConnection = function (this: typeof proto): void {
+    // Not `throw`: `connect()` defers this behind a `sleep().then(...)` when it
+    // is backing off, where a throw becomes an unhandled rejection instead of
+    // something the connector can see. `onError` rejects the connection future
+    // and every request waiting on it, which is the contract ccxt documents.
+    this.onError(new OfflineSocketError(this.url ?? 'an exchange'))
+  }
+}
+
 installOfflineGuard()
+installOfflineSocketGuard()

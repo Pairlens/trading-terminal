@@ -168,9 +168,30 @@ and a test that forgot to stub fails loudly. It stands down when any
 `PAIRLENS_LIVE_*` variable is set, which is how the opt-in suites under
 `src/__tests__/live/` still work.
 
+**Sockets are the other half, and they fail worse.** `fetch` was guarded first;
+a leaked WebSocket went unguarded until it broke CI. `platform-restriction.test.ts`
+subscribed and never tore down, which was invisible because half its cases are
+SUPPOSED to succeed (OKX is deliberately not gated, and nothing is gated outside
+a browser), and a `subscribe` that does not throw has started a stream hub that
+dials the venue. Seven live sockets per run. What makes it worse than a stray
+fetch is ccxt's ordering: `createConnection` arms a ten-second connection
+timeout BEFORE constructing the socket, and the callback dereferences
+`this.connection` unconditionally, so a socket that never came up throws a bare
+`TypeError` on a timer with no test frame on the stack. It lands in whichever
+file is running ten seconds later and fails THAT one. Locally the whole suite
+finishes in twelve seconds, so it never fired; in CI it took
+`geckoterminal-data-provider` down, which has nothing to do with exchanges.
+
+So the guard covers sockets too, via `installOfflineSocketGuard`. It patches
+ccxt's `createConnection` rather than the WebSocket constructor, and that choice
+is the whole point: refusing from inside the constructor would leave the timeout
+already armed and reproduce the bug. It reports through `client.onError`, which
+is how ccxt itself reports a connection failure, so no promise is left unsettled.
+
 Two rules follow. A test that builds a connector must tear it down (
 `CcxtMarketsProvider.dispose()` runs from `CcxtVenueRuntime.destroy`, sets its
-flag synchronously and then drains the in-flight load, bounded at 2s). And a
+flag synchronously and then drains the in-flight load, bounded at 2s); if it
+also subscribed, it must call the unsubscribe AND await `destroy()`. And a
 test that COUNTS requests must filter the stub to its own host, or a foreign
 continuation lands in its window and inflates the count.
 
