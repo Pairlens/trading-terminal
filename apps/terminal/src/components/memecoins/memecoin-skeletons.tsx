@@ -243,6 +243,15 @@ export function LaunchpadGhostRows({
                 />
               )}
             </td>
+            {/* The quick-buy bolt's own width, so the column does not jump
+                when the first real row lands with a button in it. */}
+            <td className="w-px whitespace-nowrap py-1 pl-1 text-right">
+              <Shimmer
+                className="ml-auto h-5 w-5 rounded-md @min-[19rem]/pane:w-[46px]"
+                delayIndex={row}
+                still={still}
+              />
+            </td>
           </tr>
         )
       })}

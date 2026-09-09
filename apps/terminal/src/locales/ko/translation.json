@@ -4514,7 +4514,31 @@
       "reduceOnly": "리듀스온리",
       "reduceOnlyHint": "보유 포지션을 줄이기만 하며 반대 포지션은 열지 않습니다.",
       "notional": "명목 가치",
-      "estLiquidation": "예상 청산가"
+      "estLiquidation": "예상 청산가",
+      "execution": "실행",
+      "editPreset": "실행 프리셋 편집",
+      "presetNormal": "일반",
+      "presetFast": "빠름",
+      "presetUltra": "울트라",
+      "swapPresetTitle": "실행 프리셋 · {{name}}",
+      "presetName": "이름",
+      "slippageHint": "스왑이 거부되기 전에 체결가가 견적에서 얼마나 벗어나도 되는지. 생성된 지 몇 분 된 토큰은 10~30%가 필요합니다. 최대 {{max}}%.",
+      "priorityFee": "우선 수수료",
+      "priorityAuto": "자동",
+      "priorityMedium": "중간",
+      "priorityHigh": "높음",
+      "priorityVeryHigh": "매우 높음",
+      "priorityCap": "최대 우선 수수료 (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "끔",
+      "mevReduced": "완화",
+      "mevSecure": "보안",
+      "mevOffHint": "공개 레인. 가장 저렴하지만 샌드위치 봇이 체결 전에 스왑을 볼 수 있습니다.",
+      "mevReducedHint": "비공개 레인 먼저, 거부되면 공개 레인. 공개만큼 빠르게 체결되며 보통 노출되지 않습니다.",
+      "mevSecureHint": "비공개 레인만 사용. 공개 멤풀에 절대 들어가지 않으며, Jito 리더가 없는 블록에서는 버려져 스왑을 다시 보내야 합니다.",
+      "tip": "검증자 팁 (SOL)",
+      "tipHint": "번들을 포함한 검증자에게 지급됩니다. 비공개 레인에서는 우선 수수료를 대신합니다.",
+      "tipShort": "팁 {{sol}} SOL"
     },
     "status": {
       "connecting": "연결 중…",
@@ -6997,7 +7021,33 @@
       "minTrades": "최소 거래 수",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "분"
+      "unitMinutes": "분",
+      "keywords": "키워드",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "최대 {{max}}개, 쉼표로 구분. 티커, 이름 또는 주소에 하나라도 포함되면 행이 남습니다.",
+      "launchpads": "런치패드",
+      "launchpadsHint": "아무것도 선택하지 않으면 모든 런치패드가 유지됩니다.",
+      "hasSocials": "소셜 링크 있음",
+      "authoritiesRevoked": "mint와 freeze 권한 포기됨"
+    },
+    "quickBuy": {
+      "amountTitle": "빠른 매수 금액",
+      "amountHint": "이 열의 번개 버튼이 활성 실행 프리셋으로 Solana 지갑에서 쓰는 SOL 금액입니다. 번개를 길게 눌러 매수하거나, 설정 › 리스크에서 선택했다면 한 번 클릭합니다.",
+      "amountLabel": "금액 (SOL)",
+      "buy": "{{sol}} SOL로 {{symbol}} 매수",
+      "bought": "{{sol}} SOL로 {{symbol}} 매수함",
+      "failed": "빠른 매수 실패",
+      "noWallet": "빠른 매수에는 이 기기에 Solana 지갑이 필요합니다.",
+      "addWallet": "지갑 추가",
+      "sealed": "빠른 매수를 하려면 볼트를 잠금 해제하세요."
+    },
+    "row": {
+      "authoritiesRevoked": "mint 및 freeze 권한 포기됨",
+      "authoritiesLive": "배포자가 아직 발행하거나 동결할 수 있음",
+      "launchedOn": "{{launchpad}}에서 출시",
+      "twitter": "X 프로필",
+      "telegram": "Telegram",
+      "website": "웹사이트"
     }
   }
 }

@@ -4514,7 +4514,31 @@
       "reduceOnly": "Solo riduzione",
       "reduceOnlyHint": "Riduce una posizione aperta e non apre mai il lato opposto.",
       "notional": "Nozionale",
-      "estLiquidation": "Liquidazione stim."
+      "estLiquidation": "Liquidazione stim.",
+      "execution": "Esecuzione",
+      "editPreset": "Modifica preset di esecuzione",
+      "presetNormal": "Normale",
+      "presetFast": "Veloce",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Preset di esecuzione · {{name}}",
+      "presetName": "Nome",
+      "slippageHint": "Di quanto l'esecuzione può discostarsi dal preventivo prima che lo swap venga rifiutato. Un token di pochi minuti richiede dal 10 al 30 %. Fino a {{max}} %.",
+      "priorityFee": "Commissione di priorità",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Media",
+      "priorityHigh": "Alta",
+      "priorityVeryHigh": "Molto alta",
+      "priorityCap": "Commissione di priorità massima (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Off",
+      "mevReduced": "Ridotto",
+      "mevSecure": "Sicuro",
+      "mevOffHint": "Corsia pubblica. La più economica, e un bot sandwich può vedere lo swap prima che atterri.",
+      "mevReducedHint": "Prima la corsia privata, poi quella pubblica se rifiuta. Atterra veloce come la pubblica e di solito non viene visto.",
+      "mevSecureHint": "Solo corsia privata. Non entra mai nel mempool pubblico; un blocco senza leader Jito lo scarta e lo swap va rinviato.",
+      "tip": "Mancia al validatore (SOL)",
+      "tipHint": "Pagata al validatore che include il bundle. Sostituisce la commissione di priorità su una corsia privata.",
+      "tipShort": "mancia {{sol}} SOL"
     },
     "status": {
       "connecting": "Connessione…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Scambi minimi",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "minuti"
+      "unitMinutes": "minuti",
+      "keywords": "Parole chiave",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Fino a {{max}}, separate da virgole. Una riga resta se un termine compare nel ticker, nel nome o nell'indirizzo.",
+      "launchpads": "Launchpad",
+      "launchpadsHint": "Nessuna selezione mantiene tutti i launchpad.",
+      "hasSocials": "Ha un link social",
+      "authoritiesRevoked": "Mint e freeze revocati"
+    },
+    "quickBuy": {
+      "amountTitle": "Importo acquisto rapido",
+      "amountHint": "Quanto spendono i fulmini di questa colonna, in SOL, dal tuo wallet Solana tramite il preset di esecuzione attivo. Tieni premuto un fulmine per comprare, o un solo clic se lo hai scelto in Impostazioni › Rischio.",
+      "amountLabel": "Importo (SOL)",
+      "buy": "Compra {{symbol}} per {{sol}} SOL",
+      "bought": "{{symbol}} comprato per {{sol}} SOL",
+      "failed": "Acquisto rapido non riuscito",
+      "noWallet": "L'acquisto rapido richiede un wallet Solana su questo dispositivo.",
+      "addWallet": "Aggiungi wallet",
+      "sealed": "Sblocca il vault per l'acquisto rapido."
+    },
+    "row": {
+      "authoritiesRevoked": "Autorità di mint e freeze revocate",
+      "authoritiesLive": "Il deployer può ancora coniare o congelare",
+      "launchedOn": "Lanciato su {{launchpad}}",
+      "twitter": "Profilo X",
+      "telegram": "Telegram",
+      "website": "Sito web"
     }
   }
 }

@@ -35,9 +35,19 @@ export type TradeMode = 'paper' | 'live'
 /** How the user reached the assistant. Names our own affordances only. */
 export type AssistantOpenSource = 'orb' | 'shortcut' | 'palette'
 
-/** Where an order originated: manual panel, copilot proposal, workflow, or
- * the prediction basket (one submission fans out to one order per leg). */
-export type TradeSource = 'trade_panel' | 'copilot' | 'workflow' | 'basket'
+/** Where an order originated: manual panel, copilot proposal, workflow, the
+ * prediction basket (one submission fans out to one order per leg), or a
+ * launchpad column's quick buy. */
+export type TradeSource =
+  | 'trade_panel'
+  | 'copilot'
+  | 'workflow'
+  | 'basket'
+  | 'memecoin_board'
+
+/** Which lane a DEX swap was sent through. Names our own control, never an
+ * amount: the tip and the fee cap stay out. */
+export type TradeMevLane = 'off' | 'reduced' | 'secure'
 
 /** Which layout surface — never a user-assigned workspace name or id. */
 export type WorkspaceKind = 'pair' | 'discovery' | 'custom'
@@ -61,6 +71,9 @@ export interface TradeEventProps {
   order_type: string
   mode: TradeMode
   source: TradeSource
+  /** DEX swaps only: which lane the preset chose. Answers "does anyone use
+   * the private lane", which decides whether the Jito path is worth keeping. */
+  mev?: TradeMevLane
 }
 
 export interface AnalyticsEvents {

@@ -4514,7 +4514,31 @@
       "reduceOnly": "Yalnızca azalt",
       "reduceOnlyHint": "Açık pozisyonu küçültür, ters yönde pozisyon açmaz.",
       "notional": "Nominal",
-      "estLiquidation": "Tahmini likidasyon"
+      "estLiquidation": "Tahmini likidasyon",
+      "execution": "Yürütme",
+      "editPreset": "Yürütme profilini düzenle",
+      "presetNormal": "Normal",
+      "presetFast": "Hızlı",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Yürütme profili · {{name}}",
+      "presetName": "Ad",
+      "slippageHint": "Swap reddedilmeden önce gerçekleşmenin kotasyondan ne kadar sapabileceği. Birkaç dakikalık bir token için %10–30 gerekir. En fazla %{{max}}.",
+      "priorityFee": "Öncelik ücreti",
+      "priorityAuto": "Otomatik",
+      "priorityMedium": "Orta",
+      "priorityHigh": "Yüksek",
+      "priorityVeryHigh": "Çok yüksek",
+      "priorityCap": "Maks. öncelik ücreti (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Kapalı",
+      "mevReduced": "Azaltılmış",
+      "mevSecure": "Güvenli",
+      "mevOffHint": "Herkese açık hat. En ucuzu, ama bir sandviç botu swap gerçekleşmeden önce görebilir.",
+      "mevReducedHint": "Önce özel hat, reddederse herkese açık hat. Açık hat kadar hızlı gerçekleşir ve genelde görülmez.",
+      "mevSecureHint": "Yalnızca özel hat. Herkese açık mempool'a asla girmez; Jito lideri olmayan bir blok onu düşürür ve swap yeniden gönderilmelidir.",
+      "tip": "Doğrulayıcı bahşişi (SOL)",
+      "tipHint": "Paketi dahil eden doğrulayıcıya ödenir. Özel hatta öncelik ücretinin yerine geçer.",
+      "tipShort": "bahşiş {{sol}} SOL"
     },
     "status": {
       "connecting": "Bağlanıyor…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Min. işlem",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "dakika"
+      "unitMinutes": "dakika",
+      "keywords": "Anahtar kelimeler",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "En fazla {{max}}, virgülle ayrılmış. Herhangi bir terim ticker, ad veya adreste geçiyorsa satır kalır.",
+      "launchpads": "Launchpad'ler",
+      "launchpadsHint": "Hiçbiri seçilmezse tüm launchpad'ler kalır.",
+      "hasSocials": "Sosyal bağlantısı var",
+      "authoritiesRevoked": "Mint ve freeze iptal edildi"
+    },
+    "quickBuy": {
+      "amountTitle": "Hızlı alım tutarı",
+      "amountHint": "Bu sütundaki şimşeklerin Solana cüzdanınızdan etkin yürütme profiliyle harcadığı SOL tutarı. Almak için şimşeğe basılı tutun ya da Ayarlar › Risk'te seçtiyseniz tek tık.",
+      "amountLabel": "Tutar (SOL)",
+      "buy": "{{sol}} SOL karşılığında {{symbol}} al",
+      "bought": "{{sol}} SOL karşılığında {{symbol}} alındı",
+      "failed": "Hızlı alım başarısız",
+      "noWallet": "Hızlı alım için bu cihazda bir Solana cüzdanı gerekir.",
+      "addWallet": "Cüzdan ekle",
+      "sealed": "Hızlı alım için kasayı açın."
+    },
+    "row": {
+      "authoritiesRevoked": "Mint ve freeze yetkisi iptal edildi",
+      "authoritiesLive": "Dağıtıcı hâlâ basabilir veya dondurabilir",
+      "launchedOn": "{{launchpad}} üzerinde başlatıldı",
+      "twitter": "X profili",
+      "telegram": "Telegram",
+      "website": "Web sitesi"
     }
   }
 }

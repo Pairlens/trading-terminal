@@ -8,26 +8,45 @@ import {
   VersionedTransaction,
 } from '@solana/web3.js'
 import { clearTokenDirectory } from '@pairlens/market-engine/token-directory'
-import { executeSwap, getQuote, validateQuote } from '../swap-executor'
+import bs58 from 'bs58'
+import {
+  executeSwap,
+  getQuote,
+  prioritizationFeeFor,
+  validateQuote,
+  validateSwapExecution,
+} from '../swap-executor'
 import { clearTokenCache } from '../token-registry'
 import type { JupiterQuote } from '../types'
 
 const SOL_MINT = 'So11111111111111111111111111111111111111112'
 const USDC_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 
-type Captured = { url: string }
+type Captured = { url: string; body: unknown }
 
-/** Route fetches by URL substring → response JSON. */
-function stubFetchRoutes(routes: Array<{ match: string; json: unknown }>): {
+/** Route fetches by URL substring → response JSON (and optional status). */
+function stubFetchRoutes(
+  routes: Array<{ match: string; json: unknown; status?: number }>,
+): {
   calls: Array<Captured>
 } {
   const calls: Array<Captured> = []
-  globalThis.fetch = mock(async (url: unknown) => {
+  globalThis.fetch = mock(async (url: unknown, init?: RequestInit) => {
     const u = String(url)
-    calls.push({ url: u })
+    let body: unknown = null
+    if (typeof init?.body === 'string') {
+      try {
+        body = JSON.parse(init.body)
+      } catch {
+        body = init.body
+      }
+    }
+    calls.push({ url: u, body })
     const route = routes.find((r) => u.includes(r.match))
     if (!route) return new Response('not found', { status: 404 })
-    return new Response(JSON.stringify(route.json), { status: 200 })
+    return new Response(JSON.stringify(route.json), {
+      status: route.status ?? 200,
+    })
   }) as unknown as typeof fetch
   return { calls }
 }
@@ -275,5 +294,151 @@ describe('executeSwap — refuses to sign foreign transactions', () => {
       error: 'Wallet private key not found',
     })
     expect(getPrivateKey).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('swap execution options', () => {
+  it('defaults to the venue estimate on the public lane', () => {
+    expect(prioritizationFeeFor(undefined)).toBe('auto')
+    expect(prioritizationFeeFor({ mev: 'off' })).toBe('auto')
+  })
+
+  it('maps a priority level to the capped Jupiter shape', () => {
+    expect(
+      prioritizationFeeFor({
+        priorityLevel: 'high',
+        maxPriorityFeeLamports: 2_000_000,
+      }),
+    ).toEqual({
+      priorityLevelWithMaxLamports: {
+        priorityLevel: 'high',
+        maxLamports: 2_000_000,
+        global: false,
+      },
+    })
+  })
+
+  it('a private lane pays a tip and never a priority fee', () => {
+    expect(
+      prioritizationFeeFor({
+        mev: 'reduced',
+        tipLamports: 1_000_000,
+        priorityLevel: 'veryHigh',
+      }),
+    ).toEqual({ jitoTipLamports: 1_000_000 })
+  })
+
+  it('refuses a private lane without a tip and a negative fee cap', () => {
+    expect(validateSwapExecution({ mev: 'secure' })).toContain('tip')
+    expect(validateSwapExecution({ mev: 'secure', tipLamports: 0 })).toContain(
+      'tip',
+    )
+    expect(validateSwapExecution({ maxPriorityFeeLamports: -1 })).toContain(
+      'cap',
+    )
+    expect(validateSwapExecution({ mev: 'off' })).toBeNull()
+    expect(
+      validateSwapExecution({ mev: 'reduced', tipLamports: 500_000 }),
+    ).toBeNull()
+  })
+})
+
+describe('executeSwap — lanes', () => {
+  function buildUnsignedBase64(payer: Keypair): string {
+    const message = new TransactionMessage({
+      payerKey: payer.publicKey,
+      recentBlockhash: payer.publicKey.toBase58(),
+      instructions: [
+        SystemProgram.transfer({
+          fromPubkey: payer.publicKey,
+          toPubkey: Keypair.generate().publicKey,
+          lamports: 1_000,
+        }),
+      ],
+    }).compileToV0Message()
+    return Buffer.from(new VersionedTransaction(message).serialize()).toString(
+      'base64',
+    )
+  }
+
+  it('builds the swap with the tip and refuses to fall back on the secure lane', async () => {
+    const wallet = Keypair.generate()
+    const { calls } = stubFetchRoutes([
+      {
+        match: 'swap/v1/swap',
+        json: { swapTransaction: buildUnsignedBase64(wallet) },
+      },
+      {
+        match: 'block-engine.jito.wtf',
+        json: { jsonrpc: '2.0', id: 1, error: { message: 'no leader' } },
+        status: 400,
+      },
+    ])
+    const res = await executeSwap(
+      QUOTE_JSON as JupiterQuote,
+      wallet.publicKey.toBase58(),
+      async () => bs58.encode(wallet.secretKey),
+      'http://localhost:0',
+      { mev: 'secure', tipLamports: 1_000_000 },
+    )
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('Private lane')
+    expect(res.error).toContain('no leader')
+
+    const build = calls.find((c) => c.url.includes('swap/v1/swap'))
+    expect(build?.body).toMatchObject({
+      prioritizationFeeLamports: { jitoTipLamports: 1_000_000 },
+    })
+    const jito = calls.find((c) => c.url.includes('block-engine.jito.wtf'))
+    expect(jito?.url).toContain('bundleOnly=true')
+    expect(jito?.body).toMatchObject({
+      method: 'sendTransaction',
+      params: [expect.any(String), { encoding: 'base64' }],
+    })
+    // Nothing reached the public RPC: the only calls are the build and Jito.
+    expect(
+      calls.filter((c) => c.url.startsWith('http://localhost:0')),
+    ).toHaveLength(0)
+  })
+
+  it('refuses a tipped lane before any request when the tip is missing', async () => {
+    const wallet = Keypair.generate()
+    const { calls } = stubFetchRoutes([])
+    const res = await executeSwap(
+      QUOTE_JSON as JupiterQuote,
+      wallet.publicKey.toBase58(),
+      async () => null,
+      'http://localhost:0',
+      { mev: 'reduced' },
+    )
+    expect(res.success).toBe(false)
+    expect(res.error).toContain('tip')
+    expect(calls).toHaveLength(0)
+  })
+
+  it('sends the priority level shape on the public lane', async () => {
+    const wallet = Keypair.generate()
+    const { calls } = stubFetchRoutes([
+      {
+        match: 'swap/v1/swap',
+        json: { swapTransaction: buildUnsignedBase64(wallet) },
+      },
+    ])
+    await executeSwap(
+      QUOTE_JSON as JupiterQuote,
+      wallet.publicKey.toBase58(),
+      async () => null,
+      'http://localhost:0',
+      { priorityLevel: 'veryHigh', maxPriorityFeeLamports: 10_000_000 },
+    )
+    const build = calls.find((c) => c.url.includes('swap/v1/swap'))
+    expect(build?.body).toMatchObject({
+      prioritizationFeeLamports: {
+        priorityLevelWithMaxLamports: {
+          priorityLevel: 'veryHigh',
+          maxLamports: 10_000_000,
+        },
+      },
+    })
   })
 })

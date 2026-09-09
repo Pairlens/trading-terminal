@@ -4514,7 +4514,31 @@
       "reduceOnly": "Solo reducir",
       "reduceOnlyHint": "Reduce una posición abierta y nunca abre el lado contrario.",
       "notional": "Nocional",
-      "estLiquidation": "Liquidación est."
+      "estLiquidation": "Liquidación est.",
+      "execution": "Ejecución",
+      "editPreset": "Editar preajuste de ejecución",
+      "presetNormal": "Normal",
+      "presetFast": "Rápido",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Preajuste de ejecución · {{name}}",
+      "presetName": "Nombre",
+      "slippageHint": "Cuánto puede alejarse la ejecución de la cotización antes de rechazar el swap. Un token de minutos necesita entre 10 y 30 %. Hasta {{max}} %.",
+      "priorityFee": "Comisión de prioridad",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Media",
+      "priorityHigh": "Alta",
+      "priorityVeryHigh": "Muy alta",
+      "priorityCap": "Comisión de prioridad máxima (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Apagado",
+      "mevReduced": "Reducido",
+      "mevSecure": "Seguro",
+      "mevOffHint": "Carril público. El más barato, y un bot de sándwich puede ver el swap antes de que aterrice.",
+      "mevReducedHint": "Primero el carril privado, el público si lo rechaza. Aterriza tan rápido como el público y casi siempre sin ser visto.",
+      "mevSecureHint": "Solo carril privado. Nunca entra en la mempool pública; un bloque sin líder Jito lo descarta y hay que reenviar el swap.",
+      "tip": "Propina al validador (SOL)",
+      "tipHint": "Se paga al validador que incluye el paquete. Sustituye a la comisión de prioridad en un carril privado.",
+      "tipShort": "propina {{sol}} SOL"
     },
     "status": {
       "connecting": "Conectando…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Operaciones mínimas",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "minutos"
+      "unitMinutes": "minutos",
+      "keywords": "Palabras clave",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Hasta {{max}}, separadas por comas. Una fila se queda cuando algún término aparece en su ticker, nombre o dirección.",
+      "launchpads": "Launchpads",
+      "launchpadsHint": "Sin nada seleccionado se conservan todos los launchpads.",
+      "hasSocials": "Tiene un enlace social",
+      "authoritiesRevoked": "Mint y freeze revocados"
+    },
+    "quickBuy": {
+      "amountTitle": "Importe de compra rápida",
+      "amountHint": "Lo que gastan los rayos de esta columna, en SOL, desde tu monedero de Solana a través del preajuste de ejecución activo. Mantén pulsado un rayo para comprar, o un solo clic si lo elegiste en Ajustes › Riesgo.",
+      "amountLabel": "Importe (SOL)",
+      "buy": "Comprar {{symbol}} por {{sol}} SOL",
+      "bought": "{{symbol}} comprado por {{sol}} SOL",
+      "failed": "La compra rápida falló",
+      "noWallet": "La compra rápida necesita un monedero de Solana en este dispositivo.",
+      "addWallet": "Añadir monedero",
+      "sealed": "Desbloquea la bóveda para comprar rápido."
+    },
+    "row": {
+      "authoritiesRevoked": "Autoridad de mint y freeze revocada",
+      "authoritiesLive": "El desplegador aún puede acuñar o congelar",
+      "launchedOn": "Lanzado en {{launchpad}}",
+      "twitter": "Perfil de X",
+      "telegram": "Telegram",
+      "website": "Sitio web"
     }
   }
 }

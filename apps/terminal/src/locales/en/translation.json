@@ -3525,7 +3525,31 @@
       "allOutcomes": "All {{total}}",
       "fundingAtEntry": "Funding at entry",
       "fundingLongsPay": "Longs pay shorts",
-      "fundingShortsPay": "Shorts pay longs"
+      "fundingShortsPay": "Shorts pay longs",
+      "execution": "Execution",
+      "editPreset": "Edit execution preset",
+      "presetNormal": "Normal",
+      "presetFast": "Fast",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Execution preset · {{name}}",
+      "presetName": "Name",
+      "slippageHint": "How far the fill may move from the quote before the swap is refused. A token minutes old needs 10 to 30%. Up to {{max}}%.",
+      "priorityFee": "Priority fee",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Medium",
+      "priorityHigh": "High",
+      "priorityVeryHigh": "Very high",
+      "priorityCap": "Max priority fee (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Off",
+      "mevReduced": "Reduced",
+      "mevSecure": "Secure",
+      "mevOffHint": "Public lane. Cheapest, and a sandwich bot can see the swap before it lands.",
+      "mevReducedHint": "Private lane first, public lane if it refuses. Lands as fast as public and is usually unseen.",
+      "mevSecureHint": "Private lane only. Never enters the public mempool; a block without a Jito leader drops it and the swap must be sent again.",
+      "tip": "Validator tip (SOL)",
+      "tipHint": "Paid to the validator that includes the bundle. Replaces the priority fee on a private lane.",
+      "tipShort": "tip {{sol}} SOL"
     },
     "status": {
       "connecting": "Connecting…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Min trades",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "minutes"
+      "unitMinutes": "minutes",
+      "keywords": "Keywords",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Up to {{max}}, comma separated. A row stays when any term appears in its ticker, name or address.",
+      "launchpads": "Launchpads",
+      "launchpadsHint": "Nothing selected keeps every launchpad.",
+      "hasSocials": "Has a social link",
+      "authoritiesRevoked": "Mint and freeze revoked"
+    },
+    "quickBuy": {
+      "amountTitle": "Quick buy amount",
+      "amountHint": "What the bolts in this column spend, in SOL, from your Solana wallet through the active execution preset. Press and hold a bolt to buy, or click once if you chose that in Settings › Risk.",
+      "amountLabel": "Amount (SOL)",
+      "buy": "Buy {{symbol}} for {{sol}} SOL",
+      "bought": "Bought {{symbol}} for {{sol}} SOL",
+      "failed": "Quick buy failed",
+      "noWallet": "Quick buy needs a Solana wallet on this device.",
+      "addWallet": "Add wallet",
+      "sealed": "Unlock the vault to quick buy."
+    },
+    "row": {
+      "authoritiesRevoked": "Mint and freeze authority revoked",
+      "authoritiesLive": "The deployer can still mint or freeze",
+      "launchedOn": "Launched on {{launchpad}}",
+      "twitter": "X profile",
+      "telegram": "Telegram",
+      "website": "Website"
     }
   }
 }

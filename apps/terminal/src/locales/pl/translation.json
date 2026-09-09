@@ -4612,7 +4612,31 @@
       "reduceOnly": "Tylko redukcja",
       "reduceOnlyHint": "Zmniejsza otwartą pozycję i nigdy nie otwiera przeciwnej strony.",
       "notional": "Nominał",
-      "estLiquidation": "Szac. likwidacja"
+      "estLiquidation": "Szac. likwidacja",
+      "execution": "Wykonanie",
+      "editPreset": "Edytuj profil wykonania",
+      "presetNormal": "Normalny",
+      "presetFast": "Szybki",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Profil wykonania · {{name}}",
+      "presetName": "Nazwa",
+      "slippageHint": "O ile wykonanie może odbiec od wyceny, zanim swap zostanie odrzucony. Token sprzed kilku minut potrzebuje 10–30 %. Do {{max}} %.",
+      "priorityFee": "Opłata priorytetowa",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Średnia",
+      "priorityHigh": "Wysoka",
+      "priorityVeryHigh": "Bardzo wysoka",
+      "priorityCap": "Maks. opłata priorytetowa (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Wył.",
+      "mevReduced": "Ograniczona",
+      "mevSecure": "Bezpieczna",
+      "mevOffHint": "Publiczna ścieżka. Najtańsza, ale bot sandwich widzi swap, zanim się wykona.",
+      "mevReducedHint": "Najpierw prywatna ścieżka, publiczna w razie odmowy. Wykonuje się równie szybko i zwykle pozostaje niezauważona.",
+      "mevSecureHint": "Tylko prywatna ścieżka. Nigdy nie trafia do publicznego mempoola; blok bez lidera Jito go odrzuca i swap trzeba wysłać ponownie.",
+      "tip": "Napiwek dla walidatora (SOL)",
+      "tipHint": "Trafia do walidatora, który włącza bundle. Na prywatnej ścieżce zastępuje opłatę priorytetową.",
+      "tipShort": "napiwek {{sol}} SOL"
     },
     "status": {
       "connecting": "Łączenie…",
@@ -7145,7 +7169,33 @@
       "minTrades": "Min. transakcji",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "minuty"
+      "unitMinutes": "minuty",
+      "keywords": "Słowa kluczowe",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Do {{max}}, po przecinku. Wiersz zostaje, gdy dowolny termin pojawia się w tickerze, nazwie lub adresie.",
+      "launchpads": "Launchpady",
+      "launchpadsHint": "Brak wyboru zachowuje wszystkie launchpady.",
+      "hasSocials": "Ma link społecznościowy",
+      "authoritiesRevoked": "Mint i freeze odwołane"
+    },
+    "quickBuy": {
+      "amountTitle": "Kwota szybkiego zakupu",
+      "amountHint": "Ile wydają błyskawice w tej kolumnie, w SOL, z Twojego portfela Solana przez aktywny profil wykonania. Przytrzymaj błyskawicę, by kupić, lub jedno kliknięcie, jeśli tak wybrano w Ustawienia › Ryzyko.",
+      "amountLabel": "Kwota (SOL)",
+      "buy": "Kup {{symbol}} za {{sol}} SOL",
+      "bought": "Kupiono {{symbol}} za {{sol}} SOL",
+      "failed": "Szybki zakup nie powiódł się",
+      "noWallet": "Szybki zakup wymaga portfela Solana na tym urządzeniu.",
+      "addWallet": "Dodaj portfel",
+      "sealed": "Odblokuj sejf, aby szybko kupić."
+    },
+    "row": {
+      "authoritiesRevoked": "Uprawnienia mint i freeze odwołane",
+      "authoritiesLive": "Deployer nadal może bić lub zamrażać",
+      "launchedOn": "Uruchomiony na {{launchpad}}",
+      "twitter": "Profil X",
+      "telegram": "Telegram",
+      "website": "Strona"
     }
   }
 }

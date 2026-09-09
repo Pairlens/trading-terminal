@@ -4514,7 +4514,31 @@
       "reduceOnly": "Chỉ giảm vị thế",
       "reduceOnlyHint": "Chỉ giảm vị thế đang mở và không bao giờ mở chiều ngược lại.",
       "notional": "Giá trị danh nghĩa",
-      "estLiquidation": "Thanh lý ước tính"
+      "estLiquidation": "Thanh lý ước tính",
+      "execution": "Thực thi",
+      "editPreset": "Sửa cấu hình thực thi",
+      "presetNormal": "Thường",
+      "presetFast": "Nhanh",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Cấu hình thực thi · {{name}}",
+      "presetName": "Tên",
+      "slippageHint": "Mức khớp lệnh được phép lệch khỏi báo giá trước khi swap bị từ chối. Token mới vài phút cần 10 đến 30%. Tối đa {{max}}%.",
+      "priorityFee": "Phí ưu tiên",
+      "priorityAuto": "Tự động",
+      "priorityMedium": "Trung bình",
+      "priorityHigh": "Cao",
+      "priorityVeryHigh": "Rất cao",
+      "priorityCap": "Phí ưu tiên tối đa (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Tắt",
+      "mevReduced": "Giảm",
+      "mevSecure": "Bảo mật",
+      "mevOffHint": "Làn công khai. Rẻ nhất, và bot sandwich có thể thấy swap trước khi nó được khớp.",
+      "mevReducedHint": "Làn riêng trước, công khai nếu bị từ chối. Khớp nhanh như làn công khai và thường không bị thấy.",
+      "mevSecureHint": "Chỉ làn riêng. Không bao giờ vào mempool công khai; khối không có leader Jito sẽ bỏ nó và phải gửi lại swap.",
+      "tip": "Tip cho validator (SOL)",
+      "tipHint": "Trả cho validator đưa bundle vào khối. Thay thế phí ưu tiên trên làn riêng.",
+      "tipShort": "tip {{sol}} SOL"
     },
     "status": {
       "connecting": "Đang kết nối…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Số lệnh tối thiểu",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "phút"
+      "unitMinutes": "phút",
+      "keywords": "Từ khóa",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Tối đa {{max}}, cách nhau bằng dấu phẩy. Hàng được giữ khi bất kỳ từ nào xuất hiện trong ticker, tên hoặc địa chỉ.",
+      "launchpads": "Launchpad",
+      "launchpadsHint": "Không chọn gì sẽ giữ mọi launchpad.",
+      "hasSocials": "Có liên kết mạng xã hội",
+      "authoritiesRevoked": "Đã thu hồi mint và freeze"
+    },
+    "quickBuy": {
+      "amountTitle": "Số tiền mua nhanh",
+      "amountHint": "Số SOL mà các nút tia chớp trong cột này chi từ ví Solana của bạn qua cấu hình thực thi đang dùng. Giữ nút tia chớp để mua, hoặc một lần nhấp nếu bạn đã chọn trong Cài đặt › Rủi ro.",
+      "amountLabel": "Số tiền (SOL)",
+      "buy": "Mua {{symbol}} với {{sol}} SOL",
+      "bought": "Đã mua {{symbol}} với {{sol}} SOL",
+      "failed": "Mua nhanh thất bại",
+      "noWallet": "Mua nhanh cần một ví Solana trên thiết bị này.",
+      "addWallet": "Thêm ví",
+      "sealed": "Mở khóa kho để mua nhanh."
+    },
+    "row": {
+      "authoritiesRevoked": "Đã thu hồi quyền mint và freeze",
+      "authoritiesLive": "Người triển khai vẫn có thể đúc hoặc đóng băng",
+      "launchedOn": "Ra mắt trên {{launchpad}}",
+      "twitter": "Hồ sơ X",
+      "telegram": "Telegram",
+      "website": "Trang web"
     }
   }
 }

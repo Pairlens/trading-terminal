@@ -4514,7 +4514,31 @@
       "reduceOnly": "Reduce only",
       "reduceOnlyHint": "Mengecilkan posisi terbuka dan tidak pernah membuka sisi berlawanan.",
       "notional": "Nosional",
-      "estLiquidation": "Perkiraan likuidasi"
+      "estLiquidation": "Perkiraan likuidasi",
+      "execution": "Eksekusi",
+      "editPreset": "Ubah preset eksekusi",
+      "presetNormal": "Normal",
+      "presetFast": "Cepat",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Preset eksekusi · {{name}}",
+      "presetName": "Nama",
+      "slippageHint": "Seberapa jauh eksekusi boleh bergeser dari kuotasi sebelum swap ditolak. Token berumur beberapa menit butuh 10 sampai 30%. Maksimal {{max}}%.",
+      "priorityFee": "Biaya prioritas",
+      "priorityAuto": "Otomatis",
+      "priorityMedium": "Sedang",
+      "priorityHigh": "Tinggi",
+      "priorityVeryHigh": "Sangat tinggi",
+      "priorityCap": "Biaya prioritas maks (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Mati",
+      "mevReduced": "Dikurangi",
+      "mevSecure": "Aman",
+      "mevOffHint": "Jalur publik. Paling murah, dan bot sandwich bisa melihat swap sebelum masuk.",
+      "mevReducedHint": "Jalur privat dulu, publik jika ditolak. Masuk secepat publik dan biasanya tak terlihat.",
+      "mevSecureHint": "Hanya jalur privat. Tidak pernah masuk mempool publik; blok tanpa pemimpin Jito membuangnya dan swap harus dikirim ulang.",
+      "tip": "Tip validator (SOL)",
+      "tipHint": "Dibayar ke validator yang memasukkan bundle. Menggantikan biaya prioritas di jalur privat.",
+      "tipShort": "tip {{sol}} SOL"
     },
     "status": {
       "connecting": "Menghubungkan…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Transaksi min",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "menit"
+      "unitMinutes": "menit",
+      "keywords": "Kata kunci",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Maksimal {{max}}, dipisah koma. Baris tetap tampil jika ada istilah yang muncul di ticker, nama, atau alamatnya.",
+      "launchpads": "Launchpad",
+      "launchpadsHint": "Tanpa pilihan, semua launchpad tetap tampil.",
+      "hasSocials": "Punya tautan sosial",
+      "authoritiesRevoked": "Mint dan freeze dicabut"
+    },
+    "quickBuy": {
+      "amountTitle": "Jumlah beli cepat",
+      "amountHint": "Jumlah SOL yang dibelanjakan ikon petir di kolom ini dari dompet Solana Anda lewat preset eksekusi aktif. Tahan petir untuk membeli, atau sekali klik jika Anda memilihnya di Pengaturan › Risiko.",
+      "amountLabel": "Jumlah (SOL)",
+      "buy": "Beli {{symbol}} seharga {{sol}} SOL",
+      "bought": "{{symbol}} dibeli seharga {{sol}} SOL",
+      "failed": "Beli cepat gagal",
+      "noWallet": "Beli cepat butuh dompet Solana di perangkat ini.",
+      "addWallet": "Tambah dompet",
+      "sealed": "Buka kunci brankas untuk beli cepat."
+    },
+    "row": {
+      "authoritiesRevoked": "Otoritas mint dan freeze dicabut",
+      "authoritiesLive": "Deployer masih bisa mencetak atau membekukan",
+      "launchedOn": "Diluncurkan di {{launchpad}}",
+      "twitter": "Profil X",
+      "telegram": "Telegram",
+      "website": "Situs web"
     }
   }
 }

@@ -136,6 +136,15 @@ function orderAnalyticsProps(params: Record<string, unknown>): TradeEventProps {
         : (cred?.mode ?? 'paper')
   const type = String(params['type'] ?? 'market')
   const source = params['analyticsSource']
+  const swap = params['swap']
+  const mevRaw =
+    swap && typeof swap === 'object'
+      ? (swap as Record<string, unknown>)['mev']
+      : undefined
+  const mev =
+    mevRaw === 'off' || mevRaw === 'reduced' || mevRaw === 'secure'
+      ? mevRaw
+      : undefined
   return {
     venue,
     venue_kind: isDex
@@ -148,9 +157,13 @@ function orderAnalyticsProps(params: Record<string, unknown>): TradeEventProps {
     order_type: params['trigger'] ? `trigger_${type}` : type,
     mode,
     source:
-      source === 'copilot' || source === 'workflow' || source === 'basket'
+      source === 'copilot' ||
+      source === 'workflow' ||
+      source === 'basket' ||
+      source === 'memecoin_board'
         ? source
         : 'trade_panel',
+    ...(mev ? { mev } : {}),
   }
 }
 

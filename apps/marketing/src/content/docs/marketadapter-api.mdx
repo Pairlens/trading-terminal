@@ -81,7 +81,10 @@ type MarketAdapterInfo = {
   supportedTimeframes: Array<string>
   iconUrl?: string
   walletChain?: 'solana' | 'ethereum' | 'bitcoin'
-  /** DEX venues only: the connector supports resting limit orders. */
+  /**
+   * DEX venues only: the connector supports resting limit orders. Also what
+   * lets the ticket offer a workflow there, since a take-profit leg IS one.
+   */
   dexLimitOrders?: boolean
   /** Exchange-native trigger (TP/SL) orders via OrderParams.trigger. */
   triggerOrders?: boolean

@@ -32,6 +32,11 @@ export const TIER1_KEYS: ReadonlySet<string> = new Set([
   // numbers per column, and a floor somebody set on their laptop is a decision
   // about how they trade rather than a fact about that machine.
   'memecoins.board',
+  // The three swap execution profiles (slippage, priority fee, tip, MEV
+  // lane) and which one is selected. A tip somebody tuned on their desk is
+  // how they trade, not where they sat.
+  'trade:swapPresets',
+  'trade:swapPresetActive',
   // The order of Discovery's asset-class tabs. Tier-1 transport (it is a short
   // array of ids), workspaces domain (see WORKSPACE_KEYS) — the two are
   // independent, exactly as they are for the chart keys above.

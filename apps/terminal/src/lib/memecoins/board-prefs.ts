@@ -64,11 +64,52 @@ export type LaunchpadFilters = {
   maxAgeMinutes?: number
   minVolume?: number
   minTrades?: number
+  /**
+   * Up to five lowercase terms; a row passes when ANY of them is found in its
+   * ticker, its name or its address. A watch for a narrative ("trump",
+   * "cat"), not a search: the column keeps streaming, narrowed.
+   */
+  keywords?: Array<string>
+  /**
+   * Launchpads to keep. Empty or absent is every launchpad. The ids are the
+   * feed's own strings ('pump.fun', 'letsbonk.fun', ...), an open set, so the
+   * dialog offers whatever the loaded rows carry rather than a fixed list.
+   */
+  launchpads?: Array<string>
+  /** Keep only rows with at least one social link. */
+  hasSocials?: boolean
+  /** Keep only rows whose mint AND freeze authority are revoked. Unknown fails. */
+  authoritiesRevoked?: boolean
 }
+
+/** How many keyword terms a column takes. Five is what the feeds' own UIs allow. */
+export const MAX_KEYWORDS = 5
 
 export type LaunchpadStagePrefs = {
   sort?: LaunchpadSort
   filters?: LaunchpadFilters
+  /**
+   * What the column's quick buy spends, in SOL. Per column on purpose: a
+   * trader sizes a fresh mint and a graduated pool differently, and the amount
+   * sits in the header where the bolt is pressed.
+   */
+  quickBuySol?: number
+}
+
+/** What a column's quick buy spends before anyone changes it. */
+export const DEFAULT_QUICK_BUY_SOL = 0.1
+
+/** The amounts the quick-buy dialog offers as chips, in SOL. */
+export const QUICK_BUY_CHIPS_SOL: ReadonlyArray<number> = [
+  0.05, 0.1, 0.25, 0.5, 1,
+]
+
+/** A stored amount, or the default when it is not a usable number. */
+export function quickBuySolOf(prefs: LaunchpadStagePrefs | undefined): number {
+  const v = prefs?.quickBuySol
+  return typeof v === 'number' && Number.isFinite(v) && v > 0
+    ? v
+    : DEFAULT_QUICK_BUY_SOL
 }
 
 /** What one board's worth of preferences looks like on disk. */
@@ -85,7 +126,7 @@ export const MEMECOIN_BOARD_PREFS_KEY = 'memecoins.board'
 
 /** Which filters a stage's dialog offers. Order is the order they render in. */
 export const FILTERS_FOR_STAGE: Readonly<
-  Record<LaunchpadStage, ReadonlyArray<keyof LaunchpadFilters>>
+  Record<LaunchpadStage, ReadonlyArray<NumericFilterKey>>
 > = {
   new: ['minMcap', 'maxMcap', 'minHolders', 'maxAgeMinutes', 'minTrades'],
   graduating: [
@@ -147,13 +188,20 @@ function atMost(value: number | null | undefined, max: number): boolean {
   return typeof value === 'number' && Number.isFinite(value) && value <= max
 }
 
-/** How many bounds are set. Drives the badge on the filter button. */
+/**
+ * How many filters are set. Drives the badge on the filter button. A keyword
+ * list or a launchpad list counts once however long it is: the badge answers
+ * "is this column narrowed", and five terms are one narrowing.
+ */
 export function activeFilterCount(
   filters: LaunchpadFilters | undefined,
 ): number {
   if (!filters) return 0
   return Object.values(filters).filter(
-    (value) => typeof value === 'number' && Number.isFinite(value),
+    (value) =>
+      (typeof value === 'number' && Number.isFinite(value)) ||
+      (Array.isArray(value) && value.length > 0) ||
+      value === true,
   ).length
 }
 
@@ -163,15 +211,75 @@ export function hasActiveFilters(
   return activeFilterCount(filters) > 0
 }
 
-/** Drop the keys a dialog cleared, so an empty filter set serializes as `{}`. */
+/**
+ * One keyword list, cleaned: lowercased, trimmed, deduplicated, empty terms
+ * dropped, capped at `MAX_KEYWORDS`. Tolerates junk from an old preference.
+ */
+export function normalizeKeywords(raw: unknown): Array<string> {
+  const list = Array.isArray(raw)
+    ? raw
+    : typeof raw === 'string'
+      ? raw.split(',')
+      : []
+  const seen = new Set<string>()
+  for (const item of list) {
+    if (typeof item !== 'string') continue
+    const term = item.trim().toLowerCase()
+    if (term.length === 0 || seen.has(term)) continue
+    seen.add(term)
+    if (seen.size >= MAX_KEYWORDS) break
+  }
+  return [...seen]
+}
+
+function normalizeStringList(raw: unknown): Array<string> {
+  if (!Array.isArray(raw)) return []
+  const seen = new Set<string>()
+  for (const item of raw) {
+    if (typeof item === 'string' && item.trim().length > 0)
+      seen.add(item.trim())
+  }
+  return [...seen]
+}
+
+/**
+ * Drop the keys a dialog cleared, so an empty filter set serializes as `{}`.
+ * Also the one place a stored blob is typed: the preference is parsed JSON
+ * with no schema, and every consumer reads it through here.
+ */
 export function pruneFilters(filters: LaunchpadFilters): LaunchpadFilters {
   const out: LaunchpadFilters = {}
   for (const [key, value] of Object.entries(filters)) {
-    if (typeof value === 'number' && Number.isFinite(value)) {
-      out[key as keyof LaunchpadFilters] = value
+    if (key === 'keywords') {
+      const keywords = normalizeKeywords(value)
+      if (keywords.length > 0) out.keywords = keywords
+    } else if (key === 'launchpads') {
+      const launchpads = normalizeStringList(value)
+      if (launchpads.length > 0) out.launchpads = launchpads
+    } else if (key === 'hasSocials' || key === 'authoritiesRevoked') {
+      if (value === true) out[key] = true
+    } else if (typeof value === 'number' && Number.isFinite(value)) {
+      out[key as NumericFilterKey] = value
     }
   }
   return out
+}
+
+/** The bounds, as opposed to the lists and the switches. */
+export type NumericFilterKey = Exclude<
+  keyof LaunchpadFilters,
+  'keywords' | 'launchpads' | 'hasSocials' | 'authoritiesRevoked'
+>
+
+/** Whether ANY keyword is found in the ticker, the name or the address. */
+export function matchesKeywords(
+  token: Pick<LaunchpadToken, 'symbol' | 'name' | 'address'>,
+  keywords: ReadonlyArray<string>,
+): boolean {
+  if (keywords.length === 0) return true
+  const haystack =
+    `${token.symbol}\n${token.name}\n${token.address}`.toLowerCase()
+  return keywords.some((term) => term.length > 0 && haystack.includes(term))
 }
 
 export function passesFilters(
@@ -228,6 +336,29 @@ export function passesFilters(
   if (filters.minTrades !== undefined) {
     const trades = flow ? flow.buys + flow.sells : null
     if (!atLeast(trades, filters.minTrades)) return false
+  }
+  if (filters.keywords && !matchesKeywords(token, filters.keywords)) {
+    return false
+  }
+  if (filters.launchpads && filters.launchpads.length > 0) {
+    // A row with no launchpad is not a row on one of the chosen launchpads.
+    if (
+      token.launchpad === null ||
+      !filters.launchpads.includes(token.launchpad)
+    )
+      return false
+  }
+  if (filters.hasSocials) {
+    const s = token.socials
+    if (!s.twitter && !s.telegram && !s.website) return false
+  }
+  if (filters.authoritiesRevoked) {
+    // Unknown is not revoked. The safety pane follows the same rule.
+    if (
+      token.audit?.mintAuthorityDisabled !== true ||
+      token.audit.freezeAuthorityDisabled !== true
+    )
+      return false
   }
   return true
 }

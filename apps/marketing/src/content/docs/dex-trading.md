@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 5
 eyebrow: For traders
-updated: 22 AUG 2026
-readTime: 14 min read
+updated: 9 SEP 2026
+readTime: 15 min read
 ---
 
 ## What a decentralized exchange actually is
@@ -195,17 +195,41 @@ drawn dimmed rather than quietly dropped.
 
 Select an on-chain pair and the ticket adjusts.
 
-**Market swaps get a Slippage row**: 0.1%, 0.5%, 1% and 3%. Slippage tolerance is
-the worst price you will accept. Your transaction takes seconds to confirm and the
-price can move in between, so the setting is a trade-off: too tight and the swap
-simply fails, too loose and you can be picked off by a bot that sees your pending
-transaction and trades around it. On a thin memecoin, 0.1% will not go through.
+**Market swaps get an Execution block** with three preset slots: Normal, Fast
+and Ultra. A slot holds a slippage tolerance and, on Solana, a priority fee, a
+validator tip and an MEV lane. Tap a slot to trade with it; the gear opens the
+editor for the slot in force, where you can rename it. The slots are shared with
+the launchpad board's quick buy and with the phone, and they follow your account
+when cloud sync is on.
+
+**Slippage** is the worst price you will accept: 1%, 5%, 10%, 20% and 30% as
+chips, anything up to 50% in the editor. Your transaction takes seconds to
+confirm and the price can move in between, so the setting is a trade-off: too
+tight and the swap simply fails, too loose and a bot can see your pending
+transaction and trade around it. On a token minutes old, 10 to 30% is the range
+that fills. A memecoin ticket opens on Fast (20%), everything else on Normal (10%).
+
+**Priority fee** (Solana) is what you pay validators to place the transaction
+ahead of others. Auto lets the router estimate it; Medium, High and Very high
+target a percentile of recent fees, capped at the SOL figure you set.
+
+**MEV** (Solana) picks the lane the signed transaction travels through. **Off**
+sends it to your RPC and the public mempool. **Reduced** sends it to the Jito
+block engine, which also forwards it over the ordinary route, so it lands as
+fast as public and is usually unseen; if the engine refuses, the public lane
+takes it. **Secure** sends it to the block engine as a bundle only, so it never
+enters the public mempool; the price is that a block without a Jito leader drops
+it and you send again. Both private lanes pay the **validator tip** you set in
+place of the priority fee, since the router takes one or the other.
 
 **Limit orders** appear where the chain supports resting orders. They fill at your
 price, so there is no tolerance to set.
 
-**No Workflow tab.** Bracket orders need exchange-side trigger orders, which
-on-chain venues do not provide.
+**Workflow** appears on the same venues. A take-profit leg rests at the venue as
+a limit order, an entry ladder places its limits, and a market leg is a swap
+that carries the execution preset. A stop-loss is refused rather than faked, for
+the reason [Build a workflow](/docs/build-a-workflow) gives: a resting limit
+below the market fills instantly, which is the opposite of a stop.
 
 The submit button carries an **ON-CHAIN** badge and holds for the full duration,
 because a swap is irreversible the moment it lands.

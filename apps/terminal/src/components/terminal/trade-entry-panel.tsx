@@ -11,7 +11,7 @@ import {
 } from 'react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useParams } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import {
   AlertTriangle,
@@ -39,6 +39,7 @@ import { executeWorkflow } from '@pairlens/workflow-engine/executor'
 import { checkWorkflowMarketCompat } from '@pairlens/workflow-engine/market-compat'
 import { isTokenAddress } from '@pairlens/shared/market-ref'
 import { TradeConfirmButton } from './trade-confirm-button'
+import { SwapExecutionControls } from './swap-execution-controls'
 import { TradeConnectGate } from './trade-connect-gate'
 import { FundingEntryRow } from './funding-entry-row'
 import { PredictionOrderSummary } from './prediction-payout-card'
@@ -49,6 +50,8 @@ import type { OrderExecutor } from '@pairlens/workflow-engine/types'
 import type { BalanceRecord } from '@/stores/balances-store'
 import { OutcomeSwitch } from '@/components/predictions/outcome-switch'
 import { track } from '@/lib/analytics-events'
+import { useSwapPresets } from '@/hooks/use-swap-presets'
+import { swapExecutionOf } from '@/lib/trading/swap-presets'
 
 import { splitPairAssets } from '@/lib/pairs'
 import { tokenTicker } from '@/lib/dex/token-label'
@@ -609,10 +612,21 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
         : undefined,
   )
 
-  const [slippageBps, setSlippageBps] = usePersistedState<number>(
-    'trade:slippageBps',
-    100,
-  )
+  // Slippage, priority fee, tip and lane come from the execution preset in
+  // force, three profiles shared with the launchpad quick buy and the phone.
+  // The class only picks the STARTING slot: a memecoin ticket opens on Fast.
+  const routeParams = useParams({ strict: false })
+  const instrumentClass =
+    routeParams.cls === 'memecoin' ? ('memecoin' as const) : undefined
+  const swapPresets = useSwapPresets(instrumentClass)
+  const slippageBps = swapPresets.active.slippageBps
+  // The fee and lane fields are Solana's. An EVM swap carries slippage alone,
+  // so nothing else rides on the order there and the analytics never claim a
+  // lane the connector did not use.
+  const isSolanaSwap = isDex && marketInfo?.walletChain === 'solana'
+  const swapExecution = isSolanaSwap
+    ? swapExecutionOf(swapPresets.active)
+    : undefined
 
   // Pre-market / after-hours routing for equities. Deliberately NOT persisted:
   // those sessions are thin, and a toggle left on from last night would send
@@ -705,13 +719,15 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     else if (orderType === 'workflow') setOrderType('market')
   }, [isPrediction, limitOnly, orderType])
 
-  // DEX venues support market swaps and (where the venue offers it) resting
-  // limit orders — never workflows.
+  // DEX venues support market swaps and, where the venue offers resting
+  // orders, limit orders and workflows: a take-profit leg IS a resting order,
+  // so a venue that can rest one can run the exit plan. A swap-only venue
+  // gets neither, and the type falls back to the swap.
   useEffect(() => {
     if (!isDex) return
     if (
-      orderType === 'workflow' ||
-      (orderType === 'limit' && !dexSupportsLimit)
+      (orderType === 'workflow' || orderType === 'limit') &&
+      !dexSupportsLimit
     ) {
       setOrderType('market')
     }
@@ -994,6 +1010,231 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
       return
     }
 
+    // ── Workflow path: an entry ladder or an exit plan, on an exchange
+    // account or a wallet. Ordered before the swap branch on purpose: a wallet
+    // ticket only reaches this order type on a venue that rests orders (the
+    // tab is gated on `dexSupportsLimit`), and the executor below carries the
+    // wallet where the exchange executor carries the credential. ──
+    if (orderType === 'workflow') {
+      const account = usesWallet ? selectedWallet : selectedCred
+      if (!account) return
+      const workflow = wfWorkflows.find((w) => w.id === selectedWorkflowId)
+      if (!workflow) return
+      const runMode: 'paper' | 'live' = usesWallet
+        ? 'live'
+        : (selectedCred?.mode ?? 'paper')
+      setSubmitting(true)
+      try {
+        // Safety net behind the disabled submit button: never start a run
+        // whose steps this venue cannot execute.
+        if (marketInfo) {
+          const compatIssues = checkWorkflowMarketCompat(workflow, marketInfo)
+          if (compatIssues.length > 0) {
+            toast.error(t('terminal.trade.workflowUnsupported'), {
+              description: compatIssues
+                .map(
+                  (i) =>
+                    `${stepTypeLabelById(t, 'workflows', i.stepType, i.stepLabel)}: ${stepCompatReason(t, 'workflows', i.stepType, i.reason)}`,
+                )
+                .join(' · '),
+            })
+            return
+          }
+        }
+
+        // One identity check for the whole run, here, while the user is still
+        // in front of the screen. The steps below deliberately do NOT go
+        // through the gated `placeOrder`: a workflow can hold a `wait` of up
+        // to 24 hours before it places the stop-loss it owes, by which time
+        // the idle trigger has locked the terminal and the gate would cancel
+        // that order outright — leaving a live position unprotected.
+        const allowed = await requireUnlockForTrade()
+        if (!allowed) {
+          toast.error(i18n.t('security.lock.orderCancelled'))
+          return
+        }
+
+        // What every order in the run carries: the credential on an exchange,
+        // the wallet on-chain. A swap leg also carries the execution preset,
+        // because it is a swap like any other the ticket sends.
+        const identity: Record<string, unknown> = usesWallet
+          ? {
+              walletId: account.id,
+              mode: 'live',
+              slippageBps,
+              ...(swapExecution ? { swap: swapExecution } : {}),
+            }
+          : { credentialId: account.id }
+
+        // Build OrderExecutor from plugin manager
+        const orderExecutor: OrderExecutor = {
+          placeMarketOrder: async (params) => {
+            let orderSize = params.size
+            if (usesWallet) {
+              // A swap's size is the INPUT token. The engine sizes in the
+              // ticket's currency, so a base-denominated buy or a
+              // quote-denominated sell converts at the live price first,
+              // exactly as the swap branch below does.
+              const px = pricesRef.current.latestPrice
+              const ccy = params.tgtCcy ?? 'base_ccy'
+              if (params.side === 'buy' && ccy === 'base_ccy') {
+                if (!px) throw new Error('No live price to convert base amount')
+                orderSize = (Number(params.size) * px).toFixed(8)
+              } else if (params.side === 'sell' && ccy === 'quote_ccy') {
+                if (!px)
+                  throw new Error('No live price to convert quote amount')
+                orderSize = (Number(params.size) / px).toFixed(8)
+              }
+            }
+            const r = await placeUnattendedOrder({
+              market: params.market,
+              pair: params.pair,
+              side: params.side,
+              type: 'market',
+              size: orderSize,
+              ...(usesWallet ? {} : { tgtCcy: params.tgtCcy ?? 'base_ccy' }),
+              ...identity,
+              analyticsSource: 'workflow',
+            })
+            if (usesWallet && r.success) {
+              // A swap fills atomically and no order stream echoes it back,
+              // so the run journals its own leg the way the swap branch does.
+              const px = pricesRef.current.latestPrice ?? 0
+              const baseFill =
+                params.side === 'buy'
+                  ? px > 0
+                    ? Number(orderSize) / px
+                    : 0
+                  : Number(orderSize)
+              upsertOrderEvent({
+                orderId: r.orderId ?? crypto.randomUUID(),
+                market: params.market,
+                pair: params.pair,
+                side: params.side,
+                type: 'market',
+                size: baseFill.toFixed(8),
+                price: String(px),
+                fillSize: baseFill.toFixed(8),
+                avgPrice: String(px),
+                mode: 'live',
+                status: 'filled',
+                fee: '0',
+                feeCcy: '',
+                ts: Date.now(),
+              })
+            }
+            return r
+          },
+          placeLimitOrder: async (params) => {
+            const r = await placeUnattendedOrder({
+              market: params.market,
+              pair: params.pair,
+              side: params.side,
+              type: 'limit',
+              size: params.size,
+              price: params.price,
+              ...identity,
+              analyticsSource: 'workflow',
+            })
+            return r
+          },
+          placeConditionalOrder: async (params) => {
+            // Connectors advertising triggerOrders place a real exchange-
+            // native trigger order that rests on the venue and activates at
+            // the trigger price (market or limit execution).
+            if (marketInfo?.triggerOrders) {
+              const r = await placeUnattendedOrder({
+                market: params.market,
+                pair: params.pair,
+                side: params.side,
+                type: params.orderType,
+                size: params.size,
+                price:
+                  params.orderType === 'limit' ? params.limitPrice : undefined,
+                trigger: {
+                  triggerPrice: params.triggerPrice,
+                  triggerType: params.triggerType,
+                },
+                ...identity,
+                analyticsSource: 'workflow',
+              })
+              return r
+            }
+
+            // Fallback for venues without native trigger orders. A
+            // take-profit is safely representable as a resting limit order
+            // (exit price is on the far side of the market, so it rests
+            // until the trigger level trades). A stop-loss is NOT — a limit
+            // at a below-market trigger fills immediately at market price,
+            // which is the opposite of what the user asked for. Fail it
+            // loudly instead of silently placing the wrong order.
+            if (params.triggerType === 'sl') {
+              return {
+                success: false,
+                error:
+                  'Stop-loss needs exchange-native trigger orders, which this connector does not support — no order was placed',
+              }
+            }
+            const r = await placeUnattendedOrder({
+              market: params.market,
+              pair: params.pair,
+              side: params.side,
+              type: 'limit',
+              size: params.size,
+              price: params.limitPrice ?? params.triggerPrice,
+              ...identity,
+              analyticsSource: 'workflow',
+            })
+            return r
+          },
+          getCurrentPrice: async () => pricesRef.current.latestPrice ?? 0,
+        }
+
+        // Show live toast immediately, feed it progress as steps execute
+        const { onStepComplete, onComplete } = showLiveWorkflowToast(
+          workflow.name,
+        )
+
+        const result = await executeWorkflow(
+          workflow,
+          {
+            workflowId: workflow.id,
+            market,
+            pair: pairKey,
+            side,
+            amount: size,
+            tgtCcy: sizeCcy === 'base' ? 'base_ccy' : 'quote_ccy',
+            mode: runMode,
+          },
+          orderExecutor,
+          { onStepComplete },
+        )
+
+        onComplete(result)
+        track('workflow_run_completed', {
+          status: result.status,
+          step_count: result.results.length,
+        })
+        useWorkflowRunStore.getState().record({
+          timestamp: Date.now(),
+          pair: pairKey,
+          market,
+          mode: runMode,
+          result,
+        })
+        setSize('')
+        setSellPct(0)
+        if (usesWallet) refreshWalletBalances(market, account.id, pairKey)
+      } catch (err) {
+        toast.error(t('terminal.trade.orderFailed'), {
+          description: String(err),
+        })
+      } finally {
+        setSubmitting(false)
+      }
+      return
+    }
+
     // ── DEX path: on-chain swap / resting limit order from a wallet ──
     if (isDex) {
       if (!selectedWallet) return
@@ -1076,6 +1317,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           size: orderSize,
           walletId: selectedWallet.id,
           slippageBps,
+          ...(swapExecution ? { swap: swapExecution } : {}),
           mode: 'live',
         })
 
@@ -1134,257 +1376,105 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
     if (!selectedCred) return
     setSubmitting(true)
     try {
-      if (orderType === 'workflow') {
-        // Workflow execution
-        const workflow = wfWorkflows.find((w) => w.id === selectedWorkflowId)
-        if (!workflow) {
-          throw new Error('Workflow not found')
-        }
-
-        // Safety net behind the disabled submit button: never start a run
-        // whose steps this venue cannot execute.
-        if (marketInfo) {
-          const compatIssues = checkWorkflowMarketCompat(workflow, marketInfo)
-          if (compatIssues.length > 0) {
-            toast.error(t('terminal.trade.workflowUnsupported'), {
-              description: compatIssues
-                .map(
-                  (i) =>
-                    `${stepTypeLabelById(t, 'workflows', i.stepType, i.stepLabel)}: ${stepCompatReason(t, 'workflows', i.stepType, i.reason)}`,
-                )
-                .join(' · '),
+      // ── maxPositionSize guard (single order as a % of portfolio) ──
+      const risk = useRiskConfigStore.getState()
+      if (risk.maxPositionSize > 0 && risk.positionSizeAction !== 'off') {
+        const refPrice =
+          orderType === 'limit'
+            ? Number(limitPrice)
+            : (pricesRef.current.latestPrice ?? null)
+        const notionalUsd = orderNotionalUsd(
+          {
+            pair: pairKey,
+            size: Number(size),
+            quoteDenominated: sizeCcy === 'quote',
+            price: refPrice,
+            // Only when the venue actually told us. An unknown contract size
+            // passed as 1 is a claim, and on a 0.001 BTC contract it is a
+            // thousandfold overstatement — the guard resolves it itself.
+            ...(isPerp && contractSizeKnown ? { contractSize } : {}),
+          },
+          priceUsd,
+        )
+        const { exceeds, ratioPct } = evaluatePositionSize(
+          notionalUsd,
+          totalValueUsd,
+          risk.maxPositionSize,
+        )
+        if (exceeds) {
+          const blocks =
+            risk.positionSizeAction === 'block_all' ||
+            (risk.positionSizeAction === 'block_buys' && side === 'buy')
+          if (blocks) {
+            toast.error(t('terminal.trade.orderBlocked'), {
+              description: `Position is ${ratioPct.toFixed(1)}% of portfolio, over your ${risk.maxPositionSize}% max. Adjust in Settings › Risk.`,
             })
             return
           }
+          toast.warning(
+            `Large position: ${ratioPct.toFixed(1)}% of portfolio (max ${risk.maxPositionSize}%)`,
+          )
         }
+      }
 
-        // One identity check for the whole run, here, while the user is still
-        // in front of the screen. The steps below deliberately do NOT go
-        // through the gated `placeOrder`: a workflow can hold a `wait` of up
-        // to 24 hours before it places the stop-loss it owes, by which time
-        // the idle trigger has locked the terminal and the gate would cancel
-        // that order outright — leaving a live position unprotected.
-        const allowed = await requireUnlockForTrade()
-        if (!allowed) {
-          toast.error(i18n.t('security.lock.orderCancelled'))
-          return
+      // Standard Market/Limit order
+      let orderSize = String(size)
+      let tgtCcy: string | undefined =
+        sizeCcy === 'base' ? 'base_ccy' : 'quote_ccy'
+
+      if (orderType === 'limit') {
+        tgtCcy = undefined
+        if (sizeCcy === 'quote' && Number(limitPrice) > 0) {
+          orderSize = (Number(size) / Number(limitPrice)).toFixed(8)
         }
+      }
+      // A perp size is a CONTRACT COUNT, which is what ccxt's unified
+      // interface takes for contract markets. There is no second leg to
+      // denominate it in, so `tgtCcy` — which is the spot venues' base/quote
+      // switch — must never ride along.
+      if (isPerp) {
+        orderSize = String(size)
+        tgtCcy = undefined
+      }
 
-        // Build OrderExecutor from plugin manager
-        const orderExecutor: OrderExecutor = {
-          placeMarketOrder: async (params) => {
-            const r = await placeUnattendedOrder({
-              market: params.market,
-              pair: params.pair,
-              side: params.side,
-              type: 'market',
-              size: params.size,
-              tgtCcy: params.tgtCcy ?? 'base_ccy',
-              credentialId: selectedCred.id,
-              analyticsSource: 'workflow',
-            })
-            return r
-          },
-          placeLimitOrder: async (params) => {
-            const r = await placeUnattendedOrder({
-              market: params.market,
-              pair: params.pair,
-              side: params.side,
-              type: 'limit',
-              size: params.size,
-              price: params.price,
-              credentialId: selectedCred.id,
-              analyticsSource: 'workflow',
-            })
-            return r
-          },
-          placeConditionalOrder: async (params) => {
-            // Connectors advertising triggerOrders place a real exchange-
-            // native trigger order that rests on the venue and activates at
-            // the trigger price (market or limit execution).
-            if (marketInfo?.triggerOrders) {
-              const r = await placeUnattendedOrder({
-                market: params.market,
-                pair: params.pair,
-                side: params.side,
-                type: params.orderType,
-                size: params.size,
-                price:
-                  params.orderType === 'limit' ? params.limitPrice : undefined,
-                trigger: {
-                  triggerPrice: params.triggerPrice,
-                  triggerType: params.triggerType,
-                },
-                credentialId: selectedCred.id,
-                analyticsSource: 'workflow',
-              })
-              return r
-            }
+      const result = await placeOrder({
+        market,
+        pair: pairKey,
+        side,
+        type: orderType,
+        size: orderSize,
+        credentialId: selectedCred.id,
+        ...(tgtCcy ? { tgtCcy } : {}),
+        ...(orderType === 'limit' ? { price: String(limitPrice) } : {}),
+        ...(extendedHours && extendedHoursEligible
+          ? { extendedHours: true }
+          : {}),
+        // Leverage is applied per order (the connector sets it on the symbol
+        // first, idempotently), which is why it rides ONLY when the user
+        // moved the selector and never on a reduce-only order: it is account
+        // state at the venue, and a close should not rewrite it. Matches the
+        // positions pane, which closes without leverage for the same reason.
+        ...(isPerp && leverageDirty && !reduceOnly ? { leverage } : {}),
+        ...(isPerp && contractSizeKnown ? { contractSize } : {}),
+        ...(isPerp && reduceOnly ? { reduceOnly: true } : {}),
+      })
 
-            // Fallback for venues without native trigger orders. A
-            // take-profit is safely representable as a resting limit order
-            // (exit price is on the far side of the market, so it rests
-            // until the trigger level trades). A stop-loss is NOT — a limit
-            // at a below-market trigger fills immediately at market price,
-            // which is the opposite of what the user asked for. Fail it
-            // loudly instead of silently placing the wrong order.
-            if (params.triggerType === 'sl') {
-              return {
-                success: false,
-                error:
-                  'Stop-loss needs exchange-native trigger orders, which this connector does not support — no order was placed',
-              }
-            }
-            const r = await placeUnattendedOrder({
-              market: params.market,
-              pair: params.pair,
-              side: params.side,
-              type: 'limit',
-              size: params.size,
-              price: params.limitPrice ?? params.triggerPrice,
-              credentialId: selectedCred.id,
-              analyticsSource: 'workflow',
-            })
-            return r
-          },
-          getCurrentPrice: async () => pricesRef.current.latestPrice ?? 0,
-        }
-
-        // Show live toast immediately, feed it progress as steps execute
-        const { onStepComplete, onComplete } = showLiveWorkflowToast(
-          workflow.name,
-        )
-
-        const result = await executeWorkflow(
-          workflow,
-          {
-            workflowId: workflow.id,
-            market,
-            pair: pairKey,
-            side,
-            amount: size,
-            tgtCcy: sizeCcy === 'base' ? 'base_ccy' : 'quote_ccy',
-            mode: selectedCred.mode ?? 'paper',
-          },
-          orderExecutor,
-          { onStepComplete },
-        )
-
-        onComplete(result)
-        track('workflow_run_completed', {
-          status: result.status,
-          step_count: result.results.length,
-        })
-        useWorkflowRunStore.getState().record({
-          timestamp: Date.now(),
-          pair: pairKey,
+      if (result.success) {
+        showTradeToast({
+          side,
+          orderType,
+          size,
+          sizeAsset,
+          pairKey,
           market,
-          mode: selectedCred.mode ?? 'paper',
-          result,
+          price: orderType === 'limit' ? limitPrice : undefined,
         })
         setSize('')
         setSellPct(0)
       } else {
-        // ── maxPositionSize guard (single order as a % of portfolio) ──
-        const risk = useRiskConfigStore.getState()
-        if (risk.maxPositionSize > 0 && risk.positionSizeAction !== 'off') {
-          const refPrice =
-            orderType === 'limit'
-              ? Number(limitPrice)
-              : (pricesRef.current.latestPrice ?? null)
-          const notionalUsd = orderNotionalUsd(
-            {
-              pair: pairKey,
-              size: Number(size),
-              quoteDenominated: sizeCcy === 'quote',
-              price: refPrice,
-              // Only when the venue actually told us. An unknown contract size
-              // passed as 1 is a claim, and on a 0.001 BTC contract it is a
-              // thousandfold overstatement — the guard resolves it itself.
-              ...(isPerp && contractSizeKnown ? { contractSize } : {}),
-            },
-            priceUsd,
-          )
-          const { exceeds, ratioPct } = evaluatePositionSize(
-            notionalUsd,
-            totalValueUsd,
-            risk.maxPositionSize,
-          )
-          if (exceeds) {
-            const blocks =
-              risk.positionSizeAction === 'block_all' ||
-              (risk.positionSizeAction === 'block_buys' && side === 'buy')
-            if (blocks) {
-              toast.error(t('terminal.trade.orderBlocked'), {
-                description: `Position is ${ratioPct.toFixed(1)}% of portfolio, over your ${risk.maxPositionSize}% max. Adjust in Settings › Risk.`,
-              })
-              return
-            }
-            toast.warning(
-              `Large position: ${ratioPct.toFixed(1)}% of portfolio (max ${risk.maxPositionSize}%)`,
-            )
-          }
-        }
-
-        // Standard Market/Limit order
-        let orderSize = String(size)
-        let tgtCcy: string | undefined =
-          sizeCcy === 'base' ? 'base_ccy' : 'quote_ccy'
-
-        if (orderType === 'limit') {
-          tgtCcy = undefined
-          if (sizeCcy === 'quote' && Number(limitPrice) > 0) {
-            orderSize = (Number(size) / Number(limitPrice)).toFixed(8)
-          }
-        }
-        // A perp size is a CONTRACT COUNT, which is what ccxt's unified
-        // interface takes for contract markets. There is no second leg to
-        // denominate it in, so `tgtCcy` — which is the spot venues' base/quote
-        // switch — must never ride along.
-        if (isPerp) {
-          orderSize = String(size)
-          tgtCcy = undefined
-        }
-
-        const result = await placeOrder({
-          market,
-          pair: pairKey,
-          side,
-          type: orderType,
-          size: orderSize,
-          credentialId: selectedCred.id,
-          ...(tgtCcy ? { tgtCcy } : {}),
-          ...(orderType === 'limit' ? { price: String(limitPrice) } : {}),
-          ...(extendedHours && extendedHoursEligible
-            ? { extendedHours: true }
-            : {}),
-          // Leverage is applied per order (the connector sets it on the symbol
-          // first, idempotently), which is why it rides ONLY when the user
-          // moved the selector and never on a reduce-only order: it is account
-          // state at the venue, and a close should not rewrite it. Matches the
-          // positions pane, which closes without leverage for the same reason.
-          ...(isPerp && leverageDirty && !reduceOnly ? { leverage } : {}),
-          ...(isPerp && contractSizeKnown ? { contractSize } : {}),
-          ...(isPerp && reduceOnly ? { reduceOnly: true } : {}),
+        toast.error(t('terminal.trade.orderRejected'), {
+          description: result.error ?? 'Unknown error',
         })
-
-        if (result.success) {
-          showTradeToast({
-            side,
-            orderType,
-            size,
-            sizeAsset,
-            pairKey,
-            market,
-            price: orderType === 'limit' ? limitPrice : undefined,
-          })
-          setSize('')
-          setSellPct(0)
-        } else {
-          toast.error(t('terminal.trade.orderRejected'), {
-            description: result.error ?? 'Unknown error',
-          })
-        }
       }
     } catch (err) {
       toast.error(t('terminal.trade.orderFailed'), {
@@ -1571,8 +1661,9 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </button>
         </div>
 
-        {/* Order type tabs — DEX venues get Market + Limit (when the venue
-            supports resting orders); CEX venues additionally get Workflow */}
+        {/* Order type tabs — Market + Limit + Workflow. A DEX venue gets the
+            row only when it rests orders, which is also what a workflow's
+            take-profit leg needs; a prediction venue gets no workflow at all. */}
         {(!isDex || dexSupportsLimit) && !limitOnly && (
           <Tabs
             value={orderType}
@@ -1597,7 +1688,7 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
               >
                 {t('terminal.trade.orderTypeLimit')}
               </TabsTrigger>
-              {!isDex && !isPrediction && (
+              {!isPrediction && (
                 <TabsTrigger
                   value="workflow"
                   disabled={outsideRegularHours}
@@ -1953,44 +2044,14 @@ export const TradeEntryPanel = memo(function TradeEntryPanel({
           </div>
         )}
 
-        {/* Slippage tolerance (DEX market swaps only — limit orders fill
-            at the resting price) */}
+        {/* Execution (DEX market swaps only): preset slot, slippage, and on
+            Solana the priority fee, tip and MEV lane the slot pays. A resting
+            limit order fills at its own price and carries none of this. */}
         {isDex && orderType === 'market' && (
-          <div className="space-y-1">
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-[11px] uppercase tracking-[.16em] text-muted-foreground">
-                {t('terminal.trade.slippage')}
-              </span>
-              <span className="font-mono text-[10px] tabular-nums text-muted-foreground">
-                {(slippageBps / 100).toFixed(slippageBps % 100 === 0 ? 0 : 1)}%
-              </span>
-            </div>
-            <div className="flex gap-1">
-              {[10, 50, 100, 300].map((bps) => (
-                <button
-                  key={bps}
-                  type="button"
-                  className={cn(
-                    'flex-1 rounded-md border px-1 py-0.5 font-mono text-[11.5px] tabular-nums transition-colors',
-                    slippageBps === bps
-                      ? 'border-primary text-foreground'
-                      : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
-                  )}
-                  style={
-                    slippageBps === bps
-                      ? {
-                          backgroundColor:
-                            'color-mix(in oklch, var(--primary) 14%, transparent)',
-                        }
-                      : undefined
-                  }
-                  onClick={() => setSlippageBps(bps)}
-                >
-                  {bps / 100}%
-                </button>
-              ))}
-            </div>
-          </div>
+          <SwapExecutionControls
+            cls={instrumentClass}
+            solana={marketInfo?.walletChain === 'solana'}
+          />
         )}
 
         {/* Limit price (only for limit orders) */}

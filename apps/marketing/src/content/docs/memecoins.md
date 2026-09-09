@@ -5,8 +5,8 @@ group: traders
 parent: trading
 order: 10
 eyebrow: For traders
-updated: 26 AUG 2026
-readTime: 11 min read
+updated: 9 SEP 2026
+readTime: 12 min read
 ---
 
 ## Before anything else
@@ -110,6 +110,20 @@ a liquidity or holder minimum, a curve range on Graduating, a maximum age on New
 Mints, a 24-hour volume floor on Legendary. Leave a field empty for no bound.
 Rows the feed published no figure for do not pass a bound, because a token whose
 market cap nobody published is not a token known to clear your floor.
+
+Above the bounds sit three narrowings that are not numbers. **Keywords**, up to
+five and comma separated, keep a row when any term appears in its ticker, name
+or address, which is how you watch a narrative rather than a token. **Launchpads**
+are chips built from whatever the loaded rows carry (pump.fun, letsbonk.fun and
+so on), and nothing selected keeps them all. Two switches keep only rows with a
+social link, and only rows whose deployer has revoked both mint and freeze
+authority; an unknown audit fails that switch, for the same reason the safety
+panel refuses to paint a green check on one.
+
+Every row also carries what the filters read. A dot beside the ticker is green
+when both authorities are revoked and red when the deployer can still mint or
+freeze; no dot means the feed published no audit. Social links rise on hover at
+the end of the identity, and the chart link's tooltip names the launchpad.
 
 A column filtered down to nothing says so, and offers to clear the bounds, rather
 than showing you the same empty pane a quiet market would.
@@ -235,13 +249,26 @@ changing. That is the upgrade path if you want a paid feed behind the board.
 
 Memecoin orders take the identical path as any other on-chain swap: the same
 connector, the same wallet, the same risk guardrails, the same confirmation. See
-[DEX and wallets](/docs/dex-trading) for the wallet setup.
+[DEX and wallets](/docs/dex-trading) for the wallet setup and for the execution
+presets, which are where slippage, the priority fee, the validator tip and the
+MEV lane live. A memecoin ticket opens on the **Fast** slot: 20% slippage, a high
+priority fee and the private lane with a tip, because a token minutes old is
+what the public lane at 1% fails on.
 
-Two practical notes. **Set your slippage wider than you would elsewhere**, since
-a thin launchpad token at 0.1% tolerance simply will not go through. And **a
-memecoin's identity is its chain and mint address, never its ticker.** Six tokens
-on the board can be called TIMBOTHY and be six different mints. The address is
-what everything pins.
+### Quick buy
+
+Every Solana row on the board ends in a bolt. Press and hold it (or click once,
+if that is the gesture you chose in Settings › Risk) and the column's amount of
+SOL buys that token through the active execution preset, without opening the
+chart or the ticket. The amount is the number in the column's header; click it
+to change it, per column, so a fresh mint and a graduated pool can be sized
+differently. A quick buy is the ordinary guarded order: the risk limits, the
+vault gate and the identity check apply exactly as on the ticket. Without a
+Solana wallet on the device the bolt says so and points at Accounts.
+
+**A memecoin's identity is its chain and mint address, never its ticker.** Six
+tokens on the board can be called TIMBOTHY and be six different mints. The
+address is what everything pins.
 
 ## Turning it off
 

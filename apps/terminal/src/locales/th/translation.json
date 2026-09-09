@@ -4514,7 +4514,31 @@
       "reduceOnly": "ลดสถานะเท่านั้น",
       "reduceOnlyHint": "ลดสถานะที่เปิดอยู่เท่านั้น และจะไม่เปิดฝั่งตรงข้าม",
       "notional": "มูลค่าตามสัญญา",
-      "estLiquidation": "ราคาบังคับปิดโดยประมาณ"
+      "estLiquidation": "ราคาบังคับปิดโดยประมาณ",
+      "execution": "การดำเนินการ",
+      "editPreset": "แก้ไขพรีเซ็ตการดำเนินการ",
+      "presetNormal": "ปกติ",
+      "presetFast": "เร็ว",
+      "presetUltra": "อัลตรา",
+      "swapPresetTitle": "พรีเซ็ตการดำเนินการ · {{name}}",
+      "presetName": "ชื่อ",
+      "slippageHint": "ราคาที่จับคู่ได้เบี่ยงจากราคาเสนอได้แค่ไหนก่อนที่สวอปจะถูกปฏิเสธ โทเค็นอายุไม่กี่นาทีต้องใช้ 10 ถึง 30% สูงสุด {{max}}%",
+      "priorityFee": "ค่าธรรมเนียมลำดับความสำคัญ",
+      "priorityAuto": "อัตโนมัติ",
+      "priorityMedium": "ปานกลาง",
+      "priorityHigh": "สูง",
+      "priorityVeryHigh": "สูงมาก",
+      "priorityCap": "ค่าธรรมเนียมลำดับความสำคัญสูงสุด (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "ปิด",
+      "mevReduced": "ลดลง",
+      "mevSecure": "ปลอดภัย",
+      "mevOffHint": "ช่องทางสาธารณะ ถูกที่สุด แต่บอทแซนด์วิชเห็นสวอปได้ก่อนที่จะสำเร็จ",
+      "mevReducedHint": "ใช้ช่องทางส่วนตัวก่อน ถ้าถูกปฏิเสธจึงใช้สาธารณะ เร็วเท่าสาธารณะและมักไม่ถูกเห็น",
+      "mevSecureHint": "ช่องทางส่วนตัวเท่านั้น ไม่เข้า mempool สาธารณะเลย บล็อกที่ไม่มีผู้นำ Jito จะทิ้งมันและต้องส่งสวอปใหม่",
+      "tip": "ทิปให้ validator (SOL)",
+      "tipHint": "จ่ายให้ validator ที่รวมบันเดิล ใช้แทนค่าธรรมเนียมลำดับความสำคัญในช่องทางส่วนตัว",
+      "tipShort": "ทิป {{sol}} SOL"
     },
     "status": {
       "connecting": "กำลังเชื่อมต่อ…",
@@ -6997,7 +7021,33 @@
       "minTrades": "จำนวนเทรดขั้นต่ำ",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "นาที"
+      "unitMinutes": "นาที",
+      "keywords": "คีย์เวิร์ด",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "สูงสุด {{max}} คำ คั่นด้วยจุลภาค แถวจะคงอยู่เมื่อมีคำใดปรากฏในติกเกอร์ ชื่อ หรือที่อยู่",
+      "launchpads": "ลอนช์แพด",
+      "launchpadsHint": "ไม่เลือกอะไรจะคงทุกลอนช์แพดไว้",
+      "hasSocials": "มีลิงก์โซเชียล",
+      "authoritiesRevoked": "เพิกถอน mint และ freeze แล้ว"
+    },
+    "quickBuy": {
+      "amountTitle": "จำนวนซื้อด่วน",
+      "amountHint": "จำนวน SOL ที่ปุ่มสายฟ้าในคอลัมน์นี้ใช้จ่ายจากกระเป๋า Solana ของคุณผ่านพรีเซ็ตการดำเนินการที่ใช้อยู่ กดค้างที่สายฟ้าเพื่อซื้อ หรือคลิกครั้งเดียวถ้าคุณเลือกไว้ในการตั้งค่า › ความเสี่ยง",
+      "amountLabel": "จำนวน (SOL)",
+      "buy": "ซื้อ {{symbol}} ด้วย {{sol}} SOL",
+      "bought": "ซื้อ {{symbol}} ด้วย {{sol}} SOL แล้ว",
+      "failed": "ซื้อด่วนล้มเหลว",
+      "noWallet": "ซื้อด่วนต้องมีกระเป๋า Solana บนอุปกรณ์นี้",
+      "addWallet": "เพิ่มกระเป๋า",
+      "sealed": "ปลดล็อกห้องนิรภัยเพื่อซื้อด่วน"
+    },
+    "row": {
+      "authoritiesRevoked": "เพิกถอนสิทธิ์ mint และ freeze แล้ว",
+      "authoritiesLive": "ผู้ deploy ยังสร้างเหรียญหรือแช่แข็งได้",
+      "launchedOn": "เปิดตัวบน {{launchpad}}",
+      "twitter": "โปรไฟล์ X",
+      "telegram": "Telegram",
+      "website": "เว็บไซต์"
     }
   }
 }

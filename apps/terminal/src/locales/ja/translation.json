@@ -4514,7 +4514,31 @@
       "reduceOnly": "リデュースオンリー",
       "reduceOnlyHint": "既存ポジションを減らすだけで、反対側を建てることはありません。",
       "notional": "想定元本",
-      "estLiquidation": "推定清算価格"
+      "estLiquidation": "推定清算価格",
+      "execution": "執行",
+      "editPreset": "執行プリセットを編集",
+      "presetNormal": "標準",
+      "presetFast": "高速",
+      "presetUltra": "ウルトラ",
+      "swapPresetTitle": "執行プリセット · {{name}}",
+      "presetName": "名前",
+      "slippageHint": "スワップが拒否されるまでに約定が見積もりからどれだけ離れてよいか。発行から数分のトークンには10〜30%が必要です。最大{{max}}%。",
+      "priorityFee": "優先手数料",
+      "priorityAuto": "自動",
+      "priorityMedium": "中",
+      "priorityHigh": "高",
+      "priorityVeryHigh": "最高",
+      "priorityCap": "優先手数料の上限 (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "オフ",
+      "mevReduced": "軽減",
+      "mevSecure": "保護",
+      "mevOffHint": "公開レーン。最も安いが、サンドイッチボットに約定前のスワップを見られます。",
+      "mevReducedHint": "まず非公開レーン、拒否されたら公開レーン。公開と同じ速さで約定し、通常は見られません。",
+      "mevSecureHint": "非公開レーンのみ。公開メンプールには一切入りません。Jitoリーダーのいないブロックでは破棄され、再送が必要です。",
+      "tip": "バリデーターチップ (SOL)",
+      "tipHint": "バンドルを取り込んだバリデーターに支払われます。非公開レーンでは優先手数料の代わりになります。",
+      "tipShort": "チップ {{sol}} SOL"
     },
     "status": {
       "connecting": "接続中…",
@@ -6997,7 +7021,33 @@
       "minTrades": "取引数の下限",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "分"
+      "unitMinutes": "分",
+      "keywords": "キーワード",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "最大{{max}}件、カンマ区切り。いずれかの語がティッカー・名前・アドレスに含まれる行が残ります。",
+      "launchpads": "ローンチパッド",
+      "launchpadsHint": "未選択ならすべてのローンチパッドが残ります。",
+      "hasSocials": "ソーシャルリンクあり",
+      "authoritiesRevoked": "mintとfreezeが放棄済み"
+    },
+    "quickBuy": {
+      "amountTitle": "クイック買いの金額",
+      "amountHint": "この列の稲妻ボタンが、有効な執行プリセットであなたのSolanaウォレットから使うSOLの量。稲妻を長押しで購入、設定 › リスクで選んでいればシングルクリックで購入します。",
+      "amountLabel": "金額 (SOL)",
+      "buy": "{{sol}} SOLで{{symbol}}を買う",
+      "bought": "{{sol}} SOLで{{symbol}}を購入しました",
+      "failed": "クイック買いに失敗しました",
+      "noWallet": "クイック買いにはこの端末にSolanaウォレットが必要です。",
+      "addWallet": "ウォレットを追加",
+      "sealed": "クイック買いにはボールトのロック解除が必要です。"
+    },
+    "row": {
+      "authoritiesRevoked": "mintとfreezeの権限が放棄済み",
+      "authoritiesLive": "デプロイヤーがまだ発行または凍結できます",
+      "launchedOn": "{{launchpad}}でローンチ",
+      "twitter": "Xプロフィール",
+      "telegram": "Telegram",
+      "website": "ウェブサイト"
     }
   }
 }

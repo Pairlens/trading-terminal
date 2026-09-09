@@ -4514,7 +4514,31 @@
       "reduceOnly": "Nur reduzieren",
       "reduceOnlyHint": "Verkleinert eine offene Position und eröffnet nie die Gegenseite.",
       "notional": "Nominalwert",
-      "estLiquidation": "Gesch. Liquidation"
+      "estLiquidation": "Gesch. Liquidation",
+      "execution": "Ausführung",
+      "editPreset": "Ausführungsprofil bearbeiten",
+      "presetNormal": "Normal",
+      "presetFast": "Schnell",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Ausführungsprofil · {{name}}",
+      "presetName": "Name",
+      "slippageHint": "Wie weit sich die Ausführung vom Kurs entfernen darf, bevor der Swap abgelehnt wird. Ein minutenalter Token braucht 10 bis 30 %. Bis zu {{max}} %.",
+      "priorityFee": "Prioritätsgebühr",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Mittel",
+      "priorityHigh": "Hoch",
+      "priorityVeryHigh": "Sehr hoch",
+      "priorityCap": "Max. Prioritätsgebühr (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Aus",
+      "mevReduced": "Reduziert",
+      "mevSecure": "Sicher",
+      "mevOffHint": "Öffentliche Spur. Am günstigsten, und ein Sandwich-Bot kann den Swap sehen, bevor er landet.",
+      "mevReducedHint": "Erst die private Spur, die öffentliche, wenn sie ablehnt. Landet so schnell wie öffentlich und bleibt meist ungesehen.",
+      "mevSecureHint": "Nur private Spur. Gelangt nie in den öffentlichen Mempool; ein Block ohne Jito-Leader verwirft ihn, und der Swap muss erneut gesendet werden.",
+      "tip": "Validator-Trinkgeld (SOL)",
+      "tipHint": "Geht an den Validator, der das Bundle aufnimmt. Ersetzt auf einer privaten Spur die Prioritätsgebühr.",
+      "tipShort": "Trinkgeld {{sol}} SOL"
     },
     "status": {
       "connecting": "Verbinde…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Min. Trades",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "Minuten"
+      "unitMinutes": "Minuten",
+      "keywords": "Stichwörter",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Bis zu {{max}}, durch Kommas getrennt. Eine Zeile bleibt, wenn ein Begriff in Ticker, Name oder Adresse vorkommt.",
+      "launchpads": "Launchpads",
+      "launchpadsHint": "Ohne Auswahl bleiben alle Launchpads.",
+      "hasSocials": "Hat einen Social-Link",
+      "authoritiesRevoked": "Mint und Freeze widerrufen"
+    },
+    "quickBuy": {
+      "amountTitle": "Schnellkauf-Betrag",
+      "amountHint": "Was die Blitze dieser Spalte ausgeben, in SOL, aus deiner Solana-Wallet über das aktive Ausführungsprofil. Blitz gedrückt halten zum Kaufen, oder ein Klick, wenn du das in Einstellungen › Risiko gewählt hast.",
+      "amountLabel": "Betrag (SOL)",
+      "buy": "{{symbol}} für {{sol}} SOL kaufen",
+      "bought": "{{symbol}} für {{sol}} SOL gekauft",
+      "failed": "Schnellkauf fehlgeschlagen",
+      "noWallet": "Der Schnellkauf braucht eine Solana-Wallet auf diesem Gerät.",
+      "addWallet": "Wallet hinzufügen",
+      "sealed": "Entsperre den Tresor für den Schnellkauf."
+    },
+    "row": {
+      "authoritiesRevoked": "Mint- und Freeze-Berechtigung widerrufen",
+      "authoritiesLive": "Der Deployer kann noch prägen oder einfrieren",
+      "launchedOn": "Gestartet auf {{launchpad}}",
+      "twitter": "X-Profil",
+      "telegram": "Telegram",
+      "website": "Website"
     }
   }
 }

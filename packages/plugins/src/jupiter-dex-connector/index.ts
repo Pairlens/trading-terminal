@@ -22,13 +22,52 @@ import {
 } from './trigger-client'
 import { fetchBalances } from './balance-client'
 import { fetchJupiterCandles, supportsTimeframe } from './chart-client'
-import type { CandleUpdate, Instrument } from '@pairlens/market-engine/types'
+import type {
+  CandleUpdate,
+  Instrument,
+  SwapExecution,
+  SwapMevProtection,
+  SwapPriorityLevel,
+} from '@pairlens/market-engine/types'
 import type {
   PluginExecuteParams,
   PluginInstance,
   PluginManifest,
 } from '@pairlens/plugin-system/types'
 import type { JupiterToken, WalletSlot } from './types'
+
+const MEV_LANES: ReadonlySet<string> = new Set(['off', 'reduced', 'secure'])
+const PRIORITY_LEVELS: ReadonlySet<string> = new Set([
+  'medium',
+  'high',
+  'veryHigh',
+])
+
+/**
+ * The `swap` field of an order, narrowed to the shape the executor takes.
+ * Unknown lanes and levels are dropped rather than passed through: the
+ * executor validates numbers, but a string it has never heard of would reach
+ * Jupiter's builder as a request it cannot honour.
+ */
+export function swapExecutionOf(raw: unknown): SwapExecution | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const r = raw as Record<string, unknown>
+  const out: SwapExecution = {}
+  if (typeof r['mev'] === 'string' && MEV_LANES.has(r['mev'])) {
+    out.mev = r['mev'] as SwapMevProtection
+  }
+  if (
+    typeof r['priorityLevel'] === 'string' &&
+    PRIORITY_LEVELS.has(r['priorityLevel'])
+  ) {
+    out.priorityLevel = r['priorityLevel'] as SwapPriorityLevel
+  }
+  if (typeof r['maxPriorityFeeLamports'] === 'number') {
+    out.maxPriorityFeeLamports = r['maxPriorityFeeLamports']
+  }
+  if (typeof r['tipLamports'] === 'number') out.tipLamports = r['tipLamports']
+  return out
+}
 
 /**
  * Token-arm identity: every discovery row carries the exact mint it
@@ -392,8 +431,16 @@ export function createJupiterDexConnectorPlugin(
         return { success: false, error: 'Failed to get Jupiter quote' }
       }
 
-      // Execute swap
-      return executeSwap(quote, slot.address, getKey, slot.rpcUrl)
+      // Execute swap. The execution options ride on the order verbatim from
+      // the ticket; anything malformed is refused inside `executeSwap`
+      // before a key is read, so a bad preset costs a toast and not a swap.
+      return executeSwap(
+        quote,
+        slot.address,
+        getKey,
+        slot.rpcUrl,
+        swapExecutionOf(p['swap']),
+      )
     }
 
     if (capability === 'trading:balances') {

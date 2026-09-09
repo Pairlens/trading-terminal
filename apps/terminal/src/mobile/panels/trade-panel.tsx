@@ -91,6 +91,8 @@ import {
 } from '@/stores/balances-store'
 import { upsertOrderEvent } from '@/stores/order-events-store'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useSwapPresets } from '@/hooks/use-swap-presets'
+import { swapExecutionOf } from '@/lib/trading/swap-presets'
 import { useTradeConfirmMode } from '@/hooks/use-trade-confirm'
 import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { PluginBrandTile } from '@/components/plugins/plugin-icon'
@@ -241,7 +243,7 @@ const PERCENTS = [25, 50, 75, 100] as const
 
 export default memo(function MobileTradePanel() {
   const { t, i18n } = useTranslation()
-  const { focusedPair, focusedVenue } = useMobileFocus()
+  const { focusedPair, focusedVenue, focusedClass } = useMobileFocus()
   const { pushOverlay } = useMobileActions()
   const {
     placeOrder,
@@ -270,7 +272,11 @@ export default memo(function MobileTradePanel() {
   const [submitting, setSubmitting] = useState(false)
   const pricesRef = useRef<LivePrices>(EMPTY_PRICES)
   const [prices, setPrices] = useState<LivePrices>(EMPTY_PRICES)
-  const [slippageBps] = usePersistedState<number>('trade:slippageBps', 100)
+  // The execution preset the desk selected: slippage for every swap, and on
+  // Solana the priority fee, tip and lane too. Read-only on the phone: the
+  // three profiles are edited on the desktop ticket and shared from there.
+  const swapPresets = useSwapPresets(focusedClass)
+  const slippageBps = swapPresets.active.slippageBps
   const [confirmMode] = useTradeConfirmMode()
   // The same slot the desktop ticket's stake chips write, so a preset edited on
   // the desk is the preset offered on the phone. Read-only here: editing the
@@ -754,6 +760,9 @@ export default memo(function MobileTradePanel() {
           }
           params['type'] = 'market'
           params['slippageBps'] = slippageBps
+          if (marketInfo?.walletChain === 'solana') {
+            params['swap'] = swapExecutionOf(swapPresets.active)
+          }
           params['size'] =
             side === 'buy'
               ? sizeCcy === 'base'

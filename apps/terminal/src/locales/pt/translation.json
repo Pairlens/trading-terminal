@@ -4514,7 +4514,31 @@
       "reduceOnly": "Apenas reduzir",
       "reduceOnlyHint": "Reduz uma posição aberta e nunca abre o lado oposto.",
       "notional": "Nocional",
-      "estLiquidation": "Liquidação est."
+      "estLiquidation": "Liquidação est.",
+      "execution": "Execução",
+      "editPreset": "Editar predefinição de execução",
+      "presetNormal": "Normal",
+      "presetFast": "Rápido",
+      "presetUltra": "Ultra",
+      "swapPresetTitle": "Predefinição de execução · {{name}}",
+      "presetName": "Nome",
+      "slippageHint": "Quanto a execução pode afastar-se da cotação antes de o swap ser recusado. Um token com minutos de vida precisa de 10 a 30 %. Até {{max}} %.",
+      "priorityFee": "Taxa de prioridade",
+      "priorityAuto": "Auto",
+      "priorityMedium": "Média",
+      "priorityHigh": "Alta",
+      "priorityVeryHigh": "Muito alta",
+      "priorityCap": "Taxa de prioridade máxima (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "Desligado",
+      "mevReduced": "Reduzido",
+      "mevSecure": "Seguro",
+      "mevOffHint": "Via pública. A mais barata, e um bot sandwich pode ver o swap antes de ele aterrar.",
+      "mevReducedHint": "Via privada primeiro, pública se recusar. Aterra tão rápido como a pública e quase sempre sem ser visto.",
+      "mevSecureHint": "Apenas via privada. Nunca entra na mempool pública; um bloco sem líder Jito descarta-o e o swap tem de ser reenviado.",
+      "tip": "Gorjeta ao validador (SOL)",
+      "tipHint": "Paga ao validador que inclui o bundle. Substitui a taxa de prioridade numa via privada.",
+      "tipShort": "gorjeta {{sol}} SOL"
     },
     "status": {
       "connecting": "Conectando…",
@@ -6997,7 +7021,33 @@
       "minTrades": "Negociações mínimas",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "minutos"
+      "unitMinutes": "minutos",
+      "keywords": "Palavras-chave",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "Até {{max}}, separadas por vírgulas. Uma linha fica quando algum termo aparece no ticker, no nome ou no endereço.",
+      "launchpads": "Launchpads",
+      "launchpadsHint": "Sem seleção, ficam todos os launchpads.",
+      "hasSocials": "Tem uma ligação social",
+      "authoritiesRevoked": "Mint e freeze revogados"
+    },
+    "quickBuy": {
+      "amountTitle": "Valor da compra rápida",
+      "amountHint": "O que os raios desta coluna gastam, em SOL, da tua carteira Solana através da predefinição de execução ativa. Mantém um raio premido para comprar, ou um único clique se o escolheste em Definições › Risco.",
+      "amountLabel": "Valor (SOL)",
+      "buy": "Comprar {{symbol}} por {{sol}} SOL",
+      "bought": "{{symbol}} comprado por {{sol}} SOL",
+      "failed": "A compra rápida falhou",
+      "noWallet": "A compra rápida precisa de uma carteira Solana neste dispositivo.",
+      "addWallet": "Adicionar carteira",
+      "sealed": "Desbloqueia o cofre para comprar rápido."
+    },
+    "row": {
+      "authoritiesRevoked": "Autoridade de mint e freeze revogada",
+      "authoritiesLive": "O deployer ainda pode cunhar ou congelar",
+      "launchedOn": "Lançado em {{launchpad}}",
+      "twitter": "Perfil X",
+      "telegram": "Telegram",
+      "website": "Website"
     }
   }
 }

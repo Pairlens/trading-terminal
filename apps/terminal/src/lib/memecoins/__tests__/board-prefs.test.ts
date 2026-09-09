@@ -14,9 +14,12 @@ import { describe, expect, it } from 'bun:test'
 import {
   activeFilterCount,
   arrangeTokens,
+  matchesKeywords,
   nextSort,
+  normalizeKeywords,
   passesFilters,
   pruneFilters,
+  quickBuySolOf,
 } from '../board-prefs'
 import type {
   LaunchpadFlow,
@@ -244,5 +247,105 @@ describe('pruneFilters and activeFilterCount', () => {
     expect(pruned).toEqual({ minMcap: 1_000 })
     expect(activeFilterCount(pruned)).toBe(1)
     expect(activeFilterCount(undefined)).toBe(0)
+  })
+})
+
+describe('keywords, launchpads and the two switches', () => {
+  it('matches any term against ticker, name and address, case-insensitively', () => {
+    const row = token({
+      symbol: 'TRUMPCAT',
+      name: 'Trump Cat',
+      address: 'Abc123',
+    })
+    expect(matchesKeywords(row, ['cat'])).toBe(true)
+    expect(matchesKeywords(row, ['abc1'])).toBe(true)
+    expect(matchesKeywords(row, ['dog', 'trump'])).toBe(true)
+    expect(matchesKeywords(row, ['dog'])).toBe(false)
+    expect(matchesKeywords(row, [])).toBe(true)
+  })
+
+  it('cleans a keyword list: lowercase, trimmed, deduplicated, capped at five', () => {
+    expect(normalizeKeywords(' Cat, cat ,DOG,,x,y,z,w')).toEqual([
+      'cat',
+      'dog',
+      'x',
+      'y',
+      'z',
+    ])
+    expect(normalizeKeywords(['A', 3, null, 'b'])).toEqual(['a', 'b'])
+    expect(normalizeKeywords(42)).toEqual([])
+  })
+
+  it('a launchpad list keeps only those launchpads, and a row without one fails', () => {
+    const filters = { launchpads: ['letsbonk.fun'] }
+    expect(
+      passesFilters(token({ launchpad: 'letsbonk.fun' }), 'new', filters, NOW),
+    ).toBe(true)
+    expect(
+      passesFilters(token({ launchpad: 'pump.fun' }), 'new', filters, NOW),
+    ).toBe(false)
+    expect(passesFilters(token({ launchpad: null }), 'new', filters, NOW)).toBe(
+      false,
+    )
+  })
+
+  it('the switches treat unknown as a failure', () => {
+    const noSocials = token({
+      socials: { twitter: null, telegram: null, website: null },
+    })
+    const withSite = token({
+      socials: { twitter: null, telegram: null, website: 'https://x.y' },
+    })
+    expect(passesFilters(noSocials, 'new', { hasSocials: true }, NOW)).toBe(
+      false,
+    )
+    expect(passesFilters(withSite, 'new', { hasSocials: true }, NOW)).toBe(true)
+
+    const revoked = token({
+      audit: {
+        mintAuthorityDisabled: true,
+        freezeAuthorityDisabled: true,
+        topHoldersPercent: null,
+        devMints: null,
+        devMigrations: null,
+      },
+    })
+    const halfRevoked = token({
+      audit: {
+        mintAuthorityDisabled: true,
+        freezeAuthorityDisabled: null,
+        topHoldersPercent: null,
+        devMints: null,
+        devMigrations: null,
+      },
+    })
+    const unaudited = token({ audit: null })
+    const f = { authoritiesRevoked: true }
+    expect(passesFilters(revoked, 'new', f, NOW)).toBe(true)
+    expect(passesFilters(halfRevoked, 'new', f, NOW)).toBe(false)
+    expect(passesFilters(unaudited, 'new', f, NOW)).toBe(false)
+  })
+
+  it('prunes and counts the non-numeric filters as one narrowing each', () => {
+    const pruned = pruneFilters({
+      keywords: ['Cat', 'cat', ''],
+      launchpads: [],
+      hasSocials: false,
+      authoritiesRevoked: true,
+      minMcap: 5,
+    })
+    expect(pruned).toEqual({
+      keywords: ['cat'],
+      authoritiesRevoked: true,
+      minMcap: 5,
+    })
+    expect(activeFilterCount(pruned)).toBe(3)
+    expect(activeFilterCount({ keywords: [] })).toBe(0)
+  })
+
+  it('the quick-buy amount falls back to the default when unusable', () => {
+    expect(quickBuySolOf(undefined)).toBe(0.1)
+    expect(quickBuySolOf({ quickBuySol: 0 })).toBe(0.1)
+    expect(quickBuySolOf({ quickBuySol: 0.25 })).toBe(0.25)
   })
 })

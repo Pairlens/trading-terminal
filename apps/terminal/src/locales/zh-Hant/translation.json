@@ -4514,7 +4514,31 @@
       "reduceOnly": "只減倉",
       "reduceOnlyHint": "僅減少既有部位，絕不會反向開倉。",
       "notional": "名目價值",
-      "estLiquidation": "預估強平價"
+      "estLiquidation": "預估強平價",
+      "execution": "執行",
+      "editPreset": "編輯執行預設",
+      "presetNormal": "標準",
+      "presetFast": "快速",
+      "presetUltra": "極速",
+      "swapPresetTitle": "執行預設 · {{name}}",
+      "presetName": "名稱",
+      "slippageHint": "成交價可偏離報價多少而不被拒絕。發行幾分鐘的代幣需要 10 到 30%。最高 {{max}}%。",
+      "priorityFee": "優先費",
+      "priorityAuto": "自動",
+      "priorityMedium": "中",
+      "priorityHigh": "高",
+      "priorityVeryHigh": "極高",
+      "priorityCap": "最高優先費 (SOL)",
+      "mevProtection": "MEV",
+      "mevOff": "關閉",
+      "mevReduced": "減輕",
+      "mevSecure": "安全",
+      "mevOffHint": "公開通道。最便宜，但三明治機器人能在成交前看到這筆交易。",
+      "mevReducedHint": "先走私有通道，被拒絕則走公開通道。與公開通道一樣快，通常不會被看到。",
+      "mevSecureHint": "僅私有通道。絕不進入公開記憶池；沒有 Jito 領導者的區塊會丟棄它，需要重新發送。",
+      "tip": "驗證者小費 (SOL)",
+      "tipHint": "支付給打包該捆綁交易的驗證者。在私有通道上取代優先費。",
+      "tipShort": "小費 {{sol}} SOL"
     },
     "status": {
       "connecting": "連線中…",
@@ -6997,7 +7021,33 @@
       "minTrades": "最少成交筆數",
       "unitUsd": "USD",
       "unitPercent": "%",
-      "unitMinutes": "分鐘"
+      "unitMinutes": "分鐘",
+      "keywords": "關鍵字",
+      "keywordsPlaceholder": "trump, cat, ai",
+      "keywordsHint": "最多 {{max}} 個，以逗號分隔。任一詞出現在代號、名稱或地址時保留該列。",
+      "launchpads": "發射台",
+      "launchpadsHint": "不選擇則保留所有發射台。",
+      "hasSocials": "有社群連結",
+      "authoritiesRevoked": "已放棄 mint 與 freeze 權限"
+    },
+    "quickBuy": {
+      "amountTitle": "快速買入金額",
+      "amountHint": "本欄閃電按鈕透過目前的執行預設從你的 Solana 錢包花費的 SOL 數量。長按閃電買入；若在設定 › 風險中選擇了單擊，則單擊即可。",
+      "amountLabel": "金額 (SOL)",
+      "buy": "用 {{sol}} SOL 買入 {{symbol}}",
+      "bought": "已用 {{sol}} SOL 買入 {{symbol}}",
+      "failed": "快速買入失敗",
+      "noWallet": "快速買入需要此裝置上有 Solana 錢包。",
+      "addWallet": "新增錢包",
+      "sealed": "解鎖保險庫後才能快速買入。"
+    },
+    "row": {
+      "authoritiesRevoked": "已放棄 mint 與 freeze 權限",
+      "authoritiesLive": "部署者仍可增發或凍結",
+      "launchedOn": "在 {{launchpad}} 發行",
+      "twitter": "X 個人頁",
+      "telegram": "Telegram",
+      "website": "網站"
     }
   }
 }

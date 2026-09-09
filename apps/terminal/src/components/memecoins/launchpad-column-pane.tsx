@@ -37,17 +37,31 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
 import {
+  AtSign,
   ChevronDown,
   ChevronUp,
   Crown,
+  Globe,
   GraduationCap,
   ListFilter,
   Rocket,
+  Send,
   Sparkles,
+  Zap,
 } from 'lucide-react'
 
 import { cn } from '@pairlens/ui/lib/utils'
 import { Button } from '@pairlens/ui/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@pairlens/ui/components/ui/dialog'
+import { Input } from '@pairlens/ui/components/ui/input'
+import { Spinner } from '@pairlens/ui/components/ui/spinner'
 import { normalizeInstrumentId } from '@pairlens/shared/market-ref'
 import type {
   LaunchpadStage,
@@ -93,13 +107,18 @@ import { LaunchpadFilterDialog } from '@/components/memecoins/launchpad-filter-d
 import { PaneHeaderSlot } from '@/components/layout/pane-header-slot'
 import {
   MEMECOIN_BOARD_PREFS_KEY,
+  QUICK_BUY_CHIPS_SOL,
   activeFilterCount,
   activeFlow,
   arrangeTokens,
   nextSort,
+  quickBuySolOf,
 } from '@/lib/memecoins/board-prefs'
 import { useLaunchpadColumn } from '@/hooks/use-launchpad'
 import { usePersistedState } from '@/hooks/use-persisted-state'
+import { useQuickBuy } from '@/hooks/use-quick-buy'
+import { useHoldConfirm } from '@/hooks/use-trade-confirm'
+import { tradeHoldMs } from '@/lib/settings/trade-confirm'
 import { useSlowLoad } from '@/hooks/use-slow-load'
 import { chartLinkProps } from '@/lib/market-ref/link'
 import { registerDisplayToken } from '@/stores/token-directory-store'
@@ -222,7 +241,19 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
     EMPTY_PREFS,
   )
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [amountOpen, setAmountOpen] = useState(false)
   const stagePrefs = prefs[stage]
+  const quickBuy = useQuickBuy()
+  const quickBuySol = quickBuySolOf(stagePrefs)
+
+  // The launchpads the FEED carries right now, offered as chips. An open set:
+  // the value is whatever string the provider published, and a fixed list
+  // would go stale the week a new curve launched.
+  const launchpadOptions = useMemo(() => {
+    const seen = new Set<string>()
+    for (const token of tokens) if (token.launchpad) seen.add(token.launchpad)
+    return [...seen].sort()
+  }, [tokens])
 
   // A clock for the FILTER, not for the rows. `now` above only ticks on the
   // two columns that print an elapsed time, and an age bound has to be
@@ -305,6 +336,7 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
           onOpenChange={setFiltersOpen}
           filters={stagePrefs?.filters}
           onApply={(filters) => setStagePrefs({ filters })}
+          launchpadOptions={launchpadOptions}
         />
         <PaneEmpty
           icon={filtered ? ListFilter : config.icon}
@@ -351,6 +383,13 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
         onOpenChange={setFiltersOpen}
         filters={stagePrefs?.filters}
         onApply={(filters) => setStagePrefs({ filters })}
+        launchpadOptions={launchpadOptions}
+      />
+      <QuickBuyAmountDialog
+        open={amountOpen}
+        onOpenChange={setAmountOpen}
+        value={quickBuySol}
+        onChange={(sol) => setStagePrefs({ quickBuySol: sol })}
       />
 
       {error && rows.length === 0 ? (
@@ -457,20 +496,40 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
                       t('memecoins.columns.volume')
                     ) : (
                       // The widest header on the board, over the narrowest
-                      // cell, so below 16rem of pane it would set the column's
-                      // width and take that width from the tickers. Two spans
+                      // cell, so below 20rem of pane it would set the column's
+                      // width and take that width from the tickers (a quarter
+                      // of a 1280px board is 17rem, and with the bolt column
+                      // beside it the header alone squeezed the ticker to
+                      // nothing). Two spans
                       // rather than `sr-only`/`not-sr-only`, which resets
                       // `white-space` and put the header back on two lines.
                       <>
-                        <span className="sr-only @min-[16rem]/pane:hidden">
+                        <span className="sr-only @min-[20rem]/pane:hidden">
                           {t('memecoins.columns.flow')}
                         </span>
-                        <span className="hidden @min-[16rem]/pane:inline">
+                        <span className="hidden @min-[20rem]/pane:inline">
                           {t('memecoins.columns.flow')}
                         </span>
                       </>
                     )}
                   </SortHeader>
+                </Th>
+                {/* The quick-buy column. Its header IS the amount control:
+                    the number the bolts below will spend, one click to change
+                    it, in the strip the eye already reads across. */}
+                <Th align="right" className="whitespace-nowrap">
+                  <button
+                    type="button"
+                    onClick={() => setAmountOpen(true)}
+                    title={t('memecoins.quickBuy.amountTitle')}
+                    aria-label={t('memecoins.quickBuy.amountTitle')}
+                    className="inline-flex items-center gap-0.5 rounded-sm outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring"
+                  >
+                    <Zap className="size-2.5 shrink-0" aria-hidden />
+                    <span className="hidden tabular-nums @min-[19rem]/pane:inline">
+                      {quickBuySol}
+                    </span>
+                  </button>
                 </Th>
               </tr>
             </thead>
@@ -485,6 +544,8 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
                     stage={stage}
                     now={now}
                     turnoverMultiple={turnover.get(turnoverKey(token)) ?? null}
+                    quickBuy={quickBuy}
+                    quickBuySol={quickBuySol}
                   />
                 ))
               )}
@@ -613,15 +674,31 @@ function LaunchpadRow({
   stage,
   now,
   turnoverMultiple,
+  quickBuy,
+  quickBuySol,
 }: {
   token: LaunchpadToken
   stage: LaunchpadStage
   now: number
   /** Legendary only, and null until the column has a baseline to measure on. */
   turnoverMultiple: number | null
+  quickBuy: ReturnType<typeof useQuickBuy>
+  quickBuySol: number
 }) {
   const { t } = useTranslation()
   const venue = VENUE_BY_CHAIN[token.chain] ?? null
+  const audit = token.audit
+  // Revoked means BOTH authorities are gone. One revoked and one unknown is
+  // unknown, and unknown draws nothing: the dot is a claim, and the safety
+  // pane makes the same refusal in words.
+  const safety: 'revoked' | 'live' | null =
+    audit?.mintAuthorityDisabled === true &&
+    audit.freezeAuthorityDisabled === true
+      ? 'revoked'
+      : audit?.mintAuthorityDisabled === false ||
+          audit?.freezeAuthorityDisabled === false
+        ? 'live'
+        : null
   // The five-minute window on a launch, the daily one on a coin that has been
   // around for years. Both are "what just happened" at that column's scale.
   // Shared with the sort comparator rather than repeated here: a column ranked
@@ -636,6 +713,24 @@ function LaunchpadRow({
         address={token.address}
       />
       <span className="truncate font-medium">{token.symbol}</span>
+      {safety ? (
+        <span
+          className={cn(
+            'size-1.5 shrink-0 rounded-full',
+            safety === 'revoked' ? 'bg-up' : 'bg-down',
+          )}
+          title={t(
+            safety === 'revoked'
+              ? 'memecoins.row.authoritiesRevoked'
+              : 'memecoins.row.authoritiesLive',
+          )}
+          aria-label={t(
+            safety === 'revoked'
+              ? 'memecoins.row.authoritiesRevoked'
+              : 'memecoins.row.authoritiesLive',
+          )}
+        />
+      ) : null}
       {token.holders !== null ? (
         <span className="shrink-0 text-[10px] text-muted-foreground">
           {formatCount(token.holders)}
@@ -644,30 +739,66 @@ function LaunchpadRow({
     </span>
   )
 
+  // Socials sit OUTSIDE the chart link, as their own anchors: a row is one
+  // link to its chart, and a link inside a link is not HTML. They are laid
+  // out at rest and rise on hover, so the identity column keeps one width.
+  const socials = (
+    <span className="ml-1 hidden shrink-0 items-center gap-0.5 @min-[24rem]/pane:inline-flex">
+      {token.socials.twitter ? (
+        <SocialLink
+          href={token.socials.twitter}
+          label={t('memecoins.row.twitter')}
+          Icon={AtSign}
+        />
+      ) : null}
+      {token.socials.telegram ? (
+        <SocialLink
+          href={token.socials.telegram}
+          label={t('memecoins.row.telegram')}
+          Icon={Send}
+        />
+      ) : null}
+      {token.socials.website ? (
+        <SocialLink
+          href={token.socials.website}
+          label={t('memecoins.row.website')}
+          Icon={Globe}
+        />
+      ) : null}
+    </span>
+  )
+
   return (
     <tr className="group/row border-none hover:bg-muted/40">
       <td className="w-full max-w-0 py-1 pr-3">
-        {venue ? (
-          <Link
-            {...chartLinkProps({
-              cls: 'memecoin',
-              market: venue,
-              id: normalizeInstrumentId(
-                'memecoin',
-                `${token.address}-${QUOTE}`,
-              ),
-            })}
-            title={t('memecoins.openChart', { symbol: token.symbol })}
-            className="block outline-none focus-visible:underline"
-            onClick={() =>
-              track('memecoin_row_opened', { stage, chain: token.chain })
-            }
-          >
-            {identity}
-          </Link>
-        ) : (
-          identity
-        )}
+        <span className="flex min-w-0 items-center">
+          {venue ? (
+            <Link
+              {...chartLinkProps({
+                cls: 'memecoin',
+                market: venue,
+                id: normalizeInstrumentId(
+                  'memecoin',
+                  `${token.address}-${QUOTE}`,
+                ),
+              })}
+              title={
+                token.launchpad
+                  ? `${t('memecoins.openChart', { symbol: token.symbol })} · ${t('memecoins.row.launchedOn', { launchpad: token.launchpad })}`
+                  : t('memecoins.openChart', { symbol: token.symbol })
+              }
+              className="block min-w-0 flex-1 outline-none focus-visible:underline"
+              onClick={() =>
+                track('memecoin_row_opened', { stage, chain: token.chain })
+              }
+            >
+              {identity}
+            </Link>
+          ) : (
+            <span className="min-w-0 flex-1">{identity}</span>
+          )}
+          {socials}
+        </span>
       </td>
       {/* `marketCapUsd ?? fdvUsd`: a freshly migrated row often carries no
           market cap at all, because its curve figures are gone and the pool is
@@ -715,7 +846,172 @@ function LaunchpadRow({
           <FlowBar flow={flow} />
         )}
       </td>
+      <td className="w-px whitespace-nowrap py-1 pl-1 text-right">
+        {token.chain === 'solana' ? (
+          <QuickBuyButton token={token} sol={quickBuySol} quickBuy={quickBuy} />
+        ) : null}
+      </td>
     </tr>
+  )
+}
+
+function SocialLink({
+  href,
+  label,
+  Icon,
+}: {
+  href: string
+  label: string
+  Icon: typeof Globe
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={label}
+      aria-label={label}
+      className="rounded-sm p-0.5 text-muted-foreground/60 outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring group-hover/row:text-muted-foreground"
+    >
+      <Icon className="size-2.5" aria-hidden />
+    </a>
+  )
+}
+
+/**
+ * The bolt. One press buys the column's amount of this token through the
+ * guarded order path, with the same gesture the ticket uses: press and hold
+ * by default, a single click if the trader chose that in Settings › Risk.
+ * A bolt on a device with no Solana wallet still answers: it explains and
+ * points at Accounts, rather than sitting disabled with no way to learn why.
+ */
+function QuickBuyButton({
+  token,
+  sol,
+  quickBuy,
+}: {
+  token: LaunchpadToken
+  sol: number
+  quickBuy: ReturnType<typeof useQuickBuy>
+}) {
+  const { t } = useTranslation()
+  const busy = quickBuy.isBuying(token.address)
+  const ready = quickBuy.readiness === 'ready'
+  const { controlProps, fillProps } = useHoldConfirm({
+    holdMs: tradeHoldMs(true),
+    busy,
+    onConfirm: () => {
+      if (!ready) {
+        quickBuy.explain()
+        return
+      }
+      void quickBuy.buy(token, sol)
+    },
+  })
+  const label = t('memecoins.quickBuy.buy', { symbol: token.symbol, sol })
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      {...controlProps}
+      title={label}
+      aria-label={label}
+      className={cn(
+        // A square bolt on a narrow column, the bolt plus its amount once the
+        // pane is wide enough: at a quarter of a 1280px board the four cells
+        // already fill the row, and a 46px button there pushed the table past
+        // the pane and put a horizontal scrollbar under every column.
+        'relative inline-flex h-5 w-5 select-none items-center justify-center gap-0.5 overflow-hidden rounded-md font-mono text-[10.5px] tabular-nums outline-none transition-[opacity,color] focus-visible:ring-1 focus-visible:ring-ring @min-[19rem]/pane:w-[46px]',
+        'bg-up/10 text-up opacity-60 hover:opacity-100 group-hover/row:opacity-100',
+        busy && 'opacity-100',
+      )}
+    >
+      {fillProps ? <span {...fillProps} /> : null}
+      <span className="relative inline-flex items-center gap-0.5">
+        {busy ? (
+          <Spinner className="size-2.5" />
+        ) : (
+          <Zap className="size-2.5" aria-hidden />
+        )}
+        <span className="hidden @min-[19rem]/pane:inline">{sol}</span>
+      </span>
+    </button>
+  )
+}
+
+/** The column's quick-buy amount, in SOL: five chips and a field. */
+function QuickBuyAmountDialog({
+  open,
+  onOpenChange,
+  value,
+  onChange,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  value: number
+  onChange: (sol: number) => void
+}) {
+  const { t } = useTranslation()
+  const [draft, setDraft] = useState(String(value))
+  useEffect(() => {
+    if (open) setDraft(String(value))
+  }, [open, value])
+  const commit = (sol: number) => {
+    if (!(sol > 0) || !Number.isFinite(sol)) return
+    onChange(sol)
+    onOpenChange(false)
+  }
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-xs">
+        <DialogHeader>
+          <DialogTitle>{t('memecoins.quickBuy.amountTitle')}</DialogTitle>
+          <DialogDescription>
+            {t('memecoins.quickBuy.amountHint')}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2">
+          <div className="flex gap-1">
+            {QUICK_BUY_CHIPS_SOL.map((sol) => (
+              <button
+                key={sol}
+                type="button"
+                className={cn(
+                  'flex-1 rounded-md border px-1 py-1 font-mono text-[11.5px] tabular-nums transition-colors',
+                  Number(draft) === sol
+                    ? 'border-primary text-foreground'
+                    : 'border-transparent bg-muted/40 text-muted-foreground hover:text-foreground',
+                )}
+                onClick={() => commit(sol)}
+              >
+                {sol}
+              </button>
+            ))}
+          </div>
+          <Input
+            type="number"
+            inputMode="decimal"
+            min={0}
+            step={0.01}
+            className="h-7 font-mono text-xs"
+            value={draft}
+            aria-label={t('memecoins.quickBuy.amountLabel')}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commit(Number(draft))
+            }}
+          />
+        </div>
+        <DialogFooter>
+          <Button size="sm" variant="ghost" onClick={() => onOpenChange(false)}>
+            {t('common.cancel')}
+          </Button>
+          <Button size="sm" onClick={() => commit(Number(draft))}>
+            {t('common.save')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 

@@ -102,6 +102,44 @@ export type OrderTrigger = {
   triggerType: OrderTriggerType
 }
 
+/**
+ * Which lane a Solana swap lands through.
+ *
+ * - `off`: the wallet's RPC, public mempool. Cheapest, and sandwichable.
+ * - `reduced`: the Jito block engine, which also forwards to the leader over
+ *   the ordinary route. Lands as fast as the public lane and usually private.
+ * - `secure`: the Jito block engine as a bundle ONLY. Never touches the public
+ *   mempool, so a sandwich cannot see it; the price is that a block without a
+ *   Jito leader drops it and the swap has to be sent again.
+ */
+export type SwapMevProtection = 'off' | 'reduced' | 'secure'
+
+/** Priority-fee percentile a swap builder targets, capped by `maxPriorityFeeLamports`. */
+export type SwapPriorityLevel = 'medium' | 'high' | 'veryHigh'
+
+/**
+ * How a DEX swap pays to land, and through which lane. Everything here is
+ * optional: a connector that gets none of it uses the venue's automatic
+ * estimate on the public lane, which is what every swap did before the field
+ * existed. A venue that cannot honour a field must ignore it, never fail the
+ * swap for it: a bonding-curve buy that dies because the EVM connector has no
+ * notion of a validator tip is a worse outcome than one that lands unpriced.
+ */
+export type SwapExecution = {
+  /** Priority-fee percentile. Absent means the venue's own automatic estimate. */
+  priorityLevel?: SwapPriorityLevel
+  /** Cap on the priority fee in lamports (Solana) when `priorityLevel` is set. */
+  maxPriorityFeeLamports?: number
+  /**
+   * Validator tip in lamports (Jito). Read only when `mev` is not `off`, and
+   * then it replaces the priority fee: the Jupiter builder takes one or the
+   * other, and a tipped bundle is what pays for its own placement.
+   */
+  tipLamports?: number
+  /** Lane the signed transaction is sent through. Absent means `off`. */
+  mev?: SwapMevProtection
+}
+
 export type OrderParams = {
   market: string
   pair: string
@@ -114,6 +152,8 @@ export type OrderParams = {
   tgtCcy?: string // 'base_ccy' or 'quote_ccy' — which currency the size is denominated in
   slippageBps?: number // slippage tolerance in basis points (DEX swaps)
   walletId?: string // which wallet to use (DEX trading)
+  /** Priority fee, validator tip and MEV lane for a DEX market swap. */
+  swap?: SwapExecution
   /**
    * Route an equities order into the pre-market / after-hours sessions
    * instead of queueing it for the next regular open.

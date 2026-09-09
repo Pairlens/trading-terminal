@@ -5,7 +5,7 @@ group: traders
 parent: automation
 order: 1
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 9 SEP 2026
 readTime: 6 min read
 ---
 
@@ -77,9 +77,16 @@ close all or part, market or limit.
 
 Take Profit and Stop Loss use exchange-native trigger orders where the venue
 provides them, so the order rests at the exchange and survives Pairlens being
-closed. On a venue with no trigger-order support, a stop-loss is refused rather
-than faked. A resting limit below the market would fill instantly, which is the
-opposite of a stop.
+closed. On a venue with no trigger-order support, a take-profit rests as a plain
+limit order at the target, which is what an on-chain venue like Jupiter or
+KyberSwap offers, and a stop-loss is refused rather than faked. A resting limit
+below the market would fill instantly, which is the opposite of a stop.
+
+Workflows run from a wallet as well as from an exchange account. On a DEX venue
+that rests orders, the ticket's Workflow tab is there, the market leg is a swap
+carrying your execution preset, and a limit or take-profit leg rests at the
+venue. The compatibility check still names any step the venue cannot run before
+you press the button.
 
 ### Logic
 

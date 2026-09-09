@@ -3,11 +3,117 @@
 import { restFetch as fetch } from '@pairlens/market-engine/http'
 import { resolvePairMints } from './token-registry'
 import type { JupiterQuote } from './types'
+import type { SwapExecution } from '@pairlens/market-engine/types'
 
 // Jupiter Swap API v1 (free "lite" tier — no API key required). The legacy
 // quote-api.jup.ag/v6 host was decommissioned; the request/response contract
 // is unchanged. https://dev.jup.ag/docs/swap-api
 const JUPITER_API = 'https://lite-api.jup.ag/swap/v1'
+
+/**
+ * Jito's block engine, the private lane. `sendTransaction` here takes one
+ * signed transaction and lands it as a single-transaction bundle; by default
+ * it ALSO forwards over the ordinary route, and `bundleOnly=true` switches
+ * that off. The tip that pays for the bundle is already inside the
+ * transaction: Jupiter appends the transfer when the swap is built with
+ * `jitoTipLamports`, so nothing is added locally and the fee-payer check
+ * below still covers exactly what gets signed.
+ *
+ * The endpoint reflects the request origin in its CORS headers, so the web
+ * terminal reaches it without a proxy. On desktop it is in the CSP baseline
+ * and the Tauri HTTP scope beside the Solana RPC hosts.
+ */
+const JITO_BLOCK_ENGINE =
+  'https://mainnet.block-engine.jito.wtf/api/v1/transactions'
+
+/** Jupiter refuses a priority fee above this when it estimates one itself. */
+const AUTO_PRIORITY_CAP_LAMPORTS = 5_000_000
+
+/**
+ * The `prioritizationFeeLamports` field of a `/swap` request for the given
+ * execution options. Jupiter takes a priority fee OR a Jito tip, never both,
+ * so the MEV lane decides which one is sent: a private lane pays its tip,
+ * the public lane pays the validator's priority market.
+ */
+export function prioritizationFeeFor(
+  options: SwapExecution | undefined,
+): unknown {
+  const mev = options?.mev ?? 'off'
+  if (mev !== 'off') {
+    return { jitoTipLamports: Math.round(options?.tipLamports ?? 0) }
+  }
+  if (options?.priorityLevel) {
+    return {
+      priorityLevelWithMaxLamports: {
+        priorityLevel: options.priorityLevel,
+        maxLamports: Math.round(
+          options.maxPriorityFeeLamports ?? AUTO_PRIORITY_CAP_LAMPORTS,
+        ),
+        global: false,
+      },
+    }
+  }
+  return 'auto'
+}
+
+/**
+ * Refuses execution options that cannot produce a sane transaction, before
+ * a key is touched. A tipped lane with no tip would build a bundle nobody
+ * includes; a negative or non-finite number would reach the builder as NaN.
+ */
+export function validateSwapExecution(
+  options: SwapExecution | undefined,
+): string | null {
+  if (!options) return null
+  const mev = options.mev ?? 'off'
+  if (mev !== 'off') {
+    const tip = options.tipLamports
+    if (typeof tip !== 'number' || !Number.isFinite(tip) || tip <= 0) {
+      return 'MEV protection needs a validator tip above zero'
+    }
+  }
+  const cap = options.maxPriorityFeeLamports
+  if (cap != null && (!Number.isFinite(cap) || cap < 0)) {
+    return 'Priority fee cap must be a non-negative number'
+  }
+  return null
+}
+
+/**
+ * Send a signed transaction through the Jito block engine. Returns the
+ * signature the engine acknowledged, or throws with the engine's own message
+ * so the caller can decide whether the public lane is an acceptable fallback.
+ */
+async function sendViaJito(
+  signedBase64: string,
+  bundleOnly: boolean,
+): Promise<string> {
+  const url = bundleOnly
+    ? `${JITO_BLOCK_ENGINE}?bundleOnly=true`
+    : JITO_BLOCK_ENGINE
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'sendTransaction',
+      params: [signedBase64, { encoding: 'base64' }],
+    }),
+  })
+  const body = (await res.json().catch(() => null)) as {
+    result?: unknown
+    error?: { message?: unknown }
+  } | null
+  if (!res.ok || !body || typeof body.result !== 'string') {
+    const message =
+      body && body.error && typeof body.error.message === 'string'
+        ? body.error.message
+        : `Jito block engine answered ${res.status}`
+    throw new Error(message)
+  }
+  return body.result
+}
 
 /**
  * Fail-closed check that a quote returned by the (untrusted) Jupiter API is
@@ -116,8 +222,13 @@ export async function executeSwap(
   walletAddress: string,
   getPrivateKey: () => Promise<string | null>,
   rpcUrl: string,
+  options?: SwapExecution,
 ): Promise<{ success: boolean; orderId?: string; error?: string }> {
   try {
+    const invalid = validateSwapExecution(options)
+    if (invalid) return { success: false, error: invalid }
+    const mev = options?.mev ?? 'off'
+
     // Get serialized transaction from Jupiter
     const swapRes = await fetch(`${JUPITER_API}/swap`, {
       method: 'POST',
@@ -127,7 +238,7 @@ export async function executeSwap(
         userPublicKey: walletAddress,
         wrapAndUnwrapSol: true,
         dynamicComputeUnitLimit: true,
-        prioritizationFeeLamports: 'auto',
+        prioritizationFeeLamports: prioritizationFeeFor(options),
       }),
     })
 
@@ -188,13 +299,48 @@ export async function executeSwap(
     const connection = new Connection(rpcUrl, 'confirmed')
 
     const { signBase64Transaction } = await import('./tx-signer')
-    const { tx } = await signBase64Transaction(swapTransaction, privateKey)
+    const { tx, signedBase64 } = await signBase64Transaction(
+      swapTransaction,
+      privateKey,
+    )
 
-    // Submit
-    const signature = await connection.sendRawTransaction(tx.serialize(), {
-      skipPreflight: false,
-      maxRetries: 3,
-    })
+    // Submit. The public lane is the RPC the wallet was provisioned with.
+    // `reduced` tries the block engine and falls back to the public lane if
+    // the engine refuses, because the trader chose speed with protection as a
+    // bonus; `secure` never falls back, because the trader chose never to be
+    // seen, and a swap that lands in the open would betray that choice.
+    let signature: string
+    if (mev === 'off') {
+      signature = await connection.sendRawTransaction(tx.serialize(), {
+        skipPreflight: false,
+        maxRetries: 3,
+      })
+    } else if (mev === 'reduced') {
+      try {
+        signature = await sendViaJito(signedBase64, false)
+      } catch (jitoErr) {
+        console.warn(
+          `[jupiter-dex] Jito refused the swap, sending on the public lane: ${
+            jitoErr instanceof Error ? jitoErr.message : String(jitoErr)
+          }`,
+        )
+        signature = await connection.sendRawTransaction(tx.serialize(), {
+          skipPreflight: false,
+          maxRetries: 3,
+        })
+      }
+    } else {
+      try {
+        signature = await sendViaJito(signedBase64, true)
+      } catch (jitoErr) {
+        return {
+          success: false,
+          error: `Private lane refused the swap, nothing was sent: ${
+            jitoErr instanceof Error ? jitoErr.message : String(jitoErr)
+          }`,
+        }
+      }
+    }
 
     // Confirm
     const latestBlock = await connection.getLatestBlockhash()
