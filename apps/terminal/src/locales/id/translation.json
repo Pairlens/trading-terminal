@@ -6649,7 +6649,7 @@
       "unknown": "Lainnya"
     },
     "needsKeyTitle": "Tambahkan kunci OpenSea",
-    "needsKeyBody": "Peringkat, tangga, dan pita berasal dari OpenSea, yang butuh kunci API. Kuncinya gratis dan terbit seketika. Tambahkan milikmu di plugin OpenSea.",
+    "needsKeyBody": "Pairlens mengambil kunci OpenSea gratis secara otomatis, tetapi saat ini OpenSea tidak menerbitkannya. Tambahkan kunci Anda sendiri di plugin OpenSea untuk melanjutkan.",
     "addKeyAction": "Buka Plugin Store"
   },
   "nftChains": {

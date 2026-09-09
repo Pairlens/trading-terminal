@@ -6649,7 +6649,7 @@
       "unknown": "Otro"
     },
     "needsKeyTitle": "Añade una clave de OpenSea",
-    "needsKeyBody": "Los rankings, la escalera y la cinta vienen de OpenSea, que necesita una clave de API. Son gratuitas y se emiten al instante. Añade la tuya en el plugin de OpenSea.",
+    "needsKeyBody": "Pairlens obtiene una clave gratuita de OpenSea automáticamente, pero ahora mismo OpenSea no emite ninguna. Añade la tuya en el plugin de OpenSea para continuar.",
     "addKeyAction": "Abrir la Tienda de Plugins"
   },
   "nftChains": {

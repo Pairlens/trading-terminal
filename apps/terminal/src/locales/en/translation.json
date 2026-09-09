@@ -6649,7 +6649,7 @@
       "unknown": "Other"
     },
     "needsKeyTitle": "Add an OpenSea key",
-    "needsKeyBody": "Rankings, the ladder and the tape come from OpenSea, which needs an API key. They are free and issued instantly. Add yours on the OpenSea plugin.",
+    "needsKeyBody": "Pairlens fetches a free OpenSea key automatically, but OpenSea would not issue one right now. Add your own key on the OpenSea plugin to carry on.",
     "addKeyAction": "Open the Plugin Store"
   },
   "nftChains": {

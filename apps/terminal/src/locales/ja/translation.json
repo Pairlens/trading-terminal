@@ -6649,7 +6649,7 @@
       "unknown": "その他"
     },
     "needsKeyTitle": "OpenSeaのキーを追加",
-    "needsKeyBody": "ランキング、ラダー、約定履歴は OpenSea から取得され、API キーが必要です。無料で即時発行されます。OpenSea プラグインで自分のキーを追加してください。",
+    "needsKeyBody": "Pairlens は無料の OpenSea キーを自動で取得しますが、今は OpenSea が発行してくれません。続けるには OpenSea プラグインに自分のキーを追加してください。",
     "addKeyAction": "プラグインストアを開く"
   },
   "nftChains": {

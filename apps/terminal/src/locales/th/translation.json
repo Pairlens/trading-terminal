@@ -6649,7 +6649,7 @@
       "unknown": "อื่น ๆ"
     },
     "needsKeyTitle": "เพิ่มคีย์ OpenSea",
-    "needsKeyBody": "อันดับ แลดเดอร์ และรายการซื้อขายมาจาก OpenSea ซึ่งต้องใช้คีย์ API คีย์ฟรีและออกให้ทันที เพิ่มคีย์ของคุณในปลั๊กอิน OpenSea",
+    "needsKeyBody": "Pairlens ดึงคีย์ OpenSea ฟรีให้อัตโนมัติ แต่ตอนนี้ OpenSea ไม่ออกคีย์ให้ เพิ่มคีย์ของคุณเองในปลั๊กอิน OpenSea เพื่อใช้งานต่อ",
     "addKeyAction": "เปิด Plugin Store"
   },
   "nftChains": {

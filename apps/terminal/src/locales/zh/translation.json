@@ -6649,7 +6649,7 @@
       "unknown": "其他"
     },
     "needsKeyTitle": "添加 OpenSea 密钥",
-    "needsKeyBody": "排行、阶梯和成交明细来自 OpenSea，需要 API 密钥。密钥免费且即时签发。请在 OpenSea 插件中添加你自己的密钥。",
+    "needsKeyBody": "Pairlens 会自动获取免费的 OpenSea 密钥，但 OpenSea 目前没有签发。请在 OpenSea 插件中添加你自己的密钥以继续。",
     "addKeyAction": "打开插件商店"
   },
   "nftChains": {

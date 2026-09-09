@@ -6649,7 +6649,7 @@
       "unknown": "Diğer"
     },
     "needsKeyTitle": "Bir OpenSea anahtarı ekleyin",
-    "needsKeyBody": "Sıralamalar, sıralama tablosu ve işlem akışı OpenSea'den gelir ve API anahtarı gerekir. Anahtarlar ücretsiz ve anında verilir. Kendi anahtarını OpenSea eklentisine ekle.",
+    "needsKeyBody": "Pairlens ücretsiz bir OpenSea anahtarını otomatik alır, ama OpenSea şu anda anahtar vermiyor. Devam etmek için kendi anahtarını OpenSea eklentisine ekle.",
     "addKeyAction": "Eklenti Mağazası'nı aç"
   },
   "nftChains": {

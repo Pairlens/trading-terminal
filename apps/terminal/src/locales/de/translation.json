@@ -6649,7 +6649,7 @@
       "unknown": "Sonstige"
     },
     "needsKeyTitle": "OpenSea-Key hinzufügen",
-    "needsKeyBody": "Rankings, Ladder und Tape kommen von OpenSea, das einen API-Key braucht. Er ist kostenlos und wird sofort ausgestellt. Hinterlege deinen im OpenSea-Plugin.",
+    "needsKeyBody": "Pairlens holt automatisch einen kostenlosen OpenSea-Key, aber OpenSea stellt gerade keinen aus. Hinterlege deinen eigenen im OpenSea-Plugin, um weiterzumachen.",
     "addKeyAction": "Plugin Store öffnen"
   },
   "nftChains": {

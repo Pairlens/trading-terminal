@@ -5,7 +5,7 @@ group: traders
 parent: trading
 order: 10
 eyebrow: For traders
-updated: 22 AUG 2026
+updated: 09 SEP 2026
 readTime: 11 min read
 ---
 
@@ -92,8 +92,8 @@ published one, and an absent one means the provider did not say, not zero.
 ## Two data sources
 
 **OpenSea** is the primary, and it is the only NFT venue that answers both market
-data and signed orders over an API a browser can call. It needs a free API key
-you provision yourself.
+data and signed orders over an API a browser can call. It needs an API key, and
+Pairlens fetches a free one for you the first time a board asks for data.
 
 **CoinGecko NFT** is the keyless fallback, and it exists for exactly one moment: a
 fresh install, nothing configured, someone opens a collection. It answers floor
@@ -115,14 +115,32 @@ says so, because returning nothing would tell the board this collection has no
 listings, and the board would faithfully draw an empty ladder over a collection
 with two hundred of them.
 
-## Adding your OpenSea key
+## The OpenSea key
 
-OpenSea issues API keys free and instantly. Paste one into the OpenSea plugin's
-settings and every NFT panel follows it.
+You do not have to bring one. OpenSea issues free keys from an endpoint that
+needs no account, no wallet and no human, so the first time a board asks for
+data Pairlens mints one, stores it on this device and reuses it. There is
+nothing to sign up for and nothing to paste.
 
-That key authenticates reads and posts orders to OpenSea's book. **It cannot move
-an asset.** The secret that can is your wallet key, which is a separate thing
-entirely.
+A free key is metered lower than a full one and expires after a week, so Pairlens
+renews it as it nears the end, and again if OpenSea ever rejects it mid-session.
+Key creation is rate limited to a couple of keys a day per network address, so a
+failed attempt backs off instead of retrying in a loop. On a shared or corporate
+network that budget can genuinely run out, and it is the one case where a board
+still asks you for a key: the panel says so plainly rather than showing you an
+empty collection, and CoinGecko keeps answering floor, volume and supply
+underneath.
+
+**To use your own**, paste it into the OpenSea plugin's settings. It takes over
+immediately and every NFT panel follows it. That is how you lift the ceiling: a
+full key comes from your OpenSea account settings and is metered well above the
+free tier. Clearing the field hands the boards back to the automatic key. If a
+key you pasted stops working, Pairlens falls back to a free one so the board
+keeps running instead of going dark.
+
+Either key authenticates reads and posts orders to OpenSea's book. **It cannot
+move an asset.** The secret that can is your wallet key, which is a separate
+thing entirely.
 
 ## Adding a wallet
 

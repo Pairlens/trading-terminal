@@ -12,6 +12,11 @@
  *
  * The API key is plugin CONFIG: it authenticates reads and it posts an order to
  * OpenSea's book. It is not a trading credential and it cannot move an asset.
+ * It is also OPTIONAL, which is the thing to know before reading `config`
+ * below: OpenSea issues free-tier keys from an unauthenticated endpoint, so
+ * `./auth` mints one on demand and the boards open for someone who has never
+ * signed up. A pasted key is an override that buys higher rate limits, not the
+ * price of admission.
  *
  * The private key is a WALLET, provisioned separately through `initialize` and
  * never held by this plugin, only reached through an id-scoped accessor the
@@ -66,7 +71,7 @@ export const openSeaNftManifest: PluginManifest = {
   version: '0.1.0',
   author: 'Pairlens',
   description:
-    'NFT collections, the listings and offers book, the sales tape and Seaport order execution. Add your own OpenSea key: they are free and issued instantly.',
+    'NFT collections, the listings and offers book, the sales tape and Seaport order execution. No key needed to start: a free OpenSea key is fetched automatically. Paste your own for higher rate limits.',
   homepage: 'https://opensea.io',
   icon: '/posters/opensea-nft-connector.png',
   metadata: {
@@ -136,11 +141,13 @@ export const openSeaNftManifest: PluginManifest = {
   config: {
     apiKey: {
       type: 'secret',
-      label: 'OpenSea API Key',
-      // Required, unlike the Helius key. There is no keyless OpenSea tier to
-      // degrade to, so a connector activated without one would answer every
-      // read with the same 401 and look broken rather than unconfigured.
-      required: true,
+      label: 'OpenSea API Key (optional)',
+      // Optional, and the flag is load-bearing rather than cosmetic: a plugin
+      // with unmet REQUIRED config cannot activate at all, which is what used
+      // to make the whole NFT class unreachable until the user had gone and
+      // made an OpenSea account. `./auth` mints a free key instead, and this
+      // field overrides it when a user wants the higher limits of their own.
+      required: false,
     },
   },
 }

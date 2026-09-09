@@ -6777,7 +6777,7 @@
       "unknown": "Inna"
     },
     "needsKeyTitle": "Dodaj klucz OpenSea",
-    "needsKeyBody": "Rankingi, drabinka i wstęga pochodzą z OpenSea, które wymaga klucza API. Klucze są darmowe i wydawane od razu. Dodaj swój we wtyczce OpenSea.",
+    "needsKeyBody": "Pairlens automatycznie pobiera darmowy klucz OpenSea, ale OpenSea akurat go nie wydaje. Dodaj własny klucz we wtyczce OpenSea, aby kontynuować.",
     "addKeyAction": "Otwórz Plugin Store"
   },
   "nftChains": {

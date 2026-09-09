@@ -4,7 +4,7 @@ description: Every exchange connector in the Pairlens crypto trading terminal, 1
 group: builders
 order: 4
 eyebrow: For builders
-updated: 22 AUG 2026
+updated: 09 SEP 2026
 readTime: 5 min read
 ---
 
@@ -37,8 +37,10 @@ Futures, Kraken Futures, for linear perpetual swaps. See
 one connector serving both halves of its asset class, because it is the only
 NFT venue that answers market data and accepts a signed order over an API a
 browser can call. Reads span Ethereum, Base, Polygon, Arbitrum, Optimism and
-Solana; orders are signed on Ethereum and Base only. Bring your own free
-OpenSea key. See [NFT collections](/docs/nft-trading).
+Solana; orders are signed on Ethereum and Base only. No key to set up: OpenSea
+issues free keys without an account and Pairlens fetches one on the first read,
+and you can paste your own for higher limits. See
+[NFT collections](/docs/nft-trading).
 
 **DEX.** Jupiter on Solana, plus an EVM DEX connector spanning Ethereum, Base,
 Arbitrum, BNB Chain, and Polygon through the KyberSwap aggregator.

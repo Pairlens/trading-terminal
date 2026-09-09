@@ -36,6 +36,7 @@ import {
   fetchSales,
   fetchTraits,
 } from './activity-client'
+import { resolveKey, setUserKey } from './auth'
 import { fetchBook, fetchListings, fetchOffers } from './book-client'
 import {
   clearCollectionCaches,
@@ -142,20 +143,25 @@ export function createOpenSeaNftPlugin(
   const walletSlots = new Map<string, WalletSlot>()
   const candlePollers = new Map<string, ReturnType<typeof setInterval>>()
   const tickerPollers = new Map<string, ReturnType<typeof setInterval>>()
-  let apiKey = ''
 
   /**
    * The key, or a refusal that names the fix.
    *
-   * There is no keyless OpenSea tier to degrade to, so a connector activated
-   * without one would answer every read with the same 401 and read as broken
-   * rather than as unconfigured. It throws the SAME typed error a rejected key
-   * throws, because the panes flag that one type as "this needs a key" and a
-   * plain error would send someone waiting for a recovery that cannot come.
+   * Async now, because a connector activated without a key does not stay
+   * without one: `./auth` mints a free-tier key from OpenSea's own
+   * unauthenticated endpoint, which is what lets someone open an NFT board
+   * before they have ever heard of an API key. The user's own key still wins
+   * whenever there is one.
+   *
+   * It throws only once that has failed too, and it throws the SAME typed error
+   * a rejected key throws, because the panes flag that one type as "this needs
+   * a key" and a plain error would send someone waiting for a recovery that
+   * cannot come.
    */
-  function requireKey(): string {
-    if (!apiKey) throw new MissingKeyError()
-    return apiKey
+  async function requireKey(): Promise<string> {
+    const key = await resolveKey()
+    if (!key) throw new MissingKeyError()
+    return key
   }
 
   function getSlot(params: PluginExecuteParams): WalletSlot | null {
@@ -168,7 +174,7 @@ export function createOpenSeaNftPlugin(
   }
 
   async function readNft(params: PluginExecuteParams): Promise<unknown> {
-    const key = requireKey()
+    const key = await requireKey()
     const p = params.params
     const action = readString(p['action']) ?? ''
 
@@ -281,7 +287,7 @@ export function createOpenSeaNftPlugin(
     const query =
       readString(params.params['q']) ?? readString(params.params['query'])
     if (!query) return { items: [], total: 0, hasMore: false }
-    const key = requireKey()
+    const key = await requireKey()
     const chain = chainOf(params) ?? 'ethereum'
     const limit = Math.min(readNumber(params.params['limit']) ?? 20, 50)
 
@@ -334,7 +340,7 @@ export function createOpenSeaNftPlugin(
       capability === 'market-data:history'
     ) {
       return fetchCandles(
-        requireKey(),
+        await requireKey(),
         requireChain(params, 'candles'),
         requireContract(params, 'candles'),
         readString(params.params['timeframe']) ??
@@ -369,7 +375,7 @@ export function createOpenSeaNftPlugin(
         }
       }
 
-      const key = requireKey()
+      const key = await requireKey()
       const slug = await resolveSlug(key, chain, contract)
       const p = params.params
       return executeNftOrder(
@@ -415,7 +421,10 @@ export function createOpenSeaNftPlugin(
     const { capability } = params
     const chain = chainOf(params)
     const contract = contractOf(params)
-    if (!chain || !contract || !apiKey) return () => {}
+    // Deliberately no key check here: there may be no key YET. A subscription
+    // opened before the first mint lands must poll rather than return a dead
+    // unsubscribe, or a cold board's chart never starts.
+    if (!chain || !contract) return () => {}
 
     if (capability === 'market-data:candles') {
       const timeframe =
@@ -436,6 +445,8 @@ export function createOpenSeaNftPlugin(
         if (inFlight) return
         inFlight = true
         try {
+          const apiKey = await resolveKey()
+          if (!apiKey) return
           const candles = await fetchCandles(
             apiKey,
             chain,
@@ -480,6 +491,8 @@ export function createOpenSeaNftPlugin(
         if (!active || inFlight) return
         inFlight = true
         try {
+          const apiKey = await resolveKey()
+          if (!apiKey) return
           const summary = await fetchCollection(apiKey, chain, contract)
           if (!active || summary.floorPrice === undefined) return
           callback({
@@ -530,8 +543,14 @@ export function createOpenSeaNftPlugin(
     subscribe,
 
     async initialize(config: Record<string, unknown>) {
-      const key = readString(config['apiKey'])
-      if (key) apiKey = key
+      // Wallet provisioning arrives as its OWN `initialize` call carrying only
+      // wallet fields, so it must never be read as "the user cleared the API
+      // key". Only an activation config speaks for the key, and it speaks for
+      // an empty one too: clearing the field is how a user goes back to the
+      // free key we mint.
+      if (!readString(config['walletId'])) {
+        setUserKey(readString(config['apiKey']))
+      }
 
       const getKey =
         typeof config['getPrivateKey'] === 'function'

@@ -3,7 +3,7 @@
 /**
  * The one way this connector talks to OpenSea.
  *
- * Two things it owns that the rest of the package must not duplicate.
+ * Three things it owns that the rest of the package must not duplicate.
  *
  * **The budget.** A free OpenSea key allows on the order of 600 reads an hour,
  * which is tight for a board that can have eight panes open on one collection.
@@ -41,6 +41,13 @@
  * throws a plain error, which makes the manager walk to the next provider. What
  * this module must never do is return null on a failure, because null is an
  * ANSWER: it says the collection has nothing, and the board draws that.
+ *
+ * **The retry on a dead key.** A 401 is the one failure with a recovery that
+ * does not need the user, because `./auth` can mint a free-tier key on demand.
+ * So a rejected key is retired there and the request is made again once with
+ * its replacement. Only when that comes back empty does the typed
+ * `MissingKeyError` reach a pane, which is why that error now means "OpenSea
+ * would not issue us one either" rather than merely "you have not pasted one".
  */
 import {
   isProviderThrottledError,
@@ -50,9 +57,12 @@ import {
 import { restFetch } from '@pairlens/market-engine/http'
 import { createRequestLimiter } from '@pairlens/market-engine/request-limiter'
 
+import { replaceRejectedKey } from './auth'
+import { OPENSEA_API_BASE } from './endpoints'
+
 export const OPENSEA_PROVIDER = 'opensea'
 
-export const OPENSEA_API_BASE = 'https://api.opensea.io/api/v2'
+export { OPENSEA_API_BASE }
 
 /** Reads an hour, against the ~600 a free key is metered at. */
 export const HOURLY_BUDGET = 500
@@ -135,6 +145,15 @@ export async function openSeaFetch<T>(
   path: string,
   options: OpenSeaFetchOptions = {},
 ): Promise<T> {
+  return request<T>(apiKey, path, options, true)
+}
+
+async function request<T>(
+  apiKey: string,
+  path: string,
+  options: OpenSeaFetchOptions,
+  mayReplaceKey: boolean,
+): Promise<T> {
   const { method = 'GET', body, absolute = false } = options
   await limiter.acquire()
 
@@ -158,6 +177,23 @@ export async function openSeaFetch<T>(
   }
 
   if (response.status === 401 || response.status === 403) {
+    // The key is dead, not the request. `./auth` retires it and hands back a
+    // replacement (a freshly minted free-tier key, or the user's own once an
+    // auto key is what was rejected), and the call is made again exactly once.
+    //
+    // Safe for the POST paths too, trading included: a 401 is the venue
+    // refusing to read the request, so nothing was placed. What must never be
+    // retried is a request whose outcome is unknown, and this is not one.
+    //
+    // Only a 401 counts as "this key is dead". A 403 is not the same claim: it
+    // is what a geo block, a WAF rule or an endpoint outside the free tier all
+    // look like, and none of those is fixed by a new key. Since OpenSea issues
+    // only two a day per address, retiring a working key over an ambiguous
+    // status would spend a scarce mint to change nothing.
+    if (mayReplaceKey && response.status === 401) {
+      const replacement = await replaceRejectedKey(apiKey)
+      if (replacement) return request<T>(replacement, path, options, false)
+    }
     throw new MissingKeyError()
   }
   if (!response.ok) {
@@ -173,13 +209,17 @@ export async function openSeaFetch<T>(
 }
 
 /**
- * The key is missing, wrong or revoked.
+ * There is no usable key, and we could not get one.
  *
- * Its own type because it is the one failure with a fix the user can act on,
- * and a pane that names where to paste a key is worth ten that say "request
- * failed". The key is plugin CONFIG, not a trading credential, so it is edited
- * on the plugin rather than under Accounts. Everything else that goes wrong
- * here is either a throttle or a reason to try the next provider.
+ * Rarer than it used to be, and correspondingly more serious: it is thrown only
+ * after `./auth` has failed to mint a free-tier key as well, so the honest
+ * reading is "OpenSea is not issuing keys to this address right now" and the
+ * fix is the user's own key. Its own type because it is the one failure with a
+ * fix the user can act on, and a pane that names where to paste a key is worth
+ * ten that say "request failed". The key is plugin CONFIG, not a trading
+ * credential, so it is edited on the plugin rather than under Accounts.
+ * Everything else that goes wrong here is either a throttle or a reason to try
+ * the next provider.
  */
 export class MissingKeyError extends Error {
   readonly __openSeaMissingKey = true
@@ -193,7 +233,7 @@ export class MissingKeyError extends Error {
   readonly __actionable = true
   constructor() {
     super(
-      'OpenSea rejected the API key. Add or update it on the OpenSea plugin in the Plugin Store, then reload the board.',
+      'OpenSea has no usable API key: the free one could not be issued and none is configured. Add your own key on the OpenSea plugin in the Plugin Store, then reload the board.',
     )
     this.name = 'MissingKeyError'
   }

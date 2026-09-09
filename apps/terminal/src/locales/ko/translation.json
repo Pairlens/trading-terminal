@@ -6649,7 +6649,7 @@
       "unknown": "기타"
     },
     "needsKeyTitle": "OpenSea 키를 추가하세요",
-    "needsKeyBody": "순위와 래더, 체결 내역은 API 키가 필요한 OpenSea에서 옵니다. 키는 무료이며 즉시 발급됩니다. OpenSea 플러그인에서 본인 키를 추가하세요.",
+    "needsKeyBody": "Pairlens가 무료 OpenSea 키를 자동으로 가져오지만 지금은 OpenSea가 발급하지 않습니다. 계속하려면 OpenSea 플러그인에 직접 키를 추가하세요.",
     "addKeyAction": "플러그인 스토어 열기"
   },
   "nftChains": {

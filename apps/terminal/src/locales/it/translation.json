@@ -6649,7 +6649,7 @@
       "unknown": "Altro"
     },
     "needsKeyTitle": "Aggiungi una chiave OpenSea",
-    "needsKeyBody": "Le classifiche, la scala e il nastro arrivano da OpenSea, che richiede una chiave API. Sono gratuite e vengono emesse subito. Aggiungi la tua nel plugin OpenSea.",
+    "needsKeyBody": "Pairlens ottiene automaticamente una chiave OpenSea gratuita, ma al momento OpenSea non ne rilascia. Aggiungi la tua nel plugin OpenSea per continuare.",
     "addKeyAction": "Apri il Plugin Store"
   },
   "nftChains": {

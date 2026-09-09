@@ -6649,7 +6649,7 @@
       "unknown": "Khác"
     },
     "needsKeyTitle": "Thêm khóa OpenSea",
-    "needsKeyBody": "Bảng xếp hạng, bảng giá và dòng khớp lệnh đến từ OpenSea, nơi cần khóa API. Khóa miễn phí và được cấp ngay lập tức. Thêm khóa của bạn trong plugin OpenSea.",
+    "needsKeyBody": "Pairlens tự động lấy khóa OpenSea miễn phí, nhưng hiện OpenSea không cấp khóa. Thêm khóa của riêng bạn trong plugin OpenSea để tiếp tục.",
     "addKeyAction": "Mở Plugin Store"
   },
   "nftChains": {
