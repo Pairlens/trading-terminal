@@ -38,9 +38,11 @@ import {
   CurveBar,
   FlowBar,
   StatLine,
+  formatAge,
   formatCount,
   formatMcap,
 } from '@/components/memecoins/memecoin-pane-primitives'
+import { formatPrice } from '@/lib/format-price'
 import {
   FlowTableSkeleton,
   StatLinesSkeleton,
@@ -154,6 +156,14 @@ function PaneFrame({
 
 // ── Token Stats ──────────────────────────────────────────────────────
 
+/** The four flow windows, shared by the dossier's move chips and the flow table. */
+const WINDOWS: ReadonlyArray<{ id: LaunchpadFlowWindow; labelKey: string }> = [
+  { id: 'm5', labelKey: 'memecoins.flow.m5' },
+  { id: 'h1', labelKey: 'memecoins.flow.h1' },
+  { id: 'h6', labelKey: 'memecoins.flow.h6' },
+  { id: 'h24', labelKey: 'memecoins.flow.h24' },
+]
+
 /**
  * The lines Token Stats always carries.
  *
@@ -163,15 +173,69 @@ function PaneFrame({
  * by the real pane, so they are the honest shape to hold.
  */
 const STATS_SKELETON_KEYS: ReadonlyArray<string> = [
+  'memecoins.stats.price',
   'memecoins.stats.marketCap',
   'memecoins.stats.fdv',
   'memecoins.stats.liquidity',
+  'memecoins.stats.volume24h',
   'memecoins.stats.holders',
+  'memecoins.stats.age',
   'memecoins.stats.curve',
 ]
 
 /** Market caps are wide, holder counts are not. */
-const STATS_VALUE_WIDTHS = ['w-14', 'w-14', 'w-12', 'w-8', 'w-[74px]']
+const STATS_VALUE_WIDTHS = [
+  'w-16',
+  'w-14',
+  'w-14',
+  'w-12',
+  'w-12',
+  'w-8',
+  'w-8',
+  'w-[74px]',
+]
+
+/**
+ * The four moves, as chips across the top of the dossier. Every trenches
+ * terminal leads its token header with this row, and for a reason: the first
+ * question about a memecoin is not what it is worth but which way it is
+ * going, at the scale of the last five minutes and the last day at once.
+ */
+function MoveChips({ token }: { token: LaunchpadToken }) {
+  const { t } = useTranslation()
+  const windows = WINDOWS.filter((w) => token.flow[w.id])
+  if (windows.length === 0) return null
+  return (
+    <div className="mb-1.5 flex gap-1">
+      {windows.map((w) => {
+        const pct = token.flow[w.id]!.priceChangePercent
+        const tone =
+          pct === null
+            ? 'text-muted-foreground'
+            : pct > 0
+              ? 'text-up'
+              : pct < 0
+                ? 'text-down'
+                : 'text-muted-foreground'
+        return (
+          <div
+            key={w.id}
+            className="min-w-0 flex-1 rounded-md bg-muted/40 px-1.5 py-1 text-center"
+          >
+            <div className="font-mono text-[9.5px] uppercase tracking-[.12em] text-muted-foreground">
+              {t(w.labelKey)}
+            </div>
+            <div className={cn('font-mono text-[11.5px] tabular-nums', tone)}>
+              {pct === null
+                ? '·'
+                : `${pct > 0 ? '+' : ''}${Math.abs(pct) >= 100 ? Math.round(pct) : pct.toFixed(1)}%`}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export function MemeTokenStatsPane() {
   const { t } = useTranslation()
@@ -190,6 +254,12 @@ export function MemeTokenStatsPane() {
       {(token) => (
         <>
           <div className="min-h-0 flex-1 overflow-y-auto">
+            <MoveChips token={token} />
+            <StatLine label={t('memecoins.stats.price')}>
+              {token.priceUsd !== null && token.priceUsd > 0
+                ? formatPrice(token.priceUsd)
+                : '·'}
+            </StatLine>
             <StatLine label={t('memecoins.stats.marketCap')}>
               {formatMcap(token.marketCapUsd)}
             </StatLine>
@@ -199,8 +269,14 @@ export function MemeTokenStatsPane() {
             <StatLine label={t('memecoins.stats.liquidity')}>
               {formatMcap(token.liquidityUsd)}
             </StatLine>
+            <StatLine label={t('memecoins.stats.volume24h')}>
+              {formatMcap(token.flow.h24?.volumeUsd ?? null)}
+            </StatLine>
             <StatLine label={t('memecoins.stats.holders')}>
               {formatCount(token.holders)}
+            </StatLine>
+            <StatLine label={t('memecoins.stats.age')}>
+              {formatAge(token.createdAt, Date.now())}
             </StatLine>
             {token.launchpad ? (
               <StatLine label={t('memecoins.stats.launchpad')}>
@@ -232,13 +308,6 @@ export function MemeTokenStatsPane() {
 }
 
 // ── Buy / Sell Flow ──────────────────────────────────────────────────
-
-const WINDOWS: ReadonlyArray<{ id: LaunchpadFlowWindow; labelKey: string }> = [
-  { id: 'm5', labelKey: 'memecoins.flow.m5' },
-  { id: 'h1', labelKey: 'memecoins.flow.h1' },
-  { id: 'h6', labelKey: 'memecoins.flow.h6' },
-  { id: 'h24', labelKey: 'memecoins.flow.h24' },
-]
 
 export function MemeFlowPane() {
   const { t } = useTranslation()

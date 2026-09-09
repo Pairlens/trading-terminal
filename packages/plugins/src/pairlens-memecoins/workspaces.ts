@@ -85,13 +85,22 @@ export const MEMECOIN_DISCOVERY_LAYOUT = {
  *
  * Deliberately not the DEX board. A pool desk is read in reserves, fee tier
  * and price impact; a memecoin desk is read in market cap, who is buying, and
- * whether the deployer can still mint. So the chart sits over the flow strip
- * (buys against sells at four horizons), supply and safety take the middle
- * column, and the swap ticket keeps the right edge.
+ * whether the deployer can still mint. Every trenches terminal converged on
+ * the same shape for a token page, and this is it: the chart over the tape,
+ * the token's dossier and its audit beside them, the ticket at the right edge
+ * with the trader's own book under it.
  *
- * Every pane here is either core or this family's own, so the board still
- * works in a build that dropped the DEX family. Adding the on-chain tape from
- * the picker is one click when that family is installed.
+ * Every column has to earn its height. Token Stats and Token Safety are
+ * `fitContent` panes, so they draw their rows and hand the rest of the column
+ * to Pool Stats, which reads the pool the token migrated into (and says so
+ * honestly while it is still on the curve). The ticket is `fitContent` too,
+ * so Positions takes whatever the ticket leaves. The first cut of this board
+ * gave each of those panes a percentage, and on a 1300px window that was
+ * three cards of empty space under seven rows of figures.
+ *
+ * The tape and the flow strip share a tab cell under the chart because they
+ * answer the same question at two scales: the flow strip is buys against
+ * sells over four windows, the tape is the last two hundred of them.
  */
 export const MEMECOIN_TERMINAL_LAYOUT = {
   version: 1,
@@ -102,15 +111,18 @@ export const MEMECOIN_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-chart',
-          heightPercent: 66,
+          heightPercent: 64,
           activeTabIndex: 0,
           panes: [{ id: 'pane-chart', type: 'chart' }],
         },
         {
-          id: 'cell-meme-flow',
-          heightPercent: 34,
+          id: 'cell-tape',
+          heightPercent: 36,
           activeTabIndex: 0,
-          panes: [{ id: 'pane-meme-flow', type: 'meme-flow' }],
+          panes: [
+            { id: 'pane-onchain-trades', type: 'onchain-trades' },
+            { id: 'pane-meme-flow', type: 'meme-flow' },
+          ],
         },
       ],
     },
@@ -120,15 +132,21 @@ export const MEMECOIN_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-meme-token-stats',
-          heightPercent: 55,
+          heightPercent: 40,
           activeTabIndex: 0,
           panes: [{ id: 'pane-meme-token-stats', type: 'meme-token-stats' }],
         },
         {
           id: 'cell-meme-safety',
-          heightPercent: 45,
+          heightPercent: 25,
           activeTabIndex: 0,
           panes: [{ id: 'pane-meme-safety', type: 'meme-safety' }],
+        },
+        {
+          id: 'cell-pool-stats',
+          heightPercent: 35,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-pool-stats', type: 'pool-stats' }],
         },
       ],
     },
@@ -138,9 +156,15 @@ export const MEMECOIN_TERMINAL_LAYOUT = {
       cells: [
         {
           id: 'cell-trade',
-          heightPercent: 100,
+          heightPercent: 60,
           activeTabIndex: 0,
           panes: [{ id: 'pane-trade-entry', type: 'trade-entry' }],
+        },
+        {
+          id: 'cell-positions',
+          heightPercent: 40,
+          activeTabIndex: 0,
+          panes: [{ id: 'pane-positions', type: 'positions' }],
         },
       ],
     },
@@ -243,9 +267,9 @@ export const MEMECOIN_WORKSPACES: Array<ContributedWorkspace> = [
     context: 'pair',
     routeMenu: true,
     icon: 'Rocket',
-    tagline: 'Market cap, flow, and who can still mint.',
+    tagline: 'The chart, the tape, the dossier, and who can still mint.',
     description:
-      'The default memecoin layout: a chart over the flow strip that puts buys against sells at four horizons, supply and holder count in the middle, the deployer audit under it, and a swap ticket on the right. No order book: a bonding curve does not have one.',
+      'The default memecoin layout: a chart over the on-chain tape and the flow strip, the token dossier (price, moves, market cap, liquidity, volume, holders, age, launchpad, curve) with the deployer audit and the pool under it, and a swap ticket on the right with your positions beneath. No order book: a bonding curve does not have one.',
     facets: {
       traderTypes: ['dex-degen', 'day-trader'],
       assetClasses: ['memecoins'],

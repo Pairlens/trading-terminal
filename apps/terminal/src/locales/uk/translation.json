@@ -7127,7 +7127,10 @@
       "launchpad": "Launchpad",
       "curve": "Крива",
       "graduated": "Випустився",
-      "organicScore": "Органічний скор"
+      "organicScore": "Органічний скор",
+      "price": "Ціна",
+      "volume24h": "Обсяг за 24г",
+      "age": "Вік"
     },
     "flow": {
       "window": "Вікно",

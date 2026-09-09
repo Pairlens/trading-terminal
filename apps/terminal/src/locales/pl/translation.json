@@ -7127,7 +7127,10 @@
       "launchpad": "Launchpad",
       "curve": "Krzywa",
       "graduated": "Po graduacji",
-      "organicScore": "Wynik organiczny"
+      "organicScore": "Wynik organiczny",
+      "price": "Cena",
+      "volume24h": "Wolumen 24h",
+      "age": "Wiek"
     },
     "flow": {
       "window": "Okno",

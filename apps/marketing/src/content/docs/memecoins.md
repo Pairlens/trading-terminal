@@ -160,10 +160,16 @@ Pairlens refuses to pick one instead of guessing.
 
 ## The trade board
 
-Open a memecoin and you get **Memecoin Terminal** rather than the pool layout.
+Open a memecoin and you get **Memecoin Terminal** rather than the pool layout:
+the chart over the on-chain tape, the token's dossier and audit beside it, and
+the swap ticket at the right edge with your positions under it. Every pane on
+the board is sized to what it holds, so the dossier draws its rows and hands
+the rest of its column to the pool rather than to empty space.
 
-**Token Stats** carries market cap, fully diluted value, liquidity, holder count,
-the launchpad that minted it, and curve progress.
+**Token Stats** is the dossier. It leads with the four moves (5 minutes, 1 hour,
+6 hours, 24 hours) as chips, then price, market cap, fully diluted value,
+liquidity, 24-hour volume, holder count, age, the launchpad that minted it,
+and curve progress.
 
 Market cap uses circulating supply and fully diluted value uses total supply. For
 most launchpad tokens the whole supply is circulating and the two agree. When
@@ -177,7 +183,16 @@ nobody publishes one for a coin that has been trading on Uniswap since 2021.
 
 **Buy / Sell Flow** puts buys against sells over 5 minutes, 1 hour, 6 hours and
 24 hours, each with the price move and the volume behind it. Counts are trades,
-not traders, which matters here: one wallet can be a hundred trades.
+not traders, which matters here: one wallet can be a hundred trades. It shares
+a tab with the **On-chain Trades** tape under the chart: the strip is the four
+windows, the tape is the last two hundred prints with the wallet behind each.
+
+**Pool Stats** sits under the audit and reads the pool the token migrated into:
+reserves, fee tier and price impact at a probe size. While a token is still on
+its curve there is no pool, and the pane says so rather than inventing one.
+
+**Positions** sits under the ticket and shows what the wallet holds, the open
+resting orders, and the fills the terminal journaled for it.
 
 **Token Safety** is the panel to read before an order:
 

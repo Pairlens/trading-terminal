@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "Đường cong",
       "graduated": "Đã tốt nghiệp",
-      "organicScore": "Điểm hữu cơ"
+      "organicScore": "Điểm hữu cơ",
+      "price": "Giá",
+      "volume24h": "Khối lượng 24h",
+      "age": "Tuổi"
     },
     "flow": {
       "window": "Khung",

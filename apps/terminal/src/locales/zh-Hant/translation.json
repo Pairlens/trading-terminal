@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "曲線",
       "graduated": "已畢業",
-      "organicScore": "自然度評分"
+      "organicScore": "自然度評分",
+      "price": "價格",
+      "volume24h": "24h 成交量",
+      "age": "存續時間"
     },
     "flow": {
       "window": "視窗",

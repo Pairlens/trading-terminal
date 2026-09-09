@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "Curve",
       "graduated": "Sudah lulus",
-      "organicScore": "Skor organik"
+      "organicScore": "Skor organik",
+      "price": "Harga",
+      "volume24h": "Volume 24 jam",
+      "age": "Usia"
     },
     "flow": {
       "window": "Rentang",

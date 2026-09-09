@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "커브",
       "graduated": "졸업 완료",
-      "organicScore": "오가닉 스코어"
+      "organicScore": "오가닉 스코어",
+      "price": "가격",
+      "volume24h": "24시간 거래량",
+      "age": "경과 시간"
     },
     "flow": {
       "window": "구간",

@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "Curva",
       "graduated": "Graduato",
-      "organicScore": "Punteggio organico"
+      "organicScore": "Punteggio organico",
+      "price": "Prezzo",
+      "volume24h": "Volume 24h",
+      "age": "Età"
     },
     "flow": {
       "window": "Finestra",

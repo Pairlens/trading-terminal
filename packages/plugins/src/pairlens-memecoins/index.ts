@@ -102,6 +102,9 @@ export const pairlensMemecoinsManifest: PluginManifest = {
         preview: 'stats',
         category: 'charting',
         minHeight: 120,
+        // Sized to its rows: a list of figures that banked a percentage of the
+        // column drew a card of empty space under itself on any tall window.
+        fitContent: true,
         requires: ['workspace:active-pair'],
       },
       {
@@ -124,6 +127,9 @@ export const pairlensMemecoinsManifest: PluginManifest = {
         preview: 'stats',
         category: 'charting',
         minHeight: 110,
+        // Sized to its rows: a list of figures that banked a percentage of the
+        // column drew a card of empty space under itself on any tall window.
+        fitContent: true,
         requires: ['workspace:active-pair'],
       },
     ],

@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "Eğri",
       "graduated": "Mezun oldu",
-      "organicScore": "Organik skor"
+      "organicScore": "Organik skor",
+      "price": "Fiyat",
+      "volume24h": "24s hacim",
+      "age": "Yaş"
     },
     "flow": {
       "window": "Aralık",

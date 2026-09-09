@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "เคิร์ฟ",
       "graduated": "จบเคิร์ฟแล้ว",
-      "organicScore": "คะแนนออร์แกนิก"
+      "organicScore": "คะแนนออร์แกนิก",
+      "price": "ราคา",
+      "volume24h": "ปริมาณ 24 ชม.",
+      "age": "อายุ"
     },
     "flow": {
       "window": "ช่วงเวลา",

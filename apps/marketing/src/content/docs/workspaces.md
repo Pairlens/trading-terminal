@@ -4,7 +4,7 @@ description: Build layouts that suit how you trade, bind panels to variables so 
 group: traders
 order: 8
 eyebrow: For traders
-updated: 26 AUG 2026
+updated: 9 SEP 2026
 readTime: 14 min read
 ---
 
@@ -198,8 +198,9 @@ on the ticket has a cause you can read.
 **Memecoin Terminal** is not the DEX board with a different name. A pool desk
 reads reserves, fee tier and price impact; a memecoin desk reads market cap,
 who is buying, and whether the deployer can still mint. So the chart sits over
-**Buy / Sell Flow**, with **Token Stats** and **Token Safety** in the middle
-column and the swap ticket on the right. **Memecoin Sniper** keeps the New and
+the **On-chain Trades** tape and **Buy / Sell Flow**, with **Token Stats**,
+**Token Safety** and **Pool Stats** in the middle column, and the swap ticket
+over **Positions** on the right. **Memecoin Sniper** keeps the New and
 Graduating columns on screen beside the chart, for working launches without
 leaving the board.
 

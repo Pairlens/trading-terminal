@@ -6979,7 +6979,10 @@
       "launchpad": "Launchpad",
       "curve": "カーブ",
       "graduated": "卒業済み",
-      "organicScore": "オーガニックスコア"
+      "organicScore": "オーガニックスコア",
+      "price": "価格",
+      "volume24h": "24時間出来高",
+      "age": "経過時間"
     },
     "flow": {
       "window": "期間",
