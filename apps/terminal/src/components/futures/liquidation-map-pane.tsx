@@ -211,8 +211,9 @@ function renderLiquidationHeatmap(
   // that way. Per-cell strength lives in the LUT, not in globalAlpha.
   ctx.globalAlpha = 1
 
-  const start = Math.max(0, viewport.startIndex)
-  const end = Math.min(bars.length - 1, viewport.endIndex)
+  // The viewport's edges are fractional; paint every bar they cut through.
+  const start = Math.max(0, Math.floor(viewport.startIndex))
+  const end = Math.min(bars.length - 1, Math.ceil(viewport.endIndex))
   const barMs = grid.barMs
 
   for (let i = start; i <= end; i++) {

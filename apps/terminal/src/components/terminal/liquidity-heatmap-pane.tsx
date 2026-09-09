@@ -166,8 +166,9 @@ function renderHeatmapPrimitive(
     return
 
   const logMax = Math.log1p(meta.maxLiquidity)
-  const startIdx = Math.max(0, viewport.startIndex)
-  const endIdx = Math.min(bars.length - 1, viewport.endIndex)
+  // The viewport's edges are fractional; paint every bar they cut through.
+  const startIdx = Math.max(0, Math.floor(viewport.startIndex))
+  const endIdx = Math.min(bars.length - 1, Math.ceil(viewport.endIndex))
 
   // The engine reuses this overlay context for every later draw and does not
   // save/restore around primitives — so start from a known alpha and never

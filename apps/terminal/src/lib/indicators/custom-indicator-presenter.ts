@@ -248,9 +248,12 @@ const visiblePoints = (
   const { bars, values, viewport } = context
   const pitch = barPitch(context)
   const out: Array<VisiblePoint> = []
+  // Fractional edges: a bar the edge cuts through is still on screen.
+  const first = Math.floor(viewport.startIndex)
+  const last = Math.ceil(viewport.endIndex)
   for (const point of values) {
     const index = findBarIndexByTs(bars, point.ts)
-    if (index < viewport.startIndex || index > viewport.endIndex) continue
+    if (index < first || index > last) continue
     out.push({
       point,
       index,
@@ -733,8 +736,8 @@ export const createCustomIndicatorPresenter = (
     const range = isOverlay
       ? computePriceRange(
           context.bars.slice(
-            context.viewport.startIndex,
-            context.viewport.endIndex + 1,
+            Math.max(0, Math.floor(context.viewport.startIndex)),
+            Math.ceil(context.viewport.endIndex) + 1,
           ),
         )
       : computeSpecRange(context, spec)

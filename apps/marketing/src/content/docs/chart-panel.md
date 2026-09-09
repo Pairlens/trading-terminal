@@ -4,8 +4,8 @@ description: 'How to read a candle, what a timeframe really changes, and everyth
 group: traders
 order: 1
 eyebrow: For traders
-updated: 22 AUG 2026
-readTime: 9 min read
+updated: 09 SEP 2026
+readTime: 10 min read
 ---
 
 ## How to read a candle
@@ -161,6 +161,37 @@ empty rather than borrowing the next value, which keeps a spreadsheet honest.
 
 Expands the chart over the whole workspace. <kbd>Esc</kbd> leaves. If you are
 not in fullscreen, <kbd>Esc</kbd> drops the active drawing tool instead.
+
+## Zoom and pan
+
+The chart moves the way TradingView's does, and the numbers underneath are the
+same: one mouse-wheel notch is a 10% zoom step, a trackpad tick is a fraction
+of a notch in proportion to how far your fingers moved, and the bar under your
+cursor stays under your cursor while you zoom. Zoom in eight notches and out
+eight and you are back on exactly the view you left.
+
+**Scroll** to zoom the time axis about the cursor. A burst of notches glides
+into one motion that speeds up and settles instead of jumping a step per
+notch.
+
+**Swipe sideways** on a trackpad, or hold <kbd>Shift</kbd> and scroll, to pan.
+**Drag** the chart to pan too; let go while moving and it coasts to a stop.
+
+**Pinch** on a trackpad to zoom the time axis about your fingers. Pinch and
+pan are the same gesture on the phone: see the
+[mobile terminal](/docs/mobile-terminal).
+
+**Drag the time axis** to zoom anchored at the right edge: left zooms out,
+right zooms in. **Double-click the time axis** to reset to the default view at
+the latest bar.
+
+**Scroll over the price axis**, or hold <kbd>Alt</kbd> (<kbd>Option</kbd> on a
+Mac) while scrolling anywhere, to zoom the price axis about the price under the
+cursor. **Drag the price axis** to stretch it. Either one takes the price scale
+off auto until you **double-click the price axis** or press <kbd>F</kbd>.
+
+You can zoom down to five bars and out until a bar is half a pixel wide.
+Panning past the oldest bar loads more history.
 
 ## Bar replay
 

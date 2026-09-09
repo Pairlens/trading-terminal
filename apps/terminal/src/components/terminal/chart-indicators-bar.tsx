@@ -39,7 +39,8 @@ export function ChartIndicatorsBar({
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       <span className="text-[11px] text-muted-foreground font-mono">
-        {topbar.viewport.startIndex}–{topbar.viewport.endIndex}
+        {Math.floor(topbar.viewport.startIndex)}-
+        {Math.ceil(topbar.viewport.endIndex)}
       </span>
 
       {topbar.indicators.length > 0 && (

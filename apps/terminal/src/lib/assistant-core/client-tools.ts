@@ -396,9 +396,13 @@ export function buildChartSnapshot(
       priceScaleMode: s.priceScaleMode,
       indicators,
       drawings,
+      // The engine's viewport edges are fractional; the model gets whole bars.
       visibleRange:
         viewport?.startIndex != null && viewport?.endIndex != null
-          ? { startIndex: viewport.startIndex, endIndex: viewport.endIndex }
+          ? {
+              startIndex: Math.floor(viewport.startIndex),
+              endIndex: Math.ceil(viewport.endIndex),
+            }
           : undefined,
       barCount: chart.data?.().length,
       compareSymbols: chart.seriesOrder?.().slice(1),

@@ -4,7 +4,7 @@ description: The same web address on a phone opens a chart-first trading termina
 group: get-started
 order: 5
 eyebrow: Get started
-updated: 26 AUG 2026
+updated: 09 SEP 2026
 readTime: 9 min read
 ---
 
@@ -64,6 +64,11 @@ one appears underneath it, showing that bar's open, high, low and close, its
 percentage move, its volume, and its date. Drag without lifting to scrub bar by
 bar. Let go and the readout stays put so you can read it with your hand out of
 the way. Tap the ✕ to dismiss it.
+
+**Pinch to zoom, drag to pan.** A pinch scales the time axis about the point
+between your fingers, so what you are looking at stays where you are looking.
+Move both fingers together and the chart pans with them. One finger drags the
+chart and it coasts when you let go.
 
 **Timeframes** live on a chip beside the price. Four are pinned by default (1m,
 1h, 1D, 1W) and the rest are one tap away. Long-press any of them to pin it.
