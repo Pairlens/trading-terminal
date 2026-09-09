@@ -312,6 +312,18 @@ export function fetchNewPools(
   )
 }
 
+/**
+ * Which cache the pages in flight belong to. Bumped by every clear.
+ *
+ * A clear cannot cancel a request that is already out, and the answer to that
+ * request arrives holding a page for a cache that no longer exists. Writing it
+ * anyway is how a torn-down plugin repopulates the cache it just dropped, and
+ * in a test run it is how one test's response becomes the next test's cache
+ * hit — the reader asks, is served a page it never requested, and the request
+ * it was counting on is never made.
+ */
+let listingGeneration = 0
+
 /** Cache + in-flight collapse, shared by both listing endpoints. */
 function cachedListing(
   key: string,
@@ -324,15 +336,22 @@ function cachedListing(
   const existing = listingInFlight.get(key)
   if (existing) return existing
 
+  const generation = listingGeneration
   const pending = request()
     .then((pools) => {
-      listingCache.set(key, { pools, ts: Date.now() })
+      // The caller still gets its pools; only the cache write is dropped. The
+      // request was legitimate, it is the cache it would land in that is gone.
+      if (generation === listingGeneration) {
+        listingCache.set(key, { pools, ts: Date.now() })
+      }
       return pools
     })
     .finally(() => {
       // A throttle must not be cached as an answer: the entry is only written
       // on success, and the slot is freed either way so the next caller retries.
-      listingInFlight.delete(key)
+      // Guarded by the generation as well, or a stale answer would evict the
+      // live entry a caller after the clear had just registered under this key.
+      if (generation === listingGeneration) listingInFlight.delete(key)
     })
   listingInFlight.set(key, pending)
   return pending
@@ -352,8 +371,12 @@ async function requestPoolPage(
   return parsePoolListing(json.data, meta.network)
 }
 
-/** Drop every cached page. Called when the plugin is torn down. */
+/**
+ * Drop every cached page, and disown every page still in flight. Called when
+ * the plugin is torn down.
+ */
 export function clearListingCache(): void {
   listingCache.clear()
   listingInFlight.clear()
+  listingGeneration += 1
 }

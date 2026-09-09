@@ -516,3 +516,61 @@ describe('geckoFetch', () => {
     }
   })
 })
+
+describe('reset', () => {
+  // The limiter is process-wide, so `reset` is what stops one test's pacing
+  // state reaching the next one. Forgetting the window was only half of it:
+  // the queue holds real requests that have not been issued yet, and the pump
+  // is parked on a timer for them. Left behind, they are issued during a LATER
+  // test — counted by whatever fetch stub is installed then, and written into
+  // whatever cache they find. That is what turned three request-count
+  // assertions in pool-listing-client.test.ts red on CI and nowhere else: the
+  // runner is slow enough for a 1.2s admission to cross a test boundary.
+
+  /**
+   * Settled, one way or the other, or still parked. Raced rather than awaited
+   * because the bug being pinned is a promise that never settles at all, and a
+   * test that hangs on it says far less than one that names what it found.
+   */
+  const outcome = (waiter: Promise<void>): Promise<string> =>
+    Promise.race([
+      waiter.then(
+        () => 'admitted',
+        () => 'refused',
+      ),
+      new Promise<string>((resolve) => setTimeout(() => resolve('queued'), 50)),
+    ])
+
+  it('refuses what is still queued instead of issuing it later', async () => {
+    const clock = virtualClock()
+    const limiter = limiterOn(clock, 1)
+
+    await limiter.acquire()
+    const stranded = limiter.acquire()
+    // Let the waiter reach the queue before the reset.
+    await Promise.resolve()
+    expect(limiter.waiting()).toBe(1)
+
+    limiter.reset()
+
+    expect(limiter.waiting()).toBe(0)
+    expect(await outcome(stranded)).toBe('refused')
+    await expect(stranded).rejects.toMatchObject({ status: 429 })
+  })
+
+  it('admits the next caller immediately, having forgotten the window', async () => {
+    const clock = virtualClock()
+    const limiter = limiterOn(clock, 1)
+
+    await limiter.acquire()
+    const stranded = limiter.acquire()
+    await Promise.resolve()
+    limiter.reset()
+    expect(await outcome(stranded)).toBe('refused')
+
+    const before = clock.time
+    await limiter.acquire()
+    // No wait: a refused queue must not leave the pump pacing behind it.
+    expect(clock.time).toBe(before)
+  })
+})

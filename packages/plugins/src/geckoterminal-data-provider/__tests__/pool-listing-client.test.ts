@@ -418,3 +418,70 @@ describe('mergePoolPages', () => {
     expect(merged.length).toBe(2)
   })
 })
+
+describe('a page that lands after the cache was cleared', () => {
+  // Clearing cannot cancel a request already out on the wire, so the answer
+  // arrives holding a page for a cache that no longer exists. Writing it
+  // anyway repopulates a torn-down plugin's cache, and in a test process it
+  // hands one test's response to the next as a cache hit: the reader is served
+  // a page it never asked for, and the request it was counting never happens.
+  const realFetch = globalThis.fetch
+
+  beforeEach(() => {
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  afterEach(() => {
+    globalThis.fetch = realFetch
+    clearListingCache()
+    resetProviderThrottles()
+    geckoLimiter.reset()
+  })
+
+  it('is handed to its caller and kept out of the cache', async () => {
+    let release: (() => void) | undefined
+    const held = new Promise<void>((resolve) => {
+      release = resolve
+    })
+    const calls: Array<string> = []
+    const offline = globalThis.fetch
+    globalThis.fetch = mock(async (url: unknown) => {
+      const u = String(url)
+      if (!u.includes('api.geckoterminal.com')) {
+        return (offline as (input: unknown) => Promise<Response>)(url)
+      }
+      calls.push(u)
+      if (calls.length === 1) await held
+      return new Response(
+        JSON.stringify({
+          data: [
+            {
+              id: 'solana_x',
+              attributes: {
+                address: calls.length === 1 ? 'stale' : 'fresh',
+                name: 'SOL / USDC',
+                volume_usd: { h24: '1000' },
+              },
+              relationships: { dex: { data: { id: 'orca' } } },
+            },
+          ],
+        }),
+        { status: 200 },
+      )
+    }) as unknown as typeof fetch
+
+    const inFlight = fetchTopPools('solana')
+    clearListingCache()
+    release?.()
+
+    // The caller still gets what it asked for: the request was legitimate, it
+    // is the cache it would have landed in that is gone.
+    expect((await inFlight)[0].address).toBe('stale')
+
+    const after = await fetchTopPools('solana')
+    expect(calls.length).toBe(2)
+    expect(after[0].address).toBe('fresh')
+  })
+})

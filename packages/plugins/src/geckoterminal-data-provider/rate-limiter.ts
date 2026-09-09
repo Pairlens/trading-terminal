@@ -146,9 +146,11 @@ export type RequestLimiter = {
   /** Callers currently waiting for a slot. Test/diagnostic seam. */
   waiting: () => number
   /**
-   * Forget the window and any cool-off. Test seam only: the shared limiter is
-   * process-wide, so a suite that trips a cool-off would otherwise make every
-   * later test in the same process wait it out.
+   * Forget the window and any cool-off, and refuse everything still queued.
+   * Test seam only: the shared limiter is process-wide, so a suite that trips
+   * a cool-off — or leaves a request waiting out the spacing — would otherwise
+   * make every later test in the same process wait it out, or worse, receive
+   * that request as its own.
    */
   reset: () => void
 }
@@ -362,6 +364,25 @@ export function createRequestLimiter(options: LimiterOptions): RequestLimiter {
       issued.length = 0
       lastIssued = 0
       cooldownUntil = 0
+      // The queue goes too, and this is the half that used to be missing.
+      //
+      // Forgetting the window without draining the queue leaves the waiters
+      // themselves behind, and a waiter is not inert: the pump is parked on a
+      // `delay` for it, and when that delay ends it issues a real request. In
+      // a suite that is one request every 1.2s, so a request queued by one
+      // test lands in a LATER one — counted by whatever stub is installed
+      // then, and written into whatever cache it finds. That is how three
+      // request-count assertions in pool-listing-client.test.ts failed on CI
+      // and nowhere else: the runner is slow enough for admissions to cross
+      // test boundaries, and the counts moved to a neighbouring test.
+      //
+      // Refused rather than dropped: a dropped waiter never settles and its
+      // caller hangs. A refusal is what the limiter already gives a caller it
+      // will not admit, so nothing downstream needs a new case — and an
+      // un-awaited one surfaces as an unhandled rejection, which names the
+      // test that left work behind instead of corrupting its neighbour.
+      const stranded = queue.splice(0, queue.length)
+      for (const waiter of stranded) waiter.reject(refusal(0))
     },
   }
 }
