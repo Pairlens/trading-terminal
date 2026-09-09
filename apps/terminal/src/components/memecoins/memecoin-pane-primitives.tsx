@@ -285,10 +285,20 @@ export function TokenMark({
   iconUrl,
   symbol,
   address,
+  className,
 }: {
   iconUrl: string | null
   symbol: string
   address?: string
+  /** Size and type overrides; the board's two-line rows draw a 28px mark. */
+  className?: string
 }) {
-  return <IdentityMark name={symbol} seed={address} imageUrl={iconUrl} />
+  return (
+    <IdentityMark
+      name={symbol}
+      seed={address}
+      imageUrl={iconUrl}
+      className={className}
+    />
+  )
 }

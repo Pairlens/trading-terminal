@@ -120,10 +120,12 @@ social link, and only rows whose deployer has revoked both mint and freeze
 authority; an unknown audit fails that switch, for the same reason the safety
 panel refuses to paint a green check on one.
 
-Every row also carries what the filters read. A dot beside the ticker is green
-when both authorities are revoked and red when the deployer can still mint or
-freeze; no dot means the feed published no audit. Social links rise on hover at
-the end of the identity, and the chart link's tooltip names the launchpad.
+Every row is two lines and carries what the filters read. The ticker sits on
+the first line with a dot beside it: green when both authorities are revoked,
+red when the deployer can still mint or freeze, no dot when the feed published
+no audit. The name and the social links sit under it. Market cap has liquidity
+under it, the stage figure has the holder count, and buys against sells have the
+window's volume. The chart link's tooltip names the launchpad.
 
 A column filtered down to nothing says so, and offers to clear the bounds, rather
 than showing you the same empty pane a quiet market would.

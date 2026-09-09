@@ -47,6 +47,7 @@ import {
   Rocket,
   Send,
   Sparkles,
+  Users,
   Zap,
 } from 'lucide-react'
 
@@ -75,10 +76,10 @@ import type {
   LaunchpadStagePrefs,
 } from '@/lib/memecoins/board-prefs'
 import {
+  PANE_COLUMN_HEADER,
   PANE_TABLE_BODY,
   PaneEmpty,
   PaneErrorBanner,
-  Th,
 } from '@/components/panes/pane-primitives'
 import { SkeletonStatus } from '@/components/panes/pane-skeletons'
 import {
@@ -144,6 +145,11 @@ const VENUE_BY_CHAIN: Readonly<Record<string, string>> = {
 
 /** The quote leg a memecoin board trades against. */
 const QUOTE = 'USDC'
+
+/** The two lines of a row: 16px of headline, 14px of detail under it. */
+const ROW_MAIN = 'text-[12px] leading-[16px]'
+const ROW_SUB =
+  'block min-h-[14px] truncate text-[10.5px] leading-[14px] text-muted-foreground'
 
 /** Stable identity for the three columns that never measure turnover. */
 const EMPTY_TURNOVER: ReadonlyMap<string, number> = new Map()
@@ -429,111 +435,105 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
           />
         ) : null}
 
-        {/* The table itself is drawn from the first frame, headers and all.
-            They are furniture rather than data, and a column that renders
+        {/* The list is drawn from the first frame, header and all. The
+            header is furniture rather than data, and a column that renders
             nothing until its feed answers reads as the empty state it also
             uses for "nothing is minting" — then rebuilds itself under the
-            reader when the rows land. */}
-        {isLoading || rows.length > 0 ? (
-          <table className={cn('w-full', PANE_TABLE_BODY)}>
-            <thead>
-              <tr>
-                {/* The token cell absorbs the slack and the three numeric
-                    cells shrink to their content. Four even columns is what a
-                    table does by default, and on a quarter-width board that
-                    truncated every ticker to a single letter.
+            reader when the rows land.
 
-                    The three numeric headers are `whitespace-nowrap` for the
-                    other half of that: a header allowed to wrap takes a second
-                    line from every row rather than width from the token cell,
-                    which is what "Buys / Sells" did on any board narrower than
-                    full width. */}
-                <Th>
-                  <SortHeader
-                    sort={stagePrefs?.sort ?? null}
-                    sortKey="token"
-                    onSort={onSort}
-                  >
-                    {t('memecoins.columns.token')}
-                  </SortHeader>
-                </Th>
-                <Th align="right" className="whitespace-nowrap">
-                  <SortHeader
-                    align="right"
-                    sort={stagePrefs?.sort ?? null}
-                    sortKey="mcap"
-                    onSort={onSort}
-                  >
-                    {t('memecoins.columns.mcap')}
-                  </SortHeader>
-                </Th>
-                <Th align="right" className="whitespace-nowrap">
-                  <SortHeader
-                    align="right"
-                    sort={stagePrefs?.sort ?? null}
-                    sortKey="metric"
-                    onSort={onSort}
-                  >
-                    {t(config.metricHeaderKey)}
-                  </SortHeader>
-                </Th>
-                <Th
-                  align="right"
-                  className="whitespace-nowrap"
-                  title={
-                    stage === 'legendary'
-                      ? t('memecoins.columns.turnoverHint')
-                      : t('memecoins.columns.flowSortHint')
-                  }
+            A list, not a table. A row is two lines (ticker and stage figure,
+            then name, holders and socials, with market cap stacked over flow
+            on the right), and a table would have spent four fixed columns on
+            what one flexible text block and one stacked figure now carry. On
+            a quarter-width board the four columns left the ticker a single
+            letter. */}
+        {isLoading || rows.length > 0 ? (
+          <div className={PANE_TABLE_BODY}>
+            <div
+              className={cn(
+                'sticky top-0 z-10 flex items-center gap-2.5 pb-1',
+                PANE_COLUMN_HEADER,
+              )}
+            >
+              <span className="min-w-0 flex-1">
+                <SortHeader
+                  sort={stagePrefs?.sort ?? null}
+                  sortKey="token"
+                  onSort={onSort}
                 >
-                  <SortHeader
-                    align="right"
-                    sort={stagePrefs?.sort ?? null}
-                    sortKey="flow"
-                    onSort={onSort}
-                  >
-                    {stage === 'legendary' ? (
-                      t('memecoins.columns.volume')
-                    ) : (
-                      // The widest header on the board, over the narrowest
-                      // cell, so below 20rem of pane it would set the column's
-                      // width and take that width from the tickers (a quarter
-                      // of a 1280px board is 17rem, and with the bolt column
-                      // beside it the header alone squeezed the ticker to
-                      // nothing). Two spans
-                      // rather than `sr-only`/`not-sr-only`, which resets
-                      // `white-space` and put the header back on two lines.
-                      <>
-                        <span className="sr-only @min-[20rem]/pane:hidden">
-                          {t('memecoins.columns.flow')}
-                        </span>
-                        <span className="hidden @min-[20rem]/pane:inline">
-                          {t('memecoins.columns.flow')}
-                        </span>
-                      </>
-                    )}
-                  </SortHeader>
-                </Th>
-                {/* The quick-buy column. Its header IS the amount control:
-                    the number the bolts below will spend, one click to change
-                    it, in the strip the eye already reads across. */}
-                <Th align="right" className="whitespace-nowrap">
-                  <button
-                    type="button"
-                    onClick={() => setAmountOpen(true)}
-                    title={t('memecoins.quickBuy.amountTitle')}
-                    aria-label={t('memecoins.quickBuy.amountTitle')}
-                    className="inline-flex items-center gap-0.5 rounded-sm outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring"
-                  >
-                    <Zap className="size-2.5 shrink-0" aria-hidden />
-                    <span className="hidden tabular-nums @min-[19rem]/pane:inline">
-                      {quickBuySol}
-                    </span>
-                  </button>
-                </Th>
-              </tr>
-            </thead>
-            <tbody>
+                  {t('memecoins.columns.token')}
+                </SortHeader>
+              </span>
+              <span className="whitespace-nowrap">
+                <SortHeader
+                  align="right"
+                  sort={stagePrefs?.sort ?? null}
+                  sortKey="metric"
+                  onSort={onSort}
+                >
+                  {t(config.metricHeaderKey)}
+                </SortHeader>
+              </span>
+              <span className="whitespace-nowrap">
+                <SortHeader
+                  align="right"
+                  sort={stagePrefs?.sort ?? null}
+                  sortKey="mcap"
+                  onSort={onSort}
+                >
+                  {t('memecoins.columns.mcap')}
+                </SortHeader>
+              </span>
+              <span
+                className="whitespace-nowrap"
+                title={
+                  stage === 'legendary'
+                    ? t('memecoins.columns.turnoverHint')
+                    : t('memecoins.columns.flowSortHint')
+                }
+              >
+                <SortHeader
+                  align="right"
+                  sort={stagePrefs?.sort ?? null}
+                  sortKey="flow"
+                  onSort={onSort}
+                >
+                  {stage === 'legendary' ? (
+                    t('memecoins.columns.volume')
+                  ) : (
+                    // The widest label on the board. Below 20rem of pane it
+                    // took the ticker's room in the header, so there the
+                    // sort button keeps its caret and the label goes to the
+                    // screen reader only. Two spans rather than
+                    // `sr-only`/`not-sr-only`, which resets `white-space`.
+                    <>
+                      <span className="sr-only @min-[20rem]/pane:hidden">
+                        {t('memecoins.columns.flow')}
+                      </span>
+                      <span className="hidden @min-[20rem]/pane:inline">
+                        {t('memecoins.columns.flow')}
+                      </span>
+                    </>
+                  )}
+                </SortHeader>
+              </span>
+              {/* The quick-buy amount, at the end of the header the bolts sit
+                  under: the number every bolt below will spend, one click to
+                  change it. */}
+              <button
+                type="button"
+                onClick={() => setAmountOpen(true)}
+                title={t('memecoins.quickBuy.amountTitle')}
+                aria-label={t('memecoins.quickBuy.amountTitle')}
+                className="inline-flex w-7 items-center justify-end gap-0.5 whitespace-nowrap rounded-sm outline-none transition-colors hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring @min-[19rem]/pane:w-[54px]"
+              >
+                <Zap className="size-2.5 shrink-0" aria-hidden />
+                <span className="hidden tabular-nums @min-[19rem]/pane:inline">
+                  {quickBuySol}
+                </span>
+              </button>
+            </div>
+            <ul>
               {isLoading ? (
                 <LaunchpadGhostRows stage={stage} rows={ghostRows} />
               ) : (
@@ -549,8 +549,8 @@ function LaunchpadColumn({ stage }: { stage: LaunchpadStage }) {
                   />
                 ))
               )}
-            </tbody>
-          </table>
+            </ul>
+          </div>
         ) : null}
       </div>
 
@@ -705,14 +705,24 @@ function LaunchpadRow({
   // on a window it is not showing is a column that looks broken.
   const flow = activeFlow(token, stage)
 
-  const identity = (
+  const chartLink = venue
+    ? chartLinkProps({
+        cls: 'memecoin',
+        market: venue,
+        id: normalizeInstrumentId('memecoin', `${token.address}-${QUOTE}`),
+      })
+    : null
+  const linkTitle = token.launchpad
+    ? `${t('memecoins.openChart', { symbol: token.symbol })} · ${t('memecoins.row.launchedOn', { launchpad: token.launchpad })}`
+    : t('memecoins.openChart', { symbol: token.symbol })
+
+  // The ticker and its safety dot. Wrapped in the chart link when the chain
+  // is routed, bare when it is not.
+  const headline = (
     <span className="flex min-w-0 items-center gap-1.5">
-      <TokenMark
-        iconUrl={token.iconUrl}
-        symbol={token.symbol}
-        address={token.address}
-      />
-      <span className="truncate font-medium">{token.symbol}</span>
+      <span className={cn(ROW_MAIN, 'truncate font-medium')}>
+        {token.symbol}
+      </span>
       {safety ? (
         <span
           className={cn(
@@ -731,19 +741,19 @@ function LaunchpadRow({
           )}
         />
       ) : null}
-      {token.holders !== null ? (
-        <span className="shrink-0 text-[10px] text-muted-foreground">
-          {formatCount(token.holders)}
-        </span>
-      ) : null}
     </span>
   )
 
+  // The name, or the launchpad when the name only repeats the ticker.
+  const subline =
+    token.name && token.name.toUpperCase() !== token.symbol.toUpperCase()
+      ? token.name
+      : (token.launchpad ?? '')
+
   // Socials sit OUTSIDE the chart link, as their own anchors: a row is one
-  // link to its chart, and a link inside a link is not HTML. They are laid
-  // out at rest and rise on hover, so the identity column keeps one width.
+  // link to its chart, and a link inside a link is not HTML.
   const socials = (
-    <span className="ml-1 hidden shrink-0 items-center gap-0.5 @min-[24rem]/pane:inline-flex">
+    <span className="inline-flex shrink-0 items-center gap-0.5">
       {token.socials.twitter ? (
         <SocialLink
           href={token.socials.twitter}
@@ -769,63 +779,81 @@ function LaunchpadRow({
   )
 
   return (
-    <tr className="group/row border-none hover:bg-muted/40">
-      <td className="w-full max-w-0 py-1 pr-3">
-        <span className="flex min-w-0 items-center">
-          {venue ? (
+    <li className="group/row grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-2 py-1.5 hover:bg-muted/40">
+      <TokenMark
+        iconUrl={token.iconUrl}
+        symbol={token.symbol}
+        address={token.address}
+        className="size-7 text-[10px]"
+      />
+
+      {/* Two lines of text. Line one is the ticker with the stage figure
+          beside it (age, time since migration, or the day's move); line two
+          is the name with the holder count and the social links. Graduating
+          is the exception: its figure is a 74px curve bar, which beside the
+          ticker left it two letters on a quarter-width board, so the bar
+          leads the second line there instead. */}
+      <span className="min-w-0">
+        <span className="flex min-w-0 items-center gap-2">
+          {chartLink ? (
             <Link
-              {...chartLinkProps({
-                cls: 'memecoin',
-                market: venue,
-                id: normalizeInstrumentId(
-                  'memecoin',
-                  `${token.address}-${QUOTE}`,
-                ),
-              })}
-              title={
-                token.launchpad
-                  ? `${t('memecoins.openChart', { symbol: token.symbol })} · ${t('memecoins.row.launchedOn', { launchpad: token.launchpad })}`
-                  : t('memecoins.openChart', { symbol: token.symbol })
-              }
-              className="block min-w-0 flex-1 outline-none focus-visible:underline"
+              {...chartLink}
+              title={linkTitle}
+              className="block min-w-0 outline-none focus-visible:underline"
               onClick={() =>
                 track('memecoin_row_opened', { stage, chain: token.chain })
               }
             >
-              {identity}
+              {headline}
             </Link>
           ) : (
-            <span className="min-w-0 flex-1">{identity}</span>
+            <span className="min-w-0">{headline}</span>
           )}
+          {stage !== 'graduating' ? (
+            <span className="shrink-0 text-[10.5px] text-muted-foreground">
+              <MetricCell token={token} stage={stage} now={now} />
+            </span>
+          ) : null}
+        </span>
+        <span className="flex min-w-0 items-center gap-1.5">
+          {stage === 'graduating' ? (
+            <span className="flex h-3.5 shrink-0 items-center">
+              <MetricCell token={token} stage={stage} now={now} />
+            </span>
+          ) : null}
+          <span className={cn(ROW_SUB, 'min-w-0 flex-1')}>{subline}</span>
+          {token.holders !== null ? (
+            <span
+              className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-muted-foreground"
+              title={t('memecoins.stats.holders')}
+            >
+              <Users className="size-2.5" aria-hidden />
+              {formatCount(token.holders)}
+            </span>
+          ) : null}
           {socials}
         </span>
-      </td>
-      {/* `marketCapUsd ?? fdvUsd`: a freshly migrated row often carries no
-          market cap at all, because its curve figures are gone and the pool is
-          minutes old. FDV is the same number for a launchpad token, whose
-          whole supply is circulating, so a dash there was a gap with an answer
-          sitting beside it. */}
-      <td className="w-px whitespace-nowrap py-1 pr-3 text-right">
-        {formatMcap(token.marketCapUsd ?? token.fdvUsd)}
-      </td>
-      <td className="w-px whitespace-nowrap py-1 pr-3 text-right">
-        <MetricCell token={token} stage={stage} now={now} />
-      </td>
-      <td className="w-px whitespace-nowrap py-1 text-right">
+      </span>
+
+      {/* Market cap over flow, right-aligned. `marketCapUsd ?? fdvUsd`: a
+          freshly migrated row often carries no market cap at all, because
+          its curve figures are gone and the pool is minutes old. FDV is the
+          same number for a launchpad token, whose whole supply is
+          circulating, so a dash there was a gap with an answer beside it. */}
+      <span className="flex flex-col items-end whitespace-nowrap">
+        <span className={cn(ROW_MAIN, 'block')}>
+          {formatMcap(token.marketCapUsd ?? token.fdvUsd)}
+        </span>
         {/* Legendary has no buy/sell split to show — CoinGecko publishes a
-            market-cap ranking, not a tape — so that column spends its width on
-            traded volume instead of a full column of dashes, with the turnover
-            multiple beside it. Volume without the multiple is unreadable
-            across three orders of market cap: $310M is enormous for a $500M
-            coin and a quiet day for a $14B one. */}
+            market-cap ranking, not a tape — so that column shows traded
+            volume instead of a row of dashes, with the turnover multiple
+            beside it. Volume without the multiple is unreadable across three
+            orders of market cap: $310M is enormous for a $500M coin and a
+            quiet day for a $14B one. */}
         {stage === 'legendary' ? (
-          <span className="inline-flex items-center justify-end gap-1">
+          <span className="inline-flex items-center justify-end gap-1 text-[10.5px] leading-[14px] text-muted-foreground">
             <span>{formatMcap(flow ? flow.volumeUsd : null)}</span>
             {turnoverMultiple !== null ? (
-              // Its own fixed column, four characters wide. Inline after the
-              // volume, the cell was as wide as the multiple happened to be,
-              // and `22.1×` on a live board took the width out of the ticker
-              // beside it.
               <span
                 className="hidden w-[38px] text-right @min-[17rem]/pane:inline-block"
                 title={t('memecoins.columns.turnoverHint')}
@@ -843,15 +871,20 @@ function LaunchpadRow({
             ) : null}
           </span>
         ) : (
-          <FlowBar flow={flow} />
+          <span className="flex h-3.5 items-center">
+            <FlowBar flow={flow} />
+          </span>
         )}
-      </td>
-      <td className="w-px whitespace-nowrap py-1 pl-1 text-right">
+      </span>
+
+      <span className="flex items-center justify-end">
         {token.chain === 'solana' ? (
           <QuickBuyButton token={token} sol={quickBuySol} quickBuy={quickBuy} />
-        ) : null}
-      </td>
-    </tr>
+        ) : (
+          <span className="inline-block w-7 @min-[19rem]/pane:w-[54px]" />
+        )}
+      </span>
+    </li>
   )
 }
 
@@ -921,7 +954,7 @@ function QuickBuyButton({
         // pane is wide enough: at a quarter of a 1280px board the four cells
         // already fill the row, and a 46px button there pushed the table past
         // the pane and put a horizontal scrollbar under every column.
-        'relative inline-flex h-5 w-5 select-none items-center justify-center gap-0.5 overflow-hidden rounded-md font-mono text-[10.5px] tabular-nums outline-none transition-[opacity,color] focus-visible:ring-1 focus-visible:ring-ring @min-[19rem]/pane:w-[46px]',
+        'relative inline-flex h-7 w-7 select-none items-center justify-center gap-0.5 overflow-hidden rounded-md font-mono text-[10.5px] tabular-nums outline-none transition-[opacity,color] focus-visible:ring-1 focus-visible:ring-ring @min-[19rem]/pane:w-[54px]',
         'bg-up/10 text-up opacity-60 hover:opacity-100 group-hover/row:opacity-100',
         busy && 'opacity-100',
       )}
@@ -931,7 +964,7 @@ function QuickBuyButton({
         {busy ? (
           <Spinner className="size-2.5" />
         ) : (
-          <Zap className="size-2.5" aria-hidden />
+          <Zap className="size-3" aria-hidden />
         )}
         <span className="hidden @min-[19rem]/pane:inline">{sol}</span>
       </span>

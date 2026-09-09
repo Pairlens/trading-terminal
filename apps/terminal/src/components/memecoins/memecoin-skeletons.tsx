@@ -57,7 +57,7 @@ export const GHOST_FADE_START = 0.42
  * under-filling puts a hard edge back in the middle of the pane, which is the
  * whole thing being fixed here.
  */
-const GHOST_ROW_HEIGHT = 24
+const GHOST_ROW_HEIGHT = 42
 
 /** A pane too short to have been measured yet still draws a stack. */
 const MIN_GHOST_ROWS = 10
@@ -167,7 +167,7 @@ function GhostMetric({
   }
   return (
     <Shimmer
-      className={cn('ml-auto h-2.5', stage === 'legendary' ? 'w-10' : 'w-6')}
+      className={cn('h-2.5', stage === 'legendary' ? 'w-10' : 'w-6')}
       delayIndex={row}
       still={still}
     />
@@ -177,9 +177,10 @@ function GhostMetric({
 /**
  * The rows of a launchpad column, waiting.
  *
- * Returns bare `<tr>`s on purpose: the pane keeps its own `<table>` and its
- * own header row, and only the body swaps. Nothing about the table's geometry
- * is restated here, so nothing about it can drift.
+ * Returns bare `<li>`s on purpose: the pane keeps its own list and its own
+ * header row, and only the body swaps. The grid is the real row's grid, so
+ * the mark, the stacked figures and the bolt already sit where the first
+ * real row will put them.
  */
 export function LaunchpadGhostRows({
   stage,
@@ -195,64 +196,75 @@ export function LaunchpadGhostRows({
       {Array.from({ length: rows }, (_, row) => {
         const still = row >= swept
         return (
-          <tr className="border-none" key={row}>
-            <td className="w-full max-w-0 py-1 pr-3">
-              <span className="flex items-center gap-1.5">
+          <li
+            className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-2 py-1.5"
+            key={row}
+          >
+            <Shimmer
+              className="size-7 shrink-0 rounded-full"
+              delayIndex={row}
+              still={still}
+            />
+            <span className="min-w-0">
+              <span className="flex h-4 items-center gap-2">
                 <Shimmer
-                  className="size-4 shrink-0 rounded-full"
+                  className="h-2.5"
+                  delayIndex={row}
+                  still={still}
+                  style={{ width: NAME_WIDTHS[row % NAME_WIDTHS.length] }}
+                />
+                {stage !== 'graduating' ? (
+                  <GhostMetric stage={stage} row={row} still={still} />
+                ) : null}
+              </span>
+              <span className="flex h-3.5 items-center gap-1.5">
+                {stage === 'graduating' ? (
+                  <GhostMetric stage={stage} row={row} still={still} />
+                ) : null}
+                <Shimmer
+                  className="h-2"
+                  delayIndex={row}
+                  still={still}
+                  style={{
+                    width: NAME_WIDTHS[(row + 3) % NAME_WIDTHS.length],
+                  }}
+                />
+              </span>
+            </span>
+            <span className="flex flex-col items-end">
+              <span className="flex h-4 items-center">
+                <Shimmer
+                  className={cn('h-2.5', MCAP_WIDTHS[row % MCAP_WIDTHS.length])}
                   delayIndex={row}
                   still={still}
                 />
-                <span className="min-w-0 flex-1">
+              </span>
+              <span className="flex h-3.5 items-center">
+                {stage === 'legendary' ? (
                   <Shimmer
-                    className="h-2.5"
+                    className="h-2 w-14"
                     delayIndex={row}
                     still={still}
-                    style={{ width: NAME_WIDTHS[row % NAME_WIDTHS.length] }}
                   />
-                </span>
-              </span>
-            </td>
-            <td className="w-px whitespace-nowrap py-1 pr-3 text-right">
-              <Shimmer
-                className={cn(
-                  'ml-auto h-2.5',
-                  MCAP_WIDTHS[row % MCAP_WIDTHS.length],
+                ) : (
+                  // The pill's own width, in both of its states, so the
+                  // column is already the width the first real row needs.
+                  <Shimmer
+                    className={cn(FLOW_CELL, 'rounded-[3px]')}
+                    delayIndex={row}
+                    still={still}
+                  />
                 )}
-                delayIndex={row}
-                still={still}
-              />
-            </td>
-            <td className="w-px whitespace-nowrap py-1 pr-3 text-right">
-              <GhostMetric stage={stage} row={row} still={still} />
-            </td>
-            <td className="w-px whitespace-nowrap py-1 text-right">
-              {stage === 'legendary' ? (
-                <Shimmer
-                  className="ml-auto h-2.5 w-14"
-                  delayIndex={row}
-                  still={still}
-                />
-              ) : (
-                // The pill's own width, in both of its states, so the column
-                // is already the width the first real row needs.
-                <Shimmer
-                  className={cn(FLOW_CELL, 'rounded-[3px]')}
-                  delayIndex={row}
-                  still={still}
-                />
-              )}
-            </td>
-            {/* The quick-buy bolt's own width, so the column does not jump
+              </span>
+            </span>
+            {/* The quick-buy bolt's own size, so the column does not jump
                 when the first real row lands with a button in it. */}
-            <td className="w-px whitespace-nowrap py-1 pl-1 text-right">
-              <Shimmer
-                className="ml-auto h-5 w-5 rounded-md @min-[19rem]/pane:w-[46px]"
-                delayIndex={row}
-                still={still}
-              />
-            </td>
-          </tr>
+            <Shimmer
+              className="h-7 w-7 rounded-md @min-[19rem]/pane:w-[54px]"
+              delayIndex={row}
+              still={still}
+            />
+          </li>
         )
       })}
     </>
