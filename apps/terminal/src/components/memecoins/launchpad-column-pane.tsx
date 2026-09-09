@@ -146,6 +146,25 @@ const VENUE_BY_CHAIN: Readonly<Record<string, string>> = {
 /** The quote leg a memecoin board trades against. */
 const QUOTE = 'USDC'
 
+/**
+ * The row's grid, in its two shapes.
+ *
+ * From 19rem of pane: mark | text | figures | bolt on one band, the text and
+ * the figures each two lines tall. Below it: mark | text | bolt on the first
+ * band and the figures on a band of their own underneath, spanning the row,
+ * because a quarter of a 1280px board is 261px and a market cap beside a
+ * name there left both unreadable. The same 19rem is where the bolt starts
+ * carrying its amount, so a column changes shape once, not twice.
+ */
+const ROW_GRID =
+  'group/row grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 py-1.5 hover:bg-muted/40 @min-[19rem]/pane:grid-cols-[auto_minmax(0,1fr)_auto_auto]'
+/** The figures: a full-width third line, or a stacked cell beside the text. */
+const ROW_FIGURES =
+  'col-span-3 mt-1 flex items-center justify-between gap-2 whitespace-nowrap pl-9 @min-[19rem]/pane:col-span-1 @min-[19rem]/pane:mt-0 @min-[19rem]/pane:flex-col @min-[19rem]/pane:items-end @min-[19rem]/pane:justify-center @min-[19rem]/pane:pl-0'
+/** The bolt: pinned to the first band in both shapes. */
+const ROW_BOLT =
+  'col-start-3 row-start-1 flex items-center justify-end @min-[19rem]/pane:col-start-4'
+
 /** The two lines of a row: 16px of headline, 14px of detail under it. */
 const ROW_MAIN = 'text-[12px] leading-[16px]'
 const ROW_SUB =
@@ -779,7 +798,7 @@ function LaunchpadRow({
   )
 
   return (
-    <li className="group/row grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-2 py-1.5 hover:bg-muted/40">
+    <li className={ROW_GRID}>
       <TokenMark
         iconUrl={token.iconUrl}
         symbol={token.symbol}
@@ -835,12 +854,16 @@ function LaunchpadRow({
         </span>
       </span>
 
-      {/* Market cap over flow, right-aligned. `marketCapUsd ?? fdvUsd`: a
-          freshly migrated row often carries no market cap at all, because
-          its curve figures are gone and the pool is minutes old. FDV is the
-          same number for a launchpad token, whose whole supply is
-          circulating, so a dash there was a gap with an answer beside it. */}
-      <span className="flex flex-col items-end whitespace-nowrap">
+      {/* Market cap and flow. Beside the text on a wide column, stacked
+          with the cap over the pill; on a narrow one a third line of their
+          own under the text, cap at the left and pill at the right, because
+          a 260px column has no room for a figure beside a name.
+          `marketCapUsd ?? fdvUsd`: a freshly migrated row often carries no
+          market cap at all, because its curve figures are gone and the pool
+          is minutes old. FDV is the same number for a launchpad token, whose
+          whole supply is circulating, so a dash there was a gap with an
+          answer beside it. */}
+      <span className={ROW_FIGURES}>
         <span className={cn(ROW_MAIN, 'block')}>
           {formatMcap(token.marketCapUsd ?? token.fdvUsd)}
         </span>
@@ -877,7 +900,7 @@ function LaunchpadRow({
         )}
       </span>
 
-      <span className="flex items-center justify-end">
+      <span className={ROW_BOLT}>
         {token.chain === 'solana' ? (
           <QuickBuyButton token={token} sol={quickBuySol} quickBuy={quickBuy} />
         ) : (

@@ -197,7 +197,7 @@ export function LaunchpadGhostRows({
         const still = row >= swept
         return (
           <li
-            className="grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-x-2 py-1.5"
+            className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-2 py-1.5 @min-[19rem]/pane:grid-cols-[auto_minmax(0,1fr)_auto_auto]"
             key={row}
           >
             <Shimmer
@@ -231,7 +231,7 @@ export function LaunchpadGhostRows({
                 />
               </span>
             </span>
-            <span className="flex flex-col items-end">
+            <span className="col-span-3 mt-1 flex items-center justify-between pl-9 @min-[19rem]/pane:col-span-1 @min-[19rem]/pane:mt-0 @min-[19rem]/pane:flex-col @min-[19rem]/pane:items-end @min-[19rem]/pane:pl-0">
               <span className="flex h-4 items-center">
                 <Shimmer
                   className={cn('h-2.5', MCAP_WIDTHS[row % MCAP_WIDTHS.length])}
@@ -260,7 +260,7 @@ export function LaunchpadGhostRows({
             {/* The quick-buy bolt's own size, so the column does not jump
                 when the first real row lands with a button in it. */}
             <Shimmer
-              className="h-7 w-7 rounded-md @min-[19rem]/pane:w-[54px]"
+              className="col-start-3 row-start-1 h-7 w-7 rounded-md @min-[19rem]/pane:col-start-4 @min-[19rem]/pane:w-[54px]"
               delayIndex={row}
               still={still}
             />
