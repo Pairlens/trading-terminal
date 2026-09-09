@@ -1,6 +1,14 @@
 // Copyright (c) 2026 Juan Ignacio Molina Estrada
 // SPDX-License-Identifier: FSL-1.1-Apache-2.0
-import { afterEach, beforeEach, describe, expect, it, mock } from 'bun:test'
+import {
+  afterAll,
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  mock,
+} from 'bun:test'
 
 import type { BotDefinition } from '@pairlens/bot-engine/types'
 import type { ChartBar } from '@pairlens/fast-financial-charts/types'
@@ -38,6 +46,19 @@ let computeFails: string | null = null
 let computeDelay: Promise<void> | null = null
 
 class FakeBusyError extends Error {}
+
+// `mock.module` is process-global in bun, so replacing `../bot-python` here
+// replaces it for every file that runs after this one too. bot-python.test.ts
+// mocks the Python RUNTIME and imports the real `../bot-python` on top of it;
+// handed this fake instead, its own `computeCalls` never fill and all eight of
+// its assertions read as "the runtime was never called". Capture the real
+// module (spread, never the raw namespace) and put it back when this file is
+// done — the same guard bot-runtime-vault.test.ts already carries.
+const realBotPython = { ...(await import('../bot-python')) }
+
+afterAll(() => {
+  mock.module('../bot-python', () => realBotPython)
+})
 
 mock.module('../bot-python', () => ({
   BOT_WINDOW_BARS: 500,
